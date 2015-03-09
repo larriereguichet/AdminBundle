@@ -1,0 +1,30 @@
+# symfony
+app/config/parameters.yml
+app/bootstrap.php.cache
+app/logs
+composer.phar
+resources
+vendor
+web/bundles
+web/assets
+web/css
+web/js
+web/jikpoze
+*.log
+
+# IDE
+.idea
+
+# sprites
+web/uploads/sprites
+web/uploads/tmp
+
+# kde, apple
+.ds_store
+.directory
+
+# deployment
+.mage/config/environment
+
+# sass
+.sass-cache

@@ -1,0 +1,38 @@
+parameters:
+    # template listener
+    bluebear.admin.template_listener: BlueBear\AdminBundle\Event\Subscriber\TemplateListener
+    # form
+    bluebear.admin.form.delete: BlueBear\AdminBundle\Form\DeleteType
+    # routing
+    bluebear.admin.routing: BlueBear\AdminBundle\Routing\RoutingLoader
+    # admin factory
+    bluebear.admin.factory: BlueBear\AdminBundle\Admin\AdminFactory
+
+services:
+    # template listener
+    bluebear.admin.template_listener:
+        class: %bluebear.admin.template_listener%
+        tags:
+            - {name: kernel.event_subscriber}
+        calls:
+            - [setContainer, [@service_container]]
+
+    # form
+    bluebear.admin.form.delete:
+        class: %bluebear.admin.form.delete%
+        tags:
+            - {name: form.type, alias: delete}
+
+    # routing
+    bluebear.admin.routing:
+        class: %bluebear.admin.routing%
+        tags:
+            - { name: routing.loader }
+        calls:
+            - [setContainer, [@service_container]]
+
+    # factory
+    bluebear.admin.factory:
+        class: %bluebear.admin.factory%
+        arguments: [@service_container]
+        scope: container
