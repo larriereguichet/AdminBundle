@@ -3,7 +3,7 @@
   "type": "symfony-bundle",
   "description": "Generic admin bundle for Symfony2",
   "keywords": ["Admin", "Backoffice", "Symfony2", "Generic"],
-  "homepage": "https://github.com/BlueBear/AdminBundle",
+  "homepage": "https://github.com/CleverGaming/AdminBundle",
   "license": "MIT",
   "authors": [
     {
