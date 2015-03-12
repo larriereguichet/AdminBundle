@@ -14,6 +14,10 @@ class ApplicationConfiguration
 
     public $blockTemplate;
 
+    public $description;
+
+    public $bootstrap = false;
+
     public function hydrateFromConfiguration(array $applicationConfiguration, Request $request)
     {
         $this->lang = $request->getLocale();
@@ -22,6 +26,12 @@ class ApplicationConfiguration
 
         if (array_key_exists('title', $applicationConfiguration)) {
             $this->title = $applicationConfiguration['title'];
+        }
+        if (array_key_exists('description', $applicationConfiguration)) {
+            $this->description = $applicationConfiguration['description'];
+        }
+        if (array_key_exists('bootstrap', $applicationConfiguration)) {
+            $this->bootstrap = $applicationConfiguration['bootstrap'];
         }
     }
 }

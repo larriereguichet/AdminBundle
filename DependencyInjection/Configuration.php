@@ -27,6 +27,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('title')->end()
                         ->scalarNode('description')->end()
                         ->scalarNode('layout')->end()
+                        ->scalarNode('bootstrap')->end()
                         ->scalarNode('max_per_page')->end()
                         ->scalarNode('block_template')
                             ->defaultValue('BlueBearAdminBundle:Form:fields.html.twig')

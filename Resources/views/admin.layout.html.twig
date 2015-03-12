@@ -4,25 +4,17 @@
     <title>
         {% block title %}{{ config.title }}{% endblock %}
     </title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="keywords" content="HTML, CSS, JS, JavaScript, framework, bootstrap, front-end, frontend, web development">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-
-
-    {% stylesheets
-    'bundles/bluebearbackoffice/css/bootstrap-datetimepicker.min.css'
-    'bundles/bluebearbackoffice/css/backoffice.css' filter='cssrewrite, ?yui_css' %}
-    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen"/>
-    {% endstylesheets %}
-
+    <meta name="description" content="{{ config.description }}">
+    <meta name="keywords" content="in progress">
+    <meta name="author" content="in progress">
+    {% block head %}{% endblock %}
+    {% block stylesheets %}{% endblock %}
+    {% include "BlueBearAdminBundle:Layout:head.html.twig" %}
 </head>
 <body>
-{# TODO still needed ? #}
-{% use "BlueBearCoreBundle:Form:fields.html.twig" %}
-
 <!-- flash messages -->
 <div class="alert-container container">
     {% block notice %}
@@ -36,9 +28,9 @@
     {% endblock %}
 </div>
 
-{% block topMenu %}
-    {% include 'BlueBearBackofficeBundle::top.html.twig' %}
-{% endblock %}
+{% if app.user %}
+    {% block topMenu %}{% endblock %}
+{% endif %}
 
 <div class="container">
     <div class="row-fluid">
@@ -53,16 +45,6 @@
 
 <footer>
     {% javascripts
-    'assets/jquery/jquery.min.js'
-    'assets/jquery-ui/ui/minified/core.min.js'
-    'assets/jquery-ui/ui/minified/widget.min.js'
-    'assets/jquery-ui/ui/minified/mouse.min.js'
-    'assets/jquery-ui/ui/minified/sortable.min.js'
-    '@MopaBootstrapBundle/Resources/public/bootstrap-sass/assets/javascripts/bootstrap.js'
-    '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
-    '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-subnav.js'
-    '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.js'
-    '@MopaBootstrapBundle/Resources/public/components/smalot-bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js'
     'bundles/bluebearfileupload/js/jquery.iframe-transport.js'
     'bundles/bluebearfileupload/js/jquery.fileupload.js'
     'bundles/bluebearfileupload/js/jquery.fileupload-process.js'
@@ -71,10 +53,7 @@
     'bundles/bluebearfileupload/js/jquery.fileupload-video.js'
     'bundles/bluebearfileupload/js/jquery.fileupload-validate.js'
     'bundles/bluebearfileupload/js/jquery.fileupload-ui.js'
-    'bundles/bluebearfileupload/js/jquery.fileupload.bluebear.js'
-    'bundles/bluebearadmin/js/backoffice.js'
-    'bundles/bluebearadmin/js/stupidtable.min.js'
-    'bundles/bluebearbackoffice/js/vendors/highcharts.js' filter="?yui_js" %}
+    'bundles/bluebearfileupload/js/jquery.fileupload.bluebear.js' filter="?yui_js" %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% block javascripts %}

@@ -1,35 +1,46 @@
 {
-  "name": "bluebear/adminbundle",
-  "type": "symfony-bundle",
-  "description": "Generic admin bundle for Symfony2",
-  "keywords": ["Admin", "Backoffice", "Symfony2", "Generic"],
-  "homepage": "https://github.com/CleverGaming/AdminBundle",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "JohnKrovitch",
-      "email": "arnaudfrezet@gmail.com"
+    "name": "bluebear/adminbundle",
+    "type": "symfony-bundle",
+    "description": "Generic admin bundle for Symfony2",
+    "keywords": [
+        "Admin",
+        "Backoffice",
+        "Symfony2",
+        "Generic"
+    ],
+    "homepage": "https://github.com/CleverGaming/AdminBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "JohnKrovitch",
+            "email": "arnaudfrezet@gmail.com"
+        },
+        {
+            "name": "JohanDufour",
+            "email": "johan.dufour@gmail.com"
+        },
+        {
+            "name": "VincentChalnot",
+            "email": "vincent.chalnot@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "symfony/symfony": "2.6.*",
+        "sensio/framework-extra-bundle": "~3.0",
+        "bluebear/basebundle": "dev-master",
+        "white-october/pagerfanta-bundle": "~1.0",
+        "components/jquery": "1.11.*",
+        "components/jqueryui": "1.11.*"
     },
-    {
-      "name": "JohanDufour",
-      "email": "johan.dufour@gmail.com"
+    "autoload": {
+        "psr-0": {
+            "BlueBear\\AdminBundle": ""
+        }
     },
-    {
-      "name": "VincentChalnot",
-      "email": "vincent.chalnot@gmail.com"
-    }
-  ],
-  "require": {
-    "php": ">=5.4",
-    "symfony/symfony": "2.6.*",
-    "sensio/framework-extra-bundle": "~3.0",
-    "bluebear/basebundle": "dev-master",
-    "white-october/pagerfanta-bundle": "~1.0"
-  },
-  "autoload": {
-    "psr-0": {
-      "BlueBear\\AdminBundle": ""
-    }
-  },
-  "target-dir": "BlueBear/AdminBundle"
+    "config": {
+        "bin-dir": "bin",
+        "component-dir": "web/assets"
+    },
+    "target-dir": "BlueBear/AdminBundle"
 }

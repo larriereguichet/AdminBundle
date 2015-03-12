@@ -2,6 +2,7 @@
 
 namespace BlueBear\AdminBundle\Admin;
 
+use BlueBear\AdminBundle\Admin\Application\ApplicationConfiguration;
 use BlueBear\AdminBundle\Manager\GenericManager;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
@@ -21,6 +22,11 @@ class AdminFactory
     use StringUtilsTrait, ContainerTrait;
 
     protected $admins = [];
+
+    /**
+     * @var ApplicationConfiguration
+     */
+    protected $applicationConfiguration;
 
     /**
      * Read configuration from container, then create admin with its actions and fields
@@ -98,7 +104,7 @@ class AdminFactory
      * @param $adminName
      * @param array $adminConfigArray
      */
-    protected function createAdminFromConfig($adminName, array $adminConfigArray)
+    public function createAdminFromConfig($adminName, array $adminConfigArray)
     {
         /** @var EntityManager $entityManager */
         $entityManager = $this->getContainer()->get('doctrine')->getManager();
@@ -120,6 +126,22 @@ class AdminFactory
         }
         // adding admins to the pool
         $this->admins[$admin->getName()] = $admin;
+    }
+
+    /**
+     * Create application configuration from request and application parameters
+     *
+     * @param array $applicationConfiguration
+     * @param Request $request
+     * @return ApplicationConfiguration
+     */
+    public function createApplicationFromConfiguration(array $applicationConfiguration, Request $request)
+    {
+        $applicationConfiguration = array_merge($this->getDefaultApplicationConfiguration(), $applicationConfiguration);
+        $applicationConfig = new ApplicationConfiguration();
+        $applicationConfig->hydrateFromConfiguration($applicationConfiguration, $request);
+
+        return $applicationConfig;
     }
 
     /**
@@ -244,6 +266,13 @@ class AdminFactory
         return [
             'id' => [],
             'label' => []
+        ];
+    }
+
+    protected function getDefaultApplicationConfiguration()
+    {
+        return [
+            'layout' => 'BlueBearAdminBundle::layout.html.twig',
         ];
     }
 }
