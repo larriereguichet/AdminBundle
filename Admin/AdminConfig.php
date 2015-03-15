@@ -16,7 +16,7 @@ class AdminConfig
 
     public $actions;
 
-    public $maxPerPage;
+    public $maxPerPage = 25;
 
     public function hydrateFromConfiguration(array $adminConfiguration, ContainerInterface $container)
     {
@@ -26,7 +26,12 @@ class AdminConfig
         }
         if (!array_key_exists('max_per_page', $adminConfiguration)) {
             // by default, we take the general value
-            $adminConfiguration['max_per_page'] = $container->getParameter('bluebear.admin.application')['max_per_page'];
+            $generalConfiguration = $container->getParameter('bluebear.admin.application');
+
+            if (!array_key_exists('max_per_page', $generalConfiguration)) {
+                $generalConfiguration['max_per_page'] = 25;
+            }
+            $adminConfiguration['max_per_page'] = $generalConfiguration['max_per_page'];
         }
         // general values
         $this->controllerName = $adminConfiguration['controller'];

@@ -272,7 +272,7 @@ class AdminFactory
     protected function getDefaultApplicationConfiguration()
     {
         return [
-            'layout' => 'BlueBearAdminBundle::layout.html.twig',
+            'layout' => 'BlueBearAdminBundle::admin.layout.html.twig',
         ];
     }
 }

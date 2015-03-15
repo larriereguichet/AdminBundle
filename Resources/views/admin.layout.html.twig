@@ -11,8 +11,8 @@
     <meta name="keywords" content="in progress">
     <meta name="author" content="in progress">
     {% block head %}{% endblock %}
-    {% block stylesheets %}{% endblock %}
     {% include "BlueBearAdminBundle:Layout:head.html.twig" %}
+    {% block stylesheets %}{% endblock %}
 </head>
 <body>
 <!-- flash messages -->
@@ -32,6 +32,7 @@
     {% block topMenu %}{% endblock %}
 {% endif %}
 
+{% block container %}
 <div class="container">
     <div class="row-fluid">
         <div class="col-md-2">
@@ -42,6 +43,7 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
 <footer>
     {% javascripts
