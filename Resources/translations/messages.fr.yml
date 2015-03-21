@@ -4,5 +4,5 @@ bluebear.admin.cancel: Cancel
 
 # deletion
 bluebear.admin.delete: Delete
-bluebear.admin.deleting: You are about to delete this "%entity%" (id: %id%). Are you sure ?
+bluebear.admin.deleting: You are about to delete this entity "%entity%" (id: %id%). Are you sure ?
 bluebear.admin.deleted: Entity "%entity%" has been succesfully removed

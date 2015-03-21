@@ -113,7 +113,7 @@ class Admin
     {
         if (!in_array($actionName, array_keys($this->configuration->actions))) {
             throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$this->name}\" (available action are: \""
-            . implode('", "', array_keys($this->configuration->actions)) . "\")");
+                . implode('", "', array_keys($this->configuration->actions)) . "\")");
         }
         return 'bluebear_admin_' . $this->underscore($this->getName()) . '_' . $actionName;
     }
@@ -198,6 +198,22 @@ class Admin
             throw new Exception("Entity not found in admin \"{$this->getName()}\". Try call method findEntity or createEntity first.");
         }
         return $this->entity;
+    }
+
+    public function getEntityLabel()
+    {
+        $label = '';
+
+        if (method_exists($this->entity, 'getLabel')) {
+            $label = $this->entity->getLabel();
+        } else if (method_exists($this->entity, 'getTitle')) {
+            $label = $this->entity->getTitle();
+        } else if (method_exists($this->entity, 'getName')) {
+            $label = $this->entity->getName();
+        } else if (method_exists($this->entity, '__toString')) {
+            $label = $this->entity->__toString();
+        }
+        return $label;
     }
 
     public function setEntity($entity)

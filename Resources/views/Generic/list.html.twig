@@ -1,7 +1,5 @@
 {% extends config.layout %}
 
-{% use "BlueBearAdminBundle:Form:fields.html.twig" %}
-
 {% block left %}
     <ul class="nav nav-pills nav-stacked">
         {% if admin.hasAction('list') %}
@@ -16,6 +14,6 @@
 {% block content %}
     <h1>{{ admin.currentAction.title }}</h1>
     <div class="pencils-list">
-        {{ block('admin_list') }}
+        {{ AdminBundle.adminList(admin) }}
     </div>
 {% endblock %}

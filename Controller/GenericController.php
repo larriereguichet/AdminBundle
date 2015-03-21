@@ -2,6 +2,7 @@
 
 namespace BlueBear\AdminBundle\Controller;
 
+use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\AdminBundle\Admin\AdminFactory;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use Doctrine\ORM\EntityManager;
@@ -25,8 +26,9 @@ class GenericController extends Controller
      */
     public function listAction(Request $request)
     {
+        /** @var Admin $admin */
         $admin = $this->get('bluebear.admin.factory')->getAdminFromRequest($request);
-        // TODO adding pagination and filters
+        // TODO add column filters
         // check permissions and actions
         $this->forward404Unless($admin->isActionGranted($admin->getCurrentAction()->getName(), $this->getUser()->getRoles()),
             'User not allowed for action ' . $admin->getCurrentAction()->getName());
@@ -47,7 +49,7 @@ class GenericController extends Controller
      */
     public function createAction(Request $request)
     {
-        // get admin from request parameters
+        /** @var Admin $admin */
         $admin = $this->get('bluebear.admin.factory')->getAdminFromRequest($request);
         // create entity
         $entity = $admin->createEntity();
@@ -76,7 +78,7 @@ class GenericController extends Controller
      */
     public function editAction(Request $request)
     {
-        // get admin from request parameters
+        /** @var Admin $admin */
         $admin = $this->get('bluebear.admin.factory')->getAdminFromRequest($request);
         // find entity
         $admin->findEntity('id', $request->get('id'));
@@ -84,12 +86,14 @@ class GenericController extends Controller
         $form = $this->createForm($admin->getFormType(), $admin->getEntity());
         $form->handleRequest($request);
 
+
+
         if ($form->isValid()) {
             // save entity
             $admin->saveEntity();
             // inform user everything went fine
             $this->setMessage('bluebear.admin.saved', 'info', [
-                '%entity%' => $admin->getEntity()->getLabel()
+                '%entity%' => $admin->getEntityLabel()
             ]);
 
             if ($request->request->get('submit') == 'save') {
@@ -116,9 +120,11 @@ class GenericController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        // get admin from request parameters
+        /** @var Admin $admin */
         $admin = $this->get('bluebear.admin.factory')->getAdminFromRequest($request);
+        // find entity
         $admin->findEntity('id', $request->get('id'));
+        // create form to avoid deletion by url
         $form = $this->createForm('delete', $admin->getEntity());
         $form->handleRequest($request);
 
@@ -126,7 +132,7 @@ class GenericController extends Controller
             $admin->deleteEntity();
             // inform user everything went fine
             $this->setMessage('bluebear.admin.deleted', 'info', [
-                '%entity%' => $admin->getEntity()->getLabel()
+                '%entity%' => $admin->getEntityLabel()
             ]);
             // redirect to list
             return $this->redirect($this->generateUrl($admin->generateRouteName('list')));

@@ -1,0 +1,44 @@
+{# generic list block (requires an Admin object) #}
+{% macro adminList(admin) %}
+    {% if admin.entities|length > 0 %}
+        {% set fields = admin.currentAction.fields %}
+        {% spaceless %}
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-sort">
+                    <thead>
+                    <tr>
+                        {% for field in fields %}
+                            <th data-sort="string">{{ field.name | capitalize }}</th>
+                        {% endfor %}
+                        <th>{# empty column for actions #}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for entity in admin.entities %}
+                        <tr>
+                            {% for field in fields %}
+                                <td>{{ attribute(entity, field.name) }}</td>
+                            {% endfor %}
+                            <td>
+                                <a href="{{ path(admin.generateRouteName('edit'), {id: entity.id}) }}"
+                                   class="btn btn-sm">edit</a>
+                                <a href="{{ path(admin.generateRouteName('delete'), {id: entity.id}) }}"
+                                   class="item-delete btn btn-sm">delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if admin.pager.haveToPaginate %}
+                    <div class="pagerfanta">
+                        {{ pagerfanta(admin.pager, 'twitter_bootstrap3', {page: admin.pager.currentPage}) }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endspaceless %}
+    {% else %}
+        No record yet
+    {% endif %}
+{% endmacro %}
