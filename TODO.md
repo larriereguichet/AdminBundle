@@ -3,6 +3,7 @@ v0.2:
 - add filters
 - add column sort
 - handle permissions
+- add exporters
 
 
 v0.3:
