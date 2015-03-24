@@ -62,8 +62,15 @@ class GenericController extends Controller
             $admin->saveEntity();
             // inform user everything went fine
             $this->setMessage('bluebear.admin.' . $admin->getName() . '.saved');
-            // redirect to list
-            return $this->redirect($this->generateUrl($admin->generateRouteName('list')));
+
+            if ($request->request->get('submit') == 'save') {
+                return $this->redirect($this->generateUrl($admin->generateRouteName('edit'), [
+                    'id' => $admin->getEntity()->getId()
+                ]));
+            } else {
+                // redirect to list
+                return $this->redirect($this->generateUrl($admin->generateRouteName('list')));
+            }
         }
         return [
             'admin' => $admin,
@@ -86,8 +93,6 @@ class GenericController extends Controller
         $form = $this->createForm($admin->getFormType(), $admin->getEntity());
         $form->handleRequest($request);
 
-
-
         if ($form->isValid()) {
             // save entity
             $admin->saveEntity();
@@ -95,7 +100,6 @@ class GenericController extends Controller
             $this->setMessage('bluebear.admin.saved', 'info', [
                 '%entity%' => $admin->getEntityLabel()
             ]);
-
             if ($request->request->get('submit') == 'save') {
                 return $this->redirect($this->generateUrl($admin->generateRouteName('edit'), [
                     'id' => $admin->getEntity()->getId()
