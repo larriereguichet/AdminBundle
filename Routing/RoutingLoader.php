@@ -28,7 +28,6 @@ class RoutingLoader implements LoaderInterface
             throw new RuntimeException('Do not add the "extra" loader twice');
         }
         $routes = new RouteCollection();
-        //$admins = $this->getContainer()->getParameter('bluebear.admins');
         $admins = $this->getContainer()->get('bluebear.admin.factory')->getAdmins();
         // creating a route by admin and action
         /** @var Admin $admin */
@@ -47,6 +46,21 @@ class RoutingLoader implements LoaderInterface
         return $routes;
     }
 
+    public function supports($resource, $type = null)
+    {
+        return 'extra' === $type;
+    }
+
+    public function getResolver()
+    {
+        // needed, but can be blank, unless you want to load other resources
+        // and if you do, using the Loader base class is easier (see below)
+    }
+
+    public function setResolver(LoaderResolverInterface $resolver)
+    {
+        // same as above
+    }
 
     protected function loadRouteForAction(Admin $admin, Action $action, RouteCollection $routeCollection)
     {
@@ -72,21 +86,5 @@ class RoutingLoader implements LoaderInterface
         $action->setRoute($routeName);
         // adding route to symfony collection
         $routeCollection->add($routeName, $route);
-    }
-
-    public function supports($resource, $type = null)
-    {
-        return 'extra' === $type;
-    }
-
-    public function getResolver()
-    {
-        // needed, but can be blank, unless you want to load other resources
-        // and if you do, using the Loader base class is easier (see below)
-    }
-
-    public function setResolver(LoaderResolverInterface $resolver)
-    {
-        // same as above
     }
 }
