@@ -27,10 +27,12 @@
                     <a href="{{ path(admin.action('list').route) }}"
                        class="btn"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
                         {{ 'bluebear.admin.cancel' | trans }}</a>
-                    <a href="{{ path(admin.action('delete').route, {id: admin.entity.id}) }}"
-                       class="btn btn-danger">{{ 'bluebear.admin.delete' | trans }}
-                        <i class="fa fa-remove"></i>
-                    </a>
+                    {% if form.vars.value.id %}
+                        <a href="{{ path(admin.action('delete').route, {id: admin.entity.id}) }}"
+                           class="btn btn-danger">{{ 'bluebear.admin.delete' | trans }}
+                            <i class="fa fa-remove"></i>
+                        </a>
+                    {% endif %}
                     <button type="submit" value="save" name="submit"
                             class="btn btn-default">{{ 'bluebear.admin.save' | trans }}
                         <i class="fa fa-floppy-o"></i></button>
@@ -43,4 +45,3 @@
         </form>
     </div>
 {% endblock %}
-
