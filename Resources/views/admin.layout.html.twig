@@ -17,16 +17,7 @@
 <body>
 <!-- flash messages -->
 <div class="alert-container container">
-    {% block notice %}
-        {% for notice_level in ['success', 'error', 'info', 'warning'] %}
-            {% for flash in app.session.flashbag.get(notice_level) %}
-                {% set notice_level = (notice_level == 'error') ? 'danger' : notice_level %}
-                <div class="alert {{ 'alert-' ~ notice_level }}">
-                    {{ flash }}
-                </div>
-            {% endfor %}
-        {% endfor %}
-    {% endblock %}
+    {% include "BlueBearAdminBundle:Layout:flash_messages.html.twig" %}
 </div>
 
 {% if app.user %}
