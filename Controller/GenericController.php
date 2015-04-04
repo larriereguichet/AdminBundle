@@ -5,12 +5,16 @@ namespace BlueBear\AdminBundle\Controller;
 use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\AdminBundle\Admin\AdminFactory;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
-use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class GenericController
+ *
+ * Generic CRUD controller
+ */
 class GenericController extends Controller
 {
     use ControllerTrait;
@@ -20,6 +24,8 @@ class GenericController extends Controller
     protected $formType;
 
     /**
+     * Generic list action
+     *
      * @Template()
      * @param Request $request
      * @return array
@@ -27,14 +33,15 @@ class GenericController extends Controller
     public function listAction(Request $request)
     {
         /** @var Admin $admin */
-        $admin = $this->get('bluebear.admin.factory')->getAdminFromRequest($request);
+        $admin = $this
+            ->get('bluebear.admin.factory')
+            ->getAdminFromRequest($request);
         // TODO add column filters
         // check permissions and actions
         $this->forward404Unless($admin->isActionGranted($admin->getCurrentAction()->getName(), $this->getUser()->getRoles()),
             'User not allowed for action ' . $admin->getCurrentAction()->getName());
         // set entities list
-        /** @var EntityManager $test */
-        $admin->findEntities($request->get('page', 1));
+        $admin->findEntities($request->get('page', 1), $request->get('sort', null), $request->get('order', 'ASC'));
 
         return [
             'admin' => $admin,

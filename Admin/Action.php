@@ -69,6 +69,17 @@ class Action
     }
 
     /**
+     * Return true if action has a field named $fieldName
+     *
+     * @param $fieldName
+     * @return bool
+     */
+    public function hasField($fieldName)
+    {
+        return array_key_exists($fieldName, $this->fields);
+    }
+
+    /**
      * @param Field[] $fields
      */
     public function setFields($fields)
@@ -78,7 +89,7 @@ class Action
 
     public function addField(Field $field)
     {
-        $this->fields[] = $field;
+        $this->fields[$field->getName()] = $field;
     }
 
     /**

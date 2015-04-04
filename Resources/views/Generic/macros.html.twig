@@ -9,7 +9,12 @@
                     <thead>
                     <tr>
                         {% for field in fields %}
-                            <th data-sort="string">{{ field.name | capitalize }}</th>
+                            <th>
+                                <a href="{{ getSortColumnUrl(app.request, field.name) }}">
+                                    {{ field.title | capitalize }}
+                                    <i class="{{ getSortColumnIconClass(app.request.get('order'), field.name, app.request.get('sort')) }}"></i>
+                                </a>
+                            </th>
                         {% endfor %}
                         <th>{# empty column for actions #}</th>
                     </tr>
@@ -21,10 +26,8 @@
                                 <td>{{ attribute(entity, field.name) }}</td>
                             {% endfor %}
                             <td>
-                                <a href="{{ path(admin.generateRouteName('edit'), {id: entity.id}) }}"
-                                   class="btn btn-sm">edit</a>
-                                <a href="{{ path(admin.generateRouteName('delete'), {id: entity.id}) }}"
-                                   class="item-delete btn btn-sm">delete</a>
+                                <a href="{{ path(admin.generateRouteName('edit'), {id: entity.id}) }}">edit</a>
+                                <a href="{{ path(admin.generateRouteName('delete'), {id: entity.id}) }}">delete</a>
                             </td>
                         </tr>
                     {% endfor %}

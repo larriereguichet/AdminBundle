@@ -7,6 +7,8 @@ parameters:
     bluebear.admin.routing: BlueBear\AdminBundle\Routing\RoutingLoader
     # admin factory
     bluebear.admin.factory: BlueBear\AdminBundle\Admin\AdminFactory
+    # twig
+    bluebear.admin.twig: BlueBear\AdminBundle\Twig\AdminExtension
 
 services:
     # template listener
@@ -36,3 +38,11 @@ services:
         class: %bluebear.admin.factory%
         arguments: [@service_container]
         scope: container
+
+    # twig
+    bluebear.admin.twig:
+        class: %bluebear.admin.twig%
+        tags:
+            - {name: twig.extension}
+        calls:
+            - [setRouter, [@router]]

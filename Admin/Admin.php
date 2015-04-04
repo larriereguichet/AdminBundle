@@ -96,10 +96,6 @@ class Admin
         $this->formType = $adminConfig->formType;
         $this->entities = new ArrayCollection();
         $this->customManagerActions = [];
-        // pagination
-        $adapter = new DoctrineORMAdapter($this->getManager()->getFindAllQueryBuilder());
-        // create paginator
-        $this->pager = new Pagerfanta($adapter);
     }
 
     /**
@@ -230,8 +226,21 @@ class Admin
         return $this->entity;
     }
 
-    public function findEntities($page = 1)
+    public function findEntities($page = 1, $sort = null, $order = 'ASC')
     {
+        if ($sort) {
+            // check if sort field is allowed for current action
+            if (!$this->getCurrentAction()->hasField($sort)) {
+                throw new Exception("Invalid field \"{$sort}\" for current action \"{$this->getCurrentAction()->getName()}\"");
+            }
+            if (!in_array($order, ['ASC', 'DESC'])) {
+                throw new Exception("Invalid order \"{$order}\"");
+            }
+        }
+        // create adapter from query builder
+        $adapter = new DoctrineORMAdapter($this->getManager()->getFindAllQueryBuilder($sort, $order));
+        // create pager
+        $this->pager = new Pagerfanta($adapter);
         $this->pager->setMaxPerPage($this->configuration->maxPerPage);
         $this->pager->setCurrentPage($page);
         $this->entities = $this->pager->getCurrentPageResults();

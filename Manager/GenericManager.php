@@ -102,11 +102,20 @@ class GenericManager
     }
 
     /**
+     * Return query builder to find all entities, with optional order
+     *
+     * @param string $sort
+     * @param string $order
      * @return QueryBuilder
      */
-    public function getFindAllQueryBuilder()
+    public function getFindAllQueryBuilder($sort = null, $order = 'ASC')
     {
-        return $this->entityRepository->createQueryBuilder('entity');
+        $queryBuilder = $this->entityRepository->createQueryBuilder('entity');
+
+        if ($sort) {
+            $queryBuilder->orderBy('entity.' . $sort, $order);
+        }
+        return $queryBuilder;
     }
 
     public function getCountQueryBuilderCallback()
