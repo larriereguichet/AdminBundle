@@ -185,6 +185,8 @@ class Admin
     }
 
     /**
+     * Return entity for current admin. If entity does not exist, it throws an exception
+     *
      * @return mixed
      * @throws Exception
      */
@@ -217,6 +219,14 @@ class Admin
         $this->entity = $entity;
     }
 
+    /**
+     * Find a entity by one of its field
+     *
+     * @param $field
+     * @param $value
+     * @return null|object
+     * @throws Exception
+     */
     public function findEntity($field, $value)
     {
         $this->entity = $this->getManager()->findOneBy([
@@ -226,6 +236,15 @@ class Admin
         return $this->entity;
     }
 
+    /**
+     * Find entities paginated and sorted
+     *
+     * @param int $page
+     * @param null $sort
+     * @param string $order
+     * @return array|ArrayCollection|\Traversable
+     * @throws Exception
+     */
     public function findEntities($page = 1, $sort = null, $order = 'ASC')
     {
         if ($sort) {
@@ -268,19 +287,19 @@ class Admin
         $this->getManager()->delete($this->entity);
     }
 
+    protected function checkEntity()
+    {
+        if (!$this->entity) {
+            throw new Exception("Entity not found in admin \"{$this->getName()}\". Try call method findEntity or createEntity first.");
+        }
+    }
+
     /**
      * @return GenericManager
      */
     public function getManager()
     {
         return $this->manager;
-    }
-
-    protected function checkEntity()
-    {
-        if (!$this->entity) {
-            throw new Exception("Entity not found in admin \"{$this->getName()}\". Try call method findEntity or createEntity first.");
-        }
     }
 
     /**

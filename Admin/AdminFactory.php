@@ -273,6 +273,7 @@ class AdminFactory
     {
         return [
             'layout' => 'BlueBearAdminBundle::admin.layout.html.twig',
+            'date_format' => 'd/m/Y'
         ];
     }
 }

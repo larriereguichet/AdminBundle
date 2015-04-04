@@ -44,7 +44,6 @@ trait ActionTrait
         return $isGranted;
     }
 
-
     /**
      * @param Request $request
      * @return Action

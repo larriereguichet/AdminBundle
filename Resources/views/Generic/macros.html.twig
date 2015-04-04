@@ -23,7 +23,7 @@
                     {% for entity in admin.entities %}
                         <tr>
                             {% for field in fields %}
-                                <td>{{ attribute(entity, field.name) }}</td>
+                                <td>{{ field(field, entity, config) | trans }}</td>
                             {% endfor %}
                             <td>
                                 <a href="{{ path(admin.generateRouteName('edit'), {id: entity.id}) }}">edit</a>

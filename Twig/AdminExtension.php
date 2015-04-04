@@ -1,6 +1,13 @@
 <?php
 
 namespace BlueBear\AdminBundle\Twig;
+use BlueBear\AdminBundle\Admin\Admin;
+use BlueBear\AdminBundle\Admin\Application\ApplicationConfiguration;
+use BlueBear\AdminBundle\Admin\Field;
+use DateTime;
+use Exception;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Twig_Extension;
 use Twig_SimpleFunction;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * Admin utils functions for twig
  */
-class AdminExtension extends \Twig_Extension
+class AdminExtension extends Twig_Extension
 {
     /**
      * @var RouterInterface
@@ -58,11 +65,32 @@ class AdminExtension extends \Twig_Extension
         return $class;
     }
 
+    /**
+     * @param Field $field
+     * @param $entity
+     * @param $applicationConfiguration
+     * @return mixed
+     */
+    public function field(Field $field, $entity, ApplicationConfiguration $applicationConfiguration)
+    {
+        $accessor = PropertyAccess::createPropertyAccessorBuilder()
+            ->enableMagicCall()
+            ->getPropertyAccessor();
+        $value = $accessor->getValue($entity, $field->getName());
+
+
+        if ($value instanceof DateTime) {
+            $value = $value->format($applicationConfiguration->dateFormat);
+        }
+        return $value;
+    }
+
     public function getFunctions()
     {
         return [
             new Twig_SimpleFunction('getSortColumnUrl', [$this, 'getSortColumnUrl']),
-            new Twig_SimpleFunction('getSortColumnIconClass', [$this, 'getSortColumnIconClass'])
+            new Twig_SimpleFunction('getSortColumnIconClass', [$this, 'getSortColumnIconClass']),
+            new Twig_SimpleFunction('field', [$this, 'field'])
         ];
     }
 
