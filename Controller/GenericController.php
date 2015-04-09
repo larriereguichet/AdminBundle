@@ -5,6 +5,8 @@ namespace BlueBear\AdminBundle\Controller;
 use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\AdminBundle\Admin\AdminFactory;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use EE\DataExporterBundle\Service\DataExporter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -36,13 +38,14 @@ class GenericController extends Controller
         $admin = $this
             ->get('bluebear.admin.factory')
             ->getAdminFromRequest($request);
-        // TODO add column filters
-        // check permissions and actions
-        $this->forward404Unless($admin->isActionGranted($admin->getCurrentAction()->getName(), $this->getUser()->getRoles()),
-            'User not allowed for action ' . $admin->getCurrentAction()->getName());
+        // check permissions
+        $this->forward404IfNotAllowed($admin);
         // set entities list
         $admin->findEntities($request->get('page', 1), $request->get('sort', null), $request->get('order', 'ASC'));
 
+        if ($request->get('export', false)) {
+            return $this->exportEntities($admin, $request->get('export'));
+        }
         return [
             'admin' => $admin,
             'action' => $admin->getCurrentAction()
@@ -50,6 +53,8 @@ class GenericController extends Controller
     }
 
     /**
+     * Generic create action
+     *
      * @Template("BlueBearAdminBundle:Generic:edit.html.twig")
      * @param Request $request
      * @return array
@@ -57,7 +62,11 @@ class GenericController extends Controller
     public function createAction(Request $request)
     {
         /** @var Admin $admin */
-        $admin = $this->get('bluebear.admin.factory')->getAdminFromRequest($request);
+        $admin = $this
+            ->get('bluebear.admin.factory')
+            ->getAdminFromRequest($request);
+        // check permissions
+        $this->forward404IfNotAllowed($admin);
         // create entity
         $entity = $admin->createEntity();
         // create form
@@ -94,6 +103,8 @@ class GenericController extends Controller
     {
         /** @var Admin $admin */
         $admin = $this->get('bluebear.admin.factory')->getAdminFromRequest($request);
+        // check permissions
+        $this->forward404IfNotAllowed($admin);
         // find entity
         $admin->findEntity('id', $request->get('id'));
         // create form
@@ -133,6 +144,8 @@ class GenericController extends Controller
     {
         /** @var Admin $admin */
         $admin = $this->get('bluebear.admin.factory')->getAdminFromRequest($request);
+        // check permissions
+        $this->forward404IfNotAllowed($admin);
         // find entity
         $admin->findEntity('id', $request->get('id'));
         // create form to avoid deletion by url
@@ -152,6 +165,57 @@ class GenericController extends Controller
             'admin' => $admin,
             'form' => $form->createView()
         ];
+    }
+
+    protected function exportEntities(Admin $admin, $exportType)
+    {
+        // check allowed export types
+        $this->forward404Unless(in_array($exportType, ['json', 'html', 'xls', 'csv', 'xml']));
+        /** @var DataExporter $exporter */
+        $exporter = $this->get('ee.dataexporter');
+
+        /** @var ClassMetadata $metadata */
+        $metadata = $this->getEntityManager()->getClassMetadata($admin->getRepository()->getClassName());
+        $exportColumns = [];
+        $fields = $metadata->getFieldNames();
+        $association = $metadata->getAssociationMappings();
+        $hooks = [];
+
+        foreach ($fields as $fieldName) {
+            $fieldMetadata = $metadata->getFieldMapping($fieldName);
+
+            if ($fieldMetadata['type'] == 'simple_array' || $fieldMetadata['type'] == 'array') {
+                //unset($exportColumns[$fieldName]);
+            } else {
+                $exportColumns[$fieldName] = $fieldName;
+            }
+        }
+        foreach ($association as $fieldName => $mapping) {
+            //$exportColumns[$fieldName . 'id'] = $fieldName;
+        }
+        //var_dump($exportColumns);
+        $exporter
+            ->setOptions($exportType, [
+            'fileName' => '/home/afrezet/test.csv'
+            ])
+            ->setColumns($exportColumns)
+            ->setData($admin->getEntities());
+        foreach ($hooks as $hookName => $hook) {
+            $exporter->addHook($hook, $hookName);
+        }
+        return $exporter->render();
+    }
+
+    /**
+     * Forward to 404 if user is not allowed by configuration for an action
+     *
+     * @param Admin $admin
+     */
+    protected function forward404IfNotAllowed(Admin $admin)
+    {
+        // check permissions and actions
+        $this->forward404Unless($admin->isActionGranted($admin->getCurrentAction()->getName(), $this->getUser()->getRoles()),
+            'User not allowed for action "' . $admin->getCurrentAction()->getName() . '"');
     }
 
     /**

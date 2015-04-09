@@ -29,6 +29,13 @@ class Action
     protected $parameters;
 
     /**
+     * Export types
+     *
+     * @var array
+     */
+    protected $export = [];
+
+    /**
      * @return string
      */
     public function getName()
@@ -138,5 +145,21 @@ class Action
     public function setParameters($parameters)
     {
         $this->parameters = $parameters;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExport()
+    {
+        return $this->export;
+    }
+
+    /**
+     * @param array $export
+     */
+    public function setExport($export)
+    {
+        $this->export = $export;
     }
 }

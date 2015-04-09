@@ -118,7 +118,7 @@ class AdminFactory
         $admin = new Admin($adminName, $entityRepository, $entityManager, $adminConfig);
         // actions are optional
         if (!$adminConfig->actions) {
-            $adminConfig->actions = $this->getDefaultActions();
+            $adminConfig->actions = $this->getDefaultActions($admin);
         }
         // adding actions
         foreach ($adminConfig->actions as $actionName => $actionConfig) {
@@ -154,30 +154,18 @@ class AdminFactory
      */
     protected function createActionFromConfig($actionName, $actionConfig, Admin $admin)
     {
-        // test each key to keep granularity in configuration
-        if (array_key_exists('title', $actionConfig)) {
-            $title = $actionConfig['title'];
-        } else {
-            // default title
-            $title = $this->getDefaultActionTitle($admin->getName(), $actionName);
+        if (!array_key_exists($actionName, $actionConfig)) {
+            $actionConfig[$actionName] = [];
         }
-        if (array_key_exists('permissions', $actionConfig)) {
-            $permissions = $actionConfig['permissions'];
-        } else {
-            $permissions = $this->getDefaultPermissions();
-        }
-        if (array_key_exists('fields', $actionConfig)) {
-            $fields = $actionConfig['fields'];
-        } else {
-            $fields = $this->getDefaultFields();
-        }
+        $actionConfig[$actionName] = array_merge_recursive($this->getDefaultActions($admin)[$actionName], $actionConfig[$actionName]);
         $action = new Action();
         $action->setName($actionName);
-        $action->setTitle($title);
-        $action->setPermissions($permissions);
+        $action->setTitle($actionConfig[$actionName]['title']);
+        $action->setPermissions($actionConfig[$actionName]['permissions']);
         $action->setRoute($admin->generateRouteName($action->getName()));
+        $action->setExport($actionConfig[$actionName]['export']);
         // adding items to actions
-        foreach ($fields as $fieldName => $fieldConfig) {
+        foreach ($actionConfig[$actionName]['fields'] as $fieldName => $fieldConfig) {
             $field = new Field();
             $field->setName($fieldName);
             $field->setTitle($this->inflectString($fieldName));
@@ -244,20 +232,39 @@ class AdminFactory
         return $default;
     }
 
-    protected function getDefaultActions()
+    /**
+     * Return default actions configuration (list has exports, permissions are ROLE_ADMIN)
+     *
+     * @param Admin $admin
+     * @return array
+     */
+    protected function getDefaultActions(Admin $admin)
     {
         return [
-            'list' => [],
-            'create' => [],
-            'edit' => [],
-            'delete' => []
-        ];
-    }
-
-    protected function getDefaultPermissions()
-    {
-        return [
-            'ROLE_USER'
+            'list' => [
+                'title' => $this->getDefaultActionTitle($admin->getName(), 'list'),
+                'fields' => $this->getDefaultFields(),
+                'export' => ['json', 'xml', 'xls', 'csv', 'html'],
+                'permissions' => ['ROLE_ADMIN']
+            ],
+            'create' => [
+                'title' => $this->getDefaultActionTitle($admin->getName(), 'create'),
+                'fields' => $this->getDefaultFields(),
+                'permissions' => ['ROLE_ADMIN'],
+                'export' => []
+            ],
+            'edit' => [
+                'title' => $this->getDefaultActionTitle($admin->getName(), 'edit'),
+                'permissions' => ['ROLE_ADMIN'],
+                'fields' => $this->getDefaultFields(),
+                'export' => []
+            ],
+            'delete' => [
+                'title' => $this->getDefaultActionTitle($admin->getName(), 'delete'),
+                'fields' => $this->getDefaultFields(),
+                'permissions' => ['ROLE_ADMIN'],
+                'export' => []
+            ],
         ];
     }
 

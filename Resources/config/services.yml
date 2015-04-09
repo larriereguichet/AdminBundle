@@ -37,7 +37,6 @@ services:
     bluebear.admin.factory:
         class: %bluebear.admin.factory%
         arguments: [@service_container]
-        scope: container
 
     # twig
     bluebear.admin.twig:
