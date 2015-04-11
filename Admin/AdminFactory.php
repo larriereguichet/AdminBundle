@@ -3,6 +3,7 @@
 namespace BlueBear\AdminBundle\Admin;
 
 use BlueBear\AdminBundle\Admin\Application\ApplicationConfiguration;
+use BlueBear\AdminBundle\Event\AdminFactoryEvent;
 use BlueBear\AdminBundle\Manager\GenericManager;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
@@ -10,6 +11,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,6 +21,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminFactory
 {
+    const ADMIN_CREATION = 'bluebear.admin.adminCreation';
+
     use StringUtilsTrait, ContainerTrait;
 
     protected $admins = [];
@@ -37,6 +41,13 @@ class AdminFactory
     {
         $this->container = $container;
         $admins = $this->getContainer()->getParameter('bluebear.admins');
+        // dispatch an event with admins configurations to allow dynamic admin creation
+        $event = new AdminFactoryEvent();
+        $event->setAdminsConfiguration($admins);
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container->get('event_dispatcher');
+        $eventDispatcher->dispatch(self::ADMIN_CREATION, $event);
+
         // creating configured admin
         foreach ($admins as $adminName => $adminConfig) {
             $this->createAdminFromConfig($adminName, $adminConfig);
@@ -154,18 +165,21 @@ class AdminFactory
      */
     protected function createActionFromConfig($actionName, $actionConfig, Admin $admin)
     {
-        if (!array_key_exists($actionName, $actionConfig)) {
-            $actionConfig[$actionName] = [];
+        $defaultConfiguration = $this->getDefaultActions($admin)[$actionName];
+
+        // fields configuration should not be merge if provided
+        if (array_key_exists('fields', $actionConfig) && is_array($actionConfig['fields'])) {
+            $defaultConfiguration = $actionConfig['fields'];
         }
-        $actionConfig[$actionName] = array_merge_recursive($this->getDefaultActions($admin)[$actionName], $actionConfig[$actionName]);
+        $actionConfig = array_merge_recursive($defaultConfiguration, $actionConfig);
         $action = new Action();
         $action->setName($actionName);
-        $action->setTitle($actionConfig[$actionName]['title']);
-        $action->setPermissions($actionConfig[$actionName]['permissions']);
+        $action->setTitle($actionConfig['title']);
+        $action->setPermissions($actionConfig['permissions']);
         $action->setRoute($admin->generateRouteName($action->getName()));
-        $action->setExport($actionConfig[$actionName]['export']);
+        $action->setExport($actionConfig['export']);
         // adding items to actions
-        foreach ($actionConfig[$actionName]['fields'] as $fieldName => $fieldConfig) {
+        foreach ($actionConfig['fields'] as $fieldName => $fieldConfig) {
             $field = new Field();
             $field->setName($fieldName);
             $field->setTitle($this->inflectString($fieldName));
