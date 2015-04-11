@@ -169,9 +169,9 @@ class AdminFactory
 
         // fields configuration should not be merge if provided
         if (array_key_exists('fields', $actionConfig) && is_array($actionConfig['fields'])) {
-            $defaultConfiguration = $actionConfig['fields'];
+            $defaultConfiguration['fields'] = $actionConfig['fields'];
         }
-        $actionConfig = array_merge_recursive($defaultConfiguration, $actionConfig);
+        $actionConfig = array_merge($defaultConfiguration, $actionConfig);
         $action = new Action();
         $action->setName($actionName);
         $action->setTitle($actionConfig['title']);
