@@ -3,6 +3,8 @@ x add column sort
 - handle basic permissions
 x add dynamic admin or config by event
 - add exporters
+- basic documentation
+- fixing bug in list with array fields (doctrine "array" type")
 
 v0.3:
 - add possibility to have tab in generated forms
