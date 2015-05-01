@@ -28,7 +28,7 @@
         "php": ">=5.4",
         "symfony/symfony": "2.6.*",
         "sensio/framework-extra-bundle": "~3.0",
-        "bluebear/basebundle": "dev-master",
+        "bluebear/basebundle": "dev-0.2-dev",
         "white-october/pagerfanta-bundle": "~1.0"
     },
     "autoload": {
