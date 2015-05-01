@@ -3,6 +3,7 @@
 namespace BlueBear\AdminBundle\Admin;
 
 use BlueBear\AdminBundle\Admin\Application\ApplicationConfiguration;
+use BlueBear\AdminBundle\Event\AdminFactoryEvent;
 use BlueBear\AdminBundle\Manager\GenericManager;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
@@ -10,6 +11,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,6 +21,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminFactory
 {
+    const ADMIN_CREATION = 'bluebear.admin.adminCreation';
+
     use StringUtilsTrait, ContainerTrait;
 
     protected $admins = [];
@@ -37,6 +41,13 @@ class AdminFactory
     {
         $this->container = $container;
         $admins = $this->getContainer()->getParameter('bluebear.admins');
+        // dispatch an event with admins configurations to allow dynamic admin creation
+        $event = new AdminFactoryEvent();
+        $event->setAdminsConfiguration($admins);
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container->get('event_dispatcher');
+        $eventDispatcher->dispatch(self::ADMIN_CREATION, $event);
+
         // creating configured admin
         foreach ($admins as $adminName => $adminConfig) {
             $this->createAdminFromConfig($adminName, $adminConfig);
@@ -118,7 +129,7 @@ class AdminFactory
         $admin = new Admin($adminName, $entityRepository, $entityManager, $adminConfig);
         // actions are optional
         if (!$adminConfig->actions) {
-            $adminConfig->actions = $this->getDefaultActions();
+            $adminConfig->actions = $this->getDefaultActions($admin);
         }
         // adding actions
         foreach ($adminConfig->actions as $actionName => $actionConfig) {
@@ -154,30 +165,21 @@ class AdminFactory
      */
     protected function createActionFromConfig($actionName, $actionConfig, Admin $admin)
     {
-        // test each key to keep granularity in configuration
-        if (array_key_exists('title', $actionConfig)) {
-            $title = $actionConfig['title'];
-        } else {
-            // default title
-            $title = $this->getDefaultActionTitle($admin->getName(), $actionName);
+        $defaultConfiguration = $this->getDefaultActions($admin)[$actionName];
+
+        // fields configuration should not be merge if provided
+        if (array_key_exists('fields', $actionConfig) && is_array($actionConfig['fields'])) {
+            $defaultConfiguration['fields'] = $actionConfig['fields'];
         }
-        if (array_key_exists('permissions', $actionConfig)) {
-            $permissions = $actionConfig['permissions'];
-        } else {
-            $permissions = $this->getDefaultPermissions();
-        }
-        if (array_key_exists('fields', $actionConfig)) {
-            $fields = $actionConfig['fields'];
-        } else {
-            $fields = $this->getDefaultFields();
-        }
+        $actionConfig = array_merge($defaultConfiguration, $actionConfig);
         $action = new Action();
         $action->setName($actionName);
-        $action->setTitle($title);
-        $action->setPermissions($permissions);
+        $action->setTitle($actionConfig['title']);
+        $action->setPermissions($actionConfig['permissions']);
         $action->setRoute($admin->generateRouteName($action->getName()));
+        $action->setExport($actionConfig['export']);
         // adding items to actions
-        foreach ($fields as $fieldName => $fieldConfig) {
+        foreach ($actionConfig['fields'] as $fieldName => $fieldConfig) {
             $field = new Field();
             $field->setName($fieldName);
             $field->setTitle($this->inflectString($fieldName));
@@ -244,20 +246,39 @@ class AdminFactory
         return $default;
     }
 
-    protected function getDefaultActions()
+    /**
+     * Return default actions configuration (list has exports, permissions are ROLE_ADMIN)
+     *
+     * @param Admin $admin
+     * @return array
+     */
+    protected function getDefaultActions(Admin $admin)
     {
         return [
-            'list' => [],
-            'create' => [],
-            'edit' => [],
-            'delete' => []
-        ];
-    }
-
-    protected function getDefaultPermissions()
-    {
-        return [
-            'ROLE_USER'
+            'list' => [
+                'title' => $this->getDefaultActionTitle($admin->getName(), 'list'),
+                'fields' => $this->getDefaultFields(),
+                'export' => ['json', 'xml', 'xls', 'csv', 'html'],
+                'permissions' => ['ROLE_ADMIN']
+            ],
+            'create' => [
+                'title' => $this->getDefaultActionTitle($admin->getName(), 'create'),
+                'fields' => $this->getDefaultFields(),
+                'permissions' => ['ROLE_ADMIN'],
+                'export' => []
+            ],
+            'edit' => [
+                'title' => $this->getDefaultActionTitle($admin->getName(), 'edit'),
+                'permissions' => ['ROLE_ADMIN'],
+                'fields' => $this->getDefaultFields(),
+                'export' => []
+            ],
+            'delete' => [
+                'title' => $this->getDefaultActionTitle($admin->getName(), 'delete'),
+                'fields' => $this->getDefaultFields(),
+                'permissions' => ['ROLE_ADMIN'],
+                'export' => []
+            ],
         ];
     }
 

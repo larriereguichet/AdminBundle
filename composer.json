@@ -28,8 +28,12 @@
         "php": ">=5.4",
         "symfony/symfony": "2.6.*",
         "sensio/framework-extra-bundle": "~3.0",
+        "doctrine/doctrine-bundle": "~1.2",
+        "doctrine/data-fixtures": "*",
+        "doctrine/doctrine-fixtures-bundle": "*",
         "bluebear/basebundle": "dev-0.2-dev",
-        "white-october/pagerfanta-bundle": "~1.0"
+        "white-october/pagerfanta-bundle": "~1.0",
+        "ee/dataexporter-bundle": "*"
     },
     "autoload": {
         "psr-0": {

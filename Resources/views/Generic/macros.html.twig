@@ -32,6 +32,17 @@
                         </tr>
                     {% endfor %}
                     </tbody>
+                    {% if admin.currentAction.export | length %}
+                        <tfoot>
+                        <tr>
+                            <td colspan="{{ fields | length }}">
+                                {% for export in admin.currentAction.export %}
+                                    <a href="{{ appendToQueryString(app.request, 'export', export) }}">{{ export }}</a>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        </tfoot>
+                    {% endif %}
                 </table>
 
                 {% if admin.pager.haveToPaginate %}
