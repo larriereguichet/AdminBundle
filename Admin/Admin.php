@@ -99,6 +99,28 @@ class Admin
     }
 
     /**
+     * Generate a route for admin and action name
+     *
+     * @param $actionName
+     * @return string
+     * @throws Exception
+     */
+    public function generateRouteName($actionName)
+    {
+        if (!array_key_exists($actionName, $this->getConfiguration()->actions)) {
+            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$this->getName()}\" (available action are: \""
+                . implode('", "', array_keys($this->getConfiguration()->actions)) . "\")");
+        }
+        // get routing name pattern
+        $routingPattern = $this->configuration->routingNamePattern;
+        // replace admin and action name in pattern
+        $routeName = str_replace('{admin}', $this->underscore($this->getName()), $routingPattern);
+        $routeName = str_replace('{action}', $actionName, $routeName);
+
+        return $routeName;
+    }
+
+    /**
      * @return string
      */
     public function getName()
@@ -271,13 +293,6 @@ class Admin
         $this->getManager()->delete($this->entity);
     }
 
-    protected function checkEntity()
-    {
-        if (!$this->entity) {
-            throw new Exception("Entity not found in admin \"{$this->getName()}\". Try call method findEntity or createEntity first.");
-        }
-    }
-
     /**
      * @return GenericManager
      */
@@ -300,5 +315,12 @@ class Admin
     public function getPager()
     {
         return $this->pager;
+    }
+
+    protected function checkEntity()
+    {
+        if (!$this->entity) {
+            throw new Exception("Entity not found in admin \"{$this->getName()}\". Try call method findEntity or createEntity first.");
+        }
     }
 }

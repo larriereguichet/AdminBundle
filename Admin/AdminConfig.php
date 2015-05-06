@@ -18,20 +18,26 @@ class AdminConfig
 
     public $maxPerPage = 25;
 
+    public $routingNamePattern;
+
+    public $routingUrlPattern;
+
     public function hydrateFromConfiguration(array $adminConfiguration, ContainerInterface $container)
     {
+        $applicationConfiguration = $container->getParameter('bluebear.admin.application');
         // defaults values
         if (!array_key_exists('manager', $adminConfiguration)) {
             $adminConfiguration['manager'] = [];
         }
         if (!array_key_exists('max_per_page', $adminConfiguration)) {
-            // by default, we take the general value
-            $generalConfiguration = $container->getParameter('bluebear.admin.application');
-
-            if (!array_key_exists('max_per_page', $generalConfiguration)) {
+            if (!array_key_exists('max_per_page', $applicationConfiguration)) {
                 $generalConfiguration['max_per_page'] = 25;
             }
+            // by default, we take the general value
             $adminConfiguration['max_per_page'] = $generalConfiguration['max_per_page'];
+        }
+        if (array_key_exists('routing', $applicationConfiguration)) {
+            $adminConfiguration['routing'] = $applicationConfiguration['routing'];
         }
         // general values
         $this->controllerName = $adminConfiguration['controller'];
@@ -40,5 +46,7 @@ class AdminConfig
         $this->maxPerPage = $adminConfiguration['max_per_page'];
         $this->actions = $adminConfiguration['actions'];
         $this->managerConfiguration = $adminConfiguration['manager'];
+        $this->routingNamePattern = $adminConfiguration['routing']['name_pattern'];
+        $this->routingUrlPattern = $adminConfiguration['routing']['url_pattern'];
     }
 }

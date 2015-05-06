@@ -37,10 +37,12 @@ class RoutingLoader implements LoaderInterface
             // by default, actions are create, edit, delete, list
             /** @var Action $action */
             foreach ($actions as $action) {
+                var_dump($action);
                 // load route into collection
                 $this->loadRouteForAction($admin, $action, $routes);
             }
         }
+        die;
         // loader is loaded
         $this->loaded = true;
 
@@ -52,38 +54,17 @@ class RoutingLoader implements LoaderInterface
         return 'extra' === $type;
     }
 
-    /**
-     * Generate a route for admin and action name
-     *
-     * @param Admin $admin
-     * @param $actionName
-     * @return string
-     * @throws Exception
-     */
-    public function generateRouteName(Admin $admin, $actionName)
-    {
-        if ($admin->hasAction($actionName)) {
-            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$this->name}\" (available action are: \""
-                . implode('", "', array_keys($this->configuration->actions)) . "\")");
-        }
-        $routingPattern = '';
-
-        return 'bluebear_admin_' . $this->underscore($this->getName()) . '_' . $actionName;
-    }
-
     public function getResolver()
     {
-        // needed, but can be blank, unless you want to load other resources
-        // and if you do, using the Loader base class is easier (see below)
     }
 
     public function setResolver(LoaderResolverInterface $resolver)
     {
-        // same as above
     }
 
     protected function loadRouteForAction(Admin $admin, Action $action, RouteCollection $routeCollection)
     {
+        $routingUrlPattern = $admin->getConfiguration()->routingUrlPattern;
         // route path by entity name and action name
         $path = '/' . $admin->getEntityPath() . '/' . $action->getName();
         // by default, generic controller

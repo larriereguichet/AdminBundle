@@ -5,6 +5,7 @@ namespace BlueBear\AdminBundle\Admin;
 use BlueBear\AdminBundle\Admin\Application\ApplicationConfiguration;
 use BlueBear\AdminBundle\Event\AdminFactoryEvent;
 use BlueBear\AdminBundle\Manager\GenericManager;
+use BlueBear\AdminBundle\Routing\RoutingLoader;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Doctrine\ORM\EntityManager;
@@ -294,7 +295,19 @@ class AdminFactory
     {
         return [
             'layout' => 'BlueBearAdminBundle::admin.layout.html.twig',
-            'date_format' => 'd/m/Y'
+            'date_format' => 'd/m/Y',
+            'routing' => [
+                'name_pattern' => 'bluebear.admin.{admin}',
+                'url_pattern' => '/{admin}/{action}',
+             ]
         ];
+    }
+
+    /**
+     * @return ApplicationConfiguration
+     */
+    public function getApplicationConfiguration()
+    {
+        return $this->applicationConfiguration;
     }
 }
