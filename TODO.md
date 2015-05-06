@@ -1,10 +1,13 @@
 v0.2:
 x add column sort
-- handle basic permissions
+x handle basic permissions
 x add dynamic admin or config by event
 - add exporters
 - basic documentation
 - fixing bug in list with array fields (doctrine "array" type")
+- changing admin generated routes names with dots
+x fixing bug when User is null if 404 permissions method
+- fixing bug if a prefix was added in routing admin routing import
 
 v0.3:
 - add possibility to have tab in generated forms
