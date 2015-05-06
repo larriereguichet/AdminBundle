@@ -99,22 +99,6 @@ class Admin
     }
 
     /**
-     * Generate a route for admin and action name
-     *
-     * @param $actionName
-     * @return string
-     * @throws Exception
-     */
-    public function generateRouteName($actionName)
-    {
-        if (!in_array($actionName, array_keys($this->configuration->actions))) {
-            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$this->name}\" (available action are: \""
-                . implode('", "', array_keys($this->configuration->actions)) . "\")");
-        }
-        return 'bluebear_admin_' . $this->underscore($this->getName()) . '_' . $actionName;
-    }
-
-    /**
      * @return string
      */
     public function getName()

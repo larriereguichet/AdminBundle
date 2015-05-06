@@ -5,6 +5,7 @@ namespace BlueBear\AdminBundle\Routing;
 use BlueBear\AdminBundle\Admin\Action;
 use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
+use Exception;
 use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -49,6 +50,25 @@ class RoutingLoader implements LoaderInterface
     public function supports($resource, $type = null)
     {
         return 'extra' === $type;
+    }
+
+    /**
+     * Generate a route for admin and action name
+     *
+     * @param Admin $admin
+     * @param $actionName
+     * @return string
+     * @throws Exception
+     */
+    public function generateRouteName(Admin $admin, $actionName)
+    {
+        if ($admin->hasAction($actionName)) {
+            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$this->name}\" (available action are: \""
+                . implode('", "', array_keys($this->configuration->actions)) . "\")");
+        }
+        $routingPattern = '';
+
+        return 'bluebear_admin_' . $this->underscore($this->getName()) . '_' . $actionName;
     }
 
     public function getResolver()
