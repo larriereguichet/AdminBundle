@@ -213,6 +213,7 @@ class GenericController extends Controller
      */
     protected function forward404IfNotAllowed(Admin $admin)
     {
+        $this->forward404Unless($this->getUser(), 'You must be logged to access to this url');
         // check permissions and actions
         $this->forward404Unless($admin->isActionGranted($admin->getCurrentAction()->getName(), $this->getUser()->getRoles()),
             'User not allowed for action "' . $admin->getCurrentAction()->getName() . '"');
