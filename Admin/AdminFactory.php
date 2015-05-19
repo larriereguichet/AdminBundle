@@ -64,6 +64,8 @@ class AdminFactory
      */
     public function getAdminFromRequest(Request $request)
     {
+        // TODO get action and admin name from request
+        $action = $request->get('action');
         $requestParameters = explode('/', $request->getPathInfo());
         // remove empty string
         array_shift($requestParameters);
@@ -95,7 +97,7 @@ class AdminFactory
     public function getAdmin($name)
     {
         if (!array_key_exists($name, $this->admins)) {
-            throw new Exception('Invalid admin name "' . $name . '". Did you add it in config.yml ?');
+            throw new Exception('Invalid admin name "' . $name . '". Did you add it in your configuration ?');
         }
         return $this->admins[$name];
     }

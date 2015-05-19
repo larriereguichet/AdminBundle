@@ -37,12 +37,10 @@ class RoutingLoader implements LoaderInterface
             // by default, actions are create, edit, delete, list
             /** @var Action $action */
             foreach ($actions as $action) {
-                var_dump($action);
                 // load route into collection
                 $this->loadRouteForAction($admin, $action, $routes);
             }
         }
-        die;
         // loader is loaded
         $this->loaded = true;
 
@@ -65,8 +63,13 @@ class RoutingLoader implements LoaderInterface
     protected function loadRouteForAction(Admin $admin, Action $action, RouteCollection $routeCollection)
     {
         $routingUrlPattern = $admin->getConfiguration()->routingUrlPattern;
+        // routing pattern should contains {admin} and {action}
+        if (strpos($routingUrlPattern, '{admin}') == -1 or strpos($routingUrlPattern, '{action}') == -1) {
+            throw new Exception('Admin routing pattern should contains {admin} and {action} placeholder');
+        }
         // route path by entity name and action name
-        $path = '/' . $admin->getEntityPath() . '/' . $action->getName();
+        $path = str_replace('{admin}', $admin->getEntityPath(), $routingUrlPattern);
+        $path = str_replace('{action}', $action->getName(), $path);
         // by default, generic controller
         $defaults = [
             '_controller' => $admin->getController() . ':' . $action->getName(),
