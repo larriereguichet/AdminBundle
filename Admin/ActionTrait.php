@@ -3,7 +3,6 @@
 namespace BlueBear\AdminBundle\Admin;
 
 use Exception;
-use Symfony\Component\HttpFoundation\Request;
 
 trait ActionTrait
 {
