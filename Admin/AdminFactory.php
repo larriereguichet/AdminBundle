@@ -64,16 +64,18 @@ class AdminFactory
      */
     public function getAdminFromRequest(Request $request)
     {
-        // TODO get action and admin name from request
-        $action = $request->get('action');
-        $requestParameters = explode('/', $request->getPathInfo());
-        // remove empty string
-        array_shift($requestParameters);
-        // get configured admin
-        $admin = $this->getAdmin($this->underscore($requestParameters[0]));
-        // set current action
-        $action = $admin->getActionFromRequest($request);
+        $routeParameters = $request->get('_route_params');
+
+        if (!array_key_exists('_admin', $routeParameters)) {
+            throw new Exception('Cannot find admin from request. "_admin" route parameter is missing');
+        }
+        if (!array_key_exists('_action', $routeParameters)) {
+            throw new Exception('Cannot find admin action from request. "_action" route parameter is missing');
+        }
+        $admin = $this->getAdmin($routeParameters['_admin']);
+        $action = $admin->getAction($routeParameters['_action']);
         $admin->setCurrentAction($action);
+
         // set entity
         if ($action->getName() == 'list') {
             $entities = $admin->getManager()->findAll();

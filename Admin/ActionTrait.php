@@ -45,20 +45,6 @@ trait ActionTrait
     }
 
     /**
-     * @param Request $request
-     * @return Action
-     * @throws Exception
-     */
-    public function getActionFromRequest(Request $request)
-    {
-        $requestParameters = explode('/', $request->getPathInfo());
-        // remove empty string
-        array_shift($requestParameters);
-
-        return $this->getAction($requestParameters[1]);
-    }
-
-    /**
      * @return array
      */
     public function getActions()

@@ -73,6 +73,8 @@ class RoutingLoader implements LoaderInterface
         // by default, generic controller
         $defaults = [
             '_controller' => $admin->getController() . ':' . $action->getName(),
+            '_admin' => $admin->getName(),
+            '_action' => $action->getName()
         ];
         // by default, no requirements
         $requirements = [];
