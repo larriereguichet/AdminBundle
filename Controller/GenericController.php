@@ -3,7 +3,6 @@
 namespace BlueBear\AdminBundle\Controller;
 
 use BlueBear\AdminBundle\Admin\Admin;
-use BlueBear\AdminBundle\Admin\AdminFactory;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use EE\DataExporterBundle\Service\DataExporter;
@@ -217,13 +216,5 @@ class GenericController extends Controller
         // check permissions and actions
         $this->forward404Unless($admin->isActionGranted($admin->getCurrentAction()->getName(), $this->getUser()->getRoles()),
             'User not allowed for action "' . $admin->getCurrentAction()->getName() . '"');
-    }
-
-    /**
-     * @return AdminFactory
-     */
-    protected function getAdminFactory()
-    {
-        return $this->getContainer()->get('bluebear.admin.factory');
     }
 }
