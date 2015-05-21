@@ -169,8 +169,19 @@ class AdminFactory
      */
     protected function createActionFromConfig($actionName, $actionConfig, Admin $admin)
     {
-        $defaultConfiguration = $this->getDefaultActions($admin)[$actionName];
+        $defaultConfigurations = $this->getDefaultActions($admin);
 
+        if (array_key_exists($actionName, $defaultConfigurations)) {
+            $defaultConfiguration = $defaultConfigurations[$actionName];
+        } else {
+            $defaultConfiguration = [
+                'title' => lcfirst($actionName),
+                'permissions' => [
+                    'ROLE_USER',
+                    'ROLE_ADMIN'
+                ]
+            ];
+        }
         // fields configuration should not be merge if provided
         if (array_key_exists('fields', $actionConfig) && is_array($actionConfig['fields'])) {
             $defaultConfiguration['fields'] = $actionConfig['fields'];
