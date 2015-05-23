@@ -31,10 +31,10 @@ class AdminConfig
         }
         if (!array_key_exists('max_per_page', $adminConfiguration)) {
             if (!array_key_exists('max_per_page', $applicationConfiguration)) {
-                $generalConfiguration['max_per_page'] = 25;
+                $applicationConfiguration['max_per_page'] = 25;
             }
             // by default, we take the general value
-            $adminConfiguration['max_per_page'] = $generalConfiguration['max_per_page'];
+            $adminConfiguration['max_per_page'] = $applicationConfiguration['max_per_page'];
         }
         if (array_key_exists('routing', $applicationConfiguration)) {
             $adminConfiguration['routing'] = $applicationConfiguration['routing'];
