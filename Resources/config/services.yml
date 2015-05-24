@@ -18,6 +18,8 @@ services:
             - {name: kernel.event_subscriber}
         calls:
             - [setContainer, [@service_container]]
+            - [setAdminFactory, [@bluebear.admin.factory]]
+            - [setTwig, [@twig]]
 
     # form
     bluebear.admin.form.delete:

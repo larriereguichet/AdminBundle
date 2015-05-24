@@ -147,14 +147,13 @@ class AdminFactory
      * Create application configuration from request and application parameters
      *
      * @param array $applicationConfiguration
-     * @param Request $request
      * @return ApplicationConfiguration
      */
-    public function createApplicationFromConfiguration(array $applicationConfiguration, Request $request)
+    public function createApplicationFromConfiguration(array $applicationConfiguration)
     {
         $applicationConfiguration = array_merge($this->getDefaultApplicationConfiguration(), $applicationConfiguration);
         $applicationConfig = new ApplicationConfiguration();
-        $applicationConfig->hydrateFromConfiguration($applicationConfiguration, $request);
+        $applicationConfig->hydrateFromConfiguration($applicationConfiguration);
 
         return $applicationConfig;
     }
