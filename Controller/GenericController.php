@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Class GenericController
@@ -109,6 +110,7 @@ class GenericController extends Controller
         // create form
         $form = $this->createForm($admin->getFormType(), $admin->getEntity());
         $form->handleRequest($request);
+        $accessor = PropertyAccess::createPropertyAccessor();
 
         if ($form->isValid()) {
             // save entity
@@ -119,7 +121,7 @@ class GenericController extends Controller
             ]);
             if ($request->request->get('submit') == 'save') {
                 return $this->redirect($this->generateUrl($admin->generateRouteName('edit'), [
-                    'id' => $admin->getEntity()->getId()
+                    'id' => $accessor->getValue($admin->getEntity(), 'id')
                 ]));
             } else {
                 // redirect to list
