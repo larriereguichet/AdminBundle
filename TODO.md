@@ -8,6 +8,7 @@ x add dynamic admin or config by event
 - changing admin generated routes names with dots
 x fixing bug when User is null if 404 permissions method
 - fixing bug if a prefix was added in routing admin routing import
+- fixing empty text on deletion when an entity have no label property
 
 v0.3:
 - add possibility to have tab in generated forms
