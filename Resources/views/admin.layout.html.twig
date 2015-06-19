@@ -15,6 +15,7 @@
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
+{% import "BlueBearAdminBundle:Generic:macros.html.twig" as AdminBundle %}
 <!-- flash messages -->
 <div class="alert-container container">
     {% include "BlueBearAdminBundle:Layout:flash_messages.html.twig" %}

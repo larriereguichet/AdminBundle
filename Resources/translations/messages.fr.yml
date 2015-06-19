@@ -2,7 +2,11 @@ bluebear.admin.save: Save
 bluebear.admin.save_and_return_to_list: Save and return to list
 bluebear.admin.cancel: Cancel
 
+# List
+bluebear.admin.true: True
+bluebear.admin.false: False
+
 # deletion
 bluebear.admin.delete: Delete
-bluebear.admin.deleting: You are about to delete this "%entity%" (id: %id%). Are you sure ?
+bluebear.admin.deleting: You are about to delete this entity "%entity%" (id: %id%). Are you sure ?
 bluebear.admin.deleted: Entity "%entity%" has been succesfully removed

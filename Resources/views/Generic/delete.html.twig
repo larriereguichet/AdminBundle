@@ -6,7 +6,7 @@
             <div class="well">
                 <form action="{{ path(admin.action('delete').route, {id: admin.entity.id}) }}" method="post">
                     <div class="form-group">
-                        {{ 'bluebear.admin.deleting' | trans({'%entity%' : admin.entity.label, '%id%': admin.entity.id}) }}
+                        {{ 'bluebear.admin.deleting' | trans({'%entity%' : admin.entityLabel, '%id%': admin.entity.id}) }}
                     </div>
                     {{ form_rest(form) }}
                     <div class="form-group">

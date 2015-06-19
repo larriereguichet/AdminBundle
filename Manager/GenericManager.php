@@ -13,7 +13,6 @@ use Doctrine\ORM\QueryBuilder;
  */
 class GenericManager
 {
-
     protected $customManager;
 
     protected $entityRepository;
@@ -102,11 +101,37 @@ class GenericManager
     }
 
     /**
+     * Return query builder to find all entities, with optional order
+     *
+     * @param string $sort
+     * @param string $order
      * @return QueryBuilder
      */
-    public function getFindAllQueryBuilder()
+    public function getFindAllQueryBuilder($sort = null, $order = 'ASC')
     {
-        return $this->entityRepository->createQueryBuilder('entity');
+        $queryBuilder = $this
+            ->entityRepository
+            ->createQueryBuilder('entity');
+        // @TODO sort seems to not working with entity from FOSUser. It's maybe a bug in Doctrine or FOSUserBundle
+        if (in_array('FOS\UserBundle\Model\UserInterface', class_implements($this->entityRepository->getClassName()))) {
+            return $queryBuilder;
+        }
+        // sort is optional
+        if ($sort) {
+            // check in metadata if sort column is a relation
+            $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($this->entityRepository->getClassName());
+            $orderDql = 'entity.' . $sort;
+
+            if (in_array($sort, $metadata->getAssociationNames())) {
+                $queryBuilder
+                    ->addSelect($sort)
+                    ->join('entity.' . $sort, $sort);
+                // sort by name by default
+                $orderDql = $sort . '.name';
+            }
+            $queryBuilder->orderBy($orderDql, $order);
+        }
+        return $queryBuilder;
     }
 
     public function getCountQueryBuilderCallback()

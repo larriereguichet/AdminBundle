@@ -5,6 +5,7 @@ namespace BlueBear\AdminBundle\Routing;
 use BlueBear\AdminBundle\Admin\Action;
 use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
+use Exception;
 use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -28,7 +29,6 @@ class RoutingLoader implements LoaderInterface
             throw new RuntimeException('Do not add the "extra" loader twice');
         }
         $routes = new RouteCollection();
-        //$admins = $this->getContainer()->getParameter('bluebear.admins');
         $admins = $this->getContainer()->get('bluebear.admin.factory')->getAdmins();
         // creating a route by admin and action
         /** @var Admin $admin */
@@ -47,14 +47,34 @@ class RoutingLoader implements LoaderInterface
         return $routes;
     }
 
+    public function supports($resource, $type = null)
+    {
+        return 'extra' === $type;
+    }
+
+    public function getResolver()
+    {
+    }
+
+    public function setResolver(LoaderResolverInterface $resolver)
+    {
+    }
 
     protected function loadRouteForAction(Admin $admin, Action $action, RouteCollection $routeCollection)
     {
+        $routingUrlPattern = $admin->getConfiguration()->routingUrlPattern;
+        // routing pattern should contains {admin} and {action}
+        if (strpos($routingUrlPattern, '{admin}') == -1 or strpos($routingUrlPattern, '{action}') == -1) {
+            throw new Exception('Admin routing pattern should contains {admin} and {action} placeholder');
+        }
         // route path by entity name and action name
-        $path = '/' . $admin->getEntityPath() . '/' . $action->getName();
+        $path = str_replace('{admin}', $admin->getEntityPath(), $routingUrlPattern);
+        $path = str_replace('{action}', $action->getName(), $path);
         // by default, generic controller
         $defaults = [
             '_controller' => $admin->getController() . ':' . $action->getName(),
+            '_admin' => $admin->getName(),
+            '_action' => $action->getName()
         ];
         // by default, no requirements
         $requirements = [];
@@ -72,21 +92,5 @@ class RoutingLoader implements LoaderInterface
         $action->setRoute($routeName);
         // adding route to symfony collection
         $routeCollection->add($routeName, $route);
-    }
-
-    public function supports($resource, $type = null)
-    {
-        return 'extra' === $type;
-    }
-
-    public function getResolver()
-    {
-        // needed, but can be blank, unless you want to load other resources
-        // and if you do, using the Loader base class is easier (see below)
-    }
-
-    public function setResolver(LoaderResolverInterface $resolver)
-    {
-        // same as above
     }
 }

@@ -72,7 +72,13 @@ class Field
      */
     public function getTitle()
     {
-        return $this->title;
+        $title = $this->title;
+
+        if ($title == 'Id') {
+            // TODO move in default configuration
+            $title = '#';
+        }
+        return $title;
     }
 
     /**

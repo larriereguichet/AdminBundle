@@ -2,8 +2,6 @@
 
 namespace BlueBear\AdminBundle\Admin\Application;
 
-use Symfony\Component\HttpFoundation\Request;
-
 class ApplicationConfiguration
 {
     public $title;
@@ -18,11 +16,15 @@ class ApplicationConfiguration
 
     public $bootstrap = false;
 
-    public function hydrateFromConfiguration(array $applicationConfiguration, Request $request)
+    public $dateFormat;
+
+    public function hydrateFromConfiguration(array $applicationConfiguration)
     {
-        $this->lang = $request->getLocale();
+        // TODO implements language from symfony configuration
+        $this->lang = 'fr';
         $this->layout = $applicationConfiguration['layout'];
         $this->blockTemplate = $applicationConfiguration['block_template'];
+        $this->dateFormat = $applicationConfiguration['date_format'];
 
         if (array_key_exists('title', $applicationConfiguration)) {
             $this->title = $applicationConfiguration['title'];

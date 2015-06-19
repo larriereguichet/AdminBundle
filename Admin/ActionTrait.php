@@ -3,7 +3,6 @@
 namespace BlueBear\AdminBundle\Admin;
 
 use Exception;
-use Symfony\Component\HttpFoundation\Request;
 
 trait ActionTrait
 {
@@ -42,21 +41,6 @@ trait ActionTrait
             }
         }
         return $isGranted;
-    }
-
-
-    /**
-     * @param Request $request
-     * @return Action
-     * @throws Exception
-     */
-    public function getActionFromRequest(Request $request)
-    {
-        $requestParameters = explode('/', $request->getPathInfo());
-        // remove empty string
-        array_shift($requestParameters);
-
-        return $this->getAction($requestParameters[1]);
     }
 
     /**

@@ -96,10 +96,6 @@ class Admin
         $this->formType = $adminConfig->formType;
         $this->entities = new ArrayCollection();
         $this->customManagerActions = [];
-        // pagination
-        $adapter = new DoctrineORMAdapter($this->getManager()->getFindAllQueryBuilder());
-        // create paginator
-        $this->pager = new Pagerfanta($adapter);
     }
 
     /**
@@ -111,11 +107,17 @@ class Admin
      */
     public function generateRouteName($actionName)
     {
-        if (!in_array($actionName, array_keys($this->configuration->actions))) {
-            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$this->name}\" (available action are: \""
-            . implode('", "', array_keys($this->configuration->actions)) . "\")");
+        if (!array_key_exists($actionName, $this->getConfiguration()->actions)) {
+            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$this->getName()}\" (available action are: \""
+                . implode('", "', array_keys($this->getConfiguration()->actions)) . "\")");
         }
-        return 'bluebear_admin_' . $this->underscore($this->getName()) . '_' . $actionName;
+        // get routing name pattern
+        $routingPattern = $this->configuration->routingNamePattern;
+        // replace admin and action name in pattern
+        $routeName = str_replace('{admin}', $this->underscore($this->getName()), $routingPattern);
+        $routeName = str_replace('{action}', $actionName, $routeName);
+
+        return $routeName;
     }
 
     /**
@@ -189,6 +191,8 @@ class Admin
     }
 
     /**
+     * Return entity for current admin. If entity does not exist, it throws an exception
+     *
      * @return mixed
      * @throws Exception
      */
@@ -200,11 +204,35 @@ class Admin
         return $this->entity;
     }
 
+    public function getEntityLabel()
+    {
+        $label = '';
+
+        if (method_exists($this->entity, 'getLabel')) {
+            $label = $this->entity->getLabel();
+        } else if (method_exists($this->entity, 'getTitle')) {
+            $label = $this->entity->getTitle();
+        } else if (method_exists($this->entity, 'getName')) {
+            $label = $this->entity->getName();
+        } else if (method_exists($this->entity, '__toString')) {
+            $label = $this->entity->__toString();
+        }
+        return $label;
+    }
+
     public function setEntity($entity)
     {
         $this->entity = $entity;
     }
 
+    /**
+     * Find a entity by one of its field
+     *
+     * @param $field
+     * @param $value
+     * @return null|object
+     * @throws Exception
+     */
     public function findEntity($field, $value)
     {
         $this->entity = $this->getManager()->findOneBy([
@@ -214,8 +242,30 @@ class Admin
         return $this->entity;
     }
 
-    public function findEntities($page = 1)
+    /**
+     * Find entities paginated and sorted
+     *
+     * @param int $page
+     * @param null $sort
+     * @param string $order
+     * @return array|ArrayCollection|\Traversable
+     * @throws Exception
+     */
+    public function findEntities($page = 1, $sort = null, $order = 'ASC')
     {
+        if ($sort) {
+            // check if sort field is allowed for current action
+            if (!$this->getCurrentAction()->hasField($sort)) {
+                throw new Exception("Invalid field \"{$sort}\" for current action \"{$this->getCurrentAction()->getName()}\"");
+            }
+            if (!in_array($order, ['ASC', 'DESC'])) {
+                throw new Exception("Invalid order \"{$order}\"");
+            }
+        }
+        // create adapter from query builder
+        $adapter = new DoctrineORMAdapter($this->getManager()->getFindAllQueryBuilder($sort, $order));
+        // create pager
+        $this->pager = new Pagerfanta($adapter);
         $this->pager->setMaxPerPage($this->configuration->maxPerPage);
         $this->pager->setCurrentPage($page);
         $this->entities = $this->pager->getCurrentPageResults();
@@ -251,13 +301,6 @@ class Admin
         return $this->manager;
     }
 
-    protected function checkEntity()
-    {
-        if (!$this->entity) {
-            throw new Exception("Entity not found in admin \"{$this->getName()}\". Try call method findEntity or createEntity first.");
-        }
-    }
-
     /**
      * @return AdminConfig
      */
@@ -272,5 +315,12 @@ class Admin
     public function getPager()
     {
         return $this->pager;
+    }
+
+    protected function checkEntity()
+    {
+        if (!$this->entity) {
+            throw new Exception("Entity not found in admin \"{$this->getName()}\". Try call method findEntity or createEntity first.");
+        }
     }
 }

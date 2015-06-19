@@ -29,6 +29,13 @@ class Action
     protected $parameters;
 
     /**
+     * Export types
+     *
+     * @var array
+     */
+    protected $export = [];
+
+    /**
      * @return string
      */
     public function getName()
@@ -69,6 +76,17 @@ class Action
     }
 
     /**
+     * Return true if action has a field named $fieldName
+     *
+     * @param $fieldName
+     * @return bool
+     */
+    public function hasField($fieldName)
+    {
+        return array_key_exists($fieldName, $this->fields);
+    }
+
+    /**
      * @param Field[] $fields
      */
     public function setFields($fields)
@@ -78,7 +96,7 @@ class Action
 
     public function addField(Field $field)
     {
-        $this->fields[] = $field;
+        $this->fields[$field->getName()] = $field;
     }
 
     /**
@@ -127,5 +145,21 @@ class Action
     public function setParameters($parameters)
     {
         $this->parameters = $parameters;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExport()
+    {
+        return $this->export;
+    }
+
+    /**
+     * @param array $export
+     */
+    public function setExport($export)
+    {
+        $this->export = $export;
     }
 }

@@ -5,11 +5,6 @@ namespace BlueBear\AdminBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-/**
- * This is the class that validates and merges configuration from your app/config files
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
- */
 class Configuration implements ConfigurationInterface
 {
     /**
@@ -22,6 +17,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                // application configuration
                 ->arrayNode('application')
                     ->children()
                         ->scalarNode('title')->end()
@@ -29,6 +25,12 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('layout')->end()
                         ->scalarNode('bootstrap')->end()
                         ->scalarNode('max_per_page')->end()
+                        ->arrayNode('routing')
+                            ->children()
+                                ->scalarNode('name_pattern')->end()
+                                ->scalarNode('url_pattern')->end()
+                            ->end()
+                        ->end()
                         ->scalarNode('block_template')
                             ->defaultValue('BlueBearAdminBundle:Form:fields.html.twig')
                         ->end()
@@ -54,6 +56,10 @@ class Configuration implements ConfigurationInterface
                                         ->scalarNode('title')->end()
                                         ->arrayNode('permissions')
                                             ->defaultValue(['ROLE_USER'])
+                                            ->prototype('scalar')
+                                            ->end()
+                                        ->end()
+                                        ->arrayNode('export')
                                             ->prototype('scalar')
                                             ->end()
                                         ->end()
