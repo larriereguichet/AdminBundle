@@ -3,7 +3,7 @@ Features:
 x add column sort
 x handle basic permissions
 x add dynamic admin or config by event
-- add exporters
+x add exporters
 - basic documentation
 x changing admin generated routes default names with dots
 
