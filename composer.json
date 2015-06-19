@@ -26,7 +26,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "symfony/symfony": "2.6.*",
+        "symfony/symfony": ">=2.6",
         "sensio/framework-extra-bundle": "~3.0",
         "doctrine/doctrine-bundle": "~1.2",
         "doctrine/data-fixtures": "*",
