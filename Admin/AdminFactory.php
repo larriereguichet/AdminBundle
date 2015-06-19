@@ -13,6 +13,7 @@ use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * AdminFactory
@@ -129,11 +130,15 @@ class AdminFactory
         $entityRepository = $entityManager->getRepository($adminConfig->entityName);
         // create generic manager from configuration
         $entityManager = $this->createManagerFromConfig($adminConfig, $entityRepository);
-
         $admin = new Admin($adminName, $entityRepository, $entityManager, $adminConfig);
         // actions are optional
         if (!$adminConfig->actions) {
-            $adminConfig->actions = $this->getDefaultActions($admin);
+            $adminConfig->actions = [
+                'list' => [],
+                'create' => [],
+                'edit' => [],
+                'delete' => []
+            ];
         }
         // adding actions
         foreach ($adminConfig->actions as $actionName => $actionConfig) {
@@ -162,44 +167,35 @@ class AdminFactory
      * Create an Action from configuration values
      *
      * @param $actionName
-     * @param $actionConfig
+     * @param $actionConfiguration
      * @param Admin $admin
      * @return Action
      */
-    protected function createActionFromConfig($actionName, $actionConfig, Admin $admin)
+    protected function createActionFromConfig($actionName, $actionConfiguration, Admin $admin)
     {
-        $defaultConfigurations = $this->getDefaultActions($admin);
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults($this->getDefaultActionConfiguration($actionName));
+        $actionConfiguration = $resolver->resolve($actionConfiguration);
 
-        if (array_key_exists($actionName, $defaultConfigurations)) {
-            $defaultConfiguration = $defaultConfigurations[$actionName];
-        } else {
-            $defaultConfiguration = [
-                'title' => lcfirst($actionName),
-                'permissions' => [
-                    'ROLE_USER',
-                    'ROLE_ADMIN'
-                ]
-            ];
+        // guess title if not provided
+        if (!$actionConfiguration['title']) {
+            $actionConfiguration['title'] = $this->getDefaultActionTitle($admin->getName(), $actionName);
         }
-        // fields configuration should not be merge if provided
-        if (array_key_exists('fields', $actionConfig) && is_array($actionConfig['fields'])) {
-            $defaultConfiguration['fields'] = $actionConfig['fields'];
-        }
-        $actionConfig = array_merge($defaultConfiguration, $actionConfig);
         $action = new Action();
         $action->setName($actionName);
-        $action->setTitle($actionConfig['title']);
-        $action->setPermissions($actionConfig['permissions']);
+        $action->setTitle($actionConfiguration['title']);
+        $action->setPermissions($actionConfiguration['permissions']);
         $action->setRoute($admin->generateRouteName($action->getName()));
-        $action->setExport($actionConfig['export']);
-        // adding items to actions
-        foreach ($actionConfig['fields'] as $fieldName => $fieldConfig) {
+        $action->setExport($actionConfiguration['export']);
+
+        // adding fields items to actions
+        foreach ($actionConfiguration['fields'] as $fieldName => $fieldConfiguration) {
             $field = new Field();
             $field->setName($fieldName);
             $field->setTitle($this->inflectString($fieldName));
 
-            if (array_key_exists('length', $fieldConfig)) {
-                $field->setLength($fieldConfig['length']);
+            if (array_key_exists('length', $fieldConfiguration)) {
+                $field->setLength($fieldConfiguration['length']);
             }
             $action->addField($field);
         }
@@ -263,37 +259,43 @@ class AdminFactory
     /**
      * Return default actions configuration (list has exports, permissions are ROLE_ADMIN)
      *
-     * @param Admin $admin
+     * @param $actionName
      * @return array
      */
-    protected function getDefaultActions(Admin $admin)
+    protected function getDefaultActionConfiguration($actionName)
     {
-        return [
-            'list' => [
-                'title' => $this->getDefaultActionTitle($admin->getName(), 'list'),
+        $configuration = [];
+
+        if ($actionName == 'list') {
+            $configuration = [
+                'title' => null,
                 'fields' => $this->getDefaultFields(),
                 'export' => ['json', 'xml', 'xls', 'csv', 'html'],
                 'permissions' => ['ROLE_ADMIN']
-            ],
-            'create' => [
-                'title' => $this->getDefaultActionTitle($admin->getName(), 'create'),
+            ];
+        } else if ($actionName == 'create') {
+            $configuration = [
+                'title' => null,
                 'fields' => $this->getDefaultFields(),
                 'permissions' => ['ROLE_ADMIN'],
                 'export' => []
-            ],
-            'edit' => [
-                'title' => $this->getDefaultActionTitle($admin->getName(), 'edit'),
+            ];
+        } else if ($actionName == 'edit') {
+            $configuration = [
+                'title' => null,
                 'permissions' => ['ROLE_ADMIN'],
                 'fields' => $this->getDefaultFields(),
                 'export' => []
-            ],
-            'delete' => [
-                'title' => $this->getDefaultActionTitle($admin->getName(), 'delete'),
+            ];
+        } else if ($actionName == 'delete') {
+            $configuration = [
+                'title' => null,
                 'fields' => $this->getDefaultFields(),
                 'permissions' => ['ROLE_ADMIN'],
                 'export' => []
-            ],
-        ];
+            ];
+        }
+        return $configuration;
     }
 
     protected function getDefaultFields()
