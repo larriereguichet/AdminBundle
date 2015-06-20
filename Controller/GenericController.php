@@ -186,15 +186,12 @@ class GenericController extends Controller
             $fieldMetadata = $metadata->getFieldMapping($fieldName);
 
             if ($fieldMetadata['type'] == 'simple_array' || $fieldMetadata['type'] == 'array') {
-                //unset($exportColumns[$fieldName]);
+                // TODO implements array type and relations
             } else {
                 $exportColumns[$fieldName] = $fieldName;
             }
         }
-        foreach ($association as $fieldName => $mapping) {
-            //$exportColumns[$fieldName . 'id'] = $fieldName;
-        }
-        //var_dump($exportColumns);
+        // TODO generic filename
         $exporter
             ->setOptions($exportType, [
             'fileName' => '/home/afrezet/test.csv'

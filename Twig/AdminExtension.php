@@ -1,11 +1,10 @@
 <?php
 
 namespace BlueBear\AdminBundle\Twig;
-use BlueBear\AdminBundle\Admin\Admin;
+
 use BlueBear\AdminBundle\Admin\Application\ApplicationConfiguration;
 use BlueBear\AdminBundle\Admin\Field;
 use DateTime;
-use Exception;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Extension;
 use Twig_SimpleFunction;
