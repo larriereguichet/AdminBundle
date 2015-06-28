@@ -18,11 +18,12 @@ x fixing bug in action configuration merge on export property (is override)
 
 v0.3:
 Features: 
-- unit testing
+- adding mass edit
+- add filters
 - add possibility to have tab in generated forms
+- unit testing
 - handle custom actions for edit form (enable user for example)
 - add configuration for custom url for actions (waiting for ActionBundle)
-- add filters
 - improve admin and action name from request (use default parameters in routing instead
 - handling new Symfony bootstrap layout
 
