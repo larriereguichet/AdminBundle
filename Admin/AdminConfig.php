@@ -2,8 +2,6 @@
 
 namespace BlueBear\AdminBundle\Admin;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 class AdminConfig
 {
     public $controllerName;
@@ -22,9 +20,9 @@ class AdminConfig
 
     public $routingUrlPattern;
 
-    public function hydrateFromConfiguration(array $adminConfiguration, ContainerInterface $container)
+    public function hydrateFromConfiguration(array $adminConfiguration, $applicationName)
     {
-        $applicationConfiguration = $container->getParameter('bluebear.admin.application');
+        $applicationConfiguration = $applicationName;
         // defaults values
         if (!array_key_exists('manager', $adminConfiguration)) {
             $adminConfiguration['manager'] = [];

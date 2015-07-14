@@ -126,7 +126,7 @@ class AdminFactory
         $entityManager = $this->getContainer()->get('doctrine')->getManager();
         // gathering admin data
         $adminConfig = new AdminConfig();
-        $adminConfig->hydrateFromConfiguration($adminConfigArray, $this->getContainer());
+        $adminConfig->hydrateFromConfiguration($adminConfigArray, $this->getContainer()->getParameter('bluebear.admin.application'));
         $entityRepository = $entityManager->getRepository($adminConfig->entityName);
         // create generic manager from configuration
         $entityManager = $this->createManagerFromConfig($adminConfig, $entityRepository);
