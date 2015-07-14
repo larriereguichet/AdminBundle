@@ -3,7 +3,7 @@ Features:
 x add column sort
 x handle basic permissions
 x add dynamic admin or config by event
-- add exporters (rest filename, array type, association)
+x add exporters
 - basic documentation
 x changing admin generated routes default names with dots
 
@@ -17,7 +17,8 @@ x fixing bug in action configuration merge on export property (is override)
 - fixing columns order in export
 
 v0.3:
-Features: 
+Features:
+- file exporters : array type, association
 - adding mass edit
 - add filters
 - add possibility to have tab in generated forms
@@ -28,4 +29,5 @@ Features:
 - handling new Symfony bootstrap layout
 
 v0.4:
+Bug fixes :
 - fix bug with FOSUser column sorting
