@@ -2,7 +2,7 @@ parameters:
     # template listener
     bluebear.admin.template_listener: BlueBear\AdminBundle\Event\Subscriber\TemplateListener
     # form
-    bluebear.admin.form.delete: BlueBear\AdminBundle\Form\DeleteType
+    bluebear.admin.form.delete: BlueBear\AdminBundle\Form\Type\DeleteType
     # routing
     bluebear.admin.routing: BlueBear\AdminBundle\Routing\RoutingLoader
     # admin factory
