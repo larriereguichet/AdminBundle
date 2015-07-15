@@ -80,7 +80,7 @@ To expose form type as service, rendez-vous [here](http://symfony.com/doc/curren
                 
 ```
 
-__5) Import AdminBundle routing
+__5) Import AdminBundle routing__
    
 You have to import AdminBundle routing (or using yours) in your app/config/routing.yml file.
 
@@ -99,7 +99,7 @@ That's it. You should have admin application and you should be able to manage yo
 
 
 
-__Configuration Reference
+__Configuration Reference__
 
 ```yml
 blue_bear_admin:
