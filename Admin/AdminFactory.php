@@ -164,6 +164,14 @@ class AdminFactory
     }
 
     /**
+     * @return ApplicationConfiguration
+     */
+    public function getApplicationConfiguration()
+    {
+        return $this->applicationConfiguration;
+    }
+
+    /**
      * Create an Action from configuration values
      *
      * @param $actionName
@@ -316,13 +324,5 @@ class AdminFactory
                 'url_pattern' => '/{admin}/{action}',
              ]
         ];
-    }
-
-    /**
-     * @return ApplicationConfiguration
-     */
-    public function getApplicationConfiguration()
-    {
-        return $this->applicationConfiguration;
     }
 }

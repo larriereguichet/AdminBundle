@@ -5,11 +5,13 @@ namespace BlueBear\AdminBundle\Controller;
 use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\MappingException;
 use EE\DataExporterBundle\Service\DataExporter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -168,6 +170,14 @@ class GenericController extends Controller
         ];
     }
 
+    /**
+     * Export entities according to a type (json, csv, xls...)
+     *
+     * @param Admin $admin
+     * @param $exportType
+     * @return Response
+     * @throws MappingException
+     */
     protected function exportEntities(Admin $admin, $exportType)
     {
         // check allowed export types
@@ -179,7 +189,7 @@ class GenericController extends Controller
         $metadata = $this->getEntityManager()->getClassMetadata($admin->getRepository()->getClassName());
         $exportColumns = [];
         $fields = $metadata->getFieldNames();
-        $association = $metadata->getAssociationMappings();
+        //$association = $metadata->getAssociationMappings();
         $hooks = [];
 
         foreach ($fields as $fieldName) {
