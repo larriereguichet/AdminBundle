@@ -16,7 +16,6 @@ x fixing bug in filename when exporting (always .csv)
 x fixing bug in date time fields when exporting
 x fixing bug in array fields when exporting
 x fixing bug in action configuration merge on export property (is override)
-- fixing columns order in export
 
 v0.3:
 Features:
@@ -31,6 +30,8 @@ Features:
 - handling new Symfony bootstrap layout
 - configure application date format (filename export, displayed date...)
 
-v0.4:
 Bug fixes :
 - fix bug with FOSUser column sorting
+- fixing columns order in export
+
+v0.4:
