@@ -10,7 +10,7 @@ x changing admin generated routes default names with dots
 Bug fixes :
 x fixing bug in list with array fields (doctrine "array" type")
 x fixing bug when User is null if 404 permissions method
-- fixing bug if a prefix was added in routing admin routing import
+x fixing bug if a prefix was added in routing admin routing import
 - fixing empty text on deletion when an entity have no label property
 - fixing bug in filename when exporting (always .csv)
 - fixing bug in date time fields when exporting
