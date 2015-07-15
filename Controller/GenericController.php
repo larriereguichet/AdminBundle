@@ -5,6 +5,7 @@ namespace BlueBear\AdminBundle\Controller;
 use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
+use DateTime;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\MappingException;
 use EE\DataExporterBundle\Service\DataExporter;
@@ -190,28 +191,23 @@ class GenericController extends Controller
         $metadata = $this->getEntityManager()->getClassMetadata($admin->getRepository()->getClassName());
         $exportColumns = [];
         $fields = $metadata->getFieldNames();
-        //$association = $metadata->getAssociationMappings();
         $hooks = [];
 
         foreach ($fields as $fieldName) {
-            $fieldMetadata = $metadata->getFieldMapping($fieldName);
-            $arrayFieldsTypes = [
-                'simple_array',
-                'array',
-                'json_array'
-            ];
-
-            if (in_array($fieldMetadata['type'], $arrayFieldsTypes)) {
-                $exporter->addHook(function ($fieldValue) {
-                    return $this->recursiveImplode(', ', $fieldValue);
-                }, "{$fieldName}");
-                // TODO implements array type and relations
-                //var_dump($fieldName);
-                //die;
-                $exportColumns[$fieldName] = $fieldName;
-            } else {
-                $exportColumns[$fieldName] = $fieldName;
-            }
+            $exporter->addHook(function ($fieldValue) {
+                // if field is an array
+                if (is_array($fieldValue)) {
+                    $value = $this->recursiveImplode(', ', $fieldValue);
+                } else if ($fieldValue instanceof DateTime) {
+                    // format date in string
+                    $value = $fieldValue->format('c');
+                } else {
+                    $value = $fieldValue;
+                }
+                return $value;
+            }, "{$fieldName}");
+            // add field column to export
+            $exportColumns[$fieldName] = $fieldName;
         }
         $exporter
             ->setOptions($exportType, [
