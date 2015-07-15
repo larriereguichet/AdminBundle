@@ -194,9 +194,20 @@ class GenericController extends Controller
 
         foreach ($fields as $fieldName) {
             $fieldMetadata = $metadata->getFieldMapping($fieldName);
+            $arrayFieldsTypes = [
+                'simple_array',
+                'array',
+                'json_array'
+            ];
 
-            if ($fieldMetadata['type'] == 'simple_array' || $fieldMetadata['type'] == 'array') {
+            if (in_array($fieldMetadata['type'], $arrayFieldsTypes)) {
+                $exporter->addHook(function ($fieldValue) {
+                    return $this->recursiveImplode(', ', $fieldValue);
+                }, "{$fieldName}");
                 // TODO implements array type and relations
+                //var_dump($fieldName);
+                //die;
+                $exportColumns[$fieldName] = $fieldName;
             } else {
                 $exportColumns[$fieldName] = $fieldName;
             }
@@ -204,7 +215,7 @@ class GenericController extends Controller
         // TODO generic filename
         $exporter
             ->setOptions($exportType, [
-            'fileName' => '/home/afrezet/test.csv'
+                'fileName' => '/home/afrezet/test.csv'
             ])
             ->setColumns($exportColumns)
             ->setData($admin->getEntities());
@@ -212,6 +223,33 @@ class GenericController extends Controller
             $exporter->addHook($hook, $hookName);
         }
         return $exporter->render();
+    }
+
+    /**
+     * Return a imploded string from a multi dimensional array
+     *
+     * @param $glue
+     * @param array $array
+     * @return string
+     */
+    protected function recursiveImplode($glue, array $array)
+    {
+        $return = '';
+        $index = 0;
+        $count = count($array);
+
+        foreach ($array as $piece) {
+            if (is_array($piece)) {
+                $return .= $this->recursiveImplode($glue, $piece);
+            } else {
+                $return .= $piece;
+            }
+            if ($index < $count - 1) {
+                $return .=  $glue;
+            }
+            $index++;
+        }
+        return $return;
     }
 
     /**
