@@ -31,7 +31,7 @@
         "doctrine/doctrine-bundle": "~1.2",
         "doctrine/data-fixtures": "*",
         "doctrine/doctrine-fixtures-bundle": "*",
-        "bluebear/basebundle": "dev-0.2-dev",
+        "bluebear/basebundle": "0.2",
         "white-october/pagerfanta-bundle": "~1.0",
         "ee/dataexporter-bundle": "*"
     },

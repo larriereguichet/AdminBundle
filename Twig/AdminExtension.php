@@ -1,11 +1,11 @@
 <?php
 
 namespace BlueBear\AdminBundle\Twig;
-use BlueBear\AdminBundle\Admin\Admin;
+
 use BlueBear\AdminBundle\Admin\Application\ApplicationConfiguration;
 use BlueBear\AdminBundle\Admin\Field;
+use BlueBear\AdminBundle\Utils\RecursiveImplode;
 use DateTime;
-use Exception;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Extension;
 use Twig_SimpleFunction;
@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminExtension extends Twig_Extension
 {
+    use RecursiveImplode;
+
     /**
      * @var RouterInterface
      */
@@ -78,9 +80,10 @@ class AdminExtension extends Twig_Extension
             ->getPropertyAccessor();
         $value = $accessor->getValue($entity, $field->getName());
 
-
         if ($value instanceof DateTime) {
             $value = $value->format($applicationConfiguration->dateFormat);
+        } else if (is_array($value)) {
+            $value = $this->recursiveImplode(', ', $value);
         }
         return $value;
     }

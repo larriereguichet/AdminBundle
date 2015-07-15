@@ -64,7 +64,7 @@ class RoutingLoader implements LoaderInterface
     {
         $routingUrlPattern = $admin->getConfiguration()->routingUrlPattern;
         // routing pattern should contains {admin} and {action}
-        if (strpos($routingUrlPattern, '{admin}') == -1 or strpos($routingUrlPattern, '{action}') == -1) {
+        if (strpos($routingUrlPattern, '{admin}') == -1 || strpos($routingUrlPattern, '{action}') == -1) {
             throw new Exception('Admin routing pattern should contains {admin} and {action} placeholder');
         }
         // route path by entity name and action name

@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\Form;
+namespace BlueBear\AdminBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
