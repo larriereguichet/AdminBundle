@@ -3,6 +3,7 @@
 namespace BlueBear\AdminBundle\Controller;
 
 use BlueBear\AdminBundle\Admin\Admin;
+use BlueBear\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\MappingException;
@@ -21,7 +22,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 class GenericController extends Controller
 {
-    use ControllerTrait;
+    use ControllerTrait, RecursiveImplode;
 
     protected $entityClass;
 
@@ -223,33 +224,6 @@ class GenericController extends Controller
             $exporter->addHook($hook, $hookName);
         }
         return $exporter->render();
-    }
-
-    /**
-     * Return a imploded string from a multi dimensional array
-     *
-     * @param $glue
-     * @param array $array
-     * @return string
-     */
-    protected function recursiveImplode($glue, array $array)
-    {
-        $return = '';
-        $index = 0;
-        $count = count($array);
-
-        foreach ($array as $piece) {
-            if (is_array($piece)) {
-                $return .= $this->recursiveImplode($glue, $piece);
-            } else {
-                $return .= $piece;
-            }
-            if ($index < $count - 1) {
-                $return .=  $glue;
-            }
-            $index++;
-        }
-        return $return;
     }
 
     /**

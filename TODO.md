@@ -14,6 +14,7 @@ x fixing bug when User is null if 404 permissions method
 - fixing empty text on deletion when an entity have no label property
 - fixing bug in filename when exporting (always .csv)
 - fixing bug in date time fields when exporting
+x fixing bug in array fields when exporting
 x fixing bug in action configuration merge on export property (is override)
 - fixing columns order in export
 
