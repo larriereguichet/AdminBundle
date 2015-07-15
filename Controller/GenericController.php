@@ -213,10 +213,9 @@ class GenericController extends Controller
                 $exportColumns[$fieldName] = $fieldName;
             }
         }
-        // TODO generic filename
         $exporter
             ->setOptions($exportType, [
-                'fileName' => '/home/afrezet/test.csv'
+                'fileName' => $admin->getName() . '-export-' . date('Y-m-d')
             ])
             ->setColumns($exportColumns)
             ->setData($admin->getEntities());

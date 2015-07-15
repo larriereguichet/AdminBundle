@@ -12,7 +12,7 @@ x fixing bug in list with array fields (doctrine "array" type")
 x fixing bug when User is null if 404 permissions method
 x fixing bug if a prefix was added in routing admin routing import
 x fixing empty text on deletion when an entity have no label property
-- fixing bug in filename when exporting (always .csv)
+x fixing bug in filename when exporting (always .csv)
 - fixing bug in date time fields when exporting
 x fixing bug in array fields when exporting
 x fixing bug in action configuration merge on export property (is override)
