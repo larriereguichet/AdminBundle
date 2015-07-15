@@ -80,6 +80,21 @@ To expose form type as service, rendez-vous [here](http://symfony.com/doc/curren
                 
 ```
 
+__5) Import AdminBundle routing
+   
+You have to import AdminBundle routing (or using yours) in your app/config/routing.yml file.
+
+```yml
+    # app/config/routing.yml
+    # BlueBear AdminBundle
+    blue_bear_admin:
+        resource: .
+        type: extra
+        # optional prefix
+        prefix: /admin
+        
+```
+
 That's it. You should have admin application and you should be able to manage your entities.
 
 
