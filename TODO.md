@@ -31,6 +31,7 @@ Features:
 - configure application date format (filename export, displayed date...)
 
 Bug fixes :
+- fix bug when deleting entity with integrity constraint
 - fix bug with FOSUser column sorting
 - fixing columns order in export
 
