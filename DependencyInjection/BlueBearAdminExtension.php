@@ -2,6 +2,7 @@
 
 namespace BlueBear\AdminBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -22,14 +23,23 @@ class BlueBearAdminExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
+        if (!array_key_exists('application', $config)) {
+            throw new InvalidConfigurationException('Your section "application" is not found for AdminBundle configuration');
+        }
+        if (!array_key_exists('admins', $config)) {
+            throw new InvalidConfigurationException('Your section "admins" is not found for AdminBundle configuration');
+        }
         $container->setParameter('bluebear.admins', $config['admins']);
         $container->setParameter('bluebear.menus', $config['menus']);
-
-        if (array_key_exists('application', $config)) {
-            $container->setParameter('bluebear.admin.application', $config['application']);
-        }
+        $container->setParameter('bluebear.admin.application', $config['application']);
     }
+
+    public function getAlias()
+    {
+        return 'bluebear_admin';
+    }
+
 }

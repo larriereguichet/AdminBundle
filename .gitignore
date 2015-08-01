@@ -1,2 +1,4 @@
 composer.phar
 vendor
+phpunit.xml
+Tests/app/config/parameters.yml
