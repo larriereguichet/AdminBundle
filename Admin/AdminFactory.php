@@ -118,15 +118,25 @@ class AdminFactory
      * Create an Admin from configuration values. It will be added to AdminFactory admin's list
      *
      * @param $adminName
-     * @param array $adminConfigArray
+     * @param array $adminConfiguration
      */
-    public function createAdminFromConfig($adminName, array $adminConfigArray)
+    public function createAdminFromConfig($adminName, array $adminConfiguration)
     {
         /** @var EntityManager $entityManager */
         $entityManager = $this->container->get('doctrine')->getManager();
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            'actions' => [
+                'list' => [],
+                'create' => [],
+                'edit' => [],
+                'delete' => []
+            ]
+        ]);
+        $adminConfiguration = $resolver->resolve($adminConfiguration);
         // gathering admin data
         $adminConfig = new AdminConfig();
-        $adminConfig->hydrateFromConfiguration($adminConfigArray, $this->container->getParameter('bluebear.admin.application'));
+        $adminConfig->hydrateFromConfiguration($adminConfiguration, $this->container->getParameter('bluebear.admin.application'));
         $entityRepository = $entityManager->getRepository($adminConfig->entityName);
         // create generic manager from configuration
         $entityManager = $this->createManagerFromConfig($adminConfig, $entityRepository);

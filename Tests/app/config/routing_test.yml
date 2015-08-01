@@ -1,0 +1,5 @@
+# BlueBear AdminBundle
+blue_bear_admin:
+    resource: .
+    type: extra
+    prefix: /admin

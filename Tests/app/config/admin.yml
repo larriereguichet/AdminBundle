@@ -1,0 +1,16 @@
+bluebear_admin:
+    application:
+        title: BlueBear, pyscho panda and maximum bamboo
+        description: BlueBear, pandas, bamboo and energy drink
+        # main layout (by default)
+        layout: BlueBearAdminBundle::admin.layout.html.twig
+        # block layout (by default)
+        block_template: BlueBearAdminBundle:Form:fields.html.twig
+        # max entities per page
+        max_per_page: 25
+        # use default bootstrap integration
+        bootstrap: false
+        # Routing options
+        routing:
+            name_pattern: 'bluebear.admin.{admin}.{action}'
+            url_pattern: '{admin}/{action}'
