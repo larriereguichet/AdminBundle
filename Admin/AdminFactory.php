@@ -41,7 +41,7 @@ class AdminFactory
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $admins = $this->getContainer()->getParameter('bluebear.admins');
+        $admins = $this->container->getParameter('bluebear.admins');
         // dispatch an event with admins configurations to allow dynamic admin creation
         $event = new AdminFactoryEvent();
         $event->setAdminsConfiguration($admins);
@@ -123,10 +123,10 @@ class AdminFactory
     public function createAdminFromConfig($adminName, array $adminConfigArray)
     {
         /** @var EntityManager $entityManager */
-        $entityManager = $this->getContainer()->get('doctrine')->getManager();
+        $entityManager = $this->container->get('doctrine')->getManager();
         // gathering admin data
         $adminConfig = new AdminConfig();
-        $adminConfig->hydrateFromConfiguration($adminConfigArray, $this->getContainer()->getParameter('bluebear.admin.application'));
+        $adminConfig->hydrateFromConfiguration($adminConfigArray, $this->container->getParameter('bluebear.admin.application'));
         $entityRepository = $entityManager->getRepository($adminConfig->entityName);
         // create generic manager from configuration
         $entityManager = $this->createManagerFromConfig($adminConfig, $entityRepository);
@@ -223,10 +223,10 @@ class AdminFactory
         $methodsMapping = [];
         // set default entity manager
         /** @var EntityManager $entityManager */
-        $entityManager = $this->getContainer()->get('doctrine')->getManager();
+        $entityManager = $this->container->get('doctrine')->getManager();
         // custom manager is optional
         if ($adminConfig->managerConfiguration) {
-            $customManager = $this->getContainer()->get($adminConfig->managerConfiguration['name']);
+            $customManager = $this->container->get($adminConfig->managerConfiguration['name']);
 
             if (array_key_exists('save', $adminConfig->managerConfiguration)) {
                 $methodsMapping['save'] = $adminConfig->managerConfiguration['save'];
