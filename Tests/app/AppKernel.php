@@ -3,11 +3,13 @@
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
+
+
 class AppKernel extends Kernel
 {
     public function registerBundles()
     {
-        return array(
+      return array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
@@ -16,6 +18,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
             new BlueBear\AdminBundle\BlueBearAdminBundle(),
+            new Test\TestBundle\TestTestBundle(),
         );
     }
 

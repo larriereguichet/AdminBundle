@@ -11,7 +11,7 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class Admin
+class Admin implements AdminInterface
 {
     use StringUtilsTrait, ActionTrait;
 
