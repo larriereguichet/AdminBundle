@@ -4,6 +4,7 @@ namespace BlueBear\AdminBundle\Tests;
 
 use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\AdminBundle\Admin\AdminFactory;
+use Symfony\Component\HttpFoundation\Request;
 
 class AdminFactoryTest extends Base
 {
@@ -17,7 +18,7 @@ class AdminFactoryTest extends Base
         $this->assertCount(0, $adminFactory->getAdmins(), 'No admin should be found');
     }
 
-    public function testCreateAdminFromConfig()
+    public function testCreateAdminFromConfiguration()
     {
         $client = $this->initApplication();
         $container = $client->getKernel()->getContainer();
@@ -25,7 +26,7 @@ class AdminFactoryTest extends Base
         $config = $this->getFakeAdminsConfiguration();
 
         foreach ($config as $adminName => $adminConfig) {
-            $adminFactory->createAdminFromConfig($adminName, $adminConfig);
+            $adminFactory->createAdminFromConfiguration($adminName, $adminConfig);
             $admin = $adminFactory->getAdmin($adminName);
             // test actual admin
             $this->assertInstanceOf('BlueBear\AdminBundle\Admin\Admin', $admin, 'Admin not found after creation');
@@ -39,6 +40,63 @@ class AdminFactoryTest extends Base
             }
         }
         $this->assertCount(count($config), $adminFactory->getAdmins(), 'Error on admin count');
+    }
+
+    public function testCreateApplicationFromConfiguration()
+    {
+        $client = $this->initApplication();
+        $container = $client->getKernel()->getContainer();
+        $adminFactory = new AdminFactory($container);
+        // no configuration : test default values
+        $application = $adminFactory->createApplicationFromConfiguration([]);
+        $this->assertNotNull($application->title);
+        $this->assertNotFalse($container->get('templating')->exists($application->blockTemplate));
+        $this->assertFalse($application->bootstrap);
+        $this->assertNotNull($application->dateFormat);
+        $this->assertNotNull($application->description);
+        $this->assertNotNull($application->lang);
+        $this->assertNotFalse($container->get('templating')->exists($application->layout));
+        // test invalid configuration
+        $this->assertExceptionRaised('Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException', function () use ($adminFactory) {
+            $adminFactory->createApplicationFromConfiguration([
+                'new_parameter' => true
+            ]);
+        });
+    }
+
+    public function testGetAdminFromRequest()
+    {
+        $client = $this->initApplication();
+        $container = $client->getKernel()->getContainer();
+        $adminFactory = new AdminFactory($container);
+        // test invalid route
+        $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
+            $request = Request::create('/admin/test');
+            $adminFactory->getAdminFromRequest($request);
+        });
+        $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
+            $request = Request::create('/admin/test/list', 'GET', [
+                '_route_params' => [
+                    '_admin' => 'invalid_test',
+                    '_action' => 'list',
+                ]
+            ]);
+            $adminFactory->getAdminFromRequest($request);
+        });
+        // test valid route
+        $adminFactory->createApplicationFromConfiguration([]);
+        $adminFactory->createAdminFromConfiguration('test', [
+            'entity' => 'Test\TestBundle\Entity\TestEntity',
+            'form' => 'test'
+        ]);
+        $request = Request::create('/admin/test/list', 'GET', [
+            '_route_params' => [
+                '_admin' => 'test',
+                '_action' => 'list',
+            ]
+        ]);
+        $admin = $adminFactory->getAdminFromRequest($request);
+        $this->assertInstanceOf('BlueBear\AdminBundle\Admin\Admin', $admin, 'Admin not found in request');
     }
 
     protected function getFakeAdminsConfiguration()
@@ -120,6 +178,7 @@ class AdminFactoryTest extends Base
             $this->assertEquals(array_keys($actionConfiguration['fields']), array_keys($admin->getAction($actionName)->getFields()));
             $this->assertEquals($actionConfiguration['permissions'], $admin->getAction($actionName)->getPermissions());
             $this->assertEquals($adminConfiguration['max_per_page'], $admin->getConfiguration()->maxPerPage);
+            $this->assertEquals($adminConfiguration['controller'], $admin->getController());
         }
     }
 }
