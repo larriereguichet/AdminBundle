@@ -125,13 +125,21 @@ class AdminFactory
         /** @var EntityManager $entityManager */
         $entityManager = $this->container->get('doctrine')->getManager();
         $resolver = new OptionsResolver();
+        // optional options
         $resolver->setDefaults([
             'actions' => [
                 'list' => [],
                 'create' => [],
                 'edit' => [],
                 'delete' => []
-            ]
+            ],
+            'controller' => 'BlueBearAdminBundle:Generic',
+            'max_per_page' => 25
+        ]);
+        // required options
+        $resolver->setRequired([
+            'entity',
+            'form'
         ]);
         $adminConfiguration = $resolver->resolve($adminConfiguration);
         // gathering admin data
@@ -191,28 +199,25 @@ class AdminFactory
      */
     protected function createActionFromConfig($actionName, $actionConfiguration, Admin $admin)
     {
+        // resolving default options. Options are different according to action name
         $resolver = new OptionsResolver();
-        $resolver->setDefaults($this->getDefaultActionConfiguration($actionName));
+        $resolver->setDefaults($this->getDefaultActionConfiguration($actionName, $admin->getName()));
         $actionConfiguration = $resolver->resolve($actionConfiguration);
-
-        // guess title if not provided
-        if (!$actionConfiguration['title']) {
-            $actionConfiguration['title'] = $this->getDefaultActionTitle($admin->getName(), $actionName);
-        }
+        // creating action object from configuration
         $action = new Action();
         $action->setName($actionName);
         $action->setTitle($actionConfiguration['title']);
         $action->setPermissions($actionConfiguration['permissions']);
         $action->setRoute($admin->generateRouteName($action->getName()));
         $action->setExport($actionConfiguration['export']);
-
         // adding fields items to actions
         foreach ($actionConfiguration['fields'] as $fieldName => $fieldConfiguration) {
             $field = new Field();
+            //var_dump($fieldName);
             $field->setName($fieldName);
             $field->setTitle($this->inflectString($fieldName));
 
-            if (array_key_exists('length', $fieldConfiguration)) {
+            if (is_array($fieldConfiguration) && array_key_exists('length', $fieldConfiguration)) {
                 $field->setLength($fieldConfiguration['length']);
             }
             $action->addField($field);
@@ -260,16 +265,21 @@ class AdminFactory
         return $manager;
     }
 
-    protected function getDefaultActionTitle($title, $action)
+    protected function generateDefaultActionTitle($title, $action)
     {
         $default = $title;
 
         if ($action == 'list') {
+            if (substr($title, strlen($title) - 1) == 'y') {
+                $title = substr($title, 0, strlen($title) - 1) . 'ie';
+            }
             $default = $this->inflectString($title) . 's List';
         } else if ($action == 'create') {
             $default = 'Create ' . $this->inflectString($title);
         } else if ($action == 'edit') {
             $default = 'Edit ' . $this->inflectString($title);
+        } else if ($action == 'delete') {
+            $default = 'Delete ' . $this->inflectString($title);
         }
         return $default;
     }
@@ -278,40 +288,21 @@ class AdminFactory
      * Return default actions configuration (list has exports, permissions are ROLE_ADMIN)
      *
      * @param $actionName
+     * @param $adminName
      * @return array
      */
-    protected function getDefaultActionConfiguration($actionName)
+    protected function getDefaultActionConfiguration($actionName, $adminName)
     {
-        $configuration = [];
-
+        $configuration = [
+            'title' => $this->generateDefaultActionTitle($adminName, $actionName),
+            'fields' => $this->getDefaultFields(),
+            'permissions' => ['ROLE_ADMIN'],
+            'export' => []
+        ];
         if ($actionName == 'list') {
-            $configuration = [
-                'title' => null,
-                'fields' => $this->getDefaultFields(),
-                'export' => ['json', 'xml', 'xls', 'csv', 'html'],
-                'permissions' => ['ROLE_ADMIN']
-            ];
-        } else if ($actionName == 'create') {
-            $configuration = [
-                'title' => null,
-                'fields' => $this->getDefaultFields(),
-                'permissions' => ['ROLE_ADMIN'],
-                'export' => []
-            ];
-        } else if ($actionName == 'edit') {
-            $configuration = [
-                'title' => null,
-                'permissions' => ['ROLE_ADMIN'],
-                'fields' => $this->getDefaultFields(),
-                'export' => []
-            ];
-        } else if ($actionName == 'delete') {
-            $configuration = [
-                'title' => null,
-                'fields' => $this->getDefaultFields(),
-                'permissions' => ['ROLE_ADMIN'],
-                'export' => []
-            ];
+            $configuration = array_merge($configuration, [
+                'export' => ['json', 'xml', 'xls', 'csv', 'html']
+            ]);
         }
         return $configuration;
     }
@@ -319,8 +310,7 @@ class AdminFactory
     protected function getDefaultFields()
     {
         return [
-            'id' => [],
-            'label' => []
+            'id' => []
         ];
     }
 
@@ -332,7 +322,7 @@ class AdminFactory
             'routing' => [
                 'name_pattern' => 'bluebear.admin.{admin}',
                 'url_pattern' => '/{admin}/{action}',
-             ]
+            ]
         ];
     }
 }

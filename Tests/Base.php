@@ -16,9 +16,14 @@ class Base extends WebTestCase
         $this->assertTrue($client != null, 'TestClient successfully initialized');
 
         if (!self::$isDatabaseCreated) {
-            exec(__DIR__ . '/app/console doctrine:database:create', $output);
-            exec(__DIR__ . '/app/console doctrine:schema:update', $output);
-            var_dump($output);
+            exec(__DIR__ . '/app/console doctrine:database:create --if-not-exists', $output);
+            exec(__DIR__ . '/app/console doctrine:schema:update --force', $output);
+
+            foreach ($output as $line) {
+                // only in verbose mode
+                fwrite(STDOUT, $line . "\n");
+            }
+            fwrite(STDOUT, "\n");
             self::$isDatabaseCreated = true;
         }
         $request = Request::create($url);
