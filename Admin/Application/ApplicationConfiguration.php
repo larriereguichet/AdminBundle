@@ -25,15 +25,8 @@ class ApplicationConfiguration
         $this->layout = $applicationConfiguration['layout'];
         $this->blockTemplate = $applicationConfiguration['block_template'];
         $this->dateFormat = $applicationConfiguration['date_format'];
-
-        if (array_key_exists('title', $applicationConfiguration)) {
-            $this->title = $applicationConfiguration['title'];
-        }
-        if (array_key_exists('description', $applicationConfiguration)) {
-            $this->description = $applicationConfiguration['description'];
-        }
-        if (array_key_exists('bootstrap', $applicationConfiguration)) {
-            $this->bootstrap = $applicationConfiguration['bootstrap'];
-        }
+        $this->title = $applicationConfiguration['title'];
+        $this->description = $applicationConfiguration['description'];
+        $this->bootstrap = $applicationConfiguration['bootstrap'];
     }
 }

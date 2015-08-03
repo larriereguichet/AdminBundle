@@ -2,6 +2,8 @@
 
 namespace BlueBear\AdminBundle\Tests;
 
+use Closure;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -30,5 +32,20 @@ class Base extends WebTestCase
         $client->doRequest($request);
 
         return $client;
+    }
+
+    public function assertExceptionRaised($exceptionClass, Closure $closure)
+    {
+        $e = null;
+        $isClassValid = false;
+
+        try {
+            $closure();
+        } catch (Exception $e) {
+            if (get_class($e) == $exceptionClass) {
+                $isClassValid = true;
+            }
+        }
+        $this->assertTrue($isClassValid, 'Expected ' . $exceptionClass . ', got ' . get_class($e));
     }
 }

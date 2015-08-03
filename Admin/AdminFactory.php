@@ -40,6 +40,7 @@ class AdminFactory
      */
     public function __construct(ContainerInterface $container)
     {
+        // TODO remove dependence to container
         $this->container = $container;
         $admins = $this->container->getParameter('bluebear.admins');
         // dispatch an event with admins configurations to allow dynamic admin creation
@@ -51,7 +52,7 @@ class AdminFactory
 
         // creating configured admin
         foreach ($admins as $adminName => $adminConfig) {
-            $this->createAdminFromConfig($adminName, $adminConfig);
+            $this->createAdminFromConfiguration($adminName, $adminConfig);
         }
     }
 
@@ -66,6 +67,9 @@ class AdminFactory
     {
         $routeParameters = $request->get('_route_params');
 
+        if (!$routeParameters) {
+            throw new Exception('Cannot find admin _route_params parameters for request');
+        }
         if (!array_key_exists('_admin', $routeParameters)) {
             throw new Exception('Cannot find admin from request. "_admin" route parameter is missing');
         }
@@ -120,7 +124,7 @@ class AdminFactory
      * @param $adminName
      * @param array $adminConfiguration
      */
-    public function createAdminFromConfig($adminName, array $adminConfiguration)
+    public function createAdminFromConfiguration($adminName, array $adminConfiguration)
     {
         /** @var EntityManager $entityManager */
         $entityManager = $this->container->get('doctrine')->getManager();
@@ -174,7 +178,21 @@ class AdminFactory
      */
     public function createApplicationFromConfiguration(array $applicationConfiguration)
     {
-        $applicationConfiguration = array_merge($this->getDefaultApplicationConfiguration(), $applicationConfiguration);
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            'title' => 'Admin',
+            'description' => 'AdminBundle powered by L\'arriere-guichet',
+            'layout' => 'BlueBearAdminBundle::admin.layout.html.twig',
+            'block_template' => 'BlueBearAdminBundle:Form:fields.html.twig',
+            'max_per_page' => 25,
+            'date_format' => 'Y-merwgùù*ù-d',
+            'routing' => [
+                'name_pattern' => 'bluebear.admin.{admin}',
+                'url_pattern' => '/{admin}/{action}',
+            ],
+            'bootstrap' => false
+        ]);
+        $applicationConfiguration = $resolver->resolve($applicationConfiguration);
         $applicationConfig = new ApplicationConfiguration();
         $applicationConfig->hydrateFromConfiguration($applicationConfiguration);
 
@@ -311,18 +329,6 @@ class AdminFactory
     {
         return [
             'id' => []
-        ];
-    }
-
-    protected function getDefaultApplicationConfiguration()
-    {
-        return [
-            'layout' => 'BlueBearAdminBundle::admin.layout.html.twig',
-            'date_format' => 'd/m/Y',
-            'routing' => [
-                'name_pattern' => 'bluebear.admin.{admin}',
-                'url_pattern' => '/{admin}/{action}',
-            ]
         ];
     }
 }
