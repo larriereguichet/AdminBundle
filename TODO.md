@@ -1,6 +1,8 @@
 v0.3:
 Features:
 - unit testing
+- add config for order entities in list view
+- add link type in list
 - file exporters : array type, association
 - adding mass edit
 - add filters
@@ -15,6 +17,7 @@ Bug fixes :
 - fix bug when deleting entity with integrity constraint
 - fix bug with FOSUser column sorting
 - fixing columns order in export
+- fix bug in list on column title when property has a uppercase character (eg: publicationDate should be Publication Date)
 
 v0.2:
 Features:
