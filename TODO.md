@@ -12,6 +12,7 @@ Features:
 - improve admin and action name from request (use default parameters in routing instead
 - handling new Symfony bootstrap layout
 - configure application date format (filename export, displayed date...)
+- localization
 
 Bug fixes :
 - fix bug when deleting entity with integrity constraint
