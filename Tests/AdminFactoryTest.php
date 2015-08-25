@@ -96,7 +96,17 @@ class AdminFactoryTest extends Base
             ]
         ]);
         $admin = $adminFactory->getAdminFromRequest($request);
+        // test fake admin name
+        $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
+            $adminFactory->getAdmin('invalid_test');
+        });
+        $admin->createEntity();
         $this->assertInstanceOf('BlueBear\AdminBundle\Admin\Admin', $admin, 'Admin not found in request');
+        $this->assertInstanceOf('BlueBear\AdminBundle\Admin\Admin', $adminFactory->getAdmin('test'), 'Invalid admin');
+        $this->assertEquals($admin, $adminFactory->getAdmin('test'), 'Invalid admin');
+        $this->assertEquals('test', $admin->getName(), 'Invalid admin name');
+        $this->assertEquals('Test\TestBundle\Entity\TestEntity', $admin->getEntityNamespace(), 'Invalid admin namespace');
+        $this->assertTrue($admin->getEntity() || count($admin->getEntities()), 'No entities were found');
     }
 
     protected function getFakeAdminsConfiguration()
