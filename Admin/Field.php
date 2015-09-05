@@ -19,6 +19,8 @@ class Field
      */
     protected $length;
 
+    protected $format;
+
     /**
      * @return string
      */
@@ -87,5 +89,21 @@ class Field
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    /**
+     * @param mixed $format
+     */
+    public function setFormat($format)
+    {
+        $this->format = $format;
     }
 }
