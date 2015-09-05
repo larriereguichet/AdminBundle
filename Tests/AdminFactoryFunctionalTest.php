@@ -6,7 +6,7 @@ use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\AdminBundle\Admin\AdminFactory;
 use Symfony\Component\HttpFoundation\Request;
 
-class AdminFactoryTest extends Base
+class AdminFactoryFunctionalTest extends Base
 {
     public function testInitNoParameters()
     {
@@ -49,13 +49,13 @@ class AdminFactoryTest extends Base
         $adminFactory = new AdminFactory($container);
         // no configuration : test default values
         $application = $adminFactory->createApplicationFromConfiguration([]);
-        $this->assertNotNull($application->title);
-        $this->assertNotFalse($container->get('templating')->exists($application->blockTemplate));
-        $this->assertFalse($application->bootstrap);
-        $this->assertNotNull($application->dateFormat);
-        $this->assertNotNull($application->description);
-        $this->assertNotNull($application->lang);
-        $this->assertNotFalse($container->get('templating')->exists($application->layout));
+        $this->assertNotNull($application->getTitle());
+        $this->assertNotFalse($container->get('templating')->exists($application->getBlockTemplate()));
+        $this->assertFalse($application->useBootstrap());
+        $this->assertNotNull($application->getDateFormat());
+        $this->assertNotNull($application->getDescription());
+        $this->assertNotNull($application->getLang());
+        $this->assertNotFalse($container->get('templating')->exists($application->getLayout()));
         // test invalid configuration
         $this->assertExceptionRaised('Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException', function () use ($adminFactory) {
             $adminFactory->createApplicationFromConfiguration([
@@ -134,6 +134,11 @@ class AdminFactoryTest extends Base
                             'label' => [
                                 'length' => 50
                             ]
+                        ],
+                        'order' => [
+                            'property' => 'createdAt',
+                            // TODO test order with fixtures
+                            'order' => 'desc'
                         ]
                     ],
                     'custom_edit' => [
@@ -187,7 +192,7 @@ class AdminFactoryTest extends Base
             $this->assertEquals($admin->getAction($actionName)->getTitle(), $actionConfiguration['title']);
             $this->assertEquals(array_keys($actionConfiguration['fields']), array_keys($admin->getAction($actionName)->getFields()));
             $this->assertEquals($actionConfiguration['permissions'], $admin->getAction($actionName)->getPermissions());
-            $this->assertEquals($adminConfiguration['max_per_page'], $admin->getConfiguration()->maxPerPage);
+            $this->assertEquals($adminConfiguration['max_per_page'], $admin->getConfiguration()->getMaxPerPage());
             $this->assertEquals($adminConfiguration['controller'], $admin->getController());
         }
     }
