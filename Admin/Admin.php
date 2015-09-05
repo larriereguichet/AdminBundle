@@ -2,6 +2,7 @@
 
 namespace BlueBear\AdminBundle\Admin;
 
+use BlueBear\AdminBundle\Admin\Configuration\AdminConfiguration;
 use BlueBear\AdminBundle\Manager\GenericManager;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -51,7 +52,7 @@ class Admin implements AdminInterface
     protected $manager;
 
     /**
-     * @var AdminConfig
+     * @var AdminConfiguration
      */
     protected $configuration;
 
@@ -83,41 +84,28 @@ class Admin implements AdminInterface
      */
     protected $formType;
 
+    /**
+     * @var
+     */
     protected $pager;
 
-    public function __construct($name, $repository, $manager, AdminConfig $adminConfig)
+    /**
+     * @param $name
+     * @param $repository
+     * @param $manager
+     * @param AdminConfiguration $adminConfig
+     */
+    public function __construct($name, $repository, $manager, AdminConfiguration $adminConfig)
     {
         $this->name = $name;
         $this->repository = $repository;
         $this->manager = $manager;
         $this->configuration = $adminConfig;
-        $this->controller = $adminConfig->controllerName;
-        $this->entityNamespace = $adminConfig->entityName;
-        $this->formType = $adminConfig->formType;
+        $this->controller = $adminConfig->getControllerName();
+        $this->entityNamespace = $adminConfig->getEntityName();
+        $this->formType = $adminConfig->getFormType();
         $this->entities = new ArrayCollection();
         $this->customManagerActions = [];
-    }
-
-    /**
-     * Generate a route for admin and action name
-     *
-     * @param $actionName
-     * @return string
-     * @throws Exception
-     */
-    public function generateRouteName($actionName)
-    {
-        if (!array_key_exists($actionName, $this->getConfiguration()->actions)) {
-            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$this->getName()}\" (available action are: \""
-                . implode('", "', array_keys($this->getConfiguration()->actions)) . "\")");
-        }
-        // get routing name pattern
-        $routingPattern = $this->configuration->routingNamePattern;
-        // replace admin and action name in pattern
-        $routeName = str_replace('{admin}', $this->underscore($this->getName()), $routingPattern);
-        $routeName = str_replace('{action}', $actionName, $routeName);
-
-        return $routeName;
     }
 
     /**
@@ -262,11 +250,22 @@ class Admin implements AdminInterface
                 throw new Exception("Invalid order \"{$order}\"");
             }
         }
+        $queryBuilder = $this->getManager()->getFindAllQueryBuilder($sort, $order);
+
+        // if no sort was used by user, we sort with configured sort if there is one
+        if (!$sort && $this->getCurrentAction()->hasOrder()) {
+            $order = $this->getCurrentAction()->getOrder();
+
+            foreach ($order as $orderConfiguration) {
+                $queryBuilder
+                    ->addOrderBy('entity.' . $orderConfiguration['field'], $orderConfiguration['order']);
+            }
+        }
         // create adapter from query builder
-        $adapter = new DoctrineORMAdapter($this->getManager()->getFindAllQueryBuilder($sort, $order));
+        $adapter = new DoctrineORMAdapter($queryBuilder);
         // create pager
         $this->pager = new Pagerfanta($adapter);
-        $this->pager->setMaxPerPage($this->configuration->maxPerPage);
+        $this->pager->setMaxPerPage($this->configuration->getMaxPerPage());
         $this->pager->setCurrentPage($page);
         $this->entities = $this->pager->getCurrentPageResults();
 
@@ -302,7 +301,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return AdminConfig
+     * @return AdminConfiguration
      */
     public function getConfiguration()
     {

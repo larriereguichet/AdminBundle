@@ -2,6 +2,7 @@
 
 namespace BlueBear\AdminBundle\Admin;
 
+use BlueBear\AdminBundle\Admin\Configuration\AdminConfiguration;
 use BlueBear\AdminBundle\Manager\GenericManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
@@ -10,8 +11,13 @@ use Pagerfanta\Pagerfanta;
 
 interface AdminInterface
 {
-    public function generateRouteName($actionName);
+    /**
+     * Return admin name
+     *
+     * @return string
+     */
     public function getName();
+
     /**
      * Return entity path for routing (for example, MyNamespace\EntityName => entityName)
      *
@@ -93,7 +99,7 @@ interface AdminInterface
     public function getManager();
 
     /**
-     * @return AdminConfig
+     * @return AdminConfiguration
      */
     public function getConfiguration();
 

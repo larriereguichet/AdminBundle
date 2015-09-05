@@ -2,11 +2,11 @@
 
 namespace BlueBear\AdminBundle\Admin;
 
-use BlueBear\AdminBundle\Admin\Application\ApplicationConfiguration;
+use BlueBear\AdminBundle\Admin\Configuration\AdminConfiguration;
+use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use BlueBear\AdminBundle\Event\AdminFactoryEvent;
 use BlueBear\AdminBundle\Manager\GenericManager;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
-use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
@@ -24,7 +24,7 @@ class AdminFactory
 {
     const ADMIN_CREATION = 'bluebear.admin.adminCreation';
 
-    use StringUtilsTrait, ContainerTrait;
+    use ContainerTrait;
 
     protected $admins = [];
 
@@ -147,24 +147,27 @@ class AdminFactory
         ]);
         $adminConfiguration = $resolver->resolve($adminConfiguration);
         // gathering admin data
-        $adminConfig = new AdminConfig();
+        $adminConfig = new AdminConfiguration();
         $adminConfig->hydrateFromConfiguration($adminConfiguration, $this->container->getParameter('bluebear.admin.application'));
-        $entityRepository = $entityManager->getRepository($adminConfig->entityName);
+        $entityRepository = $entityManager->getRepository($adminConfig->getEntityName());
         // create generic manager from configuration
         $entityManager = $this->createManagerFromConfig($adminConfig, $entityRepository);
         $admin = new Admin($adminName, $entityRepository, $entityManager, $adminConfig);
         // actions are optional
-        if (!$adminConfig->actions) {
-            $adminConfig->actions = [
+        if (!$adminConfig->getActions()) {
+            $adminConfig->setActions([
                 'list' => [],
                 'create' => [],
                 'edit' => [],
                 'delete' => []
-            ];
+            ]);
         }
+        /** @var ActionFactory $actionFactory */
+        $actionFactory = $this->container->get('bluebear.admin.action_factory');
         // adding actions
-        foreach ($adminConfig->actions as $actionName => $actionConfig) {
-            $admin->addAction($this->createActionFromConfig($actionName, $actionConfig, $admin));
+        foreach ($adminConfig->getActions() as $actionName => $actionConfig) {
+            $action = $actionFactory->createActionFromConfig($actionName, $actionConfig, $admin);
+            $admin->addAction($action);
         }
         // adding admins to the pool
         $this->admins[$admin->getName()] = $admin;
@@ -185,7 +188,7 @@ class AdminFactory
             'layout' => 'BlueBearAdminBundle::admin.layout.html.twig',
             'block_template' => 'BlueBearAdminBundle:Form:fields.html.twig',
             'max_per_page' => 25,
-            'date_format' => 'Y-merwgùù*ù-d',
+            'date_format' => 'Y-m-d',
             'routing' => [
                 'name_pattern' => 'bluebear.admin.{admin}',
                 'url_pattern' => '/{admin}/{action}',
@@ -208,70 +211,35 @@ class AdminFactory
     }
 
     /**
-     * Create an Action from configuration values
-     *
-     * @param $actionName
-     * @param $actionConfiguration
-     * @param Admin $admin
-     * @return Action
-     */
-    protected function createActionFromConfig($actionName, $actionConfiguration, Admin $admin)
-    {
-        // resolving default options. Options are different according to action name
-        $resolver = new OptionsResolver();
-        $resolver->setDefaults($this->getDefaultActionConfiguration($actionName, $admin->getName()));
-        $actionConfiguration = $resolver->resolve($actionConfiguration);
-        // creating action object from configuration
-        $action = new Action();
-        $action->setName($actionName);
-        $action->setTitle($actionConfiguration['title']);
-        $action->setPermissions($actionConfiguration['permissions']);
-        $action->setRoute($admin->generateRouteName($action->getName()));
-        $action->setExport($actionConfiguration['export']);
-        // adding fields items to actions
-        foreach ($actionConfiguration['fields'] as $fieldName => $fieldConfiguration) {
-            $field = new Field();
-            //var_dump($fieldName);
-            $field->setName($fieldName);
-            $field->setTitle($this->inflectString($fieldName));
-
-            if (is_array($fieldConfiguration) && array_key_exists('length', $fieldConfiguration)) {
-                $field->setLength($fieldConfiguration['length']);
-            }
-            $action->addField($field);
-        }
-        return $action;
-    }
-
-    /**
      * Create a generic manager from configuration
      *
      * @param $adminConfig
      * @param EntityRepository $entityRepository
      * @return GenericManager
      */
-    protected function createManagerFromConfig(AdminConfig $adminConfig, EntityRepository $entityRepository)
+    protected function createManagerFromConfig(AdminConfiguration $adminConfig, EntityRepository $entityRepository)
     {
         $customManager = null;
         $methodsMapping = [];
         // set default entity manager
         /** @var EntityManager $entityManager */
         $entityManager = $this->container->get('doctrine')->getManager();
+        $managerConfiguration = $adminConfig->getManagerConfiguration();
         // custom manager is optional
-        if ($adminConfig->managerConfiguration) {
-            $customManager = $this->container->get($adminConfig->managerConfiguration['name']);
+        if ($managerConfiguration) {
+            $customManager = $this->container->get($managerConfiguration['name']);
 
-            if (array_key_exists('save', $adminConfig->managerConfiguration)) {
-                $methodsMapping['save'] = $adminConfig->managerConfiguration['save'];
+            if (array_key_exists('save', $managerConfiguration)) {
+                $methodsMapping['save'] = $managerConfiguration['save'];
             }
-            if (array_key_exists('list', $adminConfig->managerConfiguration)) {
-                $methodsMapping['list'] = $adminConfig->managerConfiguration['list'];
+            if (array_key_exists('list', $managerConfiguration)) {
+                $methodsMapping['list'] = $managerConfiguration['list'];
             }
-            if (array_key_exists('edit', $adminConfig->managerConfiguration)) {
-                $methodsMapping['edit'] = $adminConfig->managerConfiguration['edit'];
+            if (array_key_exists('edit', $managerConfiguration)) {
+                $methodsMapping['edit'] = $managerConfiguration['edit'];
             }
-            if (array_key_exists('delete', $adminConfig->managerConfiguration)) {
-                $methodsMapping['delete'] = $adminConfig->managerConfiguration['delete'];
+            if (array_key_exists('delete', $managerConfiguration)) {
+                $methodsMapping['delete'] = $managerConfiguration['delete'];
             }
         }
         $manager = new GenericManager(
@@ -283,52 +251,5 @@ class AdminFactory
         return $manager;
     }
 
-    protected function generateDefaultActionTitle($title, $action)
-    {
-        $default = $title;
 
-        if ($action == 'list') {
-            if (substr($title, strlen($title) - 1) == 'y') {
-                $title = substr($title, 0, strlen($title) - 1) . 'ie';
-            }
-            $default = $this->inflectString($title) . 's List';
-        } else if ($action == 'create') {
-            $default = 'Create ' . $this->inflectString($title);
-        } else if ($action == 'edit') {
-            $default = 'Edit ' . $this->inflectString($title);
-        } else if ($action == 'delete') {
-            $default = 'Delete ' . $this->inflectString($title);
-        }
-        return $default;
-    }
-
-    /**
-     * Return default actions configuration (list has exports, permissions are ROLE_ADMIN)
-     *
-     * @param $actionName
-     * @param $adminName
-     * @return array
-     */
-    protected function getDefaultActionConfiguration($actionName, $adminName)
-    {
-        $configuration = [
-            'title' => $this->generateDefaultActionTitle($adminName, $actionName),
-            'fields' => $this->getDefaultFields(),
-            'permissions' => ['ROLE_ADMIN'],
-            'export' => []
-        ];
-        if ($actionName == 'list') {
-            $configuration = array_merge($configuration, [
-                'export' => ['json', 'xml', 'xls', 'csv', 'html']
-            ]);
-        }
-        return $configuration;
-    }
-
-    protected function getDefaultFields()
-    {
-        return [
-            'id' => []
-        ];
-    }
 }
