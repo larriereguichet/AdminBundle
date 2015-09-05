@@ -2,7 +2,7 @@
 
 namespace BlueBear\AdminBundle\Event\Subscriber;
 
-use BlueBear\AdminBundle\Admin\AdminFactory;
+use BlueBear\AdminBundle\Admin\Factory\AdminFactory;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;

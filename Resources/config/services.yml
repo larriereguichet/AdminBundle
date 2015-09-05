@@ -6,8 +6,9 @@ parameters:
     # routing
     bluebear.admin.routing: BlueBear\AdminBundle\Routing\RoutingLoader
     # admin factories
-    bluebear.admin.factory: BlueBear\AdminBundle\Admin\AdminFactory
-    bluebear.admin.action_factory: BlueBear\AdminBundle\Admin\ActionFactory
+    bluebear.admin.factory: BlueBear\AdminBundle\Admin\Factory\AdminFactory
+    bluebear.admin.action_factory: BlueBear\AdminBundle\Admin\Factory\ActionFactory
+    bluebear.admin.field_factory: BlueBear\AdminBundle\Admin\Factory\FieldFactory
     # twig
     bluebear.admin.twig: BlueBear\AdminBundle\Twig\AdminExtension
 
@@ -43,7 +44,11 @@ services:
 
     bluebear.admin.action_factory:
         class: %bluebear.admin.action_factory%
-        arguments: [@bluebear.admin.routing]
+        arguments: [@bluebear.admin.routing, @bluebear.admin.field_factory]
+
+    bluebear.admin.field_factory:
+        class: %bluebear.admin.field_factory%
+        arguments: [%bluebear.admin.application%]
 
     # twig
     bluebear.admin.twig:
