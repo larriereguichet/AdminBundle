@@ -26,8 +26,8 @@
                                 <td>{{ field(field, entity, config) | trans }}</td>
                             {% endfor %}
                             <td>
-                                <a href="{{ path(admin.generateRouteName('edit'), {id: entity.id}) }}">edit</a>
-                                <a href="{{ path(admin.generateRouteName('delete'), {id: entity.id}) }}">delete</a>
+                                <a href="{{ path(routing.generateRouteName('edit', admin), {id: entity.id}) }}">edit</a>
+                                <a href="{{ path(routing.generateRouteName('delete', admin), {id: entity.id}) }}">delete</a>
                             </td>
                         </tr>
                     {% endfor %}

@@ -5,8 +5,9 @@ parameters:
     bluebear.admin.form.delete: BlueBear\AdminBundle\Form\Type\DeleteType
     # routing
     bluebear.admin.routing: BlueBear\AdminBundle\Routing\RoutingLoader
-    # admin factory
+    # admin factories
     bluebear.admin.factory: BlueBear\AdminBundle\Admin\AdminFactory
+    bluebear.admin.action_factory: BlueBear\AdminBundle\Admin\ActionFactory
     # twig
     bluebear.admin.twig: BlueBear\AdminBundle\Twig\AdminExtension
 
@@ -35,10 +36,14 @@ services:
         calls:
             - [setContainer, [@service_container]]
 
-    # factory
+    # factories
     bluebear.admin.factory:
         class: %bluebear.admin.factory%
         arguments: [@service_container]
+
+    bluebear.admin.action_factory:
+        class: %bluebear.admin.action_factory%
+        arguments: [@bluebear.admin.routing]
 
     # twig
     bluebear.admin.twig:

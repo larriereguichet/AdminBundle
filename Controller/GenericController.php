@@ -84,12 +84,12 @@ class GenericController extends Controller
             $this->setMessage('bluebear.admin.' . $admin->getName() . '.saved');
 
             if ($request->request->get('submit') == 'save') {
-                return $this->redirect($this->generateUrl($admin->generateRouteName('edit'), [
+                return $this->redirect($this->generateUrl($this->container->get('bluebear.admin.routing')->generateRouteName('edit', $admin), [
                     'id' => $admin->getEntity()->getId()
                 ]));
             } else {
                 // redirect to list
-                return $this->redirect($this->generateUrl($admin->generateRouteName('list')));
+                return $this->redirect($this->generateUrl($this->container->get('bluebear.admin.routing')->generateRouteName('list', $admin)));
             }
         }
         return [
@@ -124,12 +124,12 @@ class GenericController extends Controller
                 '%entity%' => $admin->getEntityLabel()
             ]);
             if ($request->request->get('submit') == 'save') {
-                return $this->redirect($this->generateUrl($admin->generateRouteName('edit'), [
+                return $this->redirect($this->generateUrl($this->container->get('bluebear.admin.routing')->generateRouteName('edit', $admin), [
                     'id' => $accessor->getValue($admin->getEntity(), 'id')
                 ]));
             } else {
                 // redirect to list
-                return $this->redirect($this->generateUrl($admin->generateRouteName('list')));
+                return $this->redirect($this->generateUrl($this->container->get('bluebear.admin.routing')->generateRouteName('list', $admin)));
             }
         }
         return [
@@ -164,7 +164,7 @@ class GenericController extends Controller
                 '%entity%' => $admin->getEntityLabel()
             ]);
             // redirect to list
-            return $this->redirect($this->generateUrl($admin->generateRouteName('list')));
+            return $this->redirect($this->generateUrl($this->container->get('bluebear.admin.routing')->generateRouteName('list', $admin)));
         }
         return [
             'admin' => $admin,
