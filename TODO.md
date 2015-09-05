@@ -10,7 +10,7 @@ x add config for order entities in list view
 - handle custom actions for edit form (enable user for example)
 - add configuration for custom url for actions
 - add configuration for custom actions
-- improve admin and action name from request (use default parameters in routing instead
+- improve admin and action name from request (use default parameters in routing instead)
 - handling new Symfony bootstrap layout
 - configure application date format (filename export, displayed date...)
 - localization

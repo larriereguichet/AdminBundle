@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('title')->end()
                         ->scalarNode('description')->end()
                         ->scalarNode('layout')->end()
-                        ->scalarNode('date_format')->end()
+                        ->scalarNode('date_format')->defaultValue('Y-m-d')->end()
                         ->scalarNode('bootstrap')->end()
                         ->scalarNode('max_per_page')->end()
                         ->arrayNode('routing')

@@ -3,7 +3,7 @@
 namespace BlueBear\AdminBundle\Tests;
 
 use BlueBear\AdminBundle\Admin\Admin;
-use BlueBear\AdminBundle\Admin\AdminFactory;
+use BlueBear\AdminBundle\Admin\Factory\AdminFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdminFactoryFunctionalTest extends Base
@@ -26,7 +26,7 @@ class AdminFactoryFunctionalTest extends Base
         $config = $this->getFakeAdminsConfiguration();
 
         foreach ($config as $adminName => $adminConfig) {
-            $adminFactory->createAdminFromConfiguration($adminName, $adminConfig);
+            $adminFactory->create($adminName, $adminConfig);
             $admin = $adminFactory->getAdmin($adminName);
             // test actual admin
             $this->assertInstanceOf('BlueBear\AdminBundle\Admin\Admin', $admin, 'Admin not found after creation');
@@ -85,7 +85,7 @@ class AdminFactoryFunctionalTest extends Base
         });
         // test valid route
         $adminFactory->createApplicationFromConfiguration([]);
-        $adminFactory->createAdminFromConfiguration('test', [
+        $adminFactory->create('test', [
             'entity' => 'Test\TestBundle\Entity\TestEntity',
             'form' => 'test'
         ]);
@@ -130,7 +130,7 @@ class AdminFactoryFunctionalTest extends Base
                         ],
                         'export' => ['json'],
                         'fields' => [
-                            'id' => null,
+                            'id' => [],
                             'label' => [
                                 'length' => 50
                             ]
@@ -148,8 +148,8 @@ class AdminFactoryFunctionalTest extends Base
                         ],
                         'export' => ['html'],
                         'fields' => [
-                            'id' => null,
-                            'label' => null
+                            'id' => [],
+                            'label' => []
                         ]
                     ],
                 ]

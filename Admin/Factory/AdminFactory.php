@@ -1,7 +1,8 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin;
+namespace BlueBear\AdminBundle\Admin\Factory;
 
+use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\AdminBundle\Admin\Configuration\AdminConfiguration;
 use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use BlueBear\AdminBundle\Event\AdminFactoryEvent;
@@ -52,7 +53,7 @@ class AdminFactory
 
         // creating configured admin
         foreach ($admins as $adminName => $adminConfig) {
-            $this->createAdminFromConfiguration($adminName, $adminConfig);
+            $this->create($adminName, $adminConfig);
         }
     }
 
@@ -124,7 +125,7 @@ class AdminFactory
      * @param $adminName
      * @param array $adminConfiguration
      */
-    public function createAdminFromConfiguration($adminName, array $adminConfiguration)
+    public function create($adminName, array $adminConfiguration)
     {
         /** @var EntityManager $entityManager */
         $entityManager = $this->container->get('doctrine')->getManager();
@@ -166,7 +167,7 @@ class AdminFactory
         $actionFactory = $this->container->get('bluebear.admin.action_factory');
         // adding actions
         foreach ($adminConfig->getActions() as $actionName => $actionConfig) {
-            $action = $actionFactory->createActionFromConfig($actionName, $actionConfig, $admin);
+            $action = $actionFactory->create($actionName, $actionConfig, $admin);
             $admin->addAction($action);
         }
         // adding admins to the pool

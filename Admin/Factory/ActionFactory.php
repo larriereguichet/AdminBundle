@@ -1,7 +1,9 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin;
+namespace BlueBear\AdminBundle\Admin\Factory;
 
+use BlueBear\AdminBundle\Admin\Action;
+use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\AdminBundle\Routing\RoutingLoader;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,9 +17,15 @@ class ActionFactory
      */
     protected $routingLoader;
 
-    public function __construct(RoutingLoader $routingLoader)
+    /**
+     * @var FieldFactory
+     */
+    protected $fieldFactory;
+
+    public function __construct(RoutingLoader $routingLoader, FieldFactory $fieldFactory)
     {
         $this->routingLoader = $routingLoader;
+        $this->fieldFactory = $fieldFactory;
     }
 
     /**
@@ -28,7 +36,7 @@ class ActionFactory
      * @param Admin $admin
      * @return Action
      */
-    public function createActionFromConfig($actionName, $actionConfiguration, Admin $admin)
+    public function create($actionName, $actionConfiguration, Admin $admin)
     {
         // resolving default options. Options are different according to action name
         $resolver = new OptionsResolver();
@@ -44,13 +52,7 @@ class ActionFactory
         $action->setOrder($actionConfiguration['order']);
         // adding fields items to actions
         foreach ($actionConfiguration['fields'] as $fieldName => $fieldConfiguration) {
-            $field = new Field();
-            $field->setName($fieldName);
-            $field->setTitle($this->inflectString($fieldName));
-
-            if (is_array($fieldConfiguration) && array_key_exists('length', $fieldConfiguration)) {
-                $field->setLength($fieldConfiguration['length']);
-            }
+            $field = $this->fieldFactory->create($fieldName, $fieldConfiguration);
             $action->addField($field);
         }
         return $action;
