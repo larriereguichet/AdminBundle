@@ -36,6 +36,13 @@ class Action
     protected $export = [];
 
     /**
+     * Array of properties to order by
+     *
+     * @var array
+     */
+    protected $order = [];
+
+    /**
      * @return string
      */
     public function getName()
@@ -94,6 +101,9 @@ class Action
         $this->fields = $fields;
     }
 
+    /**
+     * @param Field $field
+     */
     public function addField(Field $field)
     {
         $this->fields[$field->getName()] = $field;
@@ -161,5 +171,29 @@ class Action
     public function setExport($export)
     {
         $this->export = $export;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param array $order
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasOrder()
+    {
+        return count($this->order) > 0;
     }
 }

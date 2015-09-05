@@ -42,6 +42,7 @@ class TemplateListener implements EventSubscriberInterface
             ->createApplicationFromConfiguration($this->container->getParameter('bluebear.admin.application'));
         // adding to twig globals (available on each twig template)
         $this->twig->addGlobal('config', $applicationConfig);
+        $this->twig->addGlobal('routing', $this->container->get('bluebear.admin.routing'));
     }
 
     public function setAdminFactory(AdminFactory $adminFactory)

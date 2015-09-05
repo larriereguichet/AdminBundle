@@ -2,7 +2,7 @@
 
 namespace BlueBear\AdminBundle\Twig;
 
-use BlueBear\AdminBundle\Admin\Application\ApplicationConfiguration;
+use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use BlueBear\AdminBundle\Admin\Field;
 use BlueBear\AdminBundle\Utils\RecursiveImplode;
 use DateTime;
@@ -81,7 +81,7 @@ class AdminExtension extends Twig_Extension
         $value = $accessor->getValue($entity, $field->getName());
 
         if ($value instanceof DateTime) {
-            $value = $value->format($applicationConfiguration->dateFormat);
+            $value = $value->format($applicationConfiguration->getDateFormat());
         } else if (is_array($value)) {
             $value = $this->recursiveImplode(', ', $value);
         }
