@@ -40,7 +40,7 @@ services:
     # factories
     bluebear.admin.factory:
         class: %bluebear.admin.factory%
-        arguments: [@service_container]
+        arguments: [@service_container, @bluebear.admin.routing]
 
     bluebear.admin.action_factory:
         class: %bluebear.admin.action_factory%

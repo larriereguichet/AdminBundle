@@ -29,6 +29,13 @@ class Action
     protected $parameters;
 
     /**
+     * Configured custom actions to display in this view
+     *
+     * @var array
+     */
+    protected $customActions = [];
+
+    /**
      * Export types
      *
      * @var array
@@ -41,6 +48,18 @@ class Action
      * @var array
      */
     protected $order = [];
+
+    /**
+     * Icon class
+     *
+     * @var string
+     */
+    protected $icon;
+
+    /**
+     * @var
+     */
+    protected $target = '_self';
 
     /**
      * @return string
@@ -195,5 +214,58 @@ class Action
     public function hasOrder()
     {
         return count($this->order) > 0;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCustomActions()
+    {
+        return $this->customActions;
+    }
+
+    /**
+     * @param array $customActions
+     */
+    public function setCustomActions($customActions)
+    {
+        $this->customActions = $customActions;
+    }
+
+    public function addCustomAction(Action $action)
+    {
+        $this->customActions[] = $action;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * @param string $icon
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * @param mixed $target
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
     }
 }
