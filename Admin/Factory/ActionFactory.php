@@ -50,6 +50,21 @@ class ActionFactory
         $action->setRoute($this->routingLoader->generateRouteName($action->getName(), $admin));
         $action->setExport($actionConfiguration['export']);
         $action->setOrder($actionConfiguration['order']);
+
+        foreach ($actionConfiguration['actions'] as $customActionName => $customActionConfiguration) {
+            $customAction = new Action();
+            $customActionConfiguration = $resolver->resolve($customActionConfiguration);
+            $customAction->setName($customActionName);
+            $customAction->setTitle($customActionConfiguration['title']);
+            $customAction->setRoute($customActionConfiguration['route']);
+            $customAction->setIcon($customActionConfiguration['icon']);
+            $customAction->setTarget($customActionConfiguration['target']);
+
+            if (array_key_exists('parameters', $customActionConfiguration)) {
+                $customAction->setParameters($customActionConfiguration['parameters']);
+            }
+            $action->addCustomAction($customAction);
+        }
         // adding fields items to actions
         foreach ($actionConfiguration['fields'] as $fieldName => $fieldConfiguration) {
             $field = $this->fieldFactory->create($fieldName, $fieldConfiguration);
@@ -91,7 +106,12 @@ class ActionFactory
             'fields' => $this->getDefaultFields(),
             'permissions' => ['ROLE_ADMIN'],
             'export' => [],
-            'order' => []
+            'order' => [],
+            'actions' => [],
+            'target' => '_self',
+            'route' => '',
+            'parameters' => [],
+            'icon' => null
         ];
         if ($actionName == 'list') {
             $configuration = array_merge($configuration, [
