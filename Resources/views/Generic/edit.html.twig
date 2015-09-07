@@ -3,33 +3,22 @@
 {% block left %}
     <ul class="nav nav-pills nav-stacked">
         {% block leftList %}
-        {% if admin.hasAction('list') %}
-            <li>
-                <a href="{{ path(admin.action('list').route) }}">
-                    <i class="fa fa-list"></i>
-                    {{ admin.action('list').title }}</a>
-            </li>
-        {% endif %}
-        {% if admin.hasAction('create') %}
-            <li>
-                <a href="{{ path(admin.action('create').route) }}">
-                    <i class="fa fa-plus"></i>
-                    {{ admin.action('create').title }}</a>
-            </li>
-        {% endif %}
-
-        {% if admin.currentAction.customActions | length > 0 %}
-            {% for action in admin.currentAction.customActions %}
-                <li class="{{ getClassForRoute(action.route) }}">
-                    <a href="{{ path(action.route, action.parameters) }}" target="{{ action.target }}">
-                        {% if action.icon %}
-                            <i class="fa fa-{{ action.icon }}"></i>
-                        {% endif %}
-                        {{ action.title | trans }}
-                    </a>
+            {% if admin.hasAction('list') %}
+                <li>
+                    <a href="{{ path(admin.action('list').route) }}">
+                        <i class="fa fa-list"></i>
+                        {{ admin.action('list').title }}</a>
                 </li>
-            {% endfor %}
-        {% endif %}
+            {% endif %}
+            {% if admin.hasAction('create') %}
+                <li>
+                    <a href="{{ path(admin.action('create').route) }}">
+                        <i class="fa fa-plus"></i>
+                        {{ admin.action('create').title }}</a>
+                </li>
+            {% endif %}
+
+            {% include 'BlueBearAdminBundle:Action:customActions.html.twig' %}
         {% endblock %}
     </ul>
 {% endblock %}

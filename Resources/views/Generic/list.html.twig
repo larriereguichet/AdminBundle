@@ -2,12 +2,9 @@
 
 {% block left %}
     <ul class="nav nav-pills nav-stacked">
-        {% if admin.hasAction('list') %}
-            <li><a href="{{ path(admin.action('list').route) }}">{{ admin.action('list').title }}</a></li>
-        {% endif %}
-        {% if admin.hasAction('create') %}
-            <li><a href="{{ path(admin.action('create').route) }}">{{ admin.action('create').title }}</a></li>
-        {% endif %}
+        {% block leftList %}
+            {% include 'BlueBearAdminBundle:Action:customActions.html.twig' %}
+        {% endblock %}
     </ul>
 {% endblock %}
 
