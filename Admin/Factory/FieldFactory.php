@@ -10,27 +10,33 @@ class FieldFactory
 {
     use StringUtilsTrait;
 
-    protected $applicationConfiguration;
+    /**
+     * @var FieldRendererFactory
+     */
+    protected $fieldRendererFactory;
 
-    public function __construct(array $applicationConfiguration)
+    public function __construct(FieldRendererFactory $fieldRendererFactory)
     {
-        $this->applicationConfiguration = $applicationConfiguration;
+        $this->fieldRendererFactory = $fieldRendererFactory;
     }
 
     public function create($fieldName, array $configuration)
     {
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
-            'length' => null,
-            'format' => $this->applicationConfiguration['date_format'],
             'type' => 'string',
+            'options' => []
         ]);
+        $resolver->setAllowedValues('type', [
+            Field::TYPE_STRING,
+            Field::TYPE_ARRAY,
+            Field::TYPE_LINK,
+            Field::TYPE_DATE,
+        ]);
+        //$this->applicationConfiguration['date_format']
         $configuration = $resolver->resolve($configuration);
-        $field = new Field();
-        $field->setName($fieldName);
-        $field->setTitle($this->inflectString($fieldName));
-        $field->setLength($configuration['length']);
-        $field->setFormat($configuration['format']);
+        $renderer = $this->fieldRendererFactory->create($configuration['type'], $configuration['options']);
+        $field = new Field($fieldName, $renderer);
 
         return $field;
     }

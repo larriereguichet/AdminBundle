@@ -2,24 +2,30 @@
 
 namespace BlueBear\AdminBundle\Admin;
 
+use BlueBear\AdminBundle\Admin\Render\RendererInterface;
+
 class Field
 {
+    const TYPE_STRING = 'string';
+    const TYPE_LINK = 'link';
+    const TYPE_ARRAY = 'array';
+    const TYPE_DATE = 'date';
+
     /**
      * @var string
      */
     protected $name;
 
     /**
-     * @var string
+     * @var RendererInterface
      */
-    protected $title;
+    protected $renderer;
 
-    /**
-     * @var int
-     */
-    protected $length;
-
-    protected $format;
+    public function __construct($name, RendererInterface $renderer)
+    {
+        $this->name = $name;
+        $this->renderer = $renderer;
+    }
 
     /**
      * @return string
@@ -30,80 +36,10 @@ class Field
     }
 
     /**
-     * @param string $name
+     * @return RendererInterface
      */
-    public function setName($name)
+    public function getRenderer()
     {
-        $this->name = $name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLabel()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param string $title
-     */
-    public function setLabel($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLength()
-    {
-        return $this->length;
-    }
-
-    /**
-     * @param int $length
-     */
-    public function setLength($length)
-    {
-        $this->length = $length;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        $title = $this->title;
-
-        if ($title == 'Id') {
-            // TODO move in default configuration
-            $title = '#';
-        }
-        return $title;
-    }
-
-    /**
-     * @param string $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFormat()
-    {
-        return $this->format;
-    }
-
-    /**
-     * @param mixed $format
-     */
-    public function setFormat($format)
-    {
-        $this->format = $format;
+        return $this->renderer;
     }
 }

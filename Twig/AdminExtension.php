@@ -4,7 +4,6 @@ namespace BlueBear\AdminBundle\Twig;
 
 use BlueBear\AdminBundle\Admin\Field;
 use BlueBear\AdminBundle\Utils\RecursiveImplode;
-use DateTime;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Extension;
 use Twig_SimpleFunction;
@@ -76,14 +75,12 @@ class AdminExtension extends Twig_Extension
         $accessor = PropertyAccess::createPropertyAccessorBuilder()
             ->enableMagicCall()
             ->getPropertyAccessor();
+        // get raw value from object
         $value = $accessor->getValue($entity, $field->getName());
+        // render value according to field type mapping
+        $render = $field->getRenderer()->render($value);
 
-        if ($value instanceof DateTime) {
-            $value = $value->format($field->getFormat());
-        } else if (is_array($value)) {
-            $value = $this->recursiveImplode(', ', $value);
-        }
-        return $value;
+        return $render;
     }
 
     public function getFunctions()

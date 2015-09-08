@@ -11,7 +11,7 @@
                         {% for field in fields %}
                             <th>
                                 <a href="{{ getSortColumnUrl(app.request, field.name) }}">
-                                    {{ field.title | capitalize }}
+                                    {{ field.name | capitalize }}
                                     <i class="{{ getSortColumnIconClass(app.request.get('order'), field.name, app.request.get('sort')) }}"></i>
                                 </a>
                             </th>
