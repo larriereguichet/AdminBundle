@@ -40,7 +40,7 @@ class ActionFactory
     {
         // resolving default options. Options are different according to action name
         $resolver = new OptionsResolver();
-        $resolver->setDefaults($this->getDefaultActionConfiguration($actionName, $admin->getName()));
+        $resolver->setDefaults($this->getDefaultActionConfiguration());
         $actionConfiguration = $resolver->resolve($actionConfiguration);
         // creating action object from configuration
         $action = new Action();
@@ -95,36 +95,25 @@ class ActionFactory
     /**
      * Return default actions configuration (list has exports, permissions are ROLE_ADMIN)
      *
-     * @param $actionName
-     * @param $adminName
      * @return array
      */
-    protected function getDefaultActionConfiguration($actionName, $adminName)
+    protected function getDefaultActionConfiguration()
     {
         $configuration = [
-            'title' => $this->generateDefaultActionTitle($adminName, $actionName),
-            'fields' => $this->getDefaultFields(),
+            'title' => null,
+            'fields' => [
+                'id' => []
+            ],
+            'field_actions' => [],
             'permissions' => ['ROLE_ADMIN'],
-            'export' => [],
+            'export' => ['json', 'xml', 'xls', 'csv', 'html'],
             'order' => [],
             'actions' => [],
             'target' => '_self',
             'route' => '',
             'parameters' => [],
-            'icon' => null
+            'icon' => null,
         ];
-        if ($actionName == 'list') {
-            $configuration = array_merge($configuration, [
-                'export' => ['json', 'xml', 'xls', 'csv', 'html']
-            ]);
-        }
         return $configuration;
-    }
-
-    protected function getDefaultFields()
-    {
-        return [
-            'id' => []
-        ];
     }
 }

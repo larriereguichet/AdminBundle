@@ -9,6 +9,7 @@ parameters:
     bluebear.admin.factory: BlueBear\AdminBundle\Admin\Factory\AdminFactory
     bluebear.admin.action_factory: BlueBear\AdminBundle\Admin\Factory\ActionFactory
     bluebear.admin.field_factory: BlueBear\AdminBundle\Admin\Factory\FieldFactory
+    bluebear.admin.field_renderer_factory: BlueBear\AdminBundle\Admin\Factory\FieldRendererFactory
     # twig
     bluebear.admin.twig: BlueBear\AdminBundle\Twig\AdminExtension
 
@@ -48,7 +49,11 @@ services:
 
     bluebear.admin.field_factory:
         class: %bluebear.admin.field_factory%
-        arguments: [%bluebear.admin.application%]
+        arguments: [@bluebear.admin.field_renderer_factory]
+
+    bluebear.admin.field_renderer_factory:
+            class: %bluebear.admin.field_renderer_factory%
+            arguments: [[], @twig]
 
     # twig
     bluebear.admin.twig:
