@@ -57,7 +57,9 @@ class LinkRenderer extends StringRenderer implements RendererInterface
     {
         $text = parent::render($value);
         $render = $this->twig->render($this->template, [
-            'text' => $text
+            'text' => $text,
+            'route' => $this->route,
+            'parameters' => $this->parameters
         ]);
         return $render;
     }

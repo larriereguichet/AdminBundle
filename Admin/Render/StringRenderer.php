@@ -25,7 +25,7 @@ class StringRenderer implements RendererInterface
     public function render($value)
     {
         if ($this->length) {
-            $value = substr($value, $this->length) . $this->replace;
+            $value = substr($value, 0, $this->length) . $this->replace;
         }
         return $value;
     }
