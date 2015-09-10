@@ -111,7 +111,7 @@ class RoutingLoader implements LoaderInterface
         // by default, no requirements
         $requirements = [];
         // for delete and edit action, an id is required
-        if (in_array($action, ['delete', 'edit'])) {
+        if (in_array($action->getName(), ['delete', 'edit'])) {
             $path .= '/{id}';
             $requirements = [
                 'id' => '\d+'
