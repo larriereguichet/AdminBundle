@@ -2,7 +2,9 @@
 
 namespace BlueBear\AdminBundle\Admin;
 
-class Action 
+use Symfony\Component\PropertyAccess\PropertyAccess;
+
+class Action
 {
     /**
      * @var string
@@ -20,6 +22,13 @@ class Action
     protected $fields = [];
 
     /**
+     * Action display among the fields
+     *
+     * @var Action[]
+     */
+    protected $fieldActions = [];
+
+    /**
      * @var string[]
      */
     protected $permissions = [];
@@ -29,11 +38,11 @@ class Action
     protected $parameters;
 
     /**
-     * Configured custom actions to display in this view
+     * Configured linked actions to display in this view
      *
      * @var array
      */
-    protected $customActions = [];
+    protected $actions = [];
 
     /**
      * Export types
@@ -60,6 +69,8 @@ class Action
      * @var
      */
     protected $target = '_self';
+
+    protected $isParametersBuild = false;
 
     /**
      * @return string
@@ -176,6 +187,26 @@ class Action
         $this->parameters = $parameters;
     }
 
+    public function buildParameters($entity)
+    {
+        $parameters = [];
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        foreach ($this->parameters as $parameterName => $fieldName) {
+            if ($this->isParametersBuild) {
+                // TODO improve this code
+                $parameters[$parameterName] = $accessor->getValue($entity, $parameterName);
+            } else {
+                if (is_array($fieldName) && !count($fieldName)) {
+                    $fieldName = $parameterName;
+                }
+                $parameters[$parameterName] = $accessor->getValue($entity, $fieldName);
+            }
+        }
+        $this->parameters = $parameters;
+        $this->isParametersBuild = true;
+    }
+
     /**
      * @return array
      */
@@ -219,22 +250,25 @@ class Action
     /**
      * @return array
      */
-    public function getCustomActions()
+    public function getActions()
     {
-        return $this->customActions;
+        return $this->actions;
     }
 
     /**
-     * @param array $customActions
+     * @param array $actions
      */
-    public function setCustomActions($customActions)
+    public function setActions($actions)
     {
-        $this->customActions = $customActions;
+        $this->actions = $actions;
     }
 
-    public function addCustomAction(Action $action)
+    /**
+     * @param Action $action
+     */
+    public function addAction(Action $action)
     {
-        $this->customActions[] = $action;
+        $this->actions[] = $action;
     }
 
     /**
@@ -267,5 +301,29 @@ class Action
     public function setTarget($target)
     {
         $this->target = $target;
+    }
+
+    /**
+     * @return Action[]
+     */
+    public function getFieldActions()
+    {
+        return $this->fieldActions;
+    }
+
+    /**
+     * @param Action[] $fieldActions
+     */
+    public function setFieldActions($fieldActions)
+    {
+        $this->fieldActions = $fieldActions;
+    }
+
+    /**
+     * @param Action $action
+     */
+    public function addFieldAction(Action $action)
+    {
+        $this->fieldActions[] = $action;
     }
 }

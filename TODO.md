@@ -2,7 +2,7 @@ v0.3:
 Features:
 - unit testing
 x add config for order entities in list view
-- add format for date in list
+x add format for date in list
 - file exporters : array type, association
 - adding simple mass edit
 - add filters

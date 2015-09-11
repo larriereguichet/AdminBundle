@@ -3,6 +3,7 @@
 namespace BlueBear\AdminBundle\Twig;
 
 use BlueBear\AdminBundle\Admin\Field;
+use BlueBear\AdminBundle\Admin\Render\EntityRendererInterface;
 use BlueBear\AdminBundle\Utils\RecursiveImplode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Extension;
@@ -30,6 +31,7 @@ class AdminExtension extends Twig_Extension
      * @param Request $request
      * @param $fieldName
      * @return string
+     * TODO rename function
      */
     public function getSortColumnUrl(Request $request, $fieldName)
     {
@@ -69,6 +71,7 @@ class AdminExtension extends Twig_Extension
      * @param Field $field
      * @param $entity
      * @return mixed
+     * TODO rename function
      */
     public function field(Field $field, $entity)
     {
@@ -77,10 +80,30 @@ class AdminExtension extends Twig_Extension
             ->getPropertyAccessor();
         // get raw value from object
         $value = $accessor->getValue($entity, $field->getName());
+        $renderer = $field->getRenderer();
+
+        if (in_array(EntityRendererInterface::class, class_implements($renderer))) {
+            /** @var EntityRendererInterface $renderer */
+            $renderer->setEntity($entity);
+        }
         // render value according to field type mapping
         $render = $field->getRenderer()->render($value);
 
         return $render;
+    }
+
+    public function routeParameters(array $parameters, $entity)
+    {
+        $accessor = PropertyAccess::createPropertyAccessor();
+        $routeParameters = [];
+
+        foreach ($parameters as $parameterName => $fieldName) {
+            if (is_array($fieldName) && !count($fieldName)) {
+                $fieldName = $parameterName;
+            }
+            $routeParameters[$parameterName] = $accessor->getValue($entity, $fieldName);
+        }
+        return $routeParameters;
     }
 
     public function getFunctions()
@@ -88,7 +111,8 @@ class AdminExtension extends Twig_Extension
         return [
             new Twig_SimpleFunction('getSortColumnUrl', [$this, 'getSortColumnUrl']),
             new Twig_SimpleFunction('getSortColumnIconClass', [$this, 'getSortColumnIconClass']),
-            new Twig_SimpleFunction('field', [$this, 'field'])
+            new Twig_SimpleFunction('field', [$this, 'field']),
+            new Twig_SimpleFunction('routeParameters', [$this, 'routeParameters']),
         ];
     }
 
