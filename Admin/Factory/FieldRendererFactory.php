@@ -4,6 +4,7 @@ namespace BlueBear\AdminBundle\Admin\Factory;
 
 use BlueBear\AdminBundle\Admin\Field;
 use BlueBear\AdminBundle\Admin\Render\RendererInterface;
+use BlueBear\AdminBundle\Admin\Render\TwigRendererInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -41,7 +42,8 @@ class FieldRendererFactory
             $class = $this->renderMapping[$fieldType];
             $renderer = new $class($fieldOptions);
 
-            if (method_exists($renderer, 'setTwig')) {
+            if (in_array(TwigRendererInterface::class, class_implements($renderer))) {
+                /** @var TwigRendererInterface $renderer */
                 $renderer->setTwig($this->twig);
             }
         } else {

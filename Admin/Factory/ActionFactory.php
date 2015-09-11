@@ -43,32 +43,47 @@ class ActionFactory
         $resolver->setDefaults($this->getDefaultActionConfiguration());
         $actionConfiguration = $resolver->resolve($actionConfiguration);
         // creating action object from configuration
-        $action = new Action();
-        $action->setName($actionName);
-        $action->setTitle($actionConfiguration['title']);
-        $action->setPermissions($actionConfiguration['permissions']);
-        $action->setRoute($this->routingLoader->generateRouteName($action->getName(), $admin));
-        $action->setExport($actionConfiguration['export']);
-        $action->setOrder($actionConfiguration['order']);
+        $action = $this->createActionFromConfiguration($actionConfiguration, $actionName, $admin);
 
         foreach ($actionConfiguration['actions'] as $customActionName => $customActionConfiguration) {
-            $customAction = new Action();
+            // resolve configuration
             $customActionConfiguration = $resolver->resolve($customActionConfiguration);
-            $customAction->setName($customActionName);
-            $customAction->setTitle($customActionConfiguration['title']);
-            $customAction->setRoute($customActionConfiguration['route']);
-            $customAction->setIcon($customActionConfiguration['icon']);
-            $customAction->setTarget($customActionConfiguration['target']);
-
-            if (array_key_exists('parameters', $customActionConfiguration)) {
-                $customAction->setParameters($customActionConfiguration['parameters']);
-            }
-            $action->addCustomAction($customAction);
+            // create action
+            $customAction = $this->createActionFromConfiguration($customActionConfiguration, $customActionName);
+            // add to the main action
+            $action->addAction($customAction);
+        }
+        foreach ($actionConfiguration['field_actions'] as $customActionName => $customActionConfiguration) {
+            // resolve configuration
+            $customActionConfiguration = $resolver->resolve($customActionConfiguration);
+            // create action
+            $customAction = $this->createActionFromConfiguration($customActionConfiguration, $customActionName);
+            // add to the main action
+            $action->addFieldAction($customAction);
         }
         // adding fields items to actions
         foreach ($actionConfiguration['fields'] as $fieldName => $fieldConfiguration) {
             $field = $this->fieldFactory->create($fieldName, $fieldConfiguration);
             $action->addField($field);
+        }
+        return $action;
+    }
+
+    protected function createActionFromConfiguration(array $actionConfiguration, $actionName, Admin $admin = null)
+    {
+        $action = new Action();
+        $action->setName($actionName);
+        $action->setTitle($actionConfiguration['title']);
+        $action->setPermissions($actionConfiguration['permissions']);
+        $action->setExport($actionConfiguration['export']);
+        $action->setOrder($actionConfiguration['order']);
+        $action->setRoute($actionConfiguration['route']);
+        $action->setIcon($actionConfiguration['icon']);
+        $action->setTarget($actionConfiguration['target']);
+        $action->setParameters($actionConfiguration['parameters']);
+
+        if ($admin) {
+            $action->setRoute($this->routingLoader->generateRouteName($actionName, $admin));
         }
         return $action;
     }
