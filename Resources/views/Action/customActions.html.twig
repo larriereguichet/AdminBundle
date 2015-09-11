@@ -1,12 +1,7 @@
-{% if admin.currentAction.customActions | length > 0 %}
-    {% for action in admin.currentAction.customActions %}
+{% if admin.currentAction.actions | length > 0 %}
+    {% for action in admin.currentAction.actions %}
         <li class="{{ getClassForRoute(action.route) }}">
-            <a href="{{ path(action.route, action.parameters) }}" target="{{ action.target }}">
-                {% if action.icon %}
-                    <i class="fa fa-{{ action.icon }}"></i>
-                {% endif %}
-                {{ action.title | trans }}
-            </a>
+            {{ AdminBundle.actionLink(action) }}
         </li>
     {% endfor %}
 {% endif %}
