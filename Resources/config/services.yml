@@ -1,13 +1,12 @@
 imports:
     - { resource: factories.yml }
+    - { resource: forms.yml }
 
 parameters:
     # application
     bluebear.admin.application_class: BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration
     # template listener
     bluebear.admin.template_listener: BlueBear\AdminBundle\Event\Subscriber\TemplateListener
-    # form
-    bluebear.admin.form.delete: BlueBear\AdminBundle\Form\Type\DeleteType
     # routing
     bluebear.admin.routing: BlueBear\AdminBundle\Routing\RoutingLoader
     # twig
@@ -28,12 +27,6 @@ services:
             - [setContainer, [@service_container]]
             - [setAdminFactory, [@bluebear.admin.factory]]
             - [setTwig, [@twig]]
-
-    # form
-    bluebear.admin.form.delete:
-        class: %bluebear.admin.form.delete%
-        tags:
-            - {name: form.type, alias: delete}
 
     # routing
     bluebear.admin.routing:
