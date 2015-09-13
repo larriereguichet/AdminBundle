@@ -34,7 +34,7 @@ class BlueBearAdminExtension extends Extension
         }
         $container->setParameter('bluebear.admins', $config['admins']);
         $container->setParameter('bluebear.menus', $config['menus']);
-        $container->setParameter('bluebear.admin.application', $config['application']);
+        $container->setParameter('bluebear.admin.application_configuration', $config['application']);
     }
 
     public function getAlias()

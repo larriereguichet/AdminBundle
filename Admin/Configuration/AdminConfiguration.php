@@ -2,6 +2,8 @@
 
 namespace BlueBear\AdminBundle\Admin\Configuration;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 class AdminConfiguration
 {
     protected $controllerName;
@@ -20,32 +22,33 @@ class AdminConfiguration
 
     protected $routingUrlPattern;
 
-    public function hydrateFromConfiguration(array $adminConfiguration, $applicationName)
+    public function __construct(array $adminConfiguration, ApplicationConfiguration $configuration)
     {
-        $applicationConfiguration = $applicationName;
-        // defaults values
-        if (!array_key_exists('manager', $adminConfiguration)) {
-            $adminConfiguration['manager'] = [];
-        }
-        if (!array_key_exists('max_per_page', $adminConfiguration)) {
-            if (!array_key_exists('max_per_page', $applicationConfiguration)) {
-                $applicationConfiguration['max_per_page'] = 25;
-            }
-            // by default, we take the general value
-            $adminConfiguration['max_per_page'] = $applicationConfiguration['max_per_page'];
-        }
-        if (array_key_exists('routing', $applicationConfiguration)) {
-            $adminConfiguration['routing'] = $applicationConfiguration['routing'];
-        }
-        // general values
+        $resolver = new OptionsResolver();
+        $resolver->setRequired([
+            'entity',
+            'form'
+        ]);
+        $resolver->setDefaults([
+            'controller' => 'BlueBearAdminBundle:Generic',
+            'manager' => [],
+            'form' => 'generic',
+            'actions' => [],
+            'max_per_page' => 25,
+            'routing_url_pattern' => $configuration->getRoutingUrlPattern(),
+            'routing_name_pattern' => $configuration->getRoutingNamePattern(),
+        ]);
+        // resolve configuration
+        $adminConfiguration = $resolver->resolve($adminConfiguration);
+        // defines values
         $this->controllerName = $adminConfiguration['controller'];
+        $this->managerConfiguration = $adminConfiguration['manager'];
         $this->entityName = $adminConfiguration['entity'];
         $this->formType = $adminConfiguration['form'];;
-        $this->maxPerPage = $adminConfiguration['max_per_page'];
         $this->actions = $adminConfiguration['actions'];
-        $this->managerConfiguration = $adminConfiguration['manager'];
-        $this->routingNamePattern = $adminConfiguration['routing']['name_pattern'];
-        $this->routingUrlPattern = $adminConfiguration['routing']['url_pattern'];
+        $this->maxPerPage = $adminConfiguration['max_per_page'];
+        $this->routingNamePattern = $adminConfiguration['routing_name_pattern'];
+        $this->routingUrlPattern = $adminConfiguration['routing_url_pattern'];
     }
 
     /**

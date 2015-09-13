@@ -1,0 +1,24 @@
+parameters:
+    # admin factories
+    bluebear.admin.factory: BlueBear\AdminBundle\Admin\Factory\AdminFactory
+    bluebear.admin.action_factory: BlueBear\AdminBundle\Admin\Factory\ActionFactory
+    bluebear.admin.field_factory: BlueBear\AdminBundle\Admin\Factory\FieldFactory
+    bluebear.admin.field_renderer_factory: BlueBear\AdminBundle\Admin\Factory\FieldRendererFactory
+
+services:
+    # factories
+    bluebear.admin.factory:
+        class: %bluebear.admin.factory%
+        arguments: [@service_container, @bluebear.admin.routing]
+
+    bluebear.admin.action_factory:
+        class: %bluebear.admin.action_factory%
+        arguments: [@bluebear.admin.routing, @bluebear.admin.field_factory]
+
+    bluebear.admin.field_factory:
+        class: %bluebear.admin.field_factory%
+        arguments: [@bluebear.admin.field_renderer_factory]
+
+    bluebear.admin.field_renderer_factory:
+            class: %bluebear.admin.field_renderer_factory%
+            arguments: [[], @twig, @bluebear.admin.application]

@@ -147,9 +147,10 @@ class AdminFactory
             'form'
         ]);
         $adminConfiguration = $resolver->resolve($adminConfiguration);
+        /** @var ApplicationConfiguration $application */
+        $application = $this->container->get('bluebear.admin.application');
+        $adminConfig = new AdminConfiguration($adminConfiguration, $application);
         // gathering admin data
-        $adminConfig = new AdminConfiguration();
-        $adminConfig->hydrateFromConfiguration($adminConfiguration, $this->container->getParameter('bluebear.admin.application'));
         $entityRepository = $entityManager->getRepository($adminConfig->getEntityName());
         // create generic manager from configuration
         $entityManager = $this->createManagerFromConfig($adminConfig, $entityRepository);
@@ -172,35 +173,6 @@ class AdminFactory
         }
         // adding admins to the pool
         $this->admins[$admin->getName()] = $admin;
-    }
-
-    /**
-     * Create application configuration from request and application parameters
-     *
-     * @param array $applicationConfiguration
-     * @return ApplicationConfiguration
-     */
-    public function createApplicationFromConfiguration(array $applicationConfiguration)
-    {
-        $resolver = new OptionsResolver();
-        $resolver->setDefaults([
-            'title' => 'Admin',
-            'description' => 'AdminBundle powered by L\'arriere-guichet',
-            'layout' => 'BlueBearAdminBundle::admin.layout.html.twig',
-            'block_template' => 'BlueBearAdminBundle:Form:fields.html.twig',
-            'max_per_page' => 25,
-            'date_format' => 'Y-m-d',
-            'routing' => [
-                'name_pattern' => 'bluebear.admin.{admin}',
-                'url_pattern' => '/{admin}/{action}',
-            ],
-            'bootstrap' => false
-        ]);
-        $applicationConfiguration = $resolver->resolve($applicationConfiguration);
-        $applicationConfig = new ApplicationConfiguration();
-        $applicationConfig->hydrateFromConfiguration($applicationConfiguration);
-
-        return $applicationConfig;
     }
 
     /**

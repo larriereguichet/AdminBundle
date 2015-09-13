@@ -2,6 +2,7 @@
 
 namespace BlueBear\AdminBundle\Admin\Render;
 
+use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Environment;
@@ -34,21 +35,28 @@ class LinkRenderer extends StringRenderer implements TwigRendererInterface, Enti
     protected $entity;
 
     /**
+     * Link target
+     *
+     * @var
+     */
+    protected $target;
+
+    /**
      * Initialize a link renderer
      *
      * @param array $options
+     * @param ApplicationConfiguration $application
      */
-    public function __construct(array $options = [])
+    public function __construct(array $options = [], ApplicationConfiguration $application)
     {
         // default configuration
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
-            'length' => null,
-            'template' => 'BlueBearAdminBundle:Render:link.html.twig'
-        ]);
-        $resolver->setRequired([
-            'route',
-            'parameters',
+            'length' => $application->getStringLength(),
+            'template' => 'BlueBearAdminBundle:Render:link.html.twig',
+            'target' => '_self',
+            'route' => '',
+            'parameters' => []
         ]);
         $resolver->setAllowedTypes('route', 'string');
         $resolver->setAllowedTypes('parameters', 'array');
@@ -59,6 +67,7 @@ class LinkRenderer extends StringRenderer implements TwigRendererInterface, Enti
         $this->parameters = $options['parameters'];
         $this->length = $options['length'];
         $this->template = $options['template'];
+        $this->target = $options['target'];
     }
 
     /**
@@ -102,7 +111,8 @@ class LinkRenderer extends StringRenderer implements TwigRendererInterface, Enti
         $render = $this->twig->render($this->template, [
             'text' => $text,
             'route' => $this->route,
-            'parameters' => $parameters
+            'parameters' => $parameters,
+            'target' => $this->target
         ]);
         return $render;
     }

@@ -36,12 +36,9 @@ class TemplateListener implements EventSubscriberInterface
      */
     public function onKernelRequest(KernelEvent $event)
     {
-        // creating application configuration object
-        $applicationConfig = $this
-            ->adminFactory
-            ->createApplicationFromConfiguration($this->container->getParameter('bluebear.admin.application'));
         // adding to twig globals (available on each twig template)
-        $this->twig->addGlobal('config', $applicationConfig);
+        // TODO inject right parameters instead of container
+        $this->twig->addGlobal('config', $this->container->get('bluebear.admin.application'));
         $this->twig->addGlobal('routing', $this->container->get('bluebear.admin.routing'));
     }
 
