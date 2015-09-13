@@ -8,6 +8,10 @@
     {% endif %}
 {%- endblock form_widget -%}
 
+{% block datetime_picker_widget %}
+   {{ block('date') }}
+{% endblock %}
+
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}
     {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-control'}) %}
