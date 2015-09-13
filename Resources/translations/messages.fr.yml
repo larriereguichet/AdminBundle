@@ -4,6 +4,8 @@ bluebear.admin.save_and_return_to_list: Save and return to list
 bluebear.admin.cancel: Cancel
 bluebear.admin.edit: Editer
 
+bluebear.admin.saved: Les modifications ont été sauvegardées
+
 # List
 bluebear.admin.true: True
 bluebear.admin.false: False

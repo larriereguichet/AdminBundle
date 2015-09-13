@@ -1,19 +1,24 @@
+imports:
+    - { resource: factories.yml }
+
 parameters:
+    # application
+    bluebear.admin.application_class: BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration
     # template listener
     bluebear.admin.template_listener: BlueBear\AdminBundle\Event\Subscriber\TemplateListener
     # form
     bluebear.admin.form.delete: BlueBear\AdminBundle\Form\Type\DeleteType
     # routing
     bluebear.admin.routing: BlueBear\AdminBundle\Routing\RoutingLoader
-    # admin factories
-    bluebear.admin.factory: BlueBear\AdminBundle\Admin\Factory\AdminFactory
-    bluebear.admin.action_factory: BlueBear\AdminBundle\Admin\Factory\ActionFactory
-    bluebear.admin.field_factory: BlueBear\AdminBundle\Admin\Factory\FieldFactory
-    bluebear.admin.field_renderer_factory: BlueBear\AdminBundle\Admin\Factory\FieldRendererFactory
     # twig
     bluebear.admin.twig: BlueBear\AdminBundle\Twig\AdminExtension
 
 services:
+    # application
+    bluebear.admin.application:
+        class: %bluebear.admin.application_class%
+        arguments: [%bluebear.admin.application_configuration%, %locale%]
+
     # template listener
     bluebear.admin.template_listener:
         class: %bluebear.admin.template_listener%
@@ -37,23 +42,6 @@ services:
             - { name: routing.loader }
         calls:
             - [setContainer, [@service_container]]
-
-    # factories
-    bluebear.admin.factory:
-        class: %bluebear.admin.factory%
-        arguments: [@service_container, @bluebear.admin.routing]
-
-    bluebear.admin.action_factory:
-        class: %bluebear.admin.action_factory%
-        arguments: [@bluebear.admin.routing, @bluebear.admin.field_factory]
-
-    bluebear.admin.field_factory:
-        class: %bluebear.admin.field_factory%
-        arguments: [@bluebear.admin.field_renderer_factory]
-
-    bluebear.admin.field_renderer_factory:
-            class: %bluebear.admin.field_renderer_factory%
-            arguments: [[], @twig]
 
     # twig
     bluebear.admin.twig:
