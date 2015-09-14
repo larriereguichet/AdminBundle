@@ -9,7 +9,16 @@
 {%- endblock form_widget -%}
 
 {% block datetime_picker_widget %}
-   {{ block('date') }}
+    {{- block('form_widget_simple') -}}
+
+    <script>
+        $(document).ready(function () {
+            var inputIdSelector = '#{{ form.vars.id }}';
+            $(inputIdSelector).datetimepicker({
+                format: '{{ form.vars.javascript_date_format }}'
+            });
+        });
+    </script>
 {% endblock %}
 
 {%- block form_widget_simple -%}

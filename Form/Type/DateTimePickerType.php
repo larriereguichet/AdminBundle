@@ -4,6 +4,8 @@ namespace BlueBear\AdminBundle\Form\Type;
 
 use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DateTimePickerType extends AbstractType
@@ -20,8 +22,20 @@ class DateTimePickerType extends AbstractType
                 'class' => 'datepicker'
             ],
             'widget' => 'single_text',
-            'format' => $this->configuration->getDateFormat()
+            'format' => $this->configuration->getDateFormat(),
         ]);
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        // dd/MM/Y HH:mm => dd/mm/yyyy hh:ii
+        // convert Symfony date format into javascript datepicker date format
+        $jsDateFormat = str_replace('Y', 'yyyy', $this->configuration->getDateFormat());
+        $jsDateFormat = str_replace('mm', 'ii', $jsDateFormat);
+        $jsDateFormat = str_replace('MM', 'mm', $jsDateFormat);
+        $jsDateFormat = str_replace('HH', 'hh', $jsDateFormat);
+
+        $view->vars['javascript_date_format'] = $jsDateFormat;
     }
 
     public function getParent()
