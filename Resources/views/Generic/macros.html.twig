@@ -26,10 +26,15 @@
                             {% for field in fields %}
                                 <td>{{ field(field, entity) | raw }}</td>
                             {% endfor %}
-                            <td>
+                            <td class="actions">
                                 {% for action in admin.currentAction.fieldActions %}
                                     {{ action.buildParameters(entity) }}
-                                    <a href="{{ path(action.route, action.parameters) }}">edit</a>
+                                    <a href="{{ path(action.route, action.parameters) }}">
+                                        {% if action.icon %}
+                                            <i class="fa fa-{{ action.icon }}"></i>
+                                        {% endif %}
+                                        {{ action.title | trans }}
+                                    </a><br/>
                                 {% endfor %}
                             </td>
                         </tr>
