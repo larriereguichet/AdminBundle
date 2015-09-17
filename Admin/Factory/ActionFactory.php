@@ -22,23 +22,29 @@ class ActionFactory
      */
     protected $fieldFactory;
 
-    public function __construct(RoutingLoader $routingLoader, FieldFactory $fieldFactory)
+    /**
+     * @var FilterFactory
+     */
+    protected $filterFactory;
+
+    public function __construct(RoutingLoader $routingLoader, FieldFactory $fieldFactory, FilterFactory $filterFactory)
     {
         $this->routingLoader = $routingLoader;
         $this->fieldFactory = $fieldFactory;
+        $this->filterFactory = $filterFactory;
     }
 
     /**
      * Create an Action from configuration values
      *
-     * @param $actionName
-     * @param $actionConfiguration
+     * @param string $actionName
+     * @param array $actionConfiguration
      * @param Admin $admin
      * @return Action
      */
-    public function create($actionName, $actionConfiguration, Admin $admin)
+    public function create($actionName, array $actionConfiguration, Admin $admin)
     {
-        // resolving default options. Options are different according to action name
+        // resolving default options
         $resolver = new OptionsResolver();
         $resolver->setDefaults($this->getDefaultActionConfiguration());
         $actionConfiguration = $resolver->resolve($actionConfiguration);
@@ -65,6 +71,11 @@ class ActionFactory
         foreach ($actionConfiguration['fields'] as $fieldName => $fieldConfiguration) {
             $field = $this->fieldFactory->create($fieldName, $fieldConfiguration);
             $action->addField($field);
+        }
+        // adding filters to the action
+        foreach ($actionConfiguration['filters'] as $fieldName => $filterConfiguration) {
+            $filter = $this->filterFactory->create($fieldName, $filterConfiguration);
+            $action->addFilter($filter);
         }
         return $action;
     }
@@ -128,6 +139,7 @@ class ActionFactory
             'route' => '',
             'parameters' => [],
             'icon' => null,
+            'filters' => []
         ];
         return $configuration;
     }

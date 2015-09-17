@@ -10,7 +10,11 @@
 
 {% block content %}
     <h1>{{ admin.currentAction.title }}</h1>
-    <div class="pencils-list">
+
+    <div class="filters">
+        {% include "BlueBearAdminBundle:Action:filters.html.twig" %}
+    </div>
+    <div class="{{ admin.name }}-list">
         {{ AdminBundle.adminList(admin) }}
     </div>
 {% endblock %}
