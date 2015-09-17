@@ -7,35 +7,53 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 class Action
 {
     /**
+     * Action name
+     *
      * @var string
      */
     protected $name;
 
     /**
+     * Action title
+     *
      * @var string
      */
     protected $title;
 
     /**
+     * Fields displayed for this action
+     *
      * @var Field[]
      */
     protected $fields = [];
 
     /**
-     * Action display among the fields
+     * Action displayed among the fields
      *
      * @var Action[]
      */
     protected $fieldActions = [];
 
     /**
+     * Action permissions
+     *
      * @var string[]
      */
     protected $permissions = [];
 
+    /**
+     * Action route
+     *
+     * @var string
+     */
     protected $route;
 
-    protected $parameters;
+    /**
+     * Action route parameters
+     *
+     * @var array
+     */
+    protected $parameters = [];
 
     /**
      * Configured linked actions to display in this view
@@ -66,11 +84,20 @@ class Action
     protected $icon;
 
     /**
+     * Action target (_blank or _self)
+     *
      * @var
      */
     protected $target = '_self';
 
     protected $isParametersBuild = false;
+
+    /**
+     *
+     *
+     * @var array
+     */
+    protected $filters = [];
 
     /**
      * @return string
@@ -325,5 +352,26 @@ class Action
     public function addFieldAction(Action $action)
     {
         $this->fieldActions[] = $action;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilters()
+    {
+        return $this->filters;
+    }
+
+    /**
+     * @param array $filters
+     */
+    public function setFilters($filters)
+    {
+        $this->filters = $filters;
+    }
+
+    public function addFilter(Filter $filter)
+    {
+        $this->filters[] = $filter;
     }
 }
