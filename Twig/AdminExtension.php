@@ -82,7 +82,7 @@ class AdminExtension extends Twig_Extension
         $value = $accessor->getValue($entity, $field->getName());
         $renderer = $field->getRenderer();
 
-        if (in_array(EntityRendererInterface::class, class_implements($renderer))) {
+        if (in_array('BlueBear\AdminBundle\Admin\Render\EntityRendererInterface', class_implements($renderer))) {
             /** @var EntityRendererInterface $renderer */
             $renderer->setEntity($entity);
         }
