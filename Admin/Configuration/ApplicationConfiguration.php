@@ -83,6 +83,13 @@ class ApplicationConfiguration
      */
     protected $routingNamePattern;
 
+    /**
+     * Default number of displayed records in list
+     *
+     * @var int
+     */
+    protected $maxPerPage;
+
     public function __construct(array $applicationConfiguration = [], $locale)
     {
         $resolver = new OptionsResolver();
@@ -99,7 +106,8 @@ class ApplicationConfiguration
             'routing' => [
                 'url_pattern' => '/{admin}/{action}',
                 'name_pattern' => 'bluebear.admin.{admin}'
-            ]
+            ],
+            'max_per_page' => 25
         ]);
         $applicationConfiguration = $resolver->resolve($applicationConfiguration);
         $this->title = $applicationConfiguration['title'];
@@ -114,6 +122,7 @@ class ApplicationConfiguration
         $this->stringLengthTruncate = $applicationConfiguration['string_length_truncate'];
         $this->routingUrlPattern = $applicationConfiguration['routing']['url_pattern'];
         $this->routingNamePattern = $applicationConfiguration['routing']['name_pattern'];
+        $this->maxPerPage = $applicationConfiguration['max_per_page'];
     }
 
     /**
@@ -298,5 +307,21 @@ class ApplicationConfiguration
     public function isBootstrap()
     {
         return $this->bootstrap;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxPerPage()
+    {
+        return $this->maxPerPage;
+    }
+
+    /**
+     * @param int $maxPerPage
+     */
+    public function setMaxPerPage($maxPerPage)
+    {
+        $this->maxPerPage = $maxPerPage;
     }
 }
