@@ -139,7 +139,7 @@ class AdminFactory
                 'delete' => []
             ],
             'controller' => 'BlueBearAdminBundle:Generic',
-            'max_per_page' => 25
+            'max_per_page' => $this->container->get('bluebear.admin.application')->getMaxPerPage()
         ]);
         // required options
         $resolver->setRequired([
