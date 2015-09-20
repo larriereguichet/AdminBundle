@@ -33,7 +33,12 @@ class AdminConfiguration
             'controller' => 'BlueBearAdminBundle:Generic',
             'manager' => [],
             'form' => 'generic',
-            'actions' => [],
+            'actions' => [
+                'list' => null,
+                'edit' => null,
+                'create' => null,
+                'delete' => null
+            ],
             'max_per_page' => 25,
             'routing_url_pattern' => $configuration->getRoutingUrlPattern(),
             'routing_name_pattern' => $configuration->getRoutingNamePattern(),
