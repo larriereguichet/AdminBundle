@@ -42,28 +42,6 @@ class AdminFactoryFunctionalTest extends Base
         $this->assertCount(count($config), $adminFactory->getAdmins(), 'Error on admin count');
     }
 
-    public function testCreateApplicationFromConfiguration()
-    {
-        $client = $this->initApplication();
-        $container = $client->getKernel()->getContainer();
-        $adminFactory = new AdminFactory($container);
-        // no configuration : test default values
-        $application = $adminFactory->createApplicationFromConfiguration([]);
-        $this->assertNotNull($application->getTitle());
-        $this->assertNotFalse($container->get('templating')->exists($application->getBlockTemplate()));
-        $this->assertFalse($application->useBootstrap());
-        $this->assertNotNull($application->getDateFormat());
-        $this->assertNotNull($application->getDescription());
-        $this->assertNotNull($application->getLang());
-        $this->assertNotFalse($container->get('templating')->exists($application->getLayout()));
-        // test invalid configuration
-        $this->assertExceptionRaised('Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException', function () use ($adminFactory) {
-            $adminFactory->createApplicationFromConfiguration([
-                'new_parameter' => true
-            ]);
-        });
-    }
-
     public function testGetAdminFromRequest()
     {
         $client = $this->initApplication();
@@ -84,7 +62,6 @@ class AdminFactoryFunctionalTest extends Base
             $adminFactory->getAdminFromRequest($request);
         });
         // test valid route
-        $adminFactory->createApplicationFromConfiguration([]);
         $adminFactory->create('test', [
             'entity' => 'Test\TestBundle\Entity\TestEntity',
             'form' => 'test'
@@ -132,7 +109,10 @@ class AdminFactoryFunctionalTest extends Base
                         'fields' => [
                             'id' => [],
                             'label' => [
-                                'length' => 50
+                                'type' => 'string',
+                                'options' => [
+                                    'length' => 50
+                                ]
                             ]
                         ],
                         'order' => [
@@ -161,23 +141,23 @@ class AdminFactoryFunctionalTest extends Base
     {
         $this->assertCount(4, $admin->getActions(), 'Invalid actions count, expected 4 (list, create, update, delete)');
         // list default parameters
-        $this->assertEquals($admin->getAction('list')->getExport(), ['json', 'xml', 'xls', 'csv', 'html']);
-        $this->assertEquals($admin->getAction('list')->getTitle(), 'MinimalEntities List');
+        $this->assertEquals($admin->getAction('list')->getExport(), []);
+        $this->assertEquals($admin->getAction('list')->getTitle(), 'bluebear.admin.minimal_entity.list');
         $this->assertEquals(array_keys($admin->getAction('list')->getFields()), ['id']);
         $this->assertContains('ROLE_ADMIN', array_keys($admin->getAction('list')->getPermissions()));
         // create default parameters
         $this->assertEquals($admin->getAction('create')->getExport(), []);
-        $this->assertEquals($admin->getAction('create')->getTitle(), 'Create MinimalEntity');
+        $this->assertEquals($admin->getAction('create')->getTitle(), 'bluebear.admin.minimal_entity.create');
         $this->assertEquals(array_keys($admin->getAction('create')->getFields()), ['id']);
         $this->assertContains('ROLE_ADMIN', array_keys($admin->getAction('list')->getPermissions()));
         // edit default parameters
         $this->assertEquals($admin->getAction('edit')->getExport(), []);
-        $this->assertEquals($admin->getAction('edit')->getTitle(), 'Edit MinimalEntity');
+        $this->assertEquals($admin->getAction('edit')->getTitle(), 'bluebear.admin.minimal_entity.edit');
         $this->assertEquals(array_keys($admin->getAction('edit')->getFields()), ['id']);
         $this->assertContains('ROLE_ADMIN', array_keys($admin->getAction('list')->getPermissions()));
         // create default parameters
         $this->assertEquals($admin->getAction('delete')->getExport(), []);
-        $this->assertEquals($admin->getAction('delete')->getTitle(), 'Delete MinimalEntity');
+        $this->assertEquals($admin->getAction('delete')->getTitle(), 'bluebear.admin.minimal_entity.delete');
         $this->assertEquals(array_keys($admin->getAction('delete')->getFields()), ['id']);
         $this->assertContains('ROLE_ADMIN', array_keys($admin->getAction('delete')->getPermissions()));
     }

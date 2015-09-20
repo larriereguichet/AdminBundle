@@ -96,26 +96,11 @@ class ActionFactory
         if ($admin) {
             $action->setRoute($this->routingLoader->generateRouteName($actionName, $admin));
         }
-        return $action;
-    }
-
-    protected function generateDefaultActionTitle($title, $action)
-    {
-        $default = $title;
-
-        if ($action == 'list') {
-            if (substr($title, strlen($title) - 1) == 'y') {
-                $title = substr($title, 0, strlen($title) - 1) . 'ie';
-            }
-            $default = $this->inflectString($title) . 's List';
-        } else if ($action == 'create') {
-            $default = 'Create ' . $this->inflectString($title);
-        } else if ($action == 'edit') {
-            $default = 'Edit ' . $this->inflectString($title);
-        } else if ($action == 'delete') {
-            $default = 'Delete ' . $this->inflectString($title);
+        if (!$action->getTitle()) {
+            $adminName = ($admin) ? $admin->getName() . '.' : '';
+            $action->setTitle(sprintf('bluebear.admin.%s%s', $adminName, $actionName));
         }
-        return $default;
+        return $action;
     }
 
     /**
@@ -132,7 +117,7 @@ class ActionFactory
             ],
             'field_actions' => [],
             'permissions' => ['ROLE_ADMIN'],
-            'export' => ['json', 'xml', 'xls', 'csv', 'html'],
+            'export' => [],
             'order' => [],
             'actions' => [],
             'target' => '_self',
