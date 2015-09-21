@@ -22,6 +22,7 @@ class DateRenderer implements RendererInterface
 
     /**
      * @param DateTime $value
+     * @return DateTime|string
      */
     public function render($value)
     {
