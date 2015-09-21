@@ -93,7 +93,7 @@ class ActionFactory
         $action->setTarget($actionConfiguration['target']);
         $action->setParameters($actionConfiguration['parameters']);
 
-        if ($admin) {
+        if ($admin && !$actionConfiguration['route']) {
             $action->setRoute($this->routingLoader->generateRouteName($actionName, $admin));
         }
         if (!$action->getTitle()) {
