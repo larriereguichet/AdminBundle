@@ -19,13 +19,13 @@ class StringRenderer implements RendererInterface
         ]);
         $configuration = $resolver->resolve($configuration);
 
-        $this->length = $configuration['length'];
+        $this->length = (int)$configuration['length'];
         $this->replace = $configuration['replace'];
     }
 
     public function render($value)
     {
-        if ($this->length) {
+        if ($this->length && strlen($value) > $this->length) {
             $value = substr($value, 0, $this->length) . $this->replace;
         }
         return $value;
