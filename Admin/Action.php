@@ -275,7 +275,7 @@ class Action
     }
 
     /**
-     * @return array
+     * @return Action[]
      */
     public function getActions()
     {
