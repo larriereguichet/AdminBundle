@@ -55,7 +55,7 @@ class FieldRendererFactory
             if (!in_array('BlueBear\AdminBundle\Admin\Render\RendererInterface', class_implements($renderer))) {
                 throw new Exception("The render $class should implements RenderInterface");
             }
-            if (in_array('BlueBear\AdminBundle\Admin\Render\RendererInterface', class_implements($renderer))) {
+            if (in_array('BlueBear\AdminBundle\Admin\Render\TwigRendererInterface', class_implements($renderer))) {
                 /** @var TwigRendererInterface $renderer */
                 $renderer->setTwig($this->twig);
             }
