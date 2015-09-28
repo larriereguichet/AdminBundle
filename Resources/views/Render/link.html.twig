@@ -1,7 +1,6 @@
-{% if route %}
-    {% set url = path(route, parameters) %}
-{% else %}
-    {% set url = text %}
-{% endif %}
-
-<a href="{{ url }}" target="{{ target }}">{{ text }}</a>
+{% spaceless %}
+    {% if route %}
+        {% set url = path(route, parameters) %}
+    {% endif %}
+    <a href="{{ url }}" target="{{ target }}">{{ text }}</a>
+{% endspaceless %}

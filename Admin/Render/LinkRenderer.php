@@ -3,6 +3,7 @@
 namespace BlueBear\AdminBundle\Admin\Render;
 
 use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Environment;
@@ -37,9 +38,16 @@ class LinkRenderer extends StringRenderer implements TwigRendererInterface, Enti
     /**
      * Link target
      *
-     * @var
+     * @var string
      */
     protected $target;
+
+    /**
+     * If an url is provided we use it instead of route
+     *
+     * @var string
+     */
+    protected $url;
 
     /**
      * Initialize a link renderer
@@ -56,18 +64,24 @@ class LinkRenderer extends StringRenderer implements TwigRendererInterface, Enti
             'template' => 'BlueBearAdminBundle:Render:link.html.twig',
             'target' => '_self',
             'route' => '',
-            'parameters' => []
+            'parameters' => [],
+            'url' => ''
         ]);
         $resolver->setAllowedTypes('route', 'string');
         $resolver->setAllowedTypes('parameters', 'array');
         $resolver->setAllowedTypes('length', 'integer');
         // resolve options
         $options = $resolver->resolve($options);
+
+        if (!$options['url'] && !$options['route']) {
+            throw new MissingOptionsException('Either options or route must be defined for LinkRenderer');
+        }
         $this->route = $options['route'];
         $this->parameters = $options['parameters'];
         $this->length = $options['length'];
         $this->template = $options['template'];
         $this->target = $options['target'];
+        $this->url = $options['url'];
     }
 
     /**
@@ -112,7 +126,8 @@ class LinkRenderer extends StringRenderer implements TwigRendererInterface, Enti
             'text' => $text,
             'route' => $this->route,
             'parameters' => $parameters,
-            'target' => $this->target
+            'target' => $this->target,
+            'url' => $this->url,
         ]);
         return $render;
     }
