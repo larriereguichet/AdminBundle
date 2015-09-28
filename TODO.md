@@ -1,20 +1,24 @@
+v0.4:
+- adding simple mass edit
+- add possibility to have tab in generated forms
+
+
 v0.3:
 Features:
 - unit testing
 x add config for order entities in list view
 x add format for date in list
 - file exporters : array type, association
-- adding simple mass edit
 - add filters
-- add possibility to have tab in generated forms
 - handle custom actions for edit form (enable user for example)
 - add configuration for custom url for actions
 - add configuration for custom actions
-- improve admin and action name from request (use default parameters in routing instead)
+x improve admin and action name from request (use default parameters in routing instead)
 - handling new Symfony bootstrap layout
 - configure application date format (filename export, displayed date...)
 - localization
-- add link type in list
+- bootstrap theme
+x add link type in list
 
 Bug fixes :
 - fix bug when deleting entity with integrity constraint
