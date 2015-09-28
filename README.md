@@ -6,7 +6,7 @@ for your Symfony application.
 Development and Documentation are in progress
 
 Testing : 
-0.3-dev (https://travis-ci.org/larriereguichet/AdminBundle.svg?branch=0.3-dev)
+0.3-dev [![Build Status](https://travis-ci.org/larriereguichet/AdminBundle.svg?branch=0.3-dev)](https://travis-ci.org/larriereguichet/AdminBundle)
 
 ## Features
 
