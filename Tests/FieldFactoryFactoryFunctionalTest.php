@@ -2,14 +2,14 @@
 
 namespace BlueBear\AdminBundle\Tests;
 
-
 use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use BlueBear\AdminBundle\Admin\Factory\FieldFactory;
 use BlueBear\AdminBundle\Admin\Factory\FieldRendererFactory;
 use BlueBear\AdminBundle\Admin\Field;
+use BlueBear\AdminBundle\Admin\Render\TwigRendererInterface;
 use DateTime;
+use Symfony\Component\Routing\RouterInterface;
 use Twig_Environment;
-use Twig_Loader_Filesystem;
 
 class FieldFactoryFactoryFunctionalTest extends Base
 {
@@ -34,6 +34,8 @@ class FieldFactoryFactoryFunctionalTest extends Base
 
     protected function doTestFieldForConfiguration(Field $field, array $configuration, $fieldName)
     {
+        $client = $this->initApplication();
+        $container = $client->getKernel()->getContainer();
         $this->assertEquals($fieldName, $field->getName());
 
         if (!array_key_exists('type', $configuration)) {
@@ -45,13 +47,13 @@ class FieldFactoryFactoryFunctionalTest extends Base
         $this->assertInstanceOf($this->rendererMapping[$configuration['type']], $renderer);
         $this->assertInstanceOf('BlueBear\AdminBundle\Admin\Render\RendererInterface', $renderer);
 
-//        if (in_array('BlueBear\AdminBundle\Admin\Render\TwigRendererInterface', class_implements($renderer))) {
-//            $this->assertTrue(method_exists($renderer, 'setTwig'));
-//            $twig = new Twig_Environment(new Twig_Loader_Filesystem([
-//                '__main__' => __DIR__ . '/../'
-//            ]));
-//            $renderer->setTwig($twig);
-//        }
+        if (in_array('BlueBear\AdminBundle\Admin\Render\TwigRendererInterface', class_implements($renderer))) {
+            /** @var TwigRendererInterface $renderer */
+            $this->assertTrue(method_exists($renderer, 'setTwig'));
+            /** @var Twig_Environment $twig */
+            $twig = $container->get('twig');
+            $renderer->setTwig($twig);
+        }
         if ($configuration['type'] == 'string') {
             $this->assertNotNull($renderer->render('Test'));
 
@@ -67,7 +69,15 @@ class FieldFactoryFactoryFunctionalTest extends Base
         } else if ($configuration['type'] == 'date') {
             $this->assertEquals(date('d/m/Y h:i:s'), $renderer->render(new DateTime()));
         } else if ($configuration['type'] == 'link') {
-            //$this->assertEquals('<a></a>', $renderer->render('MyText'));
+
+            if (array_key_exists('url', $configuration['options'])) {
+                $url = $configuration['options']['url'];
+            } else {
+                /** @var RouterInterface $router */
+                $router = $container->get('routing');
+                $url = $router->generate($configuration['route'], $configuration['parameters']);
+            }
+            $this->assertEquals('<a href="'.$url.'" target="_blank">MyText</a>', $renderer->render('MyText'));
         }
     }
 
@@ -97,7 +107,8 @@ class FieldFactoryFactoryFunctionalTest extends Base
             'link_test' => [
                 'type' => 'link',
                 'options' => [
-                    'target' => '_blank'
+                    'target' => '_blank',
+                    'url' => 'https://www.google.fr'
                 ]
             ]
 
