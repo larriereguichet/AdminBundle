@@ -36,6 +36,7 @@ class DateTimePickerType extends AbstractType
         $jsDateFormat = str_replace('HH', 'hh', $jsDateFormat);
 
         $view->vars['javascript_date_format'] = $jsDateFormat;
+        $view->vars['javascript_language'] = substr($this->configuration->getLocale(), 0, 2);
     }
 
     public function getParent()
