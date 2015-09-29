@@ -1,0 +1,17 @@
+{% javascripts
+'bundles/bluebearfileupload/js/jquery.iframe-transport.js'
+'bundles/bluebearfileupload/js/jquery.fileupload.js'
+'bundles/bluebearfileupload/js/jquery.fileupload-process.js'
+'bundles/bluebearfileupload/js/jquery.fileupload-image.js'
+'bundles/bluebearfileupload/js/jquery.fileupload-audio.js'
+'bundles/bluebearfileupload/js/jquery.fileupload-video.js'
+'bundles/bluebearfileupload/js/jquery.fileupload-validate.js'
+'bundles/bluebearfileupload/js/jquery.fileupload-ui.js'
+'bundles/bluebearfileupload/js/jquery.fileupload.bluebear.js'
+filter="?yui_js" %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+<script src="{{ asset('/bundles/scdatetimepicker/js/bootstrap-datetimepicker.js') }}"></script>
+<script src="{{ asset('/bundles/scdatetimepicker/js/locales/bootstrap-datetimepicker.fr.js') }}"></script>
+<script src="{{ asset('/bundles/scdatetimepicker/js/locales/bootstrap-datetimepicker.uk.js') }}"></script>
+{% block javascripts %}{% endblock %}
