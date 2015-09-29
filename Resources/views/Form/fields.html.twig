@@ -15,7 +15,8 @@
         $(document).ready(function () {
             var inputIdSelector = '#{{ form.vars.id }}';
             $(inputIdSelector).datetimepicker({
-                format: '{{ form.vars.javascript_date_format }}'
+                format: '{{ form.vars.javascript_date_format }}',
+                language: '{{ form.vars.javascript_language }}'
             });
         });
     </script>
