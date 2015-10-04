@@ -2,6 +2,7 @@
 
 namespace BlueBear\AdminBundle\Tests;
 
+use AppKernel;
 use Symfony\Bundle\FrameworkBundle\Client as BaseClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +15,7 @@ class Client extends BaseClient
 
     public static function initClient()
     {
-        $kernel = new \AppKernel('test', true);
+        $kernel = new AppKernel('test', true);
         $kernel->loadClassCache();
         $client = new Client($kernel);
 
