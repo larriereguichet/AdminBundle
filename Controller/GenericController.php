@@ -3,12 +3,14 @@
 namespace BlueBear\AdminBundle\Controller;
 
 use BlueBear\AdminBundle\Admin\Admin;
+use BlueBear\AdminBundle\Routing\RoutingLoader;
 use BlueBear\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use DateTime;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\MappingException;
 use EE\DataExporterBundle\Service\DataExporter;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -38,13 +40,10 @@ class GenericController extends Controller
      */
     public function listAction(Request $request)
     {
-        /** @var Admin $admin */
-        $admin = $this
-            ->get('bluebear.admin.factory')
-            ->getAdminFromRequest($request);
+        $admin = $this->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
-        // set entities list
+        // find entities list
         $admin->findEntities($request->get('page', 1), $request->get('sort', null), $request->get('order', 'ASC'));
 
         if ($request->get('export', false)) {
@@ -66,9 +65,7 @@ class GenericController extends Controller
     public function createAction(Request $request)
     {
         /** @var Admin $admin */
-        $admin = $this
-            ->get('bluebear.admin.factory')
-            ->getAdminFromRequest($request);
+        $admin = $this->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create entity
@@ -84,11 +81,16 @@ class GenericController extends Controller
             $this->setMessage('bluebear.admin.' . $admin->getName() . '.saved');
 
             if ($request->request->get('submit') == 'save') {
-                return $this->redirect($this->generateUrl($this->container->get('bluebear.admin.routing')->generateRouteName('edit', $admin), [
+                // if save is pressed, user stay on the edit view
+                $route = $this
+                    ->getRoutingLoader()
+                    ->generateRouteName('edit', $admin);
+
+                return $this->redirectToRoute($route, [
                     'id' => $admin->getEntity()->getId()
-                ]));
+                ]);
             } else {
-                // redirect to list
+                // otherwise user is redirected to list view
                 return $this->redirect($this->generateUrl($this->container->get('bluebear.admin.routing')->generateRouteName('list', $admin)));
             }
         }
@@ -230,7 +232,35 @@ class GenericController extends Controller
     {
         $this->forward404Unless($this->getUser(), 'You must be logged to access to this url');
         // check permissions and actions
-        $this->forward404Unless($admin->isActionGranted($admin->getCurrentAction()->getName(), $this->getUser()->getRoles()),
-            'User not allowed for action "' . $admin->getCurrentAction()->getName() . '"');
+        $this->forward404Unless(
+            $admin->isActionGranted($admin->getCurrentAction()->getName(), $this->getUser()->getRoles()),
+            sprintf('User not allowed for action "%s"', $admin->getCurrentAction()->getName())
+        );
+    }
+
+    /**
+     * Return an Admin object according to the request route parameters
+     *
+     * @param Request $request
+     * @return Admin
+     * @throws Exception
+     */
+    protected function getAdminFromRequest(Request $request)
+    {
+        return $this
+            ->get('bluebear.admin.factory')
+            ->getAdminFromRequest($request);
+    }
+
+    /**
+     * Return admin routing loader
+     *
+     * @return RoutingLoader
+     */
+    protected function getRoutingLoader()
+    {
+        return $this
+            ->container
+            ->get('bluebear.admin.routing');
     }
 }
