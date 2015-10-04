@@ -3,6 +3,7 @@
 {% block left %}
     <ul class="nav nav-pills nav-stacked">
         {% block leftList %}
+            {# TODO move this in default configuration#}
             {% if admin.hasAction('list') %}
                 <li>
                     <a href="{{ path(admin.action('list').route) }}">
