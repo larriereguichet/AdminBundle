@@ -6,6 +6,7 @@ use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\AdminBundle\Admin\Factory\AdminFactory;
 use Symfony\Component\HttpFoundation\Request;
 
+// TODO refactor AdminFactory test to match with other factories tests
 class AdminFactoryFunctionalTest extends Base
 {
     public function testInitNoParameters()

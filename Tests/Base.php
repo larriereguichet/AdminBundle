@@ -11,7 +11,7 @@ class Base extends WebTestCase
 {
     protected static $isDatabaseCreated = false;
 
-    public function initApplication($url = '/')
+    public function initApplication($url = '/', $method = null, $parameters = [])
     {
         // test client initialization
         $client = Client::initClient();
@@ -28,7 +28,7 @@ class Base extends WebTestCase
             fwrite(STDOUT, "\n");
             self::$isDatabaseCreated = true;
         }
-        $request = Request::create($url);
+        $request = Request::create($url, $method, $parameters);
         $client->doRequest($request);
 
         return $client;
