@@ -63,6 +63,13 @@ class Action
     protected $actions = [];
 
     /**
+     * Actions displayed at the bottom of the view
+     *
+     * @var array
+     */
+    protected $submitActions = [];
+
+    /**
      * Export types
      *
      * @var array
@@ -90,6 +97,7 @@ class Action
      */
     protected $target = '_self';
 
+    // TODO delete this parameter
     protected $isParametersBuild = false;
 
     /**
@@ -373,5 +381,21 @@ class Action
     public function addFilter(Filter $filter)
     {
         $this->filters[] = $filter;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSubmitActions()
+    {
+        return $this->submitActions;
+    }
+
+    /**
+     * @param array $submitActions
+     */
+    public function setSubmitActions($submitActions)
+    {
+        $this->submitActions = $submitActions;
     }
 }
