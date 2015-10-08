@@ -116,6 +116,7 @@ class ActionFactory
                 'id' => []
             ],
             'field_actions' => [],
+            'submit_actions' => [],
             'permissions' => ['ROLE_ADMIN'],
             'export' => [],
             'order' => [],

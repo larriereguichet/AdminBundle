@@ -15,8 +15,6 @@ class GenericControllerTest extends Base
         $controller = new GenericController();
         $controller->setContainer($container);
         $request = new Request();
-
         $controller->listAction($request);
-
     }
 }

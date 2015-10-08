@@ -82,16 +82,20 @@ class GenericController extends Controller
 
             if ($request->request->get('submit') == 'save') {
                 // if save is pressed, user stay on the edit view
-                $route = $this
+                $editRoute = $this
                     ->getRoutingLoader()
                     ->generateRouteName('edit', $admin);
 
-                return $this->redirectToRoute($route, [
+                return $this->redirectToRoute($editRoute, [
                     'id' => $admin->getEntity()->getId()
                 ]);
             } else {
+                $listRoute = $this
+                    ->container
+                    ->get('bluebear.admin.routing')
+                    ->generateRouteName('list', $admin);
                 // otherwise user is redirected to list view
-                return $this->redirect($this->generateUrl($this->container->get('bluebear.admin.routing')->generateRouteName('list', $admin)));
+                return $this->redirect($this->generateUrl($listRoute));
             }
         }
         return [
