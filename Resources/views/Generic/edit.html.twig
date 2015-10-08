@@ -46,6 +46,15 @@
                             <i class="fa fa-remove"></i>
                         </a>
                     {% endif %}
+                    {% if admin.currentAction.submitActions | length > 0 %}
+                        <ul>
+                        {% for action in admin.currentAction.submitActions %}
+                            <li class="{{ getClassForRoute(action.route) }}">
+                                {{ AdminBundle.actionLink(action) }}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
                     <button type="submit" value="save" name="submit"
                             class="btn btn-default">{{ 'bluebear.admin.save' | trans }}
                         <i class="fa fa-floppy-o"></i></button>
