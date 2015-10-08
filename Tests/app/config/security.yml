@@ -11,15 +11,11 @@ security:
             memory:
                 users:
                     ryan:  { password: ryanpass, roles: 'ROLE_USER' }
-                    admin: { password: kitten, roles: 'ROLE_ADMIN' }
+                    admin: { password: admin, roles: 'ROLE_ADMIN' }
 
     firewalls:
         secured_area:
-            pattern:    ^/
-            anonymous: ~
-            form_login:
-                login_path:  /login
-                check_path:  /login_check
+            http_basic: ~
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }

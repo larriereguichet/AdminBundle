@@ -9,12 +9,38 @@ class GenericControllerTest extends Base
 {
     public function testList()
     {
-        $client = $this->initApplication();
-        $container = $client->getKernel()->getContainer();
-
+        $this->initApplication();
         $controller = new GenericController();
-        $controller->setContainer($container);
+        $controller->setContainer($this->container);
+
+        // with no parameters, an exception should be raised
         $request = new Request();
-        $controller->listAction($request);
+        $this->assertExceptionRaised('Exception', function () use ($controller, $request) {
+            $controller->listAction($request);
+        });
+        // wrong admin and route name should raised an exception
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_admin' => 'bad_admin',
+                '_action' => 'bad_route',
+            ]
+        ]);
+        $this->assertExceptionRaised('Exception', function () use ($controller, $request) {
+            $controller->listAction($request);
+        });
+        // right admin
+        $this->logIn();
+        $request = new Request([], [], [
+                '_route_params' => [
+                '_admin' => 'test',
+                '_action' => 'list',
+            ],
+            $this->client->getCookieJar(),
+            [], [
+                'PHP_AUTH_USER' => 'admin',
+                'PHP_AUTH_PW' => 'admin',
+            ]
+        ]);
+        //$response = $controller->listAction($request);
     }
 }

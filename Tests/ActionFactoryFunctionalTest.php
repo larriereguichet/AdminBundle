@@ -2,7 +2,6 @@
 
 namespace BlueBear\AdminBundle\Tests;
 
-
 use BlueBear\AdminBundle\Admin\Action;
 use BlueBear\AdminBundle\Admin\Admin;
 use BlueBear\AdminBundle\Admin\Configuration\AdminConfiguration;
@@ -12,9 +11,10 @@ class ActionFactoryFunctionalTest extends Base
 {
     public function testCreate()
     {
-        $client = $this->initApplication();
-        $container = $client->getKernel()->getContainer();
-        $actionFactory = $container->get('bluebear.admin.action_factory');
+        $this->initApplication();
+        $actionFactory = $this
+            ->container
+            ->get('bluebear.admin.action_factory');
         $actionsConfiguration = $this->getFakeActionConfiguration();
         $adminConfiguration = new AdminConfiguration([
             'entity' => 'Test',
@@ -23,7 +23,7 @@ class ActionFactoryFunctionalTest extends Base
                 'minimal_action' => [],
                 'other_action' => [],
                 'full_action' => [],
-            ]
+            ],
         ], new ApplicationConfiguration([], 'en'));
         $fakeAdmin = new Admin('action_test', null, null, $adminConfiguration);
 
