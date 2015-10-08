@@ -19,13 +19,6 @@ interface AdminInterface
     public function getName();
 
     /**
-     * Return entity path for routing (for example, MyNamespace\EntityName => entityName)
-     *
-     * @return string
-     */
-    public function getEntityPath();
-
-    /**
      * @return mixed
      */
     public function getEntityNamespace();
@@ -107,4 +100,6 @@ interface AdminInterface
      * @return Pagerfanta
      */
     public function getPager();
+
+    public function getActions();
 }

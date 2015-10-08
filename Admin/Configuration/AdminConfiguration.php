@@ -39,7 +39,7 @@ class AdminConfiguration
                 'create' => null,
                 'delete' => null
             ],
-            'max_per_page' => 25,
+            'max_per_page' => $configuration->getMaxPerPage(),
             'routing_url_pattern' => $configuration->getRoutingUrlPattern(),
             'routing_name_pattern' => $configuration->getRoutingNamePattern(),
         ]);

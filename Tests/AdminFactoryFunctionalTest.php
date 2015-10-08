@@ -2,52 +2,48 @@
 
 namespace BlueBear\AdminBundle\Tests;
 
-use BlueBear\AdminBundle\Admin\Admin;
+use BlueBear\AdminBundle\Admin\AdminInterface;
 use BlueBear\AdminBundle\Admin\Factory\AdminFactory;
 use Symfony\Component\HttpFoundation\Request;
 
-// TODO refactor AdminFactory test to match with other factories tests
 class AdminFactoryFunctionalTest extends Base
 {
     public function testInitNoParameters()
     {
-        $client = $this->initApplication();
-        $container = $client->getKernel()->getContainer();
+        $this->initApplication();
         // admin factory initialization
-        $adminFactory = new AdminFactory($container);
+        $adminFactory = new AdminFactory($this->container);
+        // assert factory creation (dependencies are correct...)
         $this->assertTrue($adminFactory != null, 'AdminFactory initialization error');
-        $this->assertCount(0, $adminFactory->getAdmins(), 'No admin should be found');
+        // assert that loaded configurations create the right admins count
+        $this->assertCount(count($this->container->getParameter('bluebear.admins')), $adminFactory->getAdmins(), 'No admin should be found');
     }
 
     public function testCreateAdminFromConfiguration()
     {
-        $client = $this->initApplication();
-        $container = $client->getKernel()->getContainer();
-        $adminFactory = new AdminFactory($container);
+        $this->initApplication();
+        $adminFactory = new AdminFactory($this->container);
         $config = $this->getFakeAdminsConfiguration();
 
         foreach ($config as $adminName => $adminConfig) {
+            // testing admin creation from configuration
             $adminFactory->create($adminName, $adminConfig);
+            // getter should get the right admin
             $admin = $adminFactory->getAdmin($adminName);
-            // test actual admin
-            $this->assertInstanceOf('BlueBear\AdminBundle\Admin\Admin', $admin, 'Admin not found after creation');
-            $this->assertContains('BlueBear\AdminBundle\Admin\AdminInterface', class_implements(get_class($admin)), 'Admin should implement BlueBear\AdminBundle\Admin\AdminInterface');
-
-            // minimal configuration test
-            if ($adminName == 'minimal_entity') {
-                $this->doTestMinimalConfiguration($admin);
-            } else if ($adminName == 'full_entity') {
-                $this->doTestFullConfiguration($admin, $adminConfig);
-            }
+            // it should implements AdminInterface
+            $this->assertContains('BlueBear\AdminBundle\Admin\AdminInterface', class_implements(get_class($admin)),
+                'Admin should implement BlueBear\AdminBundle\Admin\AdminInterface');
+            $this->doTestAdmin($admin, $adminConfig, $adminName);
         }
-        $this->assertCount(count($config), $adminFactory->getAdmins(), 'Error on admin count');
+        $adminTotalCount = count($config) + count($this->container->getParameter('bluebear.admins'));
+        // assert admin total count is equal to configured admin + admin added dynamically
+        $this->assertCount($adminTotalCount, $adminFactory->getAdmins(), 'Error on admin count');
     }
 
     public function testGetAdminFromRequest()
     {
-        $client = $this->initApplication();
-        $container = $client->getKernel()->getContainer();
-        $adminFactory = new AdminFactory($container);
+        $this->initApplication();
+        $adminFactory = new AdminFactory($this->container);
         // test invalid route
         $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
             $request = Request::create('/admin/test');
@@ -87,13 +83,39 @@ class AdminFactoryFunctionalTest extends Base
         $this->assertTrue($admin->getEntity() || count($admin->getEntities()), 'No entities were found');
     }
 
+    protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
+    {
+        $this->assertEquals($admin->getName(), $adminName);
+        $this->assertEquals($admin->getFormType(), $configuration['form']);
+        $this->assertEquals($admin->getEntityNamespace(), $configuration['entity']);
+
+        if (array_key_exists('controller', $configuration)) {
+            $this->assertEquals($admin->getController(), $configuration['controller']);
+        }
+        if (array_key_exists('max_per_page', $configuration)) {
+            $this->assertEquals($admin->getConfiguration()->getMaxPerPage(), $configuration['max_per_page']);
+        } else {
+            // value set in Tests/app/config/config.yml
+            $this->assertEquals($admin->getConfiguration()->getMaxPerPage(), 25);
+        }
+        if (array_key_exists('actions', $configuration)) {
+            $actionsNames = array_keys($configuration['actions']);
+            $this->assertCount(count($actionsNames), $admin->getActions());
+            $this->assertEquals(array_keys($admin->getActions()), $actionsNames);
+        }
+        if (array_key_exists('manager', $configuration)) {
+            //$this->assertEquals($admin->getManager(), $configuration['manager']);
+        }
+    }
+
     protected function getFakeAdminsConfiguration()
     {
         return [
             // minimal configuration sample
             'minimal_entity' => [
                 'entity' => 'Test\TestBundle\Entity\TestEntity',
-                'form' => 'test'
+                'form' => 'test',
+                'max_per_page' => 50,
             ],
             'full_entity' => [
                 'entity' => 'Test\TestBundle\Entity\TestEntity',
@@ -101,80 +123,11 @@ class AdminFactoryFunctionalTest extends Base
                 'controller' => 'TestTestBundle:Test',
                 'max_per_page' => 50,
                 'actions' => [
-                    'custom_list' => [
-                        'title' => 'My Custom List',
-                        'permissions' => [
-                            'ROLE_CUSTOM_USER'
-                        ],
-                        'export' => ['json'],
-                        'fields' => [
-                            'id' => [],
-                            'label' => [
-                                'type' => 'string',
-                                'options' => [
-                                    'length' => 50
-                                ]
-                            ]
-                        ],
-                        'order' => [
-                            'property' => 'createdAt',
-                            // TODO test order with fixtures
-                            'order' => 'desc'
-                        ]
-                    ],
-                    'custom_edit' => [
-                        'title' => 'My Custom Edition',
-                        'permissions' => [
-                            'ROLE_CUSTOM_EDITOR'
-                        ],
-                        'export' => ['html'],
-                        'fields' => [
-                            'id' => [],
-                            'label' => []
-                        ]
-                    ],
-                ]
+                    'custom_list' => [],
+                    'custom_edit' => [],
+                ],
+                'manager' => 'MyManager'
             ]
         ];
-    }
-
-    protected function doTestMinimalConfiguration(Admin $admin)
-    {
-        $this->assertCount(4, $admin->getActions(), 'Invalid actions count, expected 4 (list, create, update, delete)');
-        // list default parameters
-        $this->assertEquals($admin->getAction('list')->getExport(), []);
-        $this->assertEquals($admin->getAction('list')->getTitle(), 'bluebear.admin.minimal_entity.list');
-        $this->assertEquals(array_keys($admin->getAction('list')->getFields()), ['id']);
-        $this->assertContains('ROLE_ADMIN', array_keys($admin->getAction('list')->getPermissions()));
-        // create default parameters
-        $this->assertEquals($admin->getAction('create')->getExport(), []);
-        $this->assertEquals($admin->getAction('create')->getTitle(), 'bluebear.admin.minimal_entity.create');
-        $this->assertEquals(array_keys($admin->getAction('create')->getFields()), ['id']);
-        $this->assertContains('ROLE_ADMIN', array_keys($admin->getAction('list')->getPermissions()));
-        // edit default parameters
-        $this->assertEquals($admin->getAction('edit')->getExport(), []);
-        $this->assertEquals($admin->getAction('edit')->getTitle(), 'bluebear.admin.minimal_entity.edit');
-        $this->assertEquals(array_keys($admin->getAction('edit')->getFields()), ['id']);
-        $this->assertContains('ROLE_ADMIN', array_keys($admin->getAction('list')->getPermissions()));
-        // create default parameters
-        $this->assertEquals($admin->getAction('delete')->getExport(), []);
-        $this->assertEquals($admin->getAction('delete')->getTitle(), 'bluebear.admin.minimal_entity.delete');
-        $this->assertEquals(array_keys($admin->getAction('delete')->getFields()), ['id']);
-        $this->assertContains('ROLE_ADMIN', array_keys($admin->getAction('delete')->getPermissions()));
-    }
-
-    protected function doTestFullConfiguration(Admin $admin, array $adminConfiguration)
-    {
-        $this->assertCount(count($adminConfiguration['actions']), $admin->getActions(), 'Invalid actions count');
-
-        foreach ($adminConfiguration['actions'] as $actionName => $actionConfiguration) {
-            // list default parameters
-            $this->assertEquals($admin->getAction($actionName)->getExport(), $actionConfiguration['export']);
-            $this->assertEquals($admin->getAction($actionName)->getTitle(), $actionConfiguration['title']);
-            $this->assertEquals(array_keys($actionConfiguration['fields']), array_keys($admin->getAction($actionName)->getFields()));
-            $this->assertEquals($actionConfiguration['permissions'], $admin->getAction($actionName)->getPermissions());
-            $this->assertEquals($adminConfiguration['max_per_page'], $admin->getConfiguration()->getMaxPerPage());
-            $this->assertEquals($adminConfiguration['controller'], $admin->getController());
-        }
     }
 }

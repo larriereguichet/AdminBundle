@@ -117,20 +117,6 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Return entity path for routing (for example, MyNamespace\EntityName => entityName)
-     *
-     * @return string
-     */
-    public function getEntityPath()
-    {
-        $array = explode('\\', $this->getEntityNamespace());
-        $path = array_pop($array);
-        $path = strtolower(substr($path, 0, 1)) . substr($path, 1);
-
-        return $path;
-    }
-
-    /**
      * @return mixed
      */
     public function getEntityNamespace()
