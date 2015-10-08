@@ -34,8 +34,7 @@ class FieldFactoryFactoryFunctionalTest extends Base
 
     protected function doTestFieldForConfiguration(Field $field, array $configuration, $fieldName)
     {
-        $client = $this->initApplication();
-        $container = $client->getKernel()->getContainer();
+        $this->initApplication();
         $this->assertEquals($fieldName, $field->getName());
 
         if (!array_key_exists('type', $configuration)) {
@@ -51,7 +50,7 @@ class FieldFactoryFactoryFunctionalTest extends Base
             /** @var TwigRendererInterface $renderer */
             $this->assertTrue(method_exists($renderer, 'setTwig'));
             /** @var Twig_Environment $twig */
-            $twig = $container->get('twig');
+            $twig = $this->container->get('twig');
             $renderer->setTwig($twig);
         }
         if ($configuration['type'] == 'string') {
@@ -74,7 +73,7 @@ class FieldFactoryFactoryFunctionalTest extends Base
                 $url = $configuration['options']['url'];
             } else {
                 /** @var RouterInterface $router */
-                $router = $container->get('routing');
+                $router = $this->container->get('routing');
                 $url = $router->generate($configuration['route'], $configuration['parameters']);
             }
             $this->assertEquals('<a href="'.$url.'" target="_blank">MyText</a>', $renderer->render('MyText'));

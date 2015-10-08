@@ -10,3 +10,8 @@ bluebear_admin:
         routing:
             name_pattern: 'bluebear.admin.{admin}.{action}'
             url_pattern: '{admin}/{action}'
+
+    admins:
+        test:
+            entity: Test\TestBundle\Entity\TestEntity
+            form: test

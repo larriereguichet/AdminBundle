@@ -104,7 +104,7 @@ class AdminFactory
     public function getAdmin($name)
     {
         if (!array_key_exists($name, $this->admins)) {
-            throw new Exception('Invalid admin name "' . $name . '". Did you add it in your configuration ?');
+            throw new Exception(sprintf('Admin with name "%s" not found. Check your admin configuration', $name ));
         }
         return $this->admins[$name];
     }
@@ -127,8 +127,13 @@ class AdminFactory
      */
     public function create($adminName, array $adminConfiguration)
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->container->get('doctrine')->getManager();
+        $application = $this
+            ->container
+            ->get('bluebear.admin.application');
+        $entityManager = $this
+            ->container
+            ->get('doctrine')
+            ->getManager();
         $resolver = new OptionsResolver();
         // optional options
         $resolver->setDefaults([
@@ -138,8 +143,14 @@ class AdminFactory
                 'edit' => [],
                 'delete' => []
             ],
+            'manager' => null,
+            'routing_url_pattern' => $application->getRoutingUrlPattern(),
+            'routing_name_pattern' => $application->getRoutingNamePattern(),
             'controller' => 'BlueBearAdminBundle:Generic',
-            'max_per_page' => $this->container->get('bluebear.admin.application')->getMaxPerPage()
+            'max_per_page' => $this
+                ->container
+                ->get('bluebear.admin.application')
+                ->getMaxPerPage()
         ]);
         // required options
         $resolver->setRequired([
@@ -147,16 +158,16 @@ class AdminFactory
             'form'
         ]);
         $adminConfiguration = $resolver->resolve($adminConfiguration);
-        /** @var ApplicationConfiguration $application */
-        $application = $this->container->get('bluebear.admin.application');
         $adminConfig = new AdminConfiguration($adminConfiguration, $application);
         // gathering admin data
+        /** @var EntityRepository $entityRepository */
         $entityRepository = $entityManager->getRepository($adminConfig->getEntityName());
         // create generic manager from configuration
         $entityManager = $this->createManagerFromConfig($adminConfig, $entityRepository);
         $admin = new Admin($adminName, $entityRepository, $entityManager, $adminConfig);
         // actions are optional
         if (!$adminConfig->getActions()) {
+            // TODO move in default configuration
             $adminConfig->setActions([
                 'list' => [],
                 'create' => [],
@@ -164,8 +175,9 @@ class AdminFactory
                 'delete' => []
             ]);
         }
-        /** @var ActionFactory $actionFactory */
-        $actionFactory = $this->container->get('bluebear.admin.action_factory');
+        $actionFactory = $this
+            ->container
+            ->get('bluebear.admin.action_factory');
         // adding actions
         foreach ($adminConfig->getActions() as $actionName => $actionConfig) {
             $action = $actionFactory->create($actionName, $actionConfig, $admin);
@@ -196,10 +208,13 @@ class AdminFactory
         $methodsMapping = [];
         // set default entity manager
         /** @var EntityManager $entityManager */
-        $entityManager = $this->container->get('doctrine')->getManager();
+        $entityManager = $this
+            ->container
+            ->get('doctrine')
+            ->getManager();
         $managerConfiguration = $adminConfig->getManagerConfiguration();
         // custom manager is optional
-        if ($managerConfiguration) {
+        if (is_array($managerConfiguration)) {
             $customManager = $this->container->get($managerConfiguration['name']);
 
             if (array_key_exists('save', $managerConfiguration)) {

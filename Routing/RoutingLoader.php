@@ -3,7 +3,7 @@
 namespace BlueBear\AdminBundle\Routing;
 
 use BlueBear\AdminBundle\Admin\Action;
-use BlueBear\AdminBundle\Admin\Admin;
+use BlueBear\AdminBundle\Admin\AdminInterface;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Exception;
@@ -32,7 +32,7 @@ class RoutingLoader implements LoaderInterface
         $routes = new RouteCollection();
         $admins = $this->getContainer()->get('bluebear.admin.factory')->getAdmins();
         // creating a route by admin and action
-        /** @var Admin $admin */
+        /** @var AdminInterface $admin */
         foreach ($admins as $admin) {
             $actions = $admin->getActions();
             // by default, actions are create, edit, delete, list
@@ -65,11 +65,11 @@ class RoutingLoader implements LoaderInterface
      * Generate a route for admin and action name
      *
      * @param $actionName
-     * @param Admin $admin
+     * @param AdminInterface $admin
      * @return string
      * @throws Exception
      */
-    public function generateRouteName($actionName, Admin $admin)
+    public function generateRouteName($actionName, AdminInterface $admin)
     {
         if (!array_key_exists($actionName, $admin->getConfiguration()->getActions())) {
             throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$admin->getName()}\" (available action are: \""
@@ -87,12 +87,12 @@ class RoutingLoader implements LoaderInterface
     /**
      * Add a Route to the RouteCollection according to an Admin an an Action
      *
-     * @param Admin $admin
+     * @param AdminInterface $admin
      * @param Action $action
      * @param RouteCollection $routeCollection
      * @throws Exception
      */
-    protected function loadRouteForAction(Admin $admin, Action $action, RouteCollection $routeCollection)
+    protected function loadRouteForAction(AdminInterface $admin, Action $action, RouteCollection $routeCollection)
     {
         $routingUrlPattern = $admin->getConfiguration()->getRoutingUrlPattern();
         // routing pattern should contains {admin} and {action}
@@ -100,7 +100,7 @@ class RoutingLoader implements LoaderInterface
             throw new Exception('Admin routing pattern should contains {admin} and {action} placeholder');
         }
         // route path by entity name and action name
-        $path = str_replace('{admin}', $admin->getEntityPath(), $routingUrlPattern);
+        $path = str_replace('{admin}', $this->getEntityPath($admin->getEntityNamespace()), $routingUrlPattern);
         $path = str_replace('{action}', $action->getName(), $path);
         // by default, generic controller
         $defaults = [
@@ -124,5 +124,20 @@ class RoutingLoader implements LoaderInterface
         $action->setRoute($routeName);
         // adding route to symfony collection
         $routeCollection->add($routeName, $route);
+    }
+
+    /**
+     * Return entity path for routing (for example, MyNamespace\EntityName => entityName)
+     *
+     * @param $namespace
+     * @return string
+     */
+    protected function getEntityPath($namespace)
+    {
+        $array = explode('\\', $namespace);
+        $path = array_pop($array);
+        $path = strtolower(substr($path, 0, 1)) . substr($path, 1);
+
+        return $path;
     }
 }
