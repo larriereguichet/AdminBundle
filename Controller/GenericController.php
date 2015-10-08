@@ -34,7 +34,7 @@ class GenericController extends Controller
     /**
      * Generic list action
      *
-     * @Template()
+     * @Template("BlueBearAdminBundle:Generic:list.html.twig")
      * @param Request $request
      * @return array
      */
