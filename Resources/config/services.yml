@@ -1,6 +1,7 @@
 imports:
     - { resource: factories.yml }
     - { resource: forms.yml }
+    - { resource: fields.yml }
 
 parameters:
     # application

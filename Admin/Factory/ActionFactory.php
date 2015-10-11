@@ -69,7 +69,9 @@ class ActionFactory
         }
         // adding fields items to actions
         foreach ($actionConfiguration['fields'] as $fieldName => $fieldConfiguration) {
-            $field = $this->fieldFactory->create($fieldName, $fieldConfiguration);
+            $field = $this
+                ->fieldFactory
+                ->create($fieldName, $fieldConfiguration);
             $action->addField($field);
         }
         // adding filters to the action
