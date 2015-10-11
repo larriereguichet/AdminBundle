@@ -4,5 +4,9 @@
     {% elseif not url %}
         {% set url = text %}
     {% endif %}
-    <a href="{{ url }}" target="{{ target }}">{{ text }}</a>
+    <a href="{{ url }}" target="{{ target }}" title="{{ title | trans }}">{% spaceless %}
+        {# font awesome icons #}
+        {% if icon %}<i class="fa fa-{{ icon }}"></i>{% endif %}
+        {{ text | trans }}
+        {% endspaceless %}</a>
 {% endspaceless %}

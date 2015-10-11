@@ -35,6 +35,10 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('block_template')
                             ->defaultValue('BlueBearAdminBundle:Form:fields.html.twig')
                         ->end()
+                        ->arrayNode('fields_mapping')
+                            ->prototype('scalar')
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
                 // admins configuration

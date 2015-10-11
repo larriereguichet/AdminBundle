@@ -18,11 +18,9 @@ services:
 
     bluebear.admin.field_factory:
         class: %bluebear.admin.field_factory%
-        arguments: [@bluebear.admin.field_renderer_factory]
-
-    bluebear.admin.field_renderer_factory:
-        class: %bluebear.admin.field_renderer_factory%
-        arguments: [[], @twig, @bluebear.admin.application]
+        arguments: [@bluebear.admin.application]
+        calls:
+            - [setContainer, [@service_container]]
 
     bluebear.admin.filter_factory:
         class: %bluebear.admin.filter_factory%
