@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * String field. It render a string that can be truncated according to is length
  */
-class String extends Field
+class StringField extends Field
 {
     /**
      * Length before truncate the string. If null, no truncation will be made

@@ -7,7 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Environment;
 
-class Link extends String implements EntityFieldInterface
+class Link extends StringField implements EntityFieldInterface
 {
     /**
      * @var string
