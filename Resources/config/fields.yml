@@ -1,5 +1,5 @@
 parameters:
-    bluebear.admin.field.string.class: BlueBear\AdminBundle\Admin\Field\String
+    bluebear.admin.field.string.class: BlueBear\AdminBundle\Admin\Field\StringField
     bluebear.admin.field.date.class: BlueBear\AdminBundle\Admin\Field\Date
     bluebear.admin.field.count.class: BlueBear\AdminBundle\Admin\Field\Count
     bluebear.admin.field.link.class: BlueBear\AdminBundle\Admin\Field\Link
