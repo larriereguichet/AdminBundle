@@ -4,26 +4,29 @@ namespace BlueBear\AdminBundle\Tests;
 
 use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use BlueBear\AdminBundle\Admin\Factory\FieldFactory;
-use BlueBear\AdminBundle\Admin\Factory\FieldRendererFactory;
 use BlueBear\AdminBundle\Admin\Field;
-use BlueBear\AdminBundle\Admin\Render\TwigRendererInterface;
+use BlueBear\AdminBundle\Admin\FieldInterface;
 use DateTime;
 use Symfony\Component\Routing\RouterInterface;
-use Twig_Environment;
 
 class FieldFactoryFactoryFunctionalTest extends Base
 {
     protected $rendererMapping = [
-        'string' => 'BlueBear\AdminBundle\Admin\Render\StringRenderer',
-        'array' => 'BlueBear\AdminBundle\Admin\Render\ArrayRenderer',
-        'date' => 'BlueBear\AdminBundle\Admin\Render\DateRenderer',
-        'link' => 'BlueBear\AdminBundle\Admin\Render\LinkRenderer',
+        'string' => 'bluebear.admin.field.string',
+        'array' => 'bluebear.admin.field.array',
+        'date' => 'bluebear.admin.field.date',
+        'link' => 'bluebear.admin.field.link',
     ];
 
     public function testCreate()
     {
-        $fieldRendererFactory = new FieldRendererFactory($this->rendererMapping, new Twig_Environment(), new ApplicationConfiguration([], 'en'));
-        $fieldFactory = new FieldFactory($fieldRendererFactory);
+        $this->initApplication();
+        $fieldFactory = new FieldFactory(new ApplicationConfiguration([], 'en'));
+        $fieldFactory->setContainer($this->container);
+
+        foreach ($this->rendererMapping as $type => $serviceId) {
+            $fieldFactory->addFieldMapping($type, $serviceId);
+        }
         $configuration = $this->getFakeFieldConfiguration();
 
         foreach ($configuration as $fieldName => $fieldConfiguration) {
@@ -32,7 +35,7 @@ class FieldFactoryFactoryFunctionalTest extends Base
         }
     }
 
-    protected function doTestFieldForConfiguration(Field $field, array $configuration, $fieldName)
+    protected function doTestFieldForConfiguration(FieldInterface $field, array $configuration, $fieldName)
     {
         $this->initApplication();
         $this->assertEquals($fieldName, $field->getName());
@@ -40,33 +43,22 @@ class FieldFactoryFactoryFunctionalTest extends Base
         if (!array_key_exists('type', $configuration)) {
             $configuration['type'] = 'string';
         }
-        $renderer = $field->getRenderer();
+        $this->assertArrayHasKey($field->getType(), $this->rendererMapping);
 
-        $this->assertArrayHasKey($configuration['type'], $this->rendererMapping);
-        $this->assertInstanceOf($this->rendererMapping[$configuration['type']], $renderer);
-        $this->assertInstanceOf('BlueBear\AdminBundle\Admin\Render\RendererInterface', $renderer);
-
-        if (in_array('BlueBear\AdminBundle\Admin\Render\TwigRendererInterface', class_implements($renderer))) {
-            /** @var TwigRendererInterface $renderer */
-            $this->assertTrue(method_exists($renderer, 'setTwig'));
-            /** @var Twig_Environment $twig */
-            $twig = $this->container->get('twig');
-            $renderer->setTwig($twig);
-        }
         if ($configuration['type'] == 'string') {
-            $this->assertNotNull($renderer->render('Test'));
+            $this->assertNotNull($field->render('Test'));
 
             if (array_key_exists('options', $configuration)) {
-                $this->assertEquals('StringTest0123456789', $renderer->render('StringTest0123456789'));
-                $this->assertEquals('StringTestVeryLongTextToSeeTruncationMarkupWi...', $renderer->render('StringTestVeryLongTextToSeeTruncationMarkupWithCharacters'));
+                $this->assertEquals('StringTest0123456789', $field->render('StringTest0123456789'));
+                $this->assertEquals('StringTestVeryLongTextToSeeTruncationMarkupWi...', $field->render('StringTestVeryLongTextToSeeTruncationMarkupWithCharacters'));
             }
         } else if ($configuration['type'] == 'array') {
-            $this->assertEquals('test//other_test', $renderer->render(['test', 'other_test']));
-            $this->assertExceptionRaised('Exception', function () use ($renderer) {
-                $renderer->render('test');
+            $this->assertEquals('test//other_test', $field->render(['test', 'other_test']));
+            $this->assertExceptionRaised('Exception', function () use ($field) {
+                $field->render('test');
             });
         } else if ($configuration['type'] == 'date') {
-            $this->assertEquals(date('d/m/Y h:i:s'), $renderer->render(new DateTime()));
+            $this->assertEquals(date('d/m/Y h:i:s'), $field->render(new DateTime()));
         } else if ($configuration['type'] == 'link') {
 
             if (array_key_exists('url', $configuration['options'])) {
@@ -76,7 +68,7 @@ class FieldFactoryFactoryFunctionalTest extends Base
                 $router = $this->container->get('routing');
                 $url = $router->generate($configuration['route'], $configuration['parameters']);
             }
-            $this->assertEquals('<a href="'.$url.'" target="_blank">MyText</a>', $renderer->render('MyText'));
+            $this->assertEquals('<a href="'.$url.'" target="_blank" title="">MyText</a>', $field->render('MyText'));
         }
     }
 

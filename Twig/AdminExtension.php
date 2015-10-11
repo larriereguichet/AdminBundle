@@ -3,7 +3,8 @@
 namespace BlueBear\AdminBundle\Twig;
 
 use BlueBear\AdminBundle\Admin\Field;
-use BlueBear\AdminBundle\Admin\Render\EntityRendererInterface;
+use BlueBear\AdminBundle\Admin\Field\EntityFieldInterface;
+use BlueBear\AdminBundle\Admin\FieldInterface;
 use BlueBear\AdminBundle\Utils\RecursiveImplode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Extension;
@@ -68,26 +69,27 @@ class AdminExtension extends Twig_Extension
     }
 
     /**
-     * @param Field $field
+     * Render a field of an entity
+     *
+     * @param FieldInterface $field
      * @param $entity
      * @return mixed
-     * TODO rename function
      */
-    public function field(Field $field, $entity)
+    public function field(FieldInterface $field, $entity)
     {
         $accessor = PropertyAccess::createPropertyAccessorBuilder()
             ->enableMagicCall()
             ->getPropertyAccessor();
-        // get raw value from object
-        $value = $accessor->getValue($entity, $field->getName());
-        $renderer = $field->getRenderer();
-
-        if (in_array('BlueBear\AdminBundle\Admin\Render\EntityRendererInterface', class_implements($renderer))) {
-            /** @var EntityRendererInterface $renderer */
-            $renderer->setEntity($entity);
+        $value = null;
+        // if name starts with a underscore, it is a custom field, not mapped to the entity
+        if (substr($field->getName(), 0, 1) != '_') {
+            // get raw value from object
+            $value = $accessor->getValue($entity, $field->getName());
         }
-        // render value according to field type mapping
-        $render = $field->getRenderer()->render($value);
+        if ($field instanceof EntityFieldInterface) {
+            $field->setEntity($entity);
+        }
+        $render = $field->render($value);
 
         return $render;
     }

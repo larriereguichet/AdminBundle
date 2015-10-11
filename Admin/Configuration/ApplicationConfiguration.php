@@ -2,6 +2,7 @@
 
 namespace BlueBear\AdminBundle\Admin\Configuration;
 
+use BlueBear\AdminBundle\Admin\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ApplicationConfiguration
@@ -107,7 +108,15 @@ class ApplicationConfiguration
                 'url_pattern' => '/{admin}/{action}',
                 'name_pattern' => 'bluebear.admin.{admin}'
             ],
-            'max_per_page' => 25
+            'max_per_page' => 25,
+            'fields_mapping' => [
+                Field::TYPE_STRING => 'bluebear.admin.field.string',
+                Field::TYPE_ARRAY => 'BlueBear\AdminBundle\Admin\Render\ArrayRenderer',
+                Field::TYPE_LINK => 'BlueBear\AdminBundle\Admin\Render\LinkRenderer',
+                Field::TYPE_DATE => 'BlueBear\AdminBundle\Admin\Render\DateRenderer',
+                Field::TYPE_COUNT => 'BlueBear\AdminBundle\Admin\Render\CountRenderer',
+                Field::TYPE_ACTION => 'BlueBear\AdminBundle\Admin\Render\LinkRenderer',
+            ]
         ]);
         $applicationConfiguration = $resolver->resolve($applicationConfiguration);
         $this->title = $applicationConfiguration['title'];

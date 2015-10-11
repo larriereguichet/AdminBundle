@@ -1,0 +1,54 @@
+parameters:
+    bluebear.admin.field.string.class: BlueBear\AdminBundle\Admin\Field\String
+    bluebear.admin.field.date.class: BlueBear\AdminBundle\Admin\Field\Date
+    bluebear.admin.field.count.class: BlueBear\AdminBundle\Admin\Field\Count
+    bluebear.admin.field.link.class: BlueBear\AdminBundle\Admin\Field\Link
+    bluebear.admin.field.action.class: BlueBear\AdminBundle\Admin\Field\Action
+    bluebear.admin.field.array.class: BlueBear\AdminBundle\Admin\Field\ArrayField
+
+services:
+    # String field
+    bluebear.admin.field.string:
+        class: %bluebear.admin.field.string.class%
+        scope: prototype
+        tags:
+            -  { name: bluebear.field, type: string }
+
+    # Date field
+    bluebear.admin.field.date:
+        class: %bluebear.admin.field.date.class%
+        scope: prototype
+        tags:
+            -  { name: bluebear.field, type: date }
+
+    # Count field
+    bluebear.admin.field.count:
+        class: %bluebear.admin.field.count.class%
+        scope: prototype
+        tags:
+            -  { name: bluebear.field, type: count }
+
+    # Link field
+    bluebear.admin.field.link:
+        class: %bluebear.admin.field.link.class%
+        scope: prototype
+        tags:
+            -  { name: bluebear.field, type: link }
+        calls:
+            - [setTwig, [@twig]]
+
+    # Action field
+    bluebear.admin.field.action:
+        class: %bluebear.admin.field.action.class%
+        scope: prototype
+        tags:
+            -  { name: bluebear.field, type: action }
+        calls:
+            - [setTwig, [@twig]]
+
+    # Array field
+    bluebear.admin.field.array:
+        class: %bluebear.admin.field.array.class%
+        scope: prototype
+        tags:
+            -  { name: bluebear.field, type: array }

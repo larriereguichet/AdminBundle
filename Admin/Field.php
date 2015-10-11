@@ -2,30 +2,28 @@
 
 namespace BlueBear\AdminBundle\Admin;
 
-use BlueBear\AdminBundle\Admin\Render\RendererInterface;
+use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 
-class Field
+abstract class Field implements FieldInterface
 {
     const TYPE_STRING = 'string';
     const TYPE_LINK = 'link';
     const TYPE_ARRAY = 'array';
     const TYPE_DATE = 'date';
+    const TYPE_COUNT = 'count';
+    const TYPE_ACTION = 'action';
 
     /**
+     * Name of the field
+     *
      * @var string
      */
     protected $name;
 
     /**
-     * @var RendererInterface
+     * @var ApplicationConfiguration
      */
-    protected $renderer;
-
-    public function __construct($name, RendererInterface $renderer)
-    {
-        $this->name = $name;
-        $this->renderer = $renderer;
-    }
+    protected $configuration;
 
     /**
      * @return string
@@ -36,10 +34,26 @@ class Field
     }
 
     /**
-     * @return RendererInterface
+     * @param string $name
      */
-    public function getRenderer()
+    public function setName($name)
     {
-        return $this->renderer;
+        $this->name = $name;
+    }
+
+    /**
+     * @return ApplicationConfiguration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
+
+    /**
+     * @param ApplicationConfiguration $configuration
+     */
+    public function setConfiguration($configuration)
+    {
+        $this->configuration = $configuration;
     }
 }
