@@ -7,6 +7,11 @@ use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Traversable;
 
+/**
+ * Array field
+ *
+ * Note : class can not be call Array by php restriction
+ */
 class ArrayField extends Field
 {
     protected $glue;
