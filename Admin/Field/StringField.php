@@ -4,9 +4,13 @@ namespace BlueBear\AdminBundle\Admin\Field;
 
 use BlueBear\AdminBundle\Admin\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * String field. It render a string that can be truncated according to is length
+ * String field
+ *
+ * It render a string that can be truncated according to is length
+ * Note : according php7 (nightly), class can not be named String anymore
  */
 class StringField extends Field
 {
@@ -25,6 +29,18 @@ class StringField extends Field
     protected $replace;
 
     /**
+     * True if value should be translated at render
+     *
+     * @var bool
+     */
+    protected $translation;
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
      * Render a string that can be truncated according to is length
      *
      * @param $value
@@ -35,6 +51,9 @@ class StringField extends Field
         if ($this->length && strlen($value) > $this->length) {
             $value = substr($value, 0, $this->length) . $this->replace;
         }
+        if ($this->translation) {
+            $value = $this->translator->trans($value);
+        }
         return $value;
     }
 
@@ -42,7 +61,8 @@ class StringField extends Field
     {
         $resolver->setDefaults([
             'length' => $this->configuration->getStringLength(),
-            'replace' => $this->configuration->getStringLengthTruncate()
+            'replace' => $this->configuration->getStringLengthTruncate(),
+            'translation' => true
         ]);
     }
 
@@ -50,6 +70,15 @@ class StringField extends Field
     {
         $this->length = (int)$options['length'];
         $this->replace = $options['replace'];
+        $this->translation = $options['translation'];
+    }
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function setTranslator(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
     }
 
     public function getType()
