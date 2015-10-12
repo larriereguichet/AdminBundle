@@ -5,21 +5,21 @@ v0.4:
 - add configuration for custom actions
 - handling new Symfony bootstrap layout
 - bootstrap theme
+- file exporters : array type, association
 
 -----------------------------------------------
 
 v0.3:
 Features:
 - unit testing
-x add config for order entities in list view
-x add format for date in list
-- file exporters : array type, association
-- add filters
-- handle custom actions for edit form (enable user for example)
-x improve admin and action name from request (use default parameters in routing instead)
-x configure application date format (filename export, displayed date...)
+- add config for order entities in list view (DONE)
+- add format for date in list (DONE)
+- add filters (WIP)
+- handle custom actions for edit form (enable user for example) (WIP)
+- improve admin and action name from request (use default parameters in routing instead) (DONE)
+- configure application date format (filename export, displayed date...) (WIP)
 - localization
-x add link type in list
+- add link type in list (DONE)
 
 Bug fixes :
 - fix bug when deleting entity with integrity constraint
