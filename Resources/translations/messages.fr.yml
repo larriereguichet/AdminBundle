@@ -7,8 +7,9 @@ bluebear.admin.edit: Editer
 bluebear.admin.saved: Les modifications ont été sauvegardées
 
 # List
-bluebear.admin.true: True
-bluebear.admin.false: False
+bluebear.admin.true: Oui
+bluebear.admin.false: Non
+
 
 # deletion
 bluebear.admin.delete: Supprimer

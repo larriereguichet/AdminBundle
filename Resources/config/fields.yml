@@ -5,6 +5,7 @@ parameters:
     bluebear.admin.field.link.class: BlueBear\AdminBundle\Admin\Field\Link
     bluebear.admin.field.action.class: BlueBear\AdminBundle\Admin\Field\Action
     bluebear.admin.field.array.class: BlueBear\AdminBundle\Admin\Field\ArrayField
+    bluebear.admin.field.boolean.class: BlueBear\AdminBundle\Admin\Field\Boolean
 
 services:
     # String field
@@ -13,6 +14,8 @@ services:
         scope: prototype
         tags:
             -  { name: bluebear.field, type: string }
+        calls:
+            - [setTranslator, [@translator]]
 
     # Date field
     bluebear.admin.field.date:
@@ -52,3 +55,12 @@ services:
         scope: prototype
         tags:
             -  { name: bluebear.field, type: array }
+
+    # Boolean field
+    bluebear.admin.field.boolean:
+        class: %bluebear.admin.field.boolean.class%
+        scope: prototype
+        tags:
+            -  { name: bluebear.field, type: boolean }
+        calls:
+            - [setTranslator, [@translator]]
