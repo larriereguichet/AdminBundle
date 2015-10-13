@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ admin.currentAction.title }}</h1>
+    <h1>{{ admin.currentAction.title | trans }}</h1>
 
     <div class="filters">
         {% include "BlueBearAdminBundle:Action:filters.html.twig" %}
