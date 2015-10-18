@@ -102,4 +102,20 @@ interface AdminInterface
     public function getPager();
 
     public function getActions();
+
+    /**
+     * Return current admin Action
+     *
+     * @return Action
+     */
+    public function getCurrentAction();
+
+    /**
+     * Return true if current action is granted for user
+     *
+     * @param string $actionName
+     * @param array $roles
+     * @return bool
+     */
+    public function isActionGranted($actionName, array $roles);
 }

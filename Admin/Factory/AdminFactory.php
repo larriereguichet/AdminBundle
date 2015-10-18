@@ -3,6 +3,7 @@
 namespace BlueBear\AdminBundle\Admin\Factory;
 
 use BlueBear\AdminBundle\Admin\Admin;
+use BlueBear\AdminBundle\Admin\AdminInterface;
 use BlueBear\AdminBundle\Admin\Configuration\AdminConfiguration;
 use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use BlueBear\AdminBundle\Event\AdminFactoryEvent;
@@ -61,7 +62,7 @@ class AdminFactory
      * Return a loaded admin from a Symfony request
      *
      * @param Request $request
-     * @return Admin
+     * @return AdminInterface
      * @throws Exception
      */
     public function getAdminFromRequest(Request $request)
