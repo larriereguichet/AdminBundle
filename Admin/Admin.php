@@ -274,6 +274,7 @@ class Admin implements AdminInterface
 
     public function deleteEntity()
     {
+        // TODO handle integrity constraint
         $this->checkEntity();
         $this->getManager()->delete($this->entity);
     }
