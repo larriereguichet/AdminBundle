@@ -8,20 +8,6 @@
     {% endif %}
 {%- endblock form_widget -%}
 
-{% block datetime_picker_widget %}
-    {{- block('form_widget_simple') -}}
-
-    <script>
-        $(document).ready(function () {
-            var inputIdSelector = '#{{ form.vars.id }}';
-            $(inputIdSelector).datetimepicker({
-                format: '{{ form.vars.javascript_date_format }}',
-                language: '{{ form.vars.javascript_language }}'
-            });
-        });
-    </script>
-{% endblock %}
-
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}
     {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-control'}) %}
