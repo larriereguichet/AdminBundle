@@ -31,6 +31,8 @@
     <h1>{{ admin.currentAction.title }}</h1>
 
     <div class="well {{ containerClass }}">
+        {{ form_errors(form) }}
+
         <form action="{{ path(admin.currentAction.route, { id: form.vars.value.id}) }}" method="post"
               class="form-horizontal" enctype="{{ encType }}">
             {{ form_widget(form) }}

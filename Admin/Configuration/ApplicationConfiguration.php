@@ -222,6 +222,17 @@ class ApplicationConfiguration
         return $this->dateFormat;
     }
 
+    public function getJavascriptDateFormat()
+    {
+        $jsDateFormat = str_replace('Y', 'yyyy', $this->getDateFormat());
+        $jsDateFormat = str_replace('mm', 'ii', $jsDateFormat);
+        $jsDateFormat = str_replace('MM', 'mm', $jsDateFormat);
+        $jsDateFormat = str_replace('HH', 'hh', $jsDateFormat);
+        $jsDateFormat = str_replace('d', 'dd', $jsDateFormat);
+
+        return $jsDateFormat;
+    }
+
     /**
      * @param mixed $dateFormat
      */
