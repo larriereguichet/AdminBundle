@@ -9,9 +9,10 @@
                     <tr>
                         {% for field in fields %}
                             <th>
+                                {% set sortClass = getSortColumnIconClass(app.request.get('order'), field.name, app.request.get('sort')) %}
+
                                 <a href="{{ getSortColumnUrl(app.request, field.name) }}">
-                                    {{ field.name | capitalize }}
-                                    <i class="{{ getSortColumnIconClass(app.request.get('order'), field.name, app.request.get('sort')) }}"></i>
+                                    {{ field.name | capitalize }}<i class="{{ sortClass }}"></i>
                                 </a>
                             </th>
                         {% endfor %}
@@ -66,7 +67,7 @@
 {% endmacro %}
 
 {% macro actionLink(action) %}
-    <a href="{{ path(action.route, action.parameters) }}" target="{{ action.target }}">
+    <a href="{{ path(action.route, action.parameters) }}" target="{{ action.target }}" title="{{ action.title | trans }}">
         {% if action.icon %}
             <i class="fa fa-{{ action.icon }}"></i>
         {% endif %}

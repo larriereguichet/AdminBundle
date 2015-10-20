@@ -1,50 +1,28 @@
-{% extends "form_div_layout.html.twig" %}
+{% extends 'bootstrap_3_horizontal_layout.html.twig' %}
 
-{%- block form_widget -%}
-    {% if compound %}
-        {{- block('form_widget_compound') -}}
-    {% else %}
-        {{- block('form_widget_simple') -}}
-    {% endif %}
-{%- endblock form_widget -%}
-
-{%- block form_widget_simple -%}
-    {%- set type = type|default('text') -%}
-    {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-control'}) %}
-
-    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-{%- endblock form_widget_simple -%}
-
-{%- block textarea_widget -%}
-    {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-control'}) %}
-
-    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-{%- endblock textarea_widget -%}
-
-{% block form_row %}
+{# Extend bootstrap layout to match with bootstrap admin theme #}
+{% block form_row -%}
     {% spaceless %}
-        <div class="form-group {{ errors|length > 0 ? 'error' : '' }}">
+        <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
             {{ form_label(form) }}
-            <div class="controls">
-                {{ form_widget(form) }}
-                {{ form_errors(form) }}
-            </div>
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
         </div>
     {% endspaceless %}
-{% endblock form_row %}
+{%- endblock form_row %}
 
-{% block form_errors %}
-    {% spaceless %}
-        {% if errors|length > 0 %}
-            <span class="help-inline">
-        {% for error in errors %}
-            {{
-            error.messagePluralization is null
-            ? error.messageTemplate|trans(error.messageParameters, 'validators')
-            : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
-            }}
-        {% endfor %}
-    </span>
+{# overriding default label class #}
+{% block form_label_class -%}{%- endblock form_label_class %}
+
+{% block form_help -%}
+    {% for attrname, attrvalue in attr %}
+        {% if attrname == 'data-help' %}
+            <span class="help-block">{{ attrvalue | trans }}</span>
         {% endif %}
-    {% endspaceless %}
-{% endblock form_errors %}
+    {% endfor %}
+{%- endblock form_help %}
+
+{% block form_errors -%}
+    {{ parent() }}
+    {{- block('form_help') -}}
+{%- endblock form_errors %}
