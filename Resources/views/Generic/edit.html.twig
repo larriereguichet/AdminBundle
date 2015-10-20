@@ -8,14 +8,14 @@
                 <li>
                     <a href="{{ path(admin.action('list').route) }}">
                         <i class="fa fa-list"></i>
-                        {{ admin.action('list').title }}</a>
+                        {{ admin.action('list').title  | trans}}</a>
                 </li>
             {% endif %}
             {% if admin.hasAction('create') %}
                 <li>
                     <a href="{{ path(admin.action('create').route) }}">
                         <i class="fa fa-plus"></i>
-                        {{ admin.action('create').title }}</a>
+                        {{ admin.action('create').title | trans }}</a>
                 </li>
             {% endif %}
 
@@ -28,7 +28,7 @@
     {% set containerClass = containerClass is defined ? containerClass : '' %}
     {% set encType = (form.vars.multipart) ? 'multipart/form-data' : 'application/x-www-form-urlencoded' %}
 
-    <h1>{{ admin.currentAction.title }}</h1>
+    <h1>{{ admin.currentAction.title | trans }}</h1>
 
     <div class="well {{ containerClass }}">
         {{ form_errors(form) }}
