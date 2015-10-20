@@ -1,71 +1,73 @@
 {% extends config.layout %}
 
-{% block left %}
-    <ul class="nav nav-pills nav-stacked">
-        {% block leftList %}
-            {# TODO move this in default configuration#}
-            {% if admin.hasAction('list') %}
-                <li>
-                    <a href="{{ path(admin.action('list').route) }}">
-                        <i class="fa fa-list"></i>
-                        {{ admin.action('list').title  | trans}}</a>
-                </li>
-            {% endif %}
-            {% if admin.hasAction('create') %}
-                <li>
-                    <a href="{{ path(admin.action('create').route) }}">
-                        <i class="fa fa-plus"></i>
-                        {{ admin.action('create').title | trans }}</a>
-                </li>
-            {% endif %}
-
-            {% include 'BlueBearAdminBundle:Action:customActions.html.twig' %}
-        {% endblock %}
-    </ul>
+{% block topMenuItems %}
+    {# TODO move this in default configuration #}
+    {% if admin.hasAction('list') %}
+        <li>
+            <a href="{{ path(admin.action('list').route) }}">
+                <i class="fa fa-list"></i>
+                {{ admin.action('list').title  | trans }}</a>
+        </li>
+    {% endif %}
+    {% if admin.hasAction('create') %}
+        <li>
+            <a href="{{ path(admin.action('create').route) }}">
+                <i class="fa fa-plus"></i>
+                {{ admin.action('create').title | trans }}</a>
+        </li>
+    {% endif %}
+    {% include 'BlueBearAdminBundle:Action:customActions.html.twig' %}
 {% endblock %}
 
 {% block content %}
     {% set containerClass = containerClass is defined ? containerClass : '' %}
     {% set encType = (form.vars.multipart) ? 'multipart/form-data' : 'application/x-www-form-urlencoded' %}
 
-    <h1>{{ admin.currentAction.title | trans }}</h1>
+    <h1 class="page-header">{{ admin.currentAction.title | trans }}</h1>
 
-    <div class="well {{ containerClass }}">
-        {{ form_errors(form) }}
+    <div class="panel panel-default {{ containerClass }}">
+        <div class="panel-heading">
+            {{ form_errors(form) }}
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="{{ path(admin.currentAction.route, { id: form.vars.value.id}) }}" method="post"
+                          role="form" title="{{ admin.currentAction.title | trans }}" enctype="{{ encType }}">
+                        {{ form_widget(form) }}
 
-        <form action="{{ path(admin.currentAction.route, { id: form.vars.value.id}) }}" method="post"
-              class="form-horizontal" enctype="{{ encType }}">
-            {{ form_widget(form) }}
-
-            <div class="form-group">
-                <div class="text-right button-list">
-                    <a href="{{ path(admin.action('list').route) }}"
-                       class="btn"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
-                        {{ 'bluebear.admin.cancel' | trans }}</a>
-                    {% if form.vars.value.id %}
-                        <a href="{{ path(admin.action('delete').route, {id: admin.entity.id}) }}"
-                           class="btn btn-danger">{{ 'bluebear.admin.delete' | trans }}
-                            <i class="fa fa-remove"></i>
-                        </a>
-                    {% endif %}
-                    {% if admin.currentAction.submitActions | length > 0 %}
-                        <ul>
-                        {% for action in admin.currentAction.submitActions %}
-                            <li class="{{ getClassForRoute(action.route) }}">
-                                {{ AdminBundle.actionLink(action) }}
-                            </li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                    <button type="submit" value="save" name="submit"
-                            class="btn btn-default">{{ 'bluebear.admin.save' | trans }}
-                        <i class="fa fa-floppy-o"></i></button>
-                    <button type="submit" value="save-return" name="submit"
-                            class="btn btn-default">{{ 'bluebear.admin.save_and_return_to_list' | trans }}
-                        <i class="fa fa-list"></i>
-                    </button>
+                        <div class="form-group">
+                            <div class="text-right button-list">
+                                <a href="{{ path(admin.action('list').route) }}"
+                                   class="btn"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
+                                    {{ 'bluebear.admin.cancel' | trans }}</a>
+                                {% if form.vars.value.id %}
+                                    <a href="{{ path(admin.action('delete').route, {id: admin.entity.id}) }}"
+                                       class="btn btn-danger">{{ 'bluebear.admin.delete' | trans }}
+                                        <i class="fa fa-remove"></i>
+                                    </a>
+                                {% endif %}
+                                {% if admin.currentAction.submitActions | length > 0 %}
+                                    <ul>
+                                        {% for action in admin.currentAction.submitActions %}
+                                            <li class="{{ getClassForRoute(action.route) }}">
+                                                {{ AdminBundle.actionLink(action) }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                <button type="submit" value="save" name="submit"
+                                        class="btn btn-default">{{ 'bluebear.admin.save' | trans }}
+                                    <i class="fa fa-floppy-o"></i></button>
+                                <button type="submit" value="save-return" name="submit"
+                                        class="btn btn-default">{{ 'bluebear.admin.save_and_return_to_list' | trans }}
+                                    <i class="fa fa-list"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 {% endblock %}

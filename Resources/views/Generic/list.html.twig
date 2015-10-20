@@ -1,15 +1,13 @@
 {% extends config.layout %}
 
-{% block left %}
-    <ul class="nav nav-pills nav-stacked">
-        {% block leftList %}
-            {% include 'BlueBearAdminBundle:Action:customActions.html.twig' %}
-        {% endblock %}
-    </ul>
+{% block topMenuItems %}
+    {% block leftList %}
+        {% include 'BlueBearAdminBundle:Action:customActions.html.twig' %}
+    {% endblock %}
 {% endblock %}
 
 {% block content %}
-    <h1>{{ admin.currentAction.title | trans }}</h1>
+    <h1 class="page-header">{{ admin.currentAction.title | trans }}</h1>
 
     <div class="filters">
         {% include "BlueBearAdminBundle:Action:filters.html.twig" %}
