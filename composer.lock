@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "05c7bbec93ea49919b7fcc3f84a8ee50",
+    "hash": "4db5f282ce4b64f96dac356a203bbacd",
+    "content-hash": "ab9cd94888b865393d51c44b21b106c1",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -48,17 +49,17 @@
         },
         {
             "name": "bluebear/basebundle",
-            "version": "v0.2",
+            "version": "v0.2.1",
             "target-dir": "BlueBear/BaseBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BlueBearGaming/BaseBundle.git",
-                "reference": "ccd03b7de68e1051107b6f45b6c704dc42ce0385"
+                "reference": "4ed6f0c19cbd05017739fa824af2c00f826bb081"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BlueBearGaming/BaseBundle/zipball/ccd03b7de68e1051107b6f45b6c704dc42ce0385",
-                "reference": "ccd03b7de68e1051107b6f45b6c704dc42ce0385",
+                "url": "https://api.github.com/repos/BlueBearGaming/BaseBundle/zipball/4ed6f0c19cbd05017739fa824af2c00f826bb081",
+                "reference": "4ed6f0c19cbd05017739fa824af2c00f826bb081",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +99,7 @@
                 "base",
                 "shortcut"
             ],
-            "time": "2015-06-27 12:08:56"
+            "time": "2015-10-23 18:10:07"
         },
         {
             "name": "doctrine/annotations",
@@ -1320,17 +1321,17 @@
         },
         {
             "name": "stephanecollot/datetimepicker-bundle",
-            "version": "dev-master",
+            "version": "1.0.1",
             "target-dir": "SC/DatetimepickerBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stephanecollot/DatetimepickerBundle.git",
-                "reference": "733e4d1896aba5ee7c0b924d0ce25bca179b47ef"
+                "reference": "dcdc1f5ff0b93e9c7372700103ffaa459064f3f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stephanecollot/DatetimepickerBundle/zipball/733e4d1896aba5ee7c0b924d0ce25bca179b47ef",
-                "reference": "733e4d1896aba5ee7c0b924d0ce25bca179b47ef",
+                "url": "https://api.github.com/repos/stephanecollot/DatetimepickerBundle/zipball/dcdc1f5ff0b93e9c7372700103ffaa459064f3f3",
+                "reference": "dcdc1f5ff0b93e9c7372700103ffaa459064f3f3",
                 "shasum": ""
             },
             "require": {
@@ -1362,7 +1363,7 @@
                 "symfony",
                 "timepicker"
             ],
-            "time": "2015-05-11 20:47:22"
+            "time": "2015-02-27 05:46:07"
         },
         {
             "name": "symfony/symfony",
@@ -1540,16 +1541,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.22.2",
+            "version": "v1.22.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "79249fc8c9ff62e41e217e0c630e2e00bcadda6a"
+                "reference": "ebfc36b7e77b0c1175afe30459cf943010245540"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/79249fc8c9ff62e41e217e0c630e2e00bcadda6a",
-                "reference": "79249fc8c9ff62e41e217e0c630e2e00bcadda6a",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ebfc36b7e77b0c1175afe30459cf943010245540",
+                "reference": "ebfc36b7e77b0c1175afe30459cf943010245540",
                 "shasum": ""
             },
             "require": {
@@ -1597,7 +1598,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-09-22 13:59:32"
+            "time": "2015-10-13 07:07:02"
         },
         {
             "name": "white-october/pagerfanta-bundle",
@@ -1764,16 +1765,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.2.3",
+            "version": "2.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "ef1ca6835468857944d5c3b48fa503d5554cff2f"
+                "reference": "eabf68b476ac7d0f73793aada060f1c1a9bf8979"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ef1ca6835468857944d5c3b48fa503d5554cff2f",
-                "reference": "ef1ca6835468857944d5c3b48fa503d5554cff2f",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/eabf68b476ac7d0f73793aada060f1c1a9bf8979",
+                "reference": "eabf68b476ac7d0f73793aada060f1c1a9bf8979",
                 "shasum": ""
             },
             "require": {
@@ -1822,7 +1823,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-09-14 06:51:16"
+            "time": "2015-10-06 15:47:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2076,16 +2077,16 @@
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "2.3.7",
+            "version": "2.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "5e2645ad49d196e020b85598d7c97e482725786a"
+                "reference": "ac8e7a3db35738d56ee9a76e78a4e03d97628983"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/5e2645ad49d196e020b85598d7c97e482725786a",
-                "reference": "5e2645ad49d196e020b85598d7c97e482725786a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/ac8e7a3db35738d56ee9a76e78a4e03d97628983",
+                "reference": "ac8e7a3db35738d56ee9a76e78a4e03d97628983",
                 "shasum": ""
             },
             "require": {
@@ -2128,7 +2129,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-08-19 09:14:08"
+            "time": "2015-10-02 06:51:40"
         },
         {
             "name": "sebastian/comparator",
@@ -2364,16 +2365,16 @@
         },
         {
             "name": "sebastian/global-state",
-            "version": "1.0.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/global-state.git",
-                "reference": "c7428acdb62ece0a45e6306f1ae85e1c05b09c01"
+                "reference": "bc37d50fea7d017d3d340f230811c9f1d7280af4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/c7428acdb62ece0a45e6306f1ae85e1c05b09c01",
-                "reference": "c7428acdb62ece0a45e6306f1ae85e1c05b09c01",
+                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/bc37d50fea7d017d3d340f230811c9f1d7280af4",
+                "reference": "bc37d50fea7d017d3d340f230811c9f1d7280af4",
                 "shasum": ""
             },
             "require": {
@@ -2411,7 +2412,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2014-10-06 09:23:50"
+            "time": "2015-10-12 03:26:01"
         },
         {
             "name": "sebastian/recursion-context",
@@ -2504,9 +2505,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "stephanecollot/datetimepicker-bundle": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
