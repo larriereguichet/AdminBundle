@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dc7a29502a54e5d6e2ed905e3745ba69",
-    "content-hash": "75eece899e18f722c60d3fa61973f920",
+    "hash": "4db5f282ce4b64f96dac356a203bbacd",
+    "content-hash": "ab9cd94888b865393d51c44b21b106c1",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -49,17 +49,17 @@
         },
         {
             "name": "bluebear/basebundle",
-            "version": "v0.2",
+            "version": "v0.2.1",
             "target-dir": "BlueBear/BaseBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BlueBearGaming/BaseBundle.git",
-                "reference": "ccd03b7de68e1051107b6f45b6c704dc42ce0385"
+                "reference": "4ed6f0c19cbd05017739fa824af2c00f826bb081"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BlueBearGaming/BaseBundle/zipball/ccd03b7de68e1051107b6f45b6c704dc42ce0385",
-                "reference": "ccd03b7de68e1051107b6f45b6c704dc42ce0385",
+                "url": "https://api.github.com/repos/BlueBearGaming/BaseBundle/zipball/4ed6f0c19cbd05017739fa824af2c00f826bb081",
+                "reference": "4ed6f0c19cbd05017739fa824af2c00f826bb081",
                 "shasum": ""
             },
             "require": {
@@ -99,7 +99,7 @@
                 "base",
                 "shortcut"
             ],
-            "time": "2015-06-27 12:08:56"
+            "time": "2015-10-23 18:10:07"
         },
         {
             "name": "doctrine/annotations",
