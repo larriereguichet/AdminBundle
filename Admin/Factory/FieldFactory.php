@@ -42,8 +42,21 @@ class FieldFactory
         ]);
         // set allowed fields type from tagged services
         $resolver->setAllowedValues('type', array_keys($this->fieldsMapping));
+        $resolver->setAllowedTypes('type', 'string');
+        $resolver->setAllowedTypes('options', 'array');
         // resolve options
         $configuration = $resolver->resolve($configuration);
+        // for collection of fields, we resolve the configuration of each item
+        if ($configuration['type'] == 'collection') {
+            $items = [];
+
+            foreach ($configuration['options'] as $itemFieldName => $itemFieldConfiguration) {
+                $items[] = $this->create($itemFieldName, $itemFieldConfiguration);
+            }
+            $configuration['options'] = [
+                'fields' => $items
+            ];
+        }
         // get field service name
         $fieldService = $this->fieldsMapping[$configuration['type']];
         // get field instance from container
