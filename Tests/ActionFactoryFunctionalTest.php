@@ -94,7 +94,7 @@ class ActionFactoryFunctionalTest extends Base
             $this->assertEquals($configuration['title'], $action->getTitle());
         } else {
             // test default title
-            $this->assertEquals('bluebear.admin.action_test.' . $actionName, $action->getTitle());
+            $this->assertEquals('bluebear.admin.' . $actionName, $action->getTitle());
         }
         if (array_key_exists('fields', $configuration)) {
             // field creation will be tested more in FieldFactory test
