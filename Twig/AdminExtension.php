@@ -8,6 +8,7 @@ use BlueBear\AdminBundle\Admin\FieldInterface;
 use BlueBear\AdminBundle\Utils\RecursiveImplode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Extension;
+use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -108,6 +109,14 @@ class AdminExtension extends Twig_Extension
         return $routeParameters;
     }
 
+    public function camelize($string)
+    {
+        $string = preg_replace('/(?<!\ )[A-Z]/', ' $0', $string);
+
+
+        return ucwords($string);
+    }
+
     public function getFunctions()
     {
         return [
@@ -115,6 +124,13 @@ class AdminExtension extends Twig_Extension
             new Twig_SimpleFunction('getSortColumnIconClass', [$this, 'getSortColumnIconClass']),
             new Twig_SimpleFunction('field', [$this, 'field']),
             new Twig_SimpleFunction('routeParameters', [$this, 'routeParameters']),
+        ];
+    }
+
+    public function getFilters()
+    {
+        return [
+            new Twig_SimpleFilter('camelize', [$this, 'camelize'])
         ];
     }
 
