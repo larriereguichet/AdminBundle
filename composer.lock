@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4db5f282ce4b64f96dac356a203bbacd",
-    "content-hash": "ab9cd94888b865393d51c44b21b106c1",
+    "hash": "a416c363ff99a494e891aa9aa68e079e",
+    "content-hash": "736042a429557a120e01c1a6be7a8dad",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -49,17 +49,17 @@
         },
         {
             "name": "bluebear/basebundle",
-            "version": "v0.2.1",
+            "version": "0.2.2",
             "target-dir": "BlueBear/BaseBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BlueBearGaming/BaseBundle.git",
-                "reference": "4ed6f0c19cbd05017739fa824af2c00f826bb081"
+                "reference": "a2f10c66769822c3aadbd5bdcef05d4e235abaa7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BlueBearGaming/BaseBundle/zipball/4ed6f0c19cbd05017739fa824af2c00f826bb081",
-                "reference": "4ed6f0c19cbd05017739fa824af2c00f826bb081",
+                "url": "https://api.github.com/repos/BlueBearGaming/BaseBundle/zipball/a2f10c66769822c3aadbd5bdcef05d4e235abaa7",
+                "reference": "a2f10c66769822c3aadbd5bdcef05d4e235abaa7",
                 "shasum": ""
             },
             "require": {
@@ -99,7 +99,7 @@
                 "base",
                 "shortcut"
             ],
-            "time": "2015-10-23 18:10:07"
+            "time": "2015-10-24 10:07:04"
         },
         {
             "name": "doctrine/annotations",
@@ -1366,6 +1366,64 @@
             "time": "2015-02-27 05:46:07"
         },
         {
+            "name": "stfalcon/tinymce-bundle",
+            "version": "dev-master",
+            "target-dir": "Stfalcon/Bundle/TinymceBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stfalcon/TinymceBundle.git",
+                "reference": "758c19947b04d93d9d79e0ae8432beaccc0097f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stfalcon/TinymceBundle/zipball/758c19947b04d93d9d79e0ae8432beaccc0097f2",
+                "reference": "758c19947b04d93d9d79e0ae8432beaccc0097f2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "symfony/symfony": ">=2.1"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Stfalcon\\Bundle\\TinymceBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stepan Tanasiychuk",
+                    "email": "ceo@stfalcon.com",
+                    "homepage": "http://blog.stfalcon.com"
+                },
+                {
+                    "name": "Igor Negrutsa",
+                    "email": "progi2007@gmail.com",
+                    "homepage": "http://igor-negrutsa.info"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://github.com/stfalcon/TinymceBundle/contributors"
+                }
+            ],
+            "description": "This Bundle integrates TinyMCE WYSIWYG editor into a Symfony2 project.",
+            "keywords": [
+                "editor",
+                "tinymce",
+                "wysiwyg"
+            ],
+            "time": "2014-09-15 12:37:07"
+        },
+        {
             "name": "symfony/symfony",
             "version": "v2.7.5",
             "source": {
@@ -2505,7 +2563,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "stfalcon/tinymce-bundle": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
