@@ -55,9 +55,11 @@ class Link extends StringField implements EntityFieldInterface
 
     protected $icon;
 
+    protected $text;
+
     public function render($value)
     {
-        $text = parent::render($value);
+        $text = $this->text ?: parent::render($value);
         $parameters = [];
         $accessor = PropertyAccess::createPropertyAccessor();
 
@@ -91,6 +93,7 @@ class Link extends StringField implements EntityFieldInterface
             'route' => '',
             'parameters' => [],
             'url' => '',
+            'text' => '',
         ]);
         $resolver->setAllowedTypes('route', 'string');
         $resolver->setAllowedTypes('parameters', 'array');
@@ -112,6 +115,7 @@ class Link extends StringField implements EntityFieldInterface
         $this->parameters = $options['parameters'];
         $this->target = $options['target'];
         $this->url = $options['url'];
+        $this->text = $options['text'];
     }
 
     public function getType()
