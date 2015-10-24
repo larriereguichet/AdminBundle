@@ -2,11 +2,13 @@
 
 namespace BlueBear\AdminBundle\Twig;
 
+use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use BlueBear\AdminBundle\Admin\Field;
 use BlueBear\AdminBundle\Admin\Field\EntityFieldInterface;
 use BlueBear\AdminBundle\Admin\FieldInterface;
 use BlueBear\AdminBundle\Utils\RecursiveImplode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -23,9 +25,26 @@ class AdminExtension extends Twig_Extension
     use RecursiveImplode;
 
     /**
+     * @var ApplicationConfiguration
+     */
+    protected $configuration;
+
+    /**
      * @var RouterInterface
      */
     protected $router;
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    public function __construct(RouterInterface $router, TranslatorInterface $translator, ApplicationConfiguration $configuration)
+    {
+        $this->router = $router;
+        $this->translator = $translator;
+        $this->configuration = $configuration;
+    }
 
     /**
      * Return sort column url, with existing request parameters, according to field name
@@ -95,6 +114,18 @@ class AdminExtension extends Twig_Extension
         return $render;
     }
 
+    public function field_title($fieldName, $adminName = null)
+    {
+        if ($this->configuration->useTranslation()) {
+            $title = $this
+                ->translator
+                ->trans($this->configuration->getTranslationKey($fieldName, $adminName));
+        } else {
+            $title = $this->camelize($fieldName);
+        }
+        return $title;
+    }
+
     public function routeParameters(array $parameters, $entity)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
@@ -123,6 +154,7 @@ class AdminExtension extends Twig_Extension
             new Twig_SimpleFunction('getSortColumnUrl', [$this, 'getSortColumnUrl']),
             new Twig_SimpleFunction('getSortColumnIconClass', [$this, 'getSortColumnIconClass']),
             new Twig_SimpleFunction('field', [$this, 'field']),
+            new Twig_SimpleFunction('field_title', [$this, 'field_title']),
             new Twig_SimpleFunction('routeParameters', [$this, 'routeParameters']),
         ];
     }
@@ -132,11 +164,6 @@ class AdminExtension extends Twig_Extension
         return [
             new Twig_SimpleFilter('camelize', [$this, 'camelize'])
         ];
-    }
-
-    public function setRouter(RouterInterface $router)
-    {
-        $this->router = $router;
     }
 
     /**

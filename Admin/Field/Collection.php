@@ -4,6 +4,7 @@ namespace BlueBear\AdminBundle\Admin\Field;
 
 use BlueBear\AdminBundle\Admin\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Environment;
 
 class Collection extends Field implements EntityFieldInterface
@@ -23,13 +24,22 @@ class Collection extends Field implements EntityFieldInterface
     public function render($value)
     {
         $render = '';
+        $accessor = PropertyAccess::createPropertyAccessorBuilder()
+            ->enableMagicCall()
+            ->getPropertyAccessor();
 
         foreach ($this->fields as $field) {
+            $value = null;
+            // if name starts with a underscore, it is a custom field, not mapped to the entity
+            if (substr($field->getName(), 0, 1) != '_') {
+                // get raw value from object
+                $value = $accessor->getValue($this->entity, $field->getName());
+            }
             // if the field required an entity to be rendered, we set it
             if ($field instanceof EntityFieldInterface) {
                 $field->setEntity($this->entity);
             }
-            $render .= $field->render($value);
+            $render .= $field->render($value) . '<br/>';
         }
         return $render;
     }

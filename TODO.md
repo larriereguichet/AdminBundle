@@ -20,6 +20,7 @@ Features:
 - configure application date format (filename export, displayed date...) (WIP)
 - localization
 - add link type in list (DONE)
+- adding translation pattern for admin (and not only in configuration)
 
 Bug fixes :
 - fix bug when deleting entity with integrity constraint

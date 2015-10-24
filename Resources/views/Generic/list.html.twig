@@ -25,7 +25,7 @@
                                     {% set sortClass = getSortColumnIconClass(app.request.get('order'), field.name, app.request.get('sort')) %}
 
                                     <a href="{{ getSortColumnUrl(app.request, field.name) }}">
-                                        {{ field.name | capitalize }}<i class="{{ sortClass }}"></i>
+                                        {{ field_title(field.name, admin.name) }}<i class="{{ sortClass }}"></i>
                                     </a>
                                 </th>
                             {% endfor %}

@@ -42,5 +42,4 @@ services:
         class: %bluebear.admin.twig%
         tags:
             - {name: twig.extension}
-        calls:
-            - [setRouter, [@router]]
+        arguments: [@router, @translator, @bluebear.admin.application]

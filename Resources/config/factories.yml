@@ -14,7 +14,7 @@ services:
 
     bluebear.admin.action_factory:
         class: %bluebear.admin.action_factory%
-        arguments: [@bluebear.admin.routing, @bluebear.admin.field_factory, @bluebear.admin.filter_factory]
+        arguments: [@bluebear.admin.routing, @bluebear.admin.field_factory, @bluebear.admin.filter_factory, @bluebear.admin.application]
 
     bluebear.admin.field_factory:
         class: %bluebear.admin.field_factory%
