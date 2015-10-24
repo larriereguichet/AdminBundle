@@ -4,6 +4,7 @@ namespace BlueBear\AdminBundle\Admin\Factory;
 
 use BlueBear\AdminBundle\Admin\Action;
 use BlueBear\AdminBundle\Admin\Admin;
+use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use BlueBear\AdminBundle\Routing\RoutingLoader;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -27,11 +28,22 @@ class ActionFactory
      */
     protected $filterFactory;
 
-    public function __construct(RoutingLoader $routingLoader, FieldFactory $fieldFactory, FilterFactory $filterFactory)
+    /**
+     * @var ApplicationConfiguration
+     */
+    protected $configuration;
+
+    public function __construct(
+        RoutingLoader $routingLoader,
+        FieldFactory $fieldFactory,
+        FilterFactory $filterFactory,
+        ApplicationConfiguration $configuration
+    )
     {
         $this->routingLoader = $routingLoader;
         $this->fieldFactory = $fieldFactory;
         $this->filterFactory = $filterFactory;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -51,6 +63,7 @@ class ActionFactory
         // creating action object from configuration
         $action = $this->createActionFromConfiguration($actionConfiguration, $actionName, $admin);
 
+        // creating actions linked to current action
         foreach ($actionConfiguration['actions'] as $customActionName => $customActionConfiguration) {
             // resolve configuration
             $customActionConfiguration = $resolver->resolve($customActionConfiguration);
@@ -59,6 +72,7 @@ class ActionFactory
             // add to the main action
             $action->addAction($customAction);
         }
+        // TODO remove this part, replaced by collection fields, more generic
         foreach ($actionConfiguration['field_actions'] as $customActionName => $customActionConfiguration) {
             // resolve configuration
             $customActionConfiguration = $resolver->resolve($customActionConfiguration);
@@ -76,7 +90,9 @@ class ActionFactory
         }
         // adding filters to the action
         foreach ($actionConfiguration['filters'] as $fieldName => $filterConfiguration) {
-            $filter = $this->filterFactory->create($fieldName, $filterConfiguration);
+            $filter = $this
+                ->filterFactory
+                ->create($fieldName, $filterConfiguration);
             $action->addFilter($filter);
         }
         return $action;
@@ -99,8 +115,7 @@ class ActionFactory
             $action->setRoute($this->routingLoader->generateRouteName($actionName, $admin));
         }
         if (!$action->getTitle()) {
-            $adminName = ($admin) ? $admin->getName() . '.' : '';
-            $action->setTitle(sprintf('bluebear.admin.%s%s', $adminName, $actionName));
+            $action->setTitle($this->configuration->getTranslationKey($action->getName(), $admin->getName()));
         }
         return $action;
     }

@@ -3,6 +3,8 @@
 namespace BlueBear\AdminBundle\Admin\Configuration;
 
 use BlueBear\AdminBundle\Admin\Field;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ApplicationConfiguration
@@ -66,7 +68,7 @@ class ApplicationConfiguration
     /**
      * Replace string in truncation
      *
-     * @var
+     * @var int
      */
     protected $stringLengthTruncate;
 
@@ -91,6 +93,18 @@ class ApplicationConfiguration
      */
     protected $maxPerPage;
 
+    /**
+     * @var bool
+     */
+    protected $useTranslation = true;
+
+    /**
+     * Pattern use for translation key (ie: bluebear.admin.{key}, admin will
+     *
+     * @var string
+     */
+    protected $translationPattern;
+
     public function __construct(array $applicationConfiguration = [], $locale)
     {
         $resolver = new OptionsResolver();
@@ -108,6 +122,10 @@ class ApplicationConfiguration
                 'url_pattern' => '/{admin}/{action}',
                 'name_pattern' => 'bluebear.admin.{admin}'
             ],
+            'translation' => [
+                'enabled' => true,
+                'pattern' => 'bluebear.admin.{key}',
+            ],
             'max_per_page' => 25,
             'fields_mapping' => [
                 Field::TYPE_STRING => 'bluebear.admin.field.string',
@@ -119,6 +137,51 @@ class ApplicationConfiguration
             ]
         ]);
         $applicationConfiguration = $resolver->resolve($applicationConfiguration);
+        // resolving routing options
+        $routingConfiguration = $applicationConfiguration['routing'];
+        $resolver->clear();
+        $resolver->setRequired([
+            'url_pattern',
+            'name_pattern',
+        ]);
+        $resolver->setNormalizer('url_pattern', function (Options $options, $value) {
+            if (strstr($value, '{admin}') === false) {
+                throw new InvalidOptionsException('Admin routing configuration url pattern should contains {admin} placeholder');
+            }
+            if (strstr($value, '{action}') === false) {
+                throw new InvalidOptionsException('Admin routing configuration url pattern should contains {action} placeholder');
+            }
+            return $value;
+        });
+        $resolver->setNormalizer('name_pattern', function (Options $options, $value) {
+            if (strstr($value, '{admin}') === false) {
+                throw new InvalidOptionsException('Admin routing configuration pattern name should contains {admin} placeholder');
+            }
+            return $value;
+        });
+        $routingConfiguration = $resolver->resolve($routingConfiguration);
+        // routing configuration
+        $this->routingUrlPattern = $routingConfiguration['url_pattern'];
+        $this->routingNamePattern = $routingConfiguration['name_pattern'];
+
+        // resolving translation configuration
+        $translationConfiguration = $applicationConfiguration['translation'];
+        $resolver
+            ->clear()
+            ->setDefault('enabled', true)
+            ->setDefault('pattern', 'bluebear.admin.{key}');
+        $resolver->setNormalizer('pattern', function (Options $options, $value) {
+            if (strstr($value, 'key') === false) {
+                throw new InvalidOptionsException('Admin translation configuration pattern should contains {key} placeholder');
+            }
+            return $value;
+        });
+        $translationConfiguration = $resolver->resolve($translationConfiguration);
+        // translation configuration
+        $this->useTranslation = $translationConfiguration['enabled'];
+        $this->translationPattern = $translationConfiguration['pattern'];
+
+        // application main configuration
         $this->title = $applicationConfiguration['title'];
         $this->description = $applicationConfiguration['description'];
         $this->locale = $applicationConfiguration['locale'];
@@ -129,8 +192,6 @@ class ApplicationConfiguration
         $this->dateFormat = $applicationConfiguration['date_format'];
         $this->stringLength = $applicationConfiguration['string_length'];
         $this->stringLengthTruncate = $applicationConfiguration['string_length_truncate'];
-        $this->routingUrlPattern = $applicationConfiguration['routing']['url_pattern'];
-        $this->routingNamePattern = $applicationConfiguration['routing']['name_pattern'];
         $this->maxPerPage = $applicationConfiguration['max_per_page'];
     }
 
@@ -343,5 +404,47 @@ class ApplicationConfiguration
     public function setMaxPerPage($maxPerPage)
     {
         $this->maxPerPage = $maxPerPage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTranslationPattern()
+    {
+        return $this->translationPattern;
+    }
+
+    /**
+     * @param string $translationPattern
+     */
+    public function setTranslationPattern($translationPattern)
+    {
+        $this->translationPattern = $translationPattern;
+    }
+
+    public function getTranslationKey($key, $adminName = null)
+    {
+        if (strstr($this->translationPattern, '{admin}') && $adminName) {
+            $key = str_replace('{admin}', $adminName, $this->translationPattern);
+        }
+        $key = str_replace('{key}', $key, $this->translationPattern);
+
+        return $key;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function useTranslation()
+    {
+        return $this->useTranslation;
+    }
+
+    /**
+     * @param boolean $useTranslation
+     */
+    public function setUseTranslation($useTranslation)
+    {
+        $this->useTranslation = $useTranslation;
     }
 }

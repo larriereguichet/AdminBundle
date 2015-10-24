@@ -176,6 +176,7 @@ class AdminFactory
                 'delete' => []
             ]);
         }
+        // TODO adding translation pattern for Admin
         $actionFactory = $this
             ->container
             ->get('bluebear.admin.action_factory');
