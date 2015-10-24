@@ -115,7 +115,8 @@ class ActionFactory
             $action->setRoute($this->routingLoader->generateRouteName($actionName, $admin));
         }
         if (!$action->getTitle()) {
-            $action->setTitle($this->configuration->getTranslationKey($action->getName(), $admin->getName()));
+            $adminName = $admin ? $admin->getName() : null;
+            $action->setTitle($this->configuration->getTranslationKey($action->getName(), $adminName));
         }
         return $action;
     }
