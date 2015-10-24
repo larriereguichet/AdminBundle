@@ -177,4 +177,6 @@ blue_bear_admin:
 
 ```
 
+## Documentation
 
+Full documentation can be found [here](https://github.com/larriereguichet/AdminBundle/tree/master/Resources/docs/summary.md)
