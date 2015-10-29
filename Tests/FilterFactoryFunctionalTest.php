@@ -1,15 +1,15 @@
 <?php
 
-namespace BlueBear\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests;
 
-use BlueBear\AdminBundle\Admin\Filter;
+use LAG\AdminBundle\Admin\Filter;
 
 class FilterFactoryFunctionalTest extends Base
 {
     public function testCreate()
     {
         $this->initApplication();
-        $filterFactory = $this->container->get('bluebear.admin.filter_factory');
+        $filterFactory = $this->container->get('lag.admin.filter_factory');
         $filtersConfiguration = $this->getFakeFiltersConfiguration();
 
         foreach ($filtersConfiguration as $fieldName => $filterConfiguration) {

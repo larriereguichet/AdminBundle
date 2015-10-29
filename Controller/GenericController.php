@@ -1,11 +1,11 @@
 <?php
 
-namespace BlueBear\AdminBundle\Controller;
+namespace LAG\AdminBundle\Controller;
 
-use BlueBear\AdminBundle\Admin\Admin;
-use BlueBear\AdminBundle\Admin\AdminInterface;
-use BlueBear\AdminBundle\Routing\RoutingLoader;
-use BlueBear\AdminBundle\Utils\RecursiveImplode;
+use LAG\AdminBundle\Admin\Admin;
+use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Routing\RoutingLoader;
+use LAG\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use DateTime;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -35,7 +35,7 @@ class GenericController extends Controller
     /**
      * Generic list action
      *
-     * @Template("BlueBearAdminBundle:Generic:list.html.twig")
+     * @Template("LAGAdminBundle:Generic:list.html.twig")
      * @param Request $request
      * @return array
      */
@@ -59,7 +59,7 @@ class GenericController extends Controller
     /**
      * Generic create action
      *
-     * @Template("BlueBearAdminBundle:Generic:edit.html.twig")
+     * @Template("LAGAdminBundle:Generic:edit.html.twig")
      * @param Request $request
      * @return array
      */
@@ -79,7 +79,7 @@ class GenericController extends Controller
             // save entity
             $admin->saveEntity();
             // inform user everything went fine
-            $this->setMessage('bluebear.admin.' . $admin->getName() . '.saved');
+            $this->setMessage('lag.admin.' . $admin->getName() . '.saved');
 
             if ($request->request->get('submit') == 'save') {
                 // if save is pressed, user stay on the edit view
@@ -93,7 +93,7 @@ class GenericController extends Controller
             } else {
                 $listRoute = $this
                     ->container
-                    ->get('bluebear.admin.routing')
+                    ->get('lag.admin.routing')
                     ->generateRouteName('list', $admin);
                 // otherwise user is redirected to list view
                 return $this->redirect($this->generateUrl($listRoute));
@@ -108,14 +108,14 @@ class GenericController extends Controller
     /**
      * Generic edit action
      *
-     * @Template("BlueBearAdminBundle:Generic:edit.html.twig")
+     * @Template("LAGAdminBundle:Generic:edit.html.twig")
      * @param Request $request
      * @return array|RedirectResponse
      */
     public function editAction(Request $request)
     {
         $admin = $this
-            ->get('bluebear.admin.factory')
+            ->get('lag.admin.factory')
             ->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
@@ -130,13 +130,13 @@ class GenericController extends Controller
             // save entity
             $admin->saveEntity();
             // inform user everything went fine
-            $this->setMessage('bluebear.admin.saved', 'info', [
+            $this->setMessage('lag.admin.saved', 'info', [
                 '%entity%' => $admin->getEntityLabel()
             ]);
             if ($request->request->get('submit') == 'save') {
                 $saveRoute = $this
                     ->container
-                    ->get('bluebear.admin.routing')
+                    ->get('lag.admin.routing')
                     ->generateRouteName('edit', $admin);
 
                 return $this->redirectToRoute($saveRoute, [
@@ -145,7 +145,7 @@ class GenericController extends Controller
             } else {
                 $listRoute = $this
                     ->container
-                    ->get('bluebear.admin.routing')
+                    ->get('lag.admin.routing')
                     ->generateRouteName('list', $admin);
                 // redirect to list
                 return $this->redirectToRoute($listRoute);
@@ -160,14 +160,14 @@ class GenericController extends Controller
     /**
      * Generic delete action
      *
-     * @Template("BlueBearAdminBundle:Generic:delete.html.twig")
+     * @Template("LAGAdminBundle:Generic:delete.html.twig")
      * @param Request $request
      * @return RedirectResponse
      */
     public function deleteAction(Request $request)
     {
         $admin = $this
-            ->get('bluebear.admin.factory')
+            ->get('lag.admin.factory')
             ->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
@@ -180,13 +180,13 @@ class GenericController extends Controller
         if ($form->isValid()) {
             $admin->deleteEntity();
             // inform user everything went fine
-            $this->setMessage('bluebear.admin.deleted', 'info', [
+            $this->setMessage('lag.admin.deleted', 'info', [
                 '%entity%' => $admin->getEntityLabel()
             ]);
             // redirect to list
             $listRoute = $this
                 ->container
-                ->get('bluebear.admin.routing')
+                ->get('lag.admin.routing')
                 ->generateRouteName('list', $admin);
             return $this->redirectToRoute($listRoute);
         }
@@ -271,7 +271,7 @@ class GenericController extends Controller
     protected function getAdminFromRequest(Request $request)
     {
         return $this
-            ->get('bluebear.admin.factory')
+            ->get('lag.admin.factory')
             ->getAdminFromRequest($request);
     }
 
@@ -284,6 +284,6 @@ class GenericController extends Controller
     {
         return $this
             ->container
-            ->get('bluebear.admin.routing');
+            ->get('lag.admin.routing');
     }
 }

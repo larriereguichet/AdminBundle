@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin\Field;
+namespace LAG\AdminBundle\Admin\Field;
 
 interface EntityFieldInterface
 {

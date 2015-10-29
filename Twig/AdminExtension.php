@@ -1,12 +1,12 @@
 <?php
 
-namespace BlueBear\AdminBundle\Twig;
+namespace LAG\AdminBundle\Twig;
 
-use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use BlueBear\AdminBundle\Admin\Field;
-use BlueBear\AdminBundle\Admin\Field\EntityFieldInterface;
-use BlueBear\AdminBundle\Admin\FieldInterface;
-use BlueBear\AdminBundle\Utils\RecursiveImplode;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Field;
+use LAG\AdminBundle\Admin\Field\EntityFieldInterface;
+use LAG\AdminBundle\Admin\FieldInterface;
+use LAG\AdminBundle\Utils\RecursiveImplode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
@@ -173,6 +173,6 @@ class AdminExtension extends Twig_Extension
      */
     public function getName()
     {
-        return 'bluebear.admin';
+        return 'lag.admin';
     }
 }

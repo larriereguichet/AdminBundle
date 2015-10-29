@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\Utils;
+namespace LAG\AdminBundle\Utils;
 
 trait RecursiveImplode
 {

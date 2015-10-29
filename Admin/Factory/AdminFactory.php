@@ -1,13 +1,13 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin\Factory;
+namespace LAG\AdminBundle\Admin\Factory;
 
-use BlueBear\AdminBundle\Admin\Admin;
-use BlueBear\AdminBundle\Admin\AdminInterface;
-use BlueBear\AdminBundle\Admin\Configuration\AdminConfiguration;
-use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use BlueBear\AdminBundle\Event\AdminFactoryEvent;
-use BlueBear\AdminBundle\Manager\GenericManager;
+use LAG\AdminBundle\Admin\Admin;
+use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Event\AdminFactoryEvent;
+use LAG\AdminBundle\Manager\GenericManager;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -24,7 +24,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class AdminFactory
 {
-    const ADMIN_CREATION = 'bluebear.admin.adminCreation';
+    const ADMIN_CREATION = 'lag.admin.adminCreation';
 
     use ContainerTrait;
 
@@ -44,7 +44,7 @@ class AdminFactory
     {
         // TODO remove dependence to container
         $this->container = $container;
-        $admins = $this->container->getParameter('bluebear.admins');
+        $admins = $this->container->getParameter('lag.admins');
         // dispatch an event with admins configurations to allow dynamic admin creation
         $event = new AdminFactoryEvent();
         $event->setAdminsConfiguration($admins);
@@ -130,7 +130,7 @@ class AdminFactory
     {
         $application = $this
             ->container
-            ->get('bluebear.admin.application');
+            ->get('lag.admin.application');
         $entityManager = $this
             ->container
             ->get('doctrine')
@@ -147,10 +147,10 @@ class AdminFactory
             'manager' => null,
             'routing_url_pattern' => $application->getRoutingUrlPattern(),
             'routing_name_pattern' => $application->getRoutingNamePattern(),
-            'controller' => 'BlueBearAdminBundle:Generic',
+            'controller' => 'LAGAdminBundle:Generic',
             'max_per_page' => $this
                 ->container
-                ->get('bluebear.admin.application')
+                ->get('lag.admin.application')
                 ->getMaxPerPage()
         ]);
         // required options
@@ -179,7 +179,7 @@ class AdminFactory
         // TODO adding translation pattern for Admin
         $actionFactory = $this
             ->container
-            ->get('bluebear.admin.action_factory');
+            ->get('lag.admin.action_factory');
         // adding actions
         foreach ($adminConfig->getActions() as $actionName => $actionConfig) {
             $action = $actionFactory->create($actionName, $actionConfig, $admin);

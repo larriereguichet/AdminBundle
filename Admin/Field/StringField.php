@@ -1,8 +1,8 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin\Field;
+namespace LAG\AdminBundle\Admin\Field;
 
-use BlueBear\AdminBundle\Admin\Field;
+use LAG\AdminBundle\Admin\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 

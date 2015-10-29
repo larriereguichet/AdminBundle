@@ -2,7 +2,7 @@
 
 {% block topMenuItems %}
     {% block leftList %}
-        {% include 'BlueBearAdminBundle:Action:customActions.html.twig' %}
+        {% include 'LAGAdminBundle:Action:customActions.html.twig' %}
     {% endblock %}
 {% endblock %}
 
@@ -10,7 +10,7 @@
     <h1 class="page-header">{{ admin.currentAction.title | trans }}</h1>
 
     <div class="filters">
-        {% include "BlueBearAdminBundle:Action:filters.html.twig" %}
+        {% include "LAGAdminBundle:Action:filters.html.twig" %}
     </div>
     <div class="{{ admin.name }}-list">
         {% if admin.entities | length > 0 %}

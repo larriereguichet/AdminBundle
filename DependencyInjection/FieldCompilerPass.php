@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\DependencyInjection;
+namespace LAG\AdminBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -11,16 +11,16 @@ class FieldCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->has('bluebear.admin.field_factory')) {
+        if (!$container->has('lag.admin.field_factory')) {
             return;
         }
         // get field factory definition
         $definition = $container->findDefinition(
-            'bluebear.admin.field_factory'
+            'lag.admin.field_factory'
         );
         // find field tagged services
         $taggedServices = $container->findTaggedServiceIds(
-            'bluebear.field'
+            'lag.field'
         );
         // foreach tagged, with add this field type to the field factory
         foreach ($taggedServices as $id => $tags) {
@@ -34,7 +34,7 @@ class FieldCompilerPass implements CompilerPassInterface
             // add application configuration for field
             $tagDefinition = $container->findDefinition($id);
             $tagDefinition->addMethodCall('setConfiguration', [
-                new Reference('bluebear.admin.application')
+                new Reference('lag.admin.application')
             ]);
         }
     }

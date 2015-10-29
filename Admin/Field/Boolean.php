@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin\Field;
+namespace LAG\AdminBundle\Admin\Field;
 
 
 class Boolean extends StringField
@@ -8,7 +8,7 @@ class Boolean extends StringField
     public function render($value)
     {
         $result = filter_var($value, FILTER_VALIDATE_BOOLEAN);
-        $text = ($result) ? 'bluebear.admin.true' : 'bluebear.admin.false';
+        $text = ($result) ? 'lag.admin.true' : 'lag.admin.false';
 
         return parent::render($text);
     }

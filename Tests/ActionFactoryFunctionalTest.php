@@ -1,11 +1,11 @@
 <?php
 
-namespace BlueBear\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests;
 
-use BlueBear\AdminBundle\Admin\Action;
-use BlueBear\AdminBundle\Admin\Admin;
-use BlueBear\AdminBundle\Admin\Configuration\AdminConfiguration;
-use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Admin\Admin;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 
 class ActionFactoryFunctionalTest extends Base
 {
@@ -14,7 +14,7 @@ class ActionFactoryFunctionalTest extends Base
         $this->initApplication();
         $actionFactory = $this
             ->container
-            ->get('bluebear.admin.action_factory');
+            ->get('lag.admin.action_factory');
         $actionsConfiguration = $this->getFakeActionConfiguration();
         $adminConfiguration = new AdminConfiguration([
             'entity' => 'Test',
@@ -94,7 +94,7 @@ class ActionFactoryFunctionalTest extends Base
             $this->assertEquals($configuration['title'], $action->getTitle());
         } else {
             // test default title
-            $this->assertEquals('bluebear.admin.' . $actionName, $action->getTitle());
+            $this->assertEquals('lag.admin.' . $actionName, $action->getTitle());
         }
         if (array_key_exists('fields', $configuration)) {
             // field creation will be tested more in FieldFactory test

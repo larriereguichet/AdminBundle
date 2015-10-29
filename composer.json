@@ -1,7 +1,7 @@
 {
-  "name": "bluebear/adminbundle",
+  "name": "lag/adminbundle",
   "type": "symfony-bundle",
-  "description": "Generic admin bundle for Symfony2",
+  "description": "Generic admin bundle for Symfony2 from L'arrière-guichet",
   "keywords": [
     "Admin",
     "Backoffice",
@@ -45,12 +45,12 @@
   },
   "autoload": {
     "psr-0": {
-      "BlueBear\\AdminBundle": ""
+      "LAG\\AdminBundle": ""
     }
   },
   "config": {
     "bin-dir": "bin",
     "component-dir": "web/assets"
   },
-  "target-dir": "BlueBear/AdminBundle"
+  "target-dir": "LAG/AdminBundle"
 }

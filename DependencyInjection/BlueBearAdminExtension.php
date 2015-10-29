@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\DependencyInjection;
+namespace LAG\AdminBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class BlueBearAdminExtension extends Extension
+class LAGAdminExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -32,14 +32,14 @@ class BlueBearAdminExtension extends Extension
         if (!array_key_exists('admins', $config)) {
             throw new InvalidConfigurationException('Your section "admins" is not found for AdminBundle configuration');
         }
-        $container->setParameter('bluebear.admins', $config['admins']);
-        $container->setParameter('bluebear.menus', $config['menus']);
-        $container->setParameter('bluebear.admin.application_configuration', $config['application']);
+        $container->setParameter('lag.admins', $config['admins']);
+        $container->setParameter('lag.menus', $config['menus']);
+        $container->setParameter('lag.admin.application_configuration', $config['application']);
     }
 
     public function getAlias()
     {
-        return 'bluebear_admin';
+        return 'lag_admin';
     }
 
 }

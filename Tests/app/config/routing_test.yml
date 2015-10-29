@@ -1,5 +1,5 @@
-# BlueBear AdminBundle
-blue_bear_admin:
+# LAG AdminBundle
+lag_admin:
     resource: .
     type: extra
     prefix: /admin

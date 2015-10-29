@@ -1,9 +1,9 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin\Factory;
+namespace LAG\AdminBundle\Admin\Factory;
 
 
-use BlueBear\AdminBundle\Admin\Filter;
+use LAG\AdminBundle\Admin\Filter;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FilterFactory
