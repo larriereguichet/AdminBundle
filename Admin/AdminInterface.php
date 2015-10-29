@@ -1,9 +1,9 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin;
+namespace LAG\AdminBundle\Admin;
 
-use BlueBear\AdminBundle\Admin\Configuration\AdminConfiguration;
-use BlueBear\AdminBundle\Manager\GenericManager;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Manager\GenericManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Exception;

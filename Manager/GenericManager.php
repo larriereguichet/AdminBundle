@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\Manager;
+namespace LAG\AdminBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;

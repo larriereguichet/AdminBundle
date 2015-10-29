@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\DependencyInjection;
+namespace LAG\AdminBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -13,7 +13,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('bluebear_admin');
+        $rootNode = $treeBuilder->root('lag_admin');
 
         $rootNode
             ->children()
@@ -39,7 +39,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->scalarNode('block_template')
-                            ->defaultValue('BlueBearAdminBundle:Form:fields.html.twig')
+                            ->defaultValue('LAGAdminBundle:Form:fields.html.twig')
                         ->end()
                         ->arrayNode('fields_mapping')
                             ->prototype('scalar')
@@ -54,7 +54,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('entity')->end()
                             ->scalarNode('form')->end()
                             ->scalarNode('max_per_page')->end()
-                            ->scalarNode('controller')->defaultValue('BlueBearAdminBundle:Generic')->end()
+                            ->scalarNode('controller')->defaultValue('LAGAdminBundle:Generic')->end()
                             ->arrayNode('manager')
                                 ->children()
                                     ->scalarNode('name')->end()
@@ -143,7 +143,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('menus')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('template')->defaultValue('BlueBearAdminBundle:Menu:main_menu.html.twig') ->end()
+                            ->scalarNode('template')->defaultValue('LAGAdminBundle:Menu:main_menu.html.twig') ->end()
                             ->arrayNode('main_item')
                                 ->children()
                                     ->scalarNode('route')->end()

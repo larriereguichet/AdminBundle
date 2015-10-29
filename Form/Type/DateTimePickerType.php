@@ -1,8 +1,8 @@
 <?php
 
-namespace BlueBear\AdminBundle\Form\Type;
+namespace LAG\AdminBundle\Form\Type;
 
-use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

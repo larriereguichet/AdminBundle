@@ -14,7 +14,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
-            new BlueBear\AdminBundle\BlueBearAdminBundle(),
+            new LAG\AdminBundle\LAGAdminBundle(),
             new Test\TestBundle\TestTestBundle(),
         );
     }

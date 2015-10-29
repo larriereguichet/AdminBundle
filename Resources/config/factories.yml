@@ -1,27 +1,27 @@
 parameters:
     # admin factories
-    bluebear.admin.factory: BlueBear\AdminBundle\Admin\Factory\AdminFactory
-    bluebear.admin.action_factory: BlueBear\AdminBundle\Admin\Factory\ActionFactory
-    bluebear.admin.field_factory: BlueBear\AdminBundle\Admin\Factory\FieldFactory
-    bluebear.admin.field_renderer_factory: BlueBear\AdminBundle\Admin\Factory\FieldRendererFactory
-    bluebear.admin.filter_factory: BlueBear\AdminBundle\Admin\Factory\FilterFactory
+    lag.admin.factory: LAG\AdminBundle\Admin\Factory\AdminFactory
+    lag.admin.action_factory: LAG\AdminBundle\Admin\Factory\ActionFactory
+    lag.admin.field_factory: LAG\AdminBundle\Admin\Factory\FieldFactory
+    lag.admin.field_renderer_factory: LAG\AdminBundle\Admin\Factory\FieldRendererFactory
+    lag.admin.filter_factory: LAG\AdminBundle\Admin\Factory\FilterFactory
 
 services:
     # factories
-    bluebear.admin.factory:
-        class: %bluebear.admin.factory%
-        arguments: [@service_container, @bluebear.admin.routing]
+    lag.admin.factory:
+        class: %lag.admin.factory%
+        arguments: [@service_container, @lag.admin.routing]
 
-    bluebear.admin.action_factory:
-        class: %bluebear.admin.action_factory%
-        arguments: [@bluebear.admin.routing, @bluebear.admin.field_factory, @bluebear.admin.filter_factory, @bluebear.admin.application]
+    lag.admin.action_factory:
+        class: %lag.admin.action_factory%
+        arguments: [@lag.admin.routing, @lag.admin.field_factory, @lag.admin.filter_factory, @lag.admin.application]
 
-    bluebear.admin.field_factory:
-        class: %bluebear.admin.field_factory%
-        arguments: [@bluebear.admin.application]
+    lag.admin.field_factory:
+        class: %lag.admin.field_factory%
+        arguments: [@lag.admin.application]
         calls:
             - [setContainer, [@service_container]]
 
-    bluebear.admin.filter_factory:
-        class: %bluebear.admin.filter_factory%
+    lag.admin.filter_factory:
+        class: %lag.admin.filter_factory%
         arguments: []

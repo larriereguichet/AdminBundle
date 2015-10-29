@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests;
 
 use AppKernel;
 use Symfony\Bundle\FrameworkBundle\Client as BaseClient;

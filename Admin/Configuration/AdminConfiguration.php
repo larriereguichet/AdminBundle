@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin\Configuration;
+namespace LAG\AdminBundle\Admin\Configuration;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -30,7 +30,7 @@ class AdminConfiguration
             'form'
         ]);
         $resolver->setDefaults([
-            'controller' => 'BlueBearAdminBundle:Generic',
+            'controller' => 'LAGAdminBundle:Generic',
             'manager' => [],
             'form' => 'generic',
             'actions' => [

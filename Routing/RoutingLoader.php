@@ -1,9 +1,9 @@
 <?php
 
-namespace BlueBear\AdminBundle\Routing;
+namespace LAG\AdminBundle\Routing;
 
-use BlueBear\AdminBundle\Admin\Action;
-use BlueBear\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Admin\AdminInterface;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Exception;
@@ -30,7 +30,7 @@ class RoutingLoader implements LoaderInterface
             throw new RuntimeException('Do not add the "extra" loader twice');
         }
         $routes = new RouteCollection();
-        $admins = $this->getContainer()->get('bluebear.admin.factory')->getAdmins();
+        $admins = $this->getContainer()->get('lag.admin.factory')->getAdmins();
         // creating a route by admin and action
         /** @var AdminInterface $admin */
         foreach ($admins as $admin) {

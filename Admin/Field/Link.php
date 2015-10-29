@@ -1,8 +1,8 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin\Field;
+namespace LAG\AdminBundle\Admin\Field;
 
-use BlueBear\AdminBundle\Admin\Field;
+use LAG\AdminBundle\Admin\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Environment;
@@ -86,7 +86,7 @@ class Link extends StringField implements EntityFieldInterface
     {
         $resolver->setDefaults([
             'length' => $this->configuration->getStringLength(),
-            'template' => 'BlueBearAdminBundle:Render:link.html.twig',
+            'template' => 'LAGAdminBundle:Render:link.html.twig',
             'title' => '',
             'icon' => '',
             'target' => '_self',

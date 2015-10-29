@@ -1,9 +1,9 @@
 <?php
 
-namespace BlueBear\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests;
 
-use BlueBear\AdminBundle\Admin\AdminInterface;
-use BlueBear\AdminBundle\Admin\Factory\AdminFactory;
+use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdminFactoryFunctionalTest extends Base
@@ -16,7 +16,7 @@ class AdminFactoryFunctionalTest extends Base
         // assert factory creation (dependencies are correct...)
         $this->assertTrue($adminFactory != null, 'AdminFactory initialization error');
         // assert that loaded configurations create the right admins count
-        $this->assertCount(count($this->container->getParameter('bluebear.admins')), $adminFactory->getAdmins(), 'No admin should be found');
+        $this->assertCount(count($this->container->getParameter('lag.admins')), $adminFactory->getAdmins(), 'No admin should be found');
     }
 
     public function testCreateAdminFromConfiguration()
@@ -31,11 +31,11 @@ class AdminFactoryFunctionalTest extends Base
             // getter should get the right admin
             $admin = $adminFactory->getAdmin($adminName);
             // it should implements AdminInterface
-            $this->assertContains('BlueBear\AdminBundle\Admin\AdminInterface', class_implements(get_class($admin)),
-                'Admin should implement BlueBear\AdminBundle\Admin\AdminInterface');
+            $this->assertContains('LAG\AdminBundle\Admin\AdminInterface', class_implements(get_class($admin)),
+                'Admin should implement LAG\AdminBundle\Admin\AdminInterface');
             $this->doTestAdmin($admin, $adminConfig, $adminName);
         }
-        $adminTotalCount = count($config) + count($this->container->getParameter('bluebear.admins'));
+        $adminTotalCount = count($config) + count($this->container->getParameter('lag.admins'));
         // assert admin total count is equal to configured admin + admin added dynamically
         $this->assertCount($adminTotalCount, $adminFactory->getAdmins(), 'Error on admin count');
     }
@@ -75,8 +75,8 @@ class AdminFactoryFunctionalTest extends Base
             $adminFactory->getAdmin('invalid_test');
         });
         $admin->createEntity();
-        $this->assertInstanceOf('BlueBear\AdminBundle\Admin\Admin', $admin, 'Admin not found in request');
-        $this->assertInstanceOf('BlueBear\AdminBundle\Admin\Admin', $adminFactory->getAdmin('test'), 'Invalid admin');
+        $this->assertInstanceOf('LAG\AdminBundle\Admin\Admin', $admin, 'Admin not found in request');
+        $this->assertInstanceOf('LAG\AdminBundle\Admin\Admin', $adminFactory->getAdmin('test'), 'Invalid admin');
         $this->assertEquals($admin, $adminFactory->getAdmin('test'), 'Invalid admin');
         $this->assertEquals('test', $admin->getName(), 'Invalid admin name');
         $this->assertEquals('Test\TestBundle\Entity\TestEntity', $admin->getEntityNamespace(), 'Invalid admin namespace');

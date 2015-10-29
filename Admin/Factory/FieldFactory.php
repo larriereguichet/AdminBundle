@@ -1,10 +1,10 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin\Factory;
+namespace LAG\AdminBundle\Admin\Factory;
 
-use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use BlueBear\AdminBundle\Admin\Field;
-use BlueBear\AdminBundle\Admin\FieldInterface;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Field;
+use LAG\AdminBundle\Admin\FieldInterface;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -65,7 +65,7 @@ class FieldFactory
             ->get($fieldService);
 
         if (!($field instanceof FieldInterface)) {
-            throw new Exception(sprintf('Field "%s" should implements BlueBear\AdminBundle\Admin\FieldInterface', get_class($field)));
+            throw new Exception(sprintf('Field "%s" should implements LAG\AdminBundle\Admin\FieldInterface', get_class($field)));
         }
         if ($field->getType() != $configuration['type']) {
             throw new Exception(sprintf('Field type mismatch for service "%s"', $fieldService));

@@ -1,8 +1,8 @@
 <?php
 
-namespace BlueBear\AdminBundle\Event\Subscriber;
+namespace LAG\AdminBundle\Event\Subscriber;
 
-use BlueBear\AdminBundle\Admin\Factory\AdminFactory;
+use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
@@ -38,8 +38,8 @@ class TemplateListener implements EventSubscriberInterface
     {
         // adding to twig globals (available on each twig template)
         // TODO inject right parameters instead of container
-        $this->twig->addGlobal('config', $this->container->get('bluebear.admin.application'));
-        $this->twig->addGlobal('routing', $this->container->get('bluebear.admin.routing'));
+        $this->twig->addGlobal('config', $this->container->get('lag.admin.application'));
+        $this->twig->addGlobal('routing', $this->container->get('lag.admin.routing'));
     }
 
     public function setAdminFactory(AdminFactory $adminFactory)

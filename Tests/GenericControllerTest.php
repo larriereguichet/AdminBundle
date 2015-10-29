@@ -1,8 +1,8 @@
 <?php
 
-namespace BlueBear\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests;
 
-use BlueBear\AdminBundle\Controller\GenericController;
+use LAG\AdminBundle\Controller\GenericController;
 use Symfony\Component\HttpFoundation\Request;
 
 class GenericControllerTest extends Base

@@ -1,13 +1,13 @@
 <?php
 
-namespace BlueBear\AdminBundle;
+namespace LAG\AdminBundle;
 
-use BlueBear\AdminBundle\DependencyInjection\FieldCompilerPass;
+use LAG\AdminBundle\DependencyInjection\FieldCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class BlueBearAdminBundle extends Bundle
+class LAGAdminBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

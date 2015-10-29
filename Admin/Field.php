@@ -1,8 +1,8 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin;
+namespace LAG\AdminBundle\Admin;
 
-use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 
 abstract class Field implements FieldInterface
 {
