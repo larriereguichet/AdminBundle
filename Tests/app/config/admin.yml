@@ -1,14 +1,14 @@
-bluebear_admin:
+lag_admin:
     application:
-        title: BlueBear, pyscho panda and maximum bamboo
-        description: BlueBear, pandas, bamboo and energy drink
+        title: LAG, pyscho panda and maximum bamboo
+        description: LAG, pandas, bamboo and energy drink
         # max entities per page
         max_per_page: 25
         # use default bootstrap integration
         bootstrap: false
         # Routing options
         routing:
-            name_pattern: 'bluebear.admin.{admin}.{action}'
+            name_pattern: 'lag.admin.{admin}.{action}'
             url_pattern: '{admin}/{action}'
 
     admins:

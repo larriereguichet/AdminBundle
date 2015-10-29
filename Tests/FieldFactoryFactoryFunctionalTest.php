@@ -1,21 +1,21 @@
 <?php
 
-namespace BlueBear\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests;
 
-use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use BlueBear\AdminBundle\Admin\Factory\FieldFactory;
-use BlueBear\AdminBundle\Admin\Field;
-use BlueBear\AdminBundle\Admin\FieldInterface;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Factory\FieldFactory;
+use LAG\AdminBundle\Admin\Field;
+use LAG\AdminBundle\Admin\FieldInterface;
 use DateTime;
 use Symfony\Component\Routing\RouterInterface;
 
 class FieldFactoryFactoryFunctionalTest extends Base
 {
     protected $rendererMapping = [
-        'string' => 'bluebear.admin.field.string',
-        'array' => 'bluebear.admin.field.array',
-        'date' => 'bluebear.admin.field.date',
-        'link' => 'bluebear.admin.field.link',
+        'string' => 'lag.admin.field.string',
+        'array' => 'lag.admin.field.array',
+        'date' => 'lag.admin.field.date',
+        'link' => 'lag.admin.field.link',
     ];
 
     public function testCreate()

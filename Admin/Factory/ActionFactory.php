@@ -1,11 +1,11 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin\Factory;
+namespace LAG\AdminBundle\Admin\Factory;
 
-use BlueBear\AdminBundle\Admin\Action;
-use BlueBear\AdminBundle\Admin\Admin;
-use BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use BlueBear\AdminBundle\Routing\RoutingLoader;
+use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Admin\Admin;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Routing\RoutingLoader;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

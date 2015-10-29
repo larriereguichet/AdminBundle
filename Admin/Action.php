@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin;
+namespace LAG\AdminBundle\Admin;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 

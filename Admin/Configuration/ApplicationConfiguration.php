@@ -1,8 +1,8 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin\Configuration;
+namespace LAG\AdminBundle\Admin\Configuration;
 
-use BlueBear\AdminBundle\Admin\Field;
+use LAG\AdminBundle\Admin\Field;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -99,7 +99,7 @@ class ApplicationConfiguration
     protected $useTranslation = true;
 
     /**
-     * Pattern use for translation key (ie: bluebear.admin.{key}, admin will
+     * Pattern use for translation key (ie: lag.admin.{key}, admin will
      *
      * @var string
      */
@@ -112,28 +112,28 @@ class ApplicationConfiguration
             'title' => '',
             'description' => '',
             'locale' => $locale,
-            'layout' => 'BlueBearAdminBundle::admin.layout.html.twig',
-            'block_template' => 'BlueBearAdminBundle:Form:fields.html.twig',
+            'layout' => 'LAGAdminBundle::admin.layout.html.twig',
+            'block_template' => 'LAGAdminBundle:Form:fields.html.twig',
             'bootstrap' => false,
             'date_format' => 'd/m/Y',
             'string_length' => 0,
             'string_length_truncate' => '...',
             'routing' => [
                 'url_pattern' => '/{admin}/{action}',
-                'name_pattern' => 'bluebear.admin.{admin}'
+                'name_pattern' => 'lag.admin.{admin}'
             ],
             'translation' => [
                 'enabled' => true,
-                'pattern' => 'bluebear.admin.{key}',
+                'pattern' => 'lag.admin.{key}',
             ],
             'max_per_page' => 25,
             'fields_mapping' => [
-                Field::TYPE_STRING => 'bluebear.admin.field.string',
-                Field::TYPE_ARRAY => 'BlueBear\AdminBundle\Admin\Render\ArrayRenderer',
-                Field::TYPE_LINK => 'BlueBear\AdminBundle\Admin\Render\LinkRenderer',
-                Field::TYPE_DATE => 'BlueBear\AdminBundle\Admin\Render\DateRenderer',
-                Field::TYPE_COUNT => 'BlueBear\AdminBundle\Admin\Render\CountRenderer',
-                Field::TYPE_ACTION => 'BlueBear\AdminBundle\Admin\Render\LinkRenderer',
+                Field::TYPE_STRING => 'lag.admin.field.string',
+                Field::TYPE_ARRAY => 'LAG\AdminBundle\Admin\Render\ArrayRenderer',
+                Field::TYPE_LINK => 'LAG\AdminBundle\Admin\Render\LinkRenderer',
+                Field::TYPE_DATE => 'LAG\AdminBundle\Admin\Render\DateRenderer',
+                Field::TYPE_COUNT => 'LAG\AdminBundle\Admin\Render\CountRenderer',
+                Field::TYPE_ACTION => 'LAG\AdminBundle\Admin\Render\LinkRenderer',
             ]
         ]);
         $applicationConfiguration = $resolver->resolve($applicationConfiguration);
@@ -169,7 +169,7 @@ class ApplicationConfiguration
         $resolver
             ->clear()
             ->setDefault('enabled', true)
-            ->setDefault('pattern', 'bluebear.admin.{key}');
+            ->setDefault('pattern', 'lag.admin.{key}');
         $resolver->setNormalizer('pattern', function (Options $options, $value) {
             if (strstr($value, 'key') === false) {
                 throw new InvalidOptionsException('Admin translation configuration pattern should contains {key} placeholder');

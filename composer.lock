@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a416c363ff99a494e891aa9aa68e079e",
-    "content-hash": "736042a429557a120e01c1a6be7a8dad",
+    "hash": "f2290fe0d5493a303d9dd6a2572e2986",
+    "content-hash": "aa62e4682791183441e76a4db79b48d7",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -171,16 +171,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.4.2",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "8c434000f420ade76a07c64cbe08ca47e5c101ca"
+                "reference": "eb8a73619af4f1c8711e2ce482f5de3643258a1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/8c434000f420ade76a07c64cbe08ca47e5c101ca",
-                "reference": "8c434000f420ade76a07c64cbe08ca47e5c101ca",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/eb8a73619af4f1c8711e2ce482f5de3643258a1f",
+                "reference": "eb8a73619af4f1c8711e2ce482f5de3643258a1f",
                 "shasum": ""
             },
             "require": {
@@ -201,8 +201,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Doctrine\\Common\\Cache\\": "lib/"
+                "psr-4": {
+                    "Doctrine\\Common\\Cache\\": "lib/Doctrine/Common/Cache"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -237,7 +237,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-08-31 12:36:41"
+            "time": "2015-10-28 11:27:45"
         },
         {
             "name": "doctrine/collections",

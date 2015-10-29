@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests;
 
 use Closure;
 use Exception;

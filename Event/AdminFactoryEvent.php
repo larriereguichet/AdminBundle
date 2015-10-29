@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\Event;
+namespace LAG\AdminBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 

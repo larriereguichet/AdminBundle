@@ -5,41 +5,41 @@ imports:
 
 parameters:
     # application
-    bluebear.admin.application_class: BlueBear\AdminBundle\Admin\Configuration\ApplicationConfiguration
+    lag.admin.application_class: LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration
     # template listener
-    bluebear.admin.template_listener: BlueBear\AdminBundle\Event\Subscriber\TemplateListener
+    lag.admin.template_listener: LAG\AdminBundle\Event\Subscriber\TemplateListener
     # routing
-    bluebear.admin.routing: BlueBear\AdminBundle\Routing\RoutingLoader
+    lag.admin.routing: LAG\AdminBundle\Routing\RoutingLoader
     # twig
-    bluebear.admin.twig: BlueBear\AdminBundle\Twig\AdminExtension
+    lag.admin.twig: LAG\AdminBundle\Twig\AdminExtension
 
 services:
     # application
-    bluebear.admin.application:
-        class: %bluebear.admin.application_class%
-        arguments: [%bluebear.admin.application_configuration%, %locale%]
+    lag.admin.application:
+        class: %lag.admin.application_class%
+        arguments: [%lag.admin.application_configuration%, %locale%]
 
     # template listener
-    bluebear.admin.template_listener:
-        class: %bluebear.admin.template_listener%
+    lag.admin.template_listener:
+        class: %lag.admin.template_listener%
         tags:
             - {name: kernel.event_subscriber}
         calls:
             - [setContainer, [@service_container]]
-            - [setAdminFactory, [@bluebear.admin.factory]]
+            - [setAdminFactory, [@lag.admin.factory]]
             - [setTwig, [@twig]]
 
     # routing
-    bluebear.admin.routing:
-        class: %bluebear.admin.routing%
+    lag.admin.routing:
+        class: %lag.admin.routing%
         tags:
             - { name: routing.loader }
         calls:
             - [setContainer, [@service_container]]
 
     # twig
-    bluebear.admin.twig:
-        class: %bluebear.admin.twig%
+    lag.admin.twig:
+        class: %lag.admin.twig%
         tags:
             - {name: twig.extension}
-        arguments: [@router, @translator, @bluebear.admin.application]
+        arguments: [@router, @translator, @lag.admin.application]

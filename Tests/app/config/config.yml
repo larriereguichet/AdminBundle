@@ -34,7 +34,7 @@ twig:
         - bootstrap_3_horizontal_layout.html.twig
 
         # Custom
-        - BlueBearCoreBundle:Form:fields.html.twig
+        - LAGCoreBundle:Form:fields.html.twig
 
 # Doctrine Configuration
 doctrine:
