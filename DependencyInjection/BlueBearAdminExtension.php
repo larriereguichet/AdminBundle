@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class BlueBearAdminExtension extends Extension
+class LAGAdminExtension extends Extension
 {
     /**
      * {@inheritdoc}
