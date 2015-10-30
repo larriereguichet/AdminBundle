@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Admin\Field;
 
-use LAG\AdminBundle\Admin\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Environment;
@@ -35,14 +34,14 @@ class Link extends StringField implements EntityFieldInterface
     protected $entity;
 
     /**
-     * Link target
+     * Link target.
      *
      * @var string
      */
     protected $target;
 
     /**
-     * If an url is provided we use it instead of route
+     * If an url is provided we use it instead of route.
      *
      * @var string
      */
@@ -79,6 +78,7 @@ class Link extends StringField implements EntityFieldInterface
             'title' => $this->title,
             'icon' => $this->icon,
         ]);
+
         return $render;
     }
 
@@ -124,7 +124,7 @@ class Link extends StringField implements EntityFieldInterface
     }
 
     /**
-     * Define Twig engine
+     * Define Twig engine.
      *
      * @param Twig_Environment $twig
      */
@@ -134,7 +134,7 @@ class Link extends StringField implements EntityFieldInterface
     }
 
     /**
-     * Define entity. It will be use to fill parameters with properties values
+     * Define entity. It will be use to fill parameters with properties values.
      *
      * @param $entity
      */

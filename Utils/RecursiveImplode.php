@@ -5,10 +5,11 @@ namespace LAG\AdminBundle\Utils;
 trait RecursiveImplode
 {
     /**
-     * Return a imploded string from a multi dimensional array
+     * Return a imploded string from a multi dimensional array.
      *
      * @param $glue
      * @param array $array
+     *
      * @return string
      */
     protected function recursiveImplode($glue, array $array)
@@ -26,8 +27,9 @@ trait RecursiveImplode
             if ($index < $count - 1) {
                 $return .=  $glue;
             }
-            $index++;
+            ++$index;
         }
+
         return $return;
     }
 }

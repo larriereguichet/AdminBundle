@@ -7,21 +7,22 @@ use Exception;
 trait ActionTrait
 {
     /**
-     * Return admin name
+     * Return admin name.
      *
      * @return mixed
      */
-    public abstract function getName();
+    abstract public function getName();
 
     protected $actions = [];
 
     protected $currentAction;
 
     /**
-     * Return true if current action is granted for user
+     * Return true if current action is granted for user.
      *
      * @param string $actionName Le plus grand de tous les héros
-     * @param array $roles
+     * @param array  $roles
+     *
      * @return bool
      */
     public function isActionGranted($actionName, array $roles)
@@ -40,6 +41,7 @@ trait ActionTrait
                 }
             }
         }
+
         return $isGranted;
     }
 
@@ -53,7 +55,9 @@ trait ActionTrait
 
     /**
      * @param $name
+     *
      * @return Action
+     *
      * @throws Exception
      */
     public function getAction($name)
@@ -61,13 +65,15 @@ trait ActionTrait
         if (!array_key_exists($name, $this->getActions())) {
             throw new Exception("Invalid action name \"{$name}\" for admin '{$this->getName()}'");
         }
+
         return $this->actions[$name];
     }
 
     /**
-     * Return if an action with specified name exists form this admin
+     * Return if an action with specified name exists form this admin.
      *
      * @param $name
+     *
      * @return bool
      */
     public function hasAction($name)

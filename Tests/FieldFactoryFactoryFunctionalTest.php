@@ -52,15 +52,14 @@ class FieldFactoryFactoryFunctionalTest extends Base
                 $this->assertEquals('StringTest0123456789', $field->render('StringTest0123456789'));
                 $this->assertEquals('StringTestVeryLongTextToSeeTruncationMarkupWi...', $field->render('StringTestVeryLongTextToSeeTruncationMarkupWithCharacters'));
             }
-        } else if ($configuration['type'] == 'array') {
+        } elseif ($configuration['type'] == 'array') {
             $this->assertEquals('test//other_test', $field->render(['test', 'other_test']));
             $this->assertExceptionRaised('Exception', function () use ($field) {
                 $field->render('test');
             });
-        } else if ($configuration['type'] == 'date') {
+        } elseif ($configuration['type'] == 'date') {
             $this->assertEquals(date('d/m/Y h:i:s'), $field->render(new DateTime()));
-        } else if ($configuration['type'] == 'link') {
-
+        } elseif ($configuration['type'] == 'link') {
             if (array_key_exists('url', $configuration['options'])) {
                 $url = $configuration['options']['url'];
             } else {
@@ -80,28 +79,28 @@ class FieldFactoryFactoryFunctionalTest extends Base
             'string_test' => [
                 'type' => 'string',
                 'options' => [
-                    'length' => 45
-                ]
+                    'length' => 45,
+                ],
             ],
             'array_test' => [
                 'type' => 'array',
                 'options' => [
-                    'glue' => '//'
-                ]
+                    'glue' => '//',
+                ],
             ],
             'date_test' => [
                 'type' => 'date',
                 'options' => [
-                    'format' => 'd/m/Y h:i:s'
-                ]
+                    'format' => 'd/m/Y h:i:s',
+                ],
             ],
             'link_test' => [
                 'type' => 'link',
                 'options' => [
                     'target' => '_blank',
-                    'url' => 'https://www.google.fr'
-                ]
-            ]
+                    'url' => 'https://www.google.fr',
+                ],
+            ],
 
         ];
     }

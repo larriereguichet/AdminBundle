@@ -38,8 +38,7 @@ class ActionFactory
         FieldFactory $fieldFactory,
         FilterFactory $filterFactory,
         ApplicationConfiguration $configuration
-    )
-    {
+    ) {
         $this->routingLoader = $routingLoader;
         $this->fieldFactory = $fieldFactory;
         $this->filterFactory = $filterFactory;
@@ -47,11 +46,12 @@ class ActionFactory
     }
 
     /**
-     * Create an Action from configuration values
+     * Create an Action from configuration values.
      *
      * @param string $actionName
-     * @param array $actionConfiguration
-     * @param Admin $admin
+     * @param array  $actionConfiguration
+     * @param Admin  $admin
+     *
      * @return Action
      */
     public function create($actionName, array $actionConfiguration, Admin $admin)
@@ -95,6 +95,7 @@ class ActionFactory
                 ->create($fieldName, $filterConfiguration);
             $action->addFilter($filter);
         }
+
         return $action;
     }
 
@@ -118,11 +119,12 @@ class ActionFactory
             $adminName = $admin ? $admin->getName() : null;
             $action->setTitle($this->configuration->getTranslationKey($action->getName(), $adminName));
         }
+
         return $action;
     }
 
     /**
-     * Return default actions configuration (list has exports, permissions are ROLE_ADMIN)
+     * Return default actions configuration (list has exports, permissions are ROLE_ADMIN).
      *
      * @return array
      */
@@ -131,7 +133,7 @@ class ActionFactory
         $configuration = [
             'title' => null,
             'fields' => [
-                'id' => []
+                'id' => [],
             ],
             'field_actions' => [],
             'submit_actions' => [],
@@ -143,8 +145,9 @@ class ActionFactory
             'route' => '',
             'parameters' => [],
             'icon' => null,
-            'filters' => []
+            'filters' => [],
         ];
+
         return $configuration;
     }
 }

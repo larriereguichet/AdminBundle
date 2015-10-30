@@ -37,12 +37,12 @@ class ActionFactoryFunctionalTest extends Base
     {
         return [
             'minimal_action' => [
-                'fields' => ['id' => []]
+                'fields' => ['id' => []],
             ],
             'other_action' => [
                 'title' => 'MyTitle',
                 'fields' => ['id' => [], 'label' => []],
-                'permissions' => ['MY_ROLE']
+                'permissions' => ['MY_ROLE'],
             ],
             'full_action' => [
                 'title' => 'MyTitle',
@@ -51,37 +51,37 @@ class ActionFactoryFunctionalTest extends Base
                     'label' => [
                         'type' => 'string',
                         'options' => [
-                            'length' => 50
-                        ]
+                            'length' => 50,
+                        ],
                     ],
                     'my_date' => [
                         'type' => 'date',
                         'options' => [
-                            'format' => 'd/m/Y'
-                        ]
-                    ]
+                            'format' => 'd/m/Y',
+                        ],
+                    ],
                 ],
                 'permissions' => ['MY_ROLE', 'AN_OTHER_ROLE'],
                 'export' => ['json', 'xml'],
                 'order' => [
-                    'test_order' => 'asc'
+                    'test_order' => 'asc',
                 ],
                 'actions' => [
-                    'test' => []
+                    'test' => [],
                 ],
                 'field_actions' => [
-                    'test' => []
+                    'test' => [],
                 ],
                 'target' => [
-                    '_blank'
+                    '_blank',
                 ],
                 'route' => 'my.route',
                 'parameters' => [
-                    'id' => []
+                    'id' => [],
                 ],
                 'icon' => 'an_icon',
-                'filters' => []
-            ]
+                'filters' => [],
+            ],
         ];
     }
 
@@ -94,7 +94,7 @@ class ActionFactoryFunctionalTest extends Base
             $this->assertEquals($configuration['title'], $action->getTitle());
         } else {
             // test default title
-            $this->assertEquals('lag.admin.' . $actionName, $action->getTitle());
+            $this->assertEquals('lag.admin.'.$actionName, $action->getTitle());
         }
         if (array_key_exists('fields', $configuration)) {
             // field creation will be tested more in FieldFactory test

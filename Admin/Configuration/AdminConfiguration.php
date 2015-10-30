@@ -27,7 +27,7 @@ class AdminConfiguration
         $resolver = new OptionsResolver();
         $resolver->setRequired([
             'entity',
-            'form'
+            'form',
         ]);
         $resolver->setDefaults([
             'controller' => 'LAGAdminBundle:Generic',
@@ -37,7 +37,7 @@ class AdminConfiguration
                 'list' => null,
                 'edit' => null,
                 'create' => null,
-                'delete' => null
+                'delete' => null,
             ],
             'max_per_page' => $configuration->getMaxPerPage(),
             'routing_url_pattern' => $configuration->getRoutingUrlPattern(),
@@ -49,7 +49,7 @@ class AdminConfiguration
         $this->controllerName = $adminConfiguration['controller'];
         $this->managerConfiguration = $adminConfiguration['manager'];
         $this->entityName = $adminConfiguration['entity'];
-        $this->formType = $adminConfiguration['form'];;
+        $this->formType = $adminConfiguration['form'];
         $this->actions = $adminConfiguration['actions'];
         $this->maxPerPage = $adminConfiguration['max_per_page'];
         $this->routingNamePattern = $adminConfiguration['routing_name_pattern'];

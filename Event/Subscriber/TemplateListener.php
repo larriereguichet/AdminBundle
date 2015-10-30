@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Event\Subscriber;
 
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
-use BlueBear\BaseBundle\Behavior\ContainerTrait;;
+use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -26,12 +26,13 @@ class TemplateListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => 'onKernelRequest'
+            KernelEvents::REQUEST => 'onKernelRequest',
         ];
     }
 
     /**
      * @param KernelEvent $event
+     *
      * @return array|null
      */
     public function onKernelRequest(KernelEvent $event)

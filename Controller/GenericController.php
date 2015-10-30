@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * Class GenericController
+ * Class GenericController.
  *
  * Generic CRUD controller
  */
@@ -33,10 +33,12 @@ class GenericController extends Controller
     protected $formType;
 
     /**
-     * Generic list action
+     * Generic list action.
      *
      * @Template("LAGAdminBundle:Generic:list.html.twig")
+     *
      * @param Request $request
+     *
      * @return array
      */
     public function listAction(Request $request)
@@ -50,17 +52,20 @@ class GenericController extends Controller
         if ($request->get('export', false)) {
             return $this->exportEntities($admin, $request->get('export'));
         }
+
         return [
             'admin' => $admin,
-            'action' => $admin->getCurrentAction()
+            'action' => $admin->getCurrentAction(),
         ];
     }
 
     /**
-     * Generic create action
+     * Generic create action.
      *
      * @Template("LAGAdminBundle:Generic:edit.html.twig")
+     *
      * @param Request $request
+     *
      * @return array
      */
     public function createAction(Request $request)
@@ -79,7 +84,7 @@ class GenericController extends Controller
             // save entity
             $admin->saveEntity();
             // inform user everything went fine
-            $this->setMessage('lag.admin.' . $admin->getName() . '.saved');
+            $this->setMessage('lag.admin.'.$admin->getName().'.saved');
 
             if ($request->request->get('submit') == 'save') {
                 // if save is pressed, user stay on the edit view
@@ -88,7 +93,7 @@ class GenericController extends Controller
                     ->generateRouteName('edit', $admin);
 
                 return $this->redirectToRoute($editRoute, [
-                    'id' => $admin->getEntity()->getId()
+                    'id' => $admin->getEntity()->getId(),
                 ]);
             } else {
                 $listRoute = $this
@@ -99,17 +104,20 @@ class GenericController extends Controller
                 return $this->redirect($this->generateUrl($listRoute));
             }
         }
+
         return [
             'admin' => $admin,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
     /**
-     * Generic edit action
+     * Generic edit action.
      *
      * @Template("LAGAdminBundle:Generic:edit.html.twig")
+     *
      * @param Request $request
+     *
      * @return array|RedirectResponse
      */
     public function editAction(Request $request)
@@ -131,7 +139,7 @@ class GenericController extends Controller
             $admin->saveEntity();
             // inform user everything went fine
             $this->setMessage('lag.admin.saved', 'info', [
-                '%entity%' => $admin->getEntityLabel()
+                '%entity%' => $admin->getEntityLabel(),
             ]);
             if ($request->request->get('submit') == 'save') {
                 $saveRoute = $this
@@ -140,7 +148,7 @@ class GenericController extends Controller
                     ->generateRouteName('edit', $admin);
 
                 return $this->redirectToRoute($saveRoute, [
-                    'id' => $accessor->getValue($admin->getEntity(), 'id')
+                    'id' => $accessor->getValue($admin->getEntity(), 'id'),
                 ]);
             } else {
                 $listRoute = $this
@@ -151,17 +159,20 @@ class GenericController extends Controller
                 return $this->redirectToRoute($listRoute);
             }
         }
+
         return [
             'admin' => $admin,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
     /**
-     * Generic delete action
+     * Generic delete action.
      *
      * @Template("LAGAdminBundle:Generic:delete.html.twig")
+     *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function deleteAction(Request $request)
@@ -181,27 +192,31 @@ class GenericController extends Controller
             $admin->deleteEntity();
             // inform user everything went fine
             $this->setMessage('lag.admin.deleted', 'info', [
-                '%entity%' => $admin->getEntityLabel()
+                '%entity%' => $admin->getEntityLabel(),
             ]);
             // redirect to list
             $listRoute = $this
                 ->container
                 ->get('lag.admin.routing')
                 ->generateRouteName('list', $admin);
+
             return $this->redirectToRoute($listRoute);
         }
+
         return [
             'admin' => $admin,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
     /**
-     * Export entities according to a type (json, csv, xls...)
+     * Export entities according to a type (json, csv, xls...).
      *
      * @param Admin $admin
      * @param $exportType
+     *
      * @return Response
+     *
      * @throws MappingException
      */
     protected function exportEntities(Admin $admin, $exportType)
@@ -222,12 +237,13 @@ class GenericController extends Controller
                 // if field is an array
                 if (is_array($fieldValue)) {
                     $value = $this->recursiveImplode(', ', $fieldValue);
-                } else if ($fieldValue instanceof DateTime) {
+                } elseif ($fieldValue instanceof DateTime) {
                     // format date in string
                     $value = $fieldValue->format('c');
                 } else {
                     $value = $fieldValue;
                 }
+
                 return $value;
             }, "{$fieldName}");
             // add field column to export
@@ -235,18 +251,19 @@ class GenericController extends Controller
         }
         $exporter
             ->setOptions($exportType, [
-                'fileName' => $admin->getName() . '-export-' . date('Y-m-d')
+                'fileName' => $admin->getName().'-export-'.date('Y-m-d'),
             ])
             ->setColumns($exportColumns)
             ->setData($admin->getEntities());
         foreach ($hooks as $hookName => $hook) {
             $exporter->addHook($hook, $hookName);
         }
+
         return $exporter->render();
     }
 
     /**
-     * Forward to 404 if user is not allowed by configuration for an action
+     * Forward to 404 if user is not allowed by configuration for an action.
      *
      * @param AdminInterface $admin
      */
@@ -262,10 +279,12 @@ class GenericController extends Controller
     }
 
     /**
-     * Return an Admin object according to the request route parameters
+     * Return an Admin object according to the request route parameters.
      *
      * @param Request $request
+     *
      * @return Admin
+     *
      * @throws Exception
      */
     protected function getAdminFromRequest(Request $request)
@@ -276,7 +295,7 @@ class GenericController extends Controller
     }
 
     /**
-     * Return admin routing loader
+     * Return admin routing loader.
      *
      * @return RoutingLoader
      */

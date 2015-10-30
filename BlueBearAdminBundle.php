@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class LAGAdminBundle extends Bundle
+class BlueBearAdminBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {
@@ -36,6 +36,7 @@ class LAGAdminBundle extends Bundle
         if ($this->extension) {
             return $this->extension;
         }
-        return null;
+
+        return;
     }
 }

@@ -25,11 +25,11 @@ class Base extends WebTestCase
     protected $client;
 
     /**
-     * Initialize an application with a container and a client. Create database if required
+     * Initialize an application with a container and a client. Create database if required.
      *
      * @param string $url
-     * @param null $method
-     * @param array $parameters
+     * @param null   $method
+     * @param array  $parameters
      */
     public function initApplication($url = '/', $method = null, $parameters = [])
     {
@@ -41,12 +41,12 @@ class Base extends WebTestCase
         // initialise database
         if (!self::$isDatabaseCreated) {
             // TODO remove database at the end of the tests
-            exec(__DIR__ . '/app/console doctrine:database:create --if-not-exists', $output);
-            exec(__DIR__ . '/app/console doctrine:schema:update --force', $output);
+            exec(__DIR__.'/app/console doctrine:database:create --if-not-exists', $output);
+            exec(__DIR__.'/app/console doctrine:schema:update --force', $output);
 
             foreach ($output as $line) {
                 // only in verbose mode
-                fwrite(STDOUT, $line . "\n");
+                fwrite(STDOUT, $line."\n");
             }
             fwrite(STDOUT, "\n");
             self::$isDatabaseCreated = true;
@@ -59,7 +59,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * Assert that an exception is raised in the given code
+     * Assert that an exception is raised in the given code.
      *
      * @param $exceptionClass
      * @param callable $closure
@@ -76,7 +76,7 @@ class Base extends WebTestCase
                 $isClassValid = true;
             }
         }
-        $this->assertTrue($isClassValid, 'Expected ' . $exceptionClass . ', got ' . get_class($e));
+        $this->assertTrue($isClassValid, 'Expected '.$exceptionClass.', got '.get_class($e));
     }
 
     public function logIn($login = 'admin', $roles = null)

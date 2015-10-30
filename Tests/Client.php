@@ -17,14 +17,16 @@ class Client extends BaseClient
     {
         $kernel = new AppKernel('test', true);
         $kernel->loadClassCache();
-        $client = new Client($kernel);
+        $client = new self($kernel);
 
         return $client;
     }
 
     /**
      * @see http://alexandre-salome.fr/blog/Symfony2-Isolation-Of-Tests
+     *
      * @param Request $request A Request instance
+     *
      * @return Response A Response instance
      */
     public function doRequest($request)

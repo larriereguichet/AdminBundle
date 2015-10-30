@@ -16,7 +16,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class AdminExtension
+ * Class AdminExtension.
  *
  * Admin utils functions for twig
  */
@@ -47,12 +47,13 @@ class AdminExtension extends Twig_Extension
     }
 
     /**
-     * Return sort column url, with existing request parameters, according to field name
+     * Return sort column url, with existing request parameters, according to field name.
      *
      * @param Request $request
      * @param $fieldName
+     *
      * @return string
-     * TODO rename function
+     *                TODO rename function
      */
     public function getSortColumnUrl(Request $request, $fieldName)
     {
@@ -68,6 +69,7 @@ class AdminExtension extends Twig_Extension
             // if no order was provided, it means that list is sorted by default order (ASC), so we must sort by DESC
             $queryString['order'] = 'DESC';
         }
+
         return $this
             ->router
             ->generate($request->get('_route'), $queryString);
@@ -81,18 +83,20 @@ class AdminExtension extends Twig_Extension
         if ($fieldName == $sort) {
             if ($order == 'ASC') {
                 $class = 'fa fa-sort-asc';
-            } else if ($order = 'DESC') {
+            } elseif ($order = 'DESC') {
                 $class = 'fa fa-sort-desc';
             }
         }
+
         return $class;
     }
 
     /**
-     * Render a field of an entity
+     * Render a field of an entity.
      *
      * @param FieldInterface $field
      * @param $entity
+     *
      * @return mixed
      */
     public function field(FieldInterface $field, $entity)
@@ -123,6 +127,7 @@ class AdminExtension extends Twig_Extension
         } else {
             $title = $this->camelize($fieldName);
         }
+
         return $title;
     }
 
@@ -137,13 +142,13 @@ class AdminExtension extends Twig_Extension
             }
             $routeParameters[$parameterName] = $accessor->getValue($entity, $fieldName);
         }
+
         return $routeParameters;
     }
 
     public function camelize($string)
     {
         $string = preg_replace('/(?<!\ )[A-Z]/', ' $0', $string);
-
 
         return ucwords($string);
     }
@@ -162,7 +167,7 @@ class AdminExtension extends Twig_Extension
     public function getFilters()
     {
         return [
-            new Twig_SimpleFilter('camelize', [$this, 'camelize'])
+            new Twig_SimpleFilter('camelize', [$this, 'camelize']),
         ];
     }
 

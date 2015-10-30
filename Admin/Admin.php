@@ -17,35 +17,35 @@ class Admin implements AdminInterface
     use StringUtilsTrait, ActionTrait;
 
     /**
-     * Admin name
+     * Admin name.
      *
      * @var string
      */
     protected $name;
 
     /**
-     * Full namespace for Admin entity
+     * Full namespace for Admin entity.
      *
      * @var string
      */
     protected $entityNamespace;
 
     /**
-     * Entities collection
+     * Entities collection.
      *
      * @var ArrayCollection
      */
     protected $entities;
 
     /**
-     * Entity
+     * Entity.
      *
      * @var Object
      */
     protected $entity;
 
     /**
-     * Entity manager (doctrine entity manager by default)
+     * Entity manager (doctrine entity manager by default).
      *
      * @var GenericManager
      */
@@ -57,28 +57,28 @@ class Admin implements AdminInterface
     protected $configuration;
 
     /**
-     * Actions called when using custom manager
+     * Actions called when using custom manager.
      *
      * @var array
      */
     protected $customManagerActions;
 
     /**
-     * Entity repository
+     * Entity repository.
      *
      * @var EntityRepository
      */
     protected $repository;
 
     /**
-     * Controller
+     * Controller.
      *
      * @var Controller
      */
     protected $controller;
 
     /**
-     * Form type
+     * Form type.
      *
      * @var string
      */
@@ -165,9 +165,10 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Return entity for current admin. If entity does not exist, it throws an exception
+     * Return entity for current admin. If entity does not exist, it throws an exception.
      *
      * @return mixed
+     *
      * @throws Exception
      */
     public function getEntity()
@@ -175,6 +176,7 @@ class Admin implements AdminInterface
         if (!$this->entity) {
             throw new Exception("Entity not found in admin \"{$this->getName()}\". Try call method findEntity or createEntity first.");
         }
+
         return $this->entity;
     }
 
@@ -184,13 +186,14 @@ class Admin implements AdminInterface
 
         if (method_exists($this->entity, 'getLabel')) {
             $label = $this->entity->getLabel();
-        } else if (method_exists($this->entity, 'getTitle')) {
+        } elseif (method_exists($this->entity, 'getTitle')) {
             $label = $this->entity->getTitle();
-        } else if (method_exists($this->entity, 'getName')) {
+        } elseif (method_exists($this->entity, 'getName')) {
             $label = $this->entity->getName();
-        } else if (method_exists($this->entity, '__toString')) {
+        } elseif (method_exists($this->entity, '__toString')) {
             $label = $this->entity->__toString();
         }
+
         return $label;
     }
 
@@ -200,29 +203,34 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Find a entity by one of its field
+     * Find a entity by one of its field.
      *
      * @param $field
      * @param $value
+     *
      * @return null|object
+     *
      * @throws Exception
      */
     public function findEntity($field, $value)
     {
         $this->entity = $this->getManager()->findOneBy([
-            $field => $value
+            $field => $value,
         ]);
         $this->checkEntity();
+
         return $this->entity;
     }
 
     /**
-     * Find entities paginated and sorted
+     * Find entities paginated and sorted.
      *
-     * @param int $page
-     * @param null $sort
+     * @param int    $page
+     * @param null   $sort
      * @param string $order
+     *
      * @return array|ArrayCollection|\Traversable
+     *
      * @throws Exception
      */
     public function findEntities($page = 1, $sort = null, $order = 'ASC')
@@ -244,7 +252,7 @@ class Admin implements AdminInterface
 
             foreach ($order as $orderConfiguration) {
                 $queryBuilder
-                    ->addOrderBy('entity.' . $orderConfiguration['field'], $orderConfiguration['order']);
+                    ->addOrderBy('entity.'.$orderConfiguration['field'], $orderConfiguration['order']);
             }
         }
         // create adapter from query builder

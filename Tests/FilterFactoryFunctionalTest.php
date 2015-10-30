@@ -22,7 +22,7 @@ class FilterFactoryFunctionalTest extends Base
     {
         return [
             'id' => [
-                'type' => 'select'
+                'type' => 'select',
             ],
         ];
     }
