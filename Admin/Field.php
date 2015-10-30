@@ -14,7 +14,7 @@ abstract class Field implements FieldInterface
     const TYPE_ACTION = 'action';
 
     /**
-     * Name of the field
+     * Name of the field.
      *
      * @var string
      */

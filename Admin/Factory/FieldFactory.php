@@ -10,7 +10,7 @@ use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Field factory. Instances fields with its renderer
+ * Field factory. Instances fields with its renderer.
  */
 class FieldFactory
 {
@@ -26,11 +26,13 @@ class FieldFactory
     }
 
     /**
-     * Create a new field with its renderer
+     * Create a new field with its renderer.
      *
      * @param $fieldName
      * @param array $configuration
+     *
      * @return Field
+     *
      * @throws Exception
      */
     public function create($fieldName, array $configuration)
@@ -38,7 +40,7 @@ class FieldFactory
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
             'type' => 'string',
-            'options' => []
+            'options' => [],
         ]);
         // set allowed fields type from tagged services
         $resolver->setAllowedValues('type', array_keys($this->fieldsMapping));
@@ -54,7 +56,7 @@ class FieldFactory
                 $items[] = $this->create($itemFieldName, $itemFieldConfiguration);
             }
             $configuration['options'] = [
-                'fields' => $items
+                'fields' => $items,
             ];
         }
         // get field service name
@@ -84,10 +86,11 @@ class FieldFactory
     }
 
     /**
-     * Add a service id to the allowed field mapping
+     * Add a service id to the allowed field mapping.
      *
      * @param $fieldType
      * @param $service
+     *
      * @throws Exception
      */
     public function addFieldMapping($fieldType, $service)

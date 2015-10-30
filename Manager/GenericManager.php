@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * GenericManager
+ * GenericManager.
  *
  * Use generic entity manager or provided custom entity manager methods
  */
@@ -18,7 +18,7 @@ class GenericManager
     protected $entityRepository;
 
     /**
-     * Doctrine entity manager
+     * Doctrine entity manager.
      *
      * @var EntityManager
      */
@@ -30,12 +30,12 @@ class GenericManager
     protected $methodsMapping;
 
     /**
-     * Initialize a generic manager with generic entity manager and optional custom manager
+     * Initialize a generic manager with generic entity manager and optional custom manager.
      *
      * @param EntityRepository $entityRepository
-     * @param EntityManager $entityManager
-     * @param null $customManager
-     * @param array $methodsMapping
+     * @param EntityManager    $entityManager
+     * @param null             $customManager
+     * @param array            $methodsMapping
      */
     public function __construct(EntityRepository $entityRepository, EntityManager $entityManager, $customManager = null, $methodsMapping = [])
     {
@@ -53,6 +53,7 @@ class GenericManager
         } else {
             $entity = $this->entityRepository->findOneBy($arguments);
         }
+
         return $entity;
     }
 
@@ -77,12 +78,13 @@ class GenericManager
 
     public function create($entityNamespace)
     {
-        $entity = new $entityNamespace;
+        $entity = new $entityNamespace();
 
         if ($this->methodMatch('create')) {
             $method = $this->methodsMapping['create'];
             $this->customManager->$method($entityNamespace);
         }
+
         return $entity;
     }
 
@@ -101,10 +103,11 @@ class GenericManager
     }
 
     /**
-     * Return query builder to find all entities, with optional order
+     * Return query builder to find all entities, with optional order.
      *
      * @param string $sort
      * @param string $order
+     *
      * @return QueryBuilder
      */
     public function getFindAllQueryBuilder($sort = null, $order = 'ASC')
@@ -120,17 +123,18 @@ class GenericManager
         if ($sort) {
             // check in metadata if sort column is a relation
             $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($this->entityRepository->getClassName());
-            $orderDql = 'entity.' . $sort;
+            $orderDql = 'entity.'.$sort;
 
             if (in_array($sort, $metadata->getAssociationNames())) {
                 $queryBuilder
                     ->addSelect($sort)
-                    ->join('entity.' . $sort, $sort);
+                    ->join('entity.'.$sort, $sort);
                 // sort by name by default
-                $orderDql = $sort . '.name';
+                $orderDql = $sort.'.name';
             }
             $queryBuilder->orderBy($orderDql, $order);
         }
+
         return $queryBuilder;
     }
 
@@ -139,6 +143,7 @@ class GenericManager
         $callback = function (QueryBuilder $queryBuilder) {
 
         };
+
         return $callback;
     }
 

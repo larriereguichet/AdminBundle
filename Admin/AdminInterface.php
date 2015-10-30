@@ -12,7 +12,7 @@ use Pagerfanta\Pagerfanta;
 interface AdminInterface
 {
     /**
-     * Return admin name
+     * Return admin name.
      *
      * @return string
      */
@@ -49,7 +49,7 @@ interface AdminInterface
     public function getController();
 
     /**
-     * Return entity for current admin. If entity does not exist, it throws an exception
+     * Return entity for current admin. If entity does not exist, it throws an exception.
      *
      * @return mixed
      */
@@ -60,22 +60,26 @@ interface AdminInterface
     public function setEntity($entity);
 
     /**
-     * Find a entity by one of its field
+     * Find a entity by one of its field.
      *
      * @param $field
      * @param $value
+     *
      * @return null|object
+     *
      * @throws Exception
      */
     public function findEntity($field, $value);
 
     /**
-     * Find entities paginated and sorted
+     * Find entities paginated and sorted.
      *
-     * @param int $page
-     * @param null $sort
+     * @param int    $page
+     * @param null   $sort
      * @param string $order
+     *
      * @return array|ArrayCollection|\Traversable
+     *
      * @throws Exception
      */
     public function findEntities($page = 1, $sort = null, $order = 'ASC');
@@ -104,17 +108,18 @@ interface AdminInterface
     public function getActions();
 
     /**
-     * Return current admin Action
+     * Return current admin Action.
      *
      * @return Action
      */
     public function getCurrentAction();
 
     /**
-     * Return true if current action is granted for user
+     * Return true if current action is granted for user.
      *
      * @param string $actionName
-     * @param array $roles
+     * @param array  $roles
+     *
      * @return bool
      */
     public function isActionGranted($actionName, array $roles);

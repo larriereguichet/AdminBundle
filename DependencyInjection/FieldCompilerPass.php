@@ -25,16 +25,16 @@ class FieldCompilerPass implements CompilerPassInterface
         // foreach tagged, with add this field type to the field factory
         foreach ($taggedServices as $id => $tags) {
             if (empty($tags[0]['type'])) {
-                throw new InvalidConfigurationException('You should defined a "type" attribute for field tag for service ' . $id);
+                throw new InvalidConfigurationException('You should defined a "type" attribute for field tag for service '.$id);
             }
             // add allowed field type to the field factory
             $definition->addMethodCall('addFieldMapping', [
-                $tags[0]['type'], $id
+                $tags[0]['type'], $id,
             ]);
             // add application configuration for field
             $tagDefinition = $container->findDefinition($id);
             $tagDefinition->addMethodCall('setConfiguration', [
-                new Reference('lag.admin.application')
+                new Reference('lag.admin.application'),
             ]);
         }
     }

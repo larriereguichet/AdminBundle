@@ -23,7 +23,7 @@ class GenericControllerTest extends Base
             '_route_params' => [
                 '_admin' => 'bad_admin',
                 '_action' => 'bad_route',
-            ]
+            ],
         ]);
         $this->assertExceptionRaised('Exception', function () use ($controller, $request) {
             $controller->listAction($request);
@@ -39,7 +39,7 @@ class GenericControllerTest extends Base
             [], [
                 'PHP_AUTH_USER' => 'admin',
                 'PHP_AUTH_PW' => 'admin',
-            ]
+            ],
         ]);
         //$response = $controller->listAction($request);
     }

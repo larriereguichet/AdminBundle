@@ -54,20 +54,20 @@ class AdminFactoryFunctionalTest extends Base
                 '_route_params' => [
                     '_admin' => 'invalid_test',
                     '_action' => 'list',
-                ]
+                ],
             ]);
             $adminFactory->getAdminFromRequest($request);
         });
         // test valid route
         $adminFactory->create('test', [
             'entity' => 'Test\TestBundle\Entity\TestEntity',
-            'form' => 'test'
+            'form' => 'test',
         ]);
         $request = Request::create('/admin/test/list', 'GET', [
             '_route_params' => [
                 '_admin' => 'test',
                 '_action' => 'list',
-            ]
+            ],
         ]);
         $admin = $adminFactory->getAdminFromRequest($request);
         // test fake admin name
@@ -126,8 +126,8 @@ class AdminFactoryFunctionalTest extends Base
                     'custom_list' => [],
                     'custom_edit' => [],
                 ],
-                'manager' => 'MyManager'
-            ]
+                'manager' => 'MyManager',
+            ],
         ];
     }
 }

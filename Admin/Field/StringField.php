@@ -7,7 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * String field
+ * String field.
  *
  * It render a string that can be truncated according to is length
  * Note : according php7 (nightly), class can not be named String anymore
@@ -15,21 +15,21 @@ use Symfony\Component\Translation\TranslatorInterface;
 class StringField extends Field
 {
     /**
-     * Length before truncate the string. If null, no truncation will be made
+     * Length before truncate the string. If null, no truncation will be made.
      *
      * @var int
      */
     protected $length;
 
     /**
-     * String use for replace truncated part
+     * String use for replace truncated part.
      *
      * @var string
      */
     protected $replace;
 
     /**
-     * True if value should be translated at render
+     * True if value should be translated at render.
      *
      * @var bool
      */
@@ -41,19 +41,21 @@ class StringField extends Field
     protected $translator;
 
     /**
-     * Render a string that can be truncated according to is length
+     * Render a string that can be truncated according to is length.
      *
      * @param $value
+     *
      * @return string
      */
     public function render($value)
     {
         if ($this->length && strlen($value) > $this->length) {
-            $value = substr($value, 0, $this->length) . $this->replace;
+            $value = substr($value, 0, $this->length).$this->replace;
         }
         if ($this->translation) {
             $value = $this->translator->trans($value);
         }
+
         return $value;
     }
 
@@ -62,13 +64,13 @@ class StringField extends Field
         $resolver->setDefaults([
             'length' => $this->configuration->getStringLength(),
             'replace' => $this->configuration->getStringLengthTruncate(),
-            'translation' => true
+            'translation' => true,
         ]);
     }
 
     public function setOptions(array $options)
     {
-        $this->length = (int)$options['length'];
+        $this->length = (int) $options['length'];
         $this->replace = $options['replace'];
         $this->translation = $options['translation'];
     }

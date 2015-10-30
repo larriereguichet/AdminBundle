@@ -7,7 +7,7 @@ class AppKernel extends Kernel
 {
     public function registerBundles()
     {
-      return array(
+        return array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
@@ -34,6 +34,7 @@ class AppKernel extends Kernel
         if (!is_dir($cacheDir)) {
             mkdir($cacheDir, 0777, true);
         }
+
         return $cacheDir;
     }
 
@@ -47,6 +48,7 @@ class AppKernel extends Kernel
         if (!is_dir($logDir)) {
             mkdir($logDir, 0777, true);
         }
+
         return $logDir;
     }
 }

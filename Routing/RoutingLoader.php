@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * RoutingLoader
+ * RoutingLoader.
  *
  * Creates routing for configured entities
  */
@@ -62,18 +62,20 @@ class RoutingLoader implements LoaderInterface
     }
 
     /**
-     * Generate a route for admin and action name
+     * Generate a route for admin and action name.
      *
      * @param $actionName
      * @param AdminInterface $admin
+     *
      * @return string
+     *
      * @throws Exception
      */
     public function generateRouteName($actionName, AdminInterface $admin)
     {
         if (!array_key_exists($actionName, $admin->getConfiguration()->getActions())) {
             throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$admin->getName()}\" (available action are: \""
-                . implode('", "', array_keys($admin->getConfiguration()->getActions())) . "\")");
+                .implode('", "', array_keys($admin->getConfiguration()->getActions())).'")');
         }
         // get routing name pattern
         $routingPattern = $admin->getConfiguration()->getRoutingNamePattern();
@@ -85,11 +87,12 @@ class RoutingLoader implements LoaderInterface
     }
 
     /**
-     * Add a Route to the RouteCollection according to an Admin an an Action
+     * Add a Route to the RouteCollection according to an Admin an an Action.
      *
-     * @param AdminInterface $admin
-     * @param Action $action
+     * @param AdminInterface  $admin
+     * @param Action          $action
      * @param RouteCollection $routeCollection
+     *
      * @throws Exception
      */
     protected function loadRouteForAction(AdminInterface $admin, Action $action, RouteCollection $routeCollection)
@@ -104,9 +107,9 @@ class RoutingLoader implements LoaderInterface
         $path = str_replace('{action}', $action->getName(), $path);
         // by default, generic controller
         $defaults = [
-            '_controller' => $admin->getController() . ':' . $action->getName(),
+            '_controller' => $admin->getController().':'.$action->getName(),
             '_admin' => $admin->getName(),
-            '_action' => $action->getName()
+            '_action' => $action->getName(),
         ];
         // by default, no requirements
         $requirements = [];
@@ -114,7 +117,7 @@ class RoutingLoader implements LoaderInterface
         if (in_array($action->getName(), ['delete', 'edit'])) {
             $path .= '/{id}';
             $requirements = [
-                'id' => '\d+'
+                'id' => '\d+',
             ];
         }
         // creating new route
@@ -127,16 +130,17 @@ class RoutingLoader implements LoaderInterface
     }
 
     /**
-     * Return entity path for routing (for example, MyNamespace\EntityName => entityName)
+     * Return entity path for routing (for example, MyNamespace\EntityName => entityName).
      *
      * @param $namespace
+     *
      * @return string
      */
     protected function getEntityPath($namespace)
     {
         $array = explode('\\', $namespace);
         $path = array_pop($array);
-        $path = strtolower(substr($path, 0, 1)) . substr($path, 1);
+        $path = strtolower(substr($path, 0, 1)).substr($path, 1);
 
         return $path;
     }

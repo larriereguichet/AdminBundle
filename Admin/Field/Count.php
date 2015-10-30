@@ -6,12 +6,12 @@ use LAG\AdminBundle\Admin\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Count field
+ * Count field.
  */
 class Count extends Field
 {
     /**
-     * String displayed if rendered value is empty (or null or 0)
+     * String displayed if rendered value is empty (or null or 0).
      *
      * @var string
      */
@@ -26,13 +26,14 @@ class Count extends Field
         } else {
             $render = $this->emptyString;
         }
+
         return $render;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'empty_string' => null
+            'empty_string' => null,
         ]);
     }
 
