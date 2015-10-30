@@ -2,20 +2,19 @@
 
 namespace LAG\AdminBundle\Admin;
 
-
 class Filter
 {
     const TYPE_SELECT = 'select';
 
     /**
-     * Field name
+     * Field name.
      *
      * @var string
      */
     protected $fieldName;
 
     /**
-     * Filter type (select, text...)
+     * Filter type (select, text...).
      *
      * @var
      */

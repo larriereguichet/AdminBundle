@@ -2,8 +2,6 @@
 
 namespace LAG\AdminBundle\Admin\Field;
 
-use LAG\AdminBundle\Admin\Field;
-
 class Action extends Link
 {
     public function render($value)

@@ -7,21 +7,22 @@ use DateTime;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Date field
+ * Date field.
  */
 class Date extends Field
 {
     /**
-     * Date format
+     * Date format.
      *
      * @var string
      */
     protected $format;
 
     /**
-     * Render and format a Datetime
+     * Render and format a Datetime.
      *
      * @param $value
+     *
      * @return string
      */
     public function render($value)
@@ -29,13 +30,14 @@ class Date extends Field
         if ($value instanceof DateTime) {
             $value = $value->format($this->format);
         }
+
         return $value;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'format' => $this->configuration->getDateFormat()
+            'format' => $this->configuration->getDateFormat(),
         ]);
     }
 

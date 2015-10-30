@@ -39,8 +39,9 @@ class Collection extends Field implements EntityFieldInterface
             if ($field instanceof EntityFieldInterface) {
                 $field->setEntity($this->entity);
             }
-            $render .= $field->render($value) . '<br/>';
+            $render .= $field->render($value).'<br/>';
         }
+
         return $render;
     }
 
@@ -52,9 +53,10 @@ class Collection extends Field implements EntityFieldInterface
     }
 
     /**
-     * Set options values after options resolving
+     * Set options values after options resolving.
      *
      * @param array $options
+     *
      * @return mixed
      */
     public function setOptions(array $options)

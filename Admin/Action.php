@@ -7,91 +7,91 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 class Action
 {
     /**
-     * Action name
+     * Action name.
      *
      * @var string
      */
     protected $name;
 
     /**
-     * Action title
+     * Action title.
      *
      * @var string
      */
     protected $title;
 
     /**
-     * Fields displayed for this action
+     * Fields displayed for this action.
      *
      * @var Field[]
      */
     protected $fields = [];
 
     /**
-     * Action displayed among the fields
+     * Action displayed among the fields.
      *
      * @var Action[]
      */
     protected $fieldActions = [];
 
     /**
-     * Action permissions
+     * Action permissions.
      *
      * @var string[]
      */
     protected $permissions = [];
 
     /**
-     * Action route
+     * Action route.
      *
      * @var string
      */
     protected $route;
 
     /**
-     * Action route parameters
+     * Action route parameters.
      *
      * @var array
      */
     protected $parameters = [];
 
     /**
-     * Configured linked actions to display in this view
+     * Configured linked actions to display in this view.
      *
      * @var array
      */
     protected $actions = [];
 
     /**
-     * Actions displayed at the bottom of the view
+     * Actions displayed at the bottom of the view.
      *
      * @var array
      */
     protected $submitActions = [];
 
     /**
-     * Export types
+     * Export types.
      *
      * @var array
      */
     protected $export = [];
 
     /**
-     * Array of properties to order by
+     * Array of properties to order by.
      *
      * @var array
      */
     protected $order = [];
 
     /**
-     * Icon class
+     * Icon class.
      *
      * @var string
      */
     protected $icon;
 
     /**
-     * Action target (_blank or _self)
+     * Action target (_blank or _self).
      *
      * @var
      */
@@ -101,8 +101,6 @@ class Action
     protected $isParametersBuild = false;
 
     /**
-     *
-     *
      * @var array
      */
     protected $filters = [];
@@ -148,9 +146,10 @@ class Action
     }
 
     /**
-     * Return true if action has a field named $fieldName
+     * Return true if action has a field named $fieldName.
      *
      * @param $fieldName
+     *
      * @return bool
      */
     public function hasField($fieldName)

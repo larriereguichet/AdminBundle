@@ -10,84 +10,84 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ApplicationConfiguration
 {
     /**
-     * Application title
+     * Application title.
      *
      * @var string
      */
     protected $title;
 
     /**
-     * Application description
+     * Application description.
      *
      * @var string
      */
     protected $description;
 
     /**
-     * Application locale
+     * Application locale.
      *
      * @var string
      */
     protected $locale;
 
     /**
-     * Admin main twig layout
+     * Admin main twig layout.
      *
      * @var string
      */
     protected $layout;
 
     /**
-     * Twig template use for rendering block in forms
+     * Twig template use for rendering block in forms.
      *
      * @var string
      */
     protected $blockTemplate;
 
     /**
-     * Use bootstrap integration
+     * Use bootstrap integration.
      *
      * @var bool
      */
     protected $bootstrap = false;
 
     /**
-     * Application main date format
+     * Application main date format.
      *
      * @var string
      */
     protected $dateFormat;
 
     /**
-     * String length before truncate it (if null, no truncation)
+     * String length before truncate it (if null, no truncation).
      *
      * @var int
      */
     protected $stringLength;
 
     /**
-     * Replace string in truncation
+     * Replace string in truncation.
      *
      * @var int
      */
     protected $stringLengthTruncate;
 
     /**
-     * Url routing pattern
+     * Url routing pattern.
      *
      * @var string
      */
     protected $routingUrlPattern;
 
     /**
-     * Generated route name pattern
+     * Generated route name pattern.
      *
      * @var string
      */
     protected $routingNamePattern;
 
     /**
-     * Default number of displayed records in list
+     * Default number of displayed records in list.
      *
      * @var int
      */
@@ -99,7 +99,7 @@ class ApplicationConfiguration
     protected $useTranslation = true;
 
     /**
-     * Pattern use for translation key (ie: lag.admin.{key}, admin will
+     * Pattern use for translation key (ie: lag.admin.{key}, admin will.
      *
      * @var string
      */
@@ -120,7 +120,7 @@ class ApplicationConfiguration
             'string_length_truncate' => '...',
             'routing' => [
                 'url_pattern' => '/{admin}/{action}',
-                'name_pattern' => 'lag.admin.{admin}'
+                'name_pattern' => 'lag.admin.{admin}',
             ],
             'translation' => [
                 'enabled' => true,
@@ -134,7 +134,7 @@ class ApplicationConfiguration
                 Field::TYPE_DATE => 'LAG\AdminBundle\Admin\Render\DateRenderer',
                 Field::TYPE_COUNT => 'LAG\AdminBundle\Admin\Render\CountRenderer',
                 Field::TYPE_ACTION => 'LAG\AdminBundle\Admin\Render\LinkRenderer',
-            ]
+            ],
         ]);
         $applicationConfiguration = $resolver->resolve($applicationConfiguration);
         // resolving routing options
@@ -151,12 +151,14 @@ class ApplicationConfiguration
             if (strstr($value, '{action}') === false) {
                 throw new InvalidOptionsException('Admin routing configuration url pattern should contains {action} placeholder');
             }
+
             return $value;
         });
         $resolver->setNormalizer('name_pattern', function (Options $options, $value) {
             if (strstr($value, '{admin}') === false) {
                 throw new InvalidOptionsException('Admin routing configuration pattern name should contains {admin} placeholder');
             }
+
             return $value;
         });
         $routingConfiguration = $resolver->resolve($routingConfiguration);
@@ -174,6 +176,7 @@ class ApplicationConfiguration
             if (strstr($value, 'key') === false) {
                 throw new InvalidOptionsException('Admin translation configuration pattern should contains {key} placeholder');
             }
+
             return $value;
         });
         $translationConfiguration = $resolver->resolve($translationConfiguration);
@@ -260,7 +263,7 @@ class ApplicationConfiguration
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function useBootstrap()
     {
@@ -268,7 +271,7 @@ class ApplicationConfiguration
     }
 
     /**
-     * @param boolean $bootstrap
+     * @param bool $bootstrap
      */
     public function setBootstrap($bootstrap)
     {
@@ -383,7 +386,7 @@ class ApplicationConfiguration
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isBootstrap()
     {
@@ -433,7 +436,7 @@ class ApplicationConfiguration
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function useTranslation()
     {
@@ -441,7 +444,7 @@ class ApplicationConfiguration
     }
 
     /**
-     * @param boolean $useTranslation
+     * @param bool $useTranslation
      */
     public function setUseTranslation($useTranslation)
     {

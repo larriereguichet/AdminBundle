@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Admin\Field;
 
-
 class Boolean extends StringField
 {
     public function render($value)

@@ -8,7 +8,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
@@ -143,7 +143,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('menus')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('template')->defaultValue('LAGAdminBundle:Menu:main_menu.html.twig') ->end()
+                            ->scalarNode('template')->defaultValue('LAGAdminBundle:Menu:main_menu.html.twig')->end()
                             ->arrayNode('main_item')
                                 ->children()
                                     ->scalarNode('route')->end()
@@ -169,7 +169,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ->end();
-
 
         return $treeBuilder;
     }

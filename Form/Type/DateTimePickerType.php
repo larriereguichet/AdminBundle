@@ -17,7 +17,7 @@ class DateTimePickerType extends AbstractType
     {
         $resolver->setDefaults([
             'attr' => [
-                'class' => 'datepicker'
+                'class' => 'datepicker',
             ],
             'widget' => 'single_text',
             'format' => $this->configuration->getDateFormat(),

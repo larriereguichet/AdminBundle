@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * AdminFactory
+ * AdminFactory.
  *
  * Create admin from configuration
  */
@@ -36,7 +36,7 @@ class AdminFactory
     protected $applicationConfiguration;
 
     /**
-     * Read configuration from container, then create admin with its actions and fields
+     * Read configuration from container, then create admin with its actions and fields.
      *
      * @param ContainerInterface $container
      */
@@ -59,10 +59,12 @@ class AdminFactory
     }
 
     /**
-     * Return a loaded admin from a Symfony request
+     * Return a loaded admin from a Symfony request.
      *
      * @param Request $request
+     *
      * @return AdminInterface
+     *
      * @throws Exception
      */
     public function getAdminFromRequest(Request $request)
@@ -86,32 +88,36 @@ class AdminFactory
         if ($action->getName() == 'list') {
             $entities = $admin->getManager()->findAll();
             $admin->setEntities($entities);
-        } else if ($action->getName() == 'edit') {
+        } elseif ($action->getName() == 'edit') {
             $entity = $admin->getManager()->findOneBy([
-                'id' => $request->get('id')
+                'id' => $request->get('id'),
             ]);
             $admin->setEntity($entity);
         }
+
         return $admin;
     }
 
     /**
-     * Return a admin by its name
+     * Return a admin by its name.
      *
      * @param $name
+     *
      * @return Admin
+     *
      * @throws Exception
      */
     public function getAdmin($name)
     {
         if (!array_key_exists($name, $this->admins)) {
-            throw new Exception(sprintf('Admin with name "%s" not found. Check your admin configuration', $name ));
+            throw new Exception(sprintf('Admin with name "%s" not found. Check your admin configuration', $name));
         }
+
         return $this->admins[$name];
     }
 
     /**
-     * Return all admins
+     * Return all admins.
      *
      * @return Admin[]
      */
@@ -121,7 +127,7 @@ class AdminFactory
     }
 
     /**
-     * Create an Admin from configuration values. It will be added to AdminFactory admin's list
+     * Create an Admin from configuration values. It will be added to AdminFactory admin's list.
      *
      * @param $adminName
      * @param array $adminConfiguration
@@ -142,7 +148,7 @@ class AdminFactory
                 'list' => [],
                 'create' => [],
                 'edit' => [],
-                'delete' => []
+                'delete' => [],
             ],
             'manager' => null,
             'routing_url_pattern' => $application->getRoutingUrlPattern(),
@@ -151,12 +157,12 @@ class AdminFactory
             'max_per_page' => $this
                 ->container
                 ->get('lag.admin.application')
-                ->getMaxPerPage()
+                ->getMaxPerPage(),
         ]);
         // required options
         $resolver->setRequired([
             'entity',
-            'form'
+            'form',
         ]);
         $adminConfiguration = $resolver->resolve($adminConfiguration);
         $adminConfig = new AdminConfiguration($adminConfiguration, $application);
@@ -173,7 +179,7 @@ class AdminFactory
                 'list' => [],
                 'create' => [],
                 'edit' => [],
-                'delete' => []
+                'delete' => [],
             ]);
         }
         // TODO adding translation pattern for Admin
@@ -198,10 +204,11 @@ class AdminFactory
     }
 
     /**
-     * Create a generic manager from configuration
+     * Create a generic manager from configuration.
      *
      * @param $adminConfig
      * @param EntityRepository $entityRepository
+     *
      * @return GenericManager
      */
     protected function createManagerFromConfig(AdminConfiguration $adminConfig, EntityRepository $entityRepository)
@@ -238,8 +245,7 @@ class AdminFactory
             $customManager,
             $methodsMapping
         );
+
         return $manager;
     }
-
-
 }
