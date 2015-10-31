@@ -2,15 +2,13 @@
 
 namespace LAG\AdminBundle\Admin\Configuration;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 class AdminConfiguration
 {
     protected $controllerName;
 
     protected $entityName;
 
-    protected $managerConfiguration;
+    protected $manager;
 
     protected $formType;
 
@@ -22,32 +20,11 @@ class AdminConfiguration
 
     protected $routingUrlPattern;
 
-    public function __construct(array $adminConfiguration, ApplicationConfiguration $configuration)
+    public function __construct(array $adminConfiguration)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired([
-            'entity',
-            'form',
-        ]);
-        $resolver->setDefaults([
-            'controller' => 'LAGAdminBundle:Generic',
-            'manager' => [],
-            'form' => 'generic',
-            'actions' => [
-                'list' => null,
-                'edit' => null,
-                'create' => null,
-                'delete' => null,
-            ],
-            'max_per_page' => $configuration->getMaxPerPage(),
-            'routing_url_pattern' => $configuration->getRoutingUrlPattern(),
-            'routing_name_pattern' => $configuration->getRoutingNamePattern(),
-        ]);
-        // resolve configuration
-        $adminConfiguration = $resolver->resolve($adminConfiguration);
         // defines values
         $this->controllerName = $adminConfiguration['controller'];
-        $this->managerConfiguration = $adminConfiguration['manager'];
+        $this->manager = $adminConfiguration['manager'];
         $this->entityName = $adminConfiguration['entity'];
         $this->formType = $adminConfiguration['form'];
         $this->actions = $adminConfiguration['actions'];
@@ -91,17 +68,17 @@ class AdminConfiguration
     /**
      * @return mixed
      */
-    public function getManagerConfiguration()
+    public function getManager()
     {
-        return $this->managerConfiguration;
+        return $this->manager;
     }
 
     /**
-     * @param mixed $managerConfiguration
+     * @param string $manager
      */
-    public function setManagerConfiguration($managerConfiguration)
+    public function setManager($manager)
     {
-        $this->managerConfiguration = $managerConfiguration;
+        $this->manager = $manager;
     }
 
     /**
