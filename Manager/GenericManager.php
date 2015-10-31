@@ -2,19 +2,22 @@
 
 namespace LAG\AdminBundle\Manager;
 
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use LAG\AdminBundle\Admin\ManagerInterface;
 
 /**
  * GenericManager.
  *
  * Use generic entity manager or provided custom entity manager methods
  */
-class GenericManager
+class GenericManager implements ManagerInterface
 {
-    protected $customManager;
-
+    /**
+     * @var ObjectRepository|EntityRepository
+     */
     protected $entityRepository;
 
     /**
@@ -24,81 +27,53 @@ class GenericManager
      */
     protected $entityManager;
 
-    /**
-     * @var array
-     */
-    protected $methodsMapping;
-
-    /**
-     * Initialize a generic manager with generic entity manager and optional custom manager.
-     *
-     * @param EntityRepository $entityRepository
-     * @param EntityManager    $entityManager
-     * @param null             $customManager
-     * @param array            $methodsMapping
-     */
-    public function __construct(EntityRepository $entityRepository, EntityManager $entityManager, $customManager = null, $methodsMapping = [])
+    public function __construct(EntityManager $manager, ObjectRepository $repository)
     {
-        $this->entityRepository = $entityRepository;
-        $this->customManager = $customManager;
-        $this->entityManager = $entityManager;
-        $this->methodsMapping = $methodsMapping;
+        $this->entityManager = $manager;
+        $this->entityRepository = $repository;
     }
 
-    public function findOneBy($arguments = [])
+    public function findOneBy(array $criteria)
     {
-        if ($this->methodMatch('findOneBy')) {
-            $method = $this->methodsMapping['findOneBy'];
-            $entity = $this->customManager->$method($arguments);
-        } else {
-            $entity = $this->entityRepository->findOneBy($arguments);
-        }
+        $entity = $this
+            ->entityRepository
+            ->findOneBy($criteria);
 
         return $entity;
     }
 
     public function findAll()
     {
-        return [];
+        $entities = $this
+            ->entityRepository
+            ->findAll();
+
+        return $entities;
     }
 
     public function save($entity, $flush = true)
     {
-        if ($this->methodMatch('save')) {
-            $method = $this->methodsMapping['save'];
-            $this->customManager->$method($entity, $flush);
-        } else {
-            $this->entityManager->persist($entity);
+        $this->entityManager->persist($entity);
 
-            if ($flush) {
-                $this->entityManager->flush($entity);
-            }
+        if ($flush) {
+            $this->entityManager->flush($entity);
         }
     }
 
-    public function create($entityNamespace)
+    public function create()
     {
-        $entity = new $entityNamespace();
-
-        if ($this->methodMatch('create')) {
-            $method = $this->methodsMapping['create'];
-            $this->customManager->$method($entityNamespace);
-        }
+        $className = $this->getClassName();
+        $entity = new $className();
 
         return $entity;
     }
 
     public function delete($entity, $flush = true)
     {
-        if ($this->methodMatch('delete')) {
-            $method = $this->methodsMapping['delete'];
-            $this->customManager->$method($entity);
-        } else {
-            $this->entityManager->remove($entity);
+        $this->entityManager->remove($entity);
 
-            if ($flush) {
-                $this->entityManager->flush($entity);
-            }
+        if ($flush) {
+            $this->entityManager->flush($entity);
         }
     }
 
@@ -123,14 +98,14 @@ class GenericManager
         if ($sort) {
             // check in metadata if sort column is a relation
             $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($this->entityRepository->getClassName());
-            $orderDql = 'entity.'.$sort;
+            $orderDql = 'entity.' . $sort;
 
             if (in_array($sort, $metadata->getAssociationNames())) {
                 $queryBuilder
                     ->addSelect($sort)
-                    ->join('entity.'.$sort, $sort);
+                    ->join('entity.' . $sort, $sort);
                 // sort by name by default
-                $orderDql = $sort.'.name';
+                $orderDql = $sort . '.name';
             }
             $queryBuilder->orderBy($orderDql, $order);
         }
@@ -138,17 +113,48 @@ class GenericManager
         return $queryBuilder;
     }
 
-    public function getCountQueryBuilderCallback()
+    /**
+     * Finds an object by its primary key / identifier.
+     *
+     * @param mixed $id The identifier.
+     *
+     * @return object The object.
+     */
+    public function find($id)
     {
-        $callback = function (QueryBuilder $queryBuilder) {
-
-        };
-
-        return $callback;
+        // TODO: Implement find() method.
     }
 
-    protected function methodMatch($method)
+    /**
+     * Finds objects by a set of criteria.
+     *
+     * Optionally sorting and limiting details can be passed. An implementation may throw
+     * an UnexpectedValueException if certain values of the sorting or limiting details are
+     * not supported.
+     *
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return array The objects.
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        return array_key_exists($method, $this->methodsMapping);
+        // TODO: Implement findBy() method.
+    }
+
+    /**
+     * Returns the class name of the object managed by the manager.
+     *
+     * @return string
+     */
+    public function getClassName()
+    {
+        return $this
+            ->entityRepository
+            ->getClassName();
     }
 }

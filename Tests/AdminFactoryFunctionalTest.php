@@ -126,7 +126,7 @@ class AdminFactoryFunctionalTest extends Base
                     'custom_list' => [],
                     'custom_edit' => [],
                 ],
-                'manager' => 'MyManager',
+                'manager' => 'Test\TestBundle\Manager\TestManager'
             ],
         ];
     }
