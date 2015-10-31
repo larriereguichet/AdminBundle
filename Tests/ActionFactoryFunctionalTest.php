@@ -17,6 +17,8 @@ class ActionFactoryFunctionalTest extends Base
             ->get('lag.admin.action_factory');
         $actionsConfiguration = $this->getFakeActionConfiguration();
         $adminConfiguration = new AdminConfiguration([
+            'controller' => 'LAGAdminBundle:Generic',
+            'manager' => 'LAG\AdminBundle\Manager\GenericManager',
             'entity' => 'Test',
             'form' => 'test',
             'actions' => [
@@ -24,6 +26,9 @@ class ActionFactoryFunctionalTest extends Base
                 'other_action' => [],
                 'full_action' => [],
             ],
+            'max_per_page' => 50,
+            'routing_url_pattern' => 'lag.admin.{admin}',
+            'routing_name_pattern' => 'lag.{admin}.{action}'
         ], new ApplicationConfiguration([], 'en'));
         $fakeAdmin = new Admin('action_test', null, null, $adminConfiguration);
 

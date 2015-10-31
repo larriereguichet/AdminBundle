@@ -2,19 +2,22 @@
 
 namespace LAG\AdminBundle\Manager;
 
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use LAG\AdminBundle\Admin\ManagerInterface;
 
 /**
  * GenericManager.
  *
  * Use generic entity manager or provided custom entity manager methods
  */
-class GenericManager
+class GenericManager implements ManagerInterface
 {
-    protected $customManager;
-
+    /**
+     * @var ObjectRepository|EntityRepository
+     */
     protected $entityRepository;
 
     /**
@@ -24,81 +27,36 @@ class GenericManager
      */
     protected $entityManager;
 
-    /**
-     * @var array
-     */
-    protected $methodsMapping;
-
-    /**
-     * Initialize a generic manager with generic entity manager and optional custom manager.
-     *
-     * @param EntityRepository $entityRepository
-     * @param EntityManager    $entityManager
-     * @param null             $customManager
-     * @param array            $methodsMapping
-     */
-    public function __construct(EntityRepository $entityRepository, EntityManager $entityManager, $customManager = null, $methodsMapping = [])
+    public function __construct(EntityManager $manager, ObjectRepository $repository)
     {
-        $this->entityRepository = $entityRepository;
-        $this->customManager = $customManager;
-        $this->entityManager = $entityManager;
-        $this->methodsMapping = $methodsMapping;
-    }
-
-    public function findOneBy($arguments = [])
-    {
-        if ($this->methodMatch('findOneBy')) {
-            $method = $this->methodsMapping['findOneBy'];
-            $entity = $this->customManager->$method($arguments);
-        } else {
-            $entity = $this->entityRepository->findOneBy($arguments);
-        }
-
-        return $entity;
-    }
-
-    public function findAll()
-    {
-        return [];
+        $this->entityManager = $manager;
+        $this->entityRepository = $repository;
     }
 
     public function save($entity, $flush = true)
     {
-        if ($this->methodMatch('save')) {
-            $method = $this->methodsMapping['save'];
-            $this->customManager->$method($entity, $flush);
-        } else {
-            $this->entityManager->persist($entity);
+        $this->entityManager->persist($entity);
 
-            if ($flush) {
-                $this->entityManager->flush($entity);
-            }
+        if ($flush) {
+            $this->entityManager->flush($entity);
         }
     }
 
-    public function create($entityNamespace)
+    public function create()
     {
-        $entity = new $entityNamespace();
-
-        if ($this->methodMatch('create')) {
-            $method = $this->methodsMapping['create'];
-            $this->customManager->$method($entityNamespace);
-        }
+        $className = $this->getClassName();
+        $entity = new $className();
 
         return $entity;
     }
 
     public function delete($entity, $flush = true)
     {
-        if ($this->methodMatch('delete')) {
-            $method = $this->methodsMapping['delete'];
-            $this->customManager->$method($entity);
-        } else {
-            $this->entityManager->remove($entity);
+        // TODO surround with try/catch
+        $this->entityManager->remove($entity);
 
-            if ($flush) {
-                $this->entityManager->flush($entity);
-            }
+        if ($flush) {
+            $this->entityManager->flush($entity);
         }
     }
 
@@ -114,7 +72,7 @@ class GenericManager
     {
         $queryBuilder = $this
             ->entityRepository
-            ->createQueryBuilder('entity');
+            ->createQueryBuilder('entity', 'entity.id');
         // @TODO sort seems to not working with entity from FOSUser. It's maybe a bug in Doctrine or FOSUserBundle
         if (in_array('FOS\UserBundle\Model\UserInterface', class_implements($this->entityRepository->getClassName()))) {
             return $queryBuilder;
@@ -123,14 +81,14 @@ class GenericManager
         if ($sort) {
             // check in metadata if sort column is a relation
             $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($this->entityRepository->getClassName());
-            $orderDql = 'entity.'.$sort;
+            $orderDql = 'entity.' . $sort;
 
             if (in_array($sort, $metadata->getAssociationNames())) {
                 $queryBuilder
                     ->addSelect($sort)
-                    ->join('entity.'.$sort, $sort);
+                    ->join('entity.' . $sort, $sort);
                 // sort by name by default
-                $orderDql = $sort.'.name';
+                $orderDql = $sort . '.name';
             }
             $queryBuilder->orderBy($orderDql, $order);
         }
@@ -138,17 +96,23 @@ class GenericManager
         return $queryBuilder;
     }
 
-    public function getCountQueryBuilderCallback()
+    /**
+     * Returns the class name of the object managed by the manager.
+     *
+     * @return string
+     */
+    public function getClassName()
     {
-        $callback = function (QueryBuilder $queryBuilder) {
-
-        };
-
-        return $callback;
+        return $this
+            ->entityRepository
+            ->getClassName();
     }
 
-    protected function methodMatch($method)
+    /**
+     * @return EntityRepository
+     */
+    public function getRepository()
     {
-        return array_key_exists($method, $this->methodsMapping);
+        return $this->entityRepository;
     }
 }

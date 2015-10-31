@@ -2,11 +2,15 @@
 
 namespace LAG\AdminBundle\Admin\Factory;
 
+use Exception;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\Admin;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Routing\RoutingLoader;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ActionFactory
@@ -38,7 +42,8 @@ class ActionFactory
         FieldFactory $fieldFactory,
         FilterFactory $filterFactory,
         ApplicationConfiguration $configuration
-    ) {
+    )
+    {
         $this->routingLoader = $routingLoader;
         $this->fieldFactory = $fieldFactory;
         $this->filterFactory = $filterFactory;
@@ -49,8 +54,8 @@ class ActionFactory
      * Create an Action from configuration values.
      *
      * @param string $actionName
-     * @param array  $actionConfiguration
-     * @param Admin  $admin
+     * @param array $actionConfiguration
+     * @param Admin $admin
      *
      * @return Action
      */
@@ -58,10 +63,11 @@ class ActionFactory
     {
         // resolving default options
         $resolver = new OptionsResolver();
-        $resolver->setDefaults($this->getDefaultActionConfiguration());
+        $this->configureOptionsResolver($resolver, $actionName, $admin);
         $actionConfiguration = $resolver->resolve($actionConfiguration);
+
         // creating action object from configuration
-        $action = $this->createActionFromConfiguration($actionConfiguration, $actionName, $admin);
+        $action = $this->createActionFromConfiguration($actionConfiguration, $actionName);
 
         // creating actions linked to current action
         foreach ($actionConfiguration['actions'] as $customActionName => $customActionConfiguration) {
@@ -71,15 +77,6 @@ class ActionFactory
             $customAction = $this->createActionFromConfiguration($customActionConfiguration, $customActionName);
             // add to the main action
             $action->addAction($customAction);
-        }
-        // TODO remove this part, replaced by collection fields, more generic
-        foreach ($actionConfiguration['field_actions'] as $customActionName => $customActionConfiguration) {
-            // resolve configuration
-            $customActionConfiguration = $resolver->resolve($customActionConfiguration);
-            // create action
-            $customAction = $this->createActionFromConfiguration($customActionConfiguration, $customActionName);
-            // add to the main action
-            $action->addFieldAction($customAction);
         }
         // adding fields items to actions
         foreach ($actionConfiguration['fields'] as $fieldName => $fieldConfiguration) {
@@ -99,55 +96,121 @@ class ActionFactory
         return $action;
     }
 
-    protected function createActionFromConfiguration(array $actionConfiguration, $actionName, Admin $admin = null)
+    /**
+     * Create an action and its configuration object from configuration values
+     *
+     * @param array $actionConfiguration
+     * @param $actionName
+     * @return Action
+     */
+    protected function createActionFromConfiguration(array $actionConfiguration, $actionName)
     {
-        $action = new Action();
-        $action->setName($actionName);
-        $action->setTitle($actionConfiguration['title']);
-        $action->setPermissions($actionConfiguration['permissions']);
-        $action->setExport($actionConfiguration['export']);
-        $action->setOrder($actionConfiguration['order']);
-        $action->setRoute($actionConfiguration['route']);
-        $action->setIcon($actionConfiguration['icon']);
-        $action->setTarget($actionConfiguration['target']);
-        $action->setParameters($actionConfiguration['parameters']);
-
-        if ($admin && !$actionConfiguration['route']) {
-            $action->setRoute($this->routingLoader->generateRouteName($actionName, $admin));
-        }
-        if (!$action->getTitle()) {
-            $adminName = $admin ? $admin->getName() : null;
-            $action->setTitle($this->configuration->getTranslationKey($action->getName(), $adminName));
-        }
+        $configuration = new ActionConfiguration();
+        $configuration->loadMethod = $actionConfiguration['load_method'];
+        $configuration->route = $actionConfiguration['route'];
+        $configuration->parameters = $actionConfiguration['parameters'];
+        $configuration->exports = $actionConfiguration['export'];
+        $configuration->order = $actionConfiguration['order'];
+        $configuration->target = $actionConfiguration['target'];
+        $configuration->icon = $actionConfiguration['icon'];
+        $configuration->batch = $actionConfiguration['batch'];
+        $action = new Action($actionName, $actionConfiguration, $configuration);
 
         return $action;
     }
 
-    /**
-     * Return default actions configuration (list has exports, permissions are ROLE_ADMIN).
-     *
-     * @return array
-     */
-    protected function getDefaultActionConfiguration()
+    protected function configureOptionsResolver(OptionsResolver $resolver, $actionName, Admin $admin = null)
     {
-        $configuration = [
-            'title' => null,
-            'fields' => [
-                'id' => [],
-            ],
-            'field_actions' => [],
-            'submit_actions' => [],
-            'permissions' => ['ROLE_ADMIN'],
-            'export' => [],
-            'order' => [],
-            'actions' => [],
-            'target' => '_self',
-            'route' => '',
-            'parameters' => [],
-            'icon' => null,
-            'filters' => [],
-        ];
+        $resolver
+            ->setDefaults([
+                'title' => null,
+                'fields' => [
+                    'id' => [],
+                ],
+                'permissions' => ['ROLE_ADMIN'],
+                'export' => [
+                    'json',
+                    'html',
+                    'csv',
+                    'xls'
+                ],
+                'order' => [],
+                'actions' => [],
+                'submit_actions' => [],
+                'target' => '_self',
+                'route' => '',
+                'parameters' => [],
+                'icon' => null,
+                'filters' => [],
+                'batch' => [],
+                'load_method' => null
+            ])
+            ->setNormalizer('route', function (Options $options, $value) use ($admin, $actionName) {
+                if (!$value) {
+                    // if no route was provided, it should be linked to an Admin
+                    if (!$admin) {
+                        throw new Exception('No route was provided for action : ' . $actionName);
+                    }
+                    return $this
+                        ->routingLoader
+                        ->generateRouteName($actionName, $admin);
+                }
+                return $value;
+            })
+            ->setNormalizer('title', function (Options $options, $value) use ($admin, $actionName) {
+                if (!$value) {
+                    $adminKey = '';
+                    // if an Admin is linked to this action, we use its name in translation key
+                    if ($admin) {
+                        $adminKey = $admin->getName();
+                    }
+                    return $this->configuration->getTranslationKey($actionName, $adminKey);
+                }
+                return $value;
+            })
+            ->setNormalizer('batch', function (Options $options, $value) use ($admin, $actionName) {
+                if (!is_array($value)) {
+                    $value = [$value];
+                }
+                foreach ($value as $key => $title) {
+                    if (!$title) {
+                        $adminKey = '';
+                        // if an Admin is linked to this action, we use its name in translation key
+                        if ($admin) {
+                            $adminKey = $admin->getName();
+                        }
+                        $value[$key] = $this->configuration->getTranslationKey('batch.' . $key, $adminKey);
+                    }
+                }
+                return $value;
+            })
+            ->setNormalizer('load_method', function (Options $options, $value) use ($actionName) {
+                $allowedValues = [
+                    Admin::LOAD_METHOD_UNIQUE_ENTITY,
+                    Admin::LOAD_METHOD_MULTIPLE_ENTITIES,
+                    Admin::LOAD_METHOD_QUERY_BUILDER
+                ];
 
-        return $configuration;
+                if ($value && !in_array($value, $allowedValues)) {
+                    throw new InvalidOptionsException('Only ' . implode(',', $allowedValues) . ' are allowed for load method');
+                } else if (!$value) {
+                    if ($actionName == 'list') {
+                        $value = Admin::LOAD_METHOD_QUERY_BUILDER;
+                    } else if (in_array($actionName, ['edit', 'create', 'delete'])) {
+                        $value = Admin::LOAD_METHOD_UNIQUE_ENTITY;
+                    }
+                }
+                return $value;
+            })
+            ->setNormalizer('parameters', function (Options $options, $value) use ($actionName) {
+                if (!count($value)) {
+                    // we add default parameter if action method is ti unique_entity
+                    if ($options->offsetGet('load_method') == Admin::LOAD_METHOD_UNIQUE_ENTITY
+                    && $actionName != 'create') {
+                        $value = ['id'];
+                    }
+                }
+                return $value;
+            });
     }
 }

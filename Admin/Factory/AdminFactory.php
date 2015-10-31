@@ -2,15 +2,16 @@
 
 namespace LAG\AdminBundle\Admin\Factory;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\ManagerInterface;
 use LAG\AdminBundle\Event\AdminFactoryEvent;
 use LAG\AdminBundle\Manager\GenericManager;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -59,6 +60,75 @@ class AdminFactory
     }
 
     /**
+     * Create an Admin from configuration values. It will be added to AdminFactory admin's list.
+     *
+     * @param $adminName
+     * @param array $adminConfiguration
+     */
+    public function create($adminName, array $adminConfiguration)
+    {
+        $application = $this
+            ->container
+            ->get('lag.admin.application');
+        $entityManager = $this
+            ->container
+            ->get('doctrine')
+            ->getManager();
+        $resolver = new OptionsResolver();
+        // optional options
+        $resolver->setDefaults([
+            'actions' => [
+                'list' => [],
+                'create' => [],
+                'edit' => [],
+                'delete' => [],
+            ],
+            'manager' => 'LAG\AdminBundle\Manager\GenericManager',
+            'routing_url_pattern' => $application->getRoutingUrlPattern(),
+            'routing_name_pattern' => $application->getRoutingNamePattern(),
+            'controller' => 'LAGAdminBundle:Generic',
+            'max_per_page' => $this
+                ->container
+                ->get('lag.admin.application')
+                ->getMaxPerPage(),
+        ]);
+        // required options
+        $resolver->setRequired([
+            'entity',
+            'form',
+        ]);
+        // resolve admin configuration
+        $adminConfiguration = $resolver->resolve($adminConfiguration);
+        // create AdminConfiguration object
+        $adminConfig = new AdminConfiguration($adminConfiguration);
+
+        // create generic manager from configuration
+        $entityRepository = $entityManager->getRepository($adminConfig->getEntityName());
+        $entityManager = $this->createManagerFromConfig($adminName, $adminConfig, $entityRepository, $entityManager);
+
+        $admin = new Admin($adminName, $entityRepository, $entityManager, $adminConfig);
+        // actions are optional
+        if (!$adminConfig->getActions()) {
+            $adminConfig->setActions([
+                'list' => [],
+                'create' => [],
+                'edit' => [],
+                'delete' => [],
+            ]);
+        }
+        $actionFactory = $this
+            ->container
+            ->get('lag.admin.action_factory');
+        // adding actions
+        foreach ($adminConfig->getActions() as $actionName => $actionConfig) {
+            $action = $actionFactory->create($actionName, $actionConfig, $admin);
+            $admin->addAction($action);
+        }
+        // adding admins to the pool
+        $this->admins[$admin->getName()] = $admin;
+    }
+
+    /**
      * Return a loaded admin from a Symfony request.
      *
      * @param Request $request
@@ -81,19 +151,7 @@ class AdminFactory
             throw new Exception('Cannot find admin action from request. "_action" route parameter is missing');
         }
         $admin = $this->getAdmin($routeParameters['_admin']);
-        $action = $admin->getAction($routeParameters['_action']);
-        $admin->setCurrentAction($action);
-
-        // set entity
-        if ($action->getName() == 'list') {
-            $entities = $admin->getManager()->findAll();
-            $admin->setEntities($entities);
-        } elseif ($action->getName() == 'edit') {
-            $entity = $admin->getManager()->findOneBy([
-                'id' => $request->get('id'),
-            ]);
-            $admin->setEntity($entity);
-        }
+        $admin->handleRequest($request);
 
         return $admin;
     }
@@ -127,75 +185,6 @@ class AdminFactory
     }
 
     /**
-     * Create an Admin from configuration values. It will be added to AdminFactory admin's list.
-     *
-     * @param $adminName
-     * @param array $adminConfiguration
-     */
-    public function create($adminName, array $adminConfiguration)
-    {
-        $application = $this
-            ->container
-            ->get('lag.admin.application');
-        $entityManager = $this
-            ->container
-            ->get('doctrine')
-            ->getManager();
-        $resolver = new OptionsResolver();
-        // optional options
-        $resolver->setDefaults([
-            'actions' => [
-                'list' => [],
-                'create' => [],
-                'edit' => [],
-                'delete' => [],
-            ],
-            'manager' => null,
-            'routing_url_pattern' => $application->getRoutingUrlPattern(),
-            'routing_name_pattern' => $application->getRoutingNamePattern(),
-            'controller' => 'LAGAdminBundle:Generic',
-            'max_per_page' => $this
-                ->container
-                ->get('lag.admin.application')
-                ->getMaxPerPage(),
-        ]);
-        // required options
-        $resolver->setRequired([
-            'entity',
-            'form',
-        ]);
-        $adminConfiguration = $resolver->resolve($adminConfiguration);
-        $adminConfig = new AdminConfiguration($adminConfiguration, $application);
-        // gathering admin data
-        /** @var EntityRepository $entityRepository */
-        $entityRepository = $entityManager->getRepository($adminConfig->getEntityName());
-        // create generic manager from configuration
-        $entityManager = $this->createManagerFromConfig($adminConfig, $entityRepository);
-        $admin = new Admin($adminName, $entityRepository, $entityManager, $adminConfig);
-        // actions are optional
-        if (!$adminConfig->getActions()) {
-            // TODO move in default configuration
-            $adminConfig->setActions([
-                'list' => [],
-                'create' => [],
-                'edit' => [],
-                'delete' => [],
-            ]);
-        }
-        // TODO adding translation pattern for Admin
-        $actionFactory = $this
-            ->container
-            ->get('lag.admin.action_factory');
-        // adding actions
-        foreach ($adminConfig->getActions() as $actionName => $actionConfig) {
-            $action = $actionFactory->create($actionName, $actionConfig, $admin);
-            $admin->addAction($action);
-        }
-        // adding admins to the pool
-        $this->admins[$admin->getName()] = $admin;
-    }
-
-    /**
      * @return ApplicationConfiguration
      */
     public function getApplicationConfiguration()
@@ -206,46 +195,27 @@ class AdminFactory
     /**
      * Create a generic manager from configuration.
      *
-     * @param $adminConfig
-     * @param EntityRepository $entityRepository
-     *
+     * @param $adminName
+     * @param AdminConfiguration $adminConfig
+     * @param ObjectRepository $repository
+     * @param ObjectManager $entityManager
      * @return GenericManager
+     * @throws Exception
      */
-    protected function createManagerFromConfig(AdminConfiguration $adminConfig, EntityRepository $entityRepository)
+    protected function createManagerFromConfig($adminName, AdminConfiguration $adminConfig, ObjectRepository $repository, ObjectManager $entityManager)
     {
-        $customManager = null;
-        $methodsMapping = [];
-        // set default entity manager
-        /** @var EntityManager $entityManager */
-        $entityManager = $this
-            ->container
-            ->get('doctrine')
-            ->getManager();
-        $managerConfiguration = $adminConfig->getManagerConfiguration();
-        // custom manager is optional
-        if (is_array($managerConfiguration)) {
-            $customManager = $this->container->get($managerConfiguration['name']);
+        $managerClass = $adminConfig->getManager();
 
-            if (array_key_exists('save', $managerConfiguration)) {
-                $methodsMapping['save'] = $managerConfiguration['save'];
-            }
-            if (array_key_exists('list', $managerConfiguration)) {
-                $methodsMapping['list'] = $managerConfiguration['list'];
-            }
-            if (array_key_exists('edit', $managerConfiguration)) {
-                $methodsMapping['edit'] = $managerConfiguration['edit'];
-            }
-            if (array_key_exists('delete', $managerConfiguration)) {
-                $methodsMapping['delete'] = $managerConfiguration['delete'];
-            }
+        if (class_exists($managerClass)) {
+            $manager = new $managerClass($entityManager, $repository);
+        } else if ($this->container->has($managerClass)) {
+            $manager = $this->container->get($managerClass);
+        } else {
+            throw new Exception("Unable to find manager for Admin \"{$adminName}\"");
         }
-        $manager = new GenericManager(
-            $entityRepository,
-            $entityManager,
-            $customManager,
-            $methodsMapping
-        );
-
+        if (!($manager instanceof ManagerInterface)) {
+            throw new Exception('Manager should implements ManagerInterface');
+        }
         return $manager;
     }
 }

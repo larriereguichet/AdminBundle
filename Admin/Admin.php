@@ -2,19 +2,28 @@
 
 namespace LAG\AdminBundle\Admin;
 
+use ArrayIterator;
+use Doctrine\ORM\QueryBuilder;
+use LAG\AdminBundle\Admin\Behaviors\ActionTrait;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Manager\GenericManager;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use LAG\AdminBundle\Form\Type\AdminListType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class Admin implements AdminInterface
 {
     use StringUtilsTrait, ActionTrait;
+
+    const LOAD_METHOD_QUERY_BUILDER = 'querybuilder';
+    const LOAD_METHOD_UNIQUE_ENTITY = 'unique_entity';
+    const LOAD_METHOD_MULTIPLE_ENTITIES = 'multiple';
 
     /**
      * Admin name.
@@ -31,9 +40,14 @@ class Admin implements AdminInterface
     protected $entityNamespace;
 
     /**
+     * @var ActionInterface
+     */
+    protected $currentAction;
+
+    /**
      * Entities collection.
      *
-     * @var ArrayCollection
+     * @var ArrayCollection|ArrayIterator
      */
     protected $entities;
 
@@ -47,7 +61,7 @@ class Admin implements AdminInterface
     /**
      * Entity manager (doctrine entity manager by default).
      *
-     * @var GenericManager
+     * @var ManagerInterface
      */
     protected $manager;
 
@@ -85,9 +99,14 @@ class Admin implements AdminInterface
     protected $formType;
 
     /**
-     * @var
+     * @var Pagerfanta
      */
     protected $pager;
+
+    /**
+     * @var QueryBuilder
+     */
+    protected $queryBuilder;
 
     /**
      * @param $name
@@ -106,6 +125,80 @@ class Admin implements AdminInterface
         $this->formType = $adminConfig->getFormType();
         $this->entities = new ArrayCollection();
         $this->customManagerActions = [];
+    }
+
+    public function handleRequest(Request $request)
+    {
+        // set current action
+        $action = $this->getAction($request->get('_route_params')['_action']);
+        $this->currentAction = $action;
+        // load entities according to action and request
+        $this->loadEntities($request->get('page', 1), $request->get('sort'), $request->get('order'));
+    }
+
+    protected function loadEntities($page = 1, $sort = null, $order = 'ASC')
+    {
+        // loading entities with a querybuilder
+        if ($this->currentAction->getConfiguration()->loadMethod == self::LOAD_METHOD_QUERY_BUILDER) {
+            $this->loadWithQueryBuilder($page, $sort, $order);
+        }
+        else if ($this->currentAction->getConfiguration()->loadMethod == self::LOAD_METHOD_UNIQUE_ENTITY) {
+            $this->entities = '';
+        }
+
+        return $this->entities;
+    }
+
+    protected function loadWithQueryBuilder($page, $sort, $order)
+    {
+        // check if sort field is allowed for current action
+        if ($sort) {
+            if (!$this->getCurrentAction()->hasField($sort)) {
+                throw new Exception("Invalid field \"{$sort}\" for current action \"{$this->getCurrentAction()->getName()}\"");
+            }
+            if (!in_array($order, ['ASC', 'DESC'])) {
+                throw new Exception("Invalid order \"{$order}\". Only ASC and DESC are allowed");
+            }
+        }
+        // creating query builder from repository
+        $this->queryBuilder = $this
+            ->manager
+            ->getRepository()
+            ->createQueryBuilder('entity', 'entity.id');
+        // getting configured order
+        $order = $this
+            ->getCurrentAction()
+            ->getConfiguration()->order;
+
+        // if no sort was used by user, we sort with default configured sort if there is one
+        if ($order) {
+            foreach ($order as $orderConfiguration) {
+                $this->queryBuilder
+                    ->addOrderBy('entity.' . $orderConfiguration['field'], $orderConfiguration['order']);
+            }
+        }
+
+        // create adapter for query builder
+        $adapter = new DoctrineORMAdapter($this->queryBuilder);
+        // create pager
+        $this->pager = new Pagerfanta($adapter);
+        $this->pager->setMaxPerPage($this->configuration->getMaxPerPage());
+        $this->pager->setCurrentPage($page);
+        // loading current entities
+        $this->entities = $this->pager->getCurrentPageResults();
+    }
+
+    /**
+     * @return ActionInterface
+     */
+    public function getCurrentAction()
+    {
+        return $this->currentAction;
+    }
+
+    protected function loadWithParameters(Request $request)
+    {
+
     }
 
     /**
@@ -214,56 +307,12 @@ class Admin implements AdminInterface
      */
     public function findEntity($field, $value)
     {
-        $this->entity = $this->getManager()->findOneBy([
+        $this->entity = $this->getManager()->getRepository()->findOneBy([
             $field => $value,
         ]);
         $this->checkEntity();
 
         return $this->entity;
-    }
-
-    /**
-     * Find entities paginated and sorted.
-     *
-     * @param int    $page
-     * @param null   $sort
-     * @param string $order
-     *
-     * @return array|ArrayCollection|\Traversable
-     *
-     * @throws Exception
-     */
-    public function findEntities($page = 1, $sort = null, $order = 'ASC')
-    {
-        if ($sort) {
-            // check if sort field is allowed for current action
-            if (!$this->getCurrentAction()->hasField($sort)) {
-                throw new Exception("Invalid field \"{$sort}\" for current action \"{$this->getCurrentAction()->getName()}\"");
-            }
-            if (!in_array($order, ['ASC', 'DESC'])) {
-                throw new Exception("Invalid order \"{$order}\"");
-            }
-        }
-        $queryBuilder = $this->getManager()->getFindAllQueryBuilder($sort, $order);
-
-        // if no sort was used by user, we sort with configured sort if there is one
-        if (!$sort && $this->getCurrentAction()->hasOrder()) {
-            $order = $this->getCurrentAction()->getOrder();
-
-            foreach ($order as $orderConfiguration) {
-                $queryBuilder
-                    ->addOrderBy('entity.'.$orderConfiguration['field'], $orderConfiguration['order']);
-            }
-        }
-        // create adapter from query builder
-        $adapter = new DoctrineORMAdapter($queryBuilder);
-        // create pager
-        $this->pager = new Pagerfanta($adapter);
-        $this->pager->setMaxPerPage($this->configuration->getMaxPerPage());
-        $this->pager->setCurrentPage($page);
-        $this->entities = $this->pager->getCurrentPageResults();
-
-        return $this->entities;
     }
 
     public function saveEntity()
@@ -274,7 +323,7 @@ class Admin implements AdminInterface
 
     public function createEntity()
     {
-        $this->entity = $this->getManager()->create($this->getEntityNamespace());
+        $this->entity = $this->getManager()->create();
         $this->checkEntity();
 
         return $this->entity;
@@ -288,7 +337,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return GenericManager
+     * @return ManagerInterface
      */
     public function getManager()
     {
@@ -309,6 +358,19 @@ class Admin implements AdminInterface
     public function getPager()
     {
         return $this->pager;
+    }
+
+    public function createListForm(FormFactoryInterface $formFactory)
+    {
+        $form = $formFactory->create(new AdminListType(), [
+            'entities' => $this->entities
+        ], [
+            'item_class' => $this->entityNamespace,
+            'batch_actions' => $this->currentAction->getConfiguration()->batch,
+            'query_builder' => $this->queryBuilder
+        ]);
+
+        return $form;
     }
 
     protected function checkEntity()

@@ -12,6 +12,8 @@ parameters:
     lag.admin.routing: LAG\AdminBundle\Routing\RoutingLoader
     # twig
     lag.admin.twig: LAG\AdminBundle\Twig\AdminExtension
+    # generic manager
+    lag.admin.generic_manager.class: LAG\AdminBundle\Manager\GenericManager
 
 services:
     # application
@@ -43,3 +45,7 @@ services:
         tags:
             - {name: twig.extension}
         arguments: [@router, @translator, @lag.admin.application]
+
+    lag.admin.generic_manager:
+        class: %lag.admin.generic_manager.class%
+        scope: prototype

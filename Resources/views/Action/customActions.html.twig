@@ -1,6 +1,6 @@
 {% if admin.currentAction.actions | length > 0 %}
     {% for action in admin.currentAction.actions %}
-        <li class="{{ getClassForRoute(action.route) }}">
+        <li class="{{ getClassForRoute(action.configuration.route) }}">
             {{ AdminBundle.actionLink(action) }}
         </li>
     {% endfor %}

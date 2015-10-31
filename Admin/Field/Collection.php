@@ -39,7 +39,7 @@ class Collection extends Field implements EntityFieldInterface
             if ($field instanceof EntityFieldInterface) {
                 $field->setEntity($this->entity);
             }
-            $render .= $field->render($value).'<br/>';
+            $render .= $field->render($value);
         }
 
         return $render;
