@@ -1,8 +1,9 @@
 <?php
 
-namespace LAG\AdminBundle\Admin;
+namespace LAG\AdminBundle\Admin\Behaviors;
 
 use Exception;
+use LAG\AdminBundle\Admin\Action;
 
 trait ActionTrait
 {
@@ -14,8 +15,6 @@ trait ActionTrait
     abstract public function getName();
 
     protected $actions = [];
-
-    protected $currentAction;
 
     /**
      * Return true if current action is granted for user.
@@ -87,21 +86,5 @@ trait ActionTrait
     public function addAction(Action $action)
     {
         $this->actions[$action->getName()] = $action;
-    }
-
-    /**
-     * @return Action
-     */
-    public function getCurrentAction()
-    {
-        return $this->currentAction;
-    }
-
-    /**
-     * @param Action $currentAction
-     */
-    public function setCurrentAction(Action $currentAction)
-    {
-        $this->currentAction = $currentAction;
     }
 }

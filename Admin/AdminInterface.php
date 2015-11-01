@@ -8,9 +8,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\HttpFoundation\Request;
 
 interface AdminInterface
 {
+    /**
+     * Handle current request :
+     *  - load entities
+     *  - creating form if required
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function handleRequest(Request $request);
+
+
     /**
      * Return admin name.
      *

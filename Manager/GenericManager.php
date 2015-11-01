@@ -33,24 +33,6 @@ class GenericManager implements ManagerInterface
         $this->entityRepository = $repository;
     }
 
-    public function findOneBy(array $criteria)
-    {
-        $entity = $this
-            ->entityRepository
-            ->findOneBy($criteria);
-
-        return $entity;
-    }
-
-    public function findAll()
-    {
-        $entities = $this
-            ->entityRepository
-            ->findAll();
-
-        return $entities;
-    }
-
     public function save($entity, $flush = true)
     {
         $this->entityManager->persist($entity);
@@ -70,6 +52,7 @@ class GenericManager implements ManagerInterface
 
     public function delete($entity, $flush = true)
     {
+        // TODO surround with try/catch
         $this->entityManager->remove($entity);
 
         if ($flush) {
@@ -89,7 +72,7 @@ class GenericManager implements ManagerInterface
     {
         $queryBuilder = $this
             ->entityRepository
-            ->createQueryBuilder('entity');
+            ->createQueryBuilder('entity', 'entity.id');
         // @TODO sort seems to not working with entity from FOSUser. It's maybe a bug in Doctrine or FOSUserBundle
         if (in_array('FOS\UserBundle\Model\UserInterface', class_implements($this->entityRepository->getClassName()))) {
             return $queryBuilder;
@@ -114,39 +97,6 @@ class GenericManager implements ManagerInterface
     }
 
     /**
-     * Finds an object by its primary key / identifier.
-     *
-     * @param mixed $id The identifier.
-     *
-     * @return object The object.
-     */
-    public function find($id)
-    {
-        // TODO: Implement find() method.
-    }
-
-    /**
-     * Finds objects by a set of criteria.
-     *
-     * Optionally sorting and limiting details can be passed. An implementation may throw
-     * an UnexpectedValueException if certain values of the sorting or limiting details are
-     * not supported.
-     *
-     * @param array $criteria
-     * @param array|null $orderBy
-     * @param int|null $limit
-     * @param int|null $offset
-     *
-     * @return array The objects.
-     *
-     * @throws \UnexpectedValueException
-     */
-    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
-    {
-        // TODO: Implement findBy() method.
-    }
-
-    /**
      * Returns the class name of the object managed by the manager.
      *
      * @return string
@@ -156,5 +106,13 @@ class GenericManager implements ManagerInterface
         return $this
             ->entityRepository
             ->getClassName();
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    public function getRepository()
+    {
+        return $this->entityRepository;
     }
 }

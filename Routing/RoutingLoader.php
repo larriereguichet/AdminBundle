@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Routing;
 
 use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
@@ -30,7 +31,10 @@ class RoutingLoader implements LoaderInterface
             throw new RuntimeException('Do not add the "extra" loader twice');
         }
         $routes = new RouteCollection();
-        $admins = $this->getContainer()->get('lag.admin.factory')->getAdmins();
+        $admins = $this
+            ->container
+            ->get('lag.admin.factory')
+            ->getAdmins();
         // creating a route by admin and action
         /** @var AdminInterface $admin */
         foreach ($admins as $admin) {
@@ -90,12 +94,12 @@ class RoutingLoader implements LoaderInterface
      * Add a Route to the RouteCollection according to an Admin an an Action.
      *
      * @param AdminInterface  $admin
-     * @param Action          $action
+     * @param ActionInterface $action
      * @param RouteCollection $routeCollection
      *
      * @throws Exception
      */
-    protected function loadRouteForAction(AdminInterface $admin, Action $action, RouteCollection $routeCollection)
+    protected function loadRouteForAction(AdminInterface $admin, ActionInterface $action, RouteCollection $routeCollection)
     {
         $routingUrlPattern = $admin->getConfiguration()->getRoutingUrlPattern();
         // routing pattern should contains {admin} and {action}
@@ -124,7 +128,8 @@ class RoutingLoader implements LoaderInterface
         $route = new Route($path, $defaults, $requirements);
         $routeName = $this->generateRouteName($action->getName(), $admin);
         // set route to action
-        $action->setRoute($routeName);
+        $action->getConfiguration()->route = $routeName;
+        $action->getConfiguration()->parameters = $requirements;
         // adding route to symfony collection
         $routeCollection->add($routeName, $route);
     }

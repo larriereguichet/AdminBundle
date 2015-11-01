@@ -1,7 +1,8 @@
 {% macro actionLink(action) %}
-    <a href="{{ path(action.route, action.parameters) }}" target="{{ action.target }}" title="{{ action.title | trans }}">
-        {% if action.icon %}
-            <i class="fa fa-{{ action.icon }}"></i>
+    <a href="{{ path(action.configuration.route, action.configuration.parameters) }}"
+       target="{{ action.configuration.target }}" title="{{ action.title | trans }}">
+        {% if action.configuration.icon %}
+            <i class="fa fa-{{ action.configuration.icon }}"></i>
         {% endif %}
         {{ action.title | trans }}
     </a>

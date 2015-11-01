@@ -4,6 +4,8 @@ namespace LAG\AdminBundle\Controller;
 
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Form\Type\AdminListForm;
+use LAG\AdminBundle\Form\Type\AdminListType;
 use LAG\AdminBundle\Routing\RoutingLoader;
 use LAG\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
@@ -47,15 +49,22 @@ class GenericController extends Controller
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // find entities list
-        $admin->findEntities($request->get('page', 1), $request->get('sort', null), $request->get('order', 'ASC'));
+        $form = $admin->createListForm($this->get('form.factory'));
+        $form->handleRequest($request);
 
         if ($request->get('export', false)) {
             return $this->exportEntities($admin, $request->get('export'));
         }
+        if ($form->isValid()) {
+            var_dump($form->getData());
+            die('lol');
+        }
+        //var_dump($admin->getEntities());
 
         return [
             'admin' => $admin,
             'action' => $admin->getCurrentAction(),
+            'form' => $form->createView()
         ];
     }
 

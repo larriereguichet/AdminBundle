@@ -6,6 +6,12 @@ v0.4:
 - handling new Symfony bootstrap layout
 - bootstrap theme
 - file exporters : array type, association
+- adding Admin own translation pattern
+- move default configuration in a separate and configurable event listener
+- remove dependence to container for routing loader
+- inject admin list form type
+- creating an action view to generate action link
+- remove hardcoded id property and use metadata tu get primary key
 
 -----------------------------------------------
 
