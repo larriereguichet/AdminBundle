@@ -2,20 +2,23 @@
 
 namespace LAG\AdminBundle\Admin;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 
 interface ManagerInterface
 {
-    public function __construct(EntityManager $manager, ObjectRepository $repository);
+    public function create();
 
-    public function find($id);
+    public function delete($entity);
 
-    public function findAll();
+    public function save($entity);
 
-    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
+    /**
+     * @return EntityRepository
+     */
+    public function getRepository();
 
-    public function findOneBy(array $criteria);
-
+    /**
+     * @return string
+     */
     public function getClassName();
 }

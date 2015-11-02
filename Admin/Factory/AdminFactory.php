@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Admin\Factory;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityRepository;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
@@ -60,74 +61,6 @@ class AdminFactory
     }
 
     /**
-     * Return a loaded admin from a Symfony request.
-     *
-     * @param Request $request
-     *
-     * @return AdminInterface
-     *
-     * @throws Exception
-     */
-    public function getAdminFromRequest(Request $request)
-    {
-        $routeParameters = $request->get('_route_params');
-
-        if (!$routeParameters) {
-            throw new Exception('Cannot find admin _route_params parameters for request');
-        }
-        if (!array_key_exists('_admin', $routeParameters)) {
-            throw new Exception('Cannot find admin from request. "_admin" route parameter is missing');
-        }
-        if (!array_key_exists('_action', $routeParameters)) {
-            throw new Exception('Cannot find admin action from request. "_action" route parameter is missing');
-        }
-        $admin = $this->getAdmin($routeParameters['_admin']);
-        $action = $admin->getAction($routeParameters['_action']);
-        $admin->setCurrentAction($action);
-
-        // set entity
-        if ($action->getName() == 'list') {
-            $entities = $admin->getManager()->findAll();
-            $admin->setEntities($entities);
-        } elseif ($action->getName() == 'edit') {
-            $entity = $admin->getManager()->findOneBy([
-                'id' => $request->get('id'),
-            ]);
-            $admin->setEntity($entity);
-        }
-
-        return $admin;
-    }
-
-    /**
-     * Return a admin by its name.
-     *
-     * @param $name
-     *
-     * @return Admin
-     *
-     * @throws Exception
-     */
-    public function getAdmin($name)
-    {
-        if (!array_key_exists($name, $this->admins)) {
-            throw new Exception(sprintf('Admin with name "%s" not found. Check your admin configuration', $name));
-        }
-
-        return $this->admins[$name];
-    }
-
-    /**
-     * Return all admins.
-     *
-     * @return Admin[]
-     */
-    public function getAdmins()
-    {
-        return $this->admins;
-    }
-
-    /**
      * Create an Admin from configuration values. It will be added to AdminFactory admin's list.
      *
      * @param $adminName
@@ -169,15 +102,21 @@ class AdminFactory
         $adminConfiguration = $resolver->resolve($adminConfiguration);
         // create AdminConfiguration object
         $adminConfig = new AdminConfiguration($adminConfiguration);
-
-        // create generic manager from configuration
+        /** @var EntityRepository $entityRepository */
         $entityRepository = $entityManager->getRepository($adminConfig->getEntityName());
+        // create generic manager from configuration
         $entityManager = $this->createManagerFromConfig($adminName, $adminConfig, $entityRepository, $entityManager);
 
-        $admin = new Admin($adminName, $entityRepository, $entityManager, $adminConfig);
+        $admin = new Admin(
+            $adminName,
+            $entityRepository,
+            $entityManager,
+            $adminConfig,
+            $this->get('session'),
+            $this->get('logger')
+        );
         // actions are optional
         if (!$adminConfig->getActions()) {
-            // TODO move in default configuration
             $adminConfig->setActions([
                 'list' => [],
                 'create' => [],
@@ -185,7 +124,6 @@ class AdminFactory
                 'delete' => [],
             ]);
         }
-        // TODO adding translation pattern for Admin
         $actionFactory = $this
             ->container
             ->get('lag.admin.action_factory');
@@ -196,6 +134,62 @@ class AdminFactory
         }
         // adding admins to the pool
         $this->admins[$admin->getName()] = $admin;
+    }
+
+    /**
+     * Return a loaded admin from a Symfony request.
+     *
+     * @param Request $request
+     *
+     * @return AdminInterface
+     *
+     * @throws Exception
+     */
+    public function getAdminFromRequest(Request $request)
+    {
+        $routeParameters = $request->get('_route_params');
+
+        if (!$routeParameters) {
+            throw new Exception('Cannot find admin _route_params parameters for request');
+        }
+        if (!array_key_exists('_admin', $routeParameters)) {
+            throw new Exception('Cannot find admin from request. "_admin" route parameter is missing');
+        }
+        if (!array_key_exists('_action', $routeParameters)) {
+            throw new Exception('Cannot find admin action from request. "_action" route parameter is missing');
+        }
+        $admin = $this->getAdmin($routeParameters['_admin']);
+        $admin->handleRequest($request);
+
+        return $admin;
+    }
+
+    /**
+     * Return a admin by its name.
+     *
+     * @param $name
+     *
+     * @return Admin
+     *
+     * @throws Exception
+     */
+    public function getAdmin($name)
+    {
+        if (!array_key_exists($name, $this->admins)) {
+            throw new Exception(sprintf('Admin with name "%s" not found. Check your admin configuration', $name));
+        }
+
+        return $this->admins[$name];
+    }
+
+    /**
+     * Return all admins.
+     *
+     * @return Admin[]
+     */
+    public function getAdmins()
+    {
+        return $this->admins;
     }
 
     /**
