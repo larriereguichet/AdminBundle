@@ -20,7 +20,11 @@ interface ActionInterface
      */
     public function getName();
 
+    public function getTitle();
+
     public function getFields();
+
+    public function getPermissions();
 
     /**
      * Return true if action has a field named $fieldName.
