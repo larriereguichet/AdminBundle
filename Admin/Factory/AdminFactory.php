@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Admin\Factory;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityRepository;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
@@ -101,12 +102,19 @@ class AdminFactory
         $adminConfiguration = $resolver->resolve($adminConfiguration);
         // create AdminConfiguration object
         $adminConfig = new AdminConfiguration($adminConfiguration);
-
-        // create generic manager from configuration
+        /** @var EntityRepository $entityRepository */
         $entityRepository = $entityManager->getRepository($adminConfig->getEntityName());
+        // create generic manager from configuration
         $entityManager = $this->createManagerFromConfig($adminName, $adminConfig, $entityRepository, $entityManager);
 
-        $admin = new Admin($adminName, $entityRepository, $entityManager, $adminConfig);
+        $admin = new Admin(
+            $adminName,
+            $entityRepository,
+            $entityManager,
+            $adminConfig,
+            $this->get('session'),
+            $this->get('logger')
+        );
         // actions are optional
         if (!$adminConfig->getActions()) {
             $adminConfig->setActions([

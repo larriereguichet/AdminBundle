@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Admin\Behaviors;
 
 use Exception;
 use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Admin\ActionInterface;
 
 trait ActionTrait
 {
@@ -14,7 +15,15 @@ trait ActionTrait
      */
     abstract public function getName();
 
+    /**
+     * @var ActionInterface[]
+     */
     protected $actions = [];
+
+    /**
+     * @var ActionInterface
+     */
+    protected $currentAction;
 
     /**
      * Return true if current action is granted for user.
@@ -45,7 +54,7 @@ trait ActionTrait
     }
 
     /**
-     * @return array
+     * @return ActionInterface[]
      */
     public function getActions()
     {
@@ -55,7 +64,7 @@ trait ActionTrait
     /**
      * @param $name
      *
-     * @return Action
+     * @return ActionInterface
      *
      * @throws Exception
      */
@@ -81,10 +90,18 @@ trait ActionTrait
     }
 
     /**
-     * @param Action $action
+     * @param ActionInterface $action
      */
-    public function addAction(Action $action)
+    public function addAction(ActionInterface $action)
     {
         $this->actions[$action->getName()] = $action;
+    }
+
+    /**
+     * @return ActionInterface
+     */
+    public function getCurrentAction()
+    {
+        return $this->currentAction;
     }
 }

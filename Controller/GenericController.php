@@ -4,13 +4,10 @@ namespace LAG\AdminBundle\Controller;
 
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Form\Type\AdminListForm;
 use LAG\AdminBundle\Form\Type\AdminListType;
-use LAG\AdminBundle\Routing\RoutingLoader;
 use LAG\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use DateTime;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\MappingException;
 use EE\DataExporterBundle\Service\DataExporter;
 use Exception;
@@ -45,21 +42,25 @@ class GenericController extends Controller
      */
     public function listAction(Request $request)
     {
+        // retrieve admin from request route parameters
         $admin = $this->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
-        // find entities list
-        $form = $admin->createListForm($this->get('form.factory'));
+        // creating form
+        $form = $this->createForm(new AdminListType(), [
+            'entities' => $admin->getEntities()
+        ], [
+            'batch_actions' => $admin->getCurrentAction()->getBatchActions(),
+        ]);
         $form->handleRequest($request);
 
-        if ($request->get('export', false)) {
+        if ($request->get('export')) {
             return $this->exportEntities($admin, $request->get('export'));
         }
         if ($form->isValid()) {
             var_dump($form->getData());
             die('lol');
         }
-        //var_dump($admin->getEntities());
 
         return [
             'admin' => $admin,
@@ -83,33 +84,29 @@ class GenericController extends Controller
         $admin = $this->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
-        // create entity
-        $entity = $admin->createEntity();
         // create form
-        $form = $this->createForm($admin->getFormType(), $entity);
+        $form = $this->createForm($admin->getFormType(), $admin->getEntity());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             // save entity
-            $admin->saveEntity();
-            // inform user everything went fine
-            $this->setMessage('lag.admin.'.$admin->getName().'.saved');
+            $admin->save();
 
             if ($request->request->get('submit') == 'save') {
                 // if save is pressed, user stay on the edit view
                 $editRoute = $this
-                    ->getRoutingLoader()
+                    ->get('lag.admin.routing')
                     ->generateRouteName('edit', $admin);
 
                 return $this->redirectToRoute($editRoute, [
                     'id' => $admin->getEntity()->getId(),
                 ]);
             } else {
+                // otherwise user is redirected to list view
                 $listRoute = $this
-                    ->container
                     ->get('lag.admin.routing')
                     ->generateRouteName('list', $admin);
-                // otherwise user is redirected to list view
+
                 return $this->redirect($this->generateUrl($listRoute));
             }
         }
@@ -136,23 +133,16 @@ class GenericController extends Controller
             ->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
-        // find entity
-        $admin->findEntity('id', $request->get('id'));
         // create form
         $form = $this->createForm($admin->getFormType(), $admin->getEntity());
         $form->handleRequest($request);
         $accessor = PropertyAccess::createPropertyAccessor();
 
         if ($form->isValid()) {
-            // save entity
-            $admin->saveEntity();
-            // inform user everything went fine
-            $this->setMessage('lag.admin.saved', 'info', [
-                '%entity%' => $admin->getEntityLabel(),
-            ]);
+            $admin->save();
+
             if ($request->request->get('submit') == 'save') {
                 $saveRoute = $this
-                    ->container
                     ->get('lag.admin.routing')
                     ->generateRouteName('edit', $admin);
 
@@ -161,7 +151,6 @@ class GenericController extends Controller
                 ]);
             } else {
                 $listRoute = $this
-                    ->container
                     ->get('lag.admin.routing')
                     ->generateRouteName('list', $admin);
                 // redirect to list
@@ -191,21 +180,14 @@ class GenericController extends Controller
             ->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
-        // find entity
-        $admin->findEntity('id', $request->get('id'));
         // create form to avoid deletion by url
         $form = $this->createForm('delete', $admin->getEntity());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $admin->deleteEntity();
-            // inform user everything went fine
-            $this->setMessage('lag.admin.deleted', 'info', [
-                '%entity%' => $admin->getEntityLabel(),
-            ]);
+            $admin->delete();
             // redirect to list
             $listRoute = $this
-                ->container
                 ->get('lag.admin.routing')
                 ->generateRouteName('list', $admin);
 
@@ -221,22 +203,22 @@ class GenericController extends Controller
     /**
      * Export entities according to a type (json, csv, xls...).
      *
-     * @param Admin $admin
+     * @param AdminInterface $admin
      * @param $exportType
      *
      * @return Response
      *
      * @throws MappingException
      */
-    protected function exportEntities(Admin $admin, $exportType)
+    protected function exportEntities(AdminInterface $admin, $exportType)
     {
         // check allowed export types
         $this->forward404Unless(in_array($exportType, ['json', 'html', 'xls', 'csv', 'xml']));
         /** @var DataExporter $exporter */
         $exporter = $this->get('ee.dataexporter');
-
-        /** @var ClassMetadata $metadata */
-        $metadata = $this->getEntityManager()->getClassMetadata($admin->getRepository()->getClassName());
+        $metadata = $this
+            ->getEntityManager()
+            ->getClassMetadata($admin->getRepository()->getClassName());
         $exportColumns = [];
         $fields = $metadata->getFieldNames();
         $hooks = [];
@@ -260,7 +242,7 @@ class GenericController extends Controller
         }
         $exporter
             ->setOptions($exportType, [
-                'fileName' => $admin->getName().'-export-'.date('Y-m-d'),
+                'fileName' => $admin->getName() . '-export-' . date('Y-m-d'),
             ])
             ->setColumns($exportColumns)
             ->setData($admin->getEntities());
@@ -292,7 +274,7 @@ class GenericController extends Controller
      *
      * @param Request $request
      *
-     * @return Admin
+     * @return AdminInterface
      *
      * @throws Exception
      */
@@ -301,17 +283,5 @@ class GenericController extends Controller
         return $this
             ->get('lag.admin.factory')
             ->getAdminFromRequest($request);
-    }
-
-    /**
-     * Return admin routing loader.
-     *
-     * @return RoutingLoader
-     */
-    protected function getRoutingLoader()
-    {
-        return $this
-            ->container
-            ->get('lag.admin.routing');
     }
 }
