@@ -307,56 +307,12 @@ class Admin implements AdminInterface
      */
     public function findEntity($field, $value)
     {
-        $this->entity = $this->getManager()->findOneBy([
+        $this->entity = $this->getManager()->getRepository()->findOneBy([
             $field => $value,
         ]);
         $this->checkEntity();
 
         return $this->entity;
-    }
-
-    /**
-     * Find entities paginated and sorted.
-     *
-     * @param int    $page
-     * @param null   $sort
-     * @param string $order
-     *
-     * @return array|ArrayCollection|\Traversable
-     *
-     * @throws Exception
-     */
-    public function findEntities($page = 1, $sort = null, $order = 'ASC')
-    {
-        if ($sort) {
-            // check if sort field is allowed for current action
-            if (!$this->getCurrentAction()->hasField($sort)) {
-                throw new Exception("Invalid field \"{$sort}\" for current action \"{$this->getCurrentAction()->getName()}\"");
-            }
-            if (!in_array($order, ['ASC', 'DESC'])) {
-                throw new Exception("Invalid order \"{$order}\"");
-            }
-        }
-        $queryBuilder = $this->getManager()->getFindAllQueryBuilder($sort, $order);
-
-        // if no sort was used by user, we sort with configured sort if there is one
-        if (!$sort && $this->getCurrentAction()->hasOrder()) {
-            $order = $this->getCurrentAction()->getOrder();
-
-            foreach ($order as $orderConfiguration) {
-                $queryBuilder
-                    ->addOrderBy('entity.'.$orderConfiguration['field'], $orderConfiguration['order']);
-            }
-        }
-        // create adapter from query builder
-        $adapter = new DoctrineORMAdapter($queryBuilder);
-        // create pager
-        $this->pager = new Pagerfanta($adapter);
-        $this->pager->setMaxPerPage($this->configuration->getMaxPerPage());
-        $this->pager->setCurrentPage($page);
-        $this->entities = $this->pager->getCurrentPageResults();
-
-        return $this->entities;
     }
 
     public function saveEntity()
@@ -367,7 +323,7 @@ class Admin implements AdminInterface
 
     public function createEntity()
     {
-        $this->entity = $this->getManager()->create($this->getEntityNamespace());
+        $this->entity = $this->getManager()->create();
         $this->checkEntity();
 
         return $this->entity;
