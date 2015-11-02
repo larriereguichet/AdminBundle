@@ -67,6 +67,7 @@ class Action implements ActionInterface
         $this->title = $actionOptions['title'];
         $this->permissions = $actionOptions['permissions'];
         $this->submitActions = $actionOptions['submit_actions'];
+        $this->batchActions = $actionOptions['batch'];
     }
 
     /**

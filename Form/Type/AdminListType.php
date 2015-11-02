@@ -48,10 +48,6 @@ class AdminListType extends AbstractType
                 'batch_actions' => [],
                 'batch_actions_label' => 'lag.admin.batch_action',
                 'batch_empty' => 'lag.admin.batch_empty',
-            ])
-            ->setRequired([
-                'item_class',
-                'query_builder'
             ]);
     }
 

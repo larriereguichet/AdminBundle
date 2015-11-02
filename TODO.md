@@ -12,6 +12,7 @@ v0.4:
 - inject admin list form type
 - creating an action view to generate action link
 - remove hardcoded id property and use metadata tu get primary key
+- removing container dependence in routing loader
 
 -----------------------------------------------
 

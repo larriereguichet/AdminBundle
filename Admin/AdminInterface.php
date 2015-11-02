@@ -2,11 +2,10 @@
 
 namespace LAG\AdminBundle\Admin;
 
+use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Manager\GenericManager;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
-use Exception;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,6 +20,16 @@ interface AdminInterface
      * @return mixed
      */
     public function handleRequest(Request $request);
+
+    /**
+     * @return void
+     */
+    public function save();
+
+    /**
+     * @return void
+     */
+    public function delete();
 
     /**
      * Return admin name.
@@ -66,14 +75,6 @@ interface AdminInterface
      */
     public function getEntity();
 
-    public function getEntityLabel();
-
-    public function saveEntity();
-
-    public function createEntity();
-
-    public function deleteEntity();
-
     /**
      * @return GenericManager
      */
@@ -107,4 +108,9 @@ interface AdminInterface
      * @return bool
      */
     public function isActionGranted($actionName, array $roles);
+
+    /**
+     * @return QueryBuilder
+     */
+    public function getQueryBuilder();
 }

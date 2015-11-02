@@ -161,6 +161,11 @@ class ActionFactory
                 return $value;
             })
             ->setNormalizer('batch', function (Options $options, $value) use ($admin, $actionName) {
+                if (!$value) {
+                    $value = [
+                        'delete' => 'lag.admin.delete'
+                    ];
+                }
                 if (!is_array($value)) {
                     $value = [$value];
                 }

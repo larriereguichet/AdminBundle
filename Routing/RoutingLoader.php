@@ -128,8 +128,8 @@ class RoutingLoader implements LoaderInterface
         $route = new Route($path, $defaults, $requirements);
         $routeName = $this->generateRouteName($action->getName(), $admin);
         // set route to action
-        $action->getConfiguration()->route = $routeName;
-        $action->getConfiguration()->parameters = $requirements;
+        $action->getConfiguration()->setRoute($routeName);
+        $action->getConfiguration()->setParameters($requirements);
         // adding route to symfony collection
         $routeCollection->add($routeName, $route);
     }
