@@ -21,7 +21,7 @@ class Admin implements AdminInterface
 {
     use StringUtilsTrait, ActionTrait;
 
-    const LOAD_METHOD_QUERY_BUILDER = 'querybuilder';
+    const LOAD_METHOD_QUERY_BUILDER = 'query_builder';
     const LOAD_METHOD_UNIQUE_ENTITY = 'unique_entity';
     const LOAD_METHOD_MULTIPLE_ENTITIES = 'multiple';
 
@@ -138,11 +138,11 @@ class Admin implements AdminInterface
 
     protected function loadEntities($page = 1, $sort = null, $order = 'ASC')
     {
-        // loading entities with a querybuilder
-        if ($this->currentAction->getConfiguration()->loadMethod == self::LOAD_METHOD_QUERY_BUILDER) {
+        // loading entities with a query builder
+        if ($this->currentAction->getConfiguration()->getLoadMethod() == self::LOAD_METHOD_QUERY_BUILDER) {
             $this->loadWithQueryBuilder($page, $sort, $order);
         }
-        else if ($this->currentAction->getConfiguration()->loadMethod == self::LOAD_METHOD_UNIQUE_ENTITY) {
+        else if ($this->currentAction->getConfiguration()->getLoadMethod() == self::LOAD_METHOD_UNIQUE_ENTITY) {
             $this->entities = '';
         }
 
@@ -168,7 +168,8 @@ class Admin implements AdminInterface
         // getting configured order
         $order = $this
             ->getCurrentAction()
-            ->getConfiguration()->order;
+            ->getConfiguration()
+            ->getOrder();
 
         // if no sort was used by user, we sort with default configured sort if there is one
         if ($order) {
@@ -177,7 +178,6 @@ class Admin implements AdminInterface
                     ->addOrderBy('entity.' . $orderConfiguration['field'], $orderConfiguration['order']);
             }
         }
-
         // create adapter for query builder
         $adapter = new DoctrineORMAdapter($this->queryBuilder);
         // create pager
@@ -366,7 +366,7 @@ class Admin implements AdminInterface
             'entities' => $this->entities
         ], [
             'item_class' => $this->entityNamespace,
-            'batch_actions' => $this->currentAction->getConfiguration()->batch,
+            'batch_actions' => $this->currentAction->getConfiguration()->getBatch(),
             'query_builder' => $this->queryBuilder
         ]);
 

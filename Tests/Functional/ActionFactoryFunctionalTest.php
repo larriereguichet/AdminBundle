@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Tests;
 
-use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
@@ -74,9 +74,6 @@ class ActionFactoryFunctionalTest extends Base
                 'actions' => [
                     'test' => [],
                 ],
-                'field_actions' => [
-                    'test' => [],
-                ],
                 'target' => [
                     '_blank',
                 ],
@@ -90,7 +87,7 @@ class ActionFactoryFunctionalTest extends Base
         ];
     }
 
-    protected function doTestActionForConfiguration(Action $action, array $configuration, $actionName)
+    protected function doTestActionForConfiguration(ActionInterface $action, array $configuration, $actionName)
     {
         $this->assertEquals($actionName, $action->getName());
 
@@ -109,31 +106,28 @@ class ActionFactoryFunctionalTest extends Base
             $this->assertEquals($configuration['permissions'], $action->getPermissions());
         }
         if (array_key_exists('export', $configuration)) {
-            $this->assertEquals($configuration['export'], $action->getExport());
+            $this->assertEquals($configuration['export'], $action->getConfiguration()->getExports());
         }
         if (array_key_exists('order', $configuration)) {
-            $this->assertCount(count($configuration['order']), $action->getOrder());
+            $this->assertCount(count($configuration['order']), $action->getConfiguration()->getOrder());
         }
         if (array_key_exists('actions', $configuration)) {
             // TODO improve linked action test
             $this->assertCount(count($configuration['actions']), $action->getActions());
         }
-        if (array_key_exists('field_actions', $configuration)) {
-            $this->assertCount(count($configuration['field_actions']), $action->getFieldActions());
-        }
         if (array_key_exists('target', $configuration)) {
-            $this->assertEquals($configuration['target'], $action->getTarget());
+            $this->assertEquals($configuration['target'], $action->getConfiguration()->getTarget());
         } else {
-            $this->assertEquals('_self', $action->getTarget());
+            $this->assertEquals('_self', $action->getConfiguration()->getTarget());
         }
         if (array_key_exists('route', $configuration)) {
-            $this->assertEquals($configuration['route'], $action->getRoute());
+            $this->assertEquals($configuration['route'], $action->getConfiguration()->getRoute());
         }
         if (array_key_exists('parameters', $configuration)) {
-            $this->assertCount(count($configuration['parameters']), $action->getParameters());
+            $this->assertCount(count($configuration['parameters']), $action->getConfiguration()->getParameters());
         }
         if (array_key_exists('icon', $configuration)) {
-            $this->assertEquals($configuration['icon'], $action->getIcon());
+            $this->assertEquals($configuration['icon'], $action->getConfiguration()->getIcon());
         }
         if (array_key_exists('filters', $configuration)) {
             $this->assertCount(count($configuration['filters']), $action->getFilters());

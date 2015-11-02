@@ -105,15 +105,7 @@ class ActionFactory
      */
     protected function createActionFromConfiguration(array $actionConfiguration, $actionName)
     {
-        $configuration = new ActionConfiguration();
-        $configuration->loadMethod = $actionConfiguration['load_method'];
-        $configuration->route = $actionConfiguration['route'];
-        $configuration->parameters = $actionConfiguration['parameters'];
-        $configuration->exports = $actionConfiguration['export'];
-        $configuration->order = $actionConfiguration['order'];
-        $configuration->target = $actionConfiguration['target'];
-        $configuration->icon = $actionConfiguration['icon'];
-        $configuration->batch = $actionConfiguration['batch'];
+        $configuration = new ActionConfiguration($actionConfiguration);
         $action = new Action($actionName, $actionConfiguration, $configuration);
 
         return $action;
