@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Admin\Factory;
 use Exception;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\Admin;
+use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Routing\RoutingLoader;
@@ -55,11 +56,11 @@ class ActionFactory
      *
      * @param string $actionName
      * @param array $actionConfiguration
-     * @param Admin $admin
+     * @param AdminInterface $admin
      *
      * @return Action
      */
-    public function create($actionName, array $actionConfiguration, Admin $admin)
+    public function create($actionName, array $actionConfiguration, AdminInterface $admin)
     {
         // resolving default options
         $resolver = new OptionsResolver();
@@ -163,7 +164,7 @@ class ActionFactory
             ->setNormalizer('batch', function (Options $options, $value) use ($admin, $actionName) {
                 if (!$value) {
                     $value = [
-                        'delete' => 'lag.admin.delete'
+                        'delete' => null
                     ];
                 }
                 if (!is_array($value)) {

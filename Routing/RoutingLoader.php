@@ -44,8 +44,10 @@ class RoutingLoader implements LoaderInterface
             foreach ($actions as $action) {
                 // load route into collection
                 $this->loadRouteForAction($admin, $action, $routes);
+                $this->loadAutomaticRoute($admin, 'batch', $routes);
             }
         }
+
         // loader is loaded
         $this->loaded = true;
 
@@ -133,6 +135,29 @@ class RoutingLoader implements LoaderInterface
         // adding route to symfony collection
         $routeCollection->add($routeName, $route);
     }
+
+    protected function loadAutomaticRoute(AdminInterface $admin, $actionName, RouteCollection $routeCollection)
+    {
+        // batch route
+        $path = $this->replaceInRoute($admin->getConfiguration()->getRoutingUrlPattern(), $admin->getName(), $actionName);
+        $name = $this->replaceInRoute($admin->getConfiguration()->getRoutingNamePattern(), $admin->getName(), $actionName);
+        $defaults = [
+            '_controller' => $admin->getController().':'.$actionName,
+            '_admin' => $admin->getName(),
+            '_action' => $actionName,
+        ];
+        // adding to collection
+        $routeCollection->add($name, new Route($path, $defaults));
+    }
+
+    protected function replaceInRoute($pattern, $adminName, $actionName)
+    {
+        $pattern = str_replace('{admin}', $adminName, $pattern);
+        $pattern = str_replace('{action}', $actionName, $pattern);
+
+        return$pattern;
+    }
+
 
     /**
      * Return entity path for routing (for example, MyNamespace\EntityName => entityName).

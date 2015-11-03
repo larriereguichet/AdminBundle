@@ -13,6 +13,8 @@ v0.4:
 - creating an action view to generate action link
 - remove hardcoded id property and use metadata tu get primary key
 - removing container dependence in routing loader
+- making batch actions configurable and disablable
+
 
 -----------------------------------------------
 

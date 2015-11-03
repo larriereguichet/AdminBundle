@@ -6,6 +6,7 @@ use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Form\Handler\BatchFormHandler;
 use LAG\AdminBundle\Form\Type\AdminListType;
+use LAG\AdminBundle\Form\Type\BatchActionType;
 use LAG\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use DateTime;
@@ -59,8 +60,13 @@ class GenericController extends Controller
             return $this->exportEntities($admin, $request->get('export'));
         }
         if ($form->isValid()) {
+            $pattern = $this
+                ->get('lag.admin.application')
+                ->getRoutingNamePattern();
+            $pattern = str_replace('{admin}', $admin->getName(), $pattern);
+            $pattern = str_replace('{action}', 'batch', $pattern);
             // handle batch actions
-            $formHandler = new BatchFormHandler($this->get('form.factory'), $admin->getAction('batch')->getConfiguration()->getRoute());
+            $formHandler = new BatchFormHandler($this->get('form.factory'), $pattern);
             $batchForm = $formHandler->handle($form);
 
             return $this->render('LAGAdminBundle:Generic:batch.html.twig', [
@@ -205,6 +211,32 @@ class GenericController extends Controller
             'admin' => $admin,
             'form' => $form->createView(),
         ];
+    }
+
+    public function batchAction(Request $request)
+    {
+//        $admin = $this
+//            ->get('lag.admin.factory')
+//            ->getAdminFromRequest($request);
+
+
+
+        var_dump($request);
+        die;
+
+        $pattern = $this
+            ->get('lag.admin.application')
+            ->getRoutingNamePattern();
+        $pattern = str_replace('{admin}', $admin->getName(), $pattern);
+        $pattern = str_replace('{action}', 'batch', $pattern);
+        // handle batch actions
+        $formHandler = new BatchFormHandler($this->get('form.factory'), $pattern);
+        $batchForm = $formHandler->handle($form);
+
+        return $this->render('LAGAdminBundle:Generic:batch.html.twig', [
+            'form' => $batchForm->createView(),
+            'returnRoute' => $admin->getCurrentAction()->getConfiguration()->getRoute()
+        ]);
     }
 
     /**

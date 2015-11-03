@@ -19,7 +19,7 @@ class BatchFormHandler
     /**
      * @var string
      */
-    protected $batchRoute;
+    private $batchRoute;
 
     public function __construct(FormFactory $formBuilder, $batchRoute)
     {
