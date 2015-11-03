@@ -93,9 +93,15 @@ interface AdminInterface
     public function getActions();
 
     /**
+     * @param $actionName
+     * @return ActionInterface
+     */
+    public function getAction($actionName);
+
+    /**
      * Return current admin Action.
      *
-     * @return Action
+     * @return ActionInterface
      */
     public function getCurrentAction();
 

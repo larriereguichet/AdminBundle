@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Controller;
 
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Form\Handler\BatchFormHandler;
 use LAG\AdminBundle\Form\Type\AdminListType;
 use LAG\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
@@ -50,7 +51,7 @@ class GenericController extends Controller
         $form = $this->createForm(new AdminListType(), [
             'entities' => $admin->getEntities()
         ], [
-            'batch_actions' => $admin->getCurrentAction()->getBatchActions(),
+            'batch_actions' => $admin->getCurrentAction()->getConfiguration()->getBatch(),
         ]);
         $form->handleRequest($request);
 
@@ -58,8 +59,14 @@ class GenericController extends Controller
             return $this->exportEntities($admin, $request->get('export'));
         }
         if ($form->isValid()) {
-            var_dump($form->getData());
-            die('lol');
+            // handle batch actions
+            $formHandler = new BatchFormHandler($this->get('form.factory'), $admin->getAction('batch')->getConfiguration()->getRoute());
+            $batchForm = $formHandler->handle($form);
+
+            return $this->render('LAGAdminBundle:Generic:batch.html.twig', [
+                'form' => $batchForm->createView(),
+                'returnRoute' => $admin->getCurrentAction()->getConfiguration()->getRoute()
+            ]);
         }
 
         return [

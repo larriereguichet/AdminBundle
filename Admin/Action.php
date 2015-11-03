@@ -208,7 +208,7 @@ class Action implements ActionInterface
     }
 
     /**
-     * @return mixed
+     * @return ActionConfiguration
      */
     public function getConfiguration()
     {
