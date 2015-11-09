@@ -6,7 +6,6 @@ use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Form\Handler\BatchFormHandler;
 use LAG\AdminBundle\Form\Type\AdminListType;
-use LAG\AdminBundle\Form\Type\BatchActionType;
 use LAG\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use DateTime;

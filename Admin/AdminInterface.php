@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Admin;
 
 use Doctrine\ORM\QueryBuilder;
+use Exception;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Manager\GenericManager;
 use Doctrine\ORM\EntityRepository;
@@ -14,12 +15,24 @@ interface AdminInterface
     /**
      * Handle current request :
      *  - load entities
-     *  - creating form if required
+     *  - create form if required
      *
      * @param Request $request
      * @return mixed
      */
     public function handleRequest(Request $request);
+
+    /**
+     * Generate a route for admin and action name.
+     *
+     * @param $actionName
+     * @param AdminInterface $admin
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    public function generateRouteName($actionName, AdminInterface $admin);
 
     /**
      * @return void

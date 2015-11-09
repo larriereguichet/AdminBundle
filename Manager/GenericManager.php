@@ -80,7 +80,10 @@ class GenericManager implements ManagerInterface
         // sort is optional
         if ($sort) {
             // check in metadata if sort column is a relation
-            $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($this->entityRepository->getClassName());
+            $metadata = $this
+                ->entityManager
+                ->getMetadataFactory()
+                ->getMetadataFor($this->entityRepository->getClassName());
             $orderDql = 'entity.' . $sort;
 
             if (in_array($sort, $metadata->getAssociationNames())) {

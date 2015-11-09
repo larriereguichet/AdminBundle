@@ -8,6 +8,7 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Exception;
+use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -21,9 +22,19 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class RoutingLoader implements LoaderInterface
 {
-    use ContainerTrait, StringUtilsTrait;
+    use StringUtilsTrait;
 
     protected $loaded = false;
+
+    /**
+     * @var AdminFactory
+     */
+    protected $adminFactory;
+
+    public function __construct(AdminFactory $adminFactory)
+    {
+        $this->adminFactory = $adminFactory;
+    }
 
     public function load($resource, $type = null)
     {
@@ -31,9 +42,9 @@ class RoutingLoader implements LoaderInterface
             throw new RuntimeException('Do not add the "extra" loader twice');
         }
         $routes = new RouteCollection();
+        $this->adminFactory->init();
         $admins = $this
-            ->container
-            ->get('lag.admin.factory')
+            ->adminFactory
             ->getAdmins();
         // creating a route by admin and action
         /** @var AdminInterface $admin */
@@ -47,7 +58,6 @@ class RoutingLoader implements LoaderInterface
                 $this->loadAutomaticRoute($admin, 'batch', $routes);
             }
         }
-
         // loader is loaded
         $this->loaded = true;
 
@@ -65,31 +75,6 @@ class RoutingLoader implements LoaderInterface
 
     public function setResolver(LoaderResolverInterface $resolver)
     {
-    }
-
-    /**
-     * Generate a route for admin and action name.
-     *
-     * @param $actionName
-     * @param AdminInterface $admin
-     *
-     * @return string
-     *
-     * @throws Exception
-     */
-    public function generateRouteName($actionName, AdminInterface $admin)
-    {
-        if (!array_key_exists($actionName, $admin->getConfiguration()->getActions())) {
-            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$admin->getName()}\" (available action are: \""
-                .implode('", "', array_keys($admin->getConfiguration()->getActions())).'")');
-        }
-        // get routing name pattern
-        $routingPattern = $admin->getConfiguration()->getRoutingNamePattern();
-        // replace admin and action name in pattern
-        $routeName = str_replace('{admin}', $this->underscore($admin->getName()), $routingPattern);
-        $routeName = str_replace('{action}', $actionName, $routeName);
-
-        return $routeName;
     }
 
     /**
@@ -128,7 +113,7 @@ class RoutingLoader implements LoaderInterface
         }
         // creating new route
         $route = new Route($path, $defaults, $requirements);
-        $routeName = $this->generateRouteName($action->getName(), $admin);
+        $routeName = $admin->generateRouteName($action->getName(), $admin);
         // set route to action
         $action->getConfiguration()->setRoute($routeName);
         $action->getConfiguration()->setParameters($requirements);
@@ -155,7 +140,7 @@ class RoutingLoader implements LoaderInterface
         $pattern = str_replace('{admin}', $adminName, $pattern);
         $pattern = str_replace('{action}', $actionName, $pattern);
 
-        return$pattern;
+        return $pattern;
     }
 
 

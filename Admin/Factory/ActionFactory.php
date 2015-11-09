@@ -19,11 +19,6 @@ class ActionFactory
     use StringUtilsTrait;
 
     /**
-     * @var RoutingLoader
-     */
-    protected $routingLoader;
-
-    /**
      * @var FieldFactory
      */
     protected $fieldFactory;
@@ -39,13 +34,11 @@ class ActionFactory
     protected $configuration;
 
     public function __construct(
-        RoutingLoader $routingLoader,
         FieldFactory $fieldFactory,
         FilterFactory $filterFactory,
         ApplicationConfiguration $configuration
     )
     {
-        $this->routingLoader = $routingLoader;
         $this->fieldFactory = $fieldFactory;
         $this->filterFactory = $filterFactory;
         $this->configuration = $configuration;
@@ -144,8 +137,7 @@ class ActionFactory
                     if (!$admin) {
                         throw new Exception('No route was provided for action : ' . $actionName);
                     }
-                    return $this
-                        ->routingLoader
+                    return $admin
                         ->generateRouteName($actionName, $admin);
                 }
                 return $value;

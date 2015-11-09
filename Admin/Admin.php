@@ -158,6 +158,31 @@ class Admin implements AdminInterface
     }
 
     /**
+     * Generate a route for admin and action name.
+     *
+     * @param $actionName
+     * @param AdminInterface $admin
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    public function generateRouteName($actionName, AdminInterface $admin)
+    {
+        if (!array_key_exists($actionName, $admin->getConfiguration()->getActions())) {
+            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$admin->getName()}\" (available action are: \""
+                .implode('", "', array_keys($admin->getConfiguration()->getActions())).'")');
+        }
+        // get routing name pattern
+        $routingPattern = $admin->getConfiguration()->getRoutingNamePattern();
+        // replace admin and action name in pattern
+        $routeName = str_replace('{admin}', $this->underscore($admin->getName()), $routingPattern);
+        $routeName = str_replace('{action}', $actionName, $routeName);
+
+        return $routeName;
+    }
+
+    /**
      * Load entities according to load method of current action
      *
      * @param Request $request

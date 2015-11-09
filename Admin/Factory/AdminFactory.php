@@ -3,20 +3,21 @@
 namespace LAG\AdminBundle\Admin\Factory;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManager;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\ManagerInterface;
-use LAG\AdminBundle\Event\AdminFactoryEvent;
+use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Manager\GenericManager;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Exception;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -32,49 +33,94 @@ class AdminFactory
 
     protected $admins = [];
 
+    protected $isInit = false;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
     /**
      * @var ApplicationConfiguration
      */
-    protected $applicationConfiguration;
+    protected $application;
+    /**
+     * @var array
+     */
+    protected $adminConfiguration;
+    /**
+     * @var Session
+     */
+    protected $session;
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+    /**
+     * @var ActionFactory
+     */
+    protected $actionFactory;
 
     /**
      * Read configuration from container, then create admin with its actions and fields.
      *
-     * @param ContainerInterface $container
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param EntityManager $entityManager
+     * @param ApplicationConfiguration $application
+     * @param array $adminConfiguration
+     * @param Session $session
+     * @param LoggerInterface $logger
+     * @param ActionFactory $actionFactory
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        EntityManager $entityManager,
+        ApplicationConfiguration $application,
+        array $adminConfiguration,
+        Session $session,
+        LoggerInterface $logger,
+        ActionFactory $actionFactory
+    )
     {
-        // TODO remove dependence to container
-        $this->container = $container;
-        $admins = $this->container->getParameter('lag.admins');
-        // dispatch an event with admins configurations to allow dynamic admin creation
-        $event = new AdminFactoryEvent();
-        $event->setAdminsConfiguration($admins);
-        /** @var EventDispatcher $eventDispatcher */
-        $eventDispatcher = $this->container->get('event_dispatcher');
-        $eventDispatcher->dispatch(self::ADMIN_CREATION, $event);
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
+        $this->application = $application;
+        $this->adminConfiguration = $adminConfiguration;
+        $this->session = $session;
+        $this->logger = $logger;
+        $this->actionFactory = $actionFactory;
+    }
 
-        // creating configured admin
-        foreach ($admins as $adminName => $adminConfig) {
-            $this->create($adminName, $adminConfig);
+    /**
+     * Create admins from configuration and load them into the pool
+     */
+    public function init()
+    {
+        if ($this->isInit) {
+            return;
         }
+        foreach ($this->adminConfiguration as $name => $configuration) {
+            $event = new AdminEvent();
+            $event->setConfiguration($configuration);
+            $this->eventDispatcher->dispatch(AdminEvent::ADMIN_CREATE, $event);
+            $this->admins[$name] = $this->create($name, $event->getConfiguration());
+        }
+        $this->isInit = true;
     }
 
     /**
      * Create an Admin from configuration values. It will be added to AdminFactory admin's list.
      *
-     * @param $adminName
-     * @param array $adminConfiguration
+     * @param $name
+     * @param array $configuration
+     * @return Admin
+     * @throws Exception
      */
-    public function create($adminName, array $adminConfiguration)
+    public function create($name, array $configuration)
     {
-        $application = $this
-            ->container
-            ->get('lag.admin.application');
-        $entityManager = $this
-            ->container
-            ->get('doctrine')
-            ->getManager();
         $resolver = new OptionsResolver();
         // optional options
         $resolver->setDefaults([
@@ -84,14 +130,12 @@ class AdminFactory
                 'edit' => [],
                 'delete' => [],
             ],
+            'batch' => true,
             'manager' => 'LAG\AdminBundle\Manager\GenericManager',
-            'routing_url_pattern' => $application->getRoutingUrlPattern(),
-            'routing_name_pattern' => $application->getRoutingNamePattern(),
+            'routing_url_pattern' => $this->application->getRoutingUrlPattern(),
+            'routing_name_pattern' => $this->application->getRoutingNamePattern(),
             'controller' => 'LAGAdminBundle:Generic',
-            'max_per_page' => $this
-                ->container
-                ->get('lag.admin.application')
-                ->getMaxPerPage(),
+            'max_per_page' => $this->application->getMaxPerPage()
         ]);
         // required options
         $resolver->setRequired([
@@ -99,41 +143,38 @@ class AdminFactory
             'form',
         ]);
         // resolve admin configuration
-        $adminConfiguration = $resolver->resolve($adminConfiguration);
+        $configuration = $resolver->resolve($configuration);
         // create AdminConfiguration object
-        $adminConfig = new AdminConfiguration($adminConfiguration);
-        /** @var EntityRepository $entityRepository */
-        $entityRepository = $entityManager->getRepository($adminConfig->getEntityName());
+        $adminConfiguration = new AdminConfiguration($configuration);
+        $repository = $this
+            ->entityManager
+            ->getRepository($adminConfiguration->getEntityName());
         // create generic manager from configuration
-        $entityManager = $this->createManagerFromConfig($adminName, $adminConfig, $entityRepository, $entityManager);
+        $entityManager = $this->createManagerFromConfig($name, $adminConfiguration, $repository, $this->entityManager);
 
         $admin = new Admin(
-            $adminName,
-            $entityRepository,
+            $name,
+            $repository,
             $entityManager,
-            $adminConfig,
-            $this->get('session'),
-            $this->get('logger')
+            $adminConfiguration,
+            $this->session,
+            $this->logger
         );
-        // actions are optional
-        if (!$adminConfig->getActions()) {
-            $adminConfig->setActions([
-                'list' => [],
-                'create' => [],
-                'edit' => [],
-                'delete' => [],
-            ]);
-        }
-        $actionFactory = $this
-            ->container
-            ->get('lag.admin.action_factory');
         // adding actions
-        foreach ($adminConfig->getActions() as $actionName => $actionConfig) {
-            $action = $actionFactory->create($actionName, $actionConfig, $admin);
+        foreach ($adminConfiguration->getActions() as $actionName => $actionConfiguration) {
+            // dispatching action create event for dynamic action creation
+            $event = new AdminEvent();
+            $event->setConfiguration($actionConfiguration);
+            $event->setAdmin($admin);
+            $this->eventDispatcher->dispatch(AdminEvent::ACTION_CREATE, $event);
+            // creating action from configuration
+            $action = $this
+                ->actionFactory
+                ->create($actionName, $event->getConfiguration(), $admin);
+            // adding action to admin
             $admin->addAction($action);
         }
-        // adding admins to the pool
-        $this->admins[$admin->getName()] = $admin;
+        return $admin;
     }
 
     /**
@@ -190,14 +231,6 @@ class AdminFactory
     public function getAdmins()
     {
         return $this->admins;
-    }
-
-    /**
-     * @return ApplicationConfiguration
-     */
-    public function getApplicationConfiguration()
-    {
-        return $this->applicationConfiguration;
     }
 
     /**

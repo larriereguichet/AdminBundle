@@ -109,6 +109,7 @@ class ApplicationConfiguration
     {
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
+            'enable_extra_configuration' => true,
             'title' => '',
             'description' => '',
             'locale' => $locale,
@@ -136,6 +137,7 @@ class ApplicationConfiguration
                 Field::TYPE_ACTION => 'LAG\AdminBundle\Admin\Render\LinkRenderer',
             ],
         ]);
+        $resolver->setAllowedValues('enable_extra_configuration', [true, false]);
         $applicationConfiguration = $resolver->resolve($applicationConfiguration);
         // resolving routing options
         $routingConfiguration = $applicationConfiguration['routing'];
