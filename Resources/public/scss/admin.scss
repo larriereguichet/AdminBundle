@@ -23,3 +23,17 @@ table {
     }
   }
 }
+
+// surcharge des styles bootstrap des checkbox pour le cas particulier des checkbox d'édition/suppression de masse
+.admin-list {
+  .batch-column {
+    .checkbox {
+      margin-top: 0;
+      margin-bottom: 0;
+
+      label {
+        cursor: auto;
+      }
+    }
+  }
+}

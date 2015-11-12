@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Event\Subscriber;
 
 use Doctrine\ORM\EntityManager;
 use LAG\AdminBundle\Event\AdminEvent;
+use LAG\AdminBundle\Utils\FieldTypeGuesser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ExtraConfigurationSubscriber implements EventSubscriberInterface
@@ -32,6 +33,11 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * Adding default CRUD if none is defined
+     *
+     * @param AdminEvent $event
+     */
     public function adminCreate(AdminEvent $event)
     {
         if (!$this->enableExtraConfiguration) {
@@ -58,12 +64,27 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         }
         $configuration = $event->getConfiguration();
 
-        if (!count($configuration['fields'])) {
-            $test = $this->entityManager->getMetadataFactory()->getMetadataFor($event->getAdmin()->getEntityNamespace());
+        if (empty($configuration['fields']) || !count($configuration['fields'])) {
+            $fields = [];
+            $guesser = new FieldTypeGuesser();
+            $metadata = $this
+                ->entityManager
+                ->getMetadataFactory()
+                ->getMetadataFor($event->getAdmin()->getEntityNamespace());
+            $fieldsName = $metadata->getFieldNames();
 
-            var_dump($test);
-            die;
-            die('lol');
+            foreach ($fieldsName as $name) {
+                $type = $metadata->getTypeOfField($name);
+                $fieldConfiguration = $guesser->getTypeAndOptions($type);
+
+                if (count($fieldConfiguration)) {
+                    $fields[$name] = $fieldConfiguration;
+                }
+            }
+            if (count($fields)) {
+                $configuration['fields'] = $fields;
+                $event->setConfiguration($configuration);
+            }
         }
     }
 }

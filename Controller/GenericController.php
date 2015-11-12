@@ -106,18 +106,14 @@ class GenericController extends Controller
 
             if ($request->request->get('submit') == 'save') {
                 // if save is pressed, user stay on the edit view
-                $editRoute = $this
-                    ->get('lag.admin.routing')
-                    ->generateRouteName('edit', $admin);
+                $editRoute = $admin->generateRouteName('edit', $admin);
 
                 return $this->redirectToRoute($editRoute, [
                     'id' => $admin->getEntity()->getId(),
                 ]);
             } else {
                 // otherwise user is redirected to list view
-                $listRoute = $this
-                    ->get('lag.admin.routing')
-                    ->generateRouteName('list', $admin);
+                $listRoute = $admin->generateRouteName('list', $admin);
 
                 return $this->redirect($this->generateUrl($listRoute));
             }
@@ -154,17 +150,13 @@ class GenericController extends Controller
             $admin->save();
 
             if ($request->request->get('submit') == 'save') {
-                $saveRoute = $this
-                    ->get('lag.admin.routing')
-                    ->generateRouteName('edit', $admin);
+                $saveRoute = $admin->generateRouteName('edit', $admin);
 
                 return $this->redirectToRoute($saveRoute, [
                     'id' => $accessor->getValue($admin->getEntity(), 'id'),
                 ]);
             } else {
-                $listRoute = $this
-                    ->get('lag.admin.routing')
-                    ->generateRouteName('list', $admin);
+                $listRoute = $admin->generateRouteName('list', $admin);
                 // redirect to list
                 return $this->redirectToRoute($listRoute);
             }
@@ -199,9 +191,7 @@ class GenericController extends Controller
         if ($form->isValid()) {
             $admin->delete();
             // redirect to list
-            $listRoute = $this
-                ->get('lag.admin.routing')
-                ->generateRouteName('list', $admin);
+            $listRoute = $admin->generateRouteName('list', $admin);
 
             return $this->redirectToRoute($listRoute);
         }
@@ -214,10 +204,9 @@ class GenericController extends Controller
 
     public function batchAction(Request $request)
     {
-//        $admin = $this
-//            ->get('lag.admin.factory')
-//            ->getAdminFromRequest($request);
-
+        $admin = $this
+            ->get('lag.admin.factory')
+            ->getAdminFromRequest($request);
 
 
         var_dump($request);
@@ -300,10 +289,16 @@ class GenericController extends Controller
     {
         // TODO move authorizations logic into kernel.request event
         $this->forward404Unless($this->getUser(), 'You must be logged to access to this url');
+        $roles = $this
+            ->getUser()
+            ->getRoles();
         // check permissions and actions
         $this->forward404Unless(
-            $admin->isActionGranted($admin->getCurrentAction()->getName(), $this->getUser()->getRoles()),
-            sprintf('User not allowed for action "%s"', $admin->getCurrentAction()->getName())
+            $admin->isActionGranted($admin->getCurrentAction()->getName(), $roles),
+            sprintf('User with roles %s not allowed for action "%s"',
+                implode(', ', $roles),
+                $admin->getCurrentAction()->getName()
+            )
         );
     }
 
