@@ -74,6 +74,11 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         $configuration = $event->getConfiguration();
         // current action admin
         $admin = $event->getAdmin();
+        // allowed actions according to the admin
+        $keys = $admin
+            ->getConfiguration()
+            ->getActions();
+        $allowedActions = array_keys($keys);
 
         // if no field was provided in configuration, we try to take fields from doctrine metadata
         if (empty($configuration['fields']) || !count($configuration['fields'])) {
@@ -100,13 +105,45 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                 $configuration['fields'] = $fields;
             }
         }
+        if (array_key_exists('_actions', $configuration['fields'])
+            && !array_key_exists('type', $configuration['fields']['_actions'])
+        ) {
+
+            if ($event->getActionName() == 'list') {
+
+                if (in_array('edit', $allowedActions)) {
+                    $configuration['fields']['_actions']['type'] = 'collection';
+                    $configuration['fields']['_actions']['options']['_edit'] = [
+                        'type' => 'action',
+                        'options' => [
+                            'title' => $this->applicationConfiguration->getTranslationKey('edit', $event->getAdmin()->getName()),
+                            'route' => $admin->generateRouteName('edit'),
+                            'parameters' => [
+                                'id' => false
+                            ],
+                            'icon' => 'pencil'
+                        ]
+                    ];
+                }
+                if (in_array('delete', $allowedActions)) {
+                    $configuration['fields']['_actions']['type'] = 'collection';
+                    $configuration['fields']['_actions']['options']['_delete'] = [
+                        'type' => 'action',
+                        'options' => [
+                            'title' => $this->applicationConfiguration->getTranslationKey('delete', $event->getAdmin()->getName()),
+                            'route' => $admin->generateRouteName('delete'),
+                            'parameters' => [
+                                'id' => false
+                            ],
+                            'icon' => 'remove'
+                        ]
+                    ];
+                }
+            }
+        }
         // add default menu actions if none was provided
         if (empty($configuration['actions'])) {
-            $keys = $admin
-                ->getConfiguration()
-                ->getActions();
-            $allowedActions = array_keys($keys);
-
+            // by default, in list action we add a create linked action
             if ($event->getActionName() == 'list') {
                 if (in_array('create', $allowedActions)) {
                     $configuration['actions']['create'] = [
