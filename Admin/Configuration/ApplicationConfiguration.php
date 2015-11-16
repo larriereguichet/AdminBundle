@@ -429,12 +429,14 @@ class ApplicationConfiguration
 
     public function getTranslationKey($key, $adminName = null)
     {
-        if (strstr($this->translationPattern, '{admin}') && $adminName) {
-            $key = str_replace('{admin}', $adminName, $this->translationPattern);
-        }
-        $key = str_replace('{key}', $key, $this->translationPattern);
+        $translationKey = $this->translationPattern;
 
-        return $key;
+        if (strstr($this->translationPattern, '{admin}') && $adminName) {
+            $translationKey = str_replace('{admin}', $adminName, $translationKey);
+        }
+        $translationKey = str_replace('{key}', $key, $translationKey);
+
+        return $translationKey;
     }
 
     /**

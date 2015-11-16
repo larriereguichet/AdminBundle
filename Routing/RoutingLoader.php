@@ -5,7 +5,6 @@ namespace LAG\AdminBundle\Routing;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
-use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Exception;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
@@ -113,7 +112,7 @@ class RoutingLoader implements LoaderInterface
         }
         // creating new route
         $route = new Route($path, $defaults, $requirements);
-        $routeName = $admin->generateRouteName($action->getName(), $admin);
+        $routeName = $admin->generateRouteName($action->getName());
         // set route to action
         $action->getConfiguration()->setRoute($routeName);
         $action->getConfiguration()->setParameters($requirements);

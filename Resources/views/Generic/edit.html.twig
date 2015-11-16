@@ -32,8 +32,7 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-lg-12">
-                    <form action="{{ path(admin.currentAction.configuration.route, { id: form.vars.value.id}) }}" method="post"
-                          role="form" title="{{ admin.currentAction.title | trans }}" enctype="{{ encType }}">
+                    <form method="post" role="form" title="{{ admin.currentAction.title | trans }}" enctype="{{ encType }}">
                         {{ form_widget(form) }}
 
                         <div class="form-group">
@@ -41,7 +40,7 @@
                                 <a href="{{ path(admin.action('list').configuration.route) }}"
                                    class="btn"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
                                     {{ 'lag.admin.cancel' | trans }}</a>
-                                {% if form.vars.value.id %}
+                                {% if admin.entity.id is defined %}
                                     <a href="{{ path(admin.action('delete').configuration.route, {id: admin.entity.id}) }}"
                                        class="btn btn-danger">{{ 'lag.admin.delete' | trans }}
                                         <i class="fa fa-remove"></i>

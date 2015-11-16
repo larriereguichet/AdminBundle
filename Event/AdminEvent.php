@@ -18,6 +18,11 @@ class AdminEvent extends Event
     protected $admin;
 
     /**
+     * @var string
+     */
+    protected $actionName;
+
+    /**
      * @param array $configuration
      * @return AdminEvent
      */
@@ -53,5 +58,21 @@ class AdminEvent extends Event
         $this->admin = $admin;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getActionName()
+    {
+        return $this->actionName;
+    }
+
+    /**
+     * @param string $actionName
+     */
+    public function setActionName($actionName)
+    {
+        $this->actionName = $actionName;
     }
 }

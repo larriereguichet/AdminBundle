@@ -166,6 +166,7 @@ class AdminFactory
             $event = new AdminEvent();
             $event->setConfiguration($actionConfiguration);
             $event->setAdmin($admin);
+            $event->setActionName($actionName);
             $this->eventDispatcher->dispatch(AdminEvent::ACTION_CREATE, $event);
             // creating action from configuration
             $action = $this

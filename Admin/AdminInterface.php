@@ -26,13 +26,12 @@ interface AdminInterface
      * Generate a route for admin and action name.
      *
      * @param $actionName
-     * @param AdminInterface $admin
      *
      * @return string
      *
      * @throws Exception
      */
-    public function generateRouteName($actionName, AdminInterface $admin);
+    public function generateRouteName($actionName);
 
     /**
      * @return void

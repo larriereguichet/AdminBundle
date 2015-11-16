@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Controller;
 
-use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Form\Handler\BatchFormHandler;
 use LAG\AdminBundle\Form\Type\AdminListType;
@@ -92,12 +91,11 @@ class GenericController extends Controller
      */
     public function createAction(Request $request)
     {
-        /** @var Admin $admin */
         $admin = $this->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
-        $form = $this->createForm($admin->getFormType(), $admin->getEntity());
+        $form = $this->createForm($admin->getFormType());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -106,14 +104,14 @@ class GenericController extends Controller
 
             if ($request->request->get('submit') == 'save') {
                 // if save is pressed, user stay on the edit view
-                $editRoute = $admin->generateRouteName('edit', $admin);
+                $editRoute = $admin->generateRouteName('edit');
 
                 return $this->redirectToRoute($editRoute, [
                     'id' => $admin->getEntity()->getId(),
                 ]);
             } else {
                 // otherwise user is redirected to list view
-                $listRoute = $admin->generateRouteName('list', $admin);
+                $listRoute = $admin->generateRouteName('list');
 
                 return $this->redirect($this->generateUrl($listRoute));
             }
@@ -136,9 +134,7 @@ class GenericController extends Controller
      */
     public function editAction(Request $request)
     {
-        $admin = $this
-            ->get('lag.admin.factory')
-            ->getAdminFromRequest($request);
+        $admin = $this->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
@@ -150,13 +146,13 @@ class GenericController extends Controller
             $admin->save();
 
             if ($request->request->get('submit') == 'save') {
-                $saveRoute = $admin->generateRouteName('edit', $admin);
+                $saveRoute = $admin->generateRouteName('edit');
 
                 return $this->redirectToRoute($saveRoute, [
                     'id' => $accessor->getValue($admin->getEntity(), 'id'),
                 ]);
             } else {
-                $listRoute = $admin->generateRouteName('list', $admin);
+                $listRoute = $admin->generateRouteName('list');
                 // redirect to list
                 return $this->redirectToRoute($listRoute);
             }
@@ -179,9 +175,7 @@ class GenericController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $admin = $this
-            ->get('lag.admin.factory')
-            ->getAdminFromRequest($request);
+        $admin = $this->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form to avoid deletion by url
@@ -191,7 +185,7 @@ class GenericController extends Controller
         if ($form->isValid()) {
             $admin->delete();
             // redirect to list
-            $listRoute = $admin->generateRouteName('list', $admin);
+            $listRoute = $admin->generateRouteName('list');
 
             return $this->redirectToRoute($listRoute);
         }
@@ -204,9 +198,7 @@ class GenericController extends Controller
 
     public function batchAction(Request $request)
     {
-        $admin = $this
-            ->get('lag.admin.factory')
-            ->getAdminFromRequest($request);
+        /*$admin = $this->getAdminFromRequest($request);
 
 
         var_dump($request);
@@ -224,7 +216,7 @@ class GenericController extends Controller
         return $this->render('LAGAdminBundle:Generic:batch.html.twig', [
             'form' => $batchForm->createView(),
             'returnRoute' => $admin->getCurrentAction()->getConfiguration()->getRoute()
-        ]);
+        ]);*/
     }
 
     /**

@@ -32,7 +32,7 @@ services:
         class: %lag.admin.extra_configuration_subscriber.class%
         tags:
             - {name: kernel.event_subscriber}
-        arguments: [%lag.enable_extra_configuration%, @doctrine.orm.entity_manager]
+        arguments: [%lag.enable_extra_configuration%, @doctrine.orm.entity_manager, @lag.admin.application]
 
     lag.admin.admin_subscriber:
         class: %lag.admin.admin_subscriber.class%

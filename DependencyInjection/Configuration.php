@@ -7,9 +7,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -58,6 +55,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('manager')->defaultValue('LAG\AdminBundle\Manager\GenericManager')->end()
                             // actions configurations
                             ->arrayNode('actions')
+                                ->useAttributeAsKey('name')
                                 ->prototype('array')
                                     ->children()
                                         ->scalarNode('title')->end()

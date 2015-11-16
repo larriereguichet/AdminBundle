@@ -8,7 +8,6 @@ use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Routing\RoutingLoader;
 use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
@@ -138,7 +137,7 @@ class ActionFactory
                         throw new Exception('No route was provided for action : ' . $actionName);
                     }
                     return $admin
-                        ->generateRouteName($actionName, $admin);
+                        ->generateRouteName($actionName);
                 }
                 return $value;
             })

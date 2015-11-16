@@ -161,22 +161,21 @@ class Admin implements AdminInterface
      * Generate a route for admin and action name.
      *
      * @param $actionName
-     * @param AdminInterface $admin
      *
      * @return string
      *
      * @throws Exception
      */
-    public function generateRouteName($actionName, AdminInterface $admin)
+    public function generateRouteName($actionName)
     {
-        if (!array_key_exists($actionName, $admin->getConfiguration()->getActions())) {
-            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$admin->getName()}\" (available action are: \""
-                .implode('", "', array_keys($admin->getConfiguration()->getActions())).'")');
+        if (!array_key_exists($actionName, $this->getConfiguration()->getActions())) {
+            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$this->getName()}\" (available action are: \""
+                .implode('", "', array_keys($this->getConfiguration()->getActions())).'")');
         }
         // get routing name pattern
-        $routingPattern = $admin->getConfiguration()->getRoutingNamePattern();
+        $routingPattern = $this->getConfiguration()->getRoutingNamePattern();
         // replace admin and action name in pattern
-        $routeName = str_replace('{admin}', $this->underscore($admin->getName()), $routingPattern);
+        $routeName = str_replace('{admin}', $this->underscore($this->getName()), $routingPattern);
         $routeName = str_replace('{action}', $actionName, $routeName);
 
         return $routeName;
