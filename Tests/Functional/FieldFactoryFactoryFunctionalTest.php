@@ -1,12 +1,13 @@
 <?php
 
-namespace LAG\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests\Functional;
 
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Factory\FieldFactory;
 use LAG\AdminBundle\Admin\Field;
 use LAG\AdminBundle\Admin\FieldInterface;
 use DateTime;
+use LAG\AdminBundle\Tests\Base;
 use Symfony\Component\Routing\RouterInterface;
 
 class FieldFactoryFactoryFunctionalTest extends Base

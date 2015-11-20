@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Tests;
 
-use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Test\TestBundle\Entity\TestEntity;
 
@@ -11,10 +10,7 @@ class AdminTest  extends Base
     public function testAdmin()
     {
         $repository = $this
-            ->getMockBuilder('Doctrine\Common\Persistence\ObjectRepository')
-            ->getMock();
-        $manager = $this
-            ->getMockBuilder('LAG\AdminBundle\Manager\GenericManager')
+            ->getMockBuilder('Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
             ->getMock();
         $configuration = [
@@ -32,12 +28,7 @@ class AdminTest  extends Base
             'routing_name_pattern' => 'lag.{admin}.{action}'
         ];
         $adminConfiguration = new AdminConfiguration($configuration);
-        $admin = new Admin(
-            'test_admin',
-            $repository,
-            $manager,
-            $adminConfiguration
-        );
+        $admin = $this->mokeAdmin('test_admin', $adminConfiguration);
         $this->assertEquals('test_admin', $admin->getName());
         $this->assertEquals($configuration['entity'], $admin->getEntityNamespace());
         $this->assertEquals($repository, $admin->getRepository());

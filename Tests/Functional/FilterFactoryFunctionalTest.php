@@ -1,8 +1,9 @@
 <?php
 
-namespace LAG\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests\Functional;
 
 use LAG\AdminBundle\Admin\Filter;
+use LAG\AdminBundle\Tests\Base;
 
 class FilterFactoryFunctionalTest extends Base
 {
