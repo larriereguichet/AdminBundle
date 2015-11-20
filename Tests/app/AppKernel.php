@@ -13,6 +13,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
             new LAG\AdminBundle\LAGAdminBundle(),
             new Test\TestBundle\TestTestBundle(),
