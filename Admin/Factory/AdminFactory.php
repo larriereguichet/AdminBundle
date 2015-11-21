@@ -95,7 +95,7 @@ class AdminFactory
     }
 
     /**
-     * Create admins from configuration and load them into the pool
+     * Create admins from configuration and load them into the pool. Dispatch ADMIN_CREATE event.
      */
     public function init()
     {

@@ -1,21 +1,28 @@
 <?php
 
-namespace LAG\AdminBundle\Tests;
+namespace Admin\Factory;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Tests\Base;
 use Test\TestBundle\Entity\TestEntity;
 
-class AdminTest extends Base
+class AdminFactoryTest extends Base
 {
-    public function testAdmin()
+    /**
+     * Init method should create Admin object according to given configuration
+     */
+    public function testInit()
     {
-        $configurations = $this->getFakeAdminsConfiguration();
+        // admin factory should work without configuration
+        $this->mockAdminFactory();
+        // test admin creation
+        $configuration = $this->getAdminsConfiguration();
+        $adminFactory = $this->mockAdminFactory($configuration);
+        $adminFactory->init();
 
-        foreach ($configurations as $adminName => $configuration) {
-            $adminConfiguration = new AdminConfiguration($configuration);
-            $admin = $this->mockAdmin($adminName, $adminConfiguration);
-            $this->doTestAdmin($admin, $configuration, $adminName);
+        foreach ($configuration as $name => $adminConfiguration) {
+            $admin = $adminFactory->getAdmin($name);
+            $this->doTestAdmin($admin, $adminConfiguration, $name);
         }
     }
 
@@ -38,9 +45,13 @@ class AdminTest extends Base
         }
     }
 
-    protected function getFakeAdminsConfiguration()
+    protected function getAdminsConfiguration()
     {
         return [
+            'minimal_configuration' => [
+                'entity' => 'Test\TestBundle\Entity\TestEntity',
+                'form' => 'test'
+            ],
             'full_entity' => [
                 'entity' => 'Test\TestBundle\Entity\TestEntity',
                 'form' => 'test',

@@ -6,11 +6,13 @@ use Closure;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use LAG\AdminBundle\Admin\ManagerInterface;
+use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
@@ -110,17 +112,17 @@ class Base extends WebTestCase
         $this->client->getCookieJar()->set($cookie);
     }
 
-    protected function mokeAdmin($name, $configuration)
+    protected function mockAdmin($name, $configuration)
     {
-        /** @var EntityRepository $repositoryMock */
-        $repositoryMock = $this
-            ->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $repositoryMock = $this->mockEntityRepository();
         /** @var ManagerInterface $managerMock */
         $managerMock = $this
             ->getMockBuilder('LAG\AdminBundle\Admin\ManagerInterface')
             ->getMock();
+        $managerMock
+            ->method('getRepository')
+            ->willReturn('Doctrine\ORM\EntityRepository');
+
         $session = $this->mockSession();
         $logger = $this->mockLogger();
 
@@ -134,44 +136,26 @@ class Base extends WebTestCase
         );
     }
 
-    protected function mokeAdminFactory(array $configuration = [])
+    protected function mockAdminFactory(array $configuration = [])
     {
         /** @var EventDispatcher $mockEventDispatcher */
         $mockEventDispatcher = $this
             ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
             ->getMock();
-        /** @var EntityManager $entityManager */
-        $entityManager = $this
-            ->getMockBuilder('Doctrine\ORM\EntityManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-        /** @var ApplicationConfiguration $applicationConfiguration */
-        $applicationConfiguration = $this
-            ->getMockBuilder('LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $session = $this->mockSession();
-        $logger = $this->mockLogger();
-
-        /** @var ActionFactory $actionFactory */
-        $actionFactory = $this
-            ->getMockBuilder('LAG\AdminBundle\Admin\Factory\ActionFactory')
-            ->disableOriginalConstructor()
-            ->getMock();
 
         return new AdminFactory(
             $mockEventDispatcher,
-            $entityManager,
-            $applicationConfiguration,
+            $this->mockEntityManager(),
+            $this->mockApplicationConfiguration(),
             $configuration,
-            $session,
-            $logger,
-            $actionFactory
+            $this->mockSession(),
+            $this->mockLogger(),
+            $this->mockActionFactory()
         );
     }
 
     /**
-     * @return Session
+     * @return Session | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockSession()
     {
@@ -189,7 +173,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return Logger
+     * @return Logger | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockLogger()
     {
@@ -204,5 +188,73 @@ class Base extends WebTestCase
                 ->getMock();
         }
         return $logger;
+    }
+
+    /**
+     * @return EntityRepository | PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockEntityRepository()
+    {
+        return $this
+            ->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
+     * @return EntityManager | PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockEntityManager()
+    {
+        $entityManager = $this
+            ->getMockBuilder('Doctrine\ORM\EntityManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $repository = $this->mockEntityRepository();
+        $entityManager
+            ->method('getRepository')
+            ->willReturn($repository);
+
+        return $entityManager;
+    }
+
+    /**
+     * @return ActionFactory | PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockActionFactory()
+    {
+        $actionFactory = $this
+            ->getMockBuilder('LAG\AdminBundle\Admin\Factory\ActionFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $actionFactory
+            ->method('create')
+            ->willReturn($this->mockAction());
+
+        return $actionFactory;
+    }
+
+    protected function mockAction()
+    {
+        return $this
+            ->getMockBuilder('LAG\AdminBundle\Admin\Action')
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
+     * @return ApplicationConfiguration
+     */
+    protected function mockApplicationConfiguration()
+    {
+        $applicationConfiguration = $this
+            ->getMockBuilder('LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $applicationConfiguration
+            ->method('getMaxPerPage')
+            ->willReturn(25);
+
+        return $applicationConfiguration;
     }
 }

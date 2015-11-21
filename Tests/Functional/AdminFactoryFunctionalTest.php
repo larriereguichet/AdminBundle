@@ -13,7 +13,7 @@ class AdminFactoryFunctionalTest extends Base
     {
         /*$this->initApplication();
         // admin factory initialization
-        $adminFactory = $this->mokeAdminFactory();
+        $adminFactory = $this->mockAdminFactory();
         // assert factory creation (dependencies are correct...)
         $this->assertTrue($adminFactory != null, 'AdminFactory initialization error');
         // assert that loaded configurations create the right admins count
@@ -23,7 +23,7 @@ class AdminFactoryFunctionalTest extends Base
     public function testCreateAdminFromConfiguration()
     {
         /*$this->initApplication();
-        $adminFactory = $this->mokeAdmin($this->getFakeAdminsConfiguration());
+        $adminFactory = $this->mockAdmin($this->getFakeAdminsConfiguration());
         $config = ;
 
         foreach ($config as $adminName => $adminConfig) {
@@ -86,7 +86,7 @@ class AdminFactoryFunctionalTest extends Base
 
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
     {
-        /*$this->assertEquals($admin->getName(), $adminName);
+        $this->assertEquals($admin->getName(), $adminName);
         $this->assertEquals($admin->getFormType(), $configuration['form']);
         $this->assertEquals($admin->getEntityNamespace(), $configuration['entity']);
 
@@ -105,8 +105,8 @@ class AdminFactoryFunctionalTest extends Base
             $this->assertEquals(array_keys($admin->getActions()), $actionsNames);
         }
         if (array_key_exists('manager', $configuration)) {
-            //$this->assertEquals($admin->getManager(), $configuration['manager']);
-        }*/
+            $this->assertEquals($admin->getManager(), $configuration['manager']);
+        }
     }
 
     protected function getFakeAdminsConfiguration()

@@ -9,7 +9,7 @@ class GenericControllerTest extends Base
 {
     public function testList()
     {
-        $this->initApplication();
+        /*$this->initApplication();
         $controller = new GenericController();
         $controller->setContainer($this->container);
 
@@ -40,7 +40,7 @@ class GenericControllerTest extends Base
                 'PHP_AUTH_USER' => 'admin',
                 'PHP_AUTH_PW' => 'admin',
             ],
-        ]);
+        ]);*/
         //$response = $controller->listAction($request);
     }
 }
