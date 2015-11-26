@@ -15,6 +15,8 @@ use Pagerfanta\Pagerfanta;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class Admin implements AdminInterface
 {
@@ -49,12 +51,18 @@ class Admin implements AdminInterface
     protected $logger;
 
     /**
+     * @var UserInterface
+     */
+    protected $user;
+
+    /**
      * @param $name
      * @param EntityRepository $repository
      * @param ManagerInterface $manager
      * @param AdminConfiguration $adminConfig
      * @param Session $session
      * @param LoggerInterface $logger
+     * @param UserInterface $user
      */
     public function __construct(
         $name,
@@ -62,7 +70,8 @@ class Admin implements AdminInterface
         ManagerInterface $manager,
         AdminConfiguration $adminConfig,
         Session $session,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UserInterface $user = null
     )
     {
         $this->name = $name;
@@ -76,6 +85,7 @@ class Admin implements AdminInterface
         $this->customManagerActions = [];
         $this->session = $session;
         $this->logger = $logger;
+        $this->user = $user;
     }
 
     /**
@@ -91,12 +101,35 @@ class Admin implements AdminInterface
         // set current action
         $action = $this->getAction($request->get('_route_params')['_action']);
         $this->currentAction = $action;
+        // check if user is logged have required permissions to get current action
+        $this->checkPermissions();
         // load entities according to action and request
         $this->loadEntities($request);
     }
 
+    public function checkPermissions()
+    {
+        if (!$this->user) {
+            throw new NotFoundHttpException('You must be logged to access to this url');
+        }
+        $roles = $this
+            ->user
+            ->getRoles();
+        $actionName = $this
+            ->getCurrentAction()
+            ->getName();
+
+        if (!$this->isActionGranted($actionName, $roles)) {
+            $message = sprintf('User with roles %s not allowed for action "%s"',
+                implode(', ', $roles),
+                $actionName
+            );
+            throw new NotFoundHttpException($message);
+        }
+    }
+
     /**
-     * Save entity via admin manager. Error are catch, logged and an flash message is added.
+     * Save entity via admin manager. Error are catch, logged and an flash message is added
      *
      * @return bool true if the entity was saved without errors
      */
@@ -127,7 +160,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Delete entity via admin manager. Error are catch, logged and an flash message is added.
+     * Delete entity via admin manager. Error are catch, logged and an flash message is added
      *
      * @return bool true if the entity was saved without errors
      */

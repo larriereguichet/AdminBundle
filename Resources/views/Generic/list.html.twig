@@ -17,7 +17,7 @@
         {% if admin.entities | length > 0 %}
             {% set fields = admin.currentAction.fields %}
             {% spaceless %}
-                <form action="" method="post">
+                <form action="{{ form.vars.action }}" method="post">
 
                     {% if form.batch is defined %}
                         <div class="row">
@@ -48,9 +48,10 @@
                             </thead>
                             <tbody>
                             {% for entity in admin.entities %}
-                                {#{% set entity = admin.entities[child.vars.value] %}#}
                                 <tr>
-                                    <td class="batch-column">{{ form_widget(form['batch_' ~ entity.id]) }}</td>
+                                    <td class="batch-column">
+                                        {{ form_widget(form['batch_' ~ entity.id]) }}
+                                    </td>
                                     {% for field in fields %}
                                         <td>{{ field(field, entity) | raw }}</td>
                                     {% endfor %}

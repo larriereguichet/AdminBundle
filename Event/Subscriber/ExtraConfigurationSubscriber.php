@@ -2,12 +2,16 @@
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
+use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Utils\FieldTypeGuesser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Add extra default configuration for actions and fields. Bind to ADMIN_CREATE and ACTION_CREATE events
+ */
 class ExtraConfigurationSubscriber implements EventSubscriberInterface
 {
     /**
@@ -25,6 +29,9 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      */
     protected $applicationConfiguration;
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -33,6 +40,13 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * ExtraConfigurationSubscriber constructor
+     *
+     * @param bool|true $enableExtraConfiguration
+     * @param EntityManager $entityManager
+     * @param ApplicationConfiguration $applicationConfiguration
+     */
     public function __construct($enableExtraConfiguration = true, EntityManager $entityManager, ApplicationConfiguration $applicationConfiguration)
     {
         $this->enableExtraConfiguration = $enableExtraConfiguration;
@@ -58,12 +72,31 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                 'create' => [],
                 'list' => [],
                 'edit' => [],
-                'delete' => []
+                'delete' => [],
+                'batch' => []
             ];
+        } else {
+            $actions = $configuration['actions'];
+
+            foreach ($actions as $name => $action) {
+                if (!array_key_exists('batch', $action) || !count($action['batch'])) {
+                    if ($name == 'list') {
+                        $configuration['actions'][$name]['batch'] = [
+                            'delete'
+                        ];
+                    }
+                }
+            }
         }
         $event->setConfiguration($configuration);
     }
 
+    /**
+     * Add default linked actions and default menu actions
+     *
+     * @param AdminEvent $event
+     * @throws MappingException
+     */
     public function actionCreate(AdminEvent $event)
     {
         // add configuration only if extra configuration is enabled
@@ -105,9 +138,11 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                 $configuration['fields'] = $fields;
             }
         }
+        // configured linked actions
         if (array_key_exists('_actions', $configuration['fields'])
             && !array_key_exists('type', $configuration['fields']['_actions'])
         ) {
+            // in list view, we add by default and an edit and a delete button
             if ($event->getActionName() == 'list') {
                 if (in_array('edit', $allowedActions)) {
                     $configuration['fields']['_actions']['type'] = 'collection';
@@ -152,6 +187,14 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                 }
             }
         }
+        if (empty($configuration['batch'])) {
+            if ($event->getActionName() == 'list') {
+                $configuration['batch'] = [
+                    'delete'
+                ];
+            }
+        }
+        // reset action configuration
         $event->setConfiguration($configuration);
     }
 }

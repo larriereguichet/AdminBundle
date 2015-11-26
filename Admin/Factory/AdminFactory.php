@@ -19,6 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * AdminFactory.
@@ -31,38 +32,55 @@ class AdminFactory
 
     use ContainerTrait;
 
+    /**
+     * @var array
+     */
     protected $admins = [];
 
+    /**
+     * @var bool
+     */
     protected $isInit = false;
 
     /**
      * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
+
     /**
      * @var EntityManager
      */
     protected $entityManager;
+
     /**
      * @var ApplicationConfiguration
      */
     protected $application;
+
     /**
      * @var array
      */
     protected $adminConfiguration;
+
     /**
      * @var Session
      */
     protected $session;
+
     /**
      * @var LoggerInterface
      */
     protected $logger;
+
     /**
      * @var ActionFactory
      */
     protected $actionFactory;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
 
     /**
      * Read configuration from container, then create admin with its actions and fields.
@@ -74,6 +92,7 @@ class AdminFactory
      * @param Session $session
      * @param LoggerInterface $logger
      * @param ActionFactory $actionFactory
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -82,7 +101,8 @@ class AdminFactory
         array $adminConfiguration,
         Session $session,
         LoggerInterface $logger,
-        ActionFactory $actionFactory
+        ActionFactory $actionFactory,
+        TokenStorageInterface $tokenStorage
     )
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -92,6 +112,7 @@ class AdminFactory
         $this->session = $session;
         $this->logger = $logger;
         $this->actionFactory = $actionFactory;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -151,14 +172,23 @@ class AdminFactory
             ->getRepository($adminConfiguration->getEntityName());
         // create generic manager from configuration
         $entityManager = $this->createManagerFromConfig($name, $adminConfiguration, $repository, $this->entityManager);
+        // get current user
+        $token = $this
+            ->tokenStorage
+            ->getToken();
+        $user = null;
 
+        if ($token) {
+            $user = $token->getUser();
+        }
         $admin = new Admin(
             $name,
             $repository,
             $entityManager,
             $adminConfiguration,
             $this->session,
-            $this->logger
+            $this->logger,
+            $user
         );
         // adding actions
         foreach ($adminConfiguration->getActions() as $actionName => $actionConfiguration) {

@@ -39,7 +39,8 @@
     "twig/extensions": "^1.2",
     "gedmo/doctrine-extensions": "^2.4",
     "stephanecollot/datetimepicker-bundle": "*",
-    "stfalcon/tinymce-bundle": "dev-master"
+    "stfalcon/tinymce-bundle": "dev-master",
+    "fabpot/php-cs-fixer": "^1.10"
   },
   "require-dev": {
     "phpunit/phpunit": "4.7.*"

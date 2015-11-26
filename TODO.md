@@ -14,6 +14,7 @@ v0.4:
 - remove hardcoded id property and use metadata tu get primary key
 - removing container dependence in routing loader
 - making batch actions configurable and disablable
+- make interfaces for factories to allow overrding by third party
 
 
 -----------------------------------------------
@@ -24,6 +25,7 @@ Features:
 - add config for order entities in list view (DONE)
 - add format for date in list (DONE)
 - add filters (WIP)
+- batch actions
 - handle custom actions for edit form (enable user for example) (WIP)
 - improve admin and action name from request (use default parameters in routing instead) (DONE)
 - configure application date format (filename export, displayed date...) (WIP)

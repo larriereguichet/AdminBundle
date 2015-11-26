@@ -44,8 +44,6 @@ class GenericController extends Controller
     {
         // retrieve admin from request route parameters
         $admin = $this->getAdminFromRequest($request);
-        // check permissions
-        $this->forward404IfNotAllowed($admin);
         // creating list form
         $form = $this->createForm(new AdminListType(), [
             'entities' => $admin->getEntities()

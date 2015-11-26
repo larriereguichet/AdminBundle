@@ -47,7 +47,7 @@ class AdminListType extends AbstractType
             ->setDefaults([
                 'batch_actions' => [],
                 'batch_actions_label' => 'lag.admin.batch_action',
-                'batch_empty' => 'lag.admin.batch_empty',
+                'batch_empty' => 'lag.admin.batch_empty'
             ]);
     }
 
