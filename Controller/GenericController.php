@@ -46,11 +46,14 @@ class GenericController extends Controller
         $admin = $this->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
-        // creating form
+        // creating list form
         $form = $this->createForm(new AdminListType(), [
             'entities' => $admin->getEntities()
         ], [
-            'batch_actions' => $admin->getCurrentAction()->getConfiguration()->getBatch(),
+            'batch_actions' => $admin
+                ->getCurrentAction()
+                ->getConfiguration()
+                ->getBatch()
         ]);
         $form->handleRequest($request);
 
@@ -198,7 +201,7 @@ class GenericController extends Controller
 
     public function batchAction(Request $request)
     {
-        /*$admin = $this->getAdminFromRequest($request);
+        $admin = $this->getAdminFromRequest($request);
 
 
         var_dump($request);
@@ -216,7 +219,7 @@ class GenericController extends Controller
         return $this->render('LAGAdminBundle:Generic:batch.html.twig', [
             'form' => $batchForm->createView(),
             'returnRoute' => $admin->getCurrentAction()->getConfiguration()->getRoute()
-        ]);*/
+        ]);
     }
 
     /**

@@ -23,22 +23,22 @@ class AdminListType extends AbstractType
                 ->add('batch_submit', 'submit', [
                     'label' => $options['batch_actions_label']
                 ]);
-        }
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $data = $event->getData();
-            $form = $event->getForm();
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $data = $event->getData();
+                $form = $event->getForm();
 
-            if (!empty($data['entities'])) {
-                /** @var Id $entity */
-                foreach ($data['entities'] as $entity) {
-                    $form->add('batch_' . $entity->getId(), 'checkbox', [
-                        'value' => $entity->getId(),
-                        'label' => false,
-                        'required' => false
-                    ]);
+                if (!empty($data['entities'])) {
+                    /** @var Id $entity */
+                    foreach ($data['entities'] as $entity) {
+                        $form->add('batch_' . $entity->getId(), 'checkbox', [
+                            'value' => $entity->getId(),
+                            'label' => false,
+                            'required' => false
+                        ]);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

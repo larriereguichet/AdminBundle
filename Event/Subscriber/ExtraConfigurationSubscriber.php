@@ -108,9 +108,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         if (array_key_exists('_actions', $configuration['fields'])
             && !array_key_exists('type', $configuration['fields']['_actions'])
         ) {
-
             if ($event->getActionName() == 'list') {
-
                 if (in_array('edit', $allowedActions)) {
                     $configuration['fields']['_actions']['type'] = 'collection';
                     $configuration['fields']['_actions']['options']['_edit'] = [

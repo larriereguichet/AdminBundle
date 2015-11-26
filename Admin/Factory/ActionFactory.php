@@ -85,7 +85,6 @@ class ActionFactory
                 ->create($fieldName, $filterConfiguration);
             $action->addFilter($filter);
         }
-
         return $action;
     }
 
@@ -153,22 +152,19 @@ class ActionFactory
                 return $value;
             })
             ->setNormalizer('batch', function (Options $options, $value) use ($admin, $actionName) {
-                if (!$value) {
-                    $value = [
-                        'delete' => null
-                    ];
-                }
-                if (!is_array($value)) {
-                    $value = [$value];
-                }
-                foreach ($value as $key => $title) {
-                    if (!$title) {
-                        $adminKey = '';
-                        // if an Admin is linked to this action, we use its name in translation key
-                        if ($admin) {
-                            $adminKey = $admin->getName();
+                if ($value) {
+                    if (!is_array($value)) {
+                        $value = [$value];
+                    }
+                    foreach ($value as $key => $title) {
+                        if (!$title) {
+                            $adminKey = '';
+                            // if an Admin is linked to this action, we use its name in translation key
+                            if ($admin) {
+                                $adminKey = $admin->getName();
+                            }
+                            $value[$key] = $this->configuration->getTranslationKey('batch.' . $key, $adminKey);
                         }
-                        $value[$key] = $this->configuration->getTranslationKey('batch.' . $key, $adminKey);
                     }
                 }
                 return $value;
@@ -195,7 +191,8 @@ class ActionFactory
                 if (!count($value)) {
                     // we add default parameter if action method is ti unique_entity
                     if ($options->offsetGet('load_method') == Admin::LOAD_METHOD_UNIQUE_ENTITY
-                    && $actionName != 'create') {
+                        && $actionName != 'create'
+                    ) {
                         $value = ['id'];
                     }
                 }
