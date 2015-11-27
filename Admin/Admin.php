@@ -71,7 +71,7 @@ class Admin implements AdminInterface
         AdminConfiguration $adminConfig,
         Session $session,
         LoggerInterface $logger,
-        UserInterface $user = null
+        $user = null
     )
     {
         $this->name = $name;
@@ -202,8 +202,8 @@ class Admin implements AdminInterface
     public function generateRouteName($actionName)
     {
         if (!array_key_exists($actionName, $this->getConfiguration()->getActions())) {
-            throw new Exception("Invalid action name \"{$actionName}\" for admin \"{$this->getName()}\" (available action are: \""
-                .implode('", "', array_keys($this->getConfiguration()->getActions())).'")');
+            $message = 'Invalid action name %s for admin %s (available action are: %s)';
+            throw new Exception(sprintf($message, $actionName, $this->getName(), implode(', ', $this->getActionNames())));
         }
         // get routing name pattern
         $routingPattern = $this->getConfiguration()->getRoutingNamePattern();
