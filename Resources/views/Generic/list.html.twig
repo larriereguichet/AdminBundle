@@ -19,10 +19,10 @@
             {% spaceless %}
                 <form action="{{ form.vars.action }}" method="post">
 
-                    {% if form.batch is defined %}
+                    {% if form.batch_action is defined %}
                         <div class="row">
                             <div class="col-lg-2">
-                                {{ form_widget(form.batch) }}
+                                {{ form_widget(form.batch_action) }}
                             </div>
                             <div class="col-lg-2">
                                 {{ form_widget(form.batch_submit) }}

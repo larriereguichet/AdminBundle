@@ -1,5 +1,5 @@
 v0.4:
-- adding simple mass edit
+- move export logic into a separate service
 - add possibility to have tab in generated forms
 - add configuration for custom url for actions
 - add configuration for custom actions
@@ -14,8 +14,8 @@ v0.4:
 - remove hardcoded id property and use metadata tu get primary key
 - removing container dependence in routing loader
 - making batch actions configurable and disablable
-- make interfaces for factories to allow overrding by third party
-
+- make interfaces for factories to allow overriding by third party
+- adding simple mass edit
 
 -----------------------------------------------
 

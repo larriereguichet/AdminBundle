@@ -4,7 +4,9 @@ namespace LAG\AdminBundle\Controller;
 
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Form\Handler\BatchFormHandler;
+use LAG\AdminBundle\Form\Handler\ListFormHandler;
 use LAG\AdminBundle\Form\Type\AdminListType;
+use LAG\AdminBundle\Form\Type\BatchActionType;
 use LAG\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use DateTime;
@@ -16,10 +18,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * Class GenericController.
+ * Class GenericController
  *
  * Generic CRUD controller
  */
@@ -32,7 +35,7 @@ class GenericController extends Controller
     protected $formType;
 
     /**
-     * Generic list action.
+     * Generic list action
      *
      * @Template("LAGAdminBundle:Generic:list.html.twig")
      *
@@ -59,21 +62,22 @@ class GenericController extends Controller
             return $this->exportEntities($admin, $request->get('export'));
         }
         if ($form->isValid()) {
-            $pattern = $this
-                ->get('lag.admin.application')
-                ->getRoutingNamePattern();
-            $pattern = str_replace('{admin}', $admin->getName(), $pattern);
-            $pattern = str_replace('{action}', 'batch', $pattern);
-            // handle batch actions
-            $formHandler = new BatchFormHandler($this->get('form.factory'), $pattern);
-            $batchForm = $formHandler->handle($form);
+            // get ids and batch action from list form data
+            $formHandler = new ListFormHandler();
+            $data = $formHandler->handle($form);
+            $batchForm = $this->createForm(new BatchActionType(), [
+                'batch_action' => $data['batch_action'],
+                'entity_ids' => $data['ids']
+            ], [
+                'labels' => $data['labels']
+            ]);
 
+            // render batch view
             return $this->render('LAGAdminBundle:Generic:batch.html.twig', [
-                'form' => $batchForm->createView(),
-                'returnRoute' => $admin->getCurrentAction()->getConfiguration()->getRoute()
+                'admin' => $admin,
+                'form' => $batchForm->createView()
             ]);
         }
-
         return [
             'admin' => $admin,
             'action' => $admin->getCurrentAction(),
@@ -81,8 +85,34 @@ class GenericController extends Controller
         ];
     }
 
+    public function batchAction(Request $request)
+    {
+        $admin = $this->getAdminFromRequest($request);
+        // create batch action form
+        $form = $this->createForm(new BatchActionType(), [
+            'batch_action' => [],
+            'entity_ids' => []
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $admin->load([
+                'id' => $data['entity_ids']
+            ]);
+
+            if ($data['batch_action'] == 'delete') {
+                $admin->delete();
+            }
+        } else {
+            throw new NotFoundHttpException('Invalid batch parameters');
+        }
+        // redirect to list view
+        return $this->redirectToRoute($admin->generateRouteName('list'));
+    }
+
     /**
-     * Generic create action.
+     * Generic create action
      *
      * @Template("LAGAdminBundle:Generic:edit.html.twig")
      *
@@ -103,8 +133,8 @@ class GenericController extends Controller
             // save entity
             $admin->save();
 
+            // if save is pressed, user stay on the edit view
             if ($request->request->get('submit') == 'save') {
-                // if save is pressed, user stay on the edit view
                 $editRoute = $admin->generateRouteName('edit');
 
                 return $this->redirectToRoute($editRoute, [
@@ -114,10 +144,9 @@ class GenericController extends Controller
                 // otherwise user is redirected to list view
                 $listRoute = $admin->generateRouteName('list');
 
-                return $this->redirect($this->generateUrl($listRoute));
+                return $this->redirectToRoute($listRoute);
             }
         }
-
         return [
             'admin' => $admin,
             'form' => $form->createView(),
@@ -166,7 +195,7 @@ class GenericController extends Controller
     }
 
     /**
-     * Generic delete action.
+     * Generic delete action
      *
      * @Template("LAGAdminBundle:Generic:delete.html.twig")
      *
@@ -197,31 +226,8 @@ class GenericController extends Controller
         ];
     }
 
-    public function batchAction(Request $request)
-    {
-        $admin = $this->getAdminFromRequest($request);
-
-
-        var_dump($request);
-        die;
-
-        $pattern = $this
-            ->get('lag.admin.application')
-            ->getRoutingNamePattern();
-        $pattern = str_replace('{admin}', $admin->getName(), $pattern);
-        $pattern = str_replace('{action}', 'batch', $pattern);
-        // handle batch actions
-        $formHandler = new BatchFormHandler($this->get('form.factory'), $pattern);
-        $batchForm = $formHandler->handle($form);
-
-        return $this->render('LAGAdminBundle:Generic:batch.html.twig', [
-            'form' => $batchForm->createView(),
-            'returnRoute' => $admin->getCurrentAction()->getConfiguration()->getRoute()
-        ]);
-    }
-
     /**
-     * Export entities according to a type (json, csv, xls...).
+     * Export entities according to a type (json, csv, xls...)
      *
      * @param AdminInterface $admin
      * @param $exportType

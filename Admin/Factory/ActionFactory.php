@@ -173,7 +173,8 @@ class ActionFactory
                 $allowedValues = [
                     Admin::LOAD_METHOD_UNIQUE_ENTITY,
                     Admin::LOAD_METHOD_MULTIPLE_ENTITIES,
-                    Admin::LOAD_METHOD_QUERY_BUILDER
+                    Admin::LOAD_METHOD_QUERY_BUILDER,
+                    Admin::LOAD_METHOD_MANUAL
                 ];
 
                 if ($value && !in_array($value, $allowedValues)) {
@@ -183,6 +184,8 @@ class ActionFactory
                         $value = Admin::LOAD_METHOD_QUERY_BUILDER;
                     } else if (in_array($actionName, ['edit', 'create', 'delete'])) {
                         $value = Admin::LOAD_METHOD_UNIQUE_ENTITY;
+                    } else if ($actionName == 'batch') {
+                        $value = Admin::LOAD_METHOD_MANUAL;
                     }
                 }
                 return $value;

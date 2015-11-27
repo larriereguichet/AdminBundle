@@ -13,7 +13,7 @@ trait ActionTrait
      *
      * @return mixed
      */
-    abstract public function getName();
+    public abstract function getName();
 
     /**
      * @var ActionInterface[]
@@ -29,7 +29,7 @@ trait ActionTrait
      * Return true if current action is granted for user.
      *
      * @param string $actionName Le plus grand de tous les héros
-     * @param array  $roles
+     * @param array $roles
      *
      * @return bool
      */
@@ -59,6 +59,14 @@ trait ActionTrait
     public function getActions()
     {
         return $this->actions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getActionNames()
+    {
+        return array_keys($this->actions);
     }
 
     /**

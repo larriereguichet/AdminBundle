@@ -68,8 +68,6 @@ trait AdminTrait
      */
     protected $configuration;
 
-    public abstract function getEntity();
-
     /**
      * @return string
      */
@@ -124,14 +122,6 @@ trait AdminTrait
     public function getPager()
     {
         return $this->pager;
-    }
-
-    /**
-     * @return QueryBuilder
-     */
-    public function getQueryBuilder()
-    {
-        return $this->queryBuilder;
     }
 
     /**

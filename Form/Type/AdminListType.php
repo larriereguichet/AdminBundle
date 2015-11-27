@@ -15,7 +15,7 @@ class AdminListType extends AbstractType
     {
         if (count($options['batch_actions'])) {
             $builder
-                ->add('batch', 'choice', [
+                ->add('batch_action', 'choice', [
                     'choices' => $options['batch_actions'],
                     'empty_data' => $options['batch_empty'],
                     'empty_value' => $options['batch_empty']

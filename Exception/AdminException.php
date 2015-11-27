@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Admin;
+namespace LAG\AdminBundle\Exception;
 
 use Exception;
 

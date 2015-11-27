@@ -3,7 +3,7 @@
 {% block content %}
     <h1 class="page-header">{{ 'lag.admin.batch_action_title' | trans }}</h1>
 
-    <form action="" method="post">
+    <form action="{{ path(admin.generateRouteName('batch')) }}" method="post">
     <div class="panel panel-red">
         <div class="panel-heading">{{ 'lag.admin.warning' | trans }}</div>
         <div class="panel-body">
@@ -11,9 +11,9 @@
             {{ 'lag.admin.batch_action_messages' | trans({'%action%': actionKey}) }}
 
             <ul>
-            {% for child in form.batch %}
+            {% for child in form.entity_ids %}
                 <li>
-                    "{{ form.vars.data.entities_labels[child.vars.value] }}"
+                    "{{ form.vars.labels[child.vars.value] }}"
                 </li>
             {% endfor %}
             </ul>

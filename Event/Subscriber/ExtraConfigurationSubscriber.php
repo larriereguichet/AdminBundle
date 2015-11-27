@@ -81,9 +81,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             foreach ($actions as $name => $action) {
                 if (!array_key_exists('batch', $action) || !count($action['batch'])) {
                     if ($name == 'list') {
-                        $configuration['actions'][$name]['batch'] = [
-                            'delete'
-                        ];
+                        $configuration['actions']['batch'] = [];
                     }
                 }
             }
@@ -190,7 +188,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         if (empty($configuration['batch'])) {
             if ($event->getActionName() == 'list') {
                 $configuration['batch'] = [
-                    'delete'
+                    'delete' => null
                 ];
             }
         }

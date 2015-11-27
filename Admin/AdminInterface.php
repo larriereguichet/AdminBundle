@@ -34,12 +34,22 @@ interface AdminInterface
     public function generateRouteName($actionName);
 
     /**
-     * @return void
+     * Load entities according to given criteria. OrderBy, limit and offset can be used
+     *
+     * @param array $criteria
+     * @param array $orderBy
+     * @param null $limit
+     * @param null $offset
+     */
+    public function load(array $criteria, $orderBy = [], $limit = null, $offset = null);
+
+    /**
+     * Save loaded entities using manager
      */
     public function save();
 
     /**
-     * @return void
+     * Delete loaded entities using manager
      */
     public function delete();
 
@@ -66,11 +76,6 @@ interface AdminInterface
     public function getEntities();
 
     /**
-     * @param mixed $entities
-     */
-    public function setEntities($entities);
-
-    /**
      * @return mixed
      */
     public function getFormType();
@@ -81,11 +86,11 @@ interface AdminInterface
     public function getController();
 
     /**
-     * Return entity for current admin. If entity does not exist, it throws an exception.
+     * Return an unique entity for current admin. If entity does not exist, it throws an exception.
      *
      * @return mixed
      */
-    public function getEntity();
+    public function getUniqueEntity();
 
     /**
      * @return GenericManager
@@ -126,9 +131,4 @@ interface AdminInterface
      * @return bool
      */
     public function isActionGranted($actionName, array $roles);
-
-    /**
-     * @return QueryBuilder
-     */
-    public function getQueryBuilder();
 }

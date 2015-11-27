@@ -10,6 +10,7 @@ use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use LAG\AdminBundle\Exception\AdminException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Psr\Log\LoggerInterface;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Traversable;
 
 class Admin implements AdminInterface
 {
@@ -25,6 +27,7 @@ class Admin implements AdminInterface
     const LOAD_METHOD_QUERY_BUILDER = 'query_builder';
     const LOAD_METHOD_UNIQUE_ENTITY = 'unique_entity';
     const LOAD_METHOD_MULTIPLE_ENTITIES = 'multiple';
+    const LOAD_METHOD_MANUAL = 'manual';
 
     /**
      * Entities collection.
@@ -107,6 +110,11 @@ class Admin implements AdminInterface
         $this->loadEntities($request);
     }
 
+    /**
+     * Check if user is allowed to be here
+     *
+     * @throws NotFoundHttpException
+     */
     public function checkPermissions()
     {
         if (!$this->user) {
@@ -135,12 +143,12 @@ class Admin implements AdminInterface
      */
     public function save()
     {
-        $success = false;
-
         try {
-            $this
-                ->manager
-                ->save($this->getEntity());
+            foreach ($this->entities as $entity) {
+                $this
+                    ->manager
+                    ->save($entity);
+            }
             // inform user everything went fine
             $this
                 ->session
@@ -155,6 +163,7 @@ class Admin implements AdminInterface
                 ->session
                 ->getFlashBag()
                 ->add('error', 'lag.admin.saved_errors');
+            $success = false;
         }
         return $success;
     }
@@ -169,9 +178,11 @@ class Admin implements AdminInterface
         $success = false;
 
         try {
-            $this
-                ->manager
-                ->delete($this->getEntity());
+            foreach ($this->entities as $entity) {
+                $this
+                    ->manager
+                    ->delete($entity);
+            }
             // inform user everything went fine
             $this
                 ->session
@@ -191,7 +202,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Generate a route for admin and action name.
+     * Generate a route for admin and action name (like lag.admin.my_admin)
      *
      * @param $actionName
      *
@@ -212,6 +223,22 @@ class Admin implements AdminInterface
         $routeName = str_replace('{action}', $actionName, $routeName);
 
         return $routeName;
+    }
+
+    /**
+     * Load entities manually according to criteria
+     *
+     * @param array $criteria
+     * @param array $orderBy
+     * @param null $limit
+     * @param null $offset
+     */
+    public function load(array $criteria, $orderBy = [], $limit = null, $offset = null)
+    {
+        $this->entities = $this
+            ->manager
+            ->getRepository()
+            ->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
@@ -238,10 +265,12 @@ class Admin implements AdminInterface
         } else if ($loadMethod == self::LOAD_METHOD_MULTIPLE_ENTITIES) {
             // load all entities matching request criteria
             $this->entities = $this->loadWithParameters($request, false);
+        } else if ($loadMethod == self::LOAD_METHOD_MANUAL) {
+            // wait for manual load
+            $this->entities = [];
         } else {
-            throw new AdminException("Unhandled entities load in method {$loadMethod} in admin {$this->getName()}");
+            throw new AdminException("Unhandled entities load method {$loadMethod} for admin {$this->getName()}");
         }
-
         return $this->entities;
     }
 
@@ -249,7 +278,7 @@ class Admin implements AdminInterface
      * Load entities by creating a query builder for PagerFanta according to request parameter
      *
      * @param Request $request
-     * @return array|\Traversable
+     * @return array|Traversable
      * @throws Exception
      */
     protected function loadWithQueryBuilder(Request $request)
@@ -335,7 +364,6 @@ class Admin implements AdminInterface
                 ->getRepository()
                 ->findBy($criteria);
         }
-
         return $entities;
     }
 
@@ -362,13 +390,11 @@ class Admin implements AdminInterface
      *
      * @throws Exception
      */
-    public function getEntity()
+    public function getUniqueEntity()
     {
-        if (!$this->entities->count()) {
-            throw new Exception("Entity not found in admin \"{$this->getName()}\". Try call method findEntity or createEntity first.");
+        if ($this->entities->count() != 1) {
+            throw new Exception("Entity not found in admin \"{$this->getName()}\".");
         }
         return $this->entities->first();
     }
-
-
 }
