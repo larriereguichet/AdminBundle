@@ -427,6 +427,11 @@ class ApplicationConfiguration
         $this->translationPattern = $translationPattern;
     }
 
+    /**
+     * @param $key
+     * @param string $adminName
+     * @return string
+     */
     public function getTranslationKey($key, $adminName = null)
     {
         $translationKey = $this->translationPattern;

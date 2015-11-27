@@ -11,16 +11,14 @@ use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
-use LAG\AdminBundle\Admin\ManagerInterface;
 use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class Base extends WebTestCase
 {
@@ -40,8 +38,8 @@ class Base extends WebTestCase
      * Initialize an application with a container and a client. Create database if required.
      *
      * @param string $url
-     * @param null   $method
-     * @param array  $parameters
+     * @param null $method
+     * @param array $parameters
      */
     public function initApplication($url = '/', $method = null, $parameters = [])
     {
@@ -53,12 +51,12 @@ class Base extends WebTestCase
         // initialise database
         if (!self::$isDatabaseCreated) {
             // TODO remove database at the end of the tests
-            exec(__DIR__.'/app/console doctrine:database:create --if-not-exists', $output);
-            exec(__DIR__.'/app/console doctrine:schema:update --force', $output);
+            exec(__DIR__ . '/app/console doctrine:database:create --if-not-exists', $output);
+            exec(__DIR__ . '/app/console doctrine:schema:update --force', $output);
 
             foreach ($output as $line) {
                 // TODO only in verbose mode
-                fwrite(STDOUT, $line."\n");
+                fwrite(STDOUT, $line . "\n");
             }
             fwrite(STDOUT, "\n");
             self::$isDatabaseCreated = true;
@@ -88,12 +86,12 @@ class Base extends WebTestCase
                 $isClassValid = true;
             }
         }
-        $this->assertTrue($isClassValid, 'Expected '.$exceptionClass.', got '.get_class($e));
+        $this->assertTrue($isClassValid, 'Expected ' . $exceptionClass . ', got ' . get_class($e));
     }
 
     protected function logIn($login = 'admin', $roles = null)
     {
-        $session = $this
+        /*$session = $this
             ->container
             ->get('session');
 
@@ -104,24 +102,18 @@ class Base extends WebTestCase
             ];
         }
         $firewall = 'secured_area';
-        $token = new UsernamePasswordToken($login, null, $firewall, $roles);
+        //$token = new UsernamePasswordToken($login, null, $firewall, $roles);
         //$session->set('_security_'.$firewall, serialize($token));
         $session->save();
 
         $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);
+        $this->client->getCookieJar()->set($cookie);*/
     }
 
     protected function mockAdmin($name, $configuration)
     {
         $repositoryMock = $this->mockEntityRepository();
-        /** @var ManagerInterface $managerMock */
-        $managerMock = $this
-            ->getMockBuilder('LAG\AdminBundle\Admin\ManagerInterface')
-            ->getMock();
-        $managerMock
-            ->method('getRepository')
-            ->willReturn('Doctrine\ORM\EntityRepository');
+
 
         $session = $this->mockSession();
         $logger = $this->mockLogger();
@@ -129,7 +121,7 @@ class Base extends WebTestCase
         return new Admin(
             $name,
             $repositoryMock,
-            $managerMock,
+            $this->mockManager(),
             $configuration,
             $session,
             $logger
@@ -150,12 +142,25 @@ class Base extends WebTestCase
             $configuration,
             $this->mockSession(),
             $this->mockLogger(),
-            $this->mockActionFactory()
+            $this->mockActionFactory(),
+            $this->mockTokenStorage()
         );
     }
 
+    protected function mockManager()
+    {
+        $managerMock = $this
+            ->getMockBuilder('LAG\AdminBundle\Admin\ManagerInterface')
+            ->getMock();
+        $managerMock
+            ->method('getRepository')
+            ->willReturn('Doctrine\ORM\EntityRepository');
+
+        return $managerMock;
+    }
+
     /**
-     * @return Session | PHPUnit_Framework_MockObject_MockObject
+     * @return Session|PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockSession()
     {
@@ -173,7 +178,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return Logger | PHPUnit_Framework_MockObject_MockObject
+     * @return Logger|PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockLogger()
     {
@@ -191,7 +196,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return EntityRepository | PHPUnit_Framework_MockObject_MockObject
+     * @return EntityRepository|PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockEntityRepository()
     {
@@ -202,7 +207,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return EntityManager | PHPUnit_Framework_MockObject_MockObject
+     * @return EntityManager|PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockEntityManager()
     {
@@ -219,7 +224,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return ActionFactory | PHPUnit_Framework_MockObject_MockObject
+     * @return ActionFactory|PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockActionFactory()
     {
@@ -234,11 +239,24 @@ class Base extends WebTestCase
         return $actionFactory;
     }
 
+    /**
+     * @return Action|PHPUnit_Framework_MockObject_MockObject
+     */
     protected function mockAction()
     {
         return $this
             ->getMockBuilder('LAG\AdminBundle\Admin\Action')
             ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
+     * @return TokenStorageInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockTokenStorage()
+    {
+        return $this
+            ->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface')
             ->getMock();
     }
 
