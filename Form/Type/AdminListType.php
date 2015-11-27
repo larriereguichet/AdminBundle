@@ -22,7 +22,16 @@ class AdminListType extends AbstractType
                 ])
                 ->add('batch_submit', 'submit', [
                     'label' => $options['batch_actions_label']
-                ]);
+                ])
+                ->add('select_all', 'checkbox', [
+                    'label' => false,
+                    'required' => false,
+                    'mapped' => false,
+                    'attr' => [
+                        'class' => 'select-all'
+                    ]
+                ])
+            ;
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $data = $event->getData();
                 $form = $event->getForm();

@@ -17,5 +17,16 @@
             format: 'd/m/yyyy',
             language: 'fr'
         });
+        var selectAllForm = $('.selectable-list');
+        var selectAllInput = selectAllForm.find('.select-all');
+
+        selectAllInput.on('change', function () {
+            selectAllForm.find('input[type=checkbox]').prop('checked', $(this).prop('checked'));
+        });
+        selectAllForm.find('input[type=checkbox]').not('.select-all').on('change', function () {
+            if (!$(this).prop('checked')) {
+                selectAllInput.prop('checked', false);
+            }
+        });
     });
 </script>
