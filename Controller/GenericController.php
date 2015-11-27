@@ -3,7 +3,6 @@
 namespace LAG\AdminBundle\Controller;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Form\Handler\BatchFormHandler;
 use LAG\AdminBundle\Form\Handler\ListFormHandler;
 use LAG\AdminBundle\Form\Type\AdminListType;
 use LAG\AdminBundle\Form\Type\BatchActionType;
@@ -138,7 +137,7 @@ class GenericController extends Controller
                 $editRoute = $admin->generateRouteName('edit');
 
                 return $this->redirectToRoute($editRoute, [
-                    'id' => $admin->getEntity()->getId(),
+                    'id' => $admin->getUniqueEntity()->getId(),
                 ]);
             } else {
                 // otherwise user is redirected to list view
@@ -168,7 +167,7 @@ class GenericController extends Controller
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
-        $form = $this->createForm($admin->getFormType(), $admin->getEntity());
+        $form = $this->createForm($admin->getFormType(), $admin->getUniqueEntity());
         $form->handleRequest($request);
         $accessor = PropertyAccess::createPropertyAccessor();
 
@@ -179,7 +178,7 @@ class GenericController extends Controller
                 $saveRoute = $admin->generateRouteName('edit');
 
                 return $this->redirectToRoute($saveRoute, [
-                    'id' => $accessor->getValue($admin->getEntity(), 'id'),
+                    'id' => $accessor->getValue($admin->getUniqueEntity(), 'id'),
                 ]);
             } else {
                 $listRoute = $admin->generateRouteName('list');
@@ -209,7 +208,7 @@ class GenericController extends Controller
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form to avoid deletion by url
-        $form = $this->createForm('delete', $admin->getEntity());
+        $form = $this->createForm('delete', $admin->getUniqueEntity());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
