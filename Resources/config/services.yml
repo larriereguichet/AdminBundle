@@ -14,6 +14,8 @@ parameters:
     lag.admin.routing.class: LAG\AdminBundle\Routing\RoutingLoader
     # twig
     lag.admin.twig.class: LAG\AdminBundle\Twig\AdminExtension
+    # handler
+    lag.admin.message_handler.class: LAG\AdminBundle\Admin\Message\MessageHandler
 
 services:
     # application
@@ -53,3 +55,11 @@ services:
         tags:
             - {name: twig.extension}
         arguments: [@router, @translator, @lag.admin.application]
+
+    # handler
+    lag.admin.message_handler:
+        class: %lag.admin.message_handler.class%
+        arguments:
+            - @logger
+            - @session
+            - @translator

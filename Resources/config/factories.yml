@@ -15,10 +15,8 @@ services:
             - @doctrine.orm.entity_manager
             - @lag.admin.application
             - %lag.admins%
-            - @session
-            - @logger
             - @lag.admin.action_factory
-            - @security.token_storage
+            - @lag.admin.message_handler
 
     lag.admin.action_factory:
         class: %lag.admin.action_factory%

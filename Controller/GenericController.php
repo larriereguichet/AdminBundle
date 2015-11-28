@@ -45,7 +45,7 @@ class GenericController extends Controller
     public function listAction(Request $request)
     {
         // retrieve admin from request route parameters
-        $admin = $this->getAdminFromRequest($request);
+        $admin = $this->getAdminFromRequest($request, $this->getUser());
         // creating list form
         $form = $this->createForm(new AdminListType(), [
             'entities' => $admin->getEntities()
@@ -86,7 +86,7 @@ class GenericController extends Controller
 
     public function batchAction(Request $request)
     {
-        $admin = $this->getAdminFromRequest($request);
+        $admin = $this->getAdminFromRequest($request, $this->getUser());
         // create batch action form
         $form = $this->createForm(new BatchActionType(), [
             'batch_action' => [],
@@ -121,7 +121,7 @@ class GenericController extends Controller
      */
     public function createAction(Request $request)
     {
-        $admin = $this->getAdminFromRequest($request);
+        $admin = $this->getAdminFromRequest($request, $this->getUser());
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
@@ -163,7 +163,7 @@ class GenericController extends Controller
      */
     public function editAction(Request $request)
     {
-        $admin = $this->getAdminFromRequest($request);
+        $admin = $this->getAdminFromRequest($request, $this->getUser());
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
@@ -204,7 +204,7 @@ class GenericController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $admin = $this->getAdminFromRequest($request);
+        $admin = $this->getAdminFromRequest($request, $this->getUser());
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form to avoid deletion by url
@@ -304,15 +304,16 @@ class GenericController extends Controller
      * Return an Admin object according to the request route parameters.
      *
      * @param Request $request
+     * @param $user
      *
      * @return AdminInterface
      *
      * @throws Exception
      */
-    protected function getAdminFromRequest(Request $request)
+    protected function getAdminFromRequest(Request $request, $user)
     {
         return $this
             ->get('lag.admin.factory')
-            ->getAdminFromRequest($request);
+            ->getAdminFromRequest($request, $user);
     }
 }

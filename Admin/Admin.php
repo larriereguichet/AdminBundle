@@ -10,12 +10,11 @@ use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use LAG\AdminBundle\Admin\Message\MessageHandler;
 use LAG\AdminBundle\Exception\AdminException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Traversable;
@@ -37,37 +36,23 @@ class Admin implements AdminInterface
     protected $entities;
 
     /**
-     * @var Session
+     * @var MessageHandler
      */
-    protected $session;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @var UserInterface
-     */
-    protected $user;
+    protected $messageHandler;
 
     /**
      * @param $name
      * @param EntityRepository $repository
      * @param ManagerInterface $manager
      * @param AdminConfiguration $adminConfig
-     * @param Session $session
-     * @param LoggerInterface $logger
-     * @param UserInterface $user
+     * @param MessageHandler $messageHandler
      */
     public function __construct(
         $name,
         EntityRepository $repository,
         ManagerInterface $manager,
         AdminConfiguration $adminConfig,
-        Session $session,
-        LoggerInterface $logger,
-        $user = null
+        MessageHandler $messageHandler
     )
     {
         $this->name = $name;
@@ -79,26 +64,24 @@ class Admin implements AdminInterface
         $this->formType = $adminConfig->getFormType();
         $this->entities = new ArrayCollection();
         $this->customManagerActions = [];
-        $this->session = $session;
-        $this->logger = $logger;
-        $this->user = $user;
+        $this->messageHandler = $messageHandler;
     }
 
     /**
      * Load entities and set current action according to request
      *
      * @param Request $request
-     * @return void
+     * @param null $user
+     * @return mixed|void
      * @throws AdminException
-     * @throws Exception
      */
-    public function handleRequest(Request $request)
+    public function handleRequest(Request $request, $user = null)
     {
         // set current action
         $action = $this->getAction($request->get('_route_params')['_action']);
         $this->currentAction = $action;
         // check if user is logged have required permissions to get current action
-        $this->checkPermissions();
+        $this->checkPermissions($user);
         // load entities according to action and request
         $this->loadEntities($request);
     }
@@ -106,16 +89,14 @@ class Admin implements AdminInterface
     /**
      * Check if user is allowed to be here
      *
-     * @throws NotFoundHttpException
+     * @param UserInterface|string $user
      */
-    public function checkPermissions()
+    public function checkPermissions($user)
     {
-        if (!$this->user) {
+        if (!$user) {
             throw new NotFoundHttpException('You must be logged to access to this url');
         }
-        $roles = $this
-            ->user
-            ->getRoles();
+        $roles = $user->getRoles();
         $actionName = $this
             ->getCurrentAction()
             ->getName();
@@ -130,7 +111,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Save entity via admin manager. Error are catch, logged and an flash message is added to session
+     * Save entity via admin manager. Error are catch, logged and a flash message is added to session
      *
      * @return bool true if the entity was saved without errors
      */
@@ -144,18 +125,16 @@ class Admin implements AdminInterface
             }
             // inform user everything went fine
             $this
-                ->session
-                ->getFlashBag()
-                ->add('info', 'lag.admin.' . $this->name . '.saved');
+                ->messageHandler
+                ->handleSuccess('lag.admin.' . $this->name . '.saved');
             $success = true;
         } catch (Exception $e) {
             $this
-                ->logger
-                ->error("An error has occured during saving an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} ");
-            $this
-                ->session
-                ->getFlashBag()
-                ->add('error', 'lag.admin.saved_errors');
+                ->messageHandler
+                ->handleError(
+                    'lag.admin.saved_errors',
+                    "An error has occurred while saving an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} "
+                );
             $success = false;
         }
         return $success;
@@ -168,8 +147,6 @@ class Admin implements AdminInterface
      */
     public function delete()
     {
-        $success = false;
-
         try {
             foreach ($this->entities as $entity) {
                 $this
@@ -178,18 +155,17 @@ class Admin implements AdminInterface
             }
             // inform user everything went fine
             $this
-                ->session
-                ->getFlashBag()
-                ->add('info', 'lag.admin.' . $this->name . '.deleted');
+                ->messageHandler
+                ->handleSuccess('lag.admin.' . $this->name . '.deleted');
             $success = true;
         } catch (Exception $e) {
             $this
-                ->logger
-                ->error("An error has occured during deleting an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} ");
-            $this
-                ->session
-                ->getFlashBag()
-                ->add('error', 'lag.admin.deleted_errors');
+                ->messageHandler
+                ->handleError(
+                    'lag.admin.deleted_errors',
+                    "An error has occurred while deleting an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} "
+                );
+            $success = false;
         }
         return $success;
     }

@@ -9,17 +9,15 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\ManagerInterface;
+use LAG\AdminBundle\Admin\Message\MessageHandler;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Manager\GenericManager;
 use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Exception;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * AdminFactory.
@@ -63,24 +61,14 @@ class AdminFactory
     protected $adminConfiguration;
 
     /**
-     * @var Session
-     */
-    protected $session;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
      * @var ActionFactory
      */
     protected $actionFactory;
 
     /**
-     * @var TokenStorageInterface
+     * @var MessageHandler
      */
-    protected $tokenStorage;
+    protected $messageHandler;
 
     /**
      * Read configuration from container, then create admin with its actions and fields.
@@ -89,30 +77,24 @@ class AdminFactory
      * @param EntityManager $entityManager
      * @param ApplicationConfiguration $application
      * @param array $adminConfiguration
-     * @param Session $session
-     * @param LoggerInterface $logger
      * @param ActionFactory $actionFactory
-     * @param TokenStorageInterface $tokenStorage
+     * @param MessageHandler $messageHandler
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EntityManager $entityManager,
         ApplicationConfiguration $application,
         array $adminConfiguration,
-        Session $session,
-        LoggerInterface $logger,
         ActionFactory $actionFactory,
-        TokenStorageInterface $tokenStorage
+        MessageHandler $messageHandler
     )
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
         $this->application = $application;
         $this->adminConfiguration = $adminConfiguration;
-        $this->session = $session;
-        $this->logger = $logger;
         $this->actionFactory = $actionFactory;
-        $this->tokenStorage = $tokenStorage;
+        $this->messageHandler = $messageHandler;
     }
 
     /**
@@ -172,23 +154,13 @@ class AdminFactory
             ->getRepository($adminConfiguration->getEntityName());
         // create generic manager from configuration
         $entityManager = $this->createManagerFromConfig($name, $adminConfiguration, $repository, $this->entityManager);
-        // get current user
-        $token = $this
-            ->tokenStorage
-            ->getToken();
-        $user = null;
 
-        if ($token) {
-            $user = $token->getUser();
-        }
         $admin = new Admin(
             $name,
             $repository,
             $entityManager,
             $adminConfiguration,
-            $this->session,
-            $this->logger,
-            $user
+            $this->messageHandler
         );
         // adding actions
         foreach ($adminConfiguration->getActions() as $actionName => $actionConfiguration) {
@@ -212,12 +184,12 @@ class AdminFactory
      * Return a loaded admin from a Symfony request.
      *
      * @param Request $request
+     * @param null $user
      *
      * @return AdminInterface
-     *
      * @throws Exception
      */
-    public function getAdminFromRequest(Request $request)
+    public function getAdminFromRequest(Request $request, $user = null)
     {
         $routeParameters = $request->get('_route_params');
 
@@ -231,7 +203,7 @@ class AdminFactory
             throw new Exception('Cannot find admin action from request. "_action" route parameter is missing');
         }
         $admin = $this->getAdmin($routeParameters['_admin']);
-        $admin->handleRequest($request);
+        $admin->handleRequest($request, $user);
 
         return $admin;
     }

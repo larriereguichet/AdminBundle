@@ -17,6 +17,7 @@ v0.4:
 - make interfaces for factories to allow overriding by third party
 - adding simple mass edit
 - unify load entities method with a FilterObject as parameter for load method
+- add configuration to disable flash message and logs in message handler
 
 -----------------------------------------------
 

@@ -17,6 +17,7 @@ lag.admin.batch_empty: Choisissez une action
 lag.admin.delete: Supprimer
 lag.admin.deleting: You are about to delete this entity "%entity%" (id: %id%). Are you sure ?
 lag.admin.deleted: Entity "%entity%" has been succesfully removed
+lag.admin.deleted_errors: An error has been encoutered during deletion
 
 # Batch
 lag.admin.warning: Attention !
