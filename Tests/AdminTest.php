@@ -21,9 +21,6 @@ class AdminTest extends Base
 
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
     {
-        $entity = new TestEntity();
-        $admin->setEntities([$entity]);
-        $this->assertEquals([$entity], $admin->getEntities());
         $this->assertEquals($admin->getName(), $adminName);
         $this->assertEquals($admin->getFormType(), $configuration['form']);
         $this->assertEquals($admin->getEntityNamespace(), $configuration['entity']);
