@@ -79,7 +79,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             $actions = $configuration['actions'];
 
             foreach ($actions as $name => $action) {
-                if (!array_key_exists('batch', $action) || !count($action['batch'])) {
+                if (!array_key_exists('batch', $action) || $action['batch'] !== false) {
                     if ($name == 'list') {
                         $configuration['actions']['batch'] = [];
                     }
