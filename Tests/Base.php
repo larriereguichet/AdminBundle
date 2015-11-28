@@ -11,6 +11,7 @@ use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
+use LAG\AdminBundle\Admin\Message\MessageHandler;
 use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -114,17 +115,12 @@ class Base extends WebTestCase
     {
         $repositoryMock = $this->mockEntityRepository();
 
-
-        $session = $this->mockSession();
-        $logger = $this->mockLogger();
-
         return new Admin(
             $name,
             $repositoryMock,
             $this->mockManager(),
             $configuration,
-            $session,
-            $logger
+            $this->mockMessageHandler()
         );
     }
 
@@ -140,10 +136,8 @@ class Base extends WebTestCase
             $this->mockEntityManager(),
             $this->mockApplicationConfiguration(),
             $configuration,
-            $this->mockSession(),
-            $this->mockLogger(),
             $this->mockActionFactory(),
-            $this->mockTokenStorage()
+            $this->mockMessageHandler()
         );
     }
 
@@ -274,5 +268,18 @@ class Base extends WebTestCase
             ->willReturn(25);
 
         return $applicationConfiguration;
+    }
+
+    /**
+     * @return MessageHandler|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockMessageHandler()
+    {
+        $messageHandler = $this
+            ->getMockBuilder('LAG\AdminBundle\Admin\Message\MessageHandler')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $messageHandler;
     }
 }
