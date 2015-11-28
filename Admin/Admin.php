@@ -37,13 +37,6 @@ class Admin implements AdminInterface
     protected $entities;
 
     /**
-     * Actions called when using custom manager.
-     *
-     * @var array
-     */
-    protected $customManagerActions;
-
-    /**
      * @var Session
      */
     protected $session;
@@ -137,7 +130,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Save entity via admin manager. Error are catch, logged and an flash message is added
+     * Save entity via admin manager. Error are catch, logged and an flash message is added to session
      *
      * @return bool true if the entity was saved without errors
      */
@@ -242,7 +235,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Load entities according to load method of current action
+     * Load entities according to action load method
      *
      * @param Request $request
      * @return ArrayIterator|ArrayCollection
@@ -368,19 +361,13 @@ class Admin implements AdminInterface
     }
 
     /**
+     * Return loaded entities
+     *
      * @return mixed
      */
     public function getEntities()
     {
         return $this->entities;
-    }
-
-    /**
-     * @param mixed $entities
-     */
-    public function setEntities($entities)
-    {
-        $this->entities = $entities;
     }
 
     /**

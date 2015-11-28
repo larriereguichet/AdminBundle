@@ -16,6 +16,7 @@ v0.4:
 - making batch actions configurable and disablable
 - make interfaces for factories to allow overriding by third party
 - adding simple mass edit
+- unify load entities method with a FilterObject as parameter for load method
 
 -----------------------------------------------
 
