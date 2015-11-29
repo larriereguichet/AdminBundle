@@ -6,11 +6,12 @@ use Closure;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
-use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
+use LAG\AdminBundle\Admin\ManagerInterface;
 use LAG\AdminBundle\Admin\Message\MessageHandler;
 use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Bridge\Monolog\Logger;
@@ -113,15 +114,30 @@ class Base extends WebTestCase
 
     protected function mockAdmin($name, $configuration)
     {
-        $repositoryMock = $this->mockEntityRepository();
-
         return new Admin(
             $name,
-            $repositoryMock,
+            $this->mockEntityRepository(),
             $this->mockManager(),
             $configuration,
             $this->mockMessageHandler()
         );
+    }
+
+    /**
+     * @param $name
+     * @return ActionInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockAction($name)
+    {
+        $action = $this
+            ->getMockBuilder('LAG\AdminBundle\Admin\ActionInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $action
+            ->method('getName')
+            ->willReturn($name);
+
+        return $action;
     }
 
     protected function mockAdminFactory(array $configuration = [])
@@ -141,6 +157,9 @@ class Base extends WebTestCase
         );
     }
 
+    /**
+     * @return ManagerInterface|PHPUnit_Framework_MockObject_MockObject
+     */
     protected function mockManager()
     {
         $managerMock = $this
@@ -228,20 +247,9 @@ class Base extends WebTestCase
             ->getMock();
         $actionFactory
             ->method('create')
-            ->willReturn($this->mockAction());
+            ->willReturn($this->mockAction('test'));
 
         return $actionFactory;
-    }
-
-    /**
-     * @return Action|PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function mockAction()
-    {
-        return $this
-            ->getMockBuilder('LAG\AdminBundle\Admin\Action')
-            ->disableOriginalConstructor()
-            ->getMock();
     }
 
     /**

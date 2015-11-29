@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Admin;
 
-use Doctrine\ORM\QueryBuilder;
 use Exception;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Manager\GenericManager;
@@ -114,6 +113,12 @@ interface AdminInterface
      * @return ActionInterface
      */
     public function getAction($actionName);
+
+    /**
+     * @param ActionInterface $actionInterface
+     * @return mixed
+     */
+    public function addAction(ActionInterface $actionInterface);
 
     /**
      * Return current admin Action.

@@ -151,7 +151,7 @@ class Action implements ActionInterface
      */
     public function addAction(Action $action)
     {
-        $this->actions[] = $action;
+        $this->actions[$action->getName()] = $action;
     }
 
     /**

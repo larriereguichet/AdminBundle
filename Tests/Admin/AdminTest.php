@@ -1,10 +1,10 @@
 <?php
 
-namespace LAG\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests\Admin;
 
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use Test\TestBundle\Entity\TestEntity;
+use LAG\AdminBundle\Tests\Base;
 
 class AdminTest extends Base
 {
@@ -33,6 +33,20 @@ class AdminTest extends Base
         } else {
             $this->assertEquals($admin->getConfiguration()->getMaxPerPage(), 25);
         }
+        if (!array_key_exists('actions', $configuration)) {
+            $configuration['actions'] = [
+                'create' => [],
+                'edit' => [],
+                'delete' => [],
+                'list' => []
+            ];
+        }
+        foreach ($configuration['actions'] as $actionName => $actionConfiguration) {
+            $action = $this->mockAction($actionName);
+            $admin->addAction($action);
+        }
+        $expectedActionNames = array_keys($configuration['actions']);
+        $this->assertEquals($expectedActionNames, array_keys($admin->getActions()));
     }
 
     protected function getFakeAdminsConfiguration()
