@@ -192,11 +192,11 @@ class ActionFactory
             })
             ->setNormalizer('parameters', function (Options $options, $value) use ($actionName) {
                 if (!count($value)) {
-                    // we add default parameter if action method is ti unique_entity
+                    // we add default parameter if action method is unique_entity
                     if ($options->offsetGet('load_method') == Admin::LOAD_METHOD_UNIQUE_ENTITY
                         && $actionName != 'create'
                     ) {
-                        $value = ['id'];
+                        $value = ['id' => false];
                     }
                 }
                 return $value;

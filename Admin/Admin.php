@@ -314,7 +314,9 @@ class Admin implements AdminInterface
         foreach ($parameters as $name => $regex) {
             $value = $request->get($name);
 
-            if ($value && preg_match("/{$regex}/", $value)) {
+            if ($regex == false) {
+                $criteria[$name] = $value;
+            } else if ($value && preg_match("/{$regex}/", $value)) {
                 $criteria[$name] = $value;
             }
         }
