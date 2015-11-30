@@ -1,8 +1,11 @@
+{% extends 'LAGAdminBundle::admin.layout.html.twig' %}
+
+{% block container %}
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
         <div class="login-panel panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</h3>
+                <h3 class="panel-title">{% block login_title %}{{ 'layout.login'|trans({}, 'FOSUserBundle') }}{% endblock %}</h3>
             </div>
             <div class="panel-body">
                 <form role="form" action="{{ path("fos_user_security_check") }}" method="post">
@@ -34,3 +37,4 @@
         </div>
     </div>
 </div>
+{% endblock %}
