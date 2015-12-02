@@ -37,7 +37,6 @@
     "symfony/security-bundle": "^2.7",
     "twig/extensions": "^1.2",
     "gedmo/doctrine-extensions": "^2.4",
-    "stephanecollot/datetimepicker-bundle": "*",
     "stfalcon/tinymce-bundle": "dev-master"
   },
   "require-dev": {
