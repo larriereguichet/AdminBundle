@@ -2,6 +2,8 @@
 
 namespace LAG\AdminBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -83,7 +85,10 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    protected function getAdminsConfigurationNode()
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    public function getAdminsConfigurationNode()
     {
         $builder = new TreeBuilder();
         $node = $builder->root('admins');
