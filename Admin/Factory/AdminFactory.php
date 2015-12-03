@@ -54,7 +54,7 @@ class AdminFactory
         $eventDispatcher->dispatch(self::ADMIN_CREATION, $event);
 
         // creating configured admin
-        foreach ($admins as $adminName => $adminConfig) {
+        foreach ($event->getAdminsConfiguration() as $adminName => $adminConfig) {
             $this->create($adminName, $adminConfig);
         }
     }
