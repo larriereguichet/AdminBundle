@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle;
 
 use LAG\AdminBundle\DependencyInjection\FieldCompilerPass;
+use LAG\AdminBundle\DependencyInjection\ManagerCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -15,6 +16,7 @@ class LAGAdminBundle extends Bundle
 
         // register field compiler pass
         $container->addCompilerPass(new FieldCompilerPass());
+        $container->addCompilerPass(new ManagerCompilerPass());
     }
 
     public function getContainerExtension()
@@ -36,7 +38,5 @@ class LAGAdminBundle extends Bundle
         if ($this->extension) {
             return $this->extension;
         }
-
-        return;
     }
 }

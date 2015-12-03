@@ -11,8 +11,8 @@ use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\ManagerInterface;
 use LAG\AdminBundle\Admin\Message\MessageHandler;
 use LAG\AdminBundle\Event\AdminEvent;
+use LAG\AdminBundle\Event\AdminFactoryEvent;
 use LAG\AdminBundle\Manager\GenericManager;
-use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -26,10 +26,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class AdminFactory
 {
-    const ADMIN_CREATION = 'lag.admin.adminCreation';
-
-    use ContainerTrait;
-
     /**
      * @var array
      */
@@ -71,8 +67,11 @@ class AdminFactory
     protected $messageHandler;
 
     /**
-     * Read configuration from container, then create admin with its actions and fields.
-     *
+     * @var ManagerInterface[]
+     */
+    protected $customManagers = [];
+
+    /**
      * @param EventDispatcherInterface $eventDispatcher
      * @param EntityManager $entityManager
      * @param ApplicationConfiguration $application
@@ -105,6 +104,11 @@ class AdminFactory
         if ($this->isInit) {
             return;
         }
+        $event = new AdminFactoryEvent();
+        $event->setAdminsConfiguration($this->adminConfiguration);
+        $this->eventDispatcher->dispatch(AdminFactoryEvent::ADMIN_CREATION, $event);
+        $this->adminConfiguration = $event->getAdminsConfiguration();
+
         foreach ($this->adminConfiguration as $name => $configuration) {
             $event = new AdminEvent();
             $event->setConfiguration($configuration);
@@ -252,14 +256,23 @@ class AdminFactory
 
         if (class_exists($managerClass)) {
             $manager = new $managerClass($entityManager, $repository);
-        } else if ($this->container->has($managerClass)) {
-            $manager = $this->container->get($managerClass);
+        } elseif (isset($this->customManagers[$managerClass])) {
+            $manager = $this->customManagers[$managerClass];
         } else {
-            throw new Exception("Unable to find manager for Admin \"{$adminName}\"");
+            throw new Exception("Unable to find manager '{$managerClass}' for Admin '{$adminName}'");
         }
         if (!($manager instanceof ManagerInterface)) {
-            throw new Exception('Manager should implements ManagerInterface');
+            throw new Exception("Manager '{$managerClass}' should implements ManagerInterface");
         }
         return $manager;
+    }
+
+    /**
+     * @param string $key
+     * @param ManagerInterface $manager
+     */
+    public function addCustomManager($key, ManagerInterface $manager)
+    {
+        $this->customManagers[$key] = $manager;
     }
 }
