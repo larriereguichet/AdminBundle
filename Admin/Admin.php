@@ -280,9 +280,12 @@ class Admin implements AdminInterface
             ->createQueryBuilder('entity', 'entity.id');
 
         if ($sort) {
-            $this
-                ->queryBuilder
-                ->addOrderBy('entity.' . $sort, $order);
+            // fix bug with join column sort in paging
+            if (!$this->configuration->getMetadata()->hasAssociation($sort)) {
+                $this
+                    ->queryBuilder
+                    ->addOrderBy('entity.' . $sort, $order);
+            }
         }
         // create adapter for query builder
         $adapter = new DoctrineORMAdapter($this->queryBuilder);

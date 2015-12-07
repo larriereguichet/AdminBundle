@@ -2,25 +2,70 @@
 
 namespace LAG\AdminBundle\Admin\Configuration;
 
+use Doctrine\ORM\Mapping\ClassMetadata;
+
+/**
+ * Ease Admin configuration manipulation
+ */
 class AdminConfiguration
 {
+    /**
+     * @var string
+     */
     protected $controllerName;
 
+    /**
+     * @var string
+     */
     protected $entityName;
 
+    /**
+     * @var string
+     */
     protected $manager;
 
+    /**
+     * @var string
+     */
     protected $formType;
 
-    protected $actions;
+    /**
+     * @var array
+     */
+    protected $actions = [];
 
+    /**
+     * @var int
+     */
     protected $maxPerPage = 25;
 
+    /**
+     * @var string
+     */
     protected $routingNamePattern;
 
+    /**
+     * @var string
+     */
     protected $routingUrlPattern;
 
-    public function __construct(array $adminConfiguration)
+    /**
+     * @var array
+     */
+    protected $adminConfiguration;
+
+    /**
+     * @var ClassMetadata
+     */
+    protected $metadata;
+
+    /**
+     * AdminConfiguration constructor.
+     *
+     * @param array $adminConfiguration
+     * @param ClassMetadata|null $metadata
+     */
+    public function __construct(array $adminConfiguration, ClassMetadata $metadata = null)
     {
         // defines values
         $this->controllerName = $adminConfiguration['controller'];
@@ -31,10 +76,12 @@ class AdminConfiguration
         $this->maxPerPage = $adminConfiguration['max_per_page'];
         $this->routingNamePattern = $adminConfiguration['routing_name_pattern'];
         $this->routingUrlPattern = $adminConfiguration['routing_url_pattern'];
+        $this->adminConfiguration = $adminConfiguration;
+        $this->metadata = $metadata;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getControllerName()
     {
@@ -42,15 +89,7 @@ class AdminConfiguration
     }
 
     /**
-     * @param mixed $controllerName
-     */
-    public function setControllerName($controllerName)
-    {
-        $this->controllerName = $controllerName;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getEntityName()
     {
@@ -58,15 +97,7 @@ class AdminConfiguration
     }
 
     /**
-     * @param mixed $entityName
-     */
-    public function setEntityName($entityName)
-    {
-        $this->entityName = $entityName;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getManager()
     {
@@ -74,15 +105,7 @@ class AdminConfiguration
     }
 
     /**
-     * @param string $manager
-     */
-    public function setManager($manager)
-    {
-        $this->manager = $manager;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getFormType()
     {
@@ -90,27 +113,11 @@ class AdminConfiguration
     }
 
     /**
-     * @param mixed $formType
-     */
-    public function setFormType($formType)
-    {
-        $this->formType = $formType;
-    }
-
-    /**
-     * @return mixed
+     * @return array
      */
     public function getActions()
     {
         return $this->actions;
-    }
-
-    /**
-     * @param mixed $actions
-     */
-    public function setActions($actions)
-    {
-        $this->actions = $actions;
     }
 
     /**
@@ -122,15 +129,7 @@ class AdminConfiguration
     }
 
     /**
-     * @param int $maxPerPage
-     */
-    public function setMaxPerPage($maxPerPage)
-    {
-        $this->maxPerPage = $maxPerPage;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getRoutingNamePattern()
     {
@@ -138,7 +137,7 @@ class AdminConfiguration
     }
 
     /**
-     * @param mixed $routingNamePattern
+     * @param string $routingNamePattern
      */
     public function setRoutingNamePattern($routingNamePattern)
     {
@@ -146,7 +145,7 @@ class AdminConfiguration
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getRoutingUrlPattern()
     {
@@ -154,10 +153,18 @@ class AdminConfiguration
     }
 
     /**
-     * @param mixed $routingUrlPattern
+     * @param string $routingUrlPattern
      */
     public function setRoutingUrlPattern($routingUrlPattern)
     {
         $this->routingUrlPattern = $routingUrlPattern;
+    }
+
+    /**
+     * @return ClassMetadata
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
     }
 }

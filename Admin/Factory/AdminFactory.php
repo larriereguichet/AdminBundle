@@ -152,7 +152,10 @@ class AdminFactory
         // resolve admin configuration
         $configuration = $resolver->resolve($configuration);
         // create AdminConfiguration object
-        $adminConfiguration = new AdminConfiguration($configuration);
+        $classMetadata = $this
+            ->entityManager
+            ->getClassMetadata($configuration['entity']);
+        $adminConfiguration = new AdminConfiguration($configuration, $classMetadata);
         $repository = $this
             ->entityManager
             ->getRepository($adminConfiguration->getEntityName());
