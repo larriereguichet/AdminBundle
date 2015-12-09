@@ -92,7 +92,7 @@ class RoutingLoader implements LoaderInterface
             throw new Exception('Admin routing pattern should contains {admin} and {action} placeholder');
         }
         // route path by entity name and action name
-        $path = str_replace('{admin}', $this->getEntityPath($admin->getEntityNamespace()), $routingUrlPattern);
+        $path = str_replace('{admin}', $admin->getName(), $routingUrlPattern);
         $path = str_replace('{action}', $action->getName(), $path);
         // by default, generic controller
         $defaults = [
