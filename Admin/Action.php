@@ -48,6 +48,9 @@ class Action implements ActionInterface
      */
     protected $submitActions = [];
 
+    /**
+     * @var ActionConfiguration
+     */
     protected $configuration;
 
     /**
@@ -60,6 +63,13 @@ class Action implements ActionInterface
      */
     protected $batchActions = [];
 
+    /**
+     * Action constructor.
+     *
+     * @param $actionName
+     * @param array $actionOptions
+     * @param ActionConfiguration $configuration
+     */
     public function __construct($actionName, array $actionOptions, ActionConfiguration $configuration)
     {
         $this->configuration = $configuration;
@@ -97,7 +107,7 @@ class Action implements ActionInterface
     /**
      * Return true if action has a field named $fieldName.
      *
-     * @param $fieldName
+     * @param string $fieldName
      *
      * @return bool
      */
@@ -170,6 +180,9 @@ class Action implements ActionInterface
         $this->filters = $filters;
     }
 
+    /**
+     * @param Filter $filter
+     */
     public function addFilter(Filter $filter)
     {
         $this->filters[] = $filter;
