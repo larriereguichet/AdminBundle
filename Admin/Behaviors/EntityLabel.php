@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Admin\Behaviors;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-trait EntityLabel
+trait EntityLabelTrait
 {
     public function getEntityLabel($entity)
     {

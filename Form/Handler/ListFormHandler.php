@@ -4,11 +4,12 @@ namespace LAG\AdminBundle\Form\Handler;
 
 use BlueBear\BaseBundle\Entity\Behaviors\Id;
 use LAG\AdminBundle\Admin\Behaviors\EntityLabel;
+use LAG\AdminBundle\Admin\Behaviors\EntityLabelTrait;
 use Symfony\Component\Form\FormInterface;
 
 class ListFormHandler
 {
-    use EntityLabel;
+    use EntityLabelTrait;
 
     /**
      * Return entities ids checked by user
