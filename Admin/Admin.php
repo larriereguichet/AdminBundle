@@ -6,7 +6,6 @@ use ArrayIterator;
 use LAG\AdminBundle\Admin\Behaviors\ActionTrait;
 use LAG\AdminBundle\Admin\Behaviors\AdminTrait;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Exception;
@@ -14,6 +13,7 @@ use LAG\AdminBundle\Admin\Message\MessageHandler;
 use LAG\AdminBundle\Exception\AdminException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -21,7 +21,7 @@ use Traversable;
 
 class Admin implements AdminInterface
 {
-    use StringUtilsTrait, ActionTrait, AdminTrait;
+    use ActionTrait, AdminTrait;
 
     const LOAD_METHOD_QUERY_BUILDER = 'query_builder';
     const LOAD_METHOD_UNIQUE_ENTITY = 'unique_entity';
@@ -188,7 +188,7 @@ class Admin implements AdminInterface
         // get routing name pattern
         $routingPattern = $this->getConfiguration()->getRoutingNamePattern();
         // replace admin and action name in pattern
-        $routeName = str_replace('{admin}', $this->underscore($this->getName()), $routingPattern);
+        $routeName = str_replace('{admin}', Container::underscore($this->getName()), $routingPattern);
         $routeName = str_replace('{action}', $actionName, $routeName);
 
         return $routeName;
