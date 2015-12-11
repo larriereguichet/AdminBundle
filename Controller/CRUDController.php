@@ -6,7 +6,6 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Form\Handler\ListFormHandler;
 use LAG\AdminBundle\Form\Type\AdminListType;
 use LAG\AdminBundle\Form\Type\BatchActionType;
-use LAG\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use DateTime;
 use Doctrine\ORM\Mapping\MappingException;
@@ -27,7 +26,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 class CRUDController extends Controller
 {
-    use ControllerTrait, RecursiveImplode;
+    use ControllerTrait;
 
     /**
      * Generic list action
@@ -248,7 +247,7 @@ class CRUDController extends Controller
             $exporter->addHook(function ($fieldValue) {
                 // if field is an array
                 if (is_array($fieldValue)) {
-                    $value = $this->recursiveImplode(', ', $fieldValue);
+                    $value = recursiveImplode(', ', $fieldValue);
                 } elseif ($fieldValue instanceof DateTime) {
                     // format date in string
                     $value = $fieldValue->format('c');

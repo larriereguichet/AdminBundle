@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "47e3ad47c1a22a647a9aa77ff62880c0",
-    "content-hash": "76b3ff295254963b6ebbb819459daf48",
+    "hash": "f55921dbbf31a4d97de28eb9e8dbb013",
+    "content-hash": "8f175d1c30774bd53460b58050479519",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1259,6 +1259,66 @@
             "time": "2014-01-12 16:20:24"
         },
         {
+            "name": "lag/array-utils",
+            "version": "0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/larriereguichet/array-utils.git",
+                "reference": "e3332b0ab766a0723d1475cdc542b53b82e05c32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/larriereguichet/array-utils/zipball/e3332b0ab766a0723d1475cdc542b53b82e05c32",
+                "reference": "e3332b0ab766a0723d1475cdc542b53b82e05c32",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.7.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Resources/functions/recursiveImplode.php"
+                ],
+                "psr-4": {
+                    "LAG\\Component\\ArrayUtils\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud Frezet",
+                    "email": "arnaudfrezet@gmail.com"
+                },
+                {
+                    "name": "Johan Dufour",
+                    "email": "johan.dufour@gmail.com"
+                }
+            ],
+            "description": "PHP array utils functions",
+            "homepage": "https://github.com/larriereguichet",
+            "keywords": [
+                "array",
+                "recursive implode",
+                "utils"
+            ],
+            "time": "2015-12-11 15:58:34"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.17.2",
             "source": {
@@ -1606,7 +1666,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stfalcon/TinymceBundle/zipball/4a943617e30b953b09ead4a8e40781e57d140df8",
+                "url": "https://api.github.com/repos/stfalcon/TinymceBundle/zipball/435c855f546fda9e4a05a1558f843f1712416ecb",
                 "reference": "4a943617e30b953b09ead4a8e40781e57d140df8",
                 "shasum": ""
             },
