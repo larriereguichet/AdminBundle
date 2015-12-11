@@ -5,7 +5,6 @@ namespace LAG\AdminBundle\Routing;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
-use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Exception;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use RuntimeException;
@@ -21,8 +20,6 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class RoutingLoader implements LoaderInterface
 {
-    use StringUtilsTrait;
-
     protected $loaded = false;
 
     /**

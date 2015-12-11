@@ -8,15 +8,12 @@ use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ActionFactory
 {
-    use StringUtilsTrait;
-
     /**
      * @var FieldFactory
      */
