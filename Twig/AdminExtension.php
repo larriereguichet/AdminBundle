@@ -6,7 +6,8 @@ use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Field;
 use LAG\AdminBundle\Admin\Field\EntityFieldInterface;
 use LAG\AdminBundle\Admin\FieldInterface;
-use LAG\AdminBundle\Utils\RecursiveImplode;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
@@ -22,8 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminExtension extends Twig_Extension
 {
-    use RecursiveImplode;
-
     /**
      * @var ApplicationConfiguration
      */
@@ -104,6 +103,28 @@ class AdminExtension extends Twig_Extension
         return $this
             ->router
             ->generate($request->get('_route'), $queryString);
+    }
+
+    /**
+     * Return an array of query string parameters, updated with sort field name.
+     *
+     * @param ParameterBagInterface $parameters
+     * @param $fieldName
+     * @return array
+     */
+    public function getOrderQueryString(ParameterBagInterface $parameters, $fieldName)
+    {
+        $parameters->set('sort', $fieldName);
+
+        if ($parameters->has('order')) {
+            // sort by opposite order
+            $order = $parameters->get('order') == 'ASC' ? 'DESC' : 'ASC';
+            $parameters->set('order', $order);
+        } else {
+            // if no order was provided, it means that list is sorted by default order (ASC), so we must sort by DESC
+            $parameters->set('order', 'DESC');
+        }
+        return $parameters->all();
     }
 
     /**
@@ -194,14 +215,14 @@ class AdminExtension extends Twig_Extension
     }
 
     /**
+     * Camelize a string (using Container camelize method)
+     *
      * @param $string
      * @return string
      */
     public function camelize($string)
     {
-        $string = preg_replace('/(?<!\ )[A-Z]/', ' $0', $string);
-
-        return ucwords($string);
+        return Container::camelize($string);
     }
 
     /**

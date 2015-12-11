@@ -13,7 +13,7 @@ v0.4:
 - creating an action view to generate action link
 - remove hardcoded id property and use metadata tu get primary key
 - removing container dependence in routing loader
-- making batch actions configurable and disablable
+- making batch actions configurable and disabled
 - make interfaces for factories to allow overriding by third party
 - adding simple mass edit
 - unify load entities method with a FilterObject as parameter for load method
@@ -21,6 +21,7 @@ v0.4:
 - use an Interface for MessageHandler and a getter in Admin class
 - use ContainerAwareInterface for FieldFactory (and maybe for ContainerTrait)
 - add configuration for entity getLabel method
+- add an adapter to pagination to allow to change pager
 
 -----------------------------------------------
 
