@@ -18,6 +18,9 @@ v0.4:
 - adding simple mass edit
 - unify load entities method with a FilterObject as parameter for load method
 - add configuration to disable flash message and logs in message handler
+- use an Interface for MessageHandler and a getter in Admin class
+- use ContainerAwareInterface for FieldFactory (and maybe for ContainerTrait)
+- add configuration for entity getLabel method
 
 -----------------------------------------------
 

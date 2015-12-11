@@ -69,6 +69,11 @@ trait AdminTrait
     protected $configuration;
 
     /**
+     * @return object
+     */
+    public abstract function getUniqueEntity();
+
+    /**
      * @return string
      */
     public function getName()
@@ -77,7 +82,7 @@ trait AdminTrait
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getEntityNamespace()
     {
@@ -93,7 +98,7 @@ trait AdminTrait
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getFormType()
     {
@@ -125,17 +130,20 @@ trait AdminTrait
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getController()
     {
         return $this->controller;
     }
 
+    /**
+     * @return string
+     */
     public function getEntityLabel()
     {
         $label = '';
-        $entity = $this->getEntity();
+        $entity = $this->getUniqueEntity();
 
         if (method_exists($entity, 'getLabel')) {
             $label = $entity->getLabel();
