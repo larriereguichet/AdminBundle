@@ -21,22 +21,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * Class GenericController
+ * Class CRUDController
  *
  * Generic CRUD controller
  */
-class GenericController extends Controller
+class CRUDController extends Controller
 {
     use ControllerTrait, RecursiveImplode;
-
-    protected $entityClass;
-
-    protected $formType;
 
     /**
      * Generic list action
      *
-     * @Template("LAGAdminBundle:Generic:list.html.twig")
+     * @Template("LAGAdminBundle:CRUD:list.html.twig")
      *
      * @param Request $request
      *
@@ -72,7 +68,7 @@ class GenericController extends Controller
             ]);
 
             // render batch view
-            return $this->render('LAGAdminBundle:Generic:batch.html.twig', [
+            return $this->render('LAGAdminBundle:CRUD:batch.html.twig', [
                 'admin' => $admin,
                 'form' => $batchForm->createView()
             ]);
@@ -113,7 +109,7 @@ class GenericController extends Controller
     /**
      * Generic create action
      *
-     * @Template("LAGAdminBundle:Generic:edit.html.twig")
+     * @Template("LAGAdminBundle:CRUD:edit.html.twig")
      *
      * @param Request $request
      *
@@ -155,7 +151,7 @@ class GenericController extends Controller
     /**
      * Generic edit action.
      *
-     * @Template("LAGAdminBundle:Generic:edit.html.twig")
+     * @Template("LAGAdminBundle:CRUD:edit.html.twig")
      *
      * @param Request $request
      *
@@ -196,7 +192,7 @@ class GenericController extends Controller
     /**
      * Generic delete action
      *
-     * @Template("LAGAdminBundle:Generic:delete.html.twig")
+     * @Template("LAGAdminBundle:CRUD:delete.html.twig")
      *
      * @param Request $request
      *
