@@ -75,11 +75,6 @@ interface AdminInterface
     public function getEntities();
 
     /**
-     * @param mixed $entities
-     */
-    public function setEntities($entities);
-
-    /**
      * @return mixed
      */
     public function getFormType();
@@ -111,6 +106,9 @@ interface AdminInterface
      */
     public function getPager();
 
+    /**
+     * @return ActionInterface[]
+     */
     public function getActions();
 
     /**
