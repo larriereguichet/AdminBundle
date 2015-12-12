@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Factory;
+namespace LAG\AdminBundle\Tests\AdminBundle\Admin\Factory;
 
 use Exception;
 use LAG\AdminBundle\Admin\AdminInterface;
@@ -67,6 +67,25 @@ class AdminFactoryTest extends Base
                 ]
             ]);
             $admin = $adminFactory->getAdminFromRequest($request);
+            $this->doTestAdmin($admin, $configuration, $name);
+        }
+    }
+
+    public function testGetAdmin()
+    {
+        // test with no configuration
+        $adminFactory = $this->mockAdminFactory();
+        // unknow admin not exists, it should throw an exception
+        $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
+            $adminFactory->getAdmin('unknown_admin');
+        });
+        // test with configurations samples
+        $adminsConfiguration = $this->getAdminsConfiguration();
+        $adminFactory = $this->mockAdminFactory($adminsConfiguration);
+        $adminFactory->init();
+
+        foreach ($adminsConfiguration as $name => $configuration) {
+            $admin = $adminFactory->getAdmin($name);
             $this->doTestAdmin($admin, $configuration, $name);
         }
     }
