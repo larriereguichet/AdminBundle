@@ -32,9 +32,15 @@ class LAGAdminExtension extends Extension
         if (!array_key_exists('admins', $config)) {
             throw new InvalidConfigurationException('Your section "admins" is not found for AdminBundle configuration');
         }
+        if (!array_key_exists('enable_extra_configuration', $config['application'])) {
+            $config['application']['enable_extra_configuration'] = true;
+        }
         $container->setParameter('lag.admins', $config['admins']);
         $container->setParameter('lag.menus', $config['menus']);
         $container->setParameter('lag.admin.application_configuration', $config['application']);
+        $container->setParameter('lag.enable_extra_configuration', $config['application']['enable_extra_configuration']);
+
+
     }
 
     public function getAlias()

@@ -2,100 +2,58 @@
 
 namespace LAG\AdminBundle\Admin;
 
+use ArrayIterator;
+use LAG\AdminBundle\Admin\Behaviors\ActionTrait;
+use LAG\AdminBundle\Admin\Behaviors\AdminTrait;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Manager\GenericManager;
-use BlueBear\BaseBundle\Behavior\StringUtilsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use LAG\AdminBundle\Admin\Message\MessageHandler;
+use LAG\AdminBundle\Exception\AdminException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Traversable;
 
 class Admin implements AdminInterface
 {
-    use StringUtilsTrait, ActionTrait;
+    use ActionTrait, AdminTrait;
 
-    /**
-     * Admin name.
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * Full namespace for Admin entity.
-     *
-     * @var string
-     */
-    protected $entityNamespace;
+    const LOAD_METHOD_QUERY_BUILDER = 'query_builder';
+    const LOAD_METHOD_UNIQUE_ENTITY = 'unique_entity';
+    const LOAD_METHOD_MULTIPLE_ENTITIES = 'multiple';
+    const LOAD_METHOD_MANUAL = 'manual';
 
     /**
      * Entities collection.
      *
-     * @var ArrayCollection
+     * @var ArrayCollection|ArrayIterator
      */
     protected $entities;
 
     /**
-     * Entity.
-     *
-     * @var Object
+     * @var MessageHandler
      */
-    protected $entity;
-
-    /**
-     * Entity manager (doctrine entity manager by default).
-     *
-     * @var GenericManager
-     */
-    protected $manager;
-
-    /**
-     * @var AdminConfiguration
-     */
-    protected $configuration;
-
-    /**
-     * Actions called when using custom manager.
-     *
-     * @var array
-     */
-    protected $customManagerActions;
-
-    /**
-     * Entity repository.
-     *
-     * @var EntityRepository
-     */
-    protected $repository;
-
-    /**
-     * Controller.
-     *
-     * @var Controller
-     */
-    protected $controller;
-
-    /**
-     * Form type.
-     *
-     * @var string
-     */
-    protected $formType;
-
-    /**
-     * @var
-     */
-    protected $pager;
+    protected $messageHandler;
 
     /**
      * @param $name
-     * @param $repository
-     * @param $manager
+     * @param EntityRepository $repository
+     * @param ManagerInterface $manager
      * @param AdminConfiguration $adminConfig
+     * @param MessageHandler $messageHandler
      */
-    public function __construct($name, $repository, $manager, AdminConfiguration $adminConfig)
+    public function __construct(
+        $name,
+        EntityRepository $repository,
+        ManagerInterface $manager,
+        AdminConfiguration $adminConfig,
+        MessageHandler $messageHandler
+    )
     {
         $this->name = $name;
         $this->repository = $repository;
@@ -106,62 +64,290 @@ class Admin implements AdminInterface
         $this->formType = $adminConfig->getFormType();
         $this->entities = new ArrayCollection();
         $this->customManagerActions = [];
+        $this->messageHandler = $messageHandler;
     }
 
     /**
+     * Load entities and set current action according to request
+     *
+     * @param Request $request
+     * @param null $user
+     * @return mixed|void
+     * @throws AdminException
+     */
+    public function handleRequest(Request $request, $user = null)
+    {
+        // set current action
+        $this->currentAction = $this->getAction($request->get('_route_params')['_action']);
+        // check if user is logged have required permissions to get current action
+        $this->checkPermissions($user);
+        // load entities according to action and request
+        $this->loadEntities($request);
+    }
+
+    /**
+     * Check if user is allowed to be here
+     *
+     * @param UserInterface|string $user
+     */
+    public function checkPermissions($user)
+    {
+        if (!$user) {
+            return;
+        }
+        $roles = $user->getRoles();
+        $actionName = $this
+            ->getCurrentAction()
+            ->getName();
+
+        if (!$this->isActionGranted($actionName, $roles)) {
+            $message = sprintf('User with roles %s not allowed for action "%s"',
+                implode(', ', $roles),
+                $actionName
+            );
+            throw new NotFoundHttpException($message);
+        }
+    }
+
+    /**
+     * Save entity via admin manager. Error are catch, logged and a flash message is added to session
+     *
+     * @return bool true if the entity was saved without errors
+     */
+    public function save()
+    {
+        try {
+            foreach ($this->entities as $entity) {
+                $this
+                    ->manager
+                    ->save($entity);
+            }
+            // inform user everything went fine
+            $this
+                ->messageHandler
+                ->handleSuccess('lag.admin.' . $this->name . '.saved');
+            $success = true;
+        } catch (Exception $e) {
+            $this
+                ->messageHandler
+                ->handleError(
+                    'lag.admin.saved_errors',
+                    "An error has occurred while saving an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} "
+                );
+            $success = false;
+        }
+        return $success;
+    }
+
+    /**
+     * Delete entity via admin manager. Error are catch, logged and an flash message is added
+     *
+     * @return bool true if the entity was saved without errors
+     */
+    public function delete()
+    {
+        try {
+            foreach ($this->entities as $entity) {
+                $this
+                    ->manager
+                    ->delete($entity);
+            }
+            // inform user everything went fine
+            $this
+                ->messageHandler
+                ->handleSuccess('lag.admin.' . $this->name . '.deleted');
+            $success = true;
+        } catch (Exception $e) {
+            $this
+                ->messageHandler
+                ->handleError(
+                    'lag.admin.deleted_errors',
+                    "An error has occurred while deleting an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} "
+                );
+            $success = false;
+        }
+        return $success;
+    }
+
+    /**
+     * Generate a route for admin and action name (like lag.admin.my_admin)
+     *
+     * @param $actionName
+     *
      * @return string
+     *
+     * @throws Exception
      */
-    public function getName()
+    public function generateRouteName($actionName)
     {
-        return $this->name;
+        if (!array_key_exists($actionName, $this->getConfiguration()->getActions())) {
+            $message = 'Invalid action name %s for admin %s (available action are: %s)';
+            throw new Exception(sprintf($message, $actionName, $this->getName(), implode(', ', $this->getActionNames())));
+        }
+        // get routing name pattern
+        $routingPattern = $this->getConfiguration()->getRoutingNamePattern();
+        // replace admin and action name in pattern
+        $routeName = str_replace('{admin}', Container::underscore($this->getName()), $routingPattern);
+        $routeName = str_replace('{action}', $actionName, $routeName);
+
+        return $routeName;
     }
 
     /**
-     * @return mixed
+     * Load entities manually according to criteria
+     *
+     * @param array $criteria
+     * @param array $orderBy
+     * @param null $limit
+     * @param null $offset
      */
-    public function getEntityNamespace()
+    public function load(array $criteria, $orderBy = [], $limit = null, $offset = null)
     {
-        return $this->entityNamespace;
+        $this->entities = $this
+            ->manager
+            ->getRepository()
+            ->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
-     * @return EntityRepository
+     * Load entities according to action load method
+     *
+     * @param Request $request
+     * @return ArrayIterator|ArrayCollection
+     * @throws AdminException
+     * @throws Exception
      */
-    public function getRepository()
+    protected function loadEntities(Request $request)
     {
-        return $this->repository;
+        $loadMethod = $this
+            ->currentAction
+            ->getConfiguration()
+            ->getLoadMethod();
+
+        if ($loadMethod == self::LOAD_METHOD_QUERY_BUILDER) {
+            // loading entities with a query builder
+            $this->entities = $this->loadWithQueryBuilder($request);
+        } else if ($loadMethod == self::LOAD_METHOD_UNIQUE_ENTITY) {
+            // load only one entity from request criteria
+            $this->entities = $this->loadWithParameters($request, true);
+        } else if ($loadMethod == self::LOAD_METHOD_MULTIPLE_ENTITIES) {
+            // load all entities matching request criteria
+            $this->entities = $this->loadWithParameters($request, false);
+        } else if ($loadMethod == self::LOAD_METHOD_MANUAL) {
+            // wait for manual load
+            $this->entities = [];
+        } else {
+            throw new AdminException("Unhandled entities load method {$loadMethod} for admin {$this->getName()}");
+        }
+        return $this->entities;
     }
 
     /**
+     * Load entities by creating a query builder for PagerFanta according to request parameter
+     *
+     * @param Request $request
+     * @return array|Traversable
+     * @throws Exception
+     */
+    protected function loadWithQueryBuilder(Request $request)
+    {
+        // getting pager parameter
+        $page = $request->get('page', 1);
+        $sort = $request->get('sort');
+        $order = $request->get('order');
+        // check if sort field is allowed for current action
+        if ($sort) {
+            if (!$this->getCurrentAction()->hasField($sort)) {
+                throw new Exception("Invalid field \"{$sort}\" for current action \"{$this->getCurrentAction()->getName()}\"");
+            }
+            // if no sort was used by user, we sort with default configured sort if there is one
+            if (!$order) {
+                // getting configured order
+                $order = $this
+                    ->getCurrentAction()
+                    ->getConfiguration()
+                    ->getOrder();
+            }
+            if (!in_array($order, ['ASC', 'DESC'])) {
+                throw new Exception("Invalid order \"{$order}\". Only ASC and DESC are allowed");
+            }
+        }
+        // creating query builder from repository
+        $this->queryBuilder = $this
+            ->manager
+            ->getRepository()
+            ->createQueryBuilder('entity', 'entity.id');
+
+        if ($sort) {
+            // fix bug with join column sort in paging
+            if (!$this->configuration->getMetadata()->hasAssociation($sort)) {
+                $this
+                    ->queryBuilder
+                    ->addOrderBy('entity.' . $sort, $order);
+            }
+        }
+        // create adapter for query builder
+        $adapter = new DoctrineORMAdapter($this->queryBuilder);
+        // create pager
+        $this->pager = new Pagerfanta($adapter);
+        $this->pager->setMaxPerPage($this->configuration->getMaxPerPage());
+        $this->pager->setCurrentPage($page);
+
+        return $this
+            ->pager
+            ->getCurrentPageResults();
+    }
+
+    /**
+     * Loading an entity according to request parameter
+     *
+     * @param Request $request
+     * @param bool $unique
+     * @return array
+     */
+    protected function loadWithParameters(Request $request, $unique = false)
+    {
+        $parameters = $this
+            ->currentAction
+            ->getConfiguration()
+            ->getParameters();
+        $criteria = [];
+
+        foreach ($parameters as $name => $regex) {
+            $value = $request->get($name);
+
+            if ($regex == false) {
+                $criteria[$name] = $value;
+            } else if ($value && preg_match("/{$regex}/", $value)) {
+                $criteria[$name] = $value;
+            }
+        }
+        if ($unique) {
+            // find entity according to criteria
+            $entity = $this
+                ->manager
+                ->getRepository()
+                ->findOneBy($criteria);
+            // returning a collection to be more generic
+            $entities = new ArrayCollection();
+            $entities->set($entity->getId(), $entity);
+        } else {
+            $entities = $this
+                ->manager
+                ->getRepository()
+                ->findBy($criteria);
+        }
+        return $entities;
+    }
+
+    /**
+     * Return loaded entities
+     *
      * @return mixed
      */
     public function getEntities()
     {
         return $this->entities;
-    }
-
-    /**
-     * @param mixed $entities
-     */
-    public function setEntities($entities)
-    {
-        $this->entities = $entities;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFormType()
-    {
-        return $this->formType;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getController()
-    {
-        return $this->controller;
     }
 
     /**
@@ -171,150 +357,11 @@ class Admin implements AdminInterface
      *
      * @throws Exception
      */
-    public function getEntity()
+    public function getUniqueEntity()
     {
-        if (!$this->entity) {
-            throw new Exception("Entity not found in admin \"{$this->getName()}\". Try call method findEntity or createEntity first.");
+        if ($this->entities->count() != 1) {
+            throw new Exception("Entity not found in admin \"{$this->getName()}\".");
         }
-
-        return $this->entity;
-    }
-
-    public function getEntityLabel()
-    {
-        $label = '';
-
-        if (method_exists($this->entity, 'getLabel')) {
-            $label = $this->entity->getLabel();
-        } elseif (method_exists($this->entity, 'getTitle')) {
-            $label = $this->entity->getTitle();
-        } elseif (method_exists($this->entity, 'getName')) {
-            $label = $this->entity->getName();
-        } elseif (method_exists($this->entity, '__toString')) {
-            $label = $this->entity->__toString();
-        }
-
-        return $label;
-    }
-
-    public function setEntity($entity)
-    {
-        $this->entity = $entity;
-    }
-
-    /**
-     * Find a entity by one of its field.
-     *
-     * @param $field
-     * @param $value
-     *
-     * @return null|object
-     *
-     * @throws Exception
-     */
-    public function findEntity($field, $value)
-    {
-        $this->entity = $this->getManager()->findOneBy([
-            $field => $value,
-        ]);
-        $this->checkEntity();
-
-        return $this->entity;
-    }
-
-    /**
-     * Find entities paginated and sorted.
-     *
-     * @param int    $page
-     * @param null   $sort
-     * @param string $order
-     *
-     * @return array|ArrayCollection|\Traversable
-     *
-     * @throws Exception
-     */
-    public function findEntities($page = 1, $sort = null, $order = 'ASC')
-    {
-        if ($sort) {
-            // check if sort field is allowed for current action
-            if (!$this->getCurrentAction()->hasField($sort)) {
-                throw new Exception("Invalid field \"{$sort}\" for current action \"{$this->getCurrentAction()->getName()}\"");
-            }
-            if (!in_array($order, ['ASC', 'DESC'])) {
-                throw new Exception("Invalid order \"{$order}\"");
-            }
-        }
-        $queryBuilder = $this->getManager()->getFindAllQueryBuilder($sort, $order);
-
-        // if no sort was used by user, we sort with configured sort if there is one
-        if (!$sort && $this->getCurrentAction()->hasOrder()) {
-            $order = $this->getCurrentAction()->getOrder();
-
-            foreach ($order as $orderConfiguration) {
-                $queryBuilder
-                    ->addOrderBy('entity.'.$orderConfiguration['field'], $orderConfiguration['order']);
-            }
-        }
-        // create adapter from query builder
-        $adapter = new DoctrineORMAdapter($queryBuilder);
-        // create pager
-        $this->pager = new Pagerfanta($adapter);
-        $this->pager->setMaxPerPage($this->configuration->getMaxPerPage());
-        $this->pager->setCurrentPage($page);
-        $this->entities = $this->pager->getCurrentPageResults();
-
-        return $this->entities;
-    }
-
-    public function saveEntity()
-    {
-        $this->checkEntity();
-        $this->getManager()->save($this->entity);
-    }
-
-    public function createEntity()
-    {
-        $this->entity = $this->getManager()->create($this->getEntityNamespace());
-        $this->checkEntity();
-
-        return $this->entity;
-    }
-
-    public function deleteEntity()
-    {
-        // TODO handle integrity constraint
-        $this->checkEntity();
-        $this->getManager()->delete($this->entity);
-    }
-
-    /**
-     * @return GenericManager
-     */
-    public function getManager()
-    {
-        return $this->manager;
-    }
-
-    /**
-     * @return AdminConfiguration
-     */
-    public function getConfiguration()
-    {
-        return $this->configuration;
-    }
-
-    /**
-     * @return Pagerfanta
-     */
-    public function getPager()
-    {
-        return $this->pager;
-    }
-
-    protected function checkEntity()
-    {
-        if (!$this->entity) {
-            throw new Exception("Entity not found in admin \"{$this->getName()}\". Try call method findEntity or createEntity first.");
-        }
+        return $this->entities->first();
     }
 }

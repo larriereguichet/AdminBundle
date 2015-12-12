@@ -6,7 +6,8 @@ use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Field;
 use LAG\AdminBundle\Admin\Field\EntityFieldInterface;
 use LAG\AdminBundle\Admin\FieldInterface;
-use LAG\AdminBundle\Utils\RecursiveImplode;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
@@ -22,8 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminExtension extends Twig_Extension
 {
-    use RecursiveImplode;
-
     /**
      * @var ApplicationConfiguration
      */
@@ -39,11 +38,42 @@ class AdminExtension extends Twig_Extension
      */
     protected $translator;
 
+    /**
+     * AdminExtension constructor.
+     *
+     * @param RouterInterface $router
+     * @param TranslatorInterface $translator
+     * @param ApplicationConfiguration $configuration
+     */
     public function __construct(RouterInterface $router, TranslatorInterface $translator, ApplicationConfiguration $configuration)
     {
         $this->router = $router;
         $this->translator = $translator;
         $this->configuration = $configuration;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFunctions()
+    {
+        return [
+            new Twig_SimpleFunction('getSortColumnUrl', [$this, 'getSortColumnUrl']),
+            new Twig_SimpleFunction('getSortColumnIconClass', [$this, 'getSortColumnIconClass']),
+            new Twig_SimpleFunction('field', [$this, 'field']),
+            new Twig_SimpleFunction('field_title', [$this, 'fieldTitle']),
+            new Twig_SimpleFunction('routeParameters', [$this, 'routeParameters']),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilters()
+    {
+        return [
+            new Twig_SimpleFilter('camelize', [$this, 'camelize']),
+        ];
     }
 
     /**
@@ -75,6 +105,34 @@ class AdminExtension extends Twig_Extension
             ->generate($request->get('_route'), $queryString);
     }
 
+    /**
+     * Return an array of query string parameters, updated with sort field name.
+     *
+     * @param ParameterBagInterface $parameters
+     * @param $fieldName
+     * @return array
+     */
+    public function getOrderQueryString(ParameterBagInterface $parameters, $fieldName)
+    {
+        $parameters->set('sort', $fieldName);
+
+        if ($parameters->has('order')) {
+            // sort by opposite order
+            $order = $parameters->get('order') == 'ASC' ? 'DESC' : 'ASC';
+            $parameters->set('order', $order);
+        } else {
+            // if no order was provided, it means that list is sorted by default order (ASC), so we must sort by DESC
+            $parameters->set('order', 'DESC');
+        }
+        return $parameters->all();
+    }
+
+    /**
+     * @param null $order
+     * @param $fieldName
+     * @param $sort
+     * @return string
+     */
     public function getSortColumnIconClass($order = null, $fieldName, $sort)
     {
         // when no order is provided, no icon should be displayed
@@ -118,7 +176,12 @@ class AdminExtension extends Twig_Extension
         return $render;
     }
 
-    public function field_title($fieldName, $adminName = null)
+    /**
+     * @param $fieldName
+     * @param null $adminName
+     * @return string
+     */
+    public function fieldTitle($fieldName, $adminName = null)
     {
         if ($this->configuration->useTranslation()) {
             $title = $this
@@ -131,6 +194,11 @@ class AdminExtension extends Twig_Extension
         return $title;
     }
 
+    /**
+     * @param array $parameters
+     * @param $entity
+     * @return array
+     */
     public function routeParameters(array $parameters, $entity)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
@@ -146,29 +214,15 @@ class AdminExtension extends Twig_Extension
         return $routeParameters;
     }
 
+    /**
+     * Camelize a string (using Container camelize method)
+     *
+     * @param $string
+     * @return string
+     */
     public function camelize($string)
     {
-        $string = preg_replace('/(?<!\ )[A-Z]/', ' $0', $string);
-
-        return ucwords($string);
-    }
-
-    public function getFunctions()
-    {
-        return [
-            new Twig_SimpleFunction('getSortColumnUrl', [$this, 'getSortColumnUrl']),
-            new Twig_SimpleFunction('getSortColumnIconClass', [$this, 'getSortColumnIconClass']),
-            new Twig_SimpleFunction('field', [$this, 'field']),
-            new Twig_SimpleFunction('field_title', [$this, 'field_title']),
-            new Twig_SimpleFunction('routeParameters', [$this, 'routeParameters']),
-        ];
-    }
-
-    public function getFilters()
-    {
-        return [
-            new Twig_SimpleFilter('camelize', [$this, 'camelize']),
-        ];
+        return Container::camelize($string);
     }
 
     /**

@@ -1,17 +1,14 @@
 <?php
 
-namespace LAG\AdminBundle\Controller;
+namespace BlueBear\AdminBundle\Controller;
 
-use LAG\AdminBundle\Admin\Admin;
-use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Routing\RoutingLoader;
-use LAG\AdminBundle\Utils\RecursiveImplode;
+use BlueBear\AdminBundle\Admin\Admin;
+use BlueBear\AdminBundle\Utils\RecursiveImplode;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use DateTime;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\MappingException;
 use EE\DataExporterBundle\Service\DataExporter;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * Class GenericController.
+ * Class GenericController
  *
  * Generic CRUD controller
  */
@@ -33,45 +30,45 @@ class GenericController extends Controller
     protected $formType;
 
     /**
-     * Generic list action.
+     * Generic list action
      *
-     * @Template("LAGAdminBundle:Generic:list.html.twig")
-     *
+     * @Template()
      * @param Request $request
-     *
      * @return array
      */
     public function listAction(Request $request)
     {
-        $admin = $this->getAdminFromRequest($request);
+        /** @var Admin $admin */
+        $admin = $this
+            ->get('bluebear.admin.factory')
+            ->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
-        // find entities list
+        // set entities list
         $admin->findEntities($request->get('page', 1), $request->get('sort', null), $request->get('order', 'ASC'));
 
         if ($request->get('export', false)) {
             return $this->exportEntities($admin, $request->get('export'));
         }
-
         return [
             'admin' => $admin,
-            'action' => $admin->getCurrentAction(),
+            'action' => $admin->getCurrentAction()
         ];
     }
 
     /**
-     * Generic create action.
+     * Generic create action
      *
-     * @Template("LAGAdminBundle:Generic:edit.html.twig")
-     *
+     * @Template("BlueBearAdminBundle:Generic:edit.html.twig")
      * @param Request $request
-     *
      * @return array
      */
     public function createAction(Request $request)
     {
         /** @var Admin $admin */
-        $admin = $this->getAdminFromRequest($request);
+        $admin = $this
+            ->get('bluebear.admin.factory')
+            ->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create entity
@@ -84,47 +81,32 @@ class GenericController extends Controller
             // save entity
             $admin->saveEntity();
             // inform user everything went fine
-            $this->setMessage('lag.admin.'.$admin->getName().'.saved');
+            $this->setMessage('bluebear.admin.' . $admin->getName() . '.saved');
 
             if ($request->request->get('submit') == 'save') {
-                // if save is pressed, user stay on the edit view
-                $editRoute = $this
-                    ->getRoutingLoader()
-                    ->generateRouteName('edit', $admin);
-
-                return $this->redirectToRoute($editRoute, [
-                    'id' => $admin->getEntity()->getId(),
-                ]);
+                return $this->redirect($this->generateUrl($admin->generateRouteName('edit'), [
+                    'id' => $admin->getEntity()->getId()
+                ]));
             } else {
-                $listRoute = $this
-                    ->container
-                    ->get('lag.admin.routing')
-                    ->generateRouteName('list', $admin);
-                // otherwise user is redirected to list view
-                return $this->redirect($this->generateUrl($listRoute));
+                // redirect to list
+                return $this->redirect($this->generateUrl($admin->generateRouteName('list')));
             }
         }
-
         return [
             'admin' => $admin,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ];
     }
 
     /**
-     * Generic edit action.
-     *
-     * @Template("LAGAdminBundle:Generic:edit.html.twig")
-     *
+     * @Template("BlueBearAdminBundle:Generic:edit.html.twig")
      * @param Request $request
-     *
      * @return array|RedirectResponse
      */
     public function editAction(Request $request)
     {
-        $admin = $this
-            ->get('lag.admin.factory')
-            ->getAdminFromRequest($request);
+        /** @var Admin $admin */
+        $admin = $this->get('bluebear.admin.factory')->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // find entity
@@ -138,48 +120,35 @@ class GenericController extends Controller
             // save entity
             $admin->saveEntity();
             // inform user everything went fine
-            $this->setMessage('lag.admin.saved', 'info', [
-                '%entity%' => $admin->getEntityLabel(),
+            $this->setMessage('bluebear.admin.saved', 'info', [
+                '%entity%' => $admin->getEntityLabel()
             ]);
             if ($request->request->get('submit') == 'save') {
-                $saveRoute = $this
-                    ->container
-                    ->get('lag.admin.routing')
-                    ->generateRouteName('edit', $admin);
-
-                return $this->redirectToRoute($saveRoute, [
-                    'id' => $accessor->getValue($admin->getEntity(), 'id'),
-                ]);
+                return $this->redirect($this->generateUrl($admin->generateRouteName('edit'), [
+                    'id' => $accessor->getValue($admin->getEntity(), 'id')
+                ]));
             } else {
-                $listRoute = $this
-                    ->container
-                    ->get('lag.admin.routing')
-                    ->generateRouteName('list', $admin);
                 // redirect to list
-                return $this->redirectToRoute($listRoute);
+                return $this->redirect($this->generateUrl($admin->generateRouteName('list')));
             }
         }
-
         return [
             'admin' => $admin,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ];
     }
 
     /**
-     * Generic delete action.
+     * Generic delete action
      *
-     * @Template("LAGAdminBundle:Generic:delete.html.twig")
-     *
+     * @Template("BlueBearAdminBundle:Generic:delete.html.twig")
      * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function deleteAction(Request $request)
     {
-        $admin = $this
-            ->get('lag.admin.factory')
-            ->getAdminFromRequest($request);
+        /** @var Admin $admin */
+        $admin = $this->get('bluebear.admin.factory')->getAdminFromRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // find entity
@@ -191,32 +160,24 @@ class GenericController extends Controller
         if ($form->isValid()) {
             $admin->deleteEntity();
             // inform user everything went fine
-            $this->setMessage('lag.admin.deleted', 'info', [
-                '%entity%' => $admin->getEntityLabel(),
+            $this->setMessage('bluebear.admin.deleted', 'info', [
+                '%entity%' => $admin->getEntityLabel()
             ]);
             // redirect to list
-            $listRoute = $this
-                ->container
-                ->get('lag.admin.routing')
-                ->generateRouteName('list', $admin);
-
-            return $this->redirectToRoute($listRoute);
+            return $this->redirect($this->generateUrl($admin->generateRouteName('list')));
         }
-
         return [
             'admin' => $admin,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ];
     }
 
     /**
-     * Export entities according to a type (json, csv, xls...).
+     * Export entities according to a type (json, csv, xls...)
      *
      * @param Admin $admin
      * @param $exportType
-     *
      * @return Response
-     *
      * @throws MappingException
      */
     protected function exportEntities(Admin $admin, $exportType)
@@ -237,13 +198,12 @@ class GenericController extends Controller
                 // if field is an array
                 if (is_array($fieldValue)) {
                     $value = $this->recursiveImplode(', ', $fieldValue);
-                } elseif ($fieldValue instanceof DateTime) {
+                } else if ($fieldValue instanceof DateTime) {
                     // format date in string
                     $value = $fieldValue->format('c');
                 } else {
                     $value = $fieldValue;
                 }
-
                 return $value;
             }, "{$fieldName}");
             // add field column to export
@@ -251,58 +211,26 @@ class GenericController extends Controller
         }
         $exporter
             ->setOptions($exportType, [
-                'fileName' => $admin->getName().'-export-'.date('Y-m-d'),
+                'fileName' => $admin->getName() . '-export-' . date('Y-m-d')
             ])
             ->setColumns($exportColumns)
             ->setData($admin->getEntities());
         foreach ($hooks as $hookName => $hook) {
             $exporter->addHook($hook, $hookName);
         }
-
         return $exporter->render();
     }
 
     /**
-     * Forward to 404 if user is not allowed by configuration for an action.
+     * Forward to 404 if user is not allowed by configuration for an action
      *
-     * @param AdminInterface $admin
+     * @param Admin $admin
      */
-    protected function forward404IfNotAllowed(AdminInterface $admin)
+    protected function forward404IfNotAllowed(Admin $admin)
     {
-        // TODO move authorizations logic into kernel.request event
         $this->forward404Unless($this->getUser(), 'You must be logged to access to this url');
         // check permissions and actions
-        $this->forward404Unless(
-            $admin->isActionGranted($admin->getCurrentAction()->getName(), $this->getUser()->getRoles()),
-            sprintf('User not allowed for action "%s"', $admin->getCurrentAction()->getName())
-        );
-    }
-
-    /**
-     * Return an Admin object according to the request route parameters.
-     *
-     * @param Request $request
-     *
-     * @return Admin
-     *
-     * @throws Exception
-     */
-    protected function getAdminFromRequest(Request $request)
-    {
-        return $this
-            ->get('lag.admin.factory')
-            ->getAdminFromRequest($request);
-    }
-
-    /**
-     * Return admin routing loader.
-     *
-     * @return RoutingLoader
-     */
-    protected function getRoutingLoader()
-    {
-        return $this
-            ->container
-            ->get('lag.admin.routing');
+        $this->forward404Unless($admin->isActionGranted($admin->getCurrentAction()->getName(), $this->getUser()->getRoles()),
+            'User not allowed for action "' . $admin->getCurrentAction()->getName() . '"');
     }
 }

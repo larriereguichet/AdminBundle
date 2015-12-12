@@ -2,9 +2,9 @@
 
 namespace LAG\AdminBundle\Admin;
 
-use Symfony\Component\PropertyAccess\PropertyAccess;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 
-class Action
+class Action implements ActionInterface
 {
     /**
      * Action name.
@@ -28,32 +28,11 @@ class Action
     protected $fields = [];
 
     /**
-     * Action displayed among the fields.
-     *
-     * @var Action[]
-     */
-    protected $fieldActions = [];
-
-    /**
      * Action permissions.
      *
      * @var string[]
      */
     protected $permissions = [];
-
-    /**
-     * Action route.
-     *
-     * @var string
-     */
-    protected $route;
-
-    /**
-     * Action route parameters.
-     *
-     * @var array
-     */
-    protected $parameters = [];
 
     /**
      * Configured linked actions to display in this view.
@@ -70,40 +49,36 @@ class Action
     protected $submitActions = [];
 
     /**
-     * Export types.
-     *
-     * @var array
+     * @var ActionConfiguration
      */
-    protected $export = [];
-
-    /**
-     * Array of properties to order by.
-     *
-     * @var array
-     */
-    protected $order = [];
-
-    /**
-     * Icon class.
-     *
-     * @var string
-     */
-    protected $icon;
-
-    /**
-     * Action target (_blank or _self).
-     *
-     * @var
-     */
-    protected $target = '_self';
-
-    // TODO delete this parameter
-    protected $isParametersBuild = false;
+    protected $configuration;
 
     /**
      * @var array
      */
     protected $filters = [];
+
+    /**
+     * @var string[]
+     */
+    protected $batchActions = [];
+
+    /**
+     * Action constructor.
+     *
+     * @param $actionName
+     * @param array $actionOptions
+     * @param ActionConfiguration $configuration
+     */
+    public function __construct($actionName, array $actionOptions, ActionConfiguration $configuration)
+    {
+        $this->configuration = $configuration;
+        $this->name = $actionName;
+        $this->title = $actionOptions['title'];
+        $this->permissions = $actionOptions['permissions'];
+        $this->submitActions = $actionOptions['submit_actions'];
+        $this->batchActions = $actionOptions['batch'];
+    }
 
     /**
      * @return string
@@ -114,27 +89,11 @@ class Action
     }
 
     /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
      * @return string
      */
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * @param string $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
     }
 
     /**
@@ -148,7 +107,7 @@ class Action
     /**
      * Return true if action has a field named $fieldName.
      *
-     * @param $fieldName
+     * @param string $fieldName
      *
      * @return bool
      */
@@ -182,106 +141,6 @@ class Action
     }
 
     /**
-     * @param string[] $permissions
-     */
-    public function setPermissions($permissions)
-    {
-        $this->permissions = $permissions;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRoute()
-    {
-        return $this->route;
-    }
-
-    /**
-     * @param mixed $route
-     */
-    public function setRoute($route)
-    {
-        $this->route = $route;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * @param mixed $parameters
-     */
-    public function setParameters($parameters)
-    {
-        $this->parameters = $parameters;
-    }
-
-    public function buildParameters($entity)
-    {
-        $parameters = [];
-        $accessor = PropertyAccess::createPropertyAccessor();
-
-        foreach ($this->parameters as $parameterName => $fieldName) {
-            if ($this->isParametersBuild) {
-                // TODO improve this code
-                $parameters[$parameterName] = $accessor->getValue($entity, $parameterName);
-            } else {
-                if (is_array($fieldName) && !count($fieldName)) {
-                    $fieldName = $parameterName;
-                }
-                $parameters[$parameterName] = $accessor->getValue($entity, $fieldName);
-            }
-        }
-        $this->parameters = $parameters;
-        $this->isParametersBuild = true;
-    }
-
-    /**
-     * @return array
-     */
-    public function getExport()
-    {
-        return $this->export;
-    }
-
-    /**
-     * @param array $export
-     */
-    public function setExport($export)
-    {
-        $this->export = $export;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOrder()
-    {
-        return $this->order;
-    }
-
-    /**
-     * @param array $order
-     */
-    public function setOrder($order)
-    {
-        $this->order = $order;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasOrder()
-    {
-        return count($this->order) > 0;
-    }
-
-    /**
      * @return Action[]
      */
     public function getActions()
@@ -302,63 +161,7 @@ class Action
      */
     public function addAction(Action $action)
     {
-        $this->actions[] = $action;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
-    /**
-     * @param string $icon
-     */
-    public function setIcon($icon)
-    {
-        $this->icon = $icon;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTarget()
-    {
-        return $this->target;
-    }
-
-    /**
-     * @param mixed $target
-     */
-    public function setTarget($target)
-    {
-        $this->target = $target;
-    }
-
-    /**
-     * @return Action[]
-     */
-    public function getFieldActions()
-    {
-        return $this->fieldActions;
-    }
-
-    /**
-     * @param Action[] $fieldActions
-     */
-    public function setFieldActions($fieldActions)
-    {
-        $this->fieldActions = $fieldActions;
-    }
-
-    /**
-     * @param Action $action
-     */
-    public function addFieldAction(Action $action)
-    {
-        $this->fieldActions[] = $action;
+        $this->actions[$action->getName()] = $action;
     }
 
     /**
@@ -377,6 +180,9 @@ class Action
         $this->filters = $filters;
     }
 
+    /**
+     * @param Filter $filter
+     */
     public function addFilter(Filter $filter)
     {
         $this->filters[] = $filter;
@@ -396,5 +202,29 @@ class Action
     public function setSubmitActions($submitActions)
     {
         $this->submitActions = $submitActions;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getBatchActions()
+    {
+        return $this->batchActions;
+    }
+
+    /**
+     * @param string[] $batchActions
+     */
+    public function setBatchActions($batchActions)
+    {
+        $this->batchActions = $batchActions;
+    }
+
+    /**
+     * @return ActionConfiguration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
     }
 }

@@ -1,11 +1,27 @@
 v0.4:
-- adding simple mass edit
+- move export logic into a separate service
 - add possibility to have tab in generated forms
 - add configuration for custom url for actions
 - add configuration for custom actions
 - handling new Symfony bootstrap layout
 - bootstrap theme
 - file exporters : array type, association
+- adding Admin own translation pattern
+- move default configuration in a separate and configurable event listener
+- remove dependence to container for routing loader
+- inject admin list form type
+- creating an action view to generate action link
+- remove hardcoded id property and use metadata tu get primary key
+- removing container dependence in routing loader
+- making batch actions configurable and disabled
+- make interfaces for factories to allow overriding by third party
+- adding simple mass edit
+- unify load entities method with a FilterObject as parameter for load method
+- add configuration to disable flash message and logs in message handler
+- use an Interface for MessageHandler and a getter in Admin class
+- use ContainerAwareInterface for FieldFactory (and maybe for ContainerTrait)
+- add configuration for entity getLabel method
+- add an adapter to pagination to allow to change pager
 
 -----------------------------------------------
 
@@ -15,6 +31,7 @@ Features:
 - add config for order entities in list view (DONE)
 - add format for date in list (DONE)
 - add filters (WIP)
+- batch actions
 - handle custom actions for edit form (enable user for example) (WIP)
 - improve admin and action name from request (use default parameters in routing instead) (DONE)
 - configure application date format (filename export, displayed date...) (WIP)
@@ -49,7 +66,22 @@ x fixing bug in date time fields when exporting
 x fixing bug in array fields when exporting
 x fixing bug in action configuration merge on export property (is override)
 
------------------------------------------------
+v0.3:
+Features:
+- file exporters : array type, association
+- adding mass edit
+- add filters
+- add possibility to have tab in generated forms
+- unit testing
+- handle custom actions for edit form (enable user for example)
+- add configuration for custom url for actions (waiting for ActionBundle)
+- improve admin and action name from request (use default parameters in routing instead
+- handling new Symfony bootstrap layout
+- configure application date format (filename export, displayed date...)
 
-v0.1: 
-the void
+Bug fixes :
+- fix bug when deleting entity with integrity constraint
+- fix bug with FOSUser column sorting
+- fixing columns order in export
+
+v0.4:

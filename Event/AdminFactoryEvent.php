@@ -6,6 +6,8 @@ use Symfony\Component\EventDispatcher\Event;
 
 class AdminFactoryEvent extends Event
 {
+    const ADMIN_CREATION = 'lag.admin.adminCreation';
+
     protected $adminsConfiguration = [];
 
     /**

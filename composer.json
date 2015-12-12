@@ -26,18 +26,21 @@
   ],
   "require": {
     "php": ">=5.4",
-    "symfony/symfony": ">=2.6",
+    "symfony/symfony": "~2.6",
     "sensio/framework-extra-bundle": "~3.0",
     "doctrine/doctrine-bundle": "~1.2",
     "doctrine/data-fixtures": "*",
     "doctrine/doctrine-fixtures-bundle": "*",
+    "symfony/monolog-bundle": "~2.4",
     "bluebear/basebundle": "0.2.*",
     "white-october/pagerfanta-bundle": "~1.0",
     "ee/dataexporter-bundle": "*",
     "symfony/security-bundle": "^2.7",
     "twig/extensions": "^1.2",
     "gedmo/doctrine-extensions": "^2.4",
-    "stfalcon/tinymce-bundle": "dev-master"
+    "stfalcon/tinymce-bundle": "dev-master",
+    "fabpot/php-cs-fixer": "^1.10",
+    "lag/array-utils": "^0.1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "4.7.*"

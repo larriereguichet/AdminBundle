@@ -1,4 +1,5 @@
-lag.admin.save: Save
+lag.admin.save: Sauvegarder
+lag.admin.saved_errors: Une erreur d'est porduite durant la sauvegarde
 lag.admin.create: Ajouter
 lag.admin.save_and_return_to_list: Save and return to list
 lag.admin.cancel: Cancel
@@ -9,9 +10,16 @@ lag.admin.saved: Les modifications ont été sauvegardées
 # List
 lag.admin.true: Oui
 lag.admin.false: Non
-
+lag.admin.batch_action: Exécuter
+lag.admin.batch_empty: Choisissez une action
 
 # deletion
 lag.admin.delete: Supprimer
 lag.admin.deleting: You are about to delete this entity "%entity%" (id: %id%). Are you sure ?
 lag.admin.deleted: Entity "%entity%" has been succesfully removed
+lag.admin.deleted_errors: An error has been encoutered during deletion
+
+# Batch
+lag.admin.warning: Attention !
+lag.admin.batch_action_title: Action de masse
+lag.admin.batch_action_messages: Vous êtes sur le point de %action% les actions suivantes, êtes-vous sûr ?

@@ -2,15 +2,56 @@
 
 namespace LAG\AdminBundle\Admin;
 
+use Exception;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Manager\GenericManager;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
-use Exception;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\HttpFoundation\Request;
 
 interface AdminInterface
 {
+    /**
+     * Handle current request :
+     *  - load entities
+     *  - create form if required
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function handleRequest(Request $request);
+
+    /**
+     * Generate a route for admin and action name.
+     *
+     * @param $actionName
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    public function generateRouteName($actionName);
+
+    /**
+     * Load entities according to given criteria. OrderBy, limit and offset can be used
+     *
+     * @param array $criteria
+     * @param array $orderBy
+     * @param null $limit
+     * @param null $offset
+     */
+    public function load(array $criteria, $orderBy = [], $limit = null, $offset = null);
+
+    /**
+     * Save loaded entities using manager
+     */
+    public function save();
+
+    /**
+     * Delete loaded entities using manager
+     */
+    public function delete();
+
     /**
      * Return admin name.
      *
@@ -49,46 +90,11 @@ interface AdminInterface
     public function getController();
 
     /**
-     * Return entity for current admin. If entity does not exist, it throws an exception.
+     * Return an unique entity for current admin. If entity does not exist, it throws an exception.
      *
      * @return mixed
      */
-    public function getEntity();
-
-    public function getEntityLabel();
-
-    public function setEntity($entity);
-
-    /**
-     * Find a entity by one of its field.
-     *
-     * @param $field
-     * @param $value
-     *
-     * @return null|object
-     *
-     * @throws Exception
-     */
-    public function findEntity($field, $value);
-
-    /**
-     * Find entities paginated and sorted.
-     *
-     * @param int    $page
-     * @param null   $sort
-     * @param string $order
-     *
-     * @return array|ArrayCollection|\Traversable
-     *
-     * @throws Exception
-     */
-    public function findEntities($page = 1, $sort = null, $order = 'ASC');
-
-    public function saveEntity();
-
-    public function createEntity();
-
-    public function deleteEntity();
+    public function getUniqueEntity();
 
     /**
      * @return GenericManager
@@ -108,9 +114,21 @@ interface AdminInterface
     public function getActions();
 
     /**
+     * @param $actionName
+     * @return ActionInterface
+     */
+    public function getAction($actionName);
+
+    /**
+     * @param ActionInterface $actionInterface
+     * @return mixed
+     */
+    public function addAction(ActionInterface $actionInterface);
+
+    /**
      * Return current admin Action.
      *
-     * @return Action
+     * @return ActionInterface
      */
     public function getCurrentAction();
 

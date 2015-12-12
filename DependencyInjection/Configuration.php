@@ -2,14 +2,13 @@
 
 namespace LAG\AdminBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -48,92 +47,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 // admins configuration
-                ->arrayNode('admins')
-                    ->prototype('array')
-                        ->children()
-                            ->scalarNode('entity')->end()
-                            ->scalarNode('form')->end()
-                            ->scalarNode('max_per_page')->end()
-                            ->scalarNode('controller')->defaultValue('LAGAdminBundle:Generic')->end()
-                            ->scalarNode('manager')->defaultValue('LAG\AdminBundle\Manager\GenericManager')->end()
-                            ->arrayNode('actions')
-                                ->prototype('array')
-                                    ->children()
-                                        ->scalarNode('title')->end()
-                                        ->arrayNode('permissions')
-                                            ->defaultValue(['ROLE_USER'])
-                                            ->prototype('scalar')->end()
-                                        ->end()
-                                        ->arrayNode('export')
-                                            ->prototype('scalar')->end()
-                                        ->end()
-                                        ->arrayNode('order')
-                                            ->prototype('array')
-                                                ->children()
-                                                    ->scalarNode('field')->end()
-                                                    ->scalarNode('order')->end()
-                                                ->end()
-                                            ->end()
-                                        ->end()
-                                        ->arrayNode('fields')
-                                            ->prototype('array')
-                                                ->children()
-                                                    ->scalarNode('type')->end()
-                                                    ->arrayNode('options')
-                                                        ->prototype('variable')->end()
-                                                    ->end()
-                                                ->end()
-                                            ->end()
-                                        ->end()
-                                        ->arrayNode('field_actions')
-                                            ->prototype('array')
-                                                ->children()
-                                                    ->scalarNode('title')->end()
-                                                    ->scalarNode('route')->end()
-                                                    ->scalarNode('target')->end()
-                                                    ->scalarNode('icon')->end()
-                                                    ->arrayNode('parameters')
-                                                        ->prototype('array')->end()
-                                                    ->end()
-                                                ->end()
-                                            ->end()
-                                        ->end()
-                                        ->arrayNode('field_actions')
-                                            ->prototype('array')
-                                                ->children()
-                                                    ->scalarNode('title')->end()
-                                                    ->scalarNode('route')->end()
-                                                    ->scalarNode('target')->end()
-                                                    ->scalarNode('icon')->end()
-                                                    ->arrayNode('parameters')
-                                                    ->prototype('array')->end()
-                                                    ->end()
-                                                ->end()
-                                            ->end()
-                                        ->end()
-                                        ->arrayNode('filters')
-                                            ->prototype('scalar')->end()
-                                        ->end()
-                                        ->arrayNode('actions')
-                                            ->prototype('array')
-                                                ->children()
-                                                    ->scalarNode('title')->end()
-                                                    ->scalarNode('route')->end()
-                                                    ->scalarNode('target')->end()
-                                                    ->scalarNode('icon')->end()
-                                                    ->arrayNode('parameters')
-                                                        ->prototype('array')
-                                                        ->end()
-                                                    ->end()
-                                                ->end()
-                                            ->end()
-                                        ->end()
-                                    ->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
+                ->append($this->getAdminsConfigurationNode())
                 // menus configurations
                 ->arrayNode('menus')
                     ->prototype('array')
@@ -166,5 +80,80 @@ class Configuration implements ConfigurationInterface
         ->end();
 
         return $treeBuilder;
+    }
+
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    public function getAdminsConfigurationNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('admins');
+
+        $node
+            ->prototype('array')
+                ->children()
+                    ->scalarNode('entity')->end()
+                    ->scalarNode('form')->end()
+                    ->scalarNode('max_per_page')->end()
+                    ->scalarNode('controller')->defaultValue('LAGAdminBundle:Generic')->end()
+                    ->scalarNode('manager')->defaultValue('LAG\AdminBundle\Manager\GenericManager')->end()
+                    // actions configurations
+                    ->arrayNode('actions')
+                        ->useAttributeAsKey('name')
+                        ->prototype('array')
+                            ->children()
+                                ->scalarNode('title')->end()
+                                ->arrayNode('permissions')
+                                    ->defaultValue(['ROLE_USER'])
+                                    ->prototype('scalar')->end()
+                                ->end()
+                                ->arrayNode('export')
+                                    ->prototype('scalar')->end()
+                                ->end()
+                                ->arrayNode('order')
+                                    ->prototype('array')
+                                        ->children()
+                                            ->scalarNode('field')->end()
+                                            ->scalarNode('order')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                                ->arrayNode('fields')
+                                    ->prototype('array')
+                                        ->children()
+                                            ->scalarNode('type')->end()
+                                            ->arrayNode('options')
+                                                ->prototype('variable')->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                                ->arrayNode('filters')
+                                    ->prototype('scalar')->end()
+                                ->end()
+                                ->arrayNode('batch')
+                                    ->prototype('variable')->end()
+                                ->end()
+                                ->arrayNode('actions')
+                                    ->prototype('array')
+                                        ->children()
+                                            ->scalarNode('title')->end()
+                                            ->scalarNode('route')->end()
+                                            ->scalarNode('target')->end()
+                                            ->scalarNode('icon')->end()
+                                            ->arrayNode('parameters')
+                                                ->prototype('array')
+                                                ->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+        return $node;
     }
 }

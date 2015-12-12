@@ -109,6 +109,7 @@ class ApplicationConfiguration
     {
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
+            'enable_extra_configuration' => true,
             'title' => '',
             'description' => '',
             'locale' => $locale,
@@ -136,6 +137,7 @@ class ApplicationConfiguration
                 Field::TYPE_ACTION => 'LAG\AdminBundle\Admin\Render\LinkRenderer',
             ],
         ]);
+        $resolver->setAllowedValues('enable_extra_configuration', [true, false]);
         $applicationConfiguration = $resolver->resolve($applicationConfiguration);
         // resolving routing options
         $routingConfiguration = $applicationConfiguration['routing'];
@@ -425,14 +427,21 @@ class ApplicationConfiguration
         $this->translationPattern = $translationPattern;
     }
 
+    /**
+     * @param $key
+     * @param string $adminName
+     * @return string
+     */
     public function getTranslationKey($key, $adminName = null)
     {
-        if (strstr($this->translationPattern, '{admin}') && $adminName) {
-            $key = str_replace('{admin}', $adminName, $this->translationPattern);
-        }
-        $key = str_replace('{key}', $key, $this->translationPattern);
+        $translationKey = $this->translationPattern;
 
-        return $key;
+        if (strstr($this->translationPattern, '{admin}') && $adminName) {
+            $translationKey = str_replace('{admin}', $adminName, $translationKey);
+        }
+        $translationKey = str_replace('{key}', $key, $translationKey);
+
+        return $translationKey;
     }
 
     /**
