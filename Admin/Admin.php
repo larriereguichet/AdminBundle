@@ -78,8 +78,7 @@ class Admin implements AdminInterface
     public function handleRequest(Request $request, $user = null)
     {
         // set current action
-        $action = $this->getAction($request->get('_route_params')['_action']);
-        $this->currentAction = $action;
+        $this->currentAction = $this->getAction($request->get('_route_params')['_action']);
         // check if user is logged have required permissions to get current action
         $this->checkPermissions($user);
         // load entities according to action and request
@@ -94,7 +93,7 @@ class Admin implements AdminInterface
     public function checkPermissions($user)
     {
         if (!$user) {
-            throw new NotFoundHttpException('You must be logged to access to this url');
+            return;
         }
         $roles = $user->getRoles();
         $actionName = $this

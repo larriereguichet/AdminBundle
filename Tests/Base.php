@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Exception;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
@@ -91,27 +92,39 @@ class Base extends WebTestCase
         $this->assertTrue($isClassValid, 'Expected ' . $exceptionClass . ', got ' . get_class($e));
     }
 
-    protected function logIn($login = 'admin', $roles = null)
+    /**
+     * Return Admin configurations samples
+     *
+     * @return array
+     */
+    protected function getAdminsConfiguration()
     {
-        /*$session = $this
-            ->container
-            ->get('session');
-
-        if ($roles === null) {
-            $roles = [
-                'ROLE_ADMIN',
-                'ROLE_USER',
-            ];
-        }
-        $firewall = 'secured_area';
-        //$token = new UsernamePasswordToken($login, null, $firewall, $roles);
-        //$session->set('_security_'.$firewall, serialize($token));
-        $session->save();
-
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);*/
+        return [
+            'minimal_configuration' => [
+                'entity' => 'Test\TestBundle\Entity\TestEntity',
+                'form' => 'test'
+            ],
+            'full_configuration' => [
+                'entity' => 'Test\TestBundle\Entity\TestEntity',
+                'form' => 'test',
+                'controller' => 'TestTestBundle:Test',
+                'max_per_page' => 50,
+                'actions' => [
+                    'custom_list' => [],
+                    'custom_edit' => [],
+                ],
+                'manager' => 'Test\TestBundle\Manager\TestManager',
+                'routing_url_pattern' => 'lag.admin.{admin}',
+                'routing_name_pattern' => 'lag.{admin}.{action}'
+            ]
+        ];
     }
 
+    /**
+     * @param $name
+     * @param $configuration
+     * @return Admin
+     */
     protected function mockAdmin($name, $configuration)
     {
         return new Admin(
@@ -136,10 +149,33 @@ class Base extends WebTestCase
         $action
             ->method('getName')
             ->willReturn($name);
+        $action
+            ->method('getConfiguration')
+            ->willReturn($this->mockActionConfiguration());
 
         return $action;
     }
 
+    /**
+     * @return ActionConfiguration|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockActionConfiguration()
+    {
+        $configuration = $this
+            ->getMockBuilder('LAG\AdminBundle\Admin\Configuration\ActionConfiguration')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $configuration
+            ->method('getLoadMethod')
+            ->willReturn(Admin::LOAD_METHOD_MANUAL);
+
+        return $configuration;
+    }
+
+    /**
+     * @param array $configuration
+     * @return AdminFactory
+     */
     protected function mockAdminFactory(array $configuration = [])
     {
         /** @var EventDispatcher $mockEventDispatcher */

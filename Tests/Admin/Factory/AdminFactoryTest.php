@@ -2,9 +2,10 @@
 
 namespace Admin\Factory;
 
+use Exception;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Tests\Base;
-use Test\TestBundle\Entity\TestEntity;
+use Symfony\Component\HttpFoundation\Request;
 
 class AdminFactoryTest extends Base
 {
@@ -26,6 +27,50 @@ class AdminFactoryTest extends Base
         }
     }
 
+    /**
+     * Create method should return an Admin according to given configuration
+     *
+     * @throws Exception
+     */
+    public function testCreate()
+    {
+        // test minimal configuration
+        $adminConfiguration = $this->getAdminsConfiguration()['minimal_configuration'];
+        // mock admin factory with empty configuration
+        $adminFactory = $this->mockAdminFactory();
+        $admin = $adminFactory->create('admin_test', $adminConfiguration);
+        $this->doTestAdmin($admin, $adminConfiguration, 'admin_test');
+
+        // test full configuration
+        $adminConfiguration = $this->getAdminsConfiguration()['full_configuration'];
+        $admin = $adminFactory->create('admin_test2', $adminConfiguration);
+        $this->doTestAdmin($admin, $adminConfiguration, 'admin_test2');
+    }
+
+    /**
+     * GetAdminFromRequest method should return a configured Admin from request parameters
+     *
+     * @throws Exception
+     */
+    public function testGetAdminFromRequest()
+    {
+        $adminConfiguration = $this->getAdminsConfiguration();
+        $adminFactory = $this->mockAdminFactory($adminConfiguration);
+        $adminFactory->init();
+
+        foreach ($adminConfiguration as $name => $configuration) {
+            $request = new Request([], [], [
+                '_route_params' => [
+                    '_admin' => $name,
+                    // see Base->mockActionFactory
+                    '_action' => 'test'
+                ]
+            ]);
+            $admin = $adminFactory->getAdminFromRequest($request);
+            $this->doTestAdmin($admin, $configuration, $name);
+        }
+    }
+
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
     {
         $this->assertEquals($admin->getName(), $adminName);
@@ -40,28 +85,5 @@ class AdminFactoryTest extends Base
         } else {
             $this->assertEquals($admin->getConfiguration()->getMaxPerPage(), 25);
         }
-    }
-
-    protected function getAdminsConfiguration()
-    {
-        return [
-            'minimal_configuration' => [
-                'entity' => 'Test\TestBundle\Entity\TestEntity',
-                'form' => 'test'
-            ],
-            'full_entity' => [
-                'entity' => 'Test\TestBundle\Entity\TestEntity',
-                'form' => 'test',
-                'controller' => 'TestTestBundle:Test',
-                'max_per_page' => 50,
-                'actions' => [
-                    'custom_list' => [],
-                    'custom_edit' => [],
-                ],
-                'manager' => 'Test\TestBundle\Manager\TestManager',
-                'routing_url_pattern' => 'lag.admin.{admin}',
-                'routing_name_pattern' => 'lag.{admin}.{action}'
-            ]
-        ];
     }
 }
