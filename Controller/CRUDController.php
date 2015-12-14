@@ -79,6 +79,10 @@ class CRUDController extends Controller
         ];
     }
 
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
     public function batchAction(Request $request)
     {
         $admin = $this->getAdminFromRequest($request, $this->getUser());

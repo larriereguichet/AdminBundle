@@ -71,6 +71,11 @@ class AdminFactoryTest extends Base
         }
     }
 
+    /**
+     * GetAdmin method should return an configured Admin by its name
+     *
+     * @throws Exception
+     */
     public function testGetAdmin()
     {
         // test with no configuration
@@ -90,6 +95,11 @@ class AdminFactoryTest extends Base
         }
     }
 
+    /**
+     * @param AdminInterface $admin
+     * @param array $configuration
+     * @param $adminName
+     */
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
     {
         $this->assertEquals($admin->getName(), $adminName);

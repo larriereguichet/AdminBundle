@@ -44,6 +44,7 @@ Bug fixes :
 - fix bug with FOSUser column sorting
 - fixing columns order in export
 - fix bug in list on column title when property has a uppercase character (eg: publicationDate should be Publication Date)
+- add default actions configuration in list (edit+delete) in ExtraConfiguration subscriber
 
 -----------------------------------------------
 

@@ -57,6 +57,10 @@ class MessageHandler
         }
     }
 
+    /**
+     * @param $flashMessage
+     * @param null $logMessage
+     */
     public function handleSuccess($flashMessage, $logMessage = null)
     {
         $this

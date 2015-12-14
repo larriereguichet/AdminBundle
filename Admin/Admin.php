@@ -63,7 +63,6 @@ class Admin implements AdminInterface
         $this->entityNamespace = $adminConfig->getEntityName();
         $this->formType = $adminConfig->getFormType();
         $this->entities = new ArrayCollection();
-        $this->customManagerActions = [];
         $this->messageHandler = $messageHandler;
     }
 
@@ -132,7 +131,7 @@ class Admin implements AdminInterface
                 ->messageHandler
                 ->handleError(
                     'lag.admin.saved_errors',
-                    "An error has occurred while saving an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} "
+                    "An error has occurred while saving an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()}"
                 );
             $success = false;
         }
