@@ -141,7 +141,7 @@ class AdminFactory
             'manager' => 'LAG\AdminBundle\Manager\GenericManager',
             'routing_url_pattern' => $this->application->getRoutingUrlPattern(),
             'routing_name_pattern' => $this->application->getRoutingNamePattern(),
-            'controller' => 'LAGAdminBundle:Generic',
+            'controller' => 'LAGAdminBundle:CRUD',
             'max_per_page' => $this->application->getMaxPerPage()
         ]);
         // required options

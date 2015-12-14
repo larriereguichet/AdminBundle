@@ -96,7 +96,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('entity')->end()
                     ->scalarNode('form')->end()
                     ->scalarNode('max_per_page')->end()
-                    ->scalarNode('controller')->defaultValue('LAGAdminBundle:Generic')->end()
+                    ->scalarNode('controller')->defaultValue('LAGAdminBundle:CRUD')->end()
                     ->scalarNode('manager')->defaultValue('LAG\AdminBundle\Manager\GenericManager')->end()
                     // actions configurations
                     ->arrayNode('actions')
