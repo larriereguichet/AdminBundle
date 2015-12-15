@@ -59,6 +59,10 @@ class StringField extends Field
         return $value;
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     * @return mixed|void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
@@ -68,6 +72,10 @@ class StringField extends Field
         ]);
     }
 
+    /**
+     * @param array $options
+     * @return mixed|void
+     */
     public function setOptions(array $options)
     {
         $this->length = (int) $options['length'];
@@ -83,6 +91,9 @@ class StringField extends Field
         $this->translator = $translator;
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return 'string';

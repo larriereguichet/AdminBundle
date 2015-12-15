@@ -19,8 +19,15 @@ class Collection extends Field implements EntityFieldInterface
      */
     protected $fields = [];
 
+    /**
+     * @var Object
+     */
     protected $entity;
 
+    /**
+     * @param mixed $value
+     * @return string
+     */
     public function render($value)
     {
         $render = '';
@@ -45,6 +52,10 @@ class Collection extends Field implements EntityFieldInterface
         return $render;
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
