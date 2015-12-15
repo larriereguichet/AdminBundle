@@ -16,10 +16,21 @@ class FieldFactory
 {
     use ContainerTrait;
 
+    /**
+     * @var ApplicationConfiguration
+     */
     protected $configuration;
 
+    /**
+     * @var array
+     */
     protected $fieldsMapping = [];
 
+    /**
+     * FieldFactory constructor.
+     *
+     * @param ApplicationConfiguration $configuration
+     */
     public function __construct(ApplicationConfiguration $configuration)
     {
         $this->configuration = $configuration;
@@ -35,7 +46,7 @@ class FieldFactory
      *
      * @throws Exception
      */
-    public function create($fieldName, array $configuration)
+    public function create($fieldName, array $configuration = [])
     {
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
@@ -53,8 +64,14 @@ class FieldFactory
             $items = [];
 
             foreach ($configuration['options'] as $itemFieldName => $itemFieldConfiguration) {
+                // configuration should be an array
+                if (!$itemFieldConfiguration) {
+                    $itemFieldConfiguration = [];
+                }
+                // create collection item
                 $items[] = $this->create($itemFieldName, $itemFieldConfiguration);
             }
+            // add created item to the field options
             $configuration['options'] = [
                 'fields' => $items,
             ];
@@ -78,7 +95,7 @@ class FieldFactory
         $field->configureOptions($resolver);
         // resolve options
         $options = $resolver->resolve($configuration['options']);
-        // setting options and value
+        // set options and value
         $field->setOptions($options);
         $field->setName($fieldName);
 
