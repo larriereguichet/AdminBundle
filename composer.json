@@ -25,11 +25,10 @@
     }
   ],
   "require": {
-    "php": ">=5.4",
+    "php": ">=5.5",
     "symfony/symfony": "~2.6",
     "sensio/framework-extra-bundle": "~3.0",
     "doctrine/doctrine-bundle": "~1.2",
-    "doctrine/common": "~2.5",
     "doctrine/data-fixtures": "*",
     "doctrine/doctrine-fixtures-bundle": "*",
     "symfony/monolog-bundle": "~2.4",
