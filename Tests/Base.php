@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Tests;
 
 use Closure;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
@@ -245,12 +246,12 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return EntityRepository|PHPUnit_Framework_MockObject_MockObject
+     * @return ObjectRepository|PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockEntityRepository()
     {
         return $this
-            ->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->getMockBuilder('Doctrine\Common\Persistence\ObjectRepository')
             ->disableOriginalConstructor()
             ->getMock();
     }

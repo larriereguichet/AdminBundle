@@ -2,11 +2,10 @@
 
 namespace LAG\AdminBundle\Admin\Behaviors;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Admin\ManagerInterface;
-use LAG\DoctrineRepositoryBundle\Repository\DoctrineRepository;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -29,7 +28,7 @@ trait AdminTrait
     /**
      * Entity repository.
      *
-     * @var DoctrineRepository
+     * @var ObjectRepository
      */
     protected $repository;
 
@@ -91,7 +90,7 @@ trait AdminTrait
     }
 
     /**
-     * @return EntityRepository
+     * @return ObjectRepository
      */
     public function getRepository()
     {
