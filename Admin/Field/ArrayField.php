@@ -62,6 +62,9 @@ class ArrayField extends Field
         $this->glue = $options['glue'];
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return 'array';

@@ -7,10 +7,10 @@ use LAG\AdminBundle\Admin\Behaviors\ActionTrait;
 use LAG\AdminBundle\Admin\Behaviors\AdminTrait;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityRepository;
 use Exception;
 use LAG\AdminBundle\Admin\Message\MessageHandler;
 use LAG\AdminBundle\Exception\AdminException;
+use LAG\DoctrineRepositoryBundle\Repository\DoctrineRepository;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\DependencyInjection\Container;
@@ -42,14 +42,14 @@ class Admin implements AdminInterface
 
     /**
      * @param $name
-     * @param EntityRepository $repository
+     * @param DoctrineRepository $repository
      * @param ManagerInterface $manager
      * @param AdminConfiguration $adminConfig
      * @param MessageHandler $messageHandler
      */
     public function __construct(
         $name,
-        EntityRepository $repository,
+        DoctrineRepository $repository,
         ManagerInterface $manager,
         AdminConfiguration $adminConfig,
         MessageHandler $messageHandler

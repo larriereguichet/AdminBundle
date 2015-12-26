@@ -40,7 +40,8 @@
     "gedmo/doctrine-extensions": "^2.4",
     "stfalcon/tinymce-bundle": "dev-master",
     "fabpot/php-cs-fixer": "^1.10",
-    "lag/array-utils": "^0.1.0"
+    "lag/array-utils": "^0.1.0",
+    "lag/doctrine-repository": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "4.7.*"

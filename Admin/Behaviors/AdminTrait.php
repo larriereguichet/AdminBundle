@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Admin\ManagerInterface;
+use LAG\DoctrineRepositoryBundle\Repository\DoctrineRepository;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -28,7 +29,7 @@ trait AdminTrait
     /**
      * Entity repository.
      *
-     * @var EntityRepository
+     * @var DoctrineRepository
      */
     protected $repository;
 
