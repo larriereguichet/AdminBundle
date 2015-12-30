@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1f32b112d9ed924ba76e8b9fb0c552eb",
-    "content-hash": "109784109746b7e1864da8e74e095bfa",
+    "hash": "0867a27cc180d0704770e7aad26fbe8f",
+    "content-hash": "53ca8c9eeafe24d0e556c8e281774b16",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1325,12 +1325,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/larriereguichet/DoctrineRepositoryBundle.git",
-                "reference": "e4bb8e232834679f4752a7c41074355882da69ad"
+                "reference": "396e3dc2dd55575c9280160d96e39da1f088441d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/larriereguichet/DoctrineRepositoryBundle/zipball/e4bb8e232834679f4752a7c41074355882da69ad",
-                "reference": "e4bb8e232834679f4752a7c41074355882da69ad",
+                "url": "https://api.github.com/repos/larriereguichet/DoctrineRepositoryBundle/zipball/396e3dc2dd55575c9280160d96e39da1f088441d",
+                "reference": "396e3dc2dd55575c9280160d96e39da1f088441d",
                 "shasum": ""
             },
             "require": {
@@ -1370,7 +1370,7 @@
                 "doctrine",
                 "repository"
             ],
-            "time": "2015-12-26 18:35:06"
+            "time": "2015-12-26 19:43:01"
         },
         {
             "name": "monolog/monolog",
@@ -2223,26 +2223,27 @@
         },
         {
             "name": "symfony/security-acl",
-            "version": "v2.7.8",
+            "version": "v2.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/security-acl.git",
-                "reference": "ef02d4606460c79836ba76f6495cf043e0eb9953"
+                "reference": "4a3f7327ad215242c78f6564ad4ea6d2db1b8347"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/security-acl/zipball/ef02d4606460c79836ba76f6495cf043e0eb9953",
-                "reference": "ef02d4606460c79836ba76f6495cf043e0eb9953",
+                "url": "https://api.github.com/repos/symfony/security-acl/zipball/4a3f7327ad215242c78f6564ad4ea6d2db1b8347",
+                "reference": "4a3f7327ad215242c78f6564ad4ea6d2db1b8347",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.9",
-                "symfony/security-core": "~2.4"
+                "symfony/security-core": "~2.4|~3.0.0"
             },
             "require-dev": {
                 "doctrine/common": "~2.2",
                 "doctrine/dbal": "~2.2",
-                "psr/log": "~1.0"
+                "psr/log": "~1.0",
+                "symfony/phpunit-bridge": "~2.7|~3.0.0"
             },
             "suggest": {
                 "doctrine/dbal": "For using the built-in ACL implementation",
@@ -2252,7 +2253,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.7-dev"
+                    "dev-master": "2.8-dev"
                 }
             },
             "autoload": {
@@ -2279,7 +2280,7 @@
             ],
             "description": "Symfony Security Component - ACL (Access Control List)",
             "homepage": "https://symfony.com",
-            "time": "2015-12-05 17:37:09"
+            "time": "2015-12-28 09:39:09"
         },
         {
             "name": "symfony/symfony",
@@ -3387,7 +3388,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.4"
+        "php": ">=5.5"
     },
     "platform-dev": []
 }
