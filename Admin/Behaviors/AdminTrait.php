@@ -2,10 +2,8 @@
 
 namespace LAG\AdminBundle\Admin\Behaviors;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Admin\ManagerInterface;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -24,13 +22,6 @@ trait AdminTrait
      * @var string
      */
     protected $entityNamespace;
-
-    /**
-     * Entity repository.
-     *
-     * @var ObjectRepository
-     */
-    protected $repository;
 
     /**
      * Form type.
@@ -55,13 +46,6 @@ trait AdminTrait
      * @var QueryBuilder
      */
     protected $queryBuilder;
-
-    /**
-     * Entity manager (doctrine entity manager by default).
-     *
-     * @var ManagerInterface
-     */
-    protected $manager;
 
     /**
      * @var AdminConfiguration
@@ -90,27 +74,11 @@ trait AdminTrait
     }
 
     /**
-     * @return ObjectRepository
-     */
-    public function getRepository()
-    {
-        return $this->repository;
-    }
-
-    /**
      * @return string
      */
     public function getFormType()
     {
         return $this->formType;
-    }
-
-    /**
-     * @return ManagerInterface
-     */
-    public function getManager()
-    {
-        return $this->manager;
     }
 
     /**

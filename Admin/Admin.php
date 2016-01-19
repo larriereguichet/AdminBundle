@@ -3,7 +3,8 @@
 namespace LAG\AdminBundle\Admin;
 
 use ArrayIterator;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use LAG\AdminBundle\Admin\Behaviors\ActionTrait;
 use LAG\AdminBundle\Admin\Behaviors\AdminTrait;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
@@ -11,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use LAG\AdminBundle\Admin\Message\MessageHandler;
 use LAG\AdminBundle\Exception\AdminException;
+use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\DependencyInjection\Container;
@@ -36,34 +38,46 @@ class Admin implements AdminInterface
     protected $entities;
 
     /**
+     * Entity repository.
+     *
+     * @var RepositoryInterface|EntityRepository
+     */
+    protected $repository;
+
+    /**
      * @var MessageHandler
      */
     protected $messageHandler;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * @param $name
-     * @param ObjectRepository $repository
-     * @param ManagerInterface $manager
+     * @param EntityManagerInterface $entityManager
+     * @param RepositoryInterface $repository
      * @param AdminConfiguration $adminConfig
      * @param MessageHandler $messageHandler
      */
     public function __construct(
         $name,
-        ObjectRepository $repository,
-        ManagerInterface $manager,
+        EntityManagerInterface $entityManager,
+        RepositoryInterface $repository,
         AdminConfiguration $adminConfig,
         MessageHandler $messageHandler
     )
     {
         $this->name = $name;
         $this->repository = $repository;
-        $this->manager = $manager;
         $this->configuration = $adminConfig;
         $this->controller = $adminConfig->getControllerName();
         $this->entityNamespace = $adminConfig->getEntityName();
         $this->formType = $adminConfig->getFormType();
         $this->entities = new ArrayCollection();
         $this->messageHandler = $messageHandler;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -118,7 +132,7 @@ class Admin implements AdminInterface
         try {
             foreach ($this->entities as $entity) {
                 $this
-                    ->manager
+                    ->repository
                     ->save($entity);
             }
             // inform user everything went fine
@@ -148,7 +162,7 @@ class Admin implements AdminInterface
         try {
             foreach ($this->entities as $entity) {
                 $this
-                    ->manager
+                    ->repository
                     ->delete($entity);
             }
             // inform user everything went fine
@@ -203,8 +217,7 @@ class Admin implements AdminInterface
     public function load(array $criteria, $orderBy = [], $limit = null, $offset = null)
     {
         $this->entities = $this
-            ->manager
-            ->getRepository()
+            ->repository
             ->findBy($criteria, $orderBy, $limit, $offset);
     }
 
@@ -271,10 +284,12 @@ class Admin implements AdminInterface
                 throw new Exception("Invalid order \"{$order}\". Only ASC and DESC are allowed");
             }
         }
+        if (!method_exists($this->repository, 'createQueryBuilder')) {
+            throw new Exception('Method createQueryBuilder not found in class ' . get_class($this->repository));
+        }
         // creating query builder from repository
         $this->queryBuilder = $this
-            ->manager
-            ->getRepository()
+            ->repository
             ->createQueryBuilder('entity', 'entity.id');
 
         if ($sort) {
@@ -324,16 +339,14 @@ class Admin implements AdminInterface
         if ($unique) {
             // find entity according to criteria
             $entity = $this
-                ->manager
-                ->getRepository()
+                ->repository
                 ->findOneBy($criteria);
             // returning a collection to be more generic
             $entities = new ArrayCollection();
             $entities->set($entity->getId(), $entity);
         } else {
             $entities = $this
-                ->manager
-                ->getRepository()
+                ->repository
                 ->findBy($criteria);
         }
         return $entities;
@@ -362,5 +375,13 @@ class Admin implements AdminInterface
             throw new Exception("Entity not found in admin \"{$this->getName()}\".");
         }
         return $this->entities->first();
+    }
+
+    /**
+     * @return EntityRepository|RepositoryInterface
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 }

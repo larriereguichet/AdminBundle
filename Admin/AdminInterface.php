@@ -4,7 +4,6 @@ namespace LAG\AdminBundle\Admin;
 
 use Exception;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Manager\GenericManager;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,11 +89,6 @@ interface AdminInterface
      * @return mixed
      */
     public function getUniqueEntity();
-
-    /**
-     * @return GenericManager
-     */
-    public function getManager();
 
     /**
      * @return AdminConfiguration

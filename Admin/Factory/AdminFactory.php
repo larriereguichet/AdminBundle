@@ -2,20 +2,20 @@
 
 namespace LAG\AdminBundle\Admin\Factory;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Admin\ManagerInterface;
 use LAG\AdminBundle\Admin\Message\MessageHandler;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminFactoryEvent;
-use LAG\AdminBundle\Manager\GenericManager;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Exception;
+use LAG\AdminBundle\Repository\GenericRepository;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -52,6 +52,13 @@ class AdminFactory
     protected $application;
 
     /**
+     * User custom repositories, indexed by service id
+     *
+     * @var ParameterBagInterface
+     */
+    protected $customRepositories;
+
+    /**
      * @var array
      */
     protected $adminConfiguration;
@@ -65,11 +72,6 @@ class AdminFactory
      * @var MessageHandler
      */
     protected $messageHandler;
-
-    /**
-     * @var ManagerInterface[]
-     */
-    protected $customManagers = [];
 
     /**
      * @param EventDispatcherInterface $eventDispatcher
@@ -94,6 +96,7 @@ class AdminFactory
         $this->adminConfiguration = $adminConfiguration;
         $this->actionFactory = $actionFactory;
         $this->messageHandler = $messageHandler;
+        $this->customRepositories = new ParameterBag();
     }
 
     /**
@@ -142,7 +145,8 @@ class AdminFactory
             'routing_url_pattern' => $this->application->getRoutingUrlPattern(),
             'routing_name_pattern' => $this->application->getRoutingNamePattern(),
             'controller' => 'LAGAdminBundle:CRUD',
-            'max_per_page' => $this->application->getMaxPerPage()
+            'max_per_page' => $this->application->getMaxPerPage(),
+            'repository' => null
         ]);
         // required options
         $resolver->setRequired([
@@ -156,16 +160,35 @@ class AdminFactory
             ->entityManager
             ->getClassMetadata($configuration['entity']);
         $adminConfiguration = new AdminConfiguration($configuration, $classMetadata);
-        $repository = $this
-            ->entityManager
-            ->getRepository($adminConfiguration->getEntityName());
-        // create generic manager from configuration
-        $entityManager = $this->createManagerFromConfig($name, $adminConfiguration, $repository, $this->entityManager);
 
+        // create or get repository accordinf to the configuration
+        if ($adminConfiguration->getRepositoryServiceId()) {
+            // custom repository class must be loaded by the compiler pass
+            if ($this->customRepositories->has($adminConfiguration->getRepositoryServiceId())) {
+                throw new Exception('Repository ' . $adminConfiguration->getRepositoryServiceId() . ' not found');
+            }
+            $repository = $this
+                ->customRepositories
+                ->get($adminConfiguration->getRepositoryServiceId());
+        } else {
+            // no repository configured, we create a new DoctrineRepository
+            // first we get a doctrine default entity repository
+            $doctrineRepository = new EntityRepository(
+                $this->entityManager,
+                $this->entityManager->getClassMetadata($adminConfiguration->getEntityName())
+            );
+            // then create a doctrine repository
+            $repository = new GenericRepository(
+                $this->entityManager,
+                $doctrineRepository,
+                $adminConfiguration->getEntityName()
+            );
+        }
+        // create Admin object
         $admin = new Admin(
             $name,
+            $this->entityManager,
             $repository,
-            $entityManager,
             $adminConfiguration,
             $this->messageHandler
         );
@@ -244,38 +267,15 @@ class AdminFactory
     }
 
     /**
-     * Create a generic manager from configuration.
+     * Add user custom repositories (for the repository compiler pass), to avoid injecting the service container
      *
-     * @param $adminName
-     * @param AdminConfiguration $adminConfig
-     * @param ObjectRepository $repository
-     * @param ObjectManager $entityManager
-     * @return GenericManager
-     * @throws Exception
+     * @param string $serviceId
+     * @param object $repository
      */
-    protected function createManagerFromConfig($adminName, AdminConfiguration $adminConfig, ObjectRepository $repository, ObjectManager $entityManager)
+    public function addRepository($serviceId, $repository)
     {
-        $managerClass = $adminConfig->getManager();
-
-        if (class_exists($managerClass)) {
-            $manager = new $managerClass($entityManager, $repository);
-        } elseif (isset($this->customManagers[$managerClass])) {
-            $manager = $this->customManagers[$managerClass];
-        } else {
-            throw new Exception("Unable to find manager '{$managerClass}' for Admin '{$adminName}'");
-        }
-        if (!($manager instanceof ManagerInterface)) {
-            throw new Exception("Manager '{$managerClass}' should implements ManagerInterface");
-        }
-        return $manager;
-    }
-
-    /**
-     * @param string $key
-     * @param ManagerInterface $manager
-     */
-    public function addCustomManager($key, ManagerInterface $manager)
-    {
-        $this->customManagers[$key] = $manager;
+        $this
+            ->customRepositories
+            ->set($serviceId, $repository);
     }
 }

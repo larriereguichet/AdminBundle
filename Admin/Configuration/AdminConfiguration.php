@@ -20,9 +20,11 @@ class AdminConfiguration
     protected $entityName;
 
     /**
+     * Custom repository service id
+     *
      * @var string
      */
-    protected $manager;
+    protected $repositoryServiceId;
 
     /**
      * @var string
@@ -78,6 +80,8 @@ class AdminConfiguration
         $this->routingUrlPattern = $adminConfiguration['routing_url_pattern'];
         $this->adminConfiguration = $adminConfiguration;
         $this->metadata = $metadata;
+        // user custom repository service id
+        $this->repositoryServiceId = $adminConfiguration['repository'];
     }
 
     /**
@@ -166,5 +170,15 @@ class AdminConfiguration
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    /**
+     * Return user custom repository service id. If none is configured, then return null
+     *
+     * @return string
+     */
+    public function getRepositoryServiceId()
+    {
+        return $this->repositoryServiceId;
     }
 }

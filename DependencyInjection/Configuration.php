@@ -94,6 +94,7 @@ class Configuration implements ConfigurationInterface
             ->prototype('array')
                 ->children()
                     ->scalarNode('entity')->end()
+                    ->scalarNode('repository')->end()
                     ->scalarNode('form')->end()
                     ->scalarNode('max_per_page')->end()
                     ->scalarNode('controller')->defaultValue('LAGAdminBundle:CRUD')->end()

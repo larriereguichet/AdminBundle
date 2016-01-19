@@ -1325,12 +1325,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/larriereguichet/DoctrineRepositoryBundle.git",
-                "reference": "396e3dc2dd55575c9280160d96e39da1f088441d"
+                "reference": "9e3f05367ece81d16527404364633064d39f8c5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/larriereguichet/DoctrineRepositoryBundle/zipball/396e3dc2dd55575c9280160d96e39da1f088441d",
-                "reference": "396e3dc2dd55575c9280160d96e39da1f088441d",
+                "url": "https://api.github.com/repos/larriereguichet/DoctrineRepositoryBundle/zipball/9e3f05367ece81d16527404364633064d39f8c5f",
+                "reference": "9e3f05367ece81d16527404364633064d39f8c5f",
                 "shasum": ""
             },
             "require": {
@@ -1370,7 +1370,7 @@
                 "doctrine",
                 "repository"
             ],
-            "time": "2015-12-26 19:43:01"
+            "time": "2015-12-30 14:27:28"
         },
         {
             "name": "monolog/monolog",
