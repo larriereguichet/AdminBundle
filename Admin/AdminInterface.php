@@ -4,7 +4,6 @@ namespace LAG\AdminBundle\Admin;
 
 use Exception;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,7 +20,7 @@ interface AdminInterface
     public function handleRequest(Request $request);
 
     /**
-     * Generate a route for admin and action name.
+     * Generate a route for an action.
      *
      * @param $actionName
      *
@@ -32,7 +31,7 @@ interface AdminInterface
     public function generateRouteName($actionName);
 
     /**
-     * Load entities according to given criteria. OrderBy, limit and offset can be used
+     * Load entities according to given criteria. OrderBy, limit and offset can be used.
      *
      * @param array $criteria
      * @param array $orderBy
@@ -42,14 +41,14 @@ interface AdminInterface
     public function load(array $criteria, $orderBy = [], $limit = null, $offset = null);
 
     /**
-     * Save loaded entities using manager
+     * Save loaded entities.
      */
     public function save();
 
     /**
-     * Delete loaded entities using manager
+     * Remove loaded entities.
      */
-    public function delete();
+    public function remove();
 
     /**
      * Return admin name.
@@ -61,27 +60,7 @@ interface AdminInterface
     /**
      * @return mixed
      */
-    public function getEntityNamespace();
-
-    /**
-     * @return EntityRepository
-     */
-    public function getRepository();
-
-    /**
-     * @return mixed
-     */
     public function getEntities();
-
-    /**
-     * @return mixed
-     */
-    public function getFormType();
-
-    /**
-     * @return mixed
-     */
-    public function getController();
 
     /**
      * Return an unique entity for current admin. If entity does not exist, it throws an exception.

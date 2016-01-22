@@ -103,11 +103,11 @@ class AdminFactoryTest extends Base
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
     {
         $this->assertEquals($admin->getName(), $adminName);
-        $this->assertEquals($admin->getFormType(), $configuration['form']);
-        $this->assertEquals($admin->getEntityNamespace(), $configuration['entity']);
+        $this->assertEquals($admin->getConfiguration()->getFormType(), $configuration['form']);
+        $this->assertEquals($admin->getConfiguration()->getEntityName(), $configuration['entity']);
 
         if (array_key_exists('controller', $configuration)) {
-            $this->assertEquals($admin->getController(), $configuration['controller']);
+            $this->assertEquals($admin->getConfiguration()->getControllerName(), $configuration['controller']);
         }
         if (array_key_exists('max_per_page', $configuration)) {
             $this->assertEquals($admin->getConfiguration()->getMaxPerPage(), $configuration['max_per_page']);

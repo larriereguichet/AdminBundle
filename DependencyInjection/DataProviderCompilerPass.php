@@ -2,12 +2,11 @@
 
 namespace LAG\AdminBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ManagerCompilerPass implements CompilerPassInterface
+class DataProviderCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
@@ -16,12 +15,15 @@ class ManagerCompilerPass implements CompilerPassInterface
         }
 
         $definition = $container->findDefinition('lag.admin.factory');
-        $taggedServices = $container->findTaggedServiceIds('lag.manager');
+        $taggedServices = $container->findTaggedServiceIds('data_provider');
 
         foreach ($taggedServices as $id => $tags) {
             $definition->addMethodCall(
-                'addCustomManager',
-                [$id, new Reference($id)]
+                'addDataProvider',
+                [
+                    $id,
+                    new Reference($id),
+                ]
             );
         }
     }

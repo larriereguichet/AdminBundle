@@ -10,6 +10,13 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class AdminConfiguration
 {
     /**
+     * Admin name
+     *
+     * @var string
+     */
+    protected $name;
+
+    /**
      * @var string
      */
     protected $controllerName;
@@ -20,11 +27,11 @@ class AdminConfiguration
     protected $entityName;
 
     /**
-     * Custom repository service id
+     * Custom data provider name
      *
      * @var string
      */
-    protected $repositoryServiceId;
+    protected $dataProvider;
 
     /**
      * @var string
@@ -52,11 +59,6 @@ class AdminConfiguration
     protected $routingUrlPattern;
 
     /**
-     * @var array
-     */
-    protected $adminConfiguration;
-
-    /**
      * @var ClassMetadata
      */
     protected $metadata;
@@ -64,24 +66,21 @@ class AdminConfiguration
     /**
      * AdminConfiguration constructor.
      *
-     * @param array $adminConfiguration
-     * @param ClassMetadata|null $metadata
+     * @param array $configuration
      */
-    public function __construct(array $adminConfiguration, ClassMetadata $metadata = null)
+    public function __construct(array $configuration)
     {
-        // defines values
-        $this->controllerName = $adminConfiguration['controller'];
-        $this->manager = $adminConfiguration['manager'];
-        $this->entityName = $adminConfiguration['entity'];
-        $this->formType = $adminConfiguration['form'];
-        $this->actions = $adminConfiguration['actions'];
-        $this->maxPerPage = $adminConfiguration['max_per_page'];
-        $this->routingNamePattern = $adminConfiguration['routing_name_pattern'];
-        $this->routingUrlPattern = $adminConfiguration['routing_url_pattern'];
-        $this->adminConfiguration = $adminConfiguration;
-        $this->metadata = $metadata;
-        // user custom repository service id
-        $this->repositoryServiceId = $adminConfiguration['repository'];
+        $this->controllerName = $configuration['controller'];
+        $this->manager = $configuration['manager'];
+        $this->entityName = $configuration['entity'];
+        $this->formType = $configuration['form'];
+        $this->actions = $configuration['actions'];
+        $this->maxPerPage = $configuration['max_per_page'];
+        $this->routingNamePattern = $configuration['routing_name_pattern'];
+        $this->routingUrlPattern = $configuration['routing_url_pattern'];
+        $this->adminConfiguration = $configuration;
+        $this->dataProvider = $configuration['data_provider'];
+        $this->metadata = $configuration['metadata'];
     }
 
     /**
@@ -173,12 +172,12 @@ class AdminConfiguration
     }
 
     /**
-     * Return user custom repository service id. If none is configured, then return null
+     * Return custom data provider name
      *
      * @return string
      */
-    public function getRepositoryServiceId()
+    public function getDataProvider()
     {
-        return $this->repositoryServiceId;
+        return $this->dataProvider;
     }
 }

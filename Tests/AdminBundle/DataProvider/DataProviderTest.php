@@ -2,26 +2,72 @@
 
 namespace BlueBear\AdminBundle\Tests\AdminBundle\DataProvider;
 
-use Doctrine\ORM\EntityManagerInterface;
 use LAG\AdminBundle\DataProvider\DataProvider;
-use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
-use PHPUnit_Framework_TestCase;
+use LAG\AdminBundle\Tests\Base;
+use stdClass;
 
-class DataProviderTest extends PHPUnit_Framework_TestCase
+/**
+ * Test the built-in data provider
+ */
+class DataProviderTest extends Base
 {
+    /**
+     * Method save SHOULD be called on the entiy repository
+     */
     public function testSave()
     {
-        /** @var RepositoryInterface $repositoryMock */
-        $repositoryMock = $this
-            ->getMockBuilder('LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface')
-            ->getMock();
-        /** @var EntityManagerInterface $entityManagerMock */
-        $entityManagerMock = $this
-            ->getMockBuilder('Doctrine\ORM\EntityManagerInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
+        // repository save method SHOULD be called
+        $repositoryMock = $this->mockEntityRepository();
+        $repositoryMock
+            ->expects($this->once())
+            ->method('save');
 
-        $dataProvider = new DataProvider($repositoryMock, $entityManagerMock);
-        $dataProvider->save(new \stdClass());
+        $dataProvider = new DataProvider($repositoryMock);
+        $dataProvider->save(new stdClass());
+    }
+
+    /**
+     * Method delete SHOULD be called on the entity repository
+     */
+    public function testDelete()
+    {
+        // entity manager delete method SHOULD be called
+        $repositoryMock = $this->mockEntityRepository();
+        $repositoryMock
+            ->expects($this->once())
+            ->method('delete');
+
+        $dataProvider = new DataProvider($repositoryMock);
+        $dataProvider->remove(new stdClass());
+    }
+
+    /**
+     * Method find SHOULD be called on the entity repository
+     */
+    public function testFind()
+    {
+        // repository find method SHOULD be called
+        $repositoryMock = $this->mockEntityRepository();
+        $repositoryMock
+            ->expects($this->once())
+            ->method('find');
+
+        $dataProvider = new DataProvider($repositoryMock);
+        $dataProvider->find('unique_id');
+    }
+
+    /**
+     * Method findBy SHOULD be called on the entity repository
+     */
+    public function testfindBy()
+    {
+        // repository findBy method SHOULD be called
+        $repositoryMock = $this->mockEntityRepository();
+        $repositoryMock
+            ->expects($this->once())
+            ->method('findBy');
+
+        $dataProvider = new DataProvider($repositoryMock);
+        $dataProvider->findBy([]);
     }
 }

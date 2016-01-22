@@ -1,12 +1,12 @@
 <?php
 
-namespace LAG\AdminBundle\Admin\Message;
+namespace LAG\AdminBundle\Message;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class MessageHandler
+class MessageHandler implements MessageHandlerInterface
 {
     /**
      * @var LoggerInterface
@@ -38,10 +38,11 @@ class MessageHandler
     }
 
     /**
-     * Log message and create flash message
+     * Create an flash message into the session. It will be translated. If $logMessage is defined, it will be logged
+     * using the logger using the error channel
      *
-     * @param $flashMessage
-     * @param $logMessage
+     * @param string $flashMessage
+     * @param string|null $logMessage
      */
     public function handleError($flashMessage, $logMessage = null)
     {
@@ -58,6 +59,9 @@ class MessageHandler
     }
 
     /**
+     * Create an flash message into the session. It will be translated. If $logMessage is defined, it will be logged
+     * using the logger using info channel
+     *
      * @param $flashMessage
      * @param null $logMessage
      */

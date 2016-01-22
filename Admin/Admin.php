@@ -5,13 +5,13 @@ namespace LAG\AdminBundle\Admin;
 use ArrayIterator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use LAG\AdminBundle\Admin\Behaviors\ActionTrait;
 use LAG\AdminBundle\Admin\Behaviors\AdminTrait;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
-use LAG\AdminBundle\Admin\Message\MessageHandler;
+use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Exception\AdminException;
+use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -23,7 +23,7 @@ use Traversable;
 
 class Admin implements AdminInterface
 {
-    use ActionTrait, AdminTrait;
+    use AdminTrait;
 
     const LOAD_METHOD_QUERY_BUILDER = 'query_builder';
     const LOAD_METHOD_UNIQUE_ENTITY = 'unique_entity';
@@ -38,14 +38,7 @@ class Admin implements AdminInterface
     protected $entities;
 
     /**
-     * Entity repository.
-     *
-     * @var RepositoryInterface|EntityRepository
-     */
-    protected $repository;
-
-    /**
-     * @var MessageHandler
+     * @var MessageHandlerInterface
      */
     protected $messageHandler;
 
@@ -55,29 +48,57 @@ class Admin implements AdminInterface
     protected $entityManager;
 
     /**
-     * @param $name
-     * @param EntityManagerInterface $entityManager
-     * @param RepositoryInterface $repository
-     * @param AdminConfiguration $adminConfig
-     * @param MessageHandler $messageHandler
+     * @var DataProviderInterface
+     */
+    protected $dataProvider;
+
+    /**
+     * Admin configuration object
+     *
+     * @var AdminConfiguration
+     */
+    protected $configuration;
+
+    /**
+     * Admin configured actions
+     *
+     * @var ActionInterface[]
+     */
+    protected $actions = [];
+
+    /**
+     * Admin current action. It will be set after calling the handleRequest()
+     *
+     * @var ActionInterface
+     */
+    protected $currentAction;
+
+    /**
+     * Admin name
+     *
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * Admin constructor.
+     *
+     * @param string $name
+     * @param DataProviderInterface $dataProvider
+     * @param AdminConfiguration $configuration
+     * @param MessageHandlerInterface $messageHandler
      */
     public function __construct(
         $name,
-        EntityManagerInterface $entityManager,
-        RepositoryInterface $repository,
-        AdminConfiguration $adminConfig,
-        MessageHandler $messageHandler
-    )
-    {
+        DataProviderInterface $dataProvider,
+        AdminConfiguration $configuration,
+        MessageHandlerInterface $messageHandler
+    ) {
         $this->name = $name;
-        $this->repository = $repository;
-        $this->configuration = $adminConfig;
-        $this->controller = $adminConfig->getControllerName();
-        $this->entityNamespace = $adminConfig->getEntityName();
-        $this->formType = $adminConfig->getFormType();
-        $this->entities = new ArrayCollection();
+        $this->dataProvider = $dataProvider;
+        $this->configuration = $configuration;
         $this->messageHandler = $messageHandler;
-        $this->entityManager = $entityManager;
+        $this->entities = new ArrayCollection();
     }
 
     /**
@@ -132,7 +153,7 @@ class Admin implements AdminInterface
         try {
             foreach ($this->entities as $entity) {
                 $this
-                    ->repository
+                    ->dataProvider
                     ->save($entity);
             }
             // inform user everything went fine
@@ -153,17 +174,17 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Delete entity via admin manager. Error are catch, logged and an flash message is added
+     * Remove an entity with data provider
      *
      * @return bool true if the entity was saved without errors
      */
-    public function delete()
+    public function remove()
     {
         try {
             foreach ($this->entities as $entity) {
                 $this
-                    ->repository
-                    ->delete($entity);
+                    ->dataProvider
+                    ->remove($entity);
             }
             // inform user everything went fine
             $this
@@ -207,7 +228,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Load entities manually according to criteria
+     * Load entities manually according to criteria.
      *
      * @param array $criteria
      * @param array $orderBy
@@ -217,12 +238,12 @@ class Admin implements AdminInterface
     public function load(array $criteria, $orderBy = [], $limit = null, $offset = null)
     {
         $this->entities = $this
-            ->repository
+            ->dataProvider
             ->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
-     * Load entities according to action load method
+     * Load entities according to action load method.
      *
      * @param Request $request
      * @return ArrayIterator|ArrayCollection
@@ -255,7 +276,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Load entities by creating a query builder for PagerFanta according to request parameter
+     * Load entities by creating a query builder for PagerFanta according to request parameter.
      *
      * @param Request $request
      * @return array|Traversable
@@ -383,5 +404,103 @@ class Admin implements AdminInterface
     public function getRepository()
     {
         return $this->repository;
+    }
+
+    /**
+     * Return admin name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+
+
+    /**
+     * Return true if current action is granted for user.
+     *
+     * @param string $actionName Le plus grand de tous les héros
+     * @param array $roles
+     *
+     * @return bool
+     */
+    public function isActionGranted($actionName, array $roles)
+    {
+        $isGranted = array_key_exists($actionName, $this->actions);
+
+        // if action exists
+        if ($isGranted) {
+            $isGranted = false;
+            /** @var Action $action */
+            $action = $this->actions[$actionName];
+            // checking roles permissions
+            foreach ($roles as $role) {
+                if (in_array($role, $action->getPermissions())) {
+                    $isGranted = true;
+                }
+            }
+        }
+
+        return $isGranted;
+    }
+
+    /**
+     * @return ActionInterface[]
+     */
+    public function getActions()
+    {
+        return $this->actions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getActionNames()
+    {
+        return array_keys($this->actions);
+    }
+
+    /**
+     * @param $name
+     * @return ActionInterface
+     * @throws Exception
+     */
+    public function getAction($name)
+    {
+        if (!array_key_exists($name, $this->getActions())) {
+            throw new Exception("Invalid action name \"{$name}\" for admin '{$this->getName()}'");
+        }
+
+        return $this->actions[$name];
+    }
+
+    /**
+     * Return if an action with specified name exists form this admin.
+     *
+     * @param $name
+     * @return bool
+     */
+    public function hasAction($name)
+    {
+        return array_key_exists($name, $this->actions);
+    }
+
+    /**
+     * @param ActionInterface $action
+     * @return void
+     */
+    public function addAction(ActionInterface $action)
+    {
+        $this->actions[$action->getName()] = $action;
+    }
+
+    /**
+     * @return ActionInterface
+     */
+    public function getCurrentAction()
+    {
+        return $this->currentAction;
     }
 }

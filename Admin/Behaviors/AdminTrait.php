@@ -2,50 +2,15 @@
 
 namespace LAG\AdminBundle\Admin\Behaviors;
 
-use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Pagerfanta\Pagerfanta;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 trait AdminTrait
 {
     /**
-     * Admin name.
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * Full namespace for Admin entity.
-     *
-     * @var string
-     */
-    protected $entityNamespace;
-
-    /**
-     * Form type.
-     *
-     * @var string
-     */
-    protected $formType;
-
-    /**
-     * Controller.
-     *
-     * @var Controller
-     */
-    protected $controller;
-
-    /**
      * @var Pagerfanta
      */
     protected $pager;
-
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
 
     /**
      * @var AdminConfiguration
@@ -56,30 +21,6 @@ trait AdminTrait
      * @return object
      */
     public abstract function getUniqueEntity();
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEntityNamespace()
-    {
-        return $this->entityNamespace;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFormType()
-    {
-        return $this->formType;
-    }
 
     /**
      * @return AdminConfiguration
@@ -95,14 +36,6 @@ trait AdminTrait
     public function getPager()
     {
         return $this->pager;
-    }
-
-    /**
-     * @return string
-     */
-    public function getController()
-    {
-        return $this->controller;
     }
 
     /**

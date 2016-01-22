@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\Admin;
 
+use Doctrine\ORM\Mapping\ClassMetadata;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Tests\Base;
@@ -22,11 +23,11 @@ class AdminTest extends Base
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
     {
         $this->assertEquals($admin->getName(), $adminName);
-        $this->assertEquals($admin->getFormType(), $configuration['form']);
-        $this->assertEquals($admin->getEntityNamespace(), $configuration['entity']);
+        $this->assertEquals($admin->getConfiguration()->getFormType(), $configuration['form']);
+        $this->assertEquals($admin->getConfiguration()->getEntityName(), $configuration['entity']);
 
         if (array_key_exists('controller', $configuration)) {
-            $this->assertEquals($admin->getController(), $configuration['controller']);
+            $this->assertEquals($admin->getConfiguration()->getControllerName(), $configuration['controller']);
         }
         if (array_key_exists('max_per_page', $configuration)) {
             $this->assertEquals($admin->getConfiguration()->getMaxPerPage(), $configuration['max_per_page']);
@@ -63,7 +64,9 @@ class AdminTest extends Base
                 ],
                 'manager' => 'Test\TestBundle\Manager\TestManager',
                 'routing_url_pattern' => 'lag.admin.{admin}',
-                'routing_name_pattern' => 'lag.{admin}.{action}'
+                'routing_name_pattern' => 'lag.{admin}.{action}',
+                'data_provider' => null,
+                'metadata' => new ClassMetadata('LAG\AdminBundle\Tests\Entity\EntityTest'),
             ]
         ];
     }

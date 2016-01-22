@@ -8,10 +8,12 @@ use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Admin\Message\MessageHandler;
+use LAG\AdminBundle\DataProvider\DataProvider;
+use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminFactoryEvent;
 use Exception;
+use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\Repository\GenericRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -52,11 +54,11 @@ class AdminFactory
     protected $application;
 
     /**
-     * User custom repositories, indexed by service id
+     * User custom data provider, indexed by service id
      *
      * @var ParameterBagInterface
      */
-    protected $customRepositories;
+    protected $dataProviders;
 
     /**
      * @var array
@@ -69,17 +71,19 @@ class AdminFactory
     protected $actionFactory;
 
     /**
-     * @var MessageHandler
+     * @var MessageHandlerInterface
      */
     protected $messageHandler;
 
     /**
+     * AdminFactory constructor.
+     *
      * @param EventDispatcherInterface $eventDispatcher
      * @param EntityManager $entityManager
      * @param ApplicationConfiguration $application
      * @param array $adminConfiguration
      * @param ActionFactory $actionFactory
-     * @param MessageHandler $messageHandler
+     * @param MessageHandlerInterface $messageHandler
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -87,16 +91,15 @@ class AdminFactory
         ApplicationConfiguration $application,
         array $adminConfiguration,
         ActionFactory $actionFactory,
-        MessageHandler $messageHandler
-    )
-    {
+        MessageHandlerInterface $messageHandler
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
         $this->application = $application;
         $this->adminConfiguration = $adminConfiguration;
         $this->actionFactory = $actionFactory;
         $this->messageHandler = $messageHandler;
-        $this->customRepositories = new ParameterBag();
+        $this->dataProviders = new ParameterBag();
     }
 
     /**
@@ -124,71 +127,32 @@ class AdminFactory
     /**
      * Create an Admin from configuration values. It will be added to AdminFactory admin's list.
      *
-     * @param $name
+     * @param string $name
      * @param array $configuration
      * @return Admin
      * @throws Exception
      */
     public function create($name, array $configuration)
     {
-        $resolver = new OptionsResolver();
-        // optional options
-        $resolver->setDefaults([
-            'actions' => [
-                'list' => [],
-                'create' => [],
-                'edit' => [],
-                'delete' => [],
-            ],
-            'batch' => true,
-            'manager' => 'LAG\AdminBundle\Manager\GenericManager',
-            'routing_url_pattern' => $this->application->getRoutingUrlPattern(),
-            'routing_name_pattern' => $this->application->getRoutingNamePattern(),
-            'controller' => 'LAGAdminBundle:CRUD',
-            'max_per_page' => $this->application->getMaxPerPage(),
-            'repository' => null
-        ]);
-        // required options
-        $resolver->setRequired([
-            'entity',
-            'form',
-        ]);
         // resolve admin configuration
-        $configuration = $resolver->resolve($configuration);
-        // create AdminConfiguration object
-        $classMetadata = $this
+        $configuration = $this->resolveConfiguration($configuration);
+        // retrieve metadata from entity manager
+        $configuration['metadata'] = $this
             ->entityManager
             ->getClassMetadata($configuration['entity']);
-        $adminConfiguration = new AdminConfiguration($configuration, $classMetadata);
+        // create AdminConfiguration object
+        $adminConfiguration = new AdminConfiguration($configuration);
 
-        // create or get repository accordinf to the configuration
-        if ($adminConfiguration->getRepositoryServiceId()) {
-            // custom repository class must be loaded by the compiler pass
-            if ($this->customRepositories->has($adminConfiguration->getRepositoryServiceId())) {
-                throw new Exception('Repository ' . $adminConfiguration->getRepositoryServiceId() . ' not found');
-            }
-            $repository = $this
-                ->customRepositories
-                ->get($adminConfiguration->getRepositoryServiceId());
-        } else {
-            // no repository configured, we create a new DoctrineRepository
-            // first we get a doctrine default entity repository
-            $doctrineRepository = new EntityRepository(
-                $this->entityManager,
-                $this->entityManager->getClassMetadata($adminConfiguration->getEntityName())
-            );
-            // then create a doctrine repository
-            $repository = new GenericRepository(
-                $this->entityManager,
-                $doctrineRepository,
-                $adminConfiguration->getEntityName()
-            );
-        }
+        // retrieve a data provider
+        $dataProvider = $this->getDataProvider(
+            $adminConfiguration->getEntityName(),
+            $adminConfiguration->getDataProvider()
+        );
+
         // create Admin object
         $admin = new Admin(
             $name,
-            $this->entityManager,
-            $repository,
+            $dataProvider,
             $adminConfiguration,
             $this->messageHandler
         );
@@ -269,13 +233,94 @@ class AdminFactory
     /**
      * Add user custom repositories (for the repository compiler pass), to avoid injecting the service container
      *
-     * @param string $serviceId
-     * @param object $repository
+     * @param string $name
+     * @param DataProviderInterface $dataProvider
      */
-    public function addRepository($serviceId, $repository)
+    public function addDataProvider($name, DataProviderInterface $dataProvider)
     {
         $this
-            ->customRepositories
-            ->set($serviceId, $repository);
+            ->dataProviders
+            ->set($name, $dataProvider);
+    }
+
+    /**
+     * Return a configured data provider or create an new instance of the default one.
+     *
+     * @param string $entityClass
+     * @param string|null $name
+     * @return DataProvider|mixed
+     * @throws Exception
+     */
+    protected function getDataProvider($entityClass, $name = null)
+    {
+        // create or get repository according to the configuration
+        if ($name) {
+            // custom data provider class must be loaded by the compiler pass
+            if (!$this->dataProviders->has($name)) {
+                throw new Exception(sprintf(
+                    'Data provider %s not found. Did you add the @data_provider tag in your service',
+                    $name
+                ));
+            }
+            $dataProvider = $this
+                ->dataProviders
+                ->get($name);
+        } else {
+            // no data provider is configured, we create a new one
+
+            // if no provider is provided, $entityClass should have metadata
+            $metadata = $this
+                ->entityManager
+                ->getClassMetadata($entityClass);
+
+            if (!$metadata) {
+                throw new Exception('No Doctrine metadata was found for class ' . $entityClass);
+            }
+            $doctrineRepository = new EntityRepository(
+                $this->entityManager,
+                $metadata
+            );
+            $repository = new GenericRepository(
+                $this->entityManager,
+                $doctrineRepository,
+                $name
+            );
+            $dataProvider = new DataProvider($repository);
+        }
+        return $dataProvider;
+    }
+
+    /**
+     * Resolve admin configuration.
+     *
+     * @param array $configuration
+     * @return array
+     */
+    protected function resolveConfiguration(array $configuration)
+    {
+        $resolver = new OptionsResolver();
+        // optional options
+        $resolver->setDefaults([
+            'actions' => [
+                'list' => [],
+                'create' => [],
+                'edit' => [],
+                'delete' => [],
+            ],
+            'batch' => true,
+            'manager' => 'LAG\AdminBundle\Manager\GenericManager',
+            'routing_url_pattern' => $this->application->getRoutingUrlPattern(),
+            'routing_name_pattern' => $this->application->getRoutingNamePattern(),
+            'controller' => 'LAGAdminBundle:CRUD',
+            'max_per_page' => $this->application->getMaxPerPage(),
+            'data_provider' => null
+        ]);
+        // required options
+        $resolver->setRequired([
+            'entity',
+            'form',
+        ]);
+
+        return $resolver->resolve($configuration);
     }
 }

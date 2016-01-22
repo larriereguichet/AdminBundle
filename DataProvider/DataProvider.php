@@ -2,41 +2,86 @@
 
 namespace LAG\AdminBundle\DataProvider;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
 
+/**
+ * Default data provider using generic repositories
+ */
 class DataProvider implements DataProviderInterface
 {
     /**
      * @var RepositoryInterface
      */
-    protected $repositoryInterface;
+    protected $repository;
 
     /**
      * @var EntityManagerInterface
      */
-    protected $entityManagerInterface;
+    protected $entityManager;
 
+    /**
+     * DataProvider constructor.
+     *
+     * @param RepositoryInterface $repository
+     */
     public function __construct(
-        RepositoryInterface $repositoryInterface,
-        EntityManagerInterface $entityManagerInterface
+        RepositoryInterface $repository
     ) {
-        $this->repositoryInterface = $repositoryInterface;
-        $this->entityManagerInterface = $entityManagerInterface;
+        $this->repository = $repository;
     }
 
+    /**
+     * Find entities by criteria
+     *
+     * @param array $criteria
+     * @param array $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return Collection
+     */
+    public function findBy(array $criteria, $orderBy = [], $limit = null, $offset = null)
+    {
+        return $this
+            ->repository
+            ->findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    /**
+     * Find an entity by its unique id
+     *
+     * @param $id
+     * @return object
+     */
+    public function find($id)
+    {
+        return $this
+            ->repository
+            ->find($id);
+    }
+
+    /**
+     * Save an entity
+     *
+     * @param $entity
+     */
     public function save($entity)
     {
-        // TODO: Implement save() method.
+        $this
+            ->repository
+            ->save($entity);
     }
 
-    public function delete($entity)
+    /**
+     * Remove an entity
+     *
+     * @param $entity
+     */
+    public function remove($entity)
     {
-        // TODO: Implement delete() method.
-    }
-
-    public function find(array $criteria, $orderBy = [], $limit = null, $offset = null)
-    {
-        // TODO: Implement find() method.
+        $this
+            ->repository
+            ->delete($entity);
     }
 }

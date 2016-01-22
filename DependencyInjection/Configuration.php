@@ -17,35 +17,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 // application configuration
-                ->arrayNode('application')
-                    ->children()
-                        ->scalarNode('title')->end()
-                        ->scalarNode('description')->end()
-                        ->scalarNode('layout')->end()
-                        ->scalarNode('date_format')->defaultValue('Y-m-d')->end()
-                        ->scalarNode('bootstrap')->end()
-                        ->scalarNode('max_per_page')->end()
-                        ->arrayNode('routing')
-                            ->children()
-                                ->scalarNode('name_pattern')->end()
-                                ->scalarNode('url_pattern')->end()
-                            ->end()
-                        ->end()
-                        ->arrayNode('translation')
-                            ->canBeDisabled()
-                            ->children()
-                                ->scalarNode('pattern')->end()
-                            ->end()
-                        ->end()
-                        ->scalarNode('block_template')
-                            ->defaultValue('LAGAdminBundle:Form:fields.html.twig')
-                        ->end()
-                        ->arrayNode('fields_mapping')
-                            ->prototype('scalar')
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
+                ->append($this->getApplicationNode())
                 // admins configuration
                 ->append($this->getAdminsConfigurationNode())
                 // menus configurations
@@ -94,11 +66,10 @@ class Configuration implements ConfigurationInterface
             ->prototype('array')
                 ->children()
                     ->scalarNode('entity')->end()
-                    ->scalarNode('repository')->end()
+                    ->scalarNode('data_provider')->end()
                     ->scalarNode('form')->end()
                     ->scalarNode('max_per_page')->end()
                     ->scalarNode('controller')->defaultValue('LAGAdminBundle:CRUD')->end()
-                    ->scalarNode('manager')->defaultValue('LAG\AdminBundle\Manager\GenericManager')->end()
                     // actions configurations
                     ->arrayNode('actions')
                         ->useAttributeAsKey('name')
@@ -155,6 +126,48 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
+
+        return $node;
+    }
+
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    public function getApplicationNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('application');
+
+        $node
+            ->children()
+                ->scalarNode('title')->end()
+                ->scalarNode('description')->end()
+                ->scalarNode('layout')->end()
+                ->scalarNode('date_format')->defaultValue('Y-m-d')->end()
+                ->scalarNode('bootstrap')->end()
+                ->scalarNode('max_per_page')->end()
+                ->arrayNode('routing')
+                    ->children()
+                        ->scalarNode('name_pattern')->end()
+                        ->scalarNode('url_pattern')->end()
+                    ->end()
+                ->end()
+                ->arrayNode('translation')
+                    ->canBeDisabled()
+                    ->children()
+                        ->scalarNode('pattern')->end()
+                    ->end()
+                ->end()
+                ->scalarNode('block_template')
+                ->defaultValue('LAGAdminBundle:Form:fields.html.twig')
+                ->end()
+                ->arrayNode('fields_mapping')
+                ->prototype('scalar')
+                ->end()
+                ->end()
+            ->end()
+        ->end();
+
         return $node;
     }
 }

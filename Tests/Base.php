@@ -3,9 +3,8 @@
 namespace LAG\AdminBundle\Tests;
 
 use Closure;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Exception;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
@@ -13,8 +12,9 @@ use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
-use LAG\AdminBundle\Admin\ManagerInterface;
-use LAG\AdminBundle\Admin\Message\MessageHandler;
+use LAG\AdminBundle\DataProvider\DataProviderInterface;
+use LAG\AdminBundle\Message\MessageHandlerInterface;
+use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
 use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -23,6 +23,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class Base extends WebTestCase
 {
@@ -130,8 +131,7 @@ class Base extends WebTestCase
     {
         return new Admin(
             $name,
-            $this->mockEntityRepository(),
-            $this->mockManager(),
+            $this->mockDataProvider(),
             $configuration,
             $this->mockMessageHandler()
         );
@@ -195,21 +195,6 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return ManagerInterface|PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function mockManager()
-    {
-        $managerMock = $this
-            ->getMockBuilder('LAG\AdminBundle\Admin\ManagerInterface')
-            ->getMock();
-        $managerMock
-            ->method('getRepository')
-            ->willReturn('Doctrine\ORM\EntityRepository');
-
-        return $managerMock;
-    }
-
-    /**
      * @return Session|PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockSession()
@@ -246,13 +231,14 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return ObjectRepository|PHPUnit_Framework_MockObject_MockObject
+     * Return a mock of an entity repository
+     *
+     * @return RepositoryInterface|PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockEntityRepository()
     {
         return $this
-            ->getMockBuilder('Doctrine\Common\Persistence\ObjectRepository')
-            ->disableOriginalConstructor()
+            ->getMockBuilder('LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface')
             ->getMock();
     }
 
@@ -269,6 +255,9 @@ class Base extends WebTestCase
         $entityManager
             ->method('getRepository')
             ->willReturn($repository);
+        $entityManager
+            ->method('getClassMetadata')
+            ->willReturn(new ClassMetadata('LAG\AdminBundle\Tests\Entity\TestEntity'));
 
         return $entityManager;
     }
@@ -316,15 +305,35 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return MessageHandler|PHPUnit_Framework_MockObject_MockObject
+     * @return MessageHandlerInterface|PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockMessageHandler()
     {
         $messageHandler = $this
-            ->getMockBuilder('LAG\AdminBundle\Admin\Message\MessageHandler')
+            ->getMockBuilder('LAG\AdminBundle\Message\MessageHandler')
             ->disableOriginalConstructor()
             ->getMock();
 
         return $messageHandler;
+    }
+
+    /**
+     * @return TranslatorInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockTranslator()
+    {
+        return $this
+            ->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+            ->getMock();
+    }
+
+    /**
+     * @return DataProviderInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockDataProvider()
+    {
+        return $this
+            ->getMockBuilder('LAG\AdminBundle\DataProvider\DataProviderInterface')
+            ->getMock();
     }
 }
