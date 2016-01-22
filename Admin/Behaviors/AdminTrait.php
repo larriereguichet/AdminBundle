@@ -13,22 +13,9 @@ trait AdminTrait
     protected $pager;
 
     /**
-     * @var AdminConfiguration
-     */
-    protected $configuration;
-
-    /**
      * @return object
      */
     public abstract function getUniqueEntity();
-
-    /**
-     * @return AdminConfiguration
-     */
-    public function getConfiguration()
-    {
-        return $this->configuration;
-    }
 
     /**
      * @return Pagerfanta

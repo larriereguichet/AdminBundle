@@ -100,7 +100,7 @@ class CRUDController extends Controller
             ]);
 
             if ($data['batch_action'] == 'delete') {
-                $admin->delete();
+                $admin->remove();
             }
         } else {
             throw new NotFoundHttpException('Invalid batch parameters');
@@ -124,7 +124,7 @@ class CRUDController extends Controller
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
-        $form = $this->createForm($admin->getFormType());
+        $form = $this->createForm($admin->getConfiguration()->getFormType());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -166,7 +166,7 @@ class CRUDController extends Controller
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
-        $form = $this->createForm($admin->getFormType(), $admin->getUniqueEntity());
+        $form = $this->createForm($admin->getConfiguration()->getFormType(), $admin->getUniqueEntity());
         $form->handleRequest($request);
         $accessor = PropertyAccess::createPropertyAccessor();
 
@@ -211,7 +211,7 @@ class CRUDController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $admin->delete();
+            $admin->remove();
             // redirect to list
             $listRoute = $admin->generateRouteName('list');
 

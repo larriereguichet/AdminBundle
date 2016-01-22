@@ -503,4 +503,14 @@ class Admin implements AdminInterface
     {
         return $this->currentAction;
     }
+
+    /**
+     * Return admin configuration object
+     *
+     * @return AdminConfiguration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
 }
