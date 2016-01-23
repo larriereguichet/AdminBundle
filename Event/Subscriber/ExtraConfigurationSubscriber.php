@@ -47,7 +47,11 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      * @param EntityManager $entityManager
      * @param ApplicationConfiguration $applicationConfiguration
      */
-    public function __construct($enableExtraConfiguration = true, EntityManager $entityManager, ApplicationConfiguration $applicationConfiguration)
+    public function __construct(
+        $enableExtraConfiguration = true,
+        EntityManager $entityManager,
+        ApplicationConfiguration $applicationConfiguration
+    )
     {
         $this->enableExtraConfiguration = $enableExtraConfiguration;
         $this->entityManager = $entityManager;
@@ -118,7 +122,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             $metadata = $this
                 ->entityManager
                 ->getMetadataFactory()
-                ->getMetadataFor($admin->getEntityNamespace());
+                ->getMetadataFor($admin->getConfiguration()->getEntityName());
             $fieldsName = $metadata->getFieldNames();
 
             foreach ($fieldsName as $name) {
