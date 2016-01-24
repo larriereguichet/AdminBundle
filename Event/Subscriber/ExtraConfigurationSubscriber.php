@@ -189,6 +189,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                 }
             }
         }
+        // for list action, add the delete batch action by defaut
         if (empty($configuration['batch'])) {
             if ($event->getActionName() == 'list') {
                 $configuration['batch'] = [

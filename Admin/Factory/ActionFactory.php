@@ -68,6 +68,7 @@ class ActionFactory
             // add to the main action
             $action->addAction($customAction);
         }
+
         // adding fields items to actions
         foreach ($actionConfiguration['fields'] as $fieldName => $fieldConfiguration) {
             $field = $this
@@ -75,6 +76,7 @@ class ActionFactory
                 ->create($fieldName, $fieldConfiguration);
             $action->addField($field);
         }
+
         // adding filters to the action
         foreach ($actionConfiguration['filters'] as $fieldName => $filterConfiguration) {
             $filter = $this
@@ -100,8 +102,27 @@ class ActionFactory
         return $action;
     }
 
+    /**
+     * Return action configuration resolver
+     *
+     * @param OptionsResolver $resolver
+     * @param $actionName
+     * @param Admin|null $admin
+     */
     protected function configureOptionsResolver(OptionsResolver $resolver, $actionName, Admin $admin = null)
     {
+        $defaultCriteria = [];
+
+        if ($actionName == 'edit') {
+            $defaultCriteria = [
+                'id'
+            ];
+        } else if ($actionName == 'delete') {
+            $defaultCriteria = [
+                'id'
+            ];
+        }
+
         $resolver
             ->setDefaults([
                 'title' => null,
@@ -124,7 +145,17 @@ class ActionFactory
                 'icon' => null,
                 'filters' => [],
                 'batch' => [],
-                'load_method' => null
+                'load_strategy' => Admin::LOAD_STRATEGY_UNIQUE,
+                'pager' => 'pagerfanta',
+                'criteria' => $defaultCriteria
+            ])
+            ->setAllowedValues('pager', [
+                null,
+                'pagerfanta',
+            ])
+            ->setAllowedValues('load_strategy', [
+                Admin::LOAD_STRATEGY_UNIQUE,
+                Admin::LOAD_STRATEGY_MULTIPLE,
             ])
             ->setNormalizer('route', function (Options $options, $value) use ($admin, $actionName) {
                 if (!$value) {
@@ -166,37 +197,6 @@ class ActionFactory
                 }
                 return $value;
             })
-            ->setNormalizer('load_method', function (Options $options, $value) use ($actionName) {
-                $allowedValues = [
-                    Admin::LOAD_METHOD_UNIQUE_ENTITY,
-                    Admin::LOAD_METHOD_MULTIPLE_ENTITIES,
-                    Admin::LOAD_METHOD_QUERY_BUILDER,
-                    Admin::LOAD_METHOD_MANUAL
-                ];
-
-                if ($value && !in_array($value, $allowedValues)) {
-                    throw new InvalidOptionsException('Only ' . implode(',', $allowedValues) . ' are allowed for load method');
-                } else if (!$value) {
-                    if ($actionName == 'list') {
-                        $value = Admin::LOAD_METHOD_QUERY_BUILDER;
-                    } else if (in_array($actionName, ['edit', 'create', 'delete'])) {
-                        $value = Admin::LOAD_METHOD_UNIQUE_ENTITY;
-                    } else if ($actionName == 'batch') {
-                        $value = Admin::LOAD_METHOD_MANUAL;
-                    }
-                }
-                return $value;
-            })
-            ->setNormalizer('parameters', function (Options $options, $value) use ($actionName) {
-                if (!count($value)) {
-                    // we add default parameter if action method is unique_entity
-                    if ($options->offsetGet('load_method') == Admin::LOAD_METHOD_UNIQUE_ENTITY
-                        && $actionName != 'create'
-                    ) {
-                        $value = ['id' => false];
-                    }
-                }
-                return $value;
-            });
+        ;
     }
 }

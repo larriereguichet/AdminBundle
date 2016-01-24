@@ -11,11 +11,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Exception\AdminException;
+use LAG\AdminBundle\Filter\PagerfantaFilter;
+use LAG\AdminBundle\Filter\RequestFilter;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
+use LAG\AdminBundle\Pager\PagerFantaAdminAdapter;
 use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -25,10 +29,8 @@ class Admin implements AdminInterface
 {
     use AdminTrait;
 
-    const LOAD_METHOD_QUERY_BUILDER = 'query_builder';
-    const LOAD_METHOD_UNIQUE_ENTITY = 'unique_entity';
-    const LOAD_METHOD_MULTIPLE_ENTITIES = 'multiple';
-    const LOAD_METHOD_MANUAL = 'manual';
+    const LOAD_STRATEGY_UNIQUE = 'strategy_unique';
+    const LOAD_STRATEGY_MULTIPLE = 'strategy_multiple';
 
     /**
      * Entities collection.
@@ -115,8 +117,27 @@ class Admin implements AdminInterface
         $this->currentAction = $this->getAction($request->get('_route_params')['_action']);
         // check if user is logged have required permissions to get current action
         $this->checkPermissions($user);
+
+        // criteria filter request
+        $filter = new RequestFilter($this->currentAction->getConfiguration()->getCriteria());
+        $criteriaFilter = $filter->filter($request);
+
+        // pager filter request
+        if ($this->currentAction->getConfiguration()->getPager() == 'pagerfanta') {
+            $filter = new PagerfantaFilter();
+            $pagerFilter = $filter->filter($request);
+        } else {
+            // empty bag
+            $pagerFilter = new ParameterBag();
+        }
+
         // load entities according to action and request
-        $this->loadEntities($request);
+        $this->load(
+            $criteriaFilter->all(),
+            $pagerFilter->get('order', []),
+            $this->configuration->getMaxPerPage(),
+            $pagerFilter->get('page', 1)
+        );
     }
 
     /**
@@ -233,144 +254,31 @@ class Admin implements AdminInterface
      * @param array $criteria
      * @param array $orderBy
      * @param null $limit
-     * @param null $offset
+     * @param int $offset
      */
-    public function load(array $criteria, $orderBy = [], $limit = null, $offset = null)
+    public function load(array $criteria, $orderBy = [], $limit = null, $offset = 1)
     {
-        $this->entities = $this
-            ->dataProvider
-            ->findBy($criteria, $orderBy, $limit, $offset);
-    }
-
-    /**
-     * Load entities according to action load method.
-     *
-     * @param Request $request
-     * @return ArrayIterator|ArrayCollection
-     * @throws AdminException
-     * @throws Exception
-     */
-    protected function loadEntities(Request $request)
-    {
-        $loadMethod = $this
-            ->currentAction
+        $pager = $this
+            ->getCurrentAction()
             ->getConfiguration()
-            ->getLoadMethod();
+            ->getPager();
 
-        if ($loadMethod == self::LOAD_METHOD_QUERY_BUILDER) {
-            // loading entities with a query builder
-            $this->entities = $this->loadWithQueryBuilder($request);
-        } else if ($loadMethod == self::LOAD_METHOD_UNIQUE_ENTITY) {
-            // load only one entity from request criteria
-            $this->entities = $this->loadWithParameters($request, true);
-        } else if ($loadMethod == self::LOAD_METHOD_MULTIPLE_ENTITIES) {
-            // load all entities matching request criteria
-            $this->entities = $this->loadWithParameters($request, false);
-        } else if ($loadMethod == self::LOAD_METHOD_MANUAL) {
-            // wait for manual load
-            $this->entities = [];
+        if ($pager == 'pagerfanta') {
+            // adapter to pager fanta
+            $adapter = new PagerFantaAdminAdapter($this->dataProvider, $criteria, $orderBy);
+            // create pager
+            $this->pager = new Pagerfanta($adapter);
+            $this->pager->setMaxPerPage($limit);
+            $this->pager->setCurrentPage($offset);
+
+            $this->entities = $this
+                ->pager
+                ->getCurrentPageResults();
         } else {
-            throw new AdminException("Unhandled entities load method {$loadMethod} for admin {$this->getName()}");
+            $this->entities = $this
+                ->dataProvider
+                ->findBy($criteria, $orderBy, $limit, $offset);
         }
-        return $this->entities;
-    }
-
-    /**
-     * Load entities by creating a query builder for PagerFanta according to request parameter.
-     *
-     * @param Request $request
-     * @return array|Traversable
-     * @throws Exception
-     */
-    protected function loadWithQueryBuilder(Request $request)
-    {
-        // getting pager parameter
-        $page = $request->get('page', 1);
-        $sort = $request->get('sort');
-        $order = $request->get('order');
-        // check if sort field is allowed for current action
-        if ($sort) {
-            if (!$this->getCurrentAction()->hasField($sort)) {
-                throw new Exception("Invalid field \"{$sort}\" for current action \"{$this->getCurrentAction()->getName()}\"");
-            }
-            // if no sort was used by user, we sort with default configured sort if there is one
-            if (!$order) {
-                // getting configured order
-                $order = $this
-                    ->getCurrentAction()
-                    ->getConfiguration()
-                    ->getOrder();
-            }
-            if (!in_array($order, ['ASC', 'DESC'])) {
-                throw new Exception("Invalid order \"{$order}\". Only ASC and DESC are allowed");
-            }
-        }
-        if (!method_exists($this->repository, 'createQueryBuilder')) {
-            throw new Exception('Method createQueryBuilder not found in class ' . get_class($this->repository));
-        }
-        // creating query builder from repository
-        $this->queryBuilder = $this
-            ->repository
-            ->createQueryBuilder('entity', 'entity.id');
-
-        if ($sort) {
-            // fix bug with join column sort in paging
-            if (!$this->configuration->getMetadata()->hasAssociation($sort)) {
-                $this
-                    ->queryBuilder
-                    ->addOrderBy('entity.' . $sort, $order);
-            }
-        }
-        // create adapter for query builder
-        $adapter = new DoctrineORMAdapter($this->queryBuilder);
-        // create pager
-        $this->pager = new Pagerfanta($adapter);
-        $this->pager->setMaxPerPage($this->configuration->getMaxPerPage());
-        $this->pager->setCurrentPage($page);
-
-        return $this
-            ->pager
-            ->getCurrentPageResults();
-    }
-
-    /**
-     * Loading an entity according to request parameter
-     *
-     * @param Request $request
-     * @param bool $unique
-     * @return array
-     */
-    protected function loadWithParameters(Request $request, $unique = false)
-    {
-        $parameters = $this
-            ->currentAction
-            ->getConfiguration()
-            ->getParameters();
-        $criteria = [];
-
-        foreach ($parameters as $name => $regex) {
-            $value = $request->get($name);
-
-            if ($regex == false) {
-                $criteria[$name] = $value;
-            } else if ($value && preg_match("/{$regex}/", $value)) {
-                $criteria[$name] = $value;
-            }
-        }
-        if ($unique) {
-            // find entity according to criteria
-            $entity = $this
-                ->repository
-                ->findOneBy($criteria);
-            // returning a collection to be more generic
-            $entities = new ArrayCollection();
-            $entities->set($entity->getId(), $entity);
-        } else {
-            $entities = $this
-                ->repository
-                ->findBy($criteria);
-        }
-        return $entities;
     }
 
     /**
@@ -399,14 +307,6 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return EntityRepository|RepositoryInterface
-     */
-    public function getRepository()
-    {
-        return $this->repository;
-    }
-
-    /**
      * Return admin name
      *
      * @return string
@@ -415,8 +315,6 @@ class Admin implements AdminInterface
     {
         return $this->name;
     }
-
-
 
     /**
      * Return true if current action is granted for user.

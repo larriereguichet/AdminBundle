@@ -9,7 +9,7 @@ class ActionConfiguration
 
     protected $parameters;
 
-    protected $loadMethod;
+    protected $loadStrategy;
 
     protected $exports;
 
@@ -21,9 +21,28 @@ class ActionConfiguration
 
     protected $batch;
 
+    /**
+     * Indicate which pager should be used. If null, no pager will be used.
+     *
+     * @var string
+     */
+    protected $pager;
+
+    /**
+     * Action criteria. Entities will be filtered by thoses criteria.
+     *
+     * @var array
+     */
+    protected $criteria;
+
+    /**
+     * ActionConfiguration constructor.
+     *
+     * @param array $configuration
+     */
     public function __construct(array $configuration)
     {
-        $this->loadMethod = $configuration['load_method'];
+        $this->loadStrategy = $configuration['load_strategy'];
         $this->route = $configuration['route'];
         $this->parameters = $configuration['parameters'];
         $this->exports = $configuration['export'];
@@ -31,6 +50,8 @@ class ActionConfiguration
         $this->target = $configuration['target'];
         $this->icon = $configuration['icon'];
         $this->batch = $configuration['batch'];
+        $this->pager = $configuration['pager'];
+        $this->criteria = $configuration['criteria'];
     }
 
     /**
@@ -68,17 +89,17 @@ class ActionConfiguration
     /**
      * @return mixed
      */
-    public function getLoadMethod()
+    public function getLoadStrategy()
     {
-        return $this->loadMethod;
+        return $this->loadStrategy;
     }
 
     /**
-     * @param mixed $loadMethod
+     * @param mixed $loadStrategy
      */
-    public function setLoadMethod($loadMethod)
+    public function setLoadStrategy($loadStrategy)
     {
-        $this->loadMethod = $loadMethod;
+        $this->loadStrategy = $loadStrategy;
     }
 
     /**
@@ -159,6 +180,26 @@ class ActionConfiguration
     public function setBatch($batch)
     {
         $this->batch = $batch;
+    }
+
+    /**
+     * Return which pager should be used for this action. If null, pager is not required.
+     *
+     * @return string
+     */
+    public function getPager()
+    {
+        return $this->pager;
+    }
+
+    /**
+     * Return action critera.
+     *
+     * @return array
+     */
+    public function getCriteria()
+    {
+        return $this->criteria;
     }
 
 

@@ -41,7 +41,7 @@ class DataProvider implements DataProviderInterface
      * @param int|null $offset
      * @return Collection
      */
-    public function findBy(array $criteria, $orderBy = [], $limit = null, $offset = null)
+    public function findBy(array $criteria = [], $orderBy = [], $limit = null, $offset = null)
     {
         return $this
             ->repository

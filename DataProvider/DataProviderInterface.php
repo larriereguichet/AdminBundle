@@ -30,7 +30,7 @@ interface DataProviderInterface
      * @param null $offset
      * @return mixed
      */
-    public function findBy(array $criteria, $orderBy = [], $limit = null, $offset = null);
+    public function findBy(array $criteria = [], $orderBy = [], $limit = null, $offset = null);
 
     /**
      * Find an entity according to its unique id

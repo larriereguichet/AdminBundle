@@ -93,7 +93,7 @@ class RoutingLoader implements LoaderInterface
         $path = str_replace('{action}', $action->getName(), $path);
         // by default, generic controller
         $defaults = [
-            '_controller' => $admin->getController().':'.$action->getName(),
+            '_controller' => $admin->getConfiguration()->getControllerName().':'.$action->getName(),
             '_admin' => $admin->getName(),
             '_action' => $action->getName(),
         ];
