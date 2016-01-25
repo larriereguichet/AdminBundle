@@ -6,6 +6,7 @@ use Exception;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 interface AdminInterface
 {
@@ -15,9 +16,10 @@ interface AdminInterface
      *  - create form if required
      *
      * @param Request $request
+     * @param UserInterface $user
      * @return mixed
      */
-    public function handleRequest(Request $request);
+    public function handleRequest(Request $request, UserInterface $user = null);
 
     /**
      * Generate a route for an action.
