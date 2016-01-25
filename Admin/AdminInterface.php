@@ -19,7 +19,7 @@ interface AdminInterface
      * @param UserInterface $user
      * @return mixed
      */
-    public function handleRequest(Request $request, UserInterface $user = null);
+    public function handleRequest(Request $request, $user = null);
 
     /**
      * Generate a route for an action.
