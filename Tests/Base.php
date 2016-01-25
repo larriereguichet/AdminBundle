@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Tests;
 
 use Closure;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Exception;
 use LAG\AdminBundle\Admin\ActionInterface;
@@ -168,7 +169,10 @@ class Base extends WebTestCase
             ->getMock();
         $configuration
             ->method('getLoadMethod')
-            ->willReturn(Admin::LOAD_METHOD_MANUAL);
+            ->willReturn(Admin::LOAD_STRATEGY_MULTIPLE);
+        $configuration
+            ->method('getCriteria')
+            ->willReturn([]);
 
         return $configuration;
     }
@@ -247,11 +251,19 @@ class Base extends WebTestCase
      */
     protected function mockEntityManager()
     {
+        /** @var EntityManagerInterface|PHPUnit_Framework_MockObject_MockObject $entityManager */
         $entityManager = $this
             ->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
             ->getMock();
         $repository = $this->mockEntityRepository();
+        $repository
+            ->method('getEntityPersister')
+            ->willReturn( $this
+                ->getMockBuilder('Doctrine\ORM\Persisters\Entity\BasicEntityPersister')
+                ->disableOriginalConstructor()
+                ->getMock());
+
         $entityManager
             ->method('getRepository')
             ->willReturn($repository);

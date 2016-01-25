@@ -17,7 +17,7 @@ class RequestFilter
      *
      * @param array $filters
      */
-    public function __construct(array $filters)
+    public function __construct(array $filters = [])
     {
         $this->filters = $filters;
     }

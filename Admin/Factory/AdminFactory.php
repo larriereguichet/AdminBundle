@@ -175,15 +175,13 @@ class AdminFactory
     }
 
     /**
-     * Return a loaded admin from a Symfony request.
+     * Return an admin from a Symfony request.
      *
      * @param Request $request
-     * @param null $user
-     *
      * @return AdminInterface
      * @throws Exception
      */
-    public function getAdminFromRequest(Request $request, $user = null)
+    public function getAdminFromRequest(Request $request)
     {
         $routeParameters = $request->get('_route_params');
 
@@ -197,7 +195,6 @@ class AdminFactory
             throw new Exception('Cannot find admin action from request. "_action" route parameter is missing');
         }
         $admin = $this->getAdmin($routeParameters['_admin']);
-        $admin->handleRequest($request, $user);
 
         return $admin;
     }
@@ -206,9 +203,7 @@ class AdminFactory
      * Return a admin by its name.
      *
      * @param $name
-     *
      * @return Admin
-     *
      * @throws Exception
      */
     public function getAdmin($name)

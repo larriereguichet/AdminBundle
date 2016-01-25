@@ -41,6 +41,7 @@ class CRUDController extends Controller
     {
         // retrieve admin from request route parameters
         $admin = $this->getAdminFromRequest($request, $this->getUser());
+        $admin->handleRequest($request);
         // creating list form
         $form = $this->createForm(new AdminListType(), [
             'entities' => $admin->getEntities()
@@ -86,6 +87,7 @@ class CRUDController extends Controller
     public function batchAction(Request $request)
     {
         $admin = $this->getAdminFromRequest($request, $this->getUser());
+        $admin->handleRequest($request);
         // create batch action form
         $form = $this->createForm(new BatchActionType(), [
             'batch_action' => [],
@@ -121,6 +123,7 @@ class CRUDController extends Controller
     public function createAction(Request $request)
     {
         $admin = $this->getAdminFromRequest($request, $this->getUser());
+        $admin->handleRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
@@ -163,6 +166,7 @@ class CRUDController extends Controller
     public function editAction(Request $request)
     {
         $admin = $this->getAdminFromRequest($request, $this->getUser());
+        $admin->handleRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
@@ -204,6 +208,7 @@ class CRUDController extends Controller
     public function deleteAction(Request $request)
     {
         $admin = $this->getAdminFromRequest($request, $this->getUser());
+        $admin->handleRequest($request);
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form to avoid deletion by url
@@ -303,16 +308,13 @@ class CRUDController extends Controller
      * Return an Admin object according to the request route parameters.
      *
      * @param Request $request
-     * @param $user
-     *
      * @return AdminInterface
-     *
      * @throws Exception
      */
-    protected function getAdminFromRequest(Request $request, $user)
+    protected function getAdminFromRequest(Request $request)
     {
         return $this
             ->get('lag.admin.factory')
-            ->getAdminFromRequest($request, $user);
+            ->getAdminFromRequest($request);
     }
 }
