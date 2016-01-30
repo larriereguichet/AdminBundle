@@ -26,3 +26,7 @@
     {{ parent() }}
     {{- block('form_help') -}}
 {%- endblock form_errors %}
+
+{% block form_group_class -%}
+    col-sm-12
+{%- endblock form_group_class %}
