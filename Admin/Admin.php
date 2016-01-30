@@ -4,7 +4,6 @@ namespace LAG\AdminBundle\Admin;
 
 use ArrayIterator;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use LAG\AdminBundle\Admin\Behaviors\AdminTrait;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,15 +14,12 @@ use LAG\AdminBundle\Filter\PagerfantaFilter;
 use LAG\AdminBundle\Filter\RequestFilter;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\Pager\PagerFantaAdminAdapter;
-use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Traversable;
 
 class Admin implements AdminInterface
 {
@@ -271,14 +267,18 @@ class Admin implements AdminInterface
             $this->pager->setMaxPerPage($limit);
             $this->pager->setCurrentPage($offset);
 
-            $this->entities = $this
+            $entities = $this
                 ->pager
                 ->getCurrentPageResults();
         } else {
-            $this->entities = $this
+            $entities = $this
                 ->dataProvider
                 ->findBy($criteria, $orderBy, $limit, $offset);
         }
+        if (is_array($entities)) {
+            $entities = new ArrayCollection($entities);
+        }
+        $this->entities = $entities;
     }
 
     /**
