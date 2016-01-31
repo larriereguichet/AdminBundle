@@ -38,7 +38,7 @@
     "symfony/security-bundle": "^2.7",
     "twig/extensions": "^1.2",
     "gedmo/doctrine-extensions": "^2.4",
-    "stfalcon/tinymce-bundle": "dev-master",
+    "stfalcon/tinymce-bundle": "^0.4",
     "fabpot/php-cs-fixer": "^1.10",
     "lag/array-utils": "^0.1.0",
     "lag/doctrine-repository": "dev-master"
