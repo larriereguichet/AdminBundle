@@ -1,7 +1,6 @@
 imports:
     - { resource: factories.yml }
     - { resource: forms.yml }
-    - { resource: fields.yml }
 
 parameters:
     # application
@@ -21,45 +20,57 @@ services:
     # application
     lag.admin.application:
         class: %lag.admin.application.class%
-        arguments: [%lag.admin.application_configuration%, %locale%]
+        arguments:
+            - %lag.admin.application_configuration%
+            - %locale%
 
     # events subscribers
     lag.admin.template_subscriber:
         class: %lag.admin.template_subscriber.class%
         tags:
             - {name: kernel.event_subscriber}
-        arguments: [@twig, @lag.admin.application]
+        arguments:
+            - '@twig'
+            - '@lag.admin.application'
 
     lag.admin.extra_configuration_subscriber:
         class: %lag.admin.extra_configuration_subscriber.class%
         tags:
             - {name: kernel.event_subscriber}
-        arguments: [%lag.enable_extra_configuration%, @doctrine.orm.entity_manager, @lag.admin.application]
+        arguments:
+            - %lag.enable_extra_configuration%
+            - '@doctrine.orm.entity_manager'
+            - '@lag.admin.application'
 
     lag.admin.admin_subscriber:
         class: %lag.admin.admin_subscriber.class%
         tags:
             - {name: kernel.event_subscriber}
-        arguments: [@lag.admin.factory]
+        arguments:
+            - '@lag.admin.factory'
 
     # routing
     lag.admin.routing:
         class: %lag.admin.routing.class%
         tags:
             - { name: routing.loader }
-        arguments: [@lag.admin.factory]
+        arguments:
+            - '@lag.admin.factory'
 
     # twig
     lag.admin.twig:
         class: %lag.admin.twig.class%
         tags:
             - {name: twig.extension}
-        arguments: [@router, @translator, @lag.admin.application]
+        arguments:
+            - '@router'
+            - '@translator'
+            - '@lag.admin.application'
 
     # handler
     lag.admin.message_handler:
         class: %lag.admin.message_handler.class%
         arguments:
-            - @logger
-            - @session
-            - @translator
+            - '@logger'
+            - '@session'
+            - '@translator'

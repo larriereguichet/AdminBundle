@@ -3,9 +3,9 @@
 namespace LAG\AdminBundle\Twig;
 
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Admin\Field;
-use LAG\AdminBundle\Admin\Field\EntityFieldInterface;
-use LAG\AdminBundle\Admin\FieldInterface;
+use LAG\AdminBundle\Field\Field;
+use LAG\AdminBundle\Field\EntityFieldInterface;
+use LAG\AdminBundle\Field\FieldInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;

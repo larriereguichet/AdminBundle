@@ -1,8 +1,9 @@
 <?php
 
-namespace LAG\AdminBundle\Admin\Field;
+namespace LAG\AdminBundle\Field\Field;
 
-use LAG\AdminBundle\Admin\Field;
+use LAG\AdminBundle\Field\EntityFieldInterface;
+use LAG\AdminBundle\Field\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Environment;

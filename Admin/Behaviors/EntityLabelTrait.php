@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Admin\Behaviors;
 
+use BlueBear\BaseBundle\Entity\Behaviors\Label;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 trait EntityLabelTrait

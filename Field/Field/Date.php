@@ -1,8 +1,8 @@
 <?php
 
-namespace LAG\AdminBundle\Admin\Field;
+namespace LAG\AdminBundle\Field\Field;
 
-use LAG\AdminBundle\Admin\Field;
+use LAG\AdminBundle\Field\Field;
 use DateTime;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

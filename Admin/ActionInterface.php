@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Admin;
 
 use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Field\Field;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 interface ActionInterface
@@ -85,4 +86,6 @@ interface ActionInterface
      * @param Action $action
      */
     public function addAction(Action $action);
+
+    public function getBatchActions();
 }

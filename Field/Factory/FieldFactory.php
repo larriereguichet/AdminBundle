@@ -1,39 +1,66 @@
 <?php
 
-namespace LAG\AdminBundle\Admin\Factory;
+namespace LAG\AdminBundle\Field\Factory;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Admin\Field;
-use LAG\AdminBundle\Admin\FieldInterface;
-use BlueBear\BaseBundle\Behavior\ContainerTrait;
 use Exception;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Field\Field;
+use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Field\TwigFieldInterface;
+use LAG\AdminBundle\Field\TranslatableFieldInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
+use Twig_Environment;
 
 /**
  * Field factory. Instances fields with its renderer.
  */
 class FieldFactory
 {
-    use ContainerTrait;
-
     /**
+     * Application configuration
+     *
      * @var ApplicationConfiguration
      */
     protected $configuration;
 
     /**
+     * Field class mapping array, indexed by field type.
+     *
      * @var array
      */
     protected $fieldsMapping = [];
 
     /**
+     * Translator for field values.
+     *
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * Twig engine.
+     *
+     * @var Twig_Environment
+     */
+    protected $twig;
+
+    /**
      * FieldFactory constructor.
      *
      * @param ApplicationConfiguration $configuration
+     * @param TranslatorInterface $translator
+     * @param Twig_Environment $twig
      */
-    public function __construct(ApplicationConfiguration $configuration)
-    {
+    public function __construct(
+        ApplicationConfiguration $configuration,
+        TranslatorInterface $translator,
+        Twig_Environment $twig
+    ) {
         $this->configuration = $configuration;
+        $this->fieldsMapping = $configuration->getFieldsMapping(); // shortcut to field mapping array
+        $this->translator = $translator;
+        $this->twig = $twig;
     }
 
     /**
@@ -57,16 +84,23 @@ class FieldFactory
         $resolver->setAllowedValues('type', array_keys($this->fieldsMapping));
         $resolver->setAllowedTypes('type', 'string');
         $resolver->setAllowedTypes('options', 'array');
+
         // resolve options
         $configuration = $resolver->resolve($configuration);
+
         // for collection of fields, we resolve the configuration of each item
         if ($configuration['type'] == 'collection') {
             $items = [];
 
             foreach ($configuration['options'] as $itemFieldName => $itemFieldConfiguration) {
+
                 // configuration should be an array
                 if (!$itemFieldConfiguration) {
                     $itemFieldConfiguration = [];
+                }
+                // type should exists
+                if (!array_key_exists('type', $configuration)) {
+                    throw new Exception("Missing type configuration for field {$itemFieldName}");
                 }
                 // create collection item
                 $items[] = $this->create($itemFieldName, $itemFieldConfiguration);
@@ -76,45 +110,51 @@ class FieldFactory
                 'fields' => $items,
             ];
         }
-        // get field service name
-        $fieldService = $this->fieldsMapping[$configuration['type']];
-        // get field instance from container
-        $field = $this
-            ->container
-            ->get($fieldService);
+        // instanciate field
+        $fieldClass = $this->getFieldMapping($configuration['type']);
+        $field = new $fieldClass();
 
         if (!($field instanceof FieldInterface)) {
-            throw new Exception(sprintf('Field "%s" should implements LAG\AdminBundle\Admin\FieldInterface', get_class($field)));
+            throw new Exception("Field class {$fieldClass} must implements " . FieldInterface::class);
         }
-        if ($field->getType() != $configuration['type']) {
-            throw new Exception(sprintf('Field type mismatch for service "%s"', $fieldService));
+        $field->setName($fieldName);
+        $field->setConfiguration($this->configuration);
+
+        if ($field instanceof TranslatableFieldInterface) {
+            $field->setTranslator($this->translator);
+        }
+        if ($field instanceof TwigFieldInterface) {
+            $field->setTwig($this->twig);
         }
         // clear revolver from previous default configuration
         $resolver->clear();
+
         // configure field default options
         $field->configureOptions($resolver);
         // resolve options
         $options = $resolver->resolve($configuration['options']);
+
         // set options and value
         $field->setOptions($options);
-        $field->setName($fieldName);
+
 
         return $field;
     }
 
     /**
-     * Add a service id to the allowed field mapping.
+     * Return field class according to the field type. If the type is not present in the field mapping array, an
+     * exception will be thrown.
      *
-     * @param $fieldType
-     * @param $service
-     *
+     * @param $type
+     * @return string
      * @throws Exception
      */
-    public function addFieldMapping($fieldType, $service)
+    public function getFieldMapping($type)
     {
-        if (array_key_exists($fieldType, $this->fieldsMapping)) {
-            throw new Exception(sprintf('You have already one service for Field type "%s"', $fieldType));
+        if (!array_key_exists($type, $this->fieldsMapping)) {
+            throw new Exception("Field type {$type} not found in field mapping. Check your configuration");
         }
-        $this->fieldsMapping[$fieldType] = $service;
+
+        return $this->fieldsMapping[$type];
     }
 }

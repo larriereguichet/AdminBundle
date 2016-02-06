@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Class CRUDController
@@ -41,13 +42,12 @@ class CRUDController extends Controller
         $admin = $this->getAdminFromRequest($request);
         $admin->handleRequest($request, $this->getUser());
         // creating list form
-        $form = $this->createForm(new AdminListType(), [
+        $form = $this->createForm(AdminListType::class, [
             'entities' => $admin->getEntities()
         ], [
             'batch_actions' => $admin
                 ->getCurrentAction()
-                ->getConfiguration()
-                ->getBatch()
+                ->getBatchActions()
         ]);
         $form->handleRequest($request);
 
@@ -58,7 +58,7 @@ class CRUDController extends Controller
             // get ids and batch action from list form data
             $formHandler = new ListFormHandler();
             $data = $formHandler->handle($form);
-            $batchForm = $this->createForm(new BatchActionType(), [
+            $batchForm = $this->createForm(BatchActionType::class, [
                 'batch_action' => $data['batch_action'],
                 'entity_ids' => $data['ids']
             ], [
@@ -87,7 +87,7 @@ class CRUDController extends Controller
         $admin = $this->getAdminFromRequest($request);
         $admin->handleRequest($request, $this->getUser());
         // create batch action form
-        $form = $this->createForm(new BatchActionType(), [
+        $form = $this->createForm(BatchActionType::class, [
             'batch_action' => [],
             'entity_ids' => []
         ]);
@@ -243,7 +243,7 @@ class CRUDController extends Controller
         $exporter = $this->get('ee.dataexporter');
         $metadata = $this
             ->getEntityManager()
-            ->getClassMetadata($admin->getRepository()->getClassName());
+            ->getClassMetadata($admin->getConfiguration()->getEntityName());
         $exportColumns = [];
         $fields = $metadata->getFieldNames();
         $hooks = [];
@@ -294,7 +294,9 @@ class CRUDController extends Controller
         $this->forward404Unless(
             $admin->isActionGranted($admin->getCurrentAction()->getName(), $roles),
             sprintf('User with roles %s not allowed for action "%s"',
-                implode(', ', $roles),
+                implode(', ', array_map(function (Role $role) {
+                    return $role->getRole();
+                }, $roles)),
                 $admin->getCurrentAction()->getName()
             )
         );

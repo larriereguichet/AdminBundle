@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Admin\Configuration;
 
-use LAG\AdminBundle\Admin\Field;
+use LAG\AdminBundle\Field\Field;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -94,6 +94,8 @@ class ApplicationConfiguration
     protected $maxPerPage;
 
     /**
+     * Define wether if translator should be used or not.
+     *
      * @var bool
      */
     protected $useTranslation = true;
@@ -105,6 +107,19 @@ class ApplicationConfiguration
      */
     protected $translationPattern;
 
+    /**
+     * Contains a array of fqcn field classes indexed by field name.
+     *
+     * @var array
+     */
+    protected $fieldsMapping = [];
+
+    /**
+     * ApplicationConfiguration constructor.
+     *
+     * @param array $applicationConfiguration
+     * @param $locale
+     */
     public function __construct(array $applicationConfiguration = [], $locale)
     {
         $resolver = new OptionsResolver();
@@ -129,16 +144,22 @@ class ApplicationConfiguration
             ],
             'max_per_page' => 25,
             'fields_mapping' => [
-                Field::TYPE_STRING => 'lag.admin.field.string',
-                Field::TYPE_ARRAY => 'LAG\AdminBundle\Admin\Render\ArrayRenderer',
-                Field::TYPE_LINK => 'LAG\AdminBundle\Admin\Render\LinkRenderer',
-                Field::TYPE_DATE => 'LAG\AdminBundle\Admin\Render\DateRenderer',
-                Field::TYPE_COUNT => 'LAG\AdminBundle\Admin\Render\CountRenderer',
-                Field::TYPE_ACTION => 'LAG\AdminBundle\Admin\Render\LinkRenderer',
             ],
         ]);
         $resolver->setAllowedValues('enable_extra_configuration', [true, false]);
         $applicationConfiguration = $resolver->resolve($applicationConfiguration);
+        // merge default field configuration
+        $applicationConfiguration['fields_mapping'] = array_merge([
+            Field::TYPE_STRING => 'LAG\AdminBundle\Field\Field\StringField',
+            Field::TYPE_ARRAY => 'LAG\AdminBundle\Field\Field\ArrayField',
+            Field::TYPE_LINK => 'LAG\AdminBundle\Field\Field\Link',
+            Field::TYPE_DATE => 'LAG\AdminBundle\Field\Field\Date',
+            Field::TYPE_COUNT => 'LAG\AdminBundle\Field\Field\Count',
+            Field::TYPE_ACTION => 'LAG\AdminBundle\Field\Field\Action',
+            Field::TYPE_COLLECTION => 'LAG\AdminBundle\Field\Field\Collection',
+            Field::TYPE_BOOLEAN => 'LAG\AdminBundle\Field\Field\Boolean',
+        ], $applicationConfiguration['fields_mapping']);
+
         // resolving routing options
         $routingConfiguration = $applicationConfiguration['routing'];
         $resolver->clear();
@@ -198,6 +219,7 @@ class ApplicationConfiguration
         $this->stringLength = $applicationConfiguration['string_length'];
         $this->stringLengthTruncate = $applicationConfiguration['string_length_truncate'];
         $this->maxPerPage = $applicationConfiguration['max_per_page'];
+        $this->fieldsMapping = $applicationConfiguration['fields_mapping'];
     }
 
     /**
@@ -288,6 +310,9 @@ class ApplicationConfiguration
         return $this->dateFormat;
     }
 
+    /**
+     * @return string
+     */
     public function getJavascriptDateFormat()
     {
         $jsDateFormat = str_replace('Y', 'yyyy', $this->getDateFormat());
@@ -458,5 +483,15 @@ class ApplicationConfiguration
     public function setUseTranslation($useTranslation)
     {
         $this->useTranslation = $useTranslation;
+    }
+
+    /**
+     * Return array field mapping
+     *
+     * @return array
+     */
+    public function getFieldsMapping()
+    {
+        return $this->fieldsMapping;
     }
 }

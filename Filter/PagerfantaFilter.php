@@ -28,7 +28,7 @@ class PagerfantaFilter
                 $sort = 'asc';
             }
             $filteredValues->set('order', [
-                $order => $sort
+                $sort => $order
             ]);
         }
         if ($page) {

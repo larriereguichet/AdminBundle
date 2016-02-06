@@ -1,9 +1,9 @@
 <?php
 
-namespace LAG\AdminBundle\Admin\Field;
+namespace LAG\AdminBundle\Field\Field;
 
 use Doctrine\Common\Collections\Collection;
-use LAG\AdminBundle\Admin\Field;
+use LAG\AdminBundle\Field\Field;
 use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Traversable;

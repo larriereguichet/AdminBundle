@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Admin\Field;
+namespace LAG\AdminBundle\Field\Field;
 
 class Boolean extends StringField
 {

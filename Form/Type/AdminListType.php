@@ -4,6 +4,9 @@ namespace LAG\AdminBundle\Form\Type;
 
 use BlueBear\BaseBundle\Entity\Behaviors\Id;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -15,15 +18,15 @@ class AdminListType extends AbstractType
     {
         if (count($options['batch_actions'])) {
             $builder
-                ->add('batch_action', 'choice', [
-                    'choices' => $options['batch_actions'],
+                ->add('batch_action', ChoiceType::class, [
+                    // in Symfony 3.0, choices are a list of values indexed by label
+                    'choices' => array_flip($options['batch_actions']),
                     'empty_data' => $options['batch_empty'],
-                    'empty_value' => $options['batch_empty']
                 ])
-                ->add('batch_submit', 'submit', [
+                ->add('batch_submit', SubmitType::class, [
                     'label' => $options['batch_actions_label']
                 ])
-                ->add('select_all', 'checkbox', [
+                ->add('select_all', CheckboxType::class, [
                     'label' => false,
                     'required' => false,
                     'mapped' => false,
@@ -39,7 +42,7 @@ class AdminListType extends AbstractType
                 if (!empty($data['entities'])) {
                     /** @var Id $entity */
                     foreach ($data['entities'] as $entity) {
-                        $form->add('batch_' . $entity->getId(), 'checkbox', [
+                        $form->add('batch_' . $entity->getId(), CheckboxType::class, [
                             'value' => $entity->getId(),
                             'label' => false,
                             'required' => false

@@ -1,8 +1,8 @@
 <?php
 
-namespace LAG\AdminBundle\Admin\Field;
+namespace LAG\AdminBundle\Field\Field;
 
-use LAG\AdminBundle\Admin\Field;
+use LAG\AdminBundle\Field\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -36,6 +36,8 @@ class StringField extends Field
     protected $translation;
 
     /**
+     * Translator.
+     *
      * @var TranslatorInterface
      */
     protected $translator;
@@ -44,22 +46,23 @@ class StringField extends Field
      * Render a string that can be truncated according to is length.
      *
      * @param $value
-     *
      * @return string
      */
     public function render($value)
     {
-        if ($this->length && strlen($value) > $this->length) {
-            $value = substr($value, 0, $this->length).$this->replace;
-        }
         if ($this->translation) {
             $value = $this->translator->trans($value);
+        }
+        if ($this->length && strlen($value) > $this->length) {
+            $value = substr($value, 0, $this->length) . $this->replace;
         }
 
         return $value;
     }
 
     /**
+     * Configure options resolver.
+     *
      * @param OptionsResolver $resolver
      * @return mixed|void
      */
@@ -73,17 +76,21 @@ class StringField extends Field
     }
 
     /**
+     * Define configured options
+     *
      * @param array $options
-     * @return mixed|void
+     * @return void
      */
     public function setOptions(array $options)
     {
-        $this->length = (int) $options['length'];
+        $this->length = (int)$options['length'];
         $this->replace = $options['replace'];
         $this->translation = $options['translation'];
     }
 
     /**
+     * Define translator.
+     *
      * @param TranslatorInterface $translator
      */
     public function setTranslator(TranslatorInterface $translator)
@@ -92,6 +99,8 @@ class StringField extends Field
     }
 
     /**
+     * Return form type.
+     *
      * @return string
      */
     public function getType()

@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Admin;
 
 use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Field\Field;
 
 class Action implements ActionInterface
 {

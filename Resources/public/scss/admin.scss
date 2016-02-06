@@ -19,6 +19,9 @@ table {
   div.checkbox {
     margin: 0 0 -2px 0;
   }
+  .checkbox label, .radio label {
+    min-height: 15px;
+  }
 
   td {
     a {
@@ -36,9 +39,6 @@ table {
 .admin-list {
   .batch-column {
     .checkbox {
-      margin-top: 0;
-      margin-bottom: 0;
-
       label {
         cursor: auto;
       }

@@ -1,7 +1,8 @@
 <?php
 
-namespace LAG\AdminBundle\Admin\Field;
+namespace LAG\AdminBundle\Field\Field;
 
+use LAG\AdminBundle\Field\EntityFieldInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Environment;
@@ -52,10 +53,26 @@ class Link extends StringField implements EntityFieldInterface
      */
     protected $title;
 
+    /**
+     * Font awesome icon name
+     *
+     * @var string
+     */
     protected $icon;
 
+    /**
+     * Link text
+     *
+     * @var
+     */
     protected $text;
 
+    /**
+     * Render link template filled with configured options
+     *
+     * @param mixed $value
+     * @return string
+     */
     public function render($value)
     {
         $text = $this->text ?: parent::render($value);
@@ -82,10 +99,17 @@ class Link extends StringField implements EntityFieldInterface
         return $render;
     }
 
+    /**
+     * Configure options resolver.
+     *
+     * @param OptionsResolver $resolver
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'length' => $this->configuration->getStringLength(),
+            'replace' => $this->configuration->getStringLengthTruncate(),
             'template' => 'LAGAdminBundle:Render:link.html.twig',
             'title' => '',
             'icon' => '',
@@ -105,9 +129,16 @@ class Link extends StringField implements EntityFieldInterface
         ]);
     }
 
+    /**
+     * Set resolved options.
+     *
+     * @param array $options
+     * @return void
+     */
     public function setOptions(array $options)
     {
         $this->length = $options['length'];
+        $this->replace = $options['replace'];
         $this->template = $options['template'];
         $this->title = $options['title'];
         $this->icon = $options['icon'];
@@ -118,6 +149,11 @@ class Link extends StringField implements EntityFieldInterface
         $this->text = $options['text'];
     }
 
+    /**
+     * Define field type.
+     *
+     * @return string
+     */
     public function getType()
     {
         return 'link';

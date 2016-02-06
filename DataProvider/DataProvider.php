@@ -3,7 +3,6 @@
 namespace LAG\AdminBundle\DataProvider;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
 use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
 
 /**
@@ -15,11 +14,6 @@ class DataProvider implements DataProviderInterface
      * @var RepositoryInterface
      */
     protected $repository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
 
     /**
      * DataProvider constructor.

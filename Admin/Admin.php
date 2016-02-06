@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class Admin implements AdminInterface
@@ -249,10 +250,10 @@ class Admin implements AdminInterface
      *
      * @param array $criteria
      * @param array $orderBy
-     * @param null $limit
+     * @param int $limit
      * @param int $offset
      */
-    public function load(array $criteria, $orderBy = [], $limit = null, $offset = 1)
+    public function load(array $criteria, $orderBy = [], $limit = 25, $offset = 1)
     {
         $pager = $this
             ->getCurrentAction()
@@ -335,6 +336,10 @@ class Admin implements AdminInterface
             $action = $this->actions[$actionName];
             // checking roles permissions
             foreach ($roles as $role) {
+
+                if ($role instanceof Role) {
+                    $role = $role->getRole();
+                }
                 if (in_array($role, $action->getPermissions())) {
                     $isGranted = true;
                 }

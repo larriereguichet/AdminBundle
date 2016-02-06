@@ -20,7 +20,7 @@ class PagerFantaAdminAdapter implements AdapterInterface
     /**
      * @var array
      */
-    private $orderBy;
+    protected $orderBy;
 
     /**
      * PagerFantaAdminAdapter constructor.

@@ -1,10 +1,12 @@
 <?php
 
-namespace LAG\AdminBundle\Admin;
+namespace LAG\AdminBundle\Field;
 
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use Symfony\Component\Translation\TranslatorInterface;
+use Twig_Environment;
 
-abstract class Field implements FieldInterface
+abstract class Field implements FieldInterface, TranslatableFieldInterface, TwigFieldInterface
 {
     const TYPE_STRING = 'string';
     const TYPE_LINK = 'link';
@@ -12,6 +14,8 @@ abstract class Field implements FieldInterface
     const TYPE_DATE = 'date';
     const TYPE_COUNT = 'count';
     const TYPE_ACTION = 'action';
+    const TYPE_COLLECTION = 'collection';
+    const TYPE_BOOLEAN = 'boolean';
 
     /**
      * Name of the field.
@@ -24,6 +28,20 @@ abstract class Field implements FieldInterface
      * @var ApplicationConfiguration
      */
     protected $configuration;
+
+    /**
+     * Twig engine.
+     *
+     * @var Twig_Environment
+     */
+    protected $twig;
+
+    /**
+     * Translator.
+     *
+     * @var TranslatorInterface
+     */
+    protected $translator;
 
     /**
      * @return string
@@ -55,5 +73,21 @@ abstract class Field implements FieldInterface
     public function setConfiguration($configuration)
     {
         $this->configuration = $configuration;
+    }
+
+    /**
+     * @param Twig_Environment $twig
+     */
+    public function setTwig(Twig_Environment $twig)
+    {
+        $this->twig = $twig;
+    }
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function setTranslator(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
     }
 }
