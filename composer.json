@@ -26,7 +26,7 @@
   ],
   "require": {
     "php": ">=5.5",
-    "symfony/symfony": "3.0",
+    "symfony/symfony": "~3.0",
     "sensio/framework-extra-bundle": "~3.0",
     "doctrine/doctrine-bundle": "~1.2",
     "doctrine/data-fixtures": "*",
@@ -34,7 +34,6 @@
     "symfony/monolog-bundle": "~2.4",
     "bluebear/basebundle": "~0.2",
     "white-october/pagerfanta-bundle": "~1.0",
-    "symfony/security-bundle": "^2.7",
     "twig/extensions": "^1.2",
     "gedmo/doctrine-extensions": "^2.4",
     "stfalcon/tinymce-bundle": "^0.4",
