@@ -62,7 +62,7 @@ class AdminExtension extends Twig_Extension
             new Twig_SimpleFunction('getSortColumnIconClass', [$this, 'getSortColumnIconClass']),
             new Twig_SimpleFunction('field', [$this, 'field']),
             new Twig_SimpleFunction('field_title', [$this, 'fieldTitle']),
-            new Twig_SimpleFunction('routeParameters', [$this, 'routeParameters']),
+            new Twig_SimpleFunction('route_parameters', [$this, 'routeParameters']),
         ];
     }
 

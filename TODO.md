@@ -24,6 +24,7 @@ v0.4:
 - add an adapter to pagination to allow to change pager
 - adding translation pattern for admin (and not only in configuration)
 - add possibility to have tab in generated forms
+- improve customActions template
 
 -----------------------------------------------
 
