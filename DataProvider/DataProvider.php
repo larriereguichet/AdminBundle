@@ -3,7 +3,6 @@
 namespace LAG\AdminBundle\DataProvider;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Persistence\ObjectRepository;
 use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
 
 /**
@@ -19,10 +18,10 @@ class DataProvider implements DataProviderInterface
     /**
      * DataProvider constructor.
      *
-     * @param ObjectRepository $repository
+     * @param RepositoryInterface $repository
      */
     public function __construct(
-        ObjectRepository $repository
+        RepositoryInterface $repository
     ) {
         $this->repository = $repository;
     }

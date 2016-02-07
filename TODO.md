@@ -25,6 +25,7 @@ v0.4:
 - adding translation pattern for admin (and not only in configuration)
 - add possibility to have tab in generated forms
 - improve customActions template
+- make delete form dynamic (@see CRUDController l.214)
 
 -----------------------------------------------
 

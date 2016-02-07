@@ -11,6 +11,7 @@ use DateTime;
 use Doctrine\ORM\Mapping\MappingException;
 use EE\DataExporterBundle\Service\DataExporter;
 use Exception;
+use LAG\AdminBundle\Form\Type\DeleteType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -210,7 +211,7 @@ class CRUDController extends Controller
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form to avoid deletion by url
-        $form = $this->createForm('delete', $admin->getUniqueEntity());
+        $form = $this->createForm(DeleteType::class, $admin->getUniqueEntity());
         $form->handleRequest($request);
 
         if ($form->isValid()) {

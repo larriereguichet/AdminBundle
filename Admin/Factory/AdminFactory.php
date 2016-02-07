@@ -3,7 +3,6 @@
 namespace LAG\AdminBundle\Admin\Factory;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
@@ -14,7 +13,8 @@ use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminFactoryEvent;
 use Exception;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
-use LAG\AdminBundle\Repository\GenericRepository;
+use LAG\DoctrineRepositoryBundle\Repository\DoctrineRepository;
+use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -265,6 +265,11 @@ class AdminFactory
             $repository = $this
                 ->entityManager
                 ->getRepository($entityClass);
+
+            if (!($repository instanceof RepositoryInterface)) {
+                $repositoryClass = get_class($repository);
+                throw new Exception("Repository {$repositoryClass} should implements " . RepositoryInterface::class);
+            }
 
             $dataProvider = new DataProvider($repository);
         }

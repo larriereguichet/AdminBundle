@@ -4,9 +4,9 @@
     <div class="row">
         <div class="col-md-6">
             <div class="well">
-                <form action="{{ path(admin.action('delete').configuration.route, {id: admin.entity.id}) }}" method="post">
+                <form action="{{ path(admin.action('delete').configuration.route, {id: admin.uniqueEntity.id}) }}" method="post">
                     <div class="form-group">
-                        {{ 'lag.admin.deleting' | trans({'%entity%' : admin.entityLabel, '%id%': admin.entity.id}) }}
+                        {{ 'lag.admin.deleting' | trans({'%entity%' : admin.entityLabel, '%id%': admin.uniqueEntity.id}) }}
                     </div>
                     {{ form_rest(form) }}
                     <div class="form-group">
