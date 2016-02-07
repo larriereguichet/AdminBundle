@@ -34,7 +34,7 @@ Features:
 - add filters
 - handle custom actions for edit form (enable user for example) (WIP)
 - configure application date format (filename export, displayed date...) (WIP)
-- localization
+- localization (rest field label in edit mode)
 - file exporters : array type, association
 - add filters
 - unit testing

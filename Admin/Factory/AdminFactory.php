@@ -262,24 +262,10 @@ class AdminFactory
                 ->get($name);
         } else {
             // no data provider is configured, we create a new one
-
-            // if no provider is provided, $entityClass should have metadata
-            $metadata = $this
+            $repository = $this
                 ->entityManager
-                ->getClassMetadata($entityClass);
+                ->getRepository($entityClass);
 
-            if (!$metadata) {
-                throw new Exception('No Doctrine metadata was found for class ' . $entityClass);
-            }
-            $doctrineRepository = new EntityRepository(
-                $this->entityManager,
-                $metadata
-            );
-            $repository = new GenericRepository(
-                $this->entityManager,
-                $doctrineRepository,
-                $name
-            );
             $dataProvider = new DataProvider($repository);
         }
         return $dataProvider;

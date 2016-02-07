@@ -8,21 +8,28 @@ namespace LAG\AdminBundle\DataProvider;
 interface DataProviderInterface
 {
     /**
-     * Save an entity
+     * Save an entity.
      *
      * @param $entity
      */
     public function save($entity);
 
     /**
-     * Remove an entity
+     * Remove an entity.
      *
      * @param $entity
      */
     public function remove($entity);
 
     /**
-     * Find entities according to the given criteria
+     * Create an new entity.
+     *
+     * @return mixed
+     */
+    public function create();
+
+    /**
+     * Find entities according to the given criteria.
      *
      * @param array $criteria
      * @param array $orderBy
@@ -33,7 +40,7 @@ interface DataProviderInterface
     public function findBy(array $criteria = [], $orderBy = [], $limit = null, $offset = null);
 
     /**
-     * Find an entity according to its unique id
+     * Find an entity according to its unique id.
      *
      * @param $id
      * @return mixed

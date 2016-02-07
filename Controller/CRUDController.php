@@ -123,25 +123,27 @@ class CRUDController extends Controller
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
-        $form = $this->createForm($admin->getConfiguration()->getFormType());
+        $form = $this->createForm($admin->getConfiguration()->getFormType(), $admin->create());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             // save entity
-            $admin->save();
+            $success = $admin->save();
 
-            // if save is pressed, user stay on the edit view
-            if ($request->request->get('submit') == 'save') {
-                $editRoute = $admin->generateRouteName('edit');
+            if ($success) {
+                // if save is pressed, user stay on the edit view
+                if ($request->request->get('submit') == 'save') {
+                    $editRoute = $admin->generateRouteName('edit');
 
-                return $this->redirectToRoute($editRoute, [
-                    'id' => $admin->getUniqueEntity()->getId(),
-                ]);
-            } else {
-                // otherwise user is redirected to list view
-                $listRoute = $admin->generateRouteName('list');
+                    return $this->redirectToRoute($editRoute, [
+                        'id' => $admin->getUniqueEntity()->getId(),
+                    ]);
+                } else {
+                    // otherwise user is redirected to list view
+                    $listRoute = $admin->generateRouteName('list');
 
-                return $this->redirectToRoute($listRoute);
+                    return $this->redirectToRoute($listRoute);
+                }
             }
         }
         return [

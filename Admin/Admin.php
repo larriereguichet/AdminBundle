@@ -26,7 +26,19 @@ class Admin implements AdminInterface
 {
     use AdminTrait;
 
+    /**
+     * Do not load entities on handleRequest (for create method for example)
+     */
+    const LOAD_STRATEGY_NONE = 'strategy_none';
+
+    /**
+     * Load one entity on handleRequest (edit method for example)
+     */
     const LOAD_STRATEGY_UNIQUE = 'strategy_unique';
+
+    /**
+     * Load multiple entities on handleRequest (list method for example)
+     */
     const LOAD_STRATEGY_MULTIPLE = 'strategy_multiple';
 
     /**
@@ -105,7 +117,7 @@ class Admin implements AdminInterface
      *
      * @param Request $request
      * @param null $user
-     * @return mixed|void
+     * @return void
      * @throws AdminException
      */
     public function handleRequest(Request $request, $user = null)
@@ -126,6 +138,11 @@ class Admin implements AdminInterface
         } else {
             // empty bag
             $pagerFilter = new ParameterBag();
+        }
+
+        // if load strategy is none, no entity should be loaded
+        if ($this->currentAction->getConfiguration()->getLoadStrategy() == Admin::LOAD_STRATEGY_NONE) {
+            return;
         }
 
         // load entities according to action and request
@@ -159,6 +176,26 @@ class Admin implements AdminInterface
             );
             throw new NotFoundHttpException($message);
         }
+    }
+
+    /**
+     * Create and return a new entity.
+     *
+     * @return object
+     */
+    public function create()
+    {
+        // create an entity from the data provider
+        $entity = $this
+            ->dataProvider
+            ->create();
+
+        // add it to the collection
+        $this
+            ->entities
+            ->add($entity);
+
+        return $entity;
     }
 
     /**
@@ -301,8 +338,11 @@ class Admin implements AdminInterface
      */
     public function getUniqueEntity()
     {
-        if ($this->entities->count() != 1) {
+        if ($this->entities->count() == 0) {
             throw new Exception("Entity not found in admin \"{$this->getName()}\".");
+        }
+        if ($this->entities->count() > 1) {
+            throw new Exception("Too much entities found in admin \"{$this->getName()}\".");
         }
         return $this->entities->first();
     }

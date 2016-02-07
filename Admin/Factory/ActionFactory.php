@@ -112,6 +112,7 @@ class ActionFactory
     protected function configureOptionsResolver(OptionsResolver $resolver, $actionName, Admin $admin = null)
     {
         $defaultCriteria = [];
+        $defaultLoadStrategy = Admin::LOAD_STRATEGY_UNIQUE;
 
         if ($actionName == 'edit') {
             $defaultCriteria = [
@@ -121,6 +122,8 @@ class ActionFactory
             $defaultCriteria = [
                 'id'
             ];
+        } else if ($actionName == 'create') {
+            $defaultLoadStrategy = Admin::LOAD_STRATEGY_NONE;
         }
 
         $resolver
@@ -145,7 +148,7 @@ class ActionFactory
                 'icon' => null,
                 'filters' => [],
                 'batch' => [],
-                'load_strategy' => Admin::LOAD_STRATEGY_UNIQUE,
+                'load_strategy' => $defaultLoadStrategy,
                 'pager' => 'pagerfanta',
                 'criteria' => $defaultCriteria
             ])
@@ -154,6 +157,7 @@ class ActionFactory
                 'pagerfanta',
             ])
             ->setAllowedValues('load_strategy', [
+                Admin::LOAD_STRATEGY_NONE,
                 Admin::LOAD_STRATEGY_UNIQUE,
                 Admin::LOAD_STRATEGY_MULTIPLE,
             ])

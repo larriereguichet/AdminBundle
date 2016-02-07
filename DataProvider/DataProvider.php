@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\DataProvider;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Persistence\ObjectRepository;
 use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
 
 /**
@@ -18,16 +19,16 @@ class DataProvider implements DataProviderInterface
     /**
      * DataProvider constructor.
      *
-     * @param RepositoryInterface $repository
+     * @param ObjectRepository $repository
      */
     public function __construct(
-        RepositoryInterface $repository
+        ObjectRepository $repository
     ) {
         $this->repository = $repository;
     }
 
     /**
-     * Find entities by criteria
+     * Find entities by criteria.
      *
      * @param array $criteria
      * @param array $orderBy
@@ -43,7 +44,7 @@ class DataProvider implements DataProviderInterface
     }
 
     /**
-     * Find an entity by its unique id
+     * Find an entity by its unique id.
      *
      * @param $id
      * @return object
@@ -56,7 +57,7 @@ class DataProvider implements DataProviderInterface
     }
 
     /**
-     * Save an entity
+     * Save an entity.
      *
      * @param $entity
      */
@@ -68,7 +69,7 @@ class DataProvider implements DataProviderInterface
     }
 
     /**
-     * Remove an entity
+     * Remove an entity.
      *
      * @param $entity
      */
@@ -77,5 +78,17 @@ class DataProvider implements DataProviderInterface
         $this
             ->repository
             ->delete($entity);
+    }
+
+    /**
+     * Create a new entity.
+     *
+     * @return object
+     */
+    public function create()
+    {
+        $className = $this->repository->getClassName();
+
+        return new $className;
     }
 }

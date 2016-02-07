@@ -53,6 +53,13 @@ interface AdminInterface
     public function remove();
 
     /**
+     * Create a new entity
+     *
+     * @return object
+     */
+    public function create();
+
+    /**
      * Return admin name.
      *
      * @return string
