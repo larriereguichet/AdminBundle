@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Admin;
 
-use ArrayIterator;
 use Doctrine\ORM\EntityManagerInterface;
 use LAG\AdminBundle\Admin\Behaviors\AdminTrait;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
@@ -44,7 +43,7 @@ class Admin implements AdminInterface
     /**
      * Entities collection.
      *
-     * @var ArrayCollection|ArrayIterator
+     * @var ArrayCollection
      */
     protected $entities;
 
@@ -161,7 +160,7 @@ class Admin implements AdminInterface
      */
     public function checkPermissions($user)
     {
-        if (!$user) {
+        if (!($user instanceof UserInterface)) {
             return;
         }
         $roles = $user->getRoles();

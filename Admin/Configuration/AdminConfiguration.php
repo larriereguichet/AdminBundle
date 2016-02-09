@@ -64,6 +64,13 @@ class AdminConfiguration
     protected $metadata;
 
     /**
+     * Original admin configuration.
+     *
+     * @var array
+     */
+    protected $adminConfiguration;
+
+    /**
      * AdminConfiguration constructor.
      *
      * @param array $configuration
@@ -71,7 +78,6 @@ class AdminConfiguration
     public function __construct(array $configuration)
     {
         $this->controllerName = $configuration['controller'];
-        $this->manager = $configuration['manager'];
         $this->entityName = $configuration['entity'];
         $this->formType = $configuration['form'];
         $this->actions = $configuration['actions'];
@@ -97,14 +103,6 @@ class AdminConfiguration
     public function getEntityName()
     {
         return $this->entityName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getManager()
-    {
-        return $this->manager;
     }
 
     /**
@@ -172,12 +170,22 @@ class AdminConfiguration
     }
 
     /**
-     * Return custom data provider name
+     * Return custom data provider name.
      *
      * @return string
      */
     public function getDataProvider()
     {
         return $this->dataProvider;
+    }
+
+    /**
+     * Return original admin configuration.
+     *
+     * @return array
+     */
+    public function getAdminConfiguration()
+    {
+        return $this->adminConfiguration;
     }
 }

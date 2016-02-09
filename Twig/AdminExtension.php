@@ -141,7 +141,7 @@ class AdminExtension extends Twig_Extension
         if ($fieldName == $sort) {
             if ($order == 'ASC') {
                 $class = 'fa fa-sort-asc';
-            } elseif ($order = 'DESC') {
+            } elseif ($order == 'DESC') {
                 $class = 'fa fa-sort-desc';
             }
         }

@@ -13,11 +13,10 @@ use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminFactoryEvent;
 use Exception;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
-use LAG\DoctrineRepositoryBundle\Repository\DoctrineRepository;
 use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

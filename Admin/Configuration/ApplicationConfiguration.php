@@ -461,7 +461,7 @@ class ApplicationConfiguration
     {
         $translationKey = $this->translationPattern;
 
-        if (strstr($this->translationPattern, '{admin}') && $adminName) {
+        if (strstr($this->translationPattern, '{admin}') && $adminName != null) {
             $translationKey = str_replace('{admin}', $adminName, $translationKey);
         }
         $translationKey = str_replace('{key}', $key, $translationKey);

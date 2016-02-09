@@ -202,7 +202,7 @@ class CRUDController extends Controller
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|array
      */
     public function deleteAction(Request $request)
     {

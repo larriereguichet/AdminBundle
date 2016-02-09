@@ -33,7 +33,7 @@ class DataProvider implements DataProviderInterface
      * @param array $orderBy
      * @param int|null $limit
      * @param int|null $offset
-     * @return Collection
+     * @return Collection|array
      */
     public function findBy(array $criteria = [], $orderBy = [], $limit = null, $offset = null)
     {
