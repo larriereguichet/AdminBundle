@@ -26,12 +26,11 @@
     <h1 class="page-header">{{ admin.currentAction.title | trans }}</h1>
 
     <div class="panel panel-default {{ containerClass }}">
-        <div class="panel-heading">
-            {{ form_errors(form) }}
-        </div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-lg-12">
+                    {{ form_errors(form) }}
+
                     <form method="post" role="form" title="{{ admin.currentAction.title | trans }}" enctype="{{ encType }}">
                         {{ form_widget(form) }}
 
@@ -69,4 +68,15 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ tinymce_init() }}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/ckeditor.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/ckeditor-gray.theme.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/dashicons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/editor.min.css') }}">
 {% endblock %}

@@ -200,7 +200,6 @@ class ActionFactory
                     }
                 }
                 return $value;
-            })
-        ;
+            });
     }
 }

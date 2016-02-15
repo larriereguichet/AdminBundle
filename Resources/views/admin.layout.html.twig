@@ -11,7 +11,9 @@
     <meta name="keywords" content="in progress">
     <meta name="author" content="in progress">
     {% block head %}{% endblock %}
+
     {% include "LAGAdminBundle:Layout:header.html.twig" %}
+
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
@@ -21,7 +23,7 @@
     {% if app.user %}
         <nav style="margin-bottom: 0" role="navigation" class="navbar navbar-default navbar-static-top">
             <div class="navbar-header">
-                {# collapse button form reponsive #}
+                {# collapse button for responsive #}
                 <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
@@ -29,11 +31,13 @@
                     <span class="icon-bar"></span>
                 </button>
                 {% block mainTitle %}{% endblock %}
+
                 {% block topMenu %}
                     <ul class="nav navbar-top-links navbar-right in">
                         {% block topMenuItems %}{% endblock %}
                     </ul>
                 {% endblock %}
+
                 {% block leftMenu %}{% endblock %}
             </div>
         </nav>
@@ -55,6 +59,7 @@
 </body>
 <footer>
     {% include "LAGAdminBundle:Layout:footer.html.twig" %}
+
     {% block javascripts %}{% endblock %}
 </footer>
 
