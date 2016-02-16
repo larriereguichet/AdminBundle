@@ -1,0 +1,18 @@
+parameters:
+    # form
+    lag.admin.form.delete.class: LAG\AdminBundle\Form\Type\DeleteType
+    lag.admin.form.datetime_picker.class: LAG\AdminBundle\Form\Type\DateTimePickerType
+
+services:
+    # form
+    lag.admin.form.delete:
+        class: %lag.admin.form.delete.class%
+        tags:
+            - {name: form.type, alias: delete}
+
+    lag.admin.form.datetime_picker:
+        class: %lag.admin.form.datetime_picker.class%
+        tags:
+            - {name: form.type, alias: datetime_picker}
+        calls:
+            - [setConfiguration, ['@lag.admin.application']]

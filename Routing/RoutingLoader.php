@@ -1,11 +1,12 @@
 <?php
 
-namespace BlueBear\AdminBundle\Routing;
+namespace LAG\AdminBundle\Routing;
 
-use BlueBear\AdminBundle\Admin\Action;
-use BlueBear\AdminBundle\Admin\Admin;
-use BlueBear\BaseBundle\Behavior\ContainerTrait;
+use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Admin\AdminInterface;
 use Exception;
+use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -13,15 +14,23 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * RoutingLoader
+ * RoutingLoader.
  *
  * Creates routing for configured entities
  */
 class RoutingLoader implements LoaderInterface
 {
-    use ContainerTrait;
-
     protected $loaded = false;
+
+    /**
+     * @var AdminFactory
+     */
+    protected $adminFactory;
+
+    public function __construct(AdminFactory $adminFactory)
+    {
+        $this->adminFactory = $adminFactory;
+    }
 
     public function load($resource, $type = null)
     {
@@ -29,9 +38,12 @@ class RoutingLoader implements LoaderInterface
             throw new RuntimeException('Do not add the "extra" loader twice');
         }
         $routes = new RouteCollection();
-        $admins = $this->getContainer()->get('bluebear.admin.factory')->getAdmins();
+        $this->adminFactory->init();
+        $admins = $this
+            ->adminFactory
+            ->getAdmins();
         // creating a route by admin and action
-        /** @var Admin $admin */
+        /** @var AdminInterface $admin */
         foreach ($admins as $admin) {
             $actions = $admin->getActions();
             // by default, actions are create, edit, delete, list
@@ -60,37 +72,71 @@ class RoutingLoader implements LoaderInterface
     {
     }
 
-    protected function loadRouteForAction(Admin $admin, Action $action, RouteCollection $routeCollection)
+    /**
+     * Add a Route to the RouteCollection according to an Admin an an Action.
+     *
+     * @param AdminInterface  $admin
+     * @param ActionInterface $action
+     * @param RouteCollection $routeCollection
+     *
+     * @throws Exception
+     */
+    protected function loadRouteForAction(AdminInterface $admin, ActionInterface $action, RouteCollection $routeCollection)
     {
-        $routingUrlPattern = $admin->getConfiguration()->routingUrlPattern;
+        $routingUrlPattern = $admin->getConfiguration()->getRoutingUrlPattern();
         // routing pattern should contains {admin} and {action}
         if (strpos($routingUrlPattern, '{admin}') == -1 || strpos($routingUrlPattern, '{action}') == -1) {
             throw new Exception('Admin routing pattern should contains {admin} and {action} placeholder');
         }
         // route path by entity name and action name
-        $path = str_replace('{admin}', $admin->getEntityPath(), $routingUrlPattern);
+        $path = str_replace('{admin}', $admin->getName(), $routingUrlPattern);
         $path = str_replace('{action}', $action->getName(), $path);
         // by default, generic controller
         $defaults = [
-            '_controller' => $admin->getController() . ':' . $action->getName(),
+            '_controller' => $admin->getConfiguration()->getControllerName().':'.$action->getName(),
             '_admin' => $admin->getName(),
-            '_action' => $action->getName()
+            '_action' => $action->getName(),
         ];
         // by default, no requirements
         $requirements = [];
         // for delete and edit action, an id is required
-        if (in_array($action, ['delete', 'edit'])) {
+        if (in_array($action->getName(), ['delete', 'edit'])) {
             $path .= '/{id}';
             $requirements = [
-                'id' => '\d+'
+                'id' => '\d+',
             ];
         }
         // creating new route
         $route = new Route($path, $defaults, $requirements);
         $routeName = $admin->generateRouteName($action->getName());
         // set route to action
-        $action->setRoute($routeName);
+        $action->getConfiguration()->setRoute($routeName);
+        $action->getConfiguration()->setParameters($requirements);
         // adding route to symfony collection
         $routeCollection->add($routeName, $route);
+    }
+
+    protected function replaceInRoute($pattern, $adminName, $actionName)
+    {
+        $pattern = str_replace('{admin}', $adminName, $pattern);
+        $pattern = str_replace('{action}', $actionName, $pattern);
+
+        return $pattern;
+    }
+
+    /**
+     * Return entity path for routing (for example, MyNamespace\EntityName => entityName).
+     *
+     * @param $namespace
+     *
+     * @return string
+     */
+    protected function getEntityPath($namespace)
+    {
+        $array = explode('\\', $namespace);
+        $path = array_pop($array);
+        $path = strtolower(substr($path, 0, 1)).substr($path, 1);
+
+        return $path;
     }
 }

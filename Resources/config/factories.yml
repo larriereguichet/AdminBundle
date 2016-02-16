@@ -1,0 +1,36 @@
+parameters:
+    # admin factories
+    lag.admin.factory: LAG\AdminBundle\Admin\Factory\AdminFactory
+    lag.admin.action_factory: LAG\AdminBundle\Admin\Factory\ActionFactory
+    lag.admin.field_factory: LAG\AdminBundle\Field\Factory\FieldFactory
+    lag.admin.filter_factory: LAG\AdminBundle\Admin\Factory\FilterFactory
+
+services:
+    # factories
+    lag.admin.factory:
+        class: %lag.admin.factory%
+        arguments:
+            - '@event_dispatcher'
+            - '@doctrine.orm.entity_manager'
+            - '@lag.admin.application'
+            - %lag.admins%
+            - '@lag.admin.action_factory'
+            - '@lag.admin.message_handler'
+
+    lag.admin.action_factory:
+        class: %lag.admin.action_factory%
+        arguments:
+            - '@lag.admin.field_factory'
+            - '@lag.admin.filter_factory'
+            - '@lag.admin.application'
+
+    lag.admin.field_factory:
+        class: %lag.admin.field_factory%
+        arguments:
+            - '@lag.admin.application'
+            - '@translator'
+            - '@twig'
+
+    lag.admin.filter_factory:
+        class: %lag.admin.filter_factory%
+        arguments: []

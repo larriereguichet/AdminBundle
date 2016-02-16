@@ -1,49 +1,76 @@
+imports:
+    - { resource: factories.yml }
+    - { resource: forms.yml }
+
 parameters:
-    # template listener
-    bluebear.admin.template_listener: BlueBear\AdminBundle\Event\Subscriber\TemplateListener
-    # form
-    bluebear.admin.form.delete: BlueBear\AdminBundle\Form\Type\DeleteType
+    # application
+    lag.admin.application.class: LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration
+    # events subscribers
+    lag.admin.template_subscriber.class: LAG\AdminBundle\Event\Subscriber\TemplateSubscriber
+    lag.admin.extra_configuration_subscriber.class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
+    lag.admin.admin_subscriber.class: LAG\AdminBundle\Event\Subscriber\AdminSubscriber
     # routing
-    bluebear.admin.routing: BlueBear\AdminBundle\Routing\RoutingLoader
-    # admin factory
-    bluebear.admin.factory: BlueBear\AdminBundle\Admin\AdminFactory
+    lag.admin.routing.class: LAG\AdminBundle\Routing\RoutingLoader
     # twig
-    bluebear.admin.twig: BlueBear\AdminBundle\Twig\AdminExtension
+    lag.admin.twig.class: LAG\AdminBundle\Twig\AdminExtension
+    # handler
+    lag.admin.message_handler.class: LAG\AdminBundle\Message\MessageHandler
 
 services:
-    # template listener
-    bluebear.admin.template_listener:
-        class: %bluebear.admin.template_listener%
+    # application
+    lag.admin.application:
+        class: %lag.admin.application.class%
+        arguments:
+            - %lag.admin.application_configuration%
+            - %locale%
+
+    # events subscribers
+    lag.admin.template_subscriber:
+        class: %lag.admin.template_subscriber.class%
         tags:
             - {name: kernel.event_subscriber}
-        calls:
-            - [setContainer, [@service_container]]
-            - [setAdminFactory, [@bluebear.admin.factory]]
-            - [setTwig, [@twig]]
+        arguments:
+            - '@twig'
+            - '@lag.admin.application'
 
-    # form
-    bluebear.admin.form.delete:
-        class: %bluebear.admin.form.delete%
+    lag.admin.extra_configuration_subscriber:
+        class: %lag.admin.extra_configuration_subscriber.class%
         tags:
-            - {name: form.type, alias: delete}
+            - {name: kernel.event_subscriber}
+        arguments:
+            - %lag.enable_extra_configuration%
+            - '@doctrine.orm.entity_manager'
+            - '@lag.admin.application'
+
+    lag.admin.admin_subscriber:
+        class: %lag.admin.admin_subscriber.class%
+        tags:
+            - {name: kernel.event_subscriber}
+        arguments:
+            - '@lag.admin.factory'
 
     # routing
-    bluebear.admin.routing:
-        class: %bluebear.admin.routing%
+    lag.admin.routing:
+        class: %lag.admin.routing.class%
         tags:
             - { name: routing.loader }
-        calls:
-            - [setContainer, [@service_container]]
-
-    # factory
-    bluebear.admin.factory:
-        class: %bluebear.admin.factory%
-        arguments: [@service_container]
+        arguments:
+            - '@lag.admin.factory'
 
     # twig
-    bluebear.admin.twig:
-        class: %bluebear.admin.twig%
+    lag.admin.twig:
+        class: %lag.admin.twig.class%
         tags:
             - {name: twig.extension}
-        calls:
-            - [setRouter, [@router]]
+        arguments:
+            - '@router'
+            - '@translator'
+            - '@lag.admin.application'
+
+    # handler
+    lag.admin.message_handler:
+        class: %lag.admin.message_handler.class%
+        arguments:
+            - '@logger'
+            - '@session'
+            - '@translator'

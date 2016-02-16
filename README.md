@@ -5,6 +5,9 @@ for your Symfony application.
 
 Development and Documentation are in progress
 
+Testing : 
+0.3-dev [![Build Status](https://travis-ci.org/larriereguichet/AdminBundle.svg?branch=0.3-dev)](https://travis-ci.org/larriereguichet/AdminBundle)
+
 ## Features
 
 Current version: 0.2
@@ -19,7 +22,7 @@ Current version: 0.2
 
 # Installation
 ```
-php composer.phar require bluebear/adminbundle
+php composer.phar require lag/adminbundle
 ```
 
 # Getting started
@@ -86,7 +89,7 @@ You have to import AdminBundle routing (or using yours) in your app/config/routi
 
 ```yml
     # app/config/routing.yml
-    # BlueBear AdminBundle
+    # LAG AdminBundle
     blue_bear_admin:
         resource: .
         type: extra
@@ -118,7 +121,7 @@ blue_bear_admin:
         # routing options
         routing:
             # admin routing name pattern
-            name_pattern: 'bluebear.admin.{admin}.{action}'
+            name_pattern: 'lag.admin.{admin}.{action}'
             # admin url pattern (admin is the unique key that you have configured in admins configuration section) 
             url_pattern: '{admin}/{action}'
     # list of managed admins
@@ -174,4 +177,6 @@ blue_bear_admin:
 
 ```
 
+## Documentation
 
+Full documentation can be found [here](https://github.com/larriereguichet/AdminBundle/tree/master/Resources/docs/summary.md)
