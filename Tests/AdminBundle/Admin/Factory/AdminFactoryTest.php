@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 class AdminFactoryTest extends Base
 {
     /**
-     * Init method should create Admin object according to given configuration
+     * Init method should create Admin object according to given configuration.
      */
     public function testInit()
     {
@@ -28,7 +28,7 @@ class AdminFactoryTest extends Base
     }
 
     /**
-     * Create method should return an Admin according to given configuration
+     * Create method should return an Admin according to given configuration.
      *
      * @throws Exception
      */
@@ -48,7 +48,7 @@ class AdminFactoryTest extends Base
     }
 
     /**
-     * GetAdminFromRequest method should return a configured Admin from request parameters
+     * GetAdminFromRequest method should return a configured Admin from request parameters.
      *
      * @throws Exception
      */
@@ -72,7 +72,7 @@ class AdminFactoryTest extends Base
     }
 
     /**
-     * GetAdmin method should return an configured Admin by its name
+     * GetAdmin method should return an configured Admin by its name.
      *
      * @throws Exception
      */
@@ -93,6 +93,47 @@ class AdminFactoryTest extends Base
             $admin = $adminFactory->getAdmin($name);
             $this->doTestAdmin($admin, $configuration, $name);
         }
+    }
+
+    /**
+     * GetAdmins method should return all configured Admin.
+     *
+     * @throws Exception
+     */
+    public function testGetAdmins()
+    {
+        // test with no configuration
+        $adminFactory = $this->mockAdminFactory();
+        // unknow admin not exists, it should throw an exception
+        $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
+            $adminFactory->getAdmin('unknown_admin');
+        });
+        // test with configurations samples
+        $adminsConfiguration = $this->getAdminsConfiguration();
+        $adminFactory = $this->mockAdminFactory($adminsConfiguration);
+        $adminFactory->init();
+
+        $admins = $adminFactory->getAdmins();
+
+        foreach ($admins as $admin) {
+            $this->assertArrayHasKey($admin->getName(), $adminsConfiguration);
+            $this->doTestAdmin($admin, $adminsConfiguration[$admin->getName()], $admin->getName());
+        }
+    }
+
+    /**
+     * AddDataProvider method must add a DataProviderInterface to the Admin.
+     */
+    public function testAddDataProvider()
+    {
+        // test with no configuration
+        $adminFactory = $this->mockAdminFactory();
+        // unknow admin not exists, it should throw an exception
+        $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
+            $adminFactory->getAdmin('unknown_admin');
+        });
+        $dataProvider = $this->mockDataProvider();
+        $adminFactory->addDataProvider('test', $dataProvider);
     }
 
     /**

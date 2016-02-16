@@ -225,7 +225,7 @@ class AdminFactory
     }
 
     /**
-     * Add user custom repositories (for the repository compiler pass), to avoid injecting the service container
+     * Add user custom repositories (called in the repository compiler pass), to avoid injecting the service container
      *
      * @param string $name
      * @param DataProviderInterface $dataProvider

@@ -1,4 +1,6 @@
 v0.4:
+- add filters
+- file exporters : array type, association
 - move export logic into a separate service
 - add possibility to have tab in generated forms
 - add configuration for custom url for actions
@@ -26,22 +28,18 @@ v0.4:
 - add possibility to have tab in generated forms
 - improve customActions template
 - make delete form dynamic (@see CRUDController l.214)
+- configure application date format (filename export, displayed date...)
+- add configuration for custom url for actions (waiting for ActionBundle ?)
 
 -----------------------------------------------
 
 v0.3:
 Features:
 - unit testing
-- add filters
+- documentation
 - handle custom actions for edit form (enable user for example) (WIP)
 - configure application date format (filename export, displayed date...) (WIP)
 - localization (rest field label in edit mode)
-- file exporters : array type, association
-- add filters
-- unit testing
-- handle custom actions for edit form (enable user for example)
-- add configuration for custom url for actions (waiting for ActionBundle)
-- configure application date format (filename export, displayed date...)
 - [DONE] handling new Symfony bootstrap layout
 - [DONE] adding mass edit
 - [DONE] improve admin and action name from request (use default parameters in routing instead)
