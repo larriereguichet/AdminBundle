@@ -6,7 +6,8 @@ for your Symfony application.
 Development and Documentation are in progress
 
 Testing : 
-0.3-dev [![Build Status](https://travis-ci.org/larriereguichet/AdminBundle.svg?branch=0.3-dev)](https://travis-ci.org/larriereguichet/AdminBundle)
+branch dev [![Build Status](https://travis-ci.org/larriereguichet/AdminBundle.svg?branch=dev)](https://travis-ci.org/larriereguichet/AdminBundle)
+coverage [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/quality-score.png?b=dev)](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/?branch=dev)
 
 ## Features
 
