@@ -107,9 +107,9 @@ class ActionFactory
      *
      * @param OptionsResolver $resolver
      * @param $actionName
-     * @param Admin|null $admin
+     * @param AdminInterface|null $admin
      */
-    protected function configureOptionsResolver(OptionsResolver $resolver, $actionName, Admin $admin = null)
+    protected function configureOptionsResolver(OptionsResolver $resolver, $actionName, AdminInterface $admin = null)
     {
         $defaultCriteria = [];
         $defaultLoadStrategy = Admin::LOAD_STRATEGY_UNIQUE;

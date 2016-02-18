@@ -43,7 +43,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     /**
      * ExtraConfigurationSubscriber constructor
      *
-     * @param bool|true $enableExtraConfiguration
+     * @param bool $enableExtraConfiguration
      * @param EntityManager $entityManager
      * @param ApplicationConfiguration $applicationConfiguration
      */
