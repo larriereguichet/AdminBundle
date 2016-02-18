@@ -3,9 +3,14 @@
 namespace LAG\AdminBundle\Tests\AdminBundle\Admin;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Exception;
+use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Tests\Base;
+use stdClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
@@ -27,6 +32,7 @@ class AdminTest extends Base
     }
 
     /**
+     * handleRequest method SHOULD throw an exception if the action is not valid.
      * handleRequest method SHOULD throw an exception if the action is not valid.
      */
     public function testHandleRequest()
@@ -63,8 +69,79 @@ class AdminTest extends Base
             ]);
             $admin->handleRequest($request);
         }
+
+        // test pagerfanta filter
+        $configurations = $this->getFakeAdminsConfiguration();
+        $configuration = $configurations['full_entity'];
+
+        $adminConfiguration = new AdminConfiguration($configuration);
+        $admin = $this->mockAdmin('full_entity', $adminConfiguration);
+
+        $admin->addAction(new Action('custom_list', [
+            'title' => 'Test action',
+            'permissions' => [
+                'ROLE_ADMIN'
+            ],
+            'submit_actions' => [],
+            'batch' => [],
+        ], new ActionConfiguration([
+                'load_strategy' => '',
+                'route' => '',
+                'parameters' => '',
+                'export' => '',
+                'order' => '',
+                'target' => '',
+                'icon' => '',
+                'batch' => '',
+                'pager' => 'pagerfanta',
+                'criteria' => [],
+            ])
+        ));
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->handleRequest($request);
+
+        // test load stregy none
+        $configurations = $this->getFakeAdminsConfiguration();
+        $configuration = $configurations['full_entity'];
+
+        $adminConfiguration = new AdminConfiguration($configuration);
+        $admin = $this->mockAdmin('full_entity', $adminConfiguration);
+
+        $admin->addAction(new Action('custom_list', [
+            'title' => 'Test action',
+            'permissions' => [
+                'ROLE_ADMIN'
+            ],
+            'submit_actions' => [],
+            'batch' => [],
+        ], new ActionConfiguration([
+                'load_strategy' => Admin::LOAD_STRATEGY_NONE,
+                'route' => '',
+                'parameters' => '',
+                'export' => '',
+                'order' => '',
+                'target' => '',
+                'icon' => '',
+                'batch' => '',
+                'pager' => 'pagerfanta',
+                'criteria' => [],
+            ])
+        ));
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->handleRequest($request);
     }
 
+    /**
+     * checkPermissions method SHOULd throw an exception if the permissions are invalid.
+     */
     public function testCheckPermissions()
     {
         $configurations = $this->getFakeAdminsConfiguration();
@@ -118,6 +195,118 @@ class AdminTest extends Base
             $admin->handleRequest($request);
             $admin->checkPermissions($user);
         }
+    }
+
+    /**
+     * create method SHOULD call the create method in the data provider.
+     */
+    public function testCreate()
+    {
+        $dataProvider = $this->mockDataProvider();
+        $dataProvider
+            ->expects($this->once())
+            ->method('create')
+        ;
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $admin->create();
+    }
+
+    /**
+     * save method SHOULD call the save method in the data provider.
+     */
+    public function testSave()
+    {
+        $dataProvider = $this->mockDataProvider();
+        $dataProvider
+            ->expects($this->once())
+            ->method('save')
+        ;
+        $dataProvider
+            ->method('create')
+            ->willReturn(new stdClass())
+        ;
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $admin->create();
+        $this->assertTrue($admin->save());
+
+        // test exception
+        $dataProvider = $this->mockDataProvider();
+        $dataProvider
+            ->expects($this->once())
+            ->method('save')
+            ->willThrowException(new Exception())
+        ;
+        $dataProvider
+            ->method('create')
+            ->willReturn(new stdClass())
+        ;
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $admin->create();
+        $this->assertFalse($admin->save());
+    }
+
+    /**
+     * remove method SHOULD call the remove method in the data provider.
+     */
+    public function testRemove()
+    {
+        $dataProvider = $this->mockDataProvider();
+        $dataProvider
+            ->expects($this->once())
+            ->method('remove')
+        ;
+        $dataProvider
+            ->method('create')
+            ->willReturn(new stdClass())
+        ;
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $admin->create();
+        $this->assertTrue($admin->remove());
+
+        // test exception
+        $dataProvider = $this->mockDataProvider();
+        $dataProvider
+            ->expects($this->once())
+            ->method('remove')
+            ->willThrowException(new Exception())
+        ;
+        $dataProvider
+            ->method('create')
+            ->willReturn(new stdClass())
+        ;
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $admin->create();
+        $this->assertFalse($admin->remove());
     }
 
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
