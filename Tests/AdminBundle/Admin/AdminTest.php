@@ -6,9 +6,15 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Tests\Base;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\User\User;
 
 class AdminTest extends Base
 {
+    /**
+     * Test if configuration is properly set.
+     */
     public function testAdmin()
     {
         $configurations = $this->getFakeAdminsConfiguration();
@@ -17,6 +23,100 @@ class AdminTest extends Base
             $adminConfiguration = new AdminConfiguration($configuration);
             $admin = $this->mockAdmin($adminName, $adminConfiguration);
             $this->doTestAdmin($admin, $configuration, $adminName);
+        }
+    }
+
+    /**
+     * handleRequest method SHOULD throw an exception if the action is not valid.
+     */
+    public function testHandleRequest()
+    {
+        $configurations = $this->getFakeAdminsConfiguration();
+
+        foreach ($configurations as $adminName => $configuration) {
+            $adminConfiguration = new AdminConfiguration($configuration);
+            $admin = $this->mockAdmin($adminName, $adminConfiguration);
+            $this->doTestAdmin($admin, $configuration, $adminName);
+
+
+            // with no action, handleRequest method SHOULD throw an exception
+            $this->assertExceptionRaised('Exception', function () use ($admin) {
+                $request = new Request();
+                $admin->handleRequest($request);
+            });
+
+            // with a wrong action, handleRequest method SHOULD throw an exception
+            $this->assertExceptionRaised('Exception', function () use ($admin) {
+                $request = new Request([], [], [
+                    '_route_params' => [
+                        '_action' => 'bad_action'
+                    ]
+                ]);
+                $admin->handleRequest($request);
+            });
+
+            // with an existing action, handleRequest method SHOULD NOT throwing an exception
+            $request = new Request([], [], [
+                '_route_params' => [
+                    '_action' => 'custom_list'
+                ]
+            ]);
+            $admin->handleRequest($request);
+        }
+    }
+
+    public function testCheckPermissions()
+    {
+        $configurations = $this->getFakeAdminsConfiguration();
+
+        foreach ($configurations as $adminName => $configuration) {
+            $adminConfiguration = new AdminConfiguration($configuration);
+            $admin = $this->mockAdmin($adminName, $adminConfiguration);
+            $this->doTestAdmin($admin, $configuration, $adminName);
+
+            // with a current action unset, checkPermissions method SHOULD throw an exception
+            $this->assertExceptionRaised('Exception', function () use ($admin) {
+                $user = new User('JohnKrovitch', 'john1234');
+                $admin->checkPermissions($user);
+            });
+
+            // with the wrong roles, checkPermissions method SHOULD throw an exception
+            $this->assertExceptionRaised(NotFoundHttpException::class, function () use ($admin) {
+                $request = new Request([], [], [
+                    '_route_params' => [
+                        '_action' => 'custom_list'
+                    ]
+                ]);
+                $user = new User('JohnKrovitch', 'john1234');
+                $admin->handleRequest($request);
+                $admin->checkPermissions($user);
+            });
+
+            // with the wrong roles, checkPermissions method SHOULD throw an exception
+            $this->assertExceptionRaised(NotFoundHttpException::class, function () use ($admin) {
+                $request = new Request([], [], [
+                    '_route_params' => [
+                        '_action' => 'custom_list'
+                    ]
+                ]);
+                $user = new User('JohnKrovitch', 'john1234', [
+                    'ROLE_USER'
+                ]);
+                $admin->handleRequest($request);
+                $admin->checkPermissions($user);
+            });
+
+            // with the right role, checkPermissions method SHOULD NOT throw an exception
+            $request = new Request([], [], [
+                '_route_params' => [
+                    '_action' => 'custom_list'
+                ]
+            ]);
+            $user = new User('JohnKrovitch', 'john1234', [
+                'ROLE_ADMIN'
+            ]);
+            $admin->handleRequest($request);
+            $admin->checkPermissions($user);
         }
     }
 

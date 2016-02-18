@@ -132,7 +132,9 @@ class ActionFactory
                 'fields' => [
                     'id' => [],
                 ],
-                'permissions' => ['ROLE_ADMIN'],
+                'permissions' => [
+                    'ROLE_ADMIN'
+                ],
                 'export' => [
                     'json',
                     'html',
@@ -200,6 +202,7 @@ class ActionFactory
                     }
                 }
                 return $value;
-            });
+            })
+        ;
     }
 }

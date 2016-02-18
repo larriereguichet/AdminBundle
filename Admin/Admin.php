@@ -157,11 +157,15 @@ class Admin implements AdminInterface
      * Check if user is allowed to be here
      *
      * @param UserInterface|string $user
+     * @throws Exception
      */
     public function checkPermissions($user)
     {
         if (!($user instanceof UserInterface)) {
             return;
+        }
+        if ($this->currentAction === null) {
+            throw new Exception('Current action should be set before checking the permissions');
         }
         $roles = $user->getRoles();
         $actionName = $this
@@ -412,7 +416,9 @@ class Admin implements AdminInterface
     public function getAction($name)
     {
         if (!array_key_exists($name, $this->getActions())) {
-            throw new Exception("Invalid action name \"{$name}\" for admin '{$this->getName()}'");
+            throw new Exception(
+                "Invalid action name \"{$name}\" for admin '{$this->getName()}'. Check your configuration"
+            );
         }
 
         return $this->actions[$name];

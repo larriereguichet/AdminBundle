@@ -154,6 +154,11 @@ class Base extends WebTestCase
         $action
             ->method('getConfiguration')
             ->willReturn($this->mockActionConfiguration());
+        $action
+            ->method('getPermissions')
+        ->willReturn([
+            'ROLE_ADMIN'
+        ]);
 
         return $action;
     }
