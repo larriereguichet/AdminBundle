@@ -309,6 +309,24 @@ class AdminTest extends Base
         $this->assertFalse($admin->remove());
     }
 
+    public function testGenerateRouteName()
+    {
+        $dataProvider = $this->mockDataProvider();
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $this->assertEquals('lag.test.custom_list', $admin->generateRouteName('custom_list'));
+        $this->assertEquals('lag.test.custom_edit', $admin->generateRouteName('custom_edit'));
+
+        $this->assertExceptionRaised(Exception::class, function () use ($admin) {
+            $admin->generateRouteName('wrong_action_name');
+        });
+    }
+
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
     {
         $this->assertEquals($admin->getName(), $adminName);
