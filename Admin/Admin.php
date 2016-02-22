@@ -449,6 +449,13 @@ class Admin implements AdminInterface
      */
     public function getCurrentAction()
     {
+        if ($this->currentAction === null) {
+            // current action should be defined
+            throw new Exception(
+                'Current action is null. You should initialize it (with handleRequest method for example)'
+            );
+        }
+
         return $this->currentAction;
     }
 

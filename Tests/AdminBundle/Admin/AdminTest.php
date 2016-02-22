@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\Admin;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Exception;
 use LAG\AdminBundle\Admin\Action;
@@ -309,6 +310,12 @@ class AdminTest extends Base
         $this->assertFalse($admin->remove());
     }
 
+    /**
+     * generateRouteName SHOULD use the configured pattern to generate route name. It SHOULD throw an exception if the
+     * given action name does not exists.
+     *
+     * @throws Exception
+     */
     public function testGenerateRouteName()
     {
         $dataProvider = $this->mockDataProvider();
@@ -325,6 +332,99 @@ class AdminTest extends Base
         $this->assertExceptionRaised(Exception::class, function () use ($admin) {
             $admin->generateRouteName('wrong_action_name');
         });
+    }
+
+    public function testLoad()
+    {
+        $testEntities = [
+            new stdClass(),
+            new stdClass(),
+        ];
+        $dataProvider = $this->mockDataProvider();
+        $dataProvider
+            ->method('findBy')
+            ->willReturn($testEntities);
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->addAction(new Action('custom_list', [
+            'title' => 'Test action',
+            'permissions' => [
+                'ROLE_ADMIN'
+            ],
+            'submit_actions' => [],
+            'batch' => [],
+        ], new ActionConfiguration([
+                'load_strategy' => '',
+                'route' => '',
+                'parameters' => '',
+                'export' => '',
+                'order' => '',
+                'target' => '',
+                'icon' => '',
+                'batch' => '',
+                'pager' => 'pagerfanta',
+                'criteria' => [],
+            ])
+        ));
+        $admin->handleRequest($request);
+        $admin->load([]);
+
+        // if an array is returned from the data provider, it SHOULD wrapped into an array collection
+        $this->assertEquals(new ArrayCollection($testEntities), $admin->getEntities());
+
+
+
+        $dataProvider = $this->mockDataProvider();
+        $dataProvider
+            ->method('findBy')
+            ->willReturn(new ArrayCollection($testEntities));
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->addAction(new Action('custom_list', [
+            'title' => 'Test action',
+            'permissions' => [
+                'ROLE_ADMIN'
+            ],
+            'submit_actions' => [],
+            'batch' => [],
+        ], new ActionConfiguration([
+                'load_strategy' => '',
+                'route' => '',
+                'parameters' => '',
+                'export' => '',
+                'order' => '',
+                'target' => '',
+                'icon' => '',
+                'batch' => '',
+                'pager' => 'pagerfanta',
+                'criteria' => [],
+            ])
+        ));
+        $admin->handleRequest($request);
+        $admin->load([]);
+
+        // if an array is returned from the data provider, it SHOULD wrapped into an array collection
+        $this->assertEquals(new ArrayCollection($testEntities), $admin->getEntities());
     }
 
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
