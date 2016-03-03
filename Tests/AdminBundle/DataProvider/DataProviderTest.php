@@ -12,7 +12,7 @@ use stdClass;
 class DataProviderTest extends Base
 {
     /**
-     * Method save SHOULD be called on the entiy repository
+     * Method save SHOULD be called on the entiy repository.
      */
     public function testSave()
     {
@@ -27,7 +27,7 @@ class DataProviderTest extends Base
     }
 
     /**
-     * Method delete SHOULD be called on the entity repository
+     * Method delete SHOULD be called on the entity repository.
      */
     public function testDelete()
     {
@@ -42,7 +42,7 @@ class DataProviderTest extends Base
     }
 
     /**
-     * Method find SHOULD be called on the entity repository
+     * Method find SHOULD be called on the entity repository.
      */
     public function testFind()
     {
@@ -57,9 +57,9 @@ class DataProviderTest extends Base
     }
 
     /**
-     * Method findBy SHOULD be called on the entity repository
+     * Method findBy SHOULD be called on the entity repository.
      */
-    public function testfindBy()
+    public function testFindBy()
     {
         // repository findBy method SHOULD be called
         $repositoryMock = $this->mockEntityRepository();
@@ -69,5 +69,22 @@ class DataProviderTest extends Base
 
         $dataProvider = new DataProvider($repositoryMock);
         $dataProvider->findBy([]);
+    }
+
+    /**
+     * Method create SHOULD return a new instance of the given class.
+     */
+    public function testCreate()
+    {
+        // repository findBy method SHOULD be called
+        $repositoryMock = $this->mockEntityRepository();
+        $repositoryMock
+            ->expects($this->once())
+            ->method('getClassName')
+            ->willReturn(self::class);
+        $dataProvider = new DataProvider($repositoryMock);
+        $test = $dataProvider->create();
+
+        $this->assertEquals(get_class($test), self::class);
     }
 }
