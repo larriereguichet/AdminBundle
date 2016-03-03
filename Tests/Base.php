@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Tests;
 
 use Closure;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -140,7 +141,7 @@ class Base extends WebTestCase
 
     /**
      * @param $name
-     * @return ActionInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return ActionInterface | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockAction($name)
     {
@@ -164,7 +165,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return ActionConfiguration|PHPUnit_Framework_MockObject_MockObject
+     * @return ActionConfiguration | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockActionConfiguration()
     {
@@ -204,7 +205,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return Session|PHPUnit_Framework_MockObject_MockObject
+     * @return Session | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockSession()
     {
@@ -222,7 +223,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return Logger|PHPUnit_Framework_MockObject_MockObject
+     * @return Logger | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockLogger()
     {
@@ -242,7 +243,7 @@ class Base extends WebTestCase
     /**
      * Return a mock of an entity repository
      *
-     * @return RepositoryInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return RepositoryInterface | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockEntityRepository()
     {
@@ -252,11 +253,11 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return EntityManager|PHPUnit_Framework_MockObject_MockObject
+     * @return EntityManager | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockEntityManager()
     {
-        /** @var EntityManagerInterface|PHPUnit_Framework_MockObject_MockObject $entityManager */
+        /** @var EntityManagerInterface | PHPUnit_Framework_MockObject_MockObject $entityManager */
         $entityManager = $this
             ->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
@@ -280,7 +281,23 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return ActionFactory|PHPUnit_Framework_MockObject_MockObject
+     * @return Registry | PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockDoctrine()
+    {
+        $doctrine = $this
+            ->getMockBuilder(Registry::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $doctrine
+            ->method('getEntityManager')
+            ->willReturn($this->mockEntityManager());
+
+        return $doctrine;
+    }
+
+    /**
+     * @return ActionFactory | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockActionFactory()
     {
@@ -296,7 +313,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return TokenStorageInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return TokenStorageInterface | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockTokenStorage()
     {
@@ -322,7 +339,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return MessageHandlerInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return MessageHandlerInterface | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockMessageHandler()
     {
@@ -335,7 +352,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return TranslatorInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return TranslatorInterface | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockTranslator()
     {
@@ -345,7 +362,7 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return DataProviderInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return DataProviderInterface | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockDataProvider()
     {

@@ -30,7 +30,7 @@ class ExtraConfigurationSubscriberTest extends Base
         // with extra configuration disabled, adminCreate method SHOULD not modifiy the configuration
         $subscriber = new ExtraConfigurationSubscriber(
             false,
-            $this->mockEntityManager(),
+            $this->mockDoctrine(),
             new ApplicationConfiguration([], 'fr')
         );
         $event = new AdminEvent();
@@ -41,7 +41,7 @@ class ExtraConfigurationSubscriberTest extends Base
         // with extra configuration enabled, adminCreate method SHOULD fill action configuration if it is empty
         $subscriber = new ExtraConfigurationSubscriber(
             true,
-            $this->mockEntityManager(),
+            $this->mockDoctrine(),
             new ApplicationConfiguration([], 'fr')
         );
         $event = new AdminEvent();
