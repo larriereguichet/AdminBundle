@@ -252,7 +252,7 @@ class CRUDController extends Controller
         $hooks = [];
 
         foreach ($fields as $fieldName) {
-            $exporter->addHook(function ($fieldValue) {
+            $exporter->addHook(function($fieldValue) {
                 // if field is an array
                 if (is_array($fieldValue)) {
                     $value = recursiveImplode(', ', $fieldValue);
@@ -297,7 +297,7 @@ class CRUDController extends Controller
         $this->forward404Unless(
             $admin->isActionGranted($admin->getCurrentAction()->getName(), $roles),
             sprintf('User with roles %s not allowed for action "%s"',
-                implode(', ', array_map(function (Role $role) {
+                implode(', ', array_map(function(Role $role) {
                     return $role->getRole();
                 }, $roles)),
                 $admin->getCurrentAction()->getName()
