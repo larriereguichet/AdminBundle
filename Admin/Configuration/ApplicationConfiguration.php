@@ -10,6 +10,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ApplicationConfiguration
 {
     /**
+     * Indicate wether or not the extra configuration should be enabled or not.
+     *
+     * @var bool
+     */
+    protected $enableExtraConfiguration = true;
+
+    /**
      * Application title.
      *
      * @var string
@@ -493,5 +500,13 @@ class ApplicationConfiguration
     public function getFieldsMapping()
     {
         return $this->fieldsMapping;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isExtraConfigurationEnabled()
+    {
+        return $this->enableExtraConfiguration;
     }
 }
