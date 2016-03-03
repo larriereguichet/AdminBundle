@@ -14,7 +14,9 @@ use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
+use LAG\AdminBundle\Admin\Factory\FilterFactory;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
+use LAG\AdminBundle\Field\Factory\FieldFactory;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -382,5 +384,31 @@ class Base extends WebTestCase
             ->willReturn($entities);
 
         return $dataProvider;
+    }
+
+    /**
+     * @return FieldFactory|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockFieldFactory()
+    {
+        $fieldFactory = $this
+            ->getMockBuilder(FieldFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $fieldFactory;
+    }
+
+    /**
+     * @return FilterFactory|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockFilterFactory()
+    {
+        $filterFactory = $this
+            ->getMockBuilder(FilterFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $filterFactory;
     }
 }

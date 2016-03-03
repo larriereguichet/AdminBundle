@@ -163,6 +163,7 @@ class ActionFactory
                 Admin::LOAD_STRATEGY_UNIQUE,
                 Admin::LOAD_STRATEGY_MULTIPLE,
             ])
+            ->setAllowedTypes('actions', 'array')
             ->setNormalizer('route', function (Options $options, $value) use ($admin, $actionName) {
                 if (!$value) {
                     // if no route was provided, it should be linked to an Admin
