@@ -39,7 +39,7 @@ services:
             - {name: kernel.event_subscriber}
         arguments:
             - %lag.enable_extra_configuration%
-            - '@doctrine.orm.entity_manager'
+            - '@doctrine'
             - '@lag.admin.application'
 
     lag.admin.admin_subscriber:

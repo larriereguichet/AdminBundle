@@ -14,6 +14,9 @@ class AdminSubscriber implements EventSubscriberInterface
      */
     protected $adminFactory;
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -21,12 +24,20 @@ class AdminSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * AdminSubscriber constructor.
+     *
+     * @param AdminFactory $adminFactory
+     */
     public function __construct(AdminFactory $adminFactory)
     {
         $this->adminFactory = $adminFactory;
     }
 
-    public function kernelRequest(KernelEvent $event)
+    /**
+     * Init admin factory on kernel request.
+     */
+    public function kernelRequest()
     {
         // init admin factory
         $this->adminFactory->init();

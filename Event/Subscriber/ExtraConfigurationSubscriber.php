@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
@@ -44,17 +45,17 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      * ExtraConfigurationSubscriber constructor
      *
      * @param bool $enableExtraConfiguration
-     * @param EntityManager $entityManager
+     * @param Registry $doctrine
      * @param ApplicationConfiguration $applicationConfiguration
      */
     public function __construct(
         $enableExtraConfiguration = true,
-        EntityManager $entityManager,
+        Registry $doctrine,
         ApplicationConfiguration $applicationConfiguration
-    )
-    {
+    ) {
         $this->enableExtraConfiguration = $enableExtraConfiguration;
-        $this->entityManager = $entityManager;
+        // entity manager can be closed. Scrutinizer recommands to inject registry instead
+        $this->entityManager = $doctrine->getManager();
         $this->applicationConfiguration = $applicationConfiguration;
     }
 

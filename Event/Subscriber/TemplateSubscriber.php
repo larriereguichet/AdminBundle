@@ -20,12 +20,21 @@ class TemplateSubscriber implements EventSubscriberInterface
      */
     protected $configuration;
 
+    /**
+     * TemplateSubscriber constructor.
+     *
+     * @param Twig_Environment $twig
+     * @param ApplicationConfiguration $configuration
+     */
     public function __construct(Twig_Environment $twig, ApplicationConfiguration $configuration)
     {
         $this->twig = $twig;
         $this->configuration = $configuration;
     }
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -34,11 +43,10 @@ class TemplateSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param KernelEvent $event
      *
      * @return null
      */
-    public function kernelView(KernelEvent $event)
+    public function kernelView()
     {
         $this->twig->addGlobal('config', $this->configuration);
     }
