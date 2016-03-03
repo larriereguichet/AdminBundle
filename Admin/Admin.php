@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Admin;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use LAG\AdminBundle\Admin\Behaviors\AdminTrait;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
@@ -292,6 +293,7 @@ class Admin implements AdminInterface
      * @param array $orderBy
      * @param int $limit
      * @param int $offset
+     * @throws Exception
      */
     public function load(array $criteria, $orderBy = [], $limit = 25, $offset = 1)
     {
@@ -316,6 +318,10 @@ class Admin implements AdminInterface
                 ->dataProvider
                 ->findBy($criteria, $orderBy, $limit, $offset);
         }
+        if (!is_array($entities) && !($entities instanceof Collection)) {
+            throw new Exception('The data provider should return either a collection or an array. Got ' . gettype($entities) . ' instead');
+        }
+
         if (is_array($entities)) {
             $entities = new ArrayCollection($entities);
         }
@@ -325,7 +331,7 @@ class Admin implements AdminInterface
     /**
      * Return loaded entities
      *
-     * @return mixed
+     * @return Collection
      */
     public function getEntities()
     {
@@ -446,6 +452,7 @@ class Admin implements AdminInterface
 
     /**
      * @return ActionInterface
+     * @throws Exception
      */
     public function getCurrentAction()
     {

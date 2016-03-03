@@ -85,6 +85,7 @@ class Base extends WebTestCase
     {
         $e = null;
         $isClassValid = false;
+        $message = '';
 
         try {
             $closure();
@@ -92,8 +93,14 @@ class Base extends WebTestCase
             if (get_class($e) == $exceptionClass) {
                 $isClassValid = true;
             }
+            $message = $e->getMessage();
         }
-        $this->assertTrue($isClassValid, 'Expected ' . $exceptionClass . ', got ' . get_class($e));
+        $this->assertNotNull($e, 'No Exception was thrown');
+        $this->assertTrue($isClassValid, sprintf('Expected %s, got %s (Exception message : "%s")',
+            $exceptionClass,
+            get_class($e),
+            $message
+        ));
     }
 
     /**
@@ -362,12 +369,18 @@ class Base extends WebTestCase
     }
 
     /**
-     * @return DataProviderInterface | PHPUnit_Framework_MockObject_MockObject
+     * @param array $entities
+     * @return DataProviderInterface|PHPUnit_Framework_MockObject_MockObject
      */
-    protected function mockDataProvider()
+    protected function mockDataProvider($entities = [])
     {
-        return $this
+        $dataProvider = $this
             ->getMockBuilder('LAG\AdminBundle\DataProvider\DataProviderInterface')
             ->getMock();
+        $dataProvider
+            ->method('findBy')
+            ->willReturn($entities);
+
+        return $dataProvider;
     }
 }

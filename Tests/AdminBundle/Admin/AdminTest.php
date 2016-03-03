@@ -318,24 +318,6 @@ class AdminTest extends Base
      */
     public function testGenerateRouteName()
     {
-        $dataProvider = $this->mockDataProvider();
-
-        $admin = new Admin(
-            'test',
-            $dataProvider,
-            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
-            $this->mockMessageHandler()
-        );
-        $this->assertEquals('lag.test.custom_list', $admin->generateRouteName('custom_list'));
-        $this->assertEquals('lag.test.custom_edit', $admin->generateRouteName('custom_edit'));
-
-        $this->assertExceptionRaised(Exception::class, function () use ($admin) {
-            $admin->generateRouteName('wrong_action_name');
-        });
-    }
-
-    public function testLoad()
-    {
         $testEntities = [
             new stdClass(),
             new stdClass(),
@@ -351,6 +333,31 @@ class AdminTest extends Base
             new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
             $this->mockMessageHandler()
         );
+        $this->assertEquals('lag.test.custom_list', $admin->generateRouteName('custom_list'));
+        $this->assertEquals('lag.test.custom_edit', $admin->generateRouteName('custom_edit'));
+
+        $this->assertExceptionRaised(Exception::class, function () use ($admin) {
+            $admin->generateRouteName('wrong_action_name');
+        });
+    }
+
+    /**
+     * getEntities method SHOULD return the entities passed by the data provider.
+     */
+    public function testGetEntities()
+    {
+        $testEntities = [
+            new stdClass(),
+            new stdClass(),
+        ];
+        $dataProvider = $this->mockDataProvider($testEntities);
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
         $request = new Request([], [], [
             '_route_params' => [
                 '_action' => 'custom_list'
@@ -379,15 +386,148 @@ class AdminTest extends Base
         $admin->handleRequest($request);
         $admin->load([]);
 
-        // if an array is returned from the data provider, it SHOULD wrapped into an array collection
-        $this->assertEquals(new ArrayCollection($testEntities), $admin->getEntities());
+        // getEntities method SHOULD return the entities passed by the data provider.
+        $this->assertEquals($testEntities, $admin->getEntities()->toArray());
+    }
 
+    /**
+     * getUniqueEntity method SHOULD return the entity passed by the data provider.
+     */
+    public function testGetUniqueEntity()
+    {
+        $testEntity = new stdClass();
+        $dataProvider = $this->mockDataProvider([$testEntity]);
 
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->addAction(new Action('custom_list', [
+            'title' => 'Test action',
+            'permissions' => [
+                'ROLE_ADMIN'
+            ],
+            'submit_actions' => [],
+            'batch' => [],
+        ], new ActionConfiguration([
+                'load_strategy' => '',
+                'route' => '',
+                'parameters' => '',
+                'export' => '',
+                'order' => '',
+                'target' => '',
+                'icon' => '',
+                'batch' => '',
+                'pager' => 'pagerfanta',
+                'criteria' => [],
+            ])
+        ));
+        $admin->handleRequest($request);
+        $admin->load([]);
 
-        $dataProvider = $this->mockDataProvider();
-        $dataProvider
-            ->method('findBy')
-            ->willReturn(new ArrayCollection($testEntities));
+        // getEntities method SHOULD return the entities passed by the data provider.
+        $this->assertEquals($testEntity, $admin->getUniqueEntity());
+
+        $testEntity = new stdClass();
+        $dataProvider = $this->mockDataProvider([$testEntity, $testEntity]);
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->addAction(new Action('custom_list', [
+            'title' => 'Test action',
+            'permissions' => [
+                'ROLE_ADMIN'
+            ],
+            'submit_actions' => [],
+            'batch' => [],
+        ], new ActionConfiguration([
+                'load_strategy' => '',
+                'route' => '',
+                'parameters' => '',
+                'export' => '',
+                'order' => '',
+                'target' => '',
+                'icon' => '',
+                'batch' => '',
+                'pager' => 'pagerfanta',
+                'criteria' => [],
+            ])
+        ));
+        $this->assertExceptionRaised(Exception::class, function () use ($admin, $request, $testEntity) {
+            $admin->handleRequest($request);
+            $admin->load([]);
+            // getEntities method SHOULD return the entities passed by the data provider.
+            $this->assertEquals($testEntity, $admin->getUniqueEntity());
+        });
+
+        $testEntity = new stdClass();
+        $dataProvider = $this->mockDataProvider([]);
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->addAction(new Action('custom_list', [
+            'title' => 'Test action',
+            'permissions' => [
+                'ROLE_ADMIN'
+            ],
+            'submit_actions' => [],
+            'batch' => [],
+        ], new ActionConfiguration([
+                'load_strategy' => '',
+                'route' => '',
+                'parameters' => '',
+                'export' => '',
+                'order' => '',
+                'target' => '',
+                'icon' => '',
+                'batch' => '',
+                'pager' => 'pagerfanta',
+                'criteria' => [],
+            ])
+        ));
+        $this->assertExceptionRaised(Exception::class, function () use ($admin, $request, $testEntity) {
+            $admin->handleRequest($request);
+            $admin->load([]);
+            // getEntities method SHOULD return the entities passed by the data provider.
+            $this->assertEquals($testEntity, $admin->getUniqueEntity());
+        });
+    }
+
+    /**
+     * load method SHOULD load entities from data provider to the admin.
+     */
+    public function testLoad()
+    {
+        $testEntities = [
+            new stdClass(),
+            new stdClass(),
+        ];
+        $dataProvider = $this->mockDataProvider($testEntities);
 
         $admin = new Admin(
             'test',
@@ -425,6 +565,81 @@ class AdminTest extends Base
 
         // if an array is returned from the data provider, it SHOULD wrapped into an array collection
         $this->assertEquals(new ArrayCollection($testEntities), $admin->getEntities());
+
+        $dataProvider = $this->mockDataProvider($testEntities);
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->addAction(new Action('custom_list', [
+            'title' => 'Test action',
+            'permissions' => [
+                'ROLE_ADMIN'
+            ],
+            'submit_actions' => [],
+            'batch' => [],
+        ], new ActionConfiguration([
+                'load_strategy' => '',
+                'route' => '',
+                'parameters' => '',
+                'export' => '',
+                'order' => '',
+                'target' => '',
+                'icon' => '',
+                'batch' => '',
+                'pager' => 'pagerfanta',
+                'criteria' => [],
+            ])
+        ));
+        $admin->handleRequest($request);
+        $admin->load([]);
+
+        // test exception
+        $dataProvider = $this->mockDataProvider(new stdClass());
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            new AdminConfiguration($this->getFakeAdminsConfiguration()['full_entity']),
+            $this->mockMessageHandler()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->addAction(new Action('custom_list', [
+            'title' => 'Test action',
+            'permissions' => [
+                'ROLE_ADMIN'
+            ],
+            'submit_actions' => [],
+            'batch' => [],
+        ], new ActionConfiguration([
+                'load_strategy' => '',
+                'route' => '',
+                'parameters' => '',
+                'export' => '',
+                'order' => '',
+                'target' => '',
+                'icon' => '',
+                'batch' => '',
+                'pager' => 'pagerfanta',
+                'criteria' => [],
+            ])
+        ));
+        $this->assertExceptionRaised(Exception::class, function () use ($admin, $request) {
+            $admin->handleRequest($request);
+            $admin->load([]);
+        });
     }
 
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
