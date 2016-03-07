@@ -174,7 +174,7 @@ class ApplicationConfiguration
             'url_pattern',
             'name_pattern',
         ]);
-        $resolver->setNormalizer('url_pattern', function (Options $options, $value) {
+        $resolver->setNormalizer('url_pattern', function(Options $options, $value) {
             if (strstr($value, '{admin}') === false) {
                 throw new InvalidOptionsException('Admin routing configuration url pattern should contains {admin} placeholder');
             }
@@ -184,7 +184,7 @@ class ApplicationConfiguration
 
             return $value;
         });
-        $resolver->setNormalizer('name_pattern', function (Options $options, $value) {
+        $resolver->setNormalizer('name_pattern', function(Options $options, $value) {
             if (strstr($value, '{admin}') === false) {
                 throw new InvalidOptionsException('Admin routing configuration pattern name should contains {admin} placeholder');
             }
@@ -202,7 +202,7 @@ class ApplicationConfiguration
             ->clear()
             ->setDefault('enabled', true)
             ->setDefault('pattern', 'lag.admin.{key}');
-        $resolver->setNormalizer('pattern', function (Options $options, $value) {
+        $resolver->setNormalizer('pattern', function(Options $options, $value) {
             if (strstr($value, 'key') === false) {
                 throw new InvalidOptionsException('Admin translation configuration pattern should contains {key} placeholder');
             }
@@ -230,7 +230,7 @@ class ApplicationConfiguration
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getTitle()
     {
@@ -246,7 +246,7 @@ class ApplicationConfiguration
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getLayout()
     {
@@ -262,7 +262,7 @@ class ApplicationConfiguration
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getBlockTemplate()
     {
@@ -278,7 +278,7 @@ class ApplicationConfiguration
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDescription()
     {
@@ -310,7 +310,7 @@ class ApplicationConfiguration
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDateFormat()
     {
@@ -404,7 +404,7 @@ class ApplicationConfiguration
     }
 
     /**
-     * @return mixed
+     * @return integer
      */
     public function getStringLengthTruncate()
     {

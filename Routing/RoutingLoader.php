@@ -93,7 +93,7 @@ class RoutingLoader implements LoaderInterface
         $path = str_replace('{action}', $action->getName(), $path);
         // by default, generic controller
         $defaults = [
-            '_controller' => $admin->getConfiguration()->getControllerName().':'.$action->getName(),
+            '_controller' => $admin->getConfiguration()->getControllerName() . ':' . $action->getName(),
             '_admin' => $admin->getName(),
             '_action' => $action->getName(),
         ];
@@ -135,7 +135,7 @@ class RoutingLoader implements LoaderInterface
     {
         $array = explode('\\', $namespace);
         $path = array_pop($array);
-        $path = strtolower(substr($path, 0, 1)).substr($path, 1);
+        $path = strtolower(substr($path, 0, 1)) . substr($path, 1);
 
         return $path;
     }

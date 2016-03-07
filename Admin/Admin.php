@@ -407,7 +407,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return array
+     * @return integer[]
      */
     public function getActionNames()
     {
