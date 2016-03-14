@@ -50,3 +50,12 @@ table {
 .help-block {
   font-style: italic;
 }
+
+// fix top and left menu to top
+#admin-top-menu {
+  position: fixed;
+  width: 100%;
+}
+#page-wrapper {
+  padding-top: 40px;
+}
