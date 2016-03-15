@@ -1,4 +1,4 @@
-v0.4:
+v0.5:
 - add filters
 - file exporters : array type, association
 - move export logic into a separate service
@@ -30,16 +30,20 @@ v0.4:
 - make delete form dynamic (@see CRUDController l.214)
 - configure application date format (filename export, displayed date...)
 - add configuration for custom url for actions (waiting for ActionBundle ?)
+- documentation
+- handle custom actions for edit form (enable user for example) (WIP)
+- configure application date format (filename export, displayed date...) (WIP)
+- localization (rest field label in edit mode)
 
+-----------------------------------------------
+v0.4: 
+ - Handle menu with KNPMenu bundle
+ - Improve documentation
 -----------------------------------------------
 
 v0.3:
 Features:
 - unit testing
-- documentation
-- handle custom actions for edit form (enable user for example) (WIP)
-- configure application date format (filename export, displayed date...) (WIP)
-- localization (rest field label in edit mode)
 - [DONE] handling new Symfony bootstrap layout
 - [DONE] adding mass edit
 - [DONE] improve admin and action name from request (use default parameters in routing instead)
