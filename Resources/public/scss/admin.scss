@@ -8,7 +8,19 @@ table {
     a {
       text-decoration: none;
       color: #ffffff;
+      display: inline-block;
+
+      i.fa {
+        padding-left: 10px;
+        display: inline;
+      }
     }
+  }
+  div.checkbox {
+    margin: 0 0 -2px 0;
+  }
+  .checkbox label, .radio label {
+    min-height: 15px;
   }
 
   td {
@@ -16,4 +28,34 @@ table {
       padding: 10px;
     }
   }
+}
+// overriding sb-admin brand display
+.navbar-brand {
+  padding-right: 30px;
+}
+
+
+// surcharge des styles bootstrap des checkbox pour le cas particulier des checkbox d'édition/suppression de masse
+.admin-list {
+  .batch-column {
+    .checkbox {
+      label {
+        cursor: auto;
+      }
+    }
+  }
+}
+
+// overriding help block to italic
+.help-block {
+  font-style: italic;
+}
+
+// fix top and left menu to top
+#admin-top-menu {
+  position: fixed;
+  width: 100%;
+}
+#page-wrapper {
+  padding-top: 40px;
 }

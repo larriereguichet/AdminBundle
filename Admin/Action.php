@@ -1,39 +1,85 @@
 <?php
 
-namespace BlueBear\AdminBundle\Admin;
+namespace LAG\AdminBundle\Admin;
 
-class Action 
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Field\Field;
+
+class Action implements ActionInterface
 {
     /**
+     * Action name.
+     *
      * @var string
      */
     protected $name;
 
     /**
+     * Action title.
+     *
      * @var string
      */
     protected $title;
 
     /**
+     * Fields displayed for this action.
+     *
      * @var Field[]
      */
     protected $fields = [];
 
     /**
+     * Action permissions.
+     *
      * @var string[]
      */
     protected $permissions = [];
 
-    protected $route;
-
-    protected $parameters;
-
     /**
-     * Export types
+     * Configured linked actions to display in this view.
      *
      * @var array
      */
-    protected $export = [];
+    protected $actions = [];
+
+    /**
+     * Actions displayed at the bottom of the view.
+     *
+     * @var array
+     */
+    protected $submitActions = [];
+
+    /**
+     * @var ActionConfiguration
+     */
+    protected $configuration;
+
+    /**
+     * @var array
+     */
+    protected $filters = [];
+
+    /**
+     * @var string[]
+     */
+    protected $batchActions = [];
+
+    /**
+     * Action constructor.
+     *
+     * @param $actionName
+     * @param array $actionOptions
+     * @param ActionConfiguration $configuration
+     */
+    public function __construct($actionName, array $actionOptions, ActionConfiguration $configuration)
+    {
+        $this->configuration = $configuration;
+        $this->name = $actionName;
+        $this->title = $actionOptions['title'];
+        $this->permissions = $actionOptions['permissions'];
+        $this->submitActions = $actionOptions['submit_actions'];
+        $this->batchActions = $actionOptions['batch'];
+    }
 
     /**
      * @return string
@@ -41,14 +87,6 @@ class Action
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
     }
 
     /**
@@ -60,14 +98,6 @@ class Action
     }
 
     /**
-     * @param string $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
      * @return Field[]
      */
     public function getFields()
@@ -76,9 +106,10 @@ class Action
     }
 
     /**
-     * Return true if action has a field named $fieldName
+     * Return true if action has a field named $fieldName.
      *
-     * @param $fieldName
+     * @param string $fieldName
+     *
      * @return bool
      */
     public function hasField($fieldName)
@@ -94,6 +125,9 @@ class Action
         $this->fields = $fields;
     }
 
+    /**
+     * @param Field $field
+     */
     public function addField(Field $field)
     {
         $this->fields[$field->getName()] = $field;
@@ -108,58 +142,90 @@ class Action
     }
 
     /**
-     * @param string[] $permissions
+     * @return Action[]
      */
-    public function setPermissions($permissions)
+    public function getActions()
     {
-        $this->permissions = $permissions;
+        return $this->actions;
     }
 
     /**
-     * @return mixed
+     * @param array $actions
      */
-    public function getRoute()
+    public function setActions($actions)
     {
-        return $this->route;
+        $this->actions = $actions;
     }
 
     /**
-     * @param mixed $route
+     * @param Action $action
      */
-    public function setRoute($route)
+    public function addAction(Action $action)
     {
-        $this->route = $route;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * @param mixed $parameters
-     */
-    public function setParameters($parameters)
-    {
-        $this->parameters = $parameters;
+        $this->actions[$action->getName()] = $action;
     }
 
     /**
      * @return array
      */
-    public function getExport()
+    public function getFilters()
     {
-        return $this->export;
+        return $this->filters;
     }
 
     /**
-     * @param array $export
+     * @param array $filters
      */
-    public function setExport($export)
+    public function setFilters($filters)
     {
-        $this->export = $export;
+        $this->filters = $filters;
+    }
+
+    /**
+     * @param Filter $filter
+     */
+    public function addFilter(Filter $filter)
+    {
+        $this->filters[] = $filter;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSubmitActions()
+    {
+        return $this->submitActions;
+    }
+
+    /**
+     * @param array $submitActions
+     */
+    public function setSubmitActions($submitActions)
+    {
+        $this->submitActions = $submitActions;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getBatchActions()
+    {
+        return $this->batchActions;
+    }
+
+    /**
+     * @param string[] $batchActions
+     */
+    public function setBatchActions($batchActions)
+    {
+        $this->batchActions = $batchActions;
+    }
+
+    /**
+     * @return ActionConfiguration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
     }
 }
