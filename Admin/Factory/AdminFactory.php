@@ -3,10 +3,10 @@
 namespace LAG\AdminBundle\Admin\Factory;
 
 use Doctrine\ORM\EntityManager;
+use LAG\AdminBundle\Action\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\DataProvider\DataProvider;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Event\AdminEvent;
@@ -18,7 +18,6 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * AdminFactory.
@@ -48,9 +47,9 @@ class AdminFactory
     protected $entityManager;
 
     /**
-     * @var ApplicationConfiguration
+     * @var ConfigurationFactory
      */
-    protected $application;
+    protected $configurationFactory;
 
     /**
      * User custom data provider, indexed by service id
@@ -62,7 +61,7 @@ class AdminFactory
     /**
      * @var array
      */
-    protected $adminConfiguration;
+    protected $adminConfigurations;
 
     /**
      * @var ActionFactory
@@ -79,23 +78,23 @@ class AdminFactory
      *
      * @param EventDispatcherInterface $eventDispatcher
      * @param EntityManager $entityManager
-     * @param ApplicationConfiguration $application
-     * @param array $adminConfiguration
+     * @param ConfigurationFactory $configurationFactory
+     * @param array $adminConfigurations
      * @param ActionFactory $actionFactory
      * @param MessageHandlerInterface $messageHandler
      */
     public function __construct(
+        array $adminConfigurations,
         EventDispatcherInterface $eventDispatcher,
         EntityManager $entityManager,
-        ApplicationConfiguration $application,
-        array $adminConfiguration,
+        ConfigurationFactory $configurationFactory,        
         ActionFactory $actionFactory,
         MessageHandlerInterface $messageHandler
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
-        $this->application = $application;
-        $this->adminConfiguration = $adminConfiguration;
+        $this->configurationFactory = $configurationFactory;
+        $this->adminConfigurations = $adminConfigurations;
         $this->actionFactory = $actionFactory;
         $this->messageHandler = $messageHandler;
         $this->dataProviders = new ParameterBag();
@@ -106,18 +105,33 @@ class AdminFactory
      */
     public function init()
     {
+        // init only once
         if ($this->isInit) {
             return;
         }
         $event = new AdminFactoryEvent();
-        $event->setAdminsConfiguration($this->adminConfiguration);
-        $this->eventDispatcher->dispatch(AdminFactoryEvent::ADMIN_CREATION, $event);
-        $this->adminConfiguration = $event->getAdminsConfiguration();
+        $event->setAdminsConfiguration($this->adminConfigurations);
 
-        foreach ($this->adminConfiguration as $name => $configuration) {
+        // dispatch an event to allow configuration modification before resolving and creating admins
+        $this
+            ->eventDispatcher
+            ->dispatch(AdminFactoryEvent::ADMIN_CREATION, $event);
+        // set modified configuration
+        $this->adminConfigurations = $event->getAdminsConfiguration();
+
+        foreach ($this->adminConfigurations as $name => $configuration) {
+
+            // dispatch an event to allow modification on this specific admin
             $event = new AdminEvent();
-            $event->setConfiguration($configuration);
-            $this->eventDispatcher->dispatch(AdminEvent::ADMIN_CREATE, $event);
+            $event
+                ->setConfiguration($configuration)
+                ->setAdminName($name)
+            ;
+            $this
+                ->eventDispatcher
+                ->dispatch(AdminEvent::ADMIN_CREATE, $event);
+
+            // create Admin object
             $this->admins[$name] = $this->create($name, $event->getConfiguration());
         }
         $this->isInit = true;
@@ -133,19 +147,15 @@ class AdminFactory
      */
     public function create($name, array $configuration)
     {
-        // resolve admin configuration
-        $configuration = $this->resolveConfiguration($configuration);
-        // retrieve metadata from entity manager
-        $configuration['metadata'] = $this
-            ->entityManager
-            ->getClassMetadata($configuration['entity']);
         // create AdminConfiguration object
-        $adminConfiguration = new AdminConfiguration($configuration);
+        $adminConfiguration = $this
+            ->configurationFactory
+            ->createAdminConfiguration($configuration);
 
         // retrieve a data provider
         $dataProvider = $this->getDataProvider(
-            $adminConfiguration->getEntityName(),
-            $adminConfiguration->getDataProvider()
+            $adminConfiguration->getParameter('entity'),
+            $adminConfiguration->getParameter('data_provider')
         );
 
         // create Admin object
@@ -155,8 +165,9 @@ class AdminFactory
             $adminConfiguration,
             $this->messageHandler
         );
+
         // adding actions
-        foreach ($adminConfiguration->getActions() as $actionName => $actionConfiguration) {
+        foreach ($adminConfiguration->getParameter('actions') as $actionName => $actionConfiguration) {
             // dispatching action create event for dynamic action creation
             $event = new AdminEvent();
             $event->setConfiguration($actionConfiguration);
@@ -252,7 +263,7 @@ class AdminFactory
             // custom data provider class must be loaded by the compiler pass
             if (!$this->dataProviders->has($name)) {
                 throw new Exception(sprintf(
-                    'Data provider %s not found. Did you add the @data_provider tag in your service',
+                    'Data provider %s not found. Did you add the @data_provider tag in your service ?',
                     $name
                 ));
             }
@@ -273,39 +284,5 @@ class AdminFactory
             $dataProvider = new DataProvider($repository);
         }
         return $dataProvider;
-    }
-
-    /**
-     * Resolve admin configuration.
-     *
-     * @param array $configuration
-     * @return array
-     */
-    protected function resolveConfiguration(array $configuration)
-    {
-        $resolver = new OptionsResolver();
-        // optional options
-        $resolver->setDefaults([
-            'actions' => [
-                'list' => [],
-                'create' => [],
-                'edit' => [],
-                'delete' => [],
-            ],
-            'batch' => true,
-            'manager' => 'LAG\AdminBundle\Manager\GenericManager',
-            'routing_url_pattern' => $this->application->getRoutingUrlPattern(),
-            'routing_name_pattern' => $this->application->getRoutingNamePattern(),
-            'controller' => 'LAGAdminBundle:CRUD',
-            'max_per_page' => $this->application->getMaxPerPage(),
-            'data_provider' => null
-        ]);
-        // required options
-        $resolver->setRequired([
-            'entity',
-            'form',
-        ]);
-
-        return $resolver->resolve($configuration);
     }
 }

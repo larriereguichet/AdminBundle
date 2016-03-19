@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Field;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 interface FieldInterface

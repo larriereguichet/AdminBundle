@@ -15,10 +15,10 @@ class AdminFactoryTest extends Base
     public function testInit()
     {
         // admin factory should work without configuration
-        $this->mockAdminFactory();
+        $this->createAdminFactory();
         // test admin creation
         $configuration = $this->getAdminsConfiguration();
-        $adminFactory = $this->mockAdminFactory($configuration);
+        $adminFactory = $this->createAdminFactory($configuration);
         $adminFactory->init();
 
         foreach ($configuration as $name => $adminConfiguration) {
@@ -37,7 +37,7 @@ class AdminFactoryTest extends Base
         // test minimal configuration
         $adminConfiguration = $this->getAdminsConfiguration()['minimal_configuration'];
         // mock admin factory with empty configuration
-        $adminFactory = $this->mockAdminFactory();
+        $adminFactory = $this->createAdminFactory();
         $admin = $adminFactory->create('admin_test', $adminConfiguration);
         $this->doTestAdmin($admin, $adminConfiguration, 'admin_test');
 
@@ -55,7 +55,7 @@ class AdminFactoryTest extends Base
     public function testGetAdminFromRequest()
     {
         $adminConfiguration = $this->getAdminsConfiguration();
-        $adminFactory = $this->mockAdminFactory($adminConfiguration);
+        $adminFactory = $this->createAdminFactory($adminConfiguration);
         $adminFactory->init();
 
         foreach ($adminConfiguration as $name => $configuration) {
@@ -79,14 +79,14 @@ class AdminFactoryTest extends Base
     public function testGetAdmin()
     {
         // test with no configuration
-        $adminFactory = $this->mockAdminFactory();
+        $adminFactory = $this->createAdminFactory();
         // unknow admin not exists, it should throw an exception
         $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
             $adminFactory->getAdmin('unknown_admin');
         });
         // test with configurations samples
         $adminsConfiguration = $this->getAdminsConfiguration();
-        $adminFactory = $this->mockAdminFactory($adminsConfiguration);
+        $adminFactory = $this->createAdminFactory($adminsConfiguration);
         $adminFactory->init();
 
         foreach ($adminsConfiguration as $name => $configuration) {
@@ -103,14 +103,14 @@ class AdminFactoryTest extends Base
     public function testGetAdmins()
     {
         // test with no configuration
-        $adminFactory = $this->mockAdminFactory();
+        $adminFactory = $this->createAdminFactory();
         // unknow admin not exists, it should throw an exception
         $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
             $adminFactory->getAdmin('unknown_admin');
         });
         // test with configurations samples
         $adminsConfiguration = $this->getAdminsConfiguration();
-        $adminFactory = $this->mockAdminFactory($adminsConfiguration);
+        $adminFactory = $this->createAdminFactory($adminsConfiguration);
         $adminFactory->init();
 
         $admins = $adminFactory->getAdmins();
@@ -127,7 +127,7 @@ class AdminFactoryTest extends Base
     public function testAddDataProvider()
     {
         // test with no configuration
-        $adminFactory = $this->mockAdminFactory();
+        $adminFactory = $this->createAdminFactory();
         // unknow admin not exists, it should throw an exception
         $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
             $adminFactory->getAdmin('unknown_admin');
@@ -144,16 +144,9 @@ class AdminFactoryTest extends Base
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
     {
         $this->assertEquals($admin->getName(), $adminName);
-        $this->assertEquals($admin->getConfiguration()->getFormType(), $configuration['form']);
-        $this->assertEquals($admin->getConfiguration()->getEntityName(), $configuration['entity']);
 
-        if (array_key_exists('controller', $configuration)) {
-            $this->assertEquals($admin->getConfiguration()->getControllerName(), $configuration['controller']);
-        }
-        if (array_key_exists('max_per_page', $configuration)) {
-            $this->assertEquals($admin->getConfiguration()->getMaxPerPage(), $configuration['max_per_page']);
-        } else {
-            $this->assertEquals($admin->getConfiguration()->getMaxPerPage(), 25);
+        foreach ($configuration as $key => $value) {
+            $this->assertEquals($admin->getConfiguration()->getParameter($key), $configuration[$key]);
         }
     }
 }

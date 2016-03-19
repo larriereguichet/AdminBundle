@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Field\Factory;
 
 use Exception;
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\TwigFieldInterface;
@@ -58,7 +58,7 @@ class FieldFactory
         Twig_Environment $twig
     ) {
         $this->configuration = $configuration;
-        $this->fieldsMapping = $configuration->getFieldsMapping(); // shortcut to field mapping array
+        $this->fieldsMapping = $configuration->getParameter('fields_mapping'); // shortcut to field mapping array
         $this->translator = $translator;
         $this->twig = $twig;
     }

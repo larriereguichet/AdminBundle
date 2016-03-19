@@ -5,9 +5,10 @@ namespace LAG\AdminBundle\Event\Subscriber;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Utils\FieldTypeGuesser;
+use LAG\AdminBundle\Utils\TranslationKeyTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -15,6 +16,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ExtraConfigurationSubscriber implements EventSubscriberInterface
 {
+    use TranslationKeyTrait;
+
     /**
      * @var bool
      */
@@ -113,7 +116,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         // allowed actions according to the admin
         $keys = $admin
             ->getConfiguration()
-            ->getActions();
+            ->getParameter('actions');
         $allowedActions = array_keys($keys);
 
         // if no field was provided in configuration, we try to take fields from doctrine metadata
@@ -123,7 +126,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             $metadata = $this
                 ->entityManager
                 ->getMetadataFactory()
-                ->getMetadataFor($admin->getConfiguration()->getEntityName());
+                ->getMetadataFor($admin->getConfiguration()->getParameter('entity'));
             $fieldsName = $metadata->getFieldNames();
 
             foreach ($fieldsName as $name) {
@@ -152,7 +155,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                     $configuration['fields']['_actions']['options']['_edit'] = [
                         'type' => 'action',
                         'options' => [
-                            'title' => $this->applicationConfiguration->getTranslationKey('edit', $event->getAdmin()->getName()),
+                            'title' => $this->getTranslationKey($this->applicationConfiguration, 'edit', $event->getAdmin()->getName()),
                             'route' => $admin->generateRouteName('edit'),
                             'parameters' => [
                                 'id' => false
@@ -166,7 +169,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                     $configuration['fields']['_actions']['options']['_delete'] = [
                         'type' => 'action',
                         'options' => [
-                            'title' => $this->applicationConfiguration->getTranslationKey('delete', $event->getAdmin()->getName()),
+                            'title' => $this->getTranslationKey($this->applicationConfiguration, 'delete', $event->getAdmin()->getName()),
                             'route' => $admin->generateRouteName('delete'),
                             'parameters' => [
                                 'id' => false
@@ -183,7 +186,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             if ($event->getActionName() == 'list') {
                 if (in_array('create', $allowedActions)) {
                     $configuration['actions']['create'] = [
-                        'title' => $this->applicationConfiguration->getTranslationKey('create', $event->getAdmin()->getName()),
+                        'title' => $this->getTranslationKey($this->applicationConfiguration, 'create', $event->getAdmin()->getName()),
                         'route' => $admin->generateRouteName('create'),
                         'icon' => 'pencil'
                     ];

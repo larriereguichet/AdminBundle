@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Admin;
 
-use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Field\Field;
 
 class Action implements ActionInterface
@@ -36,20 +36,6 @@ class Action implements ActionInterface
     protected $permissions = [];
 
     /**
-     * Configured linked actions to display in this view.
-     *
-     * @var array
-     */
-    protected $actions = [];
-
-    /**
-     * Actions displayed at the bottom of the view.
-     *
-     * @var array
-     */
-    protected $submitActions = [];
-
-    /**
      * @var ActionConfiguration
      */
     protected $configuration;
@@ -60,25 +46,17 @@ class Action implements ActionInterface
     protected $filters = [];
 
     /**
-     * @var string[]
-     */
-    protected $batchActions = [];
-
-    /**
      * Action constructor.
      *
      * @param $actionName
-     * @param array $actionOptions
      * @param ActionConfiguration $configuration
      */
-    public function __construct($actionName, array $actionOptions, ActionConfiguration $configuration)
+    public function __construct($actionName, ActionConfiguration $configuration)
     {
         $this->configuration = $configuration;
         $this->name = $actionName;
-        $this->title = $actionOptions['title'];
-        $this->permissions = $actionOptions['permissions'];
-        $this->submitActions = $actionOptions['submit_actions'];
-        $this->batchActions = $actionOptions['batch'];
+        $this->title = $configuration->getParameter('title');
+        $this->permissions = $configuration->getParameter('permissions');
     }
 
     /**
@@ -142,30 +120,6 @@ class Action implements ActionInterface
     }
 
     /**
-     * @return Action[]
-     */
-    public function getActions()
-    {
-        return $this->actions;
-    }
-
-    /**
-     * @param array $actions
-     */
-    public function setActions($actions)
-    {
-        $this->actions = $actions;
-    }
-
-    /**
-     * @param Action $action
-     */
-    public function addAction(Action $action)
-    {
-        $this->actions[$action->getName()] = $action;
-    }
-
-    /**
      * @return array
      */
     public function getFilters()
@@ -188,39 +142,7 @@ class Action implements ActionInterface
     {
         $this->filters[] = $filter;
     }
-
-    /**
-     * @return array
-     */
-    public function getSubmitActions()
-    {
-        return $this->submitActions;
-    }
-
-    /**
-     * @param array $submitActions
-     */
-    public function setSubmitActions($submitActions)
-    {
-        $this->submitActions = $submitActions;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getBatchActions()
-    {
-        return $this->batchActions;
-    }
-
-    /**
-     * @param string[] $batchActions
-     */
-    public function setBatchActions($batchActions)
-    {
-        $this->batchActions = $batchActions;
-    }
-
+    
     /**
      * @return ActionConfiguration
      */

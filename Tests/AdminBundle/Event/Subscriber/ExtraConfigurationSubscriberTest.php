@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\Event\Subscriber;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber;
 use LAG\AdminBundle\Tests\Base;
@@ -31,7 +31,7 @@ class ExtraConfigurationSubscriberTest extends Base
         $subscriber = new ExtraConfigurationSubscriber(
             false,
             $this->mockDoctrine(),
-            new ApplicationConfiguration([], 'fr')
+            new ApplicationConfiguration($this->mockKernel())
         );
         $event = new AdminEvent();
         $event->setConfiguration([]);
@@ -42,7 +42,7 @@ class ExtraConfigurationSubscriberTest extends Base
         $subscriber = new ExtraConfigurationSubscriber(
             true,
             $this->mockDoctrine(),
-            new ApplicationConfiguration([], 'fr')
+            new ApplicationConfiguration($this->mockKernel())
         );
         $event = new AdminEvent();
         $event->setConfiguration([]);

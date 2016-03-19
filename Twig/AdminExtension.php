@@ -2,10 +2,11 @@
 
 namespace LAG\AdminBundle\Twig;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Field\EntityFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Utils\TranslationKeyTrait;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -23,6 +24,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminExtension extends Twig_Extension
 {
+    use TranslationKeyTrait;
+
     /**
      * @var ApplicationConfiguration
      */
@@ -183,10 +186,10 @@ class AdminExtension extends Twig_Extension
      */
     public function fieldTitle($fieldName, $adminName = null)
     {
-        if ($this->configuration->useTranslation()) {
+        if ($this->configuration->getParameter('translation')['enabled']) {
             $title = $this
                 ->translator
-                ->trans($this->configuration->getTranslationKey($fieldName, $adminName));
+                ->trans($this->getTranslationKey($this->configuration, $fieldName, $adminName));
         } else {
             $title = $this->camelize($fieldName);
         }

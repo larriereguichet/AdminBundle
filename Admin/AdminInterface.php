@@ -11,6 +11,21 @@ use Symfony\Component\Security\Core\User\UserInterface;
 interface AdminInterface
 {
     /**
+     * Do not load entities on handleRequest (for create method for example)
+     */
+    const LOAD_STRATEGY_NONE = 'strategy_none';
+
+    /**
+     * Load one entity on handleRequest (edit method for example)
+     */
+    const LOAD_STRATEGY_UNIQUE = 'strategy_unique';
+
+    /**
+     * Load multiple entities on handleRequest (list method for example)
+     */
+    const LOAD_STRATEGY_MULTIPLE = 'strategy_multiple';
+
+    /**
      * Handle current request :
      *  - load entities
      *  - create form if required

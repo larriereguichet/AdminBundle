@@ -8,13 +8,17 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Exception;
+use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
-use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Admin\Factory\ActionFactory;
+use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Action\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use LAG\AdminBundle\Admin\Factory\FilterFactory;
+use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Field\Factory\FieldFactory;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
@@ -26,11 +30,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class Base extends WebTestCase
 {
+    /**
+     * @var bool
+     */
     protected static $isDatabaseCreated = false;
 
     /**
@@ -106,6 +115,91 @@ class Base extends WebTestCase
     }
 
     /**
+     * @param array $configuration
+     * @return ApplicationConfiguration
+     */
+    protected function createApplicationConfiguration(array $configuration = [])
+    {
+        $resolver = new OptionsResolver();
+        $applicationConfiguration = new ApplicationConfiguration($this->mockKernel());
+        $applicationConfiguration->configureOptions($resolver);
+        $applicationConfiguration->setParameters($resolver->resolve($configuration));
+
+        return $applicationConfiguration;
+    }
+
+    /**
+     * @param ApplicationConfiguration $applicationConfiguration
+     * @param array $configuration
+     * @return AdminConfiguration
+     */
+    protected function createAdminConfiguration(ApplicationConfiguration $applicationConfiguration, array $configuration = [])
+    {
+        $resolver = new OptionsResolver();
+        $adminConfiguration = new AdminConfiguration($applicationConfiguration);
+        $adminConfiguration->configureOptions($resolver);
+        $adminConfiguration->setParameters($resolver->resolve($configuration));
+
+        return $adminConfiguration;
+    }
+
+    protected function createActionConfiguration($actionName, AdminInterface $admin, array $configuration = [])
+    {
+        $resolver = new OptionsResolver();
+        $actionConfiguration = new ActionConfiguration($actionName, $admin);
+        $actionConfiguration->configureOptions($resolver);
+        $actionConfiguration->setParameters($resolver->resolve($configuration));
+
+        return $actionConfiguration;
+    }
+
+    /**
+     * @param $name
+     * @param array $configuration
+     * @param array $applicationConfiguration
+     * @return Admin
+     */
+    protected function createAdmin($name, array $configuration, array $applicationConfiguration = [])
+    {
+        $adminConfiguration = $this->createAdminConfiguration(
+            $this->createApplicationConfiguration($applicationConfiguration),
+            $configuration
+        );
+
+        return new Admin(
+            $name,
+            $this->mockDataProvider(),
+            $adminConfiguration,
+            $this->mockMessageHandler()
+        );
+    }
+
+    /**
+     * @param $actionName
+     * @param AdminInterface $admin
+     * @param array $configuration
+     * @return Action
+     */
+    protected function createAction($actionName, AdminInterface $admin, array $configuration = [])
+    {
+        return new Action(
+            $actionName,
+            $this->createActionConfiguration($actionName, $admin, $configuration)
+        );
+    }
+
+    /**
+     * @return ConfigurationFactory
+     */
+    protected function createConfigurationFactory()
+    {
+        $configuration = new ConfigurationFactory($this->mockKernel());
+        $configuration->createApplicationConfiguration([]);
+
+        return $configuration;
+    }
+
+    /**
      * Return Admin configurations samples
      *
      * @return array
@@ -134,9 +228,21 @@ class Base extends WebTestCase
     }
 
     /**
+     * @return KernelInterface | PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockKernel()
+    {
+        return $this
+            ->getMockBuilder(KernelInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
      * @param $name
      * @param $configuration
      * @return Admin
+     * @deprecated
      */
     protected function mockAdmin($name, $configuration)
     {
@@ -162,13 +268,10 @@ class Base extends WebTestCase
             ->method('getName')
             ->willReturn($name);
         $action
-            ->method('getConfiguration')
-            ->willReturn($this->mockActionConfiguration());
-        $action
-            ->method('getPermissions')
-        ->willReturn([
-            'ROLE_ADMIN'
-        ]);
+            ->method('getParameter')
+            ->willReturn($this->returnValueMap([
+
+            ]));
 
         return $action;
     }
@@ -196,7 +299,7 @@ class Base extends WebTestCase
      * @param array $configuration
      * @return AdminFactory
      */
-    protected function mockAdminFactory(array $configuration = [])
+    protected function createAdminFactory(array $configuration = [])
     {
         /** @var EventDispatcher $mockEventDispatcher */
         $mockEventDispatcher = $this
@@ -204,10 +307,10 @@ class Base extends WebTestCase
             ->getMock();
 
         return new AdminFactory(
+            $configuration,
             $mockEventDispatcher,
             $this->mockEntityManager(),
-            $this->mockApplicationConfiguration(),
-            $configuration,
+            $this->createConfigurationFactory(),
             $this->mockActionFactory(),
             $this->mockMessageHandler()
         );
@@ -311,7 +414,7 @@ class Base extends WebTestCase
     protected function mockActionFactory()
     {
         $actionFactory = $this
-            ->getMockBuilder('LAG\AdminBundle\Admin\Factory\ActionFactory')
+            ->getMockBuilder(ActionFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
         $actionFactory
@@ -410,5 +513,18 @@ class Base extends WebTestCase
             ->getMock();
 
         return $filterFactory;
+    }
+
+    /**
+     * @return ConfigurationFactory|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function mockConfigurationFactory()
+    {
+        $configurationFactory = $this
+            ->getMockBuilder(ConfigurationFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $configurationFactory;
     }
 }
