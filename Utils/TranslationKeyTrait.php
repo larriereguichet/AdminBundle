@@ -16,7 +16,7 @@ trait TranslationKeyTrait
     {
         $translationKey = $configuration->getParameter('translation')['pattern'];
 
-        if (strstr($configuration->getParameter('translation')['pattern'], '{admin}') && $adminName != null) {
+        if (strstr($configuration->getParameter('translation')['pattern'], '{admin}') && $adminName !== null) {
             $translationKey = str_replace('{admin}', $adminName, $translationKey);
         }
         $translationKey = str_replace('{key}', $key, $translationKey);
