@@ -28,7 +28,7 @@ abstract class Configuration implements ConfigurationInterface
      *
      * @param OptionsResolver $resolver
      */
-    public abstract function configureOptions(OptionsResolver $resolver);
+    abstract public function configureOptions(OptionsResolver $resolver);
 
     /**
      * Return true if the parameter exists.

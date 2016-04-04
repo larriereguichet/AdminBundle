@@ -108,8 +108,8 @@ class Link extends StringField implements EntityFieldInterface
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'length' => $this->configuration->getStringLength(),
-            'replace' => $this->configuration->getStringLengthTruncate(),
+            'length' => $this->configuration->getParameter('string_length'),
+            'replace' => $this->configuration->getParameter('string_length_truncate'),
             'template' => 'LAGAdminBundle:Render:link.html.twig',
             'title' => '',
             'icon' => '',

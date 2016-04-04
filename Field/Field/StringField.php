@@ -64,13 +64,12 @@ class StringField extends Field
      * Configure options resolver.
      *
      * @param OptionsResolver $resolver
-     * @return mixed|void
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'length' => $this->configuration->getStringLength(),
-            'replace' => $this->configuration->getStringLengthTruncate(),
+            'length' => $this->configuration->getParameter('string_length'),
+            'replace' => $this->configuration->getParameter('string_length_truncate'),
             'translation' => true,
         ]);
     }
@@ -79,7 +78,6 @@ class StringField extends Field
      * Define configured options
      *
      * @param array $options
-     * @return void
      */
     public function setOptions(array $options)
     {

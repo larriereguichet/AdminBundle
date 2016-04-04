@@ -23,7 +23,7 @@ interface ConfigurationInterface
 
     /**
      * @param string $name
-     * @return mixed
+     * @return mixed|array
      */
     public function getParameter($name);
 

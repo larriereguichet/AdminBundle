@@ -20,8 +20,6 @@ interface FieldInterface
      * Configure options resolver.
      *
      * @param OptionsResolver $resolver
-     *
-     * @return mixed
      */
     public function configureOptions(OptionsResolver $resolver);
 
@@ -29,8 +27,6 @@ interface FieldInterface
      * Set options values after options resolving.
      *
      * @param array $options
-     *
-     * @return mixed
      */
     public function setOptions(array $options);
 
@@ -45,7 +41,6 @@ interface FieldInterface
      * Define field name.
      *
      * @param $name
-     * @return void
      */
     public function setName($name);
 
