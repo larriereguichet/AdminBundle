@@ -6,6 +6,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Utils\FieldTypeGuesser;
 use LAG\AdminBundle\Utils\TranslationKeyTrait;
@@ -49,17 +50,17 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      *
      * @param bool $enableExtraConfiguration
      * @param Registry $doctrine
-     * @param ApplicationConfiguration $applicationConfiguration
+     * @param ConfigurationFactory $configurationFactory
      */
     public function __construct(
         $enableExtraConfiguration = true,
         Registry $doctrine,
-        ApplicationConfiguration $applicationConfiguration
+        ConfigurationFactory $configurationFactory
     ) {
         $this->enableExtraConfiguration = $enableExtraConfiguration;
         // entity manager can be closed. Scrutinizer recommands to inject registry instead
         $this->entityManager = $doctrine->getManager();
-        $this->applicationConfiguration = $applicationConfiguration;
+        $this->applicationConfiguration = $configurationFactory->getApplicationConfiguration();
     }
 
     /**

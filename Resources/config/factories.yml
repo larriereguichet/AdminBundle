@@ -35,7 +35,7 @@ services:
     lag.admin.field_factory:
         class: '%lag.admin.field_factory%'
         arguments:
-            - '@lag.admin.application'
+            - '@lag.admin.configuration_factory'
             - '@translator'
             - '@twig'
 

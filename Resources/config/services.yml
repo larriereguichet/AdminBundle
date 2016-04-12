@@ -24,7 +24,7 @@ services:
             - {name: kernel.event_subscriber}
         arguments:
             - '@twig'
-            - '@lag.admin.application'
+            - '@lag.admin.configuration_factory'
 
     lag.admin.extra_configuration_subscriber:
         class: '%lag.admin.extra_configuration_subscriber.class%'
@@ -33,7 +33,7 @@ services:
         arguments:
             - '%lag.enable_extra_configuration%'
             - '@doctrine'
-            - '@lag.admin.application'
+            - '@lag.admin.configuration_factory'
 
     lag.admin.admin_subscriber:
         class: '%lag.admin.admin_subscriber.class%'
@@ -58,7 +58,7 @@ services:
         arguments:
             - '@router'
             - '@translator'
-            - '@lag.admin.application'
+            - '@lag.admin.configuration_factory'
 
     # handler
     lag.admin.message_handler:

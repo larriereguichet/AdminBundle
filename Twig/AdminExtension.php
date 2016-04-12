@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Twig;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Field\EntityFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
@@ -46,13 +47,16 @@ class AdminExtension extends Twig_Extension
      *
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
-     * @param ApplicationConfiguration $configuration
+     * @param ConfigurationFactory $configurationFactory
      */
-    public function __construct(RouterInterface $router, TranslatorInterface $translator, ApplicationConfiguration $configuration)
-    {
+    public function __construct(
+        RouterInterface $router,
+        TranslatorInterface $translator,
+        ConfigurationFactory $configurationFactory
+    ) {
         $this->router = $router;
         $this->translator = $translator;
-        $this->configuration = $configuration;
+        $this->configuration = $configurationFactory->getApplicationConfiguration();
     }
 
     /**

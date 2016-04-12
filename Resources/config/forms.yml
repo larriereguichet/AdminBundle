@@ -14,5 +14,3 @@ services:
         class: %lag.admin.form.datetime_picker.class%
         tags:
             - {name: form.type, alias: datetime_picker}
-        calls:
-            - [setConfiguration, ['@lag.admin.application']]

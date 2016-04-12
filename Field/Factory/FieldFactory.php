@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Field\Factory;
 
 use Exception;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\TwigFieldInterface;
@@ -48,17 +49,19 @@ class FieldFactory
     /**
      * FieldFactory constructor.
      *
-     * @param ApplicationConfiguration $configuration
+     * @param ConfigurationFactory $configurationFactory
      * @param TranslatorInterface $translator
      * @param Twig_Environment $twig
      */
     public function __construct(
-        ApplicationConfiguration $configuration,
+        ConfigurationFactory $configurationFactory,
         TranslatorInterface $translator,
         Twig_Environment $twig
     ) {
-        $this->configuration = $configuration;
-        $this->fieldsMapping = $configuration->getParameter('fields_mapping'); // shortcut to field mapping array
+        $this->configuration = $configurationFactory->getApplicationConfiguration();
+        $this->fieldsMapping = $this
+            ->configuration
+            ->getParameter('fields_mapping'); // shortcut to field mapping array
         $this->translator = $translator;
         $this->twig = $twig;
     }
