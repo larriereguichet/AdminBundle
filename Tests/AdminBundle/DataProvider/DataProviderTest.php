@@ -3,13 +3,13 @@
 namespace BlueBear\AdminBundle\Tests\AdminBundle\DataProvider;
 
 use LAG\AdminBundle\DataProvider\DataProvider;
-use LAG\AdminBundle\Tests\Base;
+use LAG\AdminBundle\Tests\AdminTestBase;
 use stdClass;
 
 /**
  * Test the built-in data provider
  */
-class DataProviderTest extends Base
+class DataProviderTest extends AdminTestBase
 {
     /**
      * Method save SHOULD be called on the entiy repository.

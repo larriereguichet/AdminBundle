@@ -4,10 +4,10 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Application\Configuration;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Field\Field;
-use LAG\AdminBundle\Tests\Base;
+use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ApplicationConfigurationTest extends Base
+class ApplicationConfigurationTest extends AdminTestBase
 {
     /**
      * Application configuration SHOULD return configured values.

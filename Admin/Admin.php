@@ -259,8 +259,12 @@ class Admin implements AdminInterface
     public function generateRouteName($actionName)
     {
         if (!array_key_exists($actionName, $this->getConfiguration()->getParameter('actions'))) {
-            $message = 'Invalid action name %s for admin %s (available action are: %s)';
-            throw new Exception(sprintf($message, $actionName, $this->getName(), implode(', ', $this->getActionNames())));
+            throw new Exception(
+                sprintf('Invalid action name %s for admin %s (available action are: %s)', 
+                $actionName,
+                $this->getName(),
+                implode(', ', $this->getActionNames()))
+            );
         }
         // get routing name pattern
         $routingPattern = $this->getConfiguration()->getParameter('routing_name_pattern');

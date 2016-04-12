@@ -2,12 +2,10 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\Action\Configuration;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Field\Field;
-use LAG\AdminBundle\Tests\Base;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use LAG\AdminBundle\Tests\AdminTestBase;
 
-class ActionConfigurationTest extends Base
+class ActionConfigurationTest extends AdminTestBase
 {
     public function testActionConfiguration()
     {

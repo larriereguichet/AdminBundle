@@ -56,5 +56,5 @@ interface FieldInterface
      *
      * @param ApplicationConfiguration $configuration
      */
-    public function setConfiguration($configuration);
+    public function setApplicationConfiguration($configuration);
 }

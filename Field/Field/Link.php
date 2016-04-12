@@ -3,97 +3,47 @@
 namespace LAG\AdminBundle\Field\Field;
 
 use LAG\AdminBundle\Field\EntityFieldInterface;
+use LAG\AdminBundle\Field\Field;
+use LAG\AdminBundle\Field\TwigFieldInterface;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Twig_Environment;
 
-class Link extends StringField implements EntityFieldInterface
+class Link extends StringField implements EntityFieldInterface, TwigFieldInterface
 {
-    /**
-     * @var string
-     */
-    protected $route;
-
-    /**
-     * @var array
-     */
-    protected $parameters;
-
-    /**
-     * @var Twig_Environment
-     */
-    protected $twig;
-
-    /**
-     * @var string
-     */
-    protected $template;
-
     /**
      * @var Object
      */
     protected $entity;
 
     /**
-     * Link target.
-     *
-     * @var string
-     */
-    protected $target;
-
-    /**
-     * If an url is provided we use it instead of route.
-     *
-     * @var string
-     */
-    protected $url;
-
-    /**
-     * @var string
-     */
-    protected $title;
-
-    /**
-     * Font awesome icon name
-     *
-     * @var string
-     */
-    protected $icon;
-
-    /**
-     * Link text
-     *
-     * @var
-     */
-    protected $text;
-
-    /**
-     * Render link template filled with configured options
+     * Render link template filled with configured options.
      *
      * @param mixed $value
      * @return string
      */
     public function render($value)
     {
-        $text = $this->text ?: parent::render($value);
+        $text = $this->options->get('text') ?: parent::render($value);
         $parameters = [];
         $accessor = PropertyAccess::createPropertyAccessor();
 
-        foreach ($this->parameters as $parameterName => $fieldName) {
+        foreach ($this->options->get('parameters') as $parameterName => $fieldName) {
             if (!$fieldName) {
                 $fieldName = $parameterName;
             }
             $parameters[$parameterName] = $accessor->getValue($this->entity, $fieldName);
         }
-        $this->twig->getFunction('path');
-        $render = $this->twig->render($this->template, [
+
+        $render = $this->twig->render($this->options->get('template'), [
             'text' => $text,
-            'route' => $this->route,
-            'parameters' => $parameters,
-            'target' => $this->target,
-            'url' => $this->url,
-            'title' => $this->title,
-            'icon' => $this->icon,
+            'route' => $this->options->get('route'),
+            'parameters' => $this->options->get('parameters'),
+            'target' => $this->options->get('target'),
+            'url' => $this->options->get('url'),
+            'title' => $this->options->get('title'),
+            'icon' => $this->options->get('icon'),
         ]);
 
         return $render;
@@ -107,10 +57,13 @@ class Link extends StringField implements EntityFieldInterface
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        // inherit parent's option
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
-            'length' => $this->configuration->getParameter('string_length'),
-            'replace' => $this->configuration->getParameter('string_length_truncate'),
-            'template' => 'LAGAdminBundle:Render:link.html.twig',
+            'length' => $this->applicationConfiguration->getParameter('string_length'),
+            'replace' => $this->applicationConfiguration->getParameter('string_length_truncate'),
+            'template' => $this->applicationConfiguration->getParameter('fields_template_mapping')[Field::TYPE_LINK],
             'title' => '',
             'icon' => '',
             'target' => '_self',
@@ -127,26 +80,15 @@ class Link extends StringField implements EntityFieldInterface
             '_self',
             '_blank',
         ]);
-    }
+        $resolver->setNormalizer('route', function(Options $options, $value) {
 
-    /**
-     * Set resolved options.
-     *
-     * @param array $options
-     * @return void
-     */
-    public function setOptions(array $options)
-    {
-        $this->length = $options['length'];
-        $this->replace = $options['replace'];
-        $this->template = $options['template'];
-        $this->title = $options['title'];
-        $this->icon = $options['icon'];
-        $this->route = $options['route'];
-        $this->parameters = $options['parameters'];
-        $this->target = $options['target'];
-        $this->url = $options['url'];
-        $this->text = $options['text'];
+            // route or url should be defined
+            if ($value === null && $options->offsetGet('url') === null) {
+                throw new InvalidOptionsException('You must set either an url or a route');
+            }
+
+            return $value;
+        });
     }
 
     /**
@@ -157,16 +99,6 @@ class Link extends StringField implements EntityFieldInterface
     public function getType()
     {
         return 'link';
-    }
-
-    /**
-     * Define Twig engine.
-     *
-     * @param Twig_Environment $twig
-     */
-    public function setTwig(Twig_Environment $twig)
-    {
-        $this->twig = $twig;
     }
 
     /**

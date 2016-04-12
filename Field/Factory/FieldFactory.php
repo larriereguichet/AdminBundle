@@ -118,7 +118,7 @@ class FieldFactory
             throw new Exception("Field class {$fieldClass} must implements " . FieldInterface::class);
         }
         $field->setName($fieldName);
-        $field->setConfiguration($this->configuration);
+        $field->setApplicationConfiguration($this->configuration);
 
         if ($field instanceof TranslatableFieldInterface) {
             $field->setTranslator($this->translator);
@@ -131,13 +131,13 @@ class FieldFactory
 
         // configure field default options
         $field->configureOptions($resolver);
+        
         // resolve options
         $options = $resolver->resolve($configuration['options']);
 
-        // set options and value
+        // set options
         $field->setOptions($options);
-
-
+        
         return $field;
     }
 

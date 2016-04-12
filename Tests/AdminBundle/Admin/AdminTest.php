@@ -7,13 +7,13 @@ use Exception;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Tests\Base;
+use LAG\AdminBundle\Tests\AdminTestBase;
 use stdClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 
-class AdminTest extends Base
+class AdminTest extends AdminTestBase
 {
     /**
      * Test if configuration is properly set.
@@ -595,7 +595,6 @@ class AdminTest extends Base
                     'custom_list' => [],
                     'custom_edit' => [],
                 ],
-                'manager' => 'Test\TestBundle\Manager\TestManager',
                 'routing_url_pattern' => 'lag.admin.{admin}',
                 'routing_name_pattern' => 'lag.{admin}.{action}',
                 'data_provider' => null,

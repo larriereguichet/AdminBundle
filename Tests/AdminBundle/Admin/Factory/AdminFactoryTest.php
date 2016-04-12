@@ -4,10 +4,10 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Admin\Factory;
 
 use Exception;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Tests\Base;
+use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
-class AdminFactoryTest extends Base
+class AdminFactoryTest extends AdminTestBase
 {
     /**
      * Init method should create Admin object according to given configuration.
@@ -62,7 +62,7 @@ class AdminFactoryTest extends Base
             $request = new Request([], [], [
                 '_route_params' => [
                     '_admin' => $name,
-                    // see Base->mockActionFactory
+                    // see AdminTestBase->mockActionFactory
                     '_action' => 'test'
                 ]
             ]);

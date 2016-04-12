@@ -5,9 +5,9 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Event\Subscriber;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber;
-use LAG\AdminBundle\Tests\Base;
+use LAG\AdminBundle\Tests\AdminTestBase;
 
-class ExtraConfigurationSubscriberTest extends Base
+class ExtraConfigurationSubscriberTest extends AdminTestBase
 {
     /**
      * ExtraConfigurationSubscriber SHOULD subscribe to the Admin creation and the Action creation event

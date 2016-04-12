@@ -7,9 +7,9 @@ use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Filter;
 use LAG\AdminBundle\Field\Field\StringField;
-use LAG\AdminBundle\Tests\Base;
+use LAG\AdminBundle\Tests\AdminTestBase;
 
-class ActionFactoryTest extends Base
+class ActionFactoryTest extends AdminTestBase
 {
     public function testCreate()
     {

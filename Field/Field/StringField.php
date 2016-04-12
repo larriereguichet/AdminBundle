@@ -4,7 +4,6 @@ namespace LAG\AdminBundle\Field\Field;
 
 use LAG\AdminBundle\Field\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * String field.
@@ -14,33 +13,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class StringField extends Field
 {
-    /**
-     * Length before truncate the string. If null, no truncation will be made.
-     *
-     * @var int
-     */
-    protected $length;
-
-    /**
-     * String use for replace truncated part.
-     *
-     * @var string
-     */
-    protected $replace;
-
-    /**
-     * True if value should be translated at render.
-     *
-     * @var bool
-     */
-    protected $translation;
-
-    /**
-     * Translator.
-     *
-     * @var TranslatorInterface
-     */
-    protected $translator;
 
     /**
      * Render a string that can be truncated according to is length.
@@ -50,11 +22,21 @@ class StringField extends Field
      */
     public function render($value)
     {
-        if ($this->translation) {
-            $value = $this->translator->trans($value);
+        if ($this->options->get('translation')) {
+            $value = $this
+                ->translator
+                ->trans($value);
         }
-        if ($this->length && strlen($value) > $this->length) {
-            $value = substr($value, 0, $this->length) . $this->replace;
+        $maximumStringLength = $this
+            ->options
+            ->get('length');
+        $replaceString = $this
+            ->options
+            ->get('replace');
+
+        // truncate string if required
+        if ($maximumStringLength && strlen($value) > $maximumStringLength) {
+            $value = substr($value, 0, $maximumStringLength) . $replaceString;
         }
 
         return $value;
@@ -68,32 +50,10 @@ class StringField extends Field
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'length' => $this->configuration->getParameter('string_length'),
-            'replace' => $this->configuration->getParameter('string_length_truncate'),
+            'length' => $this->applicationConfiguration->getParameter('string_length'),
+            'replace' => $this->applicationConfiguration->getParameter('string_length_truncate'),
             'translation' => true,
         ]);
-    }
-
-    /**
-     * Define configured options
-     *
-     * @param array $options
-     */
-    public function setOptions(array $options)
-    {
-        $this->length = (int)$options['length'];
-        $this->replace = $options['replace'];
-        $this->translation = $options['translation'];
-    }
-
-    /**
-     * Define translator.
-     *
-     * @param TranslatorInterface $translator
-     */
-    public function setTranslator(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
     }
 
     /**

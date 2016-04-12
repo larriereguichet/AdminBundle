@@ -46,7 +46,7 @@ class ActionConfiguration extends Configuration
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        // action title. By default its the action name
+        // action title, default to action's name
         $resolver
             ->setDefault('title', Container::camelize($this->actionName))
             ->setAllowedTypes('title', 'string');
@@ -64,7 +64,7 @@ class ActionConfiguration extends Configuration
                 'ROLE_ADMIN'
             ]);
 
-        // by default, all export type are allowed
+        // by default, all exports type are allowed
         $resolver
             ->setDefault('export', [
                 'json',

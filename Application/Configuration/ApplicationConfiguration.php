@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Application\Configuration;
 use LAG\AdminBundle\Configuration\Configuration;
 use LAG\AdminBundle\Configuration\ConfigurationInterface;
 use LAG\AdminBundle\Field\Field;
+use LAG\AdminBundle\Field\Field\StringField;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
@@ -149,19 +150,33 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
 
         // admin field type mapping
         $defaultMapping = [
-            Field::TYPE_STRING => 'LAG\AdminBundle\Field\Field\StringField',
-            Field::TYPE_ARRAY => 'LAG\AdminBundle\Field\Field\ArrayField',
-            Field::TYPE_LINK => 'LAG\AdminBundle\Field\Field\Link',
-            Field::TYPE_DATE => 'LAG\AdminBundle\Field\Field\Date',
-            Field::TYPE_COUNT => 'LAG\AdminBundle\Field\Field\Count',
-            Field::TYPE_ACTION => 'LAG\AdminBundle\Field\Field\Action',
-            Field::TYPE_COLLECTION => 'LAG\AdminBundle\Field\Field\Collection',
-            Field::TYPE_BOOLEAN => 'LAG\AdminBundle\Field\Field\Boolean',
+            Field::TYPE_STRING => StringField::class,
+            Field::TYPE_ARRAY => Field\ArrayField::class,
+            Field::TYPE_LINK => Field\Link::class,
+            Field::TYPE_DATE => Field\Date::class,
+            Field::TYPE_COUNT => Field\Count::class,
+            Field::TYPE_ACTION => Field\Action::class,
+            Field::TYPE_COLLECTION => Field\Collection::class,
+            Field::TYPE_BOOLEAN => Field\Boolean::class,
         ];
 
         $resolver->setDefault('fields_mapping', $defaultMapping);
         $resolver->setAllowedTypes('fields_mapping', 'array');
         $resolver->setNormalizer('fields_mapping', function (Options $options, $value) use ($defaultMapping) {
+            // merge with default mapping to allow override
+            $value = array_merge($defaultMapping, $value);
+
+            return $value;
+        });
+
+        // fields templates mapping
+        $defaultMapping = [
+            Field::TYPE_LINK => 'LAGAdminBundle:Render:link.html.twig',
+        ];
+
+        $resolver->setDefault('fields_template_mapping', $defaultMapping);
+        $resolver->setAllowedTypes('fields_template_mapping', 'array');
+        $resolver->setNormalizer('fields_template_mapping', function (Options $options, $value) use ($defaultMapping) {
             // merge with default mapping to allow override
             $value = array_merge($defaultMapping, $value);
 

@@ -4,16 +4,13 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Admin\Configuration;
 
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Tests\Base;
+use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Entity\TestEntity;
 use LAG\AdminBundle\Tests\Form\TestForm;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AdminConfigurationTest extends Base
+class AdminConfigurationTest extends AdminTestBase
 {
-    /**
-     * 
-     */
     public function testConfiguration()
     {
         $resolver = new OptionsResolver();

@@ -53,7 +53,6 @@ class AdminConfiguration extends Configuration implements ConfigurationInterface
                 'delete' => [],
             ],
             'batch' => true,
-            'manager' => 'LAG\AdminBundle\Manager\GenericManager',
             'routing_url_pattern' => $routing['url_pattern'],
             'routing_name_pattern' => $routing['name_pattern'],
             'controller' => 'LAGAdminBundle:CRUD',

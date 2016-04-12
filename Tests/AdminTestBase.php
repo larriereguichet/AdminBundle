@@ -34,8 +34,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig_Environment;
 
-class Base extends WebTestCase
+class AdminTestBase extends WebTestCase
 {
     /**
      * @var bool
@@ -200,6 +201,14 @@ class Base extends WebTestCase
     }
 
     /**
+     * @return Twig_Environment
+     */
+    protected function createTwigEnvironment()
+    {
+        return new TwigEnvironmentMock();
+    }
+
+    /**
      * Return Admin configurations samples
      *
      * @return array
@@ -220,7 +229,6 @@ class Base extends WebTestCase
                     'custom_list' => [],
                     'custom_edit' => [],
                 ],
-                'manager' => 'Test\TestBundle\Manager\TestManager',
                 'routing_url_pattern' => 'lag.admin.{admin}',
                 'routing_name_pattern' => 'lag.{admin}.{action}'
             ]
