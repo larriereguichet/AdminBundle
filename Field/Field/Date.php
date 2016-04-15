@@ -41,7 +41,7 @@ class Date extends Field
     {
         $resolver->setDefaults([
             'format' => $this
-                ->configuration
+                ->applicationConfiguration
                 ->getParameter('date_format'),
         ]);
     }
