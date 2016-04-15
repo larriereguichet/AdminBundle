@@ -10,8 +10,6 @@ services:
     # factories
     lag.admin.configuration_factory:
         class: '%lag.admin.configuration_factory%'
-        arguments:
-            - '@kernel'
         calls:
             - ['createApplicationConfiguration', ['%lag.admin.application_configuration%']]
 

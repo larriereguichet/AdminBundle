@@ -6,7 +6,6 @@ use LAG\AdminBundle\Configuration\Configuration;
 use LAG\AdminBundle\Configuration\ConfigurationInterface;
 use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Field\Field\StringField;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,25 +15,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ApplicationConfiguration extends Configuration implements ConfigurationInterface
 {
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
-     * ApplicationConfiguration constructor.
-     *
-     * @param KernelInterface $kernel
-     */
-    public function __construct(KernelInterface $kernel)
-    {
-        // call parent constructor
-        parent::__construct();
-
-        // kernel is required to validate resources location
-        $this->kernel = $kernel;
-    }
-
     /**
      * Configure configuration allowed parameters.
      *
@@ -59,28 +39,14 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
         $resolver->setAllowedTypes('locale', 'string');
 
         // main base template
+        // as bundles are not loaded when reading the configuration, the kernel locateResources will always failed.
+        // So we must not check resource existance here.
         $resolver->setDefault('base_template', 'LAGAdminBundle::admin.layout.html.twig');
         $resolver->setAllowedTypes('base_template', 'string');
-        $resolver->setNormalizer('base_template', function (Options $options, $value) {
-            // resource must exists
-             $this
-                ->kernel
-                ->locateResource($value);
-
-            return $value;
-        });
 
         // form block template
         $resolver->setDefault('block_template', 'LAGAdminBundle:Form:fields.html.twig');
         $resolver->setAllowedTypes('block_template', 'string');
-        $resolver->setNormalizer('block_template', function (Options $options, $value) {
-            // resource must exists
-            $this
-                ->kernel
-                ->locateResource($value);
-
-            return $value;
-        });
 
         // use bootstrap or not
         $resolver->setDefault('bootstrap', true);

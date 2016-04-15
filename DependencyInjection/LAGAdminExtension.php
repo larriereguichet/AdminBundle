@@ -10,13 +10,12 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration.
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
 class LAGAdminExtension extends Extension
 {
     /**
-     * {@inheritdoc}
+     * @param array $configs
+     * @param ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -39,10 +38,11 @@ class LAGAdminExtension extends Extension
         $container->setParameter('lag.menus', $config['menus']);
         $container->setParameter('lag.admin.application_configuration', $config['application']);
         $container->setParameter('lag.enable_extra_configuration', $config['application']['enable_extra_configuration']);
-
-
     }
 
+    /**
+     * @return string
+     */
     public function getAlias()
     {
         return 'lag_admin';

@@ -6,7 +6,6 @@ use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConfigurationFactory
@@ -15,21 +14,6 @@ class ConfigurationFactory
      * @var ApplicationConfiguration
      */
     protected $applicationConfiguration;
-
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
-     * ConfigurationFactory constructor.
-     *
-     * @param KernelInterface $kernel
-     */
-    public function __construct(KernelInterface $kernel)
-    {
-        $this->kernel = $kernel;
-    }
 
     /**
      * Create an action configuration object.
@@ -58,7 +42,7 @@ class ConfigurationFactory
     public function createApplicationConfiguration(array $configuration = [])
     {
         $resolver = new OptionsResolver();
-        $this->applicationConfiguration = new ApplicationConfiguration($this->kernel);
+        $this->applicationConfiguration = new ApplicationConfiguration();
         $this->applicationConfiguration->configureOptions($resolver);
         $this->applicationConfiguration->setParameters($resolver->resolve($configuration));
 
