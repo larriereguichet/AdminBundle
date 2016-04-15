@@ -196,7 +196,7 @@ class AdminFactory
         $routeParameters = $request->get('_route_params');
 
         if (!$routeParameters) {
-            throw new Exception('Cannot find admin _route_params parameters for request');
+            throw new Exception('Cannot find admin from request. _route_params parameters for request not found');
         }
         if (!array_key_exists('_admin', $routeParameters)) {
             throw new Exception('Cannot find admin from request. "_admin" route parameter is missing');

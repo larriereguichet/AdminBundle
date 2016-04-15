@@ -10,7 +10,9 @@ class Action extends Link
      */
     public function render($value)
     {
-        $value = $this->title;
+        $value = $this
+            ->options
+            ->get('title');
 
         return parent::render($value);
     }

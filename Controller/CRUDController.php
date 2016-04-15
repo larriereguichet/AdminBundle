@@ -7,16 +7,12 @@ use LAG\AdminBundle\Form\Handler\ListFormHandler;
 use LAG\AdminBundle\Form\Type\AdminListType;
 use LAG\AdminBundle\Form\Type\BatchActionType;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
-use DateTime;
-use Doctrine\ORM\Mapping\MappingException;
-use EE\DataExporterBundle\Service\DataExporter;
 use Exception;
 use LAG\AdminBundle\Form\Type\DeleteType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Role\Role;
@@ -46,15 +42,10 @@ class CRUDController extends Controller
         $form = $this->createForm(AdminListType::class, [
             'entities' => $admin->getEntities()
         ], [
-            'batch_actions' => $admin
-                ->getCurrentAction()
-                ->getBatchActions()
+            'batch_actions' => []
         ]);
         $form->handleRequest($request);
 
-        if ($request->get('export')) {
-            return $this->exportEntities($admin, $request->get('export'));
-        }
         if ($form->isValid()) {
             // get ids and batch action from list form data
             $formHandler = new ListFormHandler();
@@ -124,7 +115,7 @@ class CRUDController extends Controller
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
-        $form = $this->createForm($admin->getConfiguration()->getFormType(), $admin->create());
+        $form = $this->createForm($admin->getConfiguration()->getParameter('form'), $admin->create());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -169,7 +160,7 @@ class CRUDController extends Controller
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
-        $form = $this->createForm($admin->getConfiguration()->getFormType(), $admin->getUniqueEntity());
+        $form = $this->createForm($admin->getConfiguration()->getParameter('form'), $admin->getUniqueEntity());
         $form->handleRequest($request);
         $accessor = PropertyAccess::createPropertyAccessor();
 
@@ -227,60 +218,7 @@ class CRUDController extends Controller
             'form' => $form->createView(),
         ];
     }
-
-    /**
-     * Export entities according to a type (json, csv, xls...)
-     *
-     * @param AdminInterface $admin
-     * @param $exportType
-     *
-     * @return Response
-     *
-     * @throws MappingException
-     */
-    protected function exportEntities(AdminInterface $admin, $exportType)
-    {
-        // check allowed export types
-        $this->forward404Unless(in_array($exportType, ['json', 'html', 'xls', 'csv', 'xml']));
-        /** @var DataExporter $exporter */
-        $exporter = $this->get('ee.dataexporter');
-        $metadata = $this
-            ->getEntityManager()
-            ->getClassMetadata($admin->getConfiguration()->getEntityName());
-        $exportColumns = [];
-        $fields = $metadata->getFieldNames();
-        $hooks = [];
-
-        foreach ($fields as $fieldName) {
-            $exporter->addHook(function($fieldValue) {
-                // if field is an array
-                if (is_array($fieldValue)) {
-                    $value = recursiveImplode(', ', $fieldValue);
-                } elseif ($fieldValue instanceof DateTime) {
-                    // format date in string
-                    $value = $fieldValue->format('c');
-                } else {
-                    $value = $fieldValue;
-                }
-
-                return $value;
-            }, "{$fieldName}");
-            // add field column to export
-            $exportColumns[$fieldName] = $fieldName;
-        }
-        $exporter
-            ->setOptions($exportType, [
-                'fileName' => $admin->getName() . '-export-' . date('Y-m-d'),
-            ])
-            ->setColumns($exportColumns)
-            ->setData($admin->getEntities());
-        foreach ($hooks as $hookName => $hook) {
-            $exporter->addHook($hook, $hookName);
-        }
-
-        return $exporter->render();
-    }
-
+    
     /**
      * Forward to 404 if user is not allowed by configuration for an action.
      *

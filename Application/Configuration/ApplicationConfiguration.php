@@ -103,7 +103,11 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
                 throw new InvalidOptionsException('Admin translation enabled parameter should be a boolean');
             }
 
-            if (strstr($value['pattern'], '{key}') === false) {
+            if (!array_key_exists('pattern', $value)) {
+                $value['pattern'] = '{key}';
+            }
+
+            if ($value['enabled'] && strstr($value['pattern'], '{key}') === false) {
                 throw new InvalidOptionsException('Admin translation pattern should contains the {key} placeholder');
             }
 

@@ -39,7 +39,7 @@ class Link extends StringField implements EntityFieldInterface, TwigFieldInterfa
         $render = $this->twig->render($this->options->get('template'), [
             'text' => $text,
             'route' => $this->options->get('route'),
-            'parameters' => $this->options->get('parameters'),
+            'parameters' => $parameters,
             'target' => $this->options->get('target'),
             'url' => $this->options->get('url'),
             'title' => $this->options->get('title'),
@@ -83,7 +83,7 @@ class Link extends StringField implements EntityFieldInterface, TwigFieldInterfa
         $resolver->setNormalizer('route', function(Options $options, $value) {
 
             // route or url should be defined
-            if ($value === null && $options->offsetGet('url') === null) {
+            if (!$value && !$options->offsetGet('url')) {
                 throw new InvalidOptionsException('You must set either an url or a route');
             }
 
