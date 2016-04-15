@@ -8,7 +8,7 @@ php:
 
 before_install:
     - mysql -e "create database IF NOT EXISTS admin_bundle_test;"
-    - cp Tests/app/config/parameters.yml.dist Tests/app/config/parameters.yml
+    - cp Tests/Fixturesapp/config/parameters.yml.dist Tests/Fixtures/app/config/parameters.yml
 
 install:
     - composer install
