@@ -84,18 +84,8 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                 'delete' => [],
                 'batch' => []
             ];
-        } else {
-            $actions = $configuration['actions'];
-
-            foreach ($actions as $name => $action) {
-                if (!array_key_exists('batch', $action) || $action['batch'] !== false) {
-                    if ($name == 'list') {
-                        $configuration['actions']['batch'] = [];
-                    }
-                }
-            }
+            $event->setConfiguration($configuration);
         }
-        $event->setConfiguration($configuration);
     }
 
     /**
@@ -179,27 +169,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                         ]
                     ];
                 }
-            }
-        }
-        // add default menu actions if none was provided
-        if (empty($configuration['actions'])) {
-            // by default, in list action we add a create linked action
-            if ($event->getActionName() == 'list') {
-                if (in_array('create', $allowedActions)) {
-                    $configuration['actions']['create'] = [
-                        'title' => $this->getTranslationKey($this->applicationConfiguration, 'create', $event->getAdmin()->getName()),
-                        'route' => $admin->generateRouteName('create'),
-                        'icon' => 'pencil'
-                    ];
-                }
-            }
-        }
-        // for list action, add the delete batch action by defaut
-        if (empty($configuration['batch'])) {
-            if ($event->getActionName() == 'list') {
-                $configuration['batch'] = [
-                    'delete' => null
-                ];
             }
         }
         // reset action configuration

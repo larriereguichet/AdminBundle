@@ -2,7 +2,7 @@
 <script src="{{ asset('bundles/lagadmin/js/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('bundles/lagadmin/js/jquery/jquery-ui.min.js') }}"></script>
 
-{% if config.bootstrap %}
+{% if config.getParameter('bootstrap') %}
     {# bootstrap js #}
     <script src="{{ asset('bundles/lagadmin/js/bootstrap/bootstrap.min.js') }}"></script>
     <script src="{{ asset('bundles/lagadmin/js/bootstrap/metisMenu.min.js') }}"></script>

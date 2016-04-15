@@ -69,37 +69,5 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
                 'myAction' => []
             ]
         ], $event->getConfiguration());
-
-        // adminCreate method SHOULD add batch for list actions if not defined
-        $event = new AdminEvent();
-        $event->setConfiguration([
-            'actions' => [
-                'list' => []
-            ]
-        ]);
-        $subscriber->adminCreate($event);
-        $this->assertEquals([
-            'actions' => [
-                'list' => [],
-                'batch' => [],
-            ]
-        ], $event->getConfiguration());
-
-        $event = new AdminEvent();
-        $event->setConfiguration([
-            'actions' => [
-                'list' => [
-                    'batch' => false
-                ]
-            ]
-        ]);
-        $subscriber->adminCreate($event);
-        $this->assertEquals([
-            'actions' => [
-                'list' => [
-                    'batch' => false
-                ]
-            ]
-        ], $event->getConfiguration());
     }
 }

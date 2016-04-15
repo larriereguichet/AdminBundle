@@ -8,7 +8,7 @@ use LAG\AdminBundle\Configuration\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Ease Admin configuration manipulation
+ * Ease Admin configuration manipulation.
  */
 class AdminConfiguration extends Configuration implements ConfigurationInterface
 {
