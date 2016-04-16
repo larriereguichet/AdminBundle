@@ -278,7 +278,7 @@ class AdminFactory
 
             if (!($repository instanceof RepositoryInterface)) {
                 $repositoryClass = get_class($repository);
-                throw new Exception("Repository {$repositoryClass} should implements " . RepositoryInterface::class);
+                throw new Exception("Repository {$repositoryClass} should implements ".RepositoryInterface::class);
             }
 
             $dataProvider = new DataProvider($repository);
