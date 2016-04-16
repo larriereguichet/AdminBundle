@@ -36,7 +36,7 @@
     "white-october/pagerfanta-bundle": "~1.0",
     "twig/extensions": "^1.2",
     "gedmo/doctrine-extensions": "^2.4",
-    "stfalcon/tinymce-bundle": "^0.4",
+    "stfalcon/tinymce-bundle": "~2.0",
     "fabpot/php-cs-fixer": "^1.10",
     "lag/array-utils": "^0.1.0",
     "lag/doctrine-repository": "dev-master",

@@ -34,18 +34,29 @@ class Date extends Field
         return $value;
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'format' => $this->configuration->getDateFormat(),
+            'format' => $this
+                ->applicationConfiguration
+                ->getParameter('date_format'),
         ]);
     }
 
+    /**
+     * @param array $options
+     */
     public function setOptions(array $options)
     {
         $this->format = $options['format'];
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return 'date';

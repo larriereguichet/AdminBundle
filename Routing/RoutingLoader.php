@@ -83,7 +83,8 @@ class RoutingLoader implements LoaderInterface
      */
     protected function loadRouteForAction(AdminInterface $admin, ActionInterface $action, RouteCollection $routeCollection)
     {
-        $routingUrlPattern = $admin->getConfiguration()->getRoutingUrlPattern();
+        $routingUrlPattern = $admin->getConfiguration()->getParameter('routing_url_pattern');
+
         // routing pattern should contains {admin} and {action}
         if (strpos($routingUrlPattern, '{admin}') == -1 || strpos($routingUrlPattern, '{action}') == -1) {
             throw new Exception('Admin routing pattern should contains {admin} and {action} placeholder');
@@ -91,14 +92,16 @@ class RoutingLoader implements LoaderInterface
         // route path by entity name and action name
         $path = str_replace('{admin}', $admin->getName(), $routingUrlPattern);
         $path = str_replace('{action}', $action->getName(), $path);
+
         // by default, generic controller
         $defaults = [
-            '_controller' => $admin->getConfiguration()->getControllerName() . ':' . $action->getName(),
+            '_controller' => $admin->getConfiguration()->getParameter('controller') . ':' . $action->getName(),
             '_admin' => $admin->getName(),
             '_action' => $action->getName(),
         ];
         // by default, no requirements
         $requirements = [];
+
         // for delete and edit action, an id is required
         if (in_array($action->getName(), ['delete', 'edit'])) {
             $path .= '/{id}';
@@ -109,9 +112,19 @@ class RoutingLoader implements LoaderInterface
         // creating new route
         $route = new Route($path, $defaults, $requirements);
         $routeName = $admin->generateRouteName($action->getName());
-        // set route to action
-        $action->getConfiguration()->setRoute($routeName);
-        $action->getConfiguration()->setParameters($requirements);
+
+        // replace action route configuration
+        $actionConfiguration = $action
+            ->getConfiguration()
+            ->getParameters();
+
+        $actionConfiguration['route'] = $routeName;
+        $actionConfiguration['parameters'] = $requirements;
+
+        $action
+            ->getConfiguration()
+            ->setParameters($actionConfiguration);
+
         // adding route to symfony collection
         $routeCollection->add($routeName, $route);
     }

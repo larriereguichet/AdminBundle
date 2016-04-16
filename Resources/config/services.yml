@@ -4,7 +4,7 @@ imports:
 
 parameters:
     # application
-    lag.admin.application.class: LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration
+    lag.admin.application.class: LAG\AdminBundle\Application\Configuration\ApplicationConfiguration
     # events subscribers
     lag.admin.template_subscriber.class: LAG\AdminBundle\Event\Subscriber\TemplateSubscriber
     lag.admin.extra_configuration_subscriber.class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
@@ -17,33 +17,26 @@ parameters:
     lag.admin.message_handler.class: LAG\AdminBundle\Message\MessageHandler
 
 services:
-    # application
-    lag.admin.application:
-        class: %lag.admin.application.class%
-        arguments:
-            - %lag.admin.application_configuration%
-            - %locale%
-
     # events subscribers
     lag.admin.template_subscriber:
-        class: %lag.admin.template_subscriber.class%
+        class: '%lag.admin.template_subscriber.class%'
         tags:
             - {name: kernel.event_subscriber}
         arguments:
             - '@twig'
-            - '@lag.admin.application'
+            - '@lag.admin.configuration_factory'
 
     lag.admin.extra_configuration_subscriber:
-        class: %lag.admin.extra_configuration_subscriber.class%
+        class: '%lag.admin.extra_configuration_subscriber.class%'
         tags:
             - {name: kernel.event_subscriber}
         arguments:
-            - %lag.enable_extra_configuration%
+            - '%lag.enable_extra_configuration%'
             - '@doctrine'
-            - '@lag.admin.application'
+            - '@lag.admin.configuration_factory'
 
     lag.admin.admin_subscriber:
-        class: %lag.admin.admin_subscriber.class%
+        class: '%lag.admin.admin_subscriber.class%'
         tags:
             - {name: kernel.event_subscriber}
         arguments:
@@ -51,7 +44,7 @@ services:
 
     # routing
     lag.admin.routing:
-        class: %lag.admin.routing.class%
+        class: '%lag.admin.routing.class%'
         tags:
             - { name: routing.loader }
         arguments:
@@ -59,17 +52,17 @@ services:
 
     # twig
     lag.admin.twig:
-        class: %lag.admin.twig.class%
+        class: '%lag.admin.twig.class%'
         tags:
             - {name: twig.extension}
         arguments:
             - '@router'
             - '@translator'
-            - '@lag.admin.application'
+            - '@lag.admin.configuration_factory'
 
     # handler
     lag.admin.message_handler:
-        class: %lag.admin.message_handler.class%
+        class: '%lag.admin.message_handler.class%'
         arguments:
             - '@logger'
             - '@session'

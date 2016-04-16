@@ -27,21 +27,6 @@ class Admin implements AdminInterface
     use AdminTrait;
 
     /**
-     * Do not load entities on handleRequest (for create method for example)
-     */
-    const LOAD_STRATEGY_NONE = 'strategy_none';
-
-    /**
-     * Load one entity on handleRequest (edit method for example)
-     */
-    const LOAD_STRATEGY_UNIQUE = 'strategy_unique';
-
-    /**
-     * Load multiple entities on handleRequest (list method for example)
-     */
-    const LOAD_STRATEGY_MULTIPLE = 'strategy_multiple';
-
-    /**
      * Entities collection.
      *
      * @var ArrayCollection
@@ -128,11 +113,11 @@ class Admin implements AdminInterface
         $this->checkPermissions($user);
 
         // criteria filter request
-        $filter = new RequestFilter($this->currentAction->getConfiguration()->getCriteria());
+        $filter = new RequestFilter($this->currentAction->getConfiguration()->getParameter('criteria'));
         $criteriaFilter = $filter->filter($request);
 
         // pager filter request
-        if ($this->currentAction->getConfiguration()->getPager() == 'pagerfanta') {
+        if ($this->currentAction->getConfiguration()->getParameter('pager') == 'pagerfanta') {
             $filter = new PagerfantaFilter();
             $pagerFilter = $filter->filter($request);
         } else {
@@ -141,7 +126,7 @@ class Admin implements AdminInterface
         }
 
         // if load strategy is none, no entity should be loaded
-        if ($this->currentAction->getConfiguration()->getLoadStrategy() == Admin::LOAD_STRATEGY_NONE) {
+        if ($this->currentAction->getConfiguration()->getParameter('load_strategy') == Admin::LOAD_STRATEGY_NONE) {
             return;
         }
 
@@ -149,7 +134,7 @@ class Admin implements AdminInterface
         $this->load(
             $criteriaFilter->all(),
             $pagerFilter->get('order', []),
-            $this->configuration->getMaxPerPage(),
+            $this->configuration->getParameter('max_per_page'),
             $pagerFilter->get('page', 1)
         );
     }
@@ -218,7 +203,7 @@ class Admin implements AdminInterface
             // inform user everything went fine
             $this
                 ->messageHandler
-                ->handleSuccess('lag.admin.' . $this->name . '.saved');
+                ->handleSuccess('lag.admin.'.$this->name.'.saved');
             $success = true;
         } catch (Exception $e) {
             $this
@@ -248,7 +233,7 @@ class Admin implements AdminInterface
             // inform user everything went fine
             $this
                 ->messageHandler
-                ->handleSuccess('lag.admin.' . $this->name . '.deleted');
+                ->handleSuccess('lag.admin.'.$this->name.'.deleted');
             $success = true;
         } catch (Exception $e) {
             $this
@@ -273,12 +258,16 @@ class Admin implements AdminInterface
      */
     public function generateRouteName($actionName)
     {
-        if (!array_key_exists($actionName, $this->getConfiguration()->getActions())) {
-            $message = 'Invalid action name %s for admin %s (available action are: %s)';
-            throw new Exception(sprintf($message, $actionName, $this->getName(), implode(', ', $this->getActionNames())));
+        if (!array_key_exists($actionName, $this->getConfiguration()->getParameter('actions'))) {
+            throw new Exception(
+                sprintf('Invalid action name %s for admin %s (available action are: %s)', 
+                $actionName,
+                $this->getName(),
+                implode(', ', $this->getActionNames()))
+            );
         }
         // get routing name pattern
-        $routingPattern = $this->getConfiguration()->getRoutingNamePattern();
+        $routingPattern = $this->getConfiguration()->getParameter('routing_name_pattern');
         // replace admin and action name in pattern
         $routeName = str_replace('{admin}', Container::underscore($this->getName()), $routingPattern);
         $routeName = str_replace('{action}', $actionName, $routeName);
@@ -300,7 +289,7 @@ class Admin implements AdminInterface
         $pager = $this
             ->getCurrentAction()
             ->getConfiguration()
-            ->getPager();
+            ->getParameter('pager');
 
         if ($pager == 'pagerfanta') {
             // adapter to pager fanta
@@ -319,7 +308,7 @@ class Admin implements AdminInterface
                 ->findBy($criteria, $orderBy, $limit, $offset);
         }
         if (!is_array($entities) && !($entities instanceof Collection)) {
-            throw new Exception('The data provider should return either a collection or an array. Got ' . gettype($entities) . ' instead');
+            throw new Exception('The data provider should return either a collection or an array. Got '.gettype($entities).' instead');
         }
 
         if (is_array($entities)) {

@@ -4,13 +4,13 @@ namespace AdminBundle\Admin\Field;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Field\Field\ArrayField;
-use LAG\AdminBundle\Tests\Base;
+use LAG\AdminBundle\Tests\AdminTestBase;
 
-class ArrayFieldTest extends Base
+class ArrayFieldTest extends AdminTestBase
 {
     public function testRender()
     {
-        $arrayField = new ArrayField ();
+        $arrayField = new ArrayField();
         $arrayField->setOptions([
             'glue' => ', '
         ]);

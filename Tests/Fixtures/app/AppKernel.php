@@ -7,7 +7,7 @@ class AppKernel extends Kernel
 {
     public function registerBundles()
     {
-        return array(
+        return [
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
@@ -16,8 +16,8 @@ class AppKernel extends Kernel
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
             new LAG\AdminBundle\LAGAdminBundle(),
-            new Test\TestBundle\TestTestBundle(),
-        );
+            new \Test\TestBundle\TestTestBundle(),
+        ];
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)

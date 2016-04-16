@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Admin;
 
-use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Field\Field;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -65,27 +65,4 @@ interface ActionInterface
      * @param Field $field
      */
     public function addField(Field $field);
-
-    /**
-     * Return linked actions
-     *
-     * @return Action[]
-     */
-    public function getActions();
-
-    /**
-     * Defined linked actions
-     *
-     * @param array $actions
-     */
-    public function setActions($actions);
-
-    /**
-     * Add a linked action
-     *
-     * @param Action $action
-     */
-    public function addAction(Action $action);
-
-    public function getBatchActions();
 }

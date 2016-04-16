@@ -1,22 +1,22 @@
-{% extends config.layout %}
+{% extends config.getParameter('base_template') %}
 
 {% block topMenuItems %}
-    {# TODO move this in default configuration #}
-    {% if admin.hasAction('list') %}
-        <li>
-            <a href="{{ path(admin.action('list').configuration.route) }}">
-                <i class="fa fa-list"></i>
-                {{ admin.action('list').title  | trans }}</a>
-        </li>
-    {% endif %}
-    {% if admin.hasAction('create') %}
-        <li>
-            <a href="{{ path(admin.action('create').configuration.route) }}">
-                <i class="fa fa-plus"></i>
-                {{ admin.action('create').title | trans }}</a>
-        </li>
-    {% endif %}
-    {% include 'LAGAdminBundle:Action:customActions.html.twig' %}
+    {# TODO fix with knp menu #}
+    {#{% if admin.hasAction('list') %}#}
+        {#<li>#}
+            {#<a href="{{ path(admin.action('list').configuration.route) }}">#}
+                {#<i class="fa fa-list"></i>#}
+                {#{{ admin.action('list').title  | trans }}</a>#}
+        {#</li>#}
+    {#{% endif %}#}
+    {#{% if admin.hasAction('create') %}#}
+        {#<li>#}
+            {#<a href="{{ path(admin.action('create').configuration.route) }}">#}
+                {#<i class="fa fa-plus"></i>#}
+                {#{{ admin.action('create').title | trans }}</a>#}
+        {#</li>#}
+    {#{% endif %}#}
+    {#{% include 'LAGAdminBundle:Action:customActions.html.twig' %}#}
 {% endblock %}
 
 {% block content %}
@@ -36,24 +36,25 @@
 
                         <div class="form-group">
                             <div class="text-right button-list">
-                                <a href="{{ path(admin.action('list').configuration.route) }}"
+                                <a href="{{ path(admin.action('list').configuration.getParameter('route')) }}"
                                    class="btn"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
                                     {{ 'lag.admin.cancel' | trans }}</a>
-                                {% if admin.entity.id is defined %}
-                                    <a href="{{ path(admin.action('delete').configuration.route, {id: admin.entity.id}) }}"
+                                {% if admin.uniqueEntity.id is defined %}
+                                    <a href="{{ path(admin.action('delete').configuration.getParameter('route'), {id: admin.uniqueEntity.id}) }}"
                                        class="btn btn-danger">{{ 'lag.admin.delete' | trans }}
                                         <i class="fa fa-remove"></i>
                                     </a>
                                 {% endif %}
-                                {% if admin.currentAction.submitActions | length > 0 %}
-                                    <ul>
-                                        {% for action in admin.currentAction.submitActions %}
-                                            <li class="{{ getClassForRoute(action.route) }}">
-                                                {{ AdminBundle.actionLink(action) }}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
+                                {# TODO fix with knp menu #}
+                                {#{% if admin.currentAction.submitActions | length > 0 %}#}
+                                    {#<ul>#}
+                                        {#{% for action in admin.currentAction.submitActions %}#}
+                                            {#<li class="{{ getClassForRoute(action.route) }}">#}
+                                                {#{{ AdminBundle.actionLink(action) }}#}
+                                            {#</li>#}
+                                        {#{% endfor %}#}
+                                    {#</ul>#}
+                                {#{% endif %}#}
                                 <button type="submit" value="save" name="submit"
                                         class="btn btn-default">{{ 'lag.admin.save' | trans }}
                                     <i class="fa fa-floppy-o"></i></button>
@@ -74,9 +75,9 @@
     {{ tinymce_init() }}
 {% endblock %}
 
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/ckeditor.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/ckeditor-gray.theme.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/dashicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/editor.min.css') }}">
-{% endblock %}
+{#{% block stylesheets %}#}
+    {#<link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/ckeditor.min.css') }}">#}
+    {#<link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/ckeditor-gray.theme.min.css') }}">#}
+    {#<link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/dashicons.min.css') }}">#}
+    {#<link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/ckeditor/editor.min.css') }}">#}
+{#{% endblock %}#}

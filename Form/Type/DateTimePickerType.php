@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Form\Type;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,7 +20,7 @@ class DateTimePickerType extends AbstractType
                 'class' => 'datepicker',
             ],
             'widget' => 'single_text',
-            'format' => $this->configuration->getDateFormat(),
+            'format' => $this->configuration->getParameter('date_format'),
         ]);
     }
 

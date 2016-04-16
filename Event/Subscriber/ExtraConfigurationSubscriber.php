@@ -5,9 +5,11 @@ namespace LAG\AdminBundle\Event\Subscriber;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Utils\FieldTypeGuesser;
+use LAG\AdminBundle\Utils\TranslationKeyTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -15,6 +17,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ExtraConfigurationSubscriber implements EventSubscriberInterface
 {
+    use TranslationKeyTrait;
+
     /**
      * @var bool
      */
@@ -46,17 +50,17 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      *
      * @param bool $enableExtraConfiguration
      * @param Registry $doctrine
-     * @param ApplicationConfiguration $applicationConfiguration
+     * @param ConfigurationFactory $configurationFactory
      */
     public function __construct(
         $enableExtraConfiguration = true,
         Registry $doctrine,
-        ApplicationConfiguration $applicationConfiguration
+        ConfigurationFactory $configurationFactory
     ) {
         $this->enableExtraConfiguration = $enableExtraConfiguration;
         // entity manager can be closed. Scrutinizer recommands to inject registry instead
         $this->entityManager = $doctrine->getManager();
-        $this->applicationConfiguration = $applicationConfiguration;
+        $this->applicationConfiguration = $configurationFactory->getApplicationConfiguration();
     }
 
     /**
@@ -80,18 +84,8 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                 'delete' => [],
                 'batch' => []
             ];
-        } else {
-            $actions = $configuration['actions'];
-
-            foreach ($actions as $name => $action) {
-                if (!array_key_exists('batch', $action) || $action['batch'] !== false) {
-                    if ($name == 'list') {
-                        $configuration['actions']['batch'] = [];
-                    }
-                }
-            }
+            $event->setConfiguration($configuration);
         }
-        $event->setConfiguration($configuration);
     }
 
     /**
@@ -113,7 +107,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         // allowed actions according to the admin
         $keys = $admin
             ->getConfiguration()
-            ->getActions();
+            ->getParameter('actions');
         $allowedActions = array_keys($keys);
 
         // if no field was provided in configuration, we try to take fields from doctrine metadata
@@ -123,7 +117,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             $metadata = $this
                 ->entityManager
                 ->getMetadataFactory()
-                ->getMetadataFor($admin->getConfiguration()->getEntityName());
+                ->getMetadataFor($admin->getConfiguration()->getParameter('entity'));
             $fieldsName = $metadata->getFieldNames();
 
             foreach ($fieldsName as $name) {
@@ -152,7 +146,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                     $configuration['fields']['_actions']['options']['_edit'] = [
                         'type' => 'action',
                         'options' => [
-                            'title' => $this->applicationConfiguration->getTranslationKey('edit', $event->getAdmin()->getName()),
+                            'title' => $this->getTranslationKey($this->applicationConfiguration, 'edit', $event->getAdmin()->getName()),
                             'route' => $admin->generateRouteName('edit'),
                             'parameters' => [
                                 'id' => false
@@ -166,7 +160,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                     $configuration['fields']['_actions']['options']['_delete'] = [
                         'type' => 'action',
                         'options' => [
-                            'title' => $this->applicationConfiguration->getTranslationKey('delete', $event->getAdmin()->getName()),
+                            'title' => $this->getTranslationKey($this->applicationConfiguration, 'delete', $event->getAdmin()->getName()),
                             'route' => $admin->generateRouteName('delete'),
                             'parameters' => [
                                 'id' => false
@@ -175,27 +169,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                         ]
                     ];
                 }
-            }
-        }
-        // add default menu actions if none was provided
-        if (empty($configuration['actions'])) {
-            // by default, in list action we add a create linked action
-            if ($event->getActionName() == 'list') {
-                if (in_array('create', $allowedActions)) {
-                    $configuration['actions']['create'] = [
-                        'title' => $this->applicationConfiguration->getTranslationKey('create', $event->getAdmin()->getName()),
-                        'route' => $admin->generateRouteName('create'),
-                        'icon' => 'pencil'
-                    ];
-                }
-            }
-        }
-        // for list action, add the delete batch action by defaut
-        if (empty($configuration['batch'])) {
-            if ($event->getActionName() == 'list') {
-                $configuration['batch'] = [
-                    'delete' => null
-                ];
             }
         }
         // reset action configuration

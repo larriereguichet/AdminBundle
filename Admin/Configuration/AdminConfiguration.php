@@ -2,190 +2,67 @@
 
 namespace LAG\AdminBundle\Admin\Configuration;
 
-use Doctrine\ORM\Mapping\ClassMetadata;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Configuration\Configuration;
+use LAG\AdminBundle\Configuration\ConfigurationInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Ease Admin configuration manipulation
+ * Ease Admin configuration manipulation.
  */
-class AdminConfiguration
+class AdminConfiguration extends Configuration implements ConfigurationInterface
 {
     /**
-     * Admin name
-     *
-     * @var string
+     * @var ApplicationConfiguration
      */
-    protected $name;
-
-    /**
-     * @var string
-     */
-    protected $controllerName;
-
-    /**
-     * @var string
-     */
-    protected $entityName;
-
-    /**
-     * Custom data provider name
-     *
-     * @var string
-     */
-    protected $dataProvider;
-
-    /**
-     * @var string
-     */
-    protected $formType;
-
-    /**
-     * @var array
-     */
-    protected $actions = [];
-
-    /**
-     * @var int
-     */
-    protected $maxPerPage = 25;
-
-    /**
-     * @var string
-     */
-    protected $routingNamePattern;
-
-    /**
-     * @var string
-     */
-    protected $routingUrlPattern;
-
-    /**
-     * @var ClassMetadata
-     */
-    protected $metadata;
-
-    /**
-     * Original admin configuration.
-     *
-     * @var array
-     */
-    protected $adminConfiguration;
+    protected $applicationConfiguration;
 
     /**
      * AdminConfiguration constructor.
      *
-     * @param array $configuration
+     * @param ApplicationConfiguration $applicationConfiguration
      */
-    public function __construct(array $configuration)
+    public function __construct(ApplicationConfiguration $applicationConfiguration)
     {
-        $this->controllerName = $configuration['controller'];
-        $this->entityName = $configuration['entity'];
-        $this->formType = $configuration['form'];
-        $this->actions = $configuration['actions'];
-        $this->maxPerPage = $configuration['max_per_page'];
-        $this->routingNamePattern = $configuration['routing_name_pattern'];
-        $this->routingUrlPattern = $configuration['routing_url_pattern'];
-        $this->adminConfiguration = $configuration;
-        $this->dataProvider = $configuration['data_provider'];
-        $this->metadata = $configuration['metadata'];
+        parent::__construct();
+
+        $this->applicationConfiguration = $applicationConfiguration;
     }
 
     /**
-     * @return string
+     * @param OptionsResolver $resolver
      */
-    public function getControllerName()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return $this->controllerName;
-    }
+        // inherited routing configuration from global application configuration
+        $routing = $this
+            ->applicationConfiguration
+            ->getParameter('routing');
 
-    /**
-     * @return string
-     */
-    public function getEntityName()
-    {
-        return $this->entityName;
-    }
+        // inherited max per page configuration
+        $maxPerPage = $this
+            ->applicationConfiguration
+            ->getParameter('max_per_page');
 
-    /**
-     * @return string
-     */
-    public function getFormType()
-    {
-        return $this->formType;
-    }
-
-    /**
-     * @return array
-     */
-    public function getActions()
-    {
-        return $this->actions;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxPerPage()
-    {
-        return $this->maxPerPage;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRoutingNamePattern()
-    {
-        return $this->routingNamePattern;
-    }
-
-    /**
-     * @param string $routingNamePattern
-     */
-    public function setRoutingNamePattern($routingNamePattern)
-    {
-        $this->routingNamePattern = $routingNamePattern;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRoutingUrlPattern()
-    {
-        return $this->routingUrlPattern;
-    }
-
-    /**
-     * @param string $routingUrlPattern
-     */
-    public function setRoutingUrlPattern($routingUrlPattern)
-    {
-        $this->routingUrlPattern = $routingUrlPattern;
-    }
-
-    /**
-     * @return ClassMetadata
-     */
-    public function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    /**
-     * Return custom data provider name.
-     *
-     * @return string
-     */
-    public function getDataProvider()
-    {
-        return $this->dataProvider;
-    }
-
-    /**
-     * Return original admin configuration.
-     *
-     * @return array
-     */
-    public function getAdminConfiguration()
-    {
-        return $this->adminConfiguration;
+        // optional options
+        $resolver->setDefaults([
+            'actions' => [
+                'list' => [],
+                'create' => [],
+                'edit' => [],
+                'delete' => [],
+            ],
+            'batch' => true,
+            'routing_url_pattern' => $routing['url_pattern'],
+            'routing_name_pattern' => $routing['name_pattern'],
+            'controller' => 'LAGAdminBundle:CRUD',
+            'max_per_page' => $maxPerPage,
+            'data_provider' => null,
+        ]);
+        // required options
+        $resolver->setRequired([
+            'entity',
+            'form',
+        ]);
     }
 }
