@@ -42,7 +42,7 @@ class AdminListType extends AbstractType
                 if (!empty($data['entities'])) {
                     /** @var Id $entity */
                     foreach ($data['entities'] as $entity) {
-                        $form->add('batch_' . $entity->getId(), CheckboxType::class, [
+                        $form->add('batch_'.$entity->getId(), CheckboxType::class, [
                             'value' => $entity->getId(),
                             'label' => false,
                             'required' => false

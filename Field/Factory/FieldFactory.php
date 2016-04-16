@@ -118,7 +118,7 @@ class FieldFactory
         $field = new $fieldClass();
 
         if (!($field instanceof FieldInterface)) {
-            throw new Exception("Field class {$fieldClass} must implements " . FieldInterface::class);
+            throw new Exception("Field class {$fieldClass} must implements ".FieldInterface::class);
         }
         $field->setName($fieldName);
         $field->setApplicationConfiguration($this->configuration);

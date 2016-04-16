@@ -36,7 +36,7 @@ class StringField extends Field
 
         // truncate string if required
         if ($maximumStringLength && strlen($value) > $maximumStringLength) {
-            $value = substr($value, 0, $maximumStringLength) . $replaceString;
+            $value = substr($value, 0, $maximumStringLength).$replaceString;
         }
 
         return $value;

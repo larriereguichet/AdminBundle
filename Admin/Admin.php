@@ -203,7 +203,7 @@ class Admin implements AdminInterface
             // inform user everything went fine
             $this
                 ->messageHandler
-                ->handleSuccess('lag.admin.' . $this->name . '.saved');
+                ->handleSuccess('lag.admin.'.$this->name.'.saved');
             $success = true;
         } catch (Exception $e) {
             $this
@@ -233,7 +233,7 @@ class Admin implements AdminInterface
             // inform user everything went fine
             $this
                 ->messageHandler
-                ->handleSuccess('lag.admin.' . $this->name . '.deleted');
+                ->handleSuccess('lag.admin.'.$this->name.'.deleted');
             $success = true;
         } catch (Exception $e) {
             $this
@@ -308,7 +308,7 @@ class Admin implements AdminInterface
                 ->findBy($criteria, $orderBy, $limit, $offset);
         }
         if (!is_array($entities) && !($entities instanceof Collection)) {
-            throw new Exception('The data provider should return either a collection or an array. Got ' . gettype($entities) . ' instead');
+            throw new Exception('The data provider should return either a collection or an array. Got '.gettype($entities).' instead');
         }
 
         if (is_array($entities)) {
