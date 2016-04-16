@@ -136,4 +136,12 @@ interface AdminInterface
      * @return bool
      */
     public function isActionGranted($actionName, array $roles);
+
+    /**
+     * Try to find a property to get a label from an entity. If found, it returns the property value through the
+     * property accessor.
+     *
+     * @return string
+     */
+    public function getEntityLabel();
 }
