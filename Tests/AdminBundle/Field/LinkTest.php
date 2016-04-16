@@ -15,7 +15,7 @@ class LinkTest extends AdminTestBase
         $options = [
             'route' => 'route_test',
             'parameters' => [
-                'id'
+                'id' => null
             ],
             'target' => '_blank',
             'title' => 'MyTitle',
@@ -36,7 +36,7 @@ class LinkTest extends AdminTestBase
         $this->assertEquals('LAGAdminBundle:Render:link.html.twig', $result['template']);
         $this->assertEquals('test', $result['parameters']['text']);
         $this->assertEquals('route_test', $result['parameters']['route']);
-        $this->assertEquals(['id'], $result['parameters']['parameters']);
+        $this->assertEquals($options['parameters'], $result['parameters']['parameters']);
         $this->assertEquals('_blank', $result['parameters']['target']);
         $this->assertEquals('MyTitle', $result['parameters']['title']);
         $this->assertEquals('fa-test', $result['parameters']['icon']);
