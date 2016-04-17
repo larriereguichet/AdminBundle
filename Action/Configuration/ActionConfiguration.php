@@ -29,9 +29,9 @@ class ActionConfiguration extends Configuration
      * ActionConfiguration constructor.
      *
      * @param $actionName
-     * @param AdminInterface|null $admin
+     * @param AdminInterface $admin
      */
-    public function __construct($actionName, AdminInterface $admin = null)
+    public function __construct($actionName, AdminInterface $admin)
     {
         parent::__construct();
 
@@ -56,7 +56,22 @@ class ActionConfiguration extends Configuration
             ->setDefault('fields', [
                 'id' => []
             ])
-            ->setAllowedTypes('fields', 'array');
+            ->setAllowedTypes('fields', 'array')
+            ->setNormalizer('fields', function(Options $options, $fields) {
+                $normalizedFields = [];
+
+                foreach ($fields as $name => $field) {
+
+                    if ($field === null) {
+                        $field = [];
+                    }
+
+                    $normalizedFields[$name] = $field;
+                }
+
+                return $normalizedFields;
+            })
+        ;
 
         // action permissions. By default, only admin are allowed
         $resolver
@@ -160,5 +175,24 @@ class ActionConfiguration extends Configuration
 
         // filters
         $resolver->setDefault('filters', []);
+
+        // menus
+        $resolver->setDefault('menu', false);
+//        $resolver->setNormalizer('menu', function(Options $options, $value) {
+//
+//            // if menu is enabled, either user provided an existing action name or a route, or list action is choosen
+//            // by default, for each item
+//            if ($value && is_array($value)) {
+//
+//                foreach ($value as $menu) {
+//                    if (!array_key_exists('route', $menu)) {
+//
+//                        if (!array_key_exists('action', $menu))
+//
+//                    }
+//                }
+//
+//            }
+//        });
     }
 }

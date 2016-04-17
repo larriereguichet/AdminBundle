@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Admin\Configuration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\Configuration;
 use LAG\AdminBundle\Configuration\ConfigurationInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -64,5 +65,25 @@ class AdminConfiguration extends Configuration implements ConfigurationInterface
             'entity',
             'form',
         ]);
+
+        $resolver->setDefault('menu', [
+            'main' => [
+                'action' => 'list'
+            ]
+        ]);
+
+        $resolver->setNormalizer('actions', function(Options $options, $actions) {
+            $normalizedActions = [];
+
+            foreach ($actions as $name => $action) {
+
+                if ($action === null) {
+                    $action = [];
+                }
+                $normalizedActions[$name] = $action;
+            }
+
+            return $normalizedActions;
+        });
     }
 }

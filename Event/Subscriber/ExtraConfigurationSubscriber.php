@@ -5,11 +5,11 @@ namespace LAG\AdminBundle\Event\Subscriber;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
+use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Utils\FieldTypeGuesser;
-use LAG\AdminBundle\Utils\TranslationKeyTrait;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -137,16 +137,24 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         }
         // configured linked actions
         if (array_key_exists('_actions', $configuration['fields'])
+            && $configuration['fields']['_actions']
             && !array_key_exists('type', $configuration['fields']['_actions'])
         ) {
             // in list view, we add by default and an edit and a delete button
             if ($event->getActionName() == 'list') {
+
+                $translationPattern = $this
+                    ->applicationConfiguration
+                    ->getParameter('translation')['pattern']
+                ;
+                
+                
                 if (in_array('edit', $allowedActions)) {
                     $configuration['fields']['_actions']['type'] = 'collection';
                     $configuration['fields']['_actions']['options']['_edit'] = [
                         'type' => 'action',
                         'options' => [
-                            'title' => $this->getTranslationKey($this->applicationConfiguration, 'edit', $event->getAdmin()->getName()),
+                            'title' => $this->getTranslationKey($translationPattern, 'edit', $event->getAdmin()->getName()),
                             'route' => $admin->generateRouteName('edit'),
                             'parameters' => [
                                 'id' => false
@@ -160,7 +168,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                     $configuration['fields']['_actions']['options']['_delete'] = [
                         'type' => 'action',
                         'options' => [
-                            'title' => $this->getTranslationKey($this->applicationConfiguration, 'delete', $event->getAdmin()->getName()),
+                            'title' => $this->getTranslationKey($translationPattern, 'delete', $event->getAdmin()->getName()),
                             'route' => $admin->generateRouteName('delete'),
                             'parameters' => [
                                 'id' => false

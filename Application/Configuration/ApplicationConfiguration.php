@@ -104,7 +104,7 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
             }
 
             if (!array_key_exists('pattern', $value)) {
-                $value['pattern'] = '{key}';
+                $value['pattern'] = '{admin}.{key}';
             }
 
             if ($value['enabled'] && strstr($value['pattern'], '{key}') === false) {

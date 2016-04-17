@@ -173,11 +173,15 @@ class AdminFactory
             $event->setConfiguration($actionConfiguration);
             $event->setAdmin($admin);
             $event->setActionName($actionName);
-            $this->eventDispatcher->dispatch(AdminEvent::ACTION_CREATE, $event);
+            $this
+                ->eventDispatcher
+                ->dispatch(AdminEvent::ACTION_CREATE, $event);
+
             // creating action from configuration
             $action = $this
                 ->actionFactory
                 ->create($actionName, $event->getConfiguration(), $admin);
+
             // adding action to admin
             $admin->addAction($action);
         }
@@ -228,7 +232,7 @@ class AdminFactory
     /**
      * Return all admins.
      *
-     * @return Admin[]
+     * @return AdminInterface[]
      */
     public function getAdmins()
     {

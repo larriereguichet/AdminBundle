@@ -38,7 +38,9 @@
                     </ul>
                 {% endblock %}
 
-                {% block leftMenu %}{% endblock %}
+                {% block leftMenu %}
+                    {{ knp_menu_render('main') }}
+                {% endblock %}
             </div>
         </nav>
     {% endif %}
