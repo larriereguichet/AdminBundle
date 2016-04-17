@@ -50,7 +50,7 @@ v0.4:
 
 v0.3:
 Features:
-- unit testing
+- [DONE] basic unit testing
 - [DONE] handling new Symfony bootstrap layout
 - [DONE] adding mass edit
 - [DONE] improve admin and action name from request (use default parameters in routing instead)

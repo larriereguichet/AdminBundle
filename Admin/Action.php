@@ -48,7 +48,7 @@ class Action implements ActionInterface
     /**
      * Action constructor.
      *
-     * @param $actionName
+     * @param string $actionName
      * @param ActionConfiguration $configuration
      */
     public function __construct($actionName, ActionConfiguration $configuration)

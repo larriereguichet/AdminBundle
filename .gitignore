@@ -5,3 +5,4 @@ phpunit.xml
 Tests/app/config/parameters.yml
 .sass-cache
 web
+composer.lock

@@ -29,9 +29,9 @@ class ActionConfiguration extends Configuration
      * ActionConfiguration constructor.
      *
      * @param $actionName
-     * @param AdminInterface|null $admin
+     * @param AdminInterface $admin
      */
-    public function __construct($actionName, AdminInterface $admin = null)
+    public function __construct($actionName, AdminInterface $admin)
     {
         parent::__construct();
 
@@ -56,7 +56,22 @@ class ActionConfiguration extends Configuration
             ->setDefault('fields', [
                 'id' => []
             ])
-            ->setAllowedTypes('fields', 'array');
+            ->setAllowedTypes('fields', 'array')
+            ->setNormalizer('fields', function(Options $options, $fields) {
+                $normalizedFields = [];
+
+                foreach ($fields as $name => $field) {
+
+                    if ($field === null) {
+                        $field = [];
+                    }
+
+                    $normalizedFields[$name] = $field;
+                }
+
+                return $normalizedFields;
+            })
+        ;
 
         // action permissions. By default, only admin are allowed
         $resolver
@@ -110,10 +125,11 @@ class ActionConfiguration extends Configuration
 
         // load strategy : determine which method should be called in the data provider
         $resolver
-            ->setDefault('load_strategy', AdminInterface::LOAD_STRATEGY_UNIQUE)
+            ->setDefault('load_strategy', null)
             ->addAllowedValues('load_strategy', AdminInterface::LOAD_STRATEGY_NONE)
             ->addAllowedValues('load_strategy', AdminInterface::LOAD_STRATEGY_UNIQUE)
             ->addAllowedValues('load_strategy', AdminInterface::LOAD_STRATEGY_MULTIPLE)
+            ->addAllowedValues('load_strategy', null)
             ->setNormalizer('load_strategy', function (Options $options, $value) {
 
                 if (!$value) {
@@ -160,5 +176,18 @@ class ActionConfiguration extends Configuration
 
         // filters
         $resolver->setDefault('filters', []);
+
+        // menus
+        $resolver
+            ->setDefault('menus', [])
+            ->setNormalizer('menus', function (Options $options, $menus) {
+                // set default to an array
+                if ($menus === false) {
+                    $menus = [];
+                }
+
+                return $menus;
+            })
+        ;
     }
 }

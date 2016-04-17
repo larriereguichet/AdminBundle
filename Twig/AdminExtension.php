@@ -2,12 +2,12 @@
 
 namespace LAG\AdminBundle\Twig;
 
+use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Field\EntityFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
-use LAG\AdminBundle\Utils\TranslationKeyTrait;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -90,7 +90,6 @@ class AdminExtension extends Twig_Extension
      * @param $fieldName
      *
      * @return string
-     *                TODO rename function
      */
     public function getSortColumnUrl(Request $request, $fieldName)
     {
@@ -184,6 +183,8 @@ class AdminExtension extends Twig_Extension
     }
 
     /**
+     * Return a the title of the field, camelized or translated.
+     *
      * @param $fieldName
      * @param null $adminName
      * @return string
@@ -193,7 +194,7 @@ class AdminExtension extends Twig_Extension
         if ($this->configuration->getParameter('translation')['enabled']) {
             $title = $this
                 ->translator
-                ->trans($this->getTranslationKey($this->configuration, $fieldName, $adminName));
+                ->trans($this->getTranslationKey($this->configuration->getParameter('translation')['pattern'], $fieldName, $adminName));
         } else {
             $title = $this->camelize($fieldName);
         }

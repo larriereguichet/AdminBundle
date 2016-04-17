@@ -21,33 +21,7 @@ class Configuration implements ConfigurationInterface
                 // admins configuration
                 ->append($this->getAdminsConfigurationNode())
                 // menus configurations
-                ->arrayNode('menus')
-                    ->prototype('array')
-                        ->children()
-                            ->scalarNode('template')->defaultValue('LAGAdminBundle:Menu:main_menu.html.twig')->end()
-                            ->arrayNode('main_item')
-                                ->children()
-                                    ->scalarNode('route')->end()
-                                    ->scalarNode('title')->end()
-                                ->end()
-                            ->end()
-                            ->arrayNode('items')
-                                ->prototype('array')
-                                    ->children()
-                                        ->scalarNode('admin')->end()
-                                        ->scalarNode('action')->end()
-                                        ->scalarNode('title')->end()
-                                        ->arrayNode('permissions')
-                                            ->defaultValue(['ROLE_USER'])
-                                            ->prototype('scalar')
-                                            ->end()
-                                        ->end()
-                                    ->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
+                ->append($this->getMenuConfiguration())
             ->end()
         ->end();
 
@@ -71,42 +45,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('max_per_page')->end()
                     ->scalarNode('controller')->defaultValue('LAGAdminBundle:CRUD')->end()
                     // actions configurations
-                    ->arrayNode('actions')
-                        ->useAttributeAsKey('name')
-                        ->prototype('array')
-                            ->children()
-                                ->scalarNode('title')->end()
-                                ->arrayNode('permissions')
-                                    ->defaultValue(['ROLE_USER'])
-                                    ->prototype('scalar')->end()
-                                ->end()
-                                ->arrayNode('export')
-                                    ->prototype('scalar')->end()
-                                ->end()
-                                ->arrayNode('order')
-                                    ->prototype('array')
-                                        ->children()
-                                            ->scalarNode('field')->end()
-                                            ->scalarNode('order')->end()
-                                        ->end()
-                                    ->end()
-                                ->end()
-                                ->arrayNode('fields')
-                                    ->prototype('array')
-                                        ->children()
-                                            ->scalarNode('type')->end()
-                                            ->arrayNode('options')
-                                                ->prototype('variable')->end()
-                                            ->end()
-                                        ->end()
-                                    ->end()
-                                ->end()
-                                ->arrayNode('filters')
-                                    ->prototype('scalar')->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
+                    ->variableNode('actions')->end()
                 ->end()
             ->end();
 
@@ -148,6 +87,20 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')
                     ->end()
                 ->end()
+                ->variableNode('menus')->end()
+            ->end()
+        ->end();
+
+        return $node;
+    }
+
+    public function getMenuConfiguration()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('menus');
+
+        $node
+            ->prototype('variable')
             ->end()
         ->end();
 
