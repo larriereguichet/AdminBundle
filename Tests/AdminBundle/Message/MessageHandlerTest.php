@@ -3,10 +3,10 @@
 namespace LAG\AdminBundle\Tests\AdminBundle\Message;
 
 use LAG\AdminBundle\Message\MessageHandler;
-use LAG\AdminBundle\Tests\Base;
+use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 
-class MessageHandlerTest extends Base
+class MessageHandlerTest extends AdminTestBase
 {
     public function testHandleError()
     {

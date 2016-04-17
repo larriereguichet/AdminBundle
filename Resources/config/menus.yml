@@ -1,0 +1,8 @@
+services:
+    lag.admin.menu_builder:
+        class: LAG\AdminBundle\Menu\MenuBuilder
+        arguments:
+            - '%lag.menus%'
+            - '@lag.admin.menu_factory'
+        tags:
+            - {name: knp_menu.menu_builder, method: mainMenu, alias: main}

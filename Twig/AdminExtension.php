@@ -2,7 +2,9 @@
 
 namespace LAG\AdminBundle\Twig;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Field\EntityFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
@@ -23,6 +25,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminExtension extends Twig_Extension
 {
+    use TranslationKeyTrait;
+
     /**
      * @var ApplicationConfiguration
      */
@@ -43,13 +47,16 @@ class AdminExtension extends Twig_Extension
      *
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
-     * @param ApplicationConfiguration $configuration
+     * @param ConfigurationFactory $configurationFactory
      */
-    public function __construct(RouterInterface $router, TranslatorInterface $translator, ApplicationConfiguration $configuration)
-    {
+    public function __construct(
+        RouterInterface $router,
+        TranslatorInterface $translator,
+        ConfigurationFactory $configurationFactory
+    ) {
         $this->router = $router;
         $this->translator = $translator;
-        $this->configuration = $configuration;
+        $this->configuration = $configurationFactory->getApplicationConfiguration();
     }
 
     /**
@@ -83,7 +90,6 @@ class AdminExtension extends Twig_Extension
      * @param $fieldName
      *
      * @return string
-     *                TODO rename function
      */
     public function getSortColumnUrl(Request $request, $fieldName)
     {
@@ -177,16 +183,18 @@ class AdminExtension extends Twig_Extension
     }
 
     /**
+     * Return a the title of the field, camelized or translated.
+     *
      * @param $fieldName
      * @param null $adminName
      * @return string
      */
     public function fieldTitle($fieldName, $adminName = null)
     {
-        if ($this->configuration->useTranslation()) {
+        if ($this->configuration->getParameter('translation')['enabled']) {
             $title = $this
                 ->translator
-                ->trans($this->configuration->getTranslationKey($fieldName, $adminName));
+                ->trans($this->getTranslationKey($this->configuration->getParameter('translation')['pattern'], $fieldName, $adminName));
         } else {
             $title = $this->camelize($fieldName);
         }

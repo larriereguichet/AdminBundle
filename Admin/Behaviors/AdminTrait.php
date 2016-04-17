@@ -2,8 +2,8 @@
 
 namespace LAG\AdminBundle\Admin\Behaviors;
 
-use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 trait AdminTrait
 {
@@ -26,23 +26,30 @@ trait AdminTrait
     }
 
     /**
+     * Try to find a property to get a label from an entity. If found, it returns the property value through the
+     * property accessor.
+     *
      * @return string
      */
     public function getEntityLabel()
     {
         $label = '';
+        $accessor = PropertyAccess::createPropertyAccessor();
         $entity = $this->getUniqueEntity();
 
-        if (method_exists($entity, 'getLabel')) {
-            $label = $entity->getLabel();
-        } elseif (method_exists($entity, 'getTitle')) {
-            $label = $entity->getTitle();
-        } elseif (method_exists($entity, 'getName')) {
-            $label = $entity->getName();
-        } elseif (method_exists($entity, '__toString')) {
-            $label = $entity->__toString();
+        if ($accessor->isReadable($entity, 'label')) {
+            $label = $accessor->getValue($entity, 'label');
+        } else if ($accessor->isReadable($entity, 'title')) {
+            $label = $accessor->getValue($entity, 'title');
+        } else if ($accessor->isReadable($entity, 'name')) {
+            $label = $accessor->getValue($entity, 'name');
+        } else if ($accessor->isReadable($entity, '__toString')) {
+            $label = $accessor->getValue($entity, '__toString');
+        } else if ($accessor->isReadable($entity, 'content')) {
+            $label = strip_tags(substr($label = $accessor->getValue($entity, 'content'), 0, 100));
+        } else if ($accessor->isReadable($entity, 'id')) {
+            $label = $accessor->getValue($entity, 'id');
         }
-
         return $label;
     }
 }

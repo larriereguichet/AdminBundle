@@ -2,12 +2,11 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\Event\Subscriber;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber;
-use LAG\AdminBundle\Tests\Base;
+use LAG\AdminBundle\Tests\AdminTestBase;
 
-class ExtraConfigurationSubscriberTest extends Base
+class ExtraConfigurationSubscriberTest extends AdminTestBase
 {
     /**
      * ExtraConfigurationSubscriber SHOULD subscribe to the Admin creation and the Action creation event
@@ -31,7 +30,7 @@ class ExtraConfigurationSubscriberTest extends Base
         $subscriber = new ExtraConfigurationSubscriber(
             false,
             $this->mockDoctrine(),
-            new ApplicationConfiguration([], 'fr')
+            $this->createConfigurationFactory()
         );
         $event = new AdminEvent();
         $event->setConfiguration([]);
@@ -42,7 +41,7 @@ class ExtraConfigurationSubscriberTest extends Base
         $subscriber = new ExtraConfigurationSubscriber(
             true,
             $this->mockDoctrine(),
-            new ApplicationConfiguration([], 'fr')
+            $this->createConfigurationFactory()
         );
         $event = new AdminEvent();
         $event->setConfiguration([]);
@@ -68,38 +67,6 @@ class ExtraConfigurationSubscriberTest extends Base
         $this->assertEquals([
             'actions' => [
                 'myAction' => []
-            ]
-        ], $event->getConfiguration());
-
-        // adminCreate method SHOULD add batch for list actions if not defined
-        $event = new AdminEvent();
-        $event->setConfiguration([
-            'actions' => [
-                'list' => []
-            ]
-        ]);
-        $subscriber->adminCreate($event);
-        $this->assertEquals([
-            'actions' => [
-                'list' => [],
-                'batch' => [],
-            ]
-        ], $event->getConfiguration());
-
-        $event = new AdminEvent();
-        $event->setConfiguration([
-            'actions' => [
-                'list' => [
-                    'batch' => false
-                ]
-            ]
-        ]);
-        $subscriber->adminCreate($event);
-        $this->assertEquals([
-            'actions' => [
-                'list' => [
-                    'batch' => false
-                ]
             ]
         ], $event->getConfiguration());
     }

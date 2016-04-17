@@ -1,4 +1,4 @@
-v0.5:
+v0.n+1:
 - add filters
 - file exporters : array type, association
 - move export logic into a separate service
@@ -34,11 +34,18 @@ v0.5:
 - handle custom actions for edit form (enable user for example) (WIP)
 - configure application date format (filename export, displayed date...) (WIP)
 - localization (rest field label in edit mode)
+- remove depency with container in action configuration (=> move camelize method in a trait)
 
 -----------------------------------------------
+
 v0.4: 
+ - Refactor configuration management (one unified interface, configureOptions in Configuration classes)
+ - Move Action* in its own folder
  - Handle menu with KNPMenu bundle
  - Improve documentation
+ - Fix assets management
+ 
+ 
 -----------------------------------------------
 
 v0.3:

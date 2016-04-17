@@ -1,27 +1,34 @@
-<script src="{{ asset('/bundles/lagadmin/js/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('/bundles/lagadmin/js/jquery/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('/bundles/lagadmin/js/metisMenu.min.js') }}"></script>
-<script src="{{ asset('/bundles/lagadmin/js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('/bundles/lagadmin/js/sb-admin-2.js') }}"></script>
+{# jquery #}
+<script src="{{ asset('bundles/lagadmin/js/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('bundles/lagadmin/js/jquery/jquery-ui.min.js') }}"></script>
 
-<script>
-    $(document).ready(function () {
-        /*var datetimePickerSelector = '.datepicker';
+{% if config.getParameter('bootstrap') %}
+    {# bootstrap js #}
+    <script src="{{ asset('bundles/lagadmin/js/bootstrap/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bundles/lagadmin/js/bootstrap/metisMenu.min.js') }}"></script>
+    <script src="{{ asset('bundles/lagadmin/js/bootstrap/sb-admin-2.js') }}"></script>
+{% endif %}
 
-        $(datetimePickerSelector).datetimepicker({
-            format: 'd/m/yyyy',
-            language: 'fr'
-        });*/
-        var selectAllForm = $('.selectable-list');
-        var selectAllInput = selectAllForm.find('.select-all');
+{% block adminJs %}
+    <script>
+        $(document).ready(function () {
+            /*var datetimePickerSelector = '.datepicker';
 
-        selectAllInput.on('change', function () {
-            selectAllForm.find('input[type=checkbox]').prop('checked', $(this).prop('checked'));
+            $(datetimePickerSelector).datetimepicker({
+                format: 'd/m/yyyy',
+                language: 'fr'
+            });*/
+            var selectAllForm = $('.selectable-list');
+            var selectAllInput = selectAllForm.find('.select-all');
+
+            selectAllInput.on('change', function () {
+                selectAllForm.find('input[type=checkbox]').prop('checked', $(this).prop('checked'));
+            });
+            selectAllForm.find('input[type=checkbox]').not('.select-all').on('change', function () {
+                if (!$(this).prop('checked')) {
+                    selectAllInput.prop('checked', false);
+                }
+            });
         });
-        selectAllForm.find('input[type=checkbox]').not('.select-all').on('change', function () {
-            if (!$(this).prop('checked')) {
-                selectAllInput.prop('checked', false);
-            }
-        });
-    });
-</script>
+    </script>
+{% endblock %}

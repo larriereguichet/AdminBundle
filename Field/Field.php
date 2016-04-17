@@ -2,7 +2,8 @@
 
 namespace LAG\AdminBundle\Field;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Environment;
 
@@ -18,30 +19,47 @@ abstract class Field implements FieldInterface, TranslatableFieldInterface, Twig
     const TYPE_BOOLEAN = 'boolean';
 
     /**
-     * Name of the field.
+     * Field's name
      *
      * @var string
      */
     protected $name;
 
     /**
+     * Application configuration for default options
+     *
      * @var ApplicationConfiguration
      */
-    protected $configuration;
+    protected $applicationConfiguration;
 
     /**
-     * Twig engine.
+     * Field's resolved options
+     *
+     * @var ParameterBag
+     */
+    protected $options;
+
+    /**
+     * Twig engine
      *
      * @var Twig_Environment
      */
     protected $twig;
 
     /**
-     * Translator.
+     * Translator
      *
      * @var TranslatorInterface
      */
     protected $translator;
+
+    /**
+     * Field constructor.
+     */
+    public function __construct()
+    {
+        $this->options = new ParameterBag();
+    }
 
     /**
      * @return string
@@ -60,27 +78,21 @@ abstract class Field implements FieldInterface, TranslatableFieldInterface, Twig
     }
 
     /**
+     * Return application configuration.
+     *
      * @return ApplicationConfiguration
      */
-    public function getConfiguration()
+    public function getApplicationConfiguration()
     {
-        return $this->configuration;
+        return $this->applicationConfiguration;
     }
 
     /**
      * @param ApplicationConfiguration $configuration
      */
-    public function setConfiguration($configuration)
+    public function setApplicationConfiguration($configuration)
     {
-        $this->configuration = $configuration;
-    }
-
-    /**
-     * @param Twig_Environment $twig
-     */
-    public function setTwig(Twig_Environment $twig)
-    {
-        $this->twig = $twig;
+        $this->applicationConfiguration = $configuration;
     }
 
     /**
@@ -89,5 +101,26 @@ abstract class Field implements FieldInterface, TranslatableFieldInterface, Twig
     public function setTranslator(TranslatorInterface $translator)
     {
         $this->translator = $translator;
+    }
+
+    /**
+     * Set resolved options.
+     *
+     * @param array $options
+     * @return void
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = new ParameterBag($options);
+    }
+
+    /**
+     * Set twig environment.
+     *
+     * @param Twig_Environment $twig
+     */
+    public function setTwig(Twig_Environment $twig)
+    {
+        $this->twig = $twig;
     }
 }

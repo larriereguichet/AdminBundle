@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ config.locale }}">
+<html lang="{{ config.getParameter('locale') }}">
 <head>
     <title>
-        {% block title %}{{ config.title }}{% endblock %}
+        {% block title %}{{ config.getParameter('title') }}{% endblock %}
     </title>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{{ config.description }}">
+    <meta name="description" content="{{ config.getParameter('description') }}">
     <meta name="keywords" content="in progress">
     <meta name="author" content="in progress">
     {% block head %}{% endblock %}
@@ -38,7 +38,9 @@
                     </ul>
                 {% endblock %}
 
-                {% block leftMenu %}{% endblock %}
+                {% block leftMenu %}
+                    {{ knp_menu_render('main') }}
+                {% endblock %}
             </div>
         </nav>
     {% endif %}
