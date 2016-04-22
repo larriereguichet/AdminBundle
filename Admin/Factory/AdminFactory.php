@@ -13,7 +13,7 @@ use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminFactoryEvent;
 use Exception;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
-use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
+use LAG\AdminBundle\Repository\RepositoryInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

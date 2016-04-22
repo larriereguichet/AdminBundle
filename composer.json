@@ -39,7 +39,6 @@
     "stfalcon/tinymce-bundle": "~2.0",
     "fabpot/php-cs-fixer": "^1.10",
     "lag/array-utils": "^0.1.0",
-    "lag/doctrine-repository": "dev-master",
     "egeloen/ckeditor-bundle": "^4.0",
     "twbs/bootstrap": "^3.3",
     "components/font-awesome": "^4.5",

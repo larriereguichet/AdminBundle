@@ -2,7 +2,7 @@
 
 namespace Test\TestBundle\Entity;
 
-use LAG\DoctrineRepositoryBundle\Repository\DoctrineRepository;
+use LAG\AdminBundle\Repository\DoctrineRepository;
 
 class TestEntityRepository extends DoctrineRepository
 {
