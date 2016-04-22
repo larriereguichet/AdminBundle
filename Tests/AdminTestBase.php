@@ -22,7 +22,7 @@ use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Field\Factory\FieldFactory;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
-use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
+use LAG\AdminBundle\Repository\RepositoryInterface;
 use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -368,7 +368,7 @@ class AdminTestBase extends WebTestCase
     protected function mockEntityRepository()
     {
         return $this
-            ->getMockBuilder('LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface')
+            ->getMockBuilder(RepositoryInterface::class)
             ->getMock();
     }
 

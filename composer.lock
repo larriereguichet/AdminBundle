@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e6a608d00d8b2c2a481d7cca337af770",
-    "content-hash": "a75bf965aa07039f08a6df1624c8aa87",
+    "hash": "be441b571486f405ae8b83e3a4539f40",
+    "content-hash": "f149cd5c6505ef48ca2e42ae8c5cb91e",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1495,59 +1495,6 @@
                 "utils"
             ],
             "time": "2015-12-11 15:58:34"
-        },
-        {
-            "name": "lag/doctrine-repository",
-            "version": "dev-master",
-            "target-dir": "LAG/DoctrineRepositoryBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/larriereguichet/DoctrineRepositoryBundle.git",
-                "reference": "d98e91d115a6c9f0fe9e9fb03de92f1268b51c10"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/larriereguichet/DoctrineRepositoryBundle/zipball/d98e91d115a6c9f0fe9e9fb03de92f1268b51c10",
-                "reference": "d98e91d115a6c9f0fe9e9fb03de92f1268b51c10",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/doctrine-bundle": "~1.2",
-                "doctrine/orm": "~2.5",
-                "php": ">=5.4",
-                "symfony/dependency-injection": "~2.6|~3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.7.*"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "LAG\\DoctrineRepositoryBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "JohnKrovitch",
-                    "email": "arnaudfrezet@gmail.com"
-                },
-                {
-                    "name": "JohanDufour",
-                    "email": "johan.dufour@gmail.com"
-                }
-            ],
-            "description": "Generic admin bundle for Symfony2 from L'Arrière Guichet",
-            "homepage": "https://github.com/larriereguichet/DoctrineRepositoryBundle",
-            "keywords": [
-                "Symfony2",
-                "doctrine",
-                "repository"
-            ],
-            "time": "2016-04-11 22:18:58"
         },
         {
             "name": "monolog/monolog",
@@ -3832,9 +3779,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "lag/doctrine-repository": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

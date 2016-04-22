@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\DataProvider;
 
 use Doctrine\Common\Collections\Collection;
-use LAG\DoctrineRepositoryBundle\Repository\RepositoryInterface;
+use LAG\AdminBundle\Repository\RepositoryInterface;
 
 /**
  * Default data provider using generic repositories
