@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Exception;
+use Knp\Menu\MenuFactory;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
@@ -33,6 +34,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Environment;
 
@@ -144,6 +146,12 @@ class AdminTestBase extends WebTestCase
         return $adminConfiguration;
     }
 
+    /**
+     * @param $actionName
+     * @param AdminInterface $admin
+     * @param array $configuration
+     * @return ActionConfiguration
+     */
     protected function createActionConfiguration($actionName, AdminInterface $admin, array $configuration = [])
     {
         $resolver = new OptionsResolver();
@@ -209,6 +217,33 @@ class AdminTestBase extends WebTestCase
     }
 
     /**
+     * @return MenuFactory
+     */
+    protected function createKnpMenuFactory()
+    {
+        return new MenuFactory();
+    }
+
+    /**
+     * @return \LAG\AdminBundle\Menu\Factory\MenuFactory
+     */
+    protected function createMenuFactory()
+    {
+        $knpFactory = $this->createKnpMenuFactory();
+        $adminFactory = $this->createAdminFactory();
+        $configurationFactory = $this->createConfigurationFactory();
+
+        $menuFactory = new \LAG\AdminBundle\Menu\Factory\MenuFactory(
+            $knpFactory,
+            $adminFactory,
+            $configurationFactory,
+            new IdentityTranslator()
+        );
+
+        return $menuFactory;
+    }
+    
+    /**
      * Return Admin configurations samples
      *
      * @return array
@@ -269,17 +304,12 @@ class AdminTestBase extends WebTestCase
     protected function mockAction($name)
     {
         $action = $this
-            ->getMockBuilder('LAG\AdminBundle\Admin\ActionInterface')
+            ->getMockBuilder(ActionInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         $action
             ->method('getName')
             ->willReturn($name);
-        $action
-            ->method('getParameter')
-            ->willReturn($this->returnValueMap([
-
-            ]));
 
         return $action;
     }
@@ -383,12 +413,6 @@ class AdminTestBase extends WebTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $repository = $this->mockEntityRepository();
-        $repository
-            ->method('getEntityPersister')
-            ->willReturn( $this
-                ->getMockBuilder('Doctrine\ORM\Persisters\Entity\BasicEntityPersister')
-                ->disableOriginalConstructor()
-                ->getMock());
 
         $entityManager
             ->method('getRepository')

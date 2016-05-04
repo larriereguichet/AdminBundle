@@ -75,7 +75,7 @@ class RoutingLoader implements LoaderInterface
     /**
      * Add a Route to the RouteCollection according to an Admin an an Action.
      *
-     * @param AdminInterface  $admin
+     * @param AdminInterface $admin
      * @param ActionInterface $action
      * @param RouteCollection $routeCollection
      *
@@ -83,7 +83,9 @@ class RoutingLoader implements LoaderInterface
      */
     protected function loadRouteForAction(AdminInterface $admin, ActionInterface $action, RouteCollection $routeCollection)
     {
-        $routingUrlPattern = $admin->getConfiguration()->getParameter('routing_url_pattern');
+        $routingUrlPattern = $admin
+            ->getConfiguration()
+            ->getParameter('routing_url_pattern');
 
         // routing pattern should contains {admin} and {action}
         if (strpos($routingUrlPattern, '{admin}') == -1 || strpos($routingUrlPattern, '{action}') == -1) {
@@ -95,7 +97,7 @@ class RoutingLoader implements LoaderInterface
 
         // by default, generic controller
         $defaults = [
-            '_controller' => $admin->getConfiguration()->getParameter('controller') . ':' . $action->getName(),
+            '_controller' => $admin->getConfiguration()->getParameter('controller').':'.$action->getName(),
             '_admin' => $admin->getName(),
             '_action' => $action->getName(),
         ];
@@ -148,7 +150,7 @@ class RoutingLoader implements LoaderInterface
     {
         $array = explode('\\', $namespace);
         $path = array_pop($array);
-        $path = strtolower(substr($path, 0, 1)) . substr($path, 1);
+        $path = strtolower(substr($path, 0, 1)).substr($path, 1);
 
         return $path;
     }

@@ -33,12 +33,16 @@
                 {% block mainTitle %}{% endblock %}
 
                 {% block topMenu %}
-                    <ul class="nav navbar-top-links navbar-right in">
-                        {% block topMenuItems %}{% endblock %}
-                    </ul>
+                    {{ knp_menu_render('top') }}
                 {% endblock %}
 
-                {% block leftMenu %}{% endblock %}
+                {% block leftMenu %}
+                    <div role="navigation" class="navbar-default sidebar">
+                        <div class="sidebar-nav navbar-collapse">
+                        {{ knp_menu_render('main') }}
+                        </div>
+                    </div>
+                {% endblock %}
             </div>
         </nav>
     {% endif %}

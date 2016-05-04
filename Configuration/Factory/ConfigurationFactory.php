@@ -19,11 +19,11 @@ class ConfigurationFactory
      * Create an action configuration object.
      *
      * @param $actionName
-     * @param AdminInterface|null $admin
+     * @param AdminInterface $admin
      * @param array $configuration
      * @return ActionConfiguration
      */
-    public function createActionConfiguration($actionName, AdminInterface $admin = null, array $configuration = [])
+    public function createActionConfiguration($actionName, AdminInterface $admin, array $configuration = [])
     {
         $resolver = new OptionsResolver();
         $actionConfiguration = new ActionConfiguration($actionName, $admin);

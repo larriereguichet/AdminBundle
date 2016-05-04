@@ -69,7 +69,7 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
             'name_pattern' => 'lag.admin.{admin}',
         ]);
         $resolver->setAllowedTypes('routing', 'array');
-        $resolver->setNormalizer('routing', function (Options $options, $value) {
+        $resolver->setNormalizer('routing', function(Options $options, $value) {
 
             // url pattern should contain {admin} and {action} token
             $urlPattern = $value['url_pattern'];
@@ -97,14 +97,14 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
             'pattern' => 'lag.admin.{key}'
         ]);
         $resolver->setAllowedTypes('translation', 'array');
-        $resolver->setNormalizer('translation', function (Options $options, $value) {
+        $resolver->setNormalizer('translation', function(Options $options, $value) {
 
             if (!is_bool($value['enabled'])) {
                 throw new InvalidOptionsException('Admin translation enabled parameter should be a boolean');
             }
 
             if (!array_key_exists('pattern', $value)) {
-                $value['pattern'] = '{key}';
+                $value['pattern'] = '{admin}.{key}';
             }
 
             if ($value['enabled'] && strstr($value['pattern'], '{key}') === false) {
@@ -132,7 +132,7 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
 
         $resolver->setDefault('fields_mapping', $defaultMapping);
         $resolver->setAllowedTypes('fields_mapping', 'array');
-        $resolver->setNormalizer('fields_mapping', function (Options $options, $value) use ($defaultMapping) {
+        $resolver->setNormalizer('fields_mapping', function(Options $options, $value) use ($defaultMapping) {
             // merge with default mapping to allow override
             $value = array_merge($defaultMapping, $value);
 
@@ -146,7 +146,7 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
 
         $resolver->setDefault('fields_template_mapping', $defaultMapping);
         $resolver->setAllowedTypes('fields_template_mapping', 'array');
-        $resolver->setNormalizer('fields_template_mapping', function (Options $options, $value) use ($defaultMapping) {
+        $resolver->setNormalizer('fields_template_mapping', function(Options $options, $value) use ($defaultMapping) {
             // merge with default mapping to allow override
             $value = array_merge($defaultMapping, $value);
 

@@ -39,8 +39,9 @@
                                 <a href="{{ path(admin.action('list').configuration.getParameter('route')) }}"
                                    class="btn"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
                                     {{ 'lag.admin.cancel' | trans }}</a>
-                                {% if admin.uniqueEntity.id is defined %}
-                                    <a href="{{ path(admin.action('delete').configuration.getParameter('route'), {id: admin.uniqueEntity.id}) }}"
+
+                                {% if admin.uniqueEntity.id %}
+                                    <a href="{{ path(admin.generateRouteName('delete'), {id: admin.uniqueEntity.id}) }}"
                                        class="btn btn-danger">{{ 'lag.admin.delete' | trans }}
                                         <i class="fa fa-remove"></i>
                                     </a>

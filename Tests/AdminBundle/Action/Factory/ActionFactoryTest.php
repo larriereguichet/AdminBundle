@@ -126,7 +126,7 @@ class ActionFactoryTest extends AdminTestBase
             'permissions' => ['ROLE_TEST'],
         ], $admin);
 
-        // default action load strategy SHOULD be unique
-        $this->assertEquals(Admin::LOAD_STRATEGY_UNIQUE, $action->getConfiguration()->getParameter('load_strategy'));
+        // default action load strategy SHOULD be unique for create action
+        $this->assertEquals(Admin::LOAD_STRATEGY_NONE, $action->getConfiguration()->getParameter('load_strategy'));
     }
 }
