@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Admin;
+namespace LAG\AdminBundle\Action;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Field\Field;

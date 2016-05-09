@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Action\Factory;
 
-use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Factory\FilterFactory;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;

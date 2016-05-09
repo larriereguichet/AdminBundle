@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\AdminBundle\Action\Factory;
 
 use LAG\AdminBundle\Action\Factory\ActionFactory;
-use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Filter;
 use LAG\AdminBundle\Field\Field\StringField;

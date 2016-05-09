@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Admin;
 
 use Exception;
+use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\Request;

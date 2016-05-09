@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Admin;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
-use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;

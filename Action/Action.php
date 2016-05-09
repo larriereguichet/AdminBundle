@@ -1,8 +1,9 @@
 <?php
 
-namespace LAG\AdminBundle\Admin;
+namespace LAG\AdminBundle\Action;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Filter;
 use LAG\AdminBundle\Field\Field;
 
 class Action implements ActionInterface
