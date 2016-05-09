@@ -2,8 +2,8 @@
 
 namespace LAG\AdminBundle\Routing;
 
-use LAG\AdminBundle\Admin\Action;
-use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Action\Action;
+use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use Exception;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;

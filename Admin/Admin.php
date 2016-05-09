@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Admin;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\Behaviors\AdminTrait;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -370,7 +371,7 @@ class Admin implements AdminInterface
         // if action exists
         if ($isGranted) {
             $isGranted = false;
-            /** @var Action $action */
+            /** @var ActionInterface $action */
             $action = $this->actions[$actionName];
             // checking roles permissions
             foreach ($roles as $role) {

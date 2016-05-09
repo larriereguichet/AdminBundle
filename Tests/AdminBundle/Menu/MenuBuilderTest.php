@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Menu;
 
 use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use LAG\AdminBundle\Menu\MenuBuilder;
