@@ -28,13 +28,15 @@
                                     </a>
                                 {% endif %}
 
-                                <button type="submit" value="save" name="submit"
-                                        class="btn btn-default">{{ 'lag.admin.save' | trans }}
-                                    <i class="fa fa-floppy-o"></i></button>
-                                <button type="submit" value="save-return" name="submit"
-                                        class="btn btn-success">{{ 'lag.admin.save_and_return_to_list' | trans }}
-                                    <i class="fa fa-list"></i>
-                                </button>
+                                {% block submitButtons %}
+                                    <button type="submit" value="save" name="submit"
+                                            class="btn btn-default">{{ 'lag.admin.save' | trans }}
+                                        <i class="fa fa-floppy-o"></i></button>
+                                    <button type="submit" value="save-return" name="submit"
+                                            class="btn btn-success">{{ 'lag.admin.save_and_return_to_list' | trans }}
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                {% endblock %}
                             </div>
                         </div>
                     </form>
