@@ -38,36 +38,51 @@ class CRUDController extends Controller
         // retrieve admin from request route parameters
         $admin = $this->getAdminFromRequest($request);
         $admin->handleRequest($request, $this->getUser());
-        // creating list form
-        $form = $this->createForm(AdminListType::class, [
-            'entities' => $admin->getEntities()
-        ], [
-            'batch_actions' => []
-        ]);
-        $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            // get ids and batch action from list form data
-            $formHandler = new ListFormHandler();
-            $data = $formHandler->handle($form);
-            $batchForm = $this->createForm(BatchActionType::class, [
-                'batch_action' => $data['batch_action'],
-                'entity_ids' => $data['ids']
-            ], [
-                'labels' => $data['labels']
-            ]);
+        // retrieve batch actions from configuration
+        $batchActions = $admin
+            ->getCurrentAction()
+            ->getConfiguration()
+            ->getParameter('batch');
 
-            // render batch view
-            return $this->render('LAGAdminBundle:CRUD:batch.html.twig', [
-                'admin' => $admin,
-                'form' => $batchForm->createView()
-            ]);
-        }
-        return [
+        // pass admin and current action to the view
+        $viewParameters = [
             'admin' => $admin,
             'action' => $admin->getCurrentAction(),
-            'form' => $form->createView()
         ];
+
+        // if batch are configured, we handle a list of checboxes
+        if ($batchActions) {
+            // creating list form
+            $form = $this->createForm(AdminListType::class, [
+                'entities' => $admin->getEntities()
+            ], [
+                'batch_actions' => $batchActions['items'],
+                'admin' => $admin
+            ]);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                // get ids and batch action from list form data
+                $formHandler = new ListFormHandler();
+                $data = $formHandler->handle($form);
+                $batchForm = $this->createForm(BatchActionType::class, [
+                    'batch_action' => $data['batch_action'],
+                    'entity_ids' => $data['ids']
+                ], [
+                    'labels' => $data['labels']
+                ]);
+
+                // render batch view
+                return $this->render('LAGAdminBundle:CRUD:batch.html.twig', [
+                    'admin' => $admin,
+                    'form' => $batchForm->createView()
+                ]);
+            }
+            $viewParameters['form'] = $form->createView();
+        }
+
+        return $viewParameters;
     }
 
     /**
@@ -95,7 +110,7 @@ class CRUDController extends Controller
                 $admin->remove();
             }
         } else {
-            throw new NotFoundHttpException('Invalid batch parameters');
+            throw new NotFoundHttpException('Invalid batch parameters : ' . $form->getErrors(true, false));
         }
         // redirect to list view
         return $this->redirectToRoute($admin->generateRouteName('list'));
@@ -218,7 +233,7 @@ class CRUDController extends Controller
             'form' => $form->createView(),
         ];
     }
-    
+
     /**
      * Forward to 404 if user is not allowed by configuration for an action.
      *

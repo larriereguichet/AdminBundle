@@ -3,7 +3,9 @@
 namespace LAG\AdminBundle\Action\Configuration;
 
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
 use LAG\AdminBundle\Configuration\Configuration;
+use LAG\AdminBundle\Menu\Configuration\MenuConfiguration;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
@@ -11,6 +13,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ActionConfiguration extends Configuration
 {
+    use TranslationKeyTrait;
+
     /**
      * Related Action name.
      *
@@ -187,6 +191,52 @@ class ActionConfiguration extends Configuration
                 }
 
                 return $menus;
+            })
+        ;
+
+        // batch actions
+        $resolver
+            // by default, the batch actions is desactivated
+            ->setDefault('batch', null)
+            ->setNormalizer('batch', function(Options $options, $batch) {
+
+                // if batch is desactivated, no more checks should be done
+                if ($batch === false) {
+                    return $batch;
+                }
+                // for list actions, we add a default configuration
+                if ($batch === null) {
+                    // delete action should be allowed in order to be place in batch actions
+                    $allowedActions = array_keys($this
+                        ->admin
+                        ->getConfiguration()
+                        ->getParameter('actions'));
+
+                    if ($this->actionName == 'list' && in_array('delete', $allowedActions)) {
+                        $pattern = $this
+                            ->admin
+                            ->getConfiguration()
+                            ->getParameter('translation_pattern')['pattern'];
+
+                        $batch = [
+                            'items' => [
+                                'delete' => [
+                                    'admin' => $this->admin->getName(),
+                                    'action' => 'delete',
+                                    'text' => $this->getTranslationKey($pattern, 'delete', $this->admin->getName())
+                                ]
+                            ]
+                        ];
+                    } else {
+                        return $batch;
+                    }
+                }
+                $resolver = new OptionsResolver();
+                $configuration = new MenuConfiguration();
+                $configuration->configureOptions($resolver);
+                $batch = $resolver->resolve($batch);
+
+                return $batch;
             })
         ;
     }
