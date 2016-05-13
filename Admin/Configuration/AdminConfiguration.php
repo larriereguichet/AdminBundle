@@ -59,6 +59,7 @@ class AdminConfiguration extends Configuration implements ConfigurationInterface
             'controller' => 'LAGAdminBundle:CRUD',
             'max_per_page' => $maxPerPage,
             'data_provider' => null,
+            'translation_pattern' => $this->applicationConfiguration->getParameter('translation')
         ]);
         // required options
         $resolver->setRequired([
@@ -74,13 +75,25 @@ class AdminConfiguration extends Configuration implements ConfigurationInterface
 
         $resolver->setNormalizer('actions', function(Options $options, $actions) {
             $normalizedActions = [];
+            $addBatchAction = false;
 
             foreach ($actions as $name => $action) {
 
+                // action configuration is an array by default
                 if ($action === null) {
                     $action = [];
                 }
                 $normalizedActions[$name] = $action;
+
+                // in list action, if no batch was configured or disabled, we add a batch action
+                if ($name == 'list' && (!array_key_exists('batch', $action) || $action['batch'] === null)) {
+                    $addBatchAction = true;
+                }
+            }
+
+            // add empty default batch action
+            if ($addBatchAction) {
+                $normalizedActions['batch'] = [];
             }
 
             return $normalizedActions;

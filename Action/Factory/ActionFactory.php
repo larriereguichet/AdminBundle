@@ -76,6 +76,13 @@ class ActionFactory
                 ->create($fieldName, $filterConfiguration);
             $action->addFilter($filter);
         }
+
+        // add batch action
+        if (count($action->getConfiguration()->getParameter('batch'))) {
+
+            
+        }
+
         return $action;
     }
 }

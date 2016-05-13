@@ -27,11 +27,22 @@ class RoutingLoader implements LoaderInterface
      */
     protected $adminFactory;
 
+    /**
+     * RoutingLoader constructor.
+     * 
+     * @param AdminFactory $adminFactory
+     */
     public function __construct(AdminFactory $adminFactory)
     {
         $this->adminFactory = $adminFactory;
     }
 
+    /**
+     * @param mixed $resource
+     * @param null $type
+     * @return RouteCollection
+     * @throws Exception
+     */
     public function load($resource, $type = null)
     {
         if (true === $this->loaded) {
@@ -42,10 +53,12 @@ class RoutingLoader implements LoaderInterface
         $admins = $this
             ->adminFactory
             ->getAdmins();
+        
         // creating a route by admin and action
         /** @var AdminInterface $admin */
         foreach ($admins as $admin) {
             $actions = $admin->getActions();
+            
             // by default, actions are create, edit, delete, list
             /** @var Action $action */
             foreach ($actions as $action) {
@@ -59,15 +72,26 @@ class RoutingLoader implements LoaderInterface
         return $routes;
     }
 
+    /**
+     * @param mixed $resource
+     * @param null $type
+     * @return bool
+     */
     public function supports($resource, $type = null)
     {
         return 'extra' === $type;
     }
 
+    /**
+     * 
+     */
     public function getResolver()
     {
     }
 
+    /**
+     * @param LoaderResolverInterface $resolver
+     */
     public function setResolver(LoaderResolverInterface $resolver)
     {
     }
@@ -131,6 +155,12 @@ class RoutingLoader implements LoaderInterface
         $routeCollection->add($routeName, $route);
     }
 
+    /**
+     * @param $pattern
+     * @param $adminName
+     * @param $actionName
+     * @return mixed
+     */
     protected function replaceInRoute($pattern, $adminName, $actionName)
     {
         $pattern = str_replace('{admin}', $adminName, $pattern);
