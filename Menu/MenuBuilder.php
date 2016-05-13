@@ -55,9 +55,10 @@ class MenuBuilder
     /**
      * Create main menu.
      *
+     * @param array $options
      * @return ItemInterface
      */
-    public function mainMenu()
+    public function mainMenu(array $options = [])
     {
         if (!array_key_exists('main', $this->menusConfiguration)) {
             $this->menusConfiguration['main'] = [];
@@ -66,19 +67,25 @@ class MenuBuilder
             'id' => 'side-menu',
             'class' => 'nav in',
         ];
+        $entity = null;
+
+        if (array_key_exists('entity', $options)) {
+            $entity = $options['entity'];
+        }
 
         return $this
             ->menuFactory
-            ->create('main', $this->menusConfiguration['main']);
+            ->create('main', $this->menusConfiguration['main'], $entity);
     }
 
     /**
      * Create dynamic top menu.
      *
+     * @param array $options
      * @return ItemInterface
      * @throws \Exception
      */
-    public function topMenu()
+    public function topMenu(array $options)
     {
         // get current request
         $request = $this
@@ -107,9 +114,14 @@ class MenuBuilder
                 'class' => 'nav navbar-top-links navbar-right in',
             ];
         }
+        $entity = null;
+
+        if (array_key_exists('entity', $options)) {
+            $entity = $options['entity'];
+        }
 
         return $this
             ->menuFactory
-            ->create('top', $menusConfiguration['top']);
+            ->create('top', $menusConfiguration['top'], $entity);
     }
 }

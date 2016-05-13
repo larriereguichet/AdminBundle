@@ -33,13 +33,13 @@
                 {% block mainTitle %}{% endblock %}
 
                 {% block topMenu %}
-                    {{ knp_menu_render('top') }}
+                    {{ AdminBundle.adminMenu('top', admin) }}
                 {% endblock %}
 
                 {% block leftMenu %}
                     <div role="navigation" class="navbar-default sidebar">
                         <div class="sidebar-nav navbar-collapse">
-                        {{ knp_menu_render('main') }}
+                            {{ AdminBundle.adminMenu('main', admin) }}
                         </div>
                     </div>
                 {% endblock %}

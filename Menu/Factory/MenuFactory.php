@@ -11,6 +11,7 @@ use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Menu\Configuration\MenuConfiguration;
 use LAG\AdminBundle\Menu\Configuration\MenuItemConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -65,15 +66,18 @@ class MenuFactory
      *
      * @param string $name
      * @param array $configuration
+     * @param null $entity
      * @return ItemInterface
      */
-    public function create($name, array $configuration)
+    public function create($name, array $configuration, $entity = null)
     {
+        // resolve menu configuration. It will return a MenuConfiguration with MenuItemConfiguration object
         $resolver = new OptionsResolver();
         $menuConfiguration = new MenuConfiguration();
         $menuConfiguration->configureOptions($resolver);
         $menuConfiguration->setParameters($resolver->resolve($configuration));
 
+        // create knp menu
         $menu = $this
             ->menuFactory
             ->createItem($name, [
@@ -92,13 +96,14 @@ class MenuFactory
             $subItems = $itemConfiguration->getParameter('items');
             $hasChildren = count($subItems);
 
-            // create menu item configuration
-            $menuItemConfiguration = $this->createMenuItemConfiguration($itemConfiguration);
+            // create menu item configuration (link attributes, icon, route...)
+            $menuItemConfiguration = $this->createMenuItemConfiguration($itemConfiguration, $entity);
 
             if ($hasChildren) {
-                $menuItemConfiguration['childrenAttributes']['class'] = 'nav nav-second-level collapse in';
+                $menuItemConfiguration['childrenAttributes']['class'] = 'nav nav-second-level collapse';
             }
 
+            // add to knp menu
             $menu->addChild($text, $menuItemConfiguration);
 
             if ($hasChildren) {
@@ -153,18 +158,37 @@ class MenuFactory
      * Create a knp menu item configuration from the configured options.
      *
      * @param MenuItemConfiguration $itemConfiguration
+     * @param null $entity
      * @return array
      * @throws Exception
      */
-    protected function createMenuItemConfiguration(MenuItemConfiguration $itemConfiguration)
+    protected function createMenuItemConfiguration(MenuItemConfiguration $itemConfiguration, $entity = null)
     {
         $menuItemConfiguration = [
-            'childrenAttributes' => $itemConfiguration->getParameter('attr'),
+            // configured <a> tag attributes
+            'linkAttributes' => $itemConfiguration->getParameter('attr'),
             'routeParameters' => $itemConfiguration->getParameter('parameters'),
             'attributes' => [
                 'icon' => $itemConfiguration->getParameter('icon'),
             ]
         ];
+
+        // add parameters value from entity
+        if ($entity && count($menuItemConfiguration['routeParameters'])) {
+            $routeParameters = [];
+
+            foreach ($menuItemConfiguration['routeParameters'] as $name => $value) {
+
+                if ($value === null) {
+                    // get value from current entity
+                    $propertyAccessor = PropertyAccess::createPropertyAccessor();
+                    $routeParameters[$name] = $propertyAccessor->getValue($entity, $name);
+                } else {
+                    $routeParameters[$name] = $value;
+                }
+            }
+            $menuItemConfiguration['routeParameters'] = $routeParameters;
+        }
 
         if ($adminName = $itemConfiguration->getParameter('admin')) {
             // retrieve an existing admin
