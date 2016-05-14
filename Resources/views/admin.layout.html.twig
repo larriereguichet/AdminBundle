@@ -19,6 +19,10 @@
 <body>
 {% import "LAGAdminBundle:CRUD:macros.html.twig" as AdminBundle %}
 
+{% if admin is not defined %}
+ {% set admin = null %}
+{% endif %}
+
 <div class="wrapper">
     {% if app.user %}
         <nav style="margin-bottom: 0" role="navigation" id="admin-top-menu" class="navbar navbar-default navbar-static-top">

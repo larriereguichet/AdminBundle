@@ -85,7 +85,7 @@ class MenuBuilder
      * @return ItemInterface
      * @throws \Exception
      */
-    public function topMenu(array $options)
+    public function topMenu(array $options = [])
     {
         // get current request
         $request = $this

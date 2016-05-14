@@ -15,8 +15,7 @@
 
 {% macro adminMenu(menuName, admin) %}
 
-
-    {% if admin is defined %}
+    {% if admin and admin.currentAction.configuration.getParameter('load_strategy') == 'strategy_unique' %}
 
         {% set menu = knp_menu_get(menuName, [], {entity: admin.uniqueEntity}) %}
         {{ knp_menu_render(menu) }}
