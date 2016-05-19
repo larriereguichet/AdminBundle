@@ -22,22 +22,22 @@ class MenuBuilderTest extends AdminTestBase
     {
         $stack = new RequestStack();
         $menuBuilder = new MenuBuilder([
-                'main' => [
-                    'items' => [
-                        'test' => [
-                            'url' => '#'
-                        ],
-                        'other_test' => [
-                            'url' => '#',
-                            'items' => [
-                                'test' => [
-                                    'url' => '#'
-                                ],
-                            ]
-                        ]
+            'main' => [
+                'items' => [
+                    'test' => [
+                        'url' => '#'
                     ],
-                ]
-            ],
+                    'other_test' => [
+                        'url' => '#',
+                        'items' => [
+                            'test' => [
+                                'url' => '#'
+                            ],
+                        ]
+                    ]
+                ],
+            ]
+        ],
             $this->createMenuFactory(),
             $this->createAdminFactory(),
             $stack
@@ -58,7 +58,6 @@ class MenuBuilderTest extends AdminTestBase
         $this->assertEquals('top', $topMenu->getName());
 
 
-
         $stack = new RequestStack();
         $stack->push(new Request([
             '_route_params' => [
@@ -67,13 +66,10 @@ class MenuBuilderTest extends AdminTestBase
             ]
         ]));
 
-
-
         /** @var AdminInterface|PHPUnit_Framework_MockObject_MockObject $admin */
         $admin = $this
             ->getMockBuilder(AdminInterface::class)
-            ->getMock()
-        ;
+            ->getMock();
         $actionConfiguration = new ActionConfiguration('test', $admin);
         $actionConfiguration->setParameters([
             'title' => 'Test',
@@ -84,13 +80,15 @@ class MenuBuilderTest extends AdminTestBase
         $admin
             ->method('getCurrentAction')
             ->willReturn(new Action('test', $actionConfiguration));
+        $admin
+            ->method('isCurrentActionDefined')
+            ->willReturn(true);
 
         /** @var AdminFactory|PHPUnit_Framework_MockObject_MockObject $adminFactory */
         $adminFactory = $this
             ->getMockBuilder(AdminFactory::class)
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
         $adminFactory
             ->method('getAdminFromRequest')
             ->willReturn($admin);
