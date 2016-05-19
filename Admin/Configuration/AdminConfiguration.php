@@ -59,7 +59,9 @@ class AdminConfiguration extends Configuration implements ConfigurationInterface
             'controller' => 'LAGAdminBundle:CRUD',
             'max_per_page' => $maxPerPage,
             'data_provider' => null,
-            'translation_pattern' => $this->applicationConfiguration->getParameter('translation')
+            'translation_pattern' => $this
+                ->applicationConfiguration
+                ->getParameter('translation')['pattern']
         ]);
         // required options
         $resolver->setRequired([

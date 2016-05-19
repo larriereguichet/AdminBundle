@@ -6,7 +6,6 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
 use LAG\AdminBundle\Configuration\Configuration;
 use LAG\AdminBundle\Menu\Configuration\MenuConfiguration;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,9 +49,18 @@ class ActionConfiguration extends Configuration
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        // action title, default to action's name
+        // action title, default to action name key
+        $translationPattern = $this
+            ->admin
+            ->getConfiguration()
+            ->getParameter('translation_pattern');
+
         $resolver
-            ->setDefault('title', Container::camelize($this->actionName))
+            ->setDefault('title', $this->getTranslationKey(
+                $translationPattern,
+                $this->actionName,
+                $this->admin->getName())
+            )
             ->setAllowedTypes('title', 'string');
 
         // displayed fields for this action
@@ -216,7 +224,7 @@ class ActionConfiguration extends Configuration
                         $pattern = $this
                             ->admin
                             ->getConfiguration()
-                            ->getParameter('translation_pattern')['pattern'];
+                            ->getParameter('translation_pattern');
 
                         $batch = [
                             'items' => [
