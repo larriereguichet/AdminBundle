@@ -129,6 +129,13 @@ interface AdminInterface
     public function getCurrentAction();
 
     /**
+     * Return if the current action has been initialized and set.
+     *
+     * @return boolean
+     */
+    public function isCurrentActionDefined();
+
+    /**
      * Return true if current action is granted for user.
      *
      * @param string $actionName

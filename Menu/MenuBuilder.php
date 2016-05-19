@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Menu;
 
+use Exception;
 use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use LAG\AdminBundle\Menu\Factory\MenuFactory;
@@ -83,7 +84,7 @@ class MenuBuilder
      *
      * @param array $options
      * @return ItemInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function topMenu(array $options = [])
     {
@@ -91,30 +92,32 @@ class MenuBuilder
         $request = $this
             ->requestStack
             ->getCurrentRequest();
-        $menusConfiguration = [];
-
-        if ($request === null || empty($request->get('_route_params')['_admin'])) {
-            $menusConfiguration['top'] = [];
-        } else {
-            // get current action from admin
-            $action = $this
-                ->adminFactory
-                ->getAdminFromRequest($request)
-                ->getCurrentAction();
-
-            // menu configuration
-            $menusConfiguration = $action
-                ->getConfiguration()
-                ->getParameter('menus');
-
-            if (!array_key_exists('top', $menusConfiguration)) {
-                $menusConfiguration['top'] = [];
-            }
-            $menusConfiguration['top']['attr'] = [
-                'class' => 'nav navbar-top-links navbar-right in',
-            ];
-        }
         $entity = null;
+        $menusConfiguration = [];
+        $menusConfiguration['top'] = [];
+
+        // request should exists and should have admin parameters
+        if ($request !== null && !empty($request->get('_route_params')['_admin'])) {
+            // get current action from admin
+            $admin = $this
+                ->adminFactory
+                ->getAdminFromRequest($request);
+
+            if ($admin->isCurrentActionDefined()) {
+                // menu configuration
+                $menusConfiguration = $admin
+                    ->getCurrentAction()
+                    ->getConfiguration()
+                    ->getParameter('menus');
+
+                if (!array_key_exists('top', $menusConfiguration)) {
+                    $menusConfiguration['top'] = [];
+                }
+                $menusConfiguration['top']['attr'] = [
+                    'class' => 'nav navbar-top-links navbar-right in',
+                ];
+            }
+        }
 
         if (array_key_exists('entity', $options)) {
             $entity = $options['entity'];

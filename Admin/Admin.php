@@ -441,6 +441,8 @@ class Admin implements AdminInterface
     }
 
     /**
+     * Return the current action or an exception if it is not set.
+     *
      * @return ActionInterface
      * @throws Exception
      */
@@ -454,6 +456,16 @@ class Admin implements AdminInterface
         }
 
         return $this->currentAction;
+    }
+
+    /**
+     * Return if the current action has been initialized and set.
+     *
+     * @return boolean
+     */
+    public function isCurrentActionDefined()
+    {
+        return ($this->currentAction instanceof ActionInterface);
     }
 
     /**
