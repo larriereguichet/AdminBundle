@@ -17,20 +17,23 @@ trait EntityLabelTrait
     {
         $label = '';
         $accessor = PropertyAccess::createPropertyAccessor();
+        $properties = [
+            'label',
+            'title',
+            'name',
+            '__toString',
+            'content',
+            'id',
+        ];
 
-        if ($accessor->isReadable($entity, 'label')) {
-            $label = $accessor->getValue($entity, 'label');
-        } else if ($accessor->isReadable($entity, 'title')) {
-            $label = $accessor->getValue($entity, 'title');
-        } else if ($accessor->isReadable($entity, 'name')) {
-            $label = $accessor->getValue($entity, 'name');
-        } else if ($accessor->isReadable($entity, '__toString')) {
-            $label = $accessor->getValue($entity, '__toString');
-        } else if ($accessor->isReadable($entity, 'content')) {
-            $label = strip_tags(substr($label = $accessor->getValue($entity, 'content'), 0, 100));
-        } else if ($accessor->isReadable($entity, 'id')) {
-            $label = $accessor->getValue($entity, 'id');
+        foreach ($properties as $property) {
+
+            if ($accessor->isReadable($entity, $property)) {
+                $label = $accessor->getValue($entity, $property);
+                break;
+            }               
         }
+        
         return $label;
     }
 }

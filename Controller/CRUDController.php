@@ -27,7 +27,7 @@ class CRUDController extends Controller
     use ControllerTrait;
 
     /**
-     * Generic list action
+     * Generic list action.
      *
      * @Template("LAGAdminBundle:CRUD:list.html.twig")
      * @param Request $request
@@ -117,7 +117,7 @@ class CRUDController extends Controller
     }
 
     /**
-     * Generic create action
+     * Generic create action.
      *
      * @Template("LAGAdminBundle:CRUD:edit.html.twig")
      * @param Request $request
@@ -202,12 +202,10 @@ class CRUDController extends Controller
     }
 
     /**
-     * Generic delete action
+     * Generic delete action.
      *
      * @Template("LAGAdminBundle:CRUD:delete.html.twig")
-     *
      * @param Request $request
-     *
      * @return RedirectResponse|array
      */
     public function deleteAction(Request $request)
@@ -241,7 +239,6 @@ class CRUDController extends Controller
      */
     protected function forward404IfNotAllowed(AdminInterface $admin)
     {
-        // TODO move authorizations logic into kernel.request event
         $this->forward404Unless($this->getUser(), 'You must be logged to access to this url');
         $roles = $this
             ->getUser()
