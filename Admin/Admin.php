@@ -160,6 +160,17 @@ class Admin implements AdminInterface
             ->getName();
 
         if (!$this->isActionGranted($actionName, $roles)) {
+            $rolesStringArray = [];
+
+            foreach ($roles as $role) {
+
+                if ($role instanceof Role) {
+                    $rolesStringArray[] = $role->getRole();
+                } else {
+                    $rolesStringArray[] = $role;
+                }
+            }
+
             $message = sprintf('User with roles %s not allowed for action "%s"',
                 implode(', ', $roles),
                 $actionName
