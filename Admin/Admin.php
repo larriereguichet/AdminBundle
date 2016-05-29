@@ -172,7 +172,7 @@ class Admin implements AdminInterface
             }
 
             $message = sprintf('User with roles %s not allowed for action "%s"',
-                implode(', ', $roles),
+                implode(', ', $rolesStringArray),
                 $actionName
             );
             throw new NotFoundHttpException($message);
