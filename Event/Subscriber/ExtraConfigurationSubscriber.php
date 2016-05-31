@@ -144,49 +144,54 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             if (count($fields)) {
                 // adding new fields to action configuration
                 $configuration['fields'] = $fields;
+
+                if ($event->getActionName() == 'list') {
+                    $configuration['fields']['_actions'] = null;
+                }
             }
         }
-        // configured linked actions
-        if (array_key_exists('_actions', $configuration['fields'])
-            && $configuration['fields']['_actions'] === null
-        ) {
-            // in list view, we add by default and an edit and a delete button
-            if ($event->getActionName() == 'list') {
+        // configured linked actions :
+        // _action key should exists and be null
+        $_actionExists = array_key_exists('_actions', $configuration['fields']);
+        $_actionIsNull = $_actionExists && $configuration['fields']['_actions'] === null;
+        // _action is added extra configuration only for the "list" action
+        $isListAction = $event->getActionName() == 'list';
 
-                $translationPattern = $this
-                    ->applicationConfiguration
-                    ->getParameter('translation')['pattern']
-                ;
-                
-                
-                if (in_array('edit', $allowedActions)) {
-                    $configuration['fields']['_actions']['type'] = 'collection';
-                    $configuration['fields']['_actions']['options']['_edit'] = [
-                        'type' => 'action',
-                        'options' => [
-                            'title' => $this->getTranslationKey($translationPattern, 'edit', $event->getAdmin()->getName()),
-                            'route' => $admin->generateRouteName('edit'),
-                            'parameters' => [
-                                'id' => false
-                            ],
-                            'icon' => 'pencil'
-                        ]
-                    ];
-                }
-                if (in_array('delete', $allowedActions)) {
-                    $configuration['fields']['_actions']['type'] = 'collection';
-                    $configuration['fields']['_actions']['options']['_delete'] = [
-                        'type' => 'action',
-                        'options' => [
-                            'title' => $this->getTranslationKey($translationPattern, 'delete', $event->getAdmin()->getName()),
-                            'route' => $admin->generateRouteName('delete'),
-                            'parameters' => [
-                                'id' => false
-                            ],
-                            'icon' => 'remove'
-                        ]
-                    ];
-                }
+        if ($_actionExists && $_actionIsNull && $isListAction) {
+            // in list view, we add by default and an edit and a delete button
+            $translationPattern = $this
+                ->applicationConfiguration
+                ->getParameter('translation')['pattern'];
+
+            // add a link to the "edit" action, if it is allowed
+            if (in_array('edit', $allowedActions)) {
+                $configuration['fields']['_actions']['type'] = 'collection';
+                $configuration['fields']['_actions']['options']['_edit'] = [
+                    'type' => 'action',
+                    'options' => [
+                        'title' => $this->getTranslationKey($translationPattern, 'edit', $event->getAdmin()->getName()),
+                        'route' => $admin->generateRouteName('edit'),
+                        'parameters' => [
+                            'id' => false
+                        ],
+                        'icon' => 'pencil'
+                    ]
+                ];
+            }
+            // add a link to the "delete" action, if it is allowed
+            if (in_array('delete', $allowedActions)) {
+                $configuration['fields']['_actions']['type'] = 'collection';
+                $configuration['fields']['_actions']['options']['_delete'] = [
+                    'type' => 'action',
+                    'options' => [
+                        'title' => $this->getTranslationKey($translationPattern, 'delete', $event->getAdmin()->getName()),
+                        'route' => $admin->generateRouteName('delete'),
+                        'parameters' => [
+                            'id' => false
+                        ],
+                        'icon' => 'remove'
+                    ]
+                ];
             }
         }
         // reset action configuration
