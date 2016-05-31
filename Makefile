@@ -18,15 +18,15 @@ install-assets:
 
 
 install-assets-css:
-	### copy bootstrap css ###
+	@### copy bootstrap css ###
 	mkdir -p Resources/public/css/bootstrap
 	cp vendor/twbs/bootstrap/dist/css/*.min.css Resources/public/css/bootstrap/
 
-	### copy font-awesome css ###
+	@### copy font-awesome css ###
 	mkdir -p Resources/public/css/font-awesome
-	cp vendor/components/font-awesome/css/*.min.css Resources/public/css/font-awesome/
+	@cp vendor/components/font-awesome/css/*.min.css Resources/public/css/font-awesome/
 
-	### build css with compass  ###
+	@### build css with compass  ###
 	compass compile
 
 
