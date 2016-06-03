@@ -264,6 +264,11 @@ class AdminFactory
     {
         // create or get repository according to the configuration
         if ($name) {
+            // removing arobase if exists
+            if (substr($name, 0, 1) == '@') {
+                $name = substr($name, 1);
+            }
+
             // custom data provider class must be loaded by the compiler pass
             if (!$this->dataProviders->has($name)) {
                 throw new Exception(sprintf(
