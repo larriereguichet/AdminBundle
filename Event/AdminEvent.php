@@ -93,4 +93,12 @@ class AdminEvent extends Event
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getAdminName()
+    {
+        return $this->adminName;
+    }
 }
