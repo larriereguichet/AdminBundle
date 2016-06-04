@@ -1,8 +1,8 @@
-composer.phar
 bin
 build
 vendor
 phpunit.xml
 Tests/app/config/parameters.yml
-web/assets
 .sass-cache
+web
+composer.lock

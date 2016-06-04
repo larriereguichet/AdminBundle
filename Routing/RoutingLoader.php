@@ -2,8 +2,8 @@
 
 namespace LAG\AdminBundle\Routing;
 
-use LAG\AdminBundle\Admin\Action;
-use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Action\Action;
+use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use Exception;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
@@ -27,11 +27,22 @@ class RoutingLoader implements LoaderInterface
      */
     protected $adminFactory;
 
+    /**
+     * RoutingLoader constructor.
+     * 
+     * @param AdminFactory $adminFactory
+     */
     public function __construct(AdminFactory $adminFactory)
     {
         $this->adminFactory = $adminFactory;
     }
 
+    /**
+     * @param mixed $resource
+     * @param null $type
+     * @return RouteCollection
+     * @throws Exception
+     */
     public function load($resource, $type = null)
     {
         if (true === $this->loaded) {
@@ -42,10 +53,12 @@ class RoutingLoader implements LoaderInterface
         $admins = $this
             ->adminFactory
             ->getAdmins();
+        
         // creating a route by admin and action
         /** @var AdminInterface $admin */
         foreach ($admins as $admin) {
             $actions = $admin->getActions();
+            
             // by default, actions are create, edit, delete, list
             /** @var Action $action */
             foreach ($actions as $action) {
@@ -59,15 +72,26 @@ class RoutingLoader implements LoaderInterface
         return $routes;
     }
 
+    /**
+     * @param mixed $resource
+     * @param null $type
+     * @return bool
+     */
     public function supports($resource, $type = null)
     {
         return 'extra' === $type;
     }
 
+    /**
+     * 
+     */
     public function getResolver()
     {
     }
 
+    /**
+     * @param LoaderResolverInterface $resolver
+     */
     public function setResolver(LoaderResolverInterface $resolver)
     {
     }
@@ -75,7 +99,7 @@ class RoutingLoader implements LoaderInterface
     /**
      * Add a Route to the RouteCollection according to an Admin an an Action.
      *
-     * @param AdminInterface  $admin
+     * @param AdminInterface $admin
      * @param ActionInterface $action
      * @param RouteCollection $routeCollection
      *
@@ -83,7 +107,10 @@ class RoutingLoader implements LoaderInterface
      */
     protected function loadRouteForAction(AdminInterface $admin, ActionInterface $action, RouteCollection $routeCollection)
     {
-        $routingUrlPattern = $admin->getConfiguration()->getRoutingUrlPattern();
+        $routingUrlPattern = $admin
+            ->getConfiguration()
+            ->getParameter('routing_url_pattern');
+
         // routing pattern should contains {admin} and {action}
         if (strpos($routingUrlPattern, '{admin}') == -1 || strpos($routingUrlPattern, '{action}') == -1) {
             throw new Exception('Admin routing pattern should contains {admin} and {action} placeholder');
@@ -91,14 +118,16 @@ class RoutingLoader implements LoaderInterface
         // route path by entity name and action name
         $path = str_replace('{admin}', $admin->getName(), $routingUrlPattern);
         $path = str_replace('{action}', $action->getName(), $path);
+
         // by default, generic controller
         $defaults = [
-            '_controller' => $admin->getConfiguration()->getControllerName() . ':' . $action->getName(),
+            '_controller' => $admin->getConfiguration()->getParameter('controller').':'.$action->getName(),
             '_admin' => $admin->getName(),
             '_action' => $action->getName(),
         ];
         // by default, no requirements
         $requirements = [];
+
         // for delete and edit action, an id is required
         if (in_array($action->getName(), ['delete', 'edit'])) {
             $path .= '/{id}';
@@ -109,13 +138,29 @@ class RoutingLoader implements LoaderInterface
         // creating new route
         $route = new Route($path, $defaults, $requirements);
         $routeName = $admin->generateRouteName($action->getName());
-        // set route to action
-        $action->getConfiguration()->setRoute($routeName);
-        $action->getConfiguration()->setParameters($requirements);
+
+        // replace action route configuration
+        $actionConfiguration = $action
+            ->getConfiguration()
+            ->getParameters();
+
+        $actionConfiguration['route'] = $routeName;
+        $actionConfiguration['parameters'] = $requirements;
+
+        $action
+            ->getConfiguration()
+            ->setParameters($actionConfiguration);
+
         // adding route to symfony collection
         $routeCollection->add($routeName, $route);
     }
 
+    /**
+     * @param $pattern
+     * @param $adminName
+     * @param $actionName
+     * @return mixed
+     */
     protected function replaceInRoute($pattern, $adminName, $actionName)
     {
         $pattern = str_replace('{admin}', $adminName, $pattern);
@@ -135,7 +180,7 @@ class RoutingLoader implements LoaderInterface
     {
         $array = explode('\\', $namespace);
         $path = array_pop($array);
-        $path = strtolower(substr($path, 0, 1)) . substr($path, 1);
+        $path = strtolower(substr($path, 0, 1)).substr($path, 1);
 
         return $path;
     }

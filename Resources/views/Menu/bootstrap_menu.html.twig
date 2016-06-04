@@ -1,0 +1,14 @@
+{% extends 'knp_menu.html.twig' %}
+
+{# allow icon tag to be displayed #}
+{% block label %}
+    {% if options.allow_safe_labels and item.getExtra('safe_label', false) %}
+        {{ item.label|raw }}
+    {% else %}
+        {% if item.attribute('icon') is not empty %}
+            <i class="{{ item.attribute('icon') }}"></i>
+        {% endif %}
+
+        {{ item.label | trans }}
+    {% endif %}
+{% endblock %}

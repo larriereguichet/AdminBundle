@@ -1,13 +1,20 @@
-{% if config.bootstrap %}
+{% if config.getParameter('bootstrap') %}
     {# bootstrap css #}
-    <link href="{{ asset('/bundles/lagadmin/css/bootstrap.min.css') }}" rel="stylesheet" />
-    {#<link href="{{ asset('/bundles/lagadmin/css/bootstrap-theme.min.css') }}" rel="stylesheet" />#}
+    <link href="{{ asset('bundles/lagadmin/css/bootstrap/bootstrap.min.css') }}" rel="stylesheet" />
+
     {# font awesomes icons #}
-    <link href="{{ asset('/bundles/lagadmin/css/font-awesome.min.css') }}" rel="stylesheet" />
-    {# Stephane Collot dateime picker #}
-    <link href="{{ asset('/bundles/scdatetimepicker/css/datetimepicker.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/lagadmin/css/font-awesome/font-awesome.min.css') }}" rel="stylesheet" />
+
     {# Start Bootstrap theme #}
-    <link href="{{ asset('/bundles/lagadmin/css/sb-admin-2.css') }}" rel="stylesheet" />
-    <link href="{{ asset('/bundles/lagadmin/css/timeline.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/lagadmin/css/bootstrap/sb-admin-2.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/lagadmin/css/bootstrap/timeline.css') }}" rel="stylesheet" />
+
+    {# tinymce #}
+    <link href="{{ asset('bundles/lagadmin/css/tinymce/editor.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/lagadmin/css/tinymce/dashicon.min.css') }}" rel="stylesheet">
 {% endif %}
-<link href="{{ asset('/bundles/lagadmin/css/admin.css') }}" rel="stylesheet" />
+
+{% block adminCss %}
+    {# AdminBundle css #}
+    <link href="{{ asset('bundles/lagadmin/css/admin.css') }}" rel="stylesheet" />
+{% endblock %}

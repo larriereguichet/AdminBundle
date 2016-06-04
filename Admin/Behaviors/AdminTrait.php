@@ -2,11 +2,14 @@
 
 namespace LAG\AdminBundle\Admin\Behaviors;
 
-use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Pagerfanta\Pagerfanta;
 
 trait AdminTrait
 {
+    use EntityLabelTrait {
+        getEntityLabel as parentEntityLabel;
+    }
+
     /**
      * @var Pagerfanta
      */
@@ -26,22 +29,15 @@ trait AdminTrait
     }
 
     /**
+     * Try to find a property to get a label from an entity. If found, it returns the property value through the
+     * property accessor.
+     *
      * @return string
      */
     public function getEntityLabel()
     {
-        $label = '';
         $entity = $this->getUniqueEntity();
-
-        if (method_exists($entity, 'getLabel')) {
-            $label = $entity->getLabel();
-        } elseif (method_exists($entity, 'getTitle')) {
-            $label = $entity->getTitle();
-        } elseif (method_exists($entity, 'getName')) {
-            $label = $entity->getName();
-        } elseif (method_exists($entity, '__toString')) {
-            $label = $entity->__toString();
-        }
+        $label = $this->parentEntityLabel($entity);
 
         return $label;
     }

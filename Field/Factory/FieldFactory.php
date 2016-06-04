@@ -3,7 +3,8 @@
 namespace LAG\AdminBundle\Field\Factory;
 
 use Exception;
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\TwigFieldInterface;
@@ -48,17 +49,19 @@ class FieldFactory
     /**
      * FieldFactory constructor.
      *
-     * @param ApplicationConfiguration $configuration
+     * @param ConfigurationFactory $configurationFactory
      * @param TranslatorInterface $translator
      * @param Twig_Environment $twig
      */
     public function __construct(
-        ApplicationConfiguration $configuration,
+        ConfigurationFactory $configurationFactory,
         TranslatorInterface $translator,
         Twig_Environment $twig
     ) {
-        $this->configuration = $configuration;
-        $this->fieldsMapping = $configuration->getFieldsMapping(); // shortcut to field mapping array
+        $this->configuration = $configurationFactory->getApplicationConfiguration();
+        $this->fieldsMapping = $this
+            ->configuration
+            ->getParameter('fields_mapping'); // shortcut to field mapping array
         $this->translator = $translator;
         $this->twig = $twig;
     }
@@ -115,10 +118,10 @@ class FieldFactory
         $field = new $fieldClass();
 
         if (!($field instanceof FieldInterface)) {
-            throw new Exception("Field class {$fieldClass} must implements " . FieldInterface::class);
+            throw new Exception("Field class {$fieldClass} must implements ".FieldInterface::class);
         }
         $field->setName($fieldName);
-        $field->setConfiguration($this->configuration);
+        $field->setApplicationConfiguration($this->configuration);
 
         if ($field instanceof TranslatableFieldInterface) {
             $field->setTranslator($this->translator);
@@ -131,13 +134,13 @@ class FieldFactory
 
         // configure field default options
         $field->configureOptions($resolver);
+        
         // resolve options
         $options = $resolver->resolve($configuration['options']);
 
-        // set options and value
+        // set options
         $field->setOptions($options);
-
-
+        
         return $field;
     }
 

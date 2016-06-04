@@ -9,7 +9,7 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="Tests/bootstrap.php">
+         bootstrap="Tests/Fixtures/bootstrap.php">
     <testsuites>
         <testsuite name="AdminBundle Test Suite">
             <directory>./Tests/</directory>

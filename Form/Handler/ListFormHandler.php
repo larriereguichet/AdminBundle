@@ -34,7 +34,7 @@ class ListFormHandler
         }
         // check if they exists in entities displayed and if checkbox is checked
         foreach ($batchItems as $name => $batchItem) {
-            $batchId = (int)str_replace('batch_', '', $name);
+            $batchId = (int) str_replace('batch_', '', $name);
 
             if (array_key_exists($batchId, $cleanData['labels']) && $batchItem === true) {
                 $cleanData['ids'][] = $batchId;

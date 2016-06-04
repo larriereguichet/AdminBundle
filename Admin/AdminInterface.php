@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Admin;
 
 use Exception;
+use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,6 +11,21 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 interface AdminInterface
 {
+    /**
+     * Do not load entities on handleRequest (for create method for example)
+     */
+    const LOAD_STRATEGY_NONE = 'strategy_none';
+
+    /**
+     * Load one entity on handleRequest (edit method for example)
+     */
+    const LOAD_STRATEGY_UNIQUE = 'strategy_unique';
+
+    /**
+     * Load multiple entities on handleRequest (list method for example)
+     */
+    const LOAD_STRATEGY_MULTIPLE = 'strategy_multiple';
+
     /**
      * Handle current request :
      *  - load entities
@@ -113,6 +129,13 @@ interface AdminInterface
     public function getCurrentAction();
 
     /**
+     * Return if the current action has been initialized and set.
+     *
+     * @return boolean
+     */
+    public function isCurrentActionDefined();
+
+    /**
      * Return true if current action is granted for user.
      *
      * @param string $actionName
@@ -121,4 +144,12 @@ interface AdminInterface
      * @return bool
      */
     public function isActionGranted($actionName, array $roles);
+
+    /**
+     * Try to find a property to get a label from an entity. If found, it returns the property value through the
+     * property accessor.
+     *
+     * @return string
+     */
+    public function getEntityLabel();
 }

@@ -1,9 +1,27 @@
+{# Display a link according ot the given entity and the given admin action #}
 {% macro actionLink(action, entity) %}
-    <a href="{{ path(action.configuration.route, route_parameters(action.configuration.parameters, entity)) }}"
-       target="{{ action.configuration.target }}" title="{{ action.title | trans }}">
+
+    {% set url = path(action.configuration.route, route_parameters(action.configuration.parameters, entity)) %}
+
+    <a href="{{ url }}" target="{{ action.configuration.target }}" title="{{ action.title | trans }}">
         {% if action.configuration.icon %}
             <i class="fa fa-{{ action.configuration.icon }}"></i>
         {% endif %}
         {{ action.title | trans }}
     </a>
+
+{% endmacro %}
+
+
+{% macro adminMenu(menuName, admin) %}
+
+    {% if admin and admin.currentAction.configuration.getParameter('load_strategy') == 'strategy_unique' %}
+
+        {% set menu = knp_menu_get(menuName, [], {entity: admin.uniqueEntity}) %}
+        {{ knp_menu_render(menu) }}
+
+    {% else %}
+        {{ knp_menu_render(menuName) }}
+    {% endif %}
+
 {% endmacro %}

@@ -7,16 +7,12 @@ use LAG\AdminBundle\Form\Handler\ListFormHandler;
 use LAG\AdminBundle\Form\Type\AdminListType;
 use LAG\AdminBundle\Form\Type\BatchActionType;
 use BlueBear\BaseBundle\Behavior\ControllerTrait;
-use DateTime;
-use Doctrine\ORM\Mapping\MappingException;
-use EE\DataExporterBundle\Service\DataExporter;
 use Exception;
 use LAG\AdminBundle\Form\Type\DeleteType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Role\Role;
@@ -31,7 +27,7 @@ class CRUDController extends Controller
     use ControllerTrait;
 
     /**
-     * Generic list action
+     * Generic list action.
      *
      * @Template("LAGAdminBundle:CRUD:list.html.twig")
      * @param Request $request
@@ -42,41 +38,51 @@ class CRUDController extends Controller
         // retrieve admin from request route parameters
         $admin = $this->getAdminFromRequest($request);
         $admin->handleRequest($request, $this->getUser());
-        // creating list form
-        $form = $this->createForm(AdminListType::class, [
-            'entities' => $admin->getEntities()
-        ], [
-            'batch_actions' => $admin
-                ->getCurrentAction()
-                ->getBatchActions()
-        ]);
-        $form->handleRequest($request);
 
-        if ($request->get('export')) {
-            return $this->exportEntities($admin, $request->get('export'));
-        }
-        if ($form->isValid()) {
-            // get ids and batch action from list form data
-            $formHandler = new ListFormHandler();
-            $data = $formHandler->handle($form);
-            $batchForm = $this->createForm(BatchActionType::class, [
-                'batch_action' => $data['batch_action'],
-                'entity_ids' => $data['ids']
-            ], [
-                'labels' => $data['labels']
-            ]);
+        // retrieve batch actions from configuration
+        $batchActions = $admin
+            ->getCurrentAction()
+            ->getConfiguration()
+            ->getParameter('batch');
 
-            // render batch view
-            return $this->render('LAGAdminBundle:CRUD:batch.html.twig', [
-                'admin' => $admin,
-                'form' => $batchForm->createView()
-            ]);
-        }
-        return [
+        // pass admin and current action to the view
+        $viewParameters = [
             'admin' => $admin,
             'action' => $admin->getCurrentAction(),
-            'form' => $form->createView()
         ];
+
+        // if batch are configured, we handle a list of checboxes
+        if ($batchActions) {
+            // creating list form
+            $form = $this->createForm(AdminListType::class, [
+                'entities' => $admin->getEntities()
+            ], [
+                'batch_actions' => $batchActions['items'],
+                'admin' => $admin
+            ]);
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                // get ids and batch action from list form data
+                $formHandler = new ListFormHandler();
+                $data = $formHandler->handle($form);
+                $batchForm = $this->createForm(BatchActionType::class, [
+                    'batch_action' => $data['batch_action'],
+                    'entity_ids' => $data['ids']
+                ], [
+                    'labels' => $data['labels']
+                ]);
+
+                // render batch view
+                return $this->render('LAGAdminBundle:CRUD:batch.html.twig', [
+                    'admin' => $admin,
+                    'form' => $batchForm->createView()
+                ]);
+            }
+            $viewParameters['form'] = $form->createView();
+        }
+
+        return $viewParameters;
     }
 
     /**
@@ -104,14 +110,14 @@ class CRUDController extends Controller
                 $admin->remove();
             }
         } else {
-            throw new NotFoundHttpException('Invalid batch parameters');
+            throw new NotFoundHttpException('Invalid batch parameters : ' . $form->getErrors(true, false));
         }
         // redirect to list view
         return $this->redirectToRoute($admin->generateRouteName('list'));
     }
 
     /**
-     * Generic create action
+     * Generic create action.
      *
      * @Template("LAGAdminBundle:CRUD:edit.html.twig")
      * @param Request $request
@@ -124,7 +130,7 @@ class CRUDController extends Controller
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
-        $form = $this->createForm($admin->getConfiguration()->getFormType(), $admin->create());
+        $form = $this->createForm($admin->getConfiguration()->getParameter('form'), $admin->create());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -169,7 +175,7 @@ class CRUDController extends Controller
         // check permissions
         $this->forward404IfNotAllowed($admin);
         // create form
-        $form = $this->createForm($admin->getConfiguration()->getFormType(), $admin->getUniqueEntity());
+        $form = $this->createForm($admin->getConfiguration()->getParameter('form'), $admin->getUniqueEntity());
         $form->handleRequest($request);
         $accessor = PropertyAccess::createPropertyAccessor();
 
@@ -196,12 +202,10 @@ class CRUDController extends Controller
     }
 
     /**
-     * Generic delete action
+     * Generic delete action.
      *
      * @Template("LAGAdminBundle:CRUD:delete.html.twig")
-     *
      * @param Request $request
-     *
      * @return RedirectResponse|array
      */
     public function deleteAction(Request $request)
@@ -229,66 +233,12 @@ class CRUDController extends Controller
     }
 
     /**
-     * Export entities according to a type (json, csv, xls...)
-     *
-     * @param AdminInterface $admin
-     * @param $exportType
-     *
-     * @return Response
-     *
-     * @throws MappingException
-     */
-    protected function exportEntities(AdminInterface $admin, $exportType)
-    {
-        // check allowed export types
-        $this->forward404Unless(in_array($exportType, ['json', 'html', 'xls', 'csv', 'xml']));
-        /** @var DataExporter $exporter */
-        $exporter = $this->get('ee.dataexporter');
-        $metadata = $this
-            ->getEntityManager()
-            ->getClassMetadata($admin->getConfiguration()->getEntityName());
-        $exportColumns = [];
-        $fields = $metadata->getFieldNames();
-        $hooks = [];
-
-        foreach ($fields as $fieldName) {
-            $exporter->addHook(function($fieldValue) {
-                // if field is an array
-                if (is_array($fieldValue)) {
-                    $value = recursiveImplode(', ', $fieldValue);
-                } elseif ($fieldValue instanceof DateTime) {
-                    // format date in string
-                    $value = $fieldValue->format('c');
-                } else {
-                    $value = $fieldValue;
-                }
-
-                return $value;
-            }, "{$fieldName}");
-            // add field column to export
-            $exportColumns[$fieldName] = $fieldName;
-        }
-        $exporter
-            ->setOptions($exportType, [
-                'fileName' => $admin->getName() . '-export-' . date('Y-m-d'),
-            ])
-            ->setColumns($exportColumns)
-            ->setData($admin->getEntities());
-        foreach ($hooks as $hookName => $hook) {
-            $exporter->addHook($hook, $hookName);
-        }
-
-        return $exporter->render();
-    }
-
-    /**
      * Forward to 404 if user is not allowed by configuration for an action.
      *
      * @param AdminInterface $admin
      */
     protected function forward404IfNotAllowed(AdminInterface $admin)
     {
-        // TODO move authorizations logic into kernel.request event
         $this->forward404Unless($this->getUser(), 'You must be logged to access to this url');
         $roles = $this
             ->getUser()

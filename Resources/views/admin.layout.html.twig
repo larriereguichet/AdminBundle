@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ config.locale }}">
+<html lang="{{ config.getParameter('locale') }}">
 <head>
     <title>
-        {% block title %}{{ config.title }}{% endblock %}
+        {% block title %}{{ config.getParameter('title') }}{% endblock %}
     </title>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{{ config.description }}">
+    <meta name="description" content="{{ config.getParameter('description') }}">
     <meta name="keywords" content="in progress">
     <meta name="author" content="in progress">
     {% block head %}{% endblock %}
@@ -18,6 +18,10 @@
 </head>
 <body>
 {% import "LAGAdminBundle:CRUD:macros.html.twig" as AdminBundle %}
+
+{% if admin is not defined %}
+ {% set admin = null %}
+{% endif %}
 
 <div class="wrapper">
     {% if app.user %}
@@ -33,12 +37,16 @@
                 {% block mainTitle %}{% endblock %}
 
                 {% block topMenu %}
-                    <ul class="nav navbar-top-links navbar-right in">
-                        {% block topMenuItems %}{% endblock %}
-                    </ul>
+                    {{ AdminBundle.adminMenu('top', admin) }}
                 {% endblock %}
 
-                {% block leftMenu %}{% endblock %}
+                {% block leftMenu %}
+                    <div role="navigation" class="navbar-default sidebar">
+                        <div class="sidebar-nav navbar-collapse">
+                            {{ AdminBundle.adminMenu('main', admin) }}
+                        </div>
+                    </div>
+                {% endblock %}
             </div>
         </nav>
     {% endif %}
