@@ -1,32 +1,185 @@
-# AdminBundle
+[![Build Status](https://travis-ci.org/larriereguichet/AdminBundle.svg?branch=master)](https://travis-ci.org/larriereguichet/AdminBundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/?branch=master)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0/big.png)](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0)
 
-AdminBundle allows you to create flexible and robust management application, using a simple configuration,
+
+# AdminBundle
+AdminBundle allows you to create flexible and robust backoffice application, using a simple yml configuration,
 for your Symfony application.
 
-Development and Documentation are in progress
-
-Testing : 
-branch dev [![Build Status](https://travis-ci.org/larriereguichet/AdminBundle.svg?branch=dev)](https://travis-ci.org/larriereguichet/AdminBundle)
-coverage [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/quality-score.png?b=dev)](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/?branch=dev)
+## Installation
+```
+composer require lag/adminbundle
+```
 
 ## Features
+Version 0.4 :
 
-Current version: 0.2
+* Dynamic CRUD for your entities (no code generation)
+* Simple configuration in yml (look alike symfony1 generators.yml syntax)
+* List with pagination, sorting and batch remove (filters are coming)
+* Full translated
+* Main and left menu integration
+* Fully customizable (use your own controllers, data providers or templates)
+* Bootstrap integration (can be disabled or override)
 
-* Provides dynamics CRUD for your entities (not generated)
-* Simple configuration in yml (look alike symfony1 generators.yml files)
-* Basic permissions
-* Built-in pager (using PagerFanta)
-* List export in multiple formats : html, pdf, xls, csv, json (using EE/DataExporter)
-* Fully customizable (use your own controllers, managers or templates)
-
-
-# Installation
+## Configuration Reference
+```yml
+    lag_admin:
+        application:            
+            title: My Little TaunTaun application
+            description: My Little TaunTaun application using Admin Bundle
+            locale: en
+            # Use the css framework Bootstrap integration (default: true) 
+            bootstrap: true
+            # Your base template (default: LAGAdminBundle::admin.layout.html.twig)
+            base_template: 'MyLittleTaunTaunBundle::layout.html.twig'
+            # Form block template
+            block_template: 'MyLittleTaunTaunBundle:Form:fields.html.twig'
+            # Admins routing configuration
+            routing:
+                name_pattern: 'tauntaun.{admin}.{action}'
+                url_pattern: 'tauntaun/{admin}/{action}'
+            # Use extra configuration helper (default: true)
+            enable_extra_configuration: true
+            # Global date format (can be override for each admin, or field)
+            date_format: 'd/M/Y'
+            # In list view, strings will be truncated after 200 characters and will be suffixed by ...
+            string_length: 200
+            string_length_truncate: '...'
+            # Translation configuration
+            translation:
+                # Default: true
+                enabled: true
+                pattern: app.{key}
+            # In list view, only 25 items per page
+            max_per_page: 25
+            fields_mapping:
+                # You can override or create new field (it should be declared in services.yml, see the dedicated chapter)
+                my_custom_field: MyLittleTaunTaunBundle\Fields\MyCustomField
+                my_custom_string: MyLittleTaunTaunBundle\Fields\MyString
+        admins:
+            planet:
+                # Generic action
+                create: ~
+                edit: ~
+                delete: ~
+                list:
+                    fields:
+                        id: ~
+                        name:
+                            type: link
+                            options:
+                                length: 40
+                                # According to global routing pattern
+                                route: tauntaun.planet.edit
+                                parameters: {id: ~}
+                        category: ~
+                        galaxy: ~
+                        publicationStatus: ~
+                        publicationDate: {type: date, options: {format: d/m/Y}}
+                        updatedAt: {type: date, options: {format: '\L\e d/m/Y à h:i:s'}}
+                # Your Doctrine entity (required)
+                entity: MyLittleTaunTaunBundle\Entity\Planet
+                # Your Symfony form type (required; used in create and edit action)
+                form: MyLittleTaunTaunBundle\Form\PlanetType
+                actions:
+                    # Custom actions
+                    death_star:                        
+                        title: Destroy a planet
+                        fields:
+                        permissions: [ROLE_DARK_SITH]
+                        # Planets will be retrieved sorted by size and by population
+                        order:
+                            size: getSize
+                            population: ~
+                        route: app.planets.destroy
+                        route_parameters: {id: ~}
+                        icon: fa fa-planet
+                        load_strategy: unique
+                        # Allowed options are pagerfanta and false
+                        pager: false
+                        criteria: {id: ~}
+                        menu:
+                            top:
+                                items:
+                                    destroy_another:
+                                        title: Destroy an other planet
+                                        route: destroy.again
+                # Used batch action in list view
+                batch: true
+                # Global routing override
+                routing_url_pattern: custom/planet/{admin}/{action}
+                routing_name_pattern: tauntaun.{admin}.{action}
+                # Your custom controller (can extends CRUDController to ease Admin management)
+                controller: MyLittleTaunTaunBundle:MyController
+                max_per_page: 5
+                # Should implements DataProviderInterface
+                data_provider: 'my.custom.data_provider.service'
+                # Translations pattern override
+                translation_pattern: {key}
+            # Short configuration reference            
+            tauntaun:
+                entity: MyLittleTaunTaunBundle\Entity\TaunTaun
+                form: MyLittleTaunTaunBundle\Entity\TaunTaunType
+                actions: ~
+        
 ```
-php composer.phar require lag/adminbundle
-```
 
-# Getting started
+
+
+
+# app/config/config.yml
+knp_menu:
+    # use "twig: false" to disable the Twig extension and the TwigRenderer
+    twig:
+        template: 'LAGAdminBundle:Menu:bootstrap_menu.html.twig'
+    #  if true, enables the helper for PHP templates
+    templating: false
+    # the renderer to use, list is also available by default
+    default_renderer: twig
+
+
+lag_admin:
+    menus:
+        main:
+            items:
+                map_menu:
+                    url: '#'
+                    text: Map
+                    icon: fa fa-gamepad
+                    items:
+                        map:
+                            admin: map
+                            action: list
+                        layer:
+                            admin: layer
+                            action: list
+                        pencil_set:
+                            admin: pencil_set
+                            action: list
+                fireman:
+                    url: '#'
+                    text: Fire 3242
+                    icon: fa fa-fire-extinguisher
+                    items:
+                        fireman:
+                            admin: fireman
+                            action: list
+                logout:
+                    route: logout
+                    icon: fa fa-sign-out
+                    text: Logout
+
+
+
+
+
+
+
+
+
+#### Getting Started
 
 ## Configuring your application
 
