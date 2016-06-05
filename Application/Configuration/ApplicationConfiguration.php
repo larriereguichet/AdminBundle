@@ -40,7 +40,7 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
 
         // main base template
         // as bundles are not loaded when reading the configuration, the kernel locateResources will always failed.
-        // So we must not check resource existance here.
+        // So we must not check resource existence here.
         $resolver->setDefault('base_template', 'LAGAdminBundle::admin.layout.html.twig');
         $resolver->setAllowedTypes('base_template', 'string');
 
