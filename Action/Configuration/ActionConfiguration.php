@@ -109,11 +109,11 @@ class ActionConfiguration extends Configuration
         $resolver
             ->setDefault('route', '')
             ->setAllowedTypes('route', 'string')
-            ->setNormalizer('route', function (Options $options, $value) {
+            ->setNormalizer('route', function(Options $options, $value) {
                 if (!$value) {
                     // if no route was provided, it should be linked to an Admin
                     if (!$this->admin) {
-                        throw new InvalidOptionsException('No route was provided for action : ' . $this->actionName);
+                        throw new InvalidOptionsException('No route was provided for action : '.$this->actionName);
                     }
 
                     // generate default route from admin
@@ -142,7 +142,7 @@ class ActionConfiguration extends Configuration
             ->addAllowedValues('load_strategy', AdminInterface::LOAD_STRATEGY_UNIQUE)
             ->addAllowedValues('load_strategy', AdminInterface::LOAD_STRATEGY_MULTIPLE)
             ->addAllowedValues('load_strategy', null)
-            ->setNormalizer('load_strategy', function (Options $options, $value) {
+            ->setNormalizer('load_strategy', function(Options $options, $value) {
 
                 if (!$value) {
                     if ($this->actionName == 'create') {
@@ -167,7 +167,7 @@ class ActionConfiguration extends Configuration
         // criteria used to find entity in the data provider
         $resolver
             ->setDefault('criteria', [])
-            ->setNormalizer('criteria', function (Options $options, $value) {
+            ->setNormalizer('criteria', function(Options $options, $value) {
 
                 if (!$value) {
                     $idActions = [
@@ -192,7 +192,7 @@ class ActionConfiguration extends Configuration
         // menus
         $resolver
             ->setDefault('menus', [])
-            ->setNormalizer('menus', function (Options $options, $menus) {
+            ->setNormalizer('menus', function(Options $options, $menus) {
                 // set default to an array
                 if ($menus === false) {
                     $menus = [];
