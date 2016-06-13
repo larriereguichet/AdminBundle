@@ -110,7 +110,7 @@ class CRUDController extends Controller
                 $admin->remove();
             }
         } else {
-            throw new NotFoundHttpException('Invalid batch parameters : ' . $form->getErrors(true, false));
+            throw new NotFoundHttpException('Invalid batch parameters : '.$form->getErrors(true, false));
         }
         // redirect to list view
         return $this->redirectToRoute($admin->generateRouteName('list'));
