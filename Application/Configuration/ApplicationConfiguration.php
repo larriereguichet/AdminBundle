@@ -64,12 +64,37 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
         $resolver->setAllowedTypes('string_length_truncate', 'string');
 
         // routing configuration (route name pattern and url name pattern)
+        $this->setRoutingOptions($resolver);
+
+        // translation configuration
+        $this->setTranslationOptions($resolver);
+
+        // maximum number of elements displayed
+        $resolver->setDefault('max_per_page', 25);
+        $resolver->setAllowedTypes('max_per_page', 'integer');
+
+        // admin field type mapping
+        $this->setFieldsOptions($resolver);
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    protected function setRoutingOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefault('routing', [
             'url_pattern' => '/{admin}/{action}',
-            'name_pattern' => 'lag.admin.{admin}',
+            'name_pattern' => 'lag.admin.{admin}.{action}',
         ]);
         $resolver->setAllowedTypes('routing', 'array');
         $resolver->setNormalizer('routing', function(Options $options, $value) {
+
+            if (!array_key_exists('url_pattern', $value)) {
+                $value['url_pattern'] = '/{admin}/{action}';
+            }
+            if (!array_key_exists('name_pattern', $value)) {
+                $value['name_pattern'] = 'lag.admin.{admin}.{action}';
+            }
 
             // url pattern should contain {admin} and {action} token
             $urlPattern = $value['url_pattern'];
@@ -87,17 +112,29 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
             if (strstr($namePattern, '{admin}') === false) {
                 throw new InvalidOptionsException('Admin routing configuration pattern name should contains the {admin} placeholder');
             }
+            if (strstr($namePattern, '{action}') === false) {
+                throw new InvalidOptionsException('Admin routing configuration pattern name should contains the {action} placeholder');
+            }
 
             return $value;
         });
+    }
 
-        // translation configuration
+    /**
+     * @param OptionsResolver $resolver
+     */
+    protected function setTranslationOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefault('translation', [
             'enabled' => true,
             'pattern' => 'lag.admin.{key}'
         ]);
         $resolver->setAllowedTypes('translation', 'array');
         $resolver->setNormalizer('translation', function(Options $options, $value) {
+
+            if (!array_key_exists('enabled', $value)) {
+                throw new InvalidOptionsException('Admin translation enabled parameter should be defined');
+            }
 
             if (!is_bool($value['enabled'])) {
                 throw new InvalidOptionsException('Admin translation enabled parameter should be a boolean');
@@ -113,12 +150,13 @@ class ApplicationConfiguration extends Configuration implements ConfigurationInt
 
             return $value;
         });
+    }
 
-        // maximum number of elements displayed
-        $resolver->setDefault('max_per_page', 25);
-        $resolver->setAllowedTypes('max_per_page', 'integer');
-
-        // admin field type mapping
+    /**
+     * @param OptionsResolver $resolver
+     */
+    protected function setFieldsOptions(OptionsResolver $resolver)
+    {
         $defaultMapping = [
             Field::TYPE_STRING => StringField::class,
             Field::TYPE_ARRAY => Field\ArrayField::class,
