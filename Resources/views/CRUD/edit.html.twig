@@ -47,5 +47,8 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ tinymce_init() }}
+
+    {% if function_exists('tinymce_init') %}
+        {{ tinymce_init() }}
+    {% endif %}
 {% endblock %}

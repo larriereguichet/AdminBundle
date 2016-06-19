@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig_Environment;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -43,20 +44,28 @@ class AdminExtension extends Twig_Extension
     protected $translator;
 
     /**
+     * @var Twig_Environment
+     */
+    protected $twig;
+
+    /**
      * AdminExtension constructor.
      *
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
      * @param ConfigurationFactory $configurationFactory
+     * @param Twig_Environment $twig
      */
     public function __construct(
         RouterInterface $router,
         TranslatorInterface $translator,
-        ConfigurationFactory $configurationFactory
+        ConfigurationFactory $configurationFactory,
+        Twig_Environment $twig
     ) {
         $this->router = $router;
         $this->translator = $translator;
         $this->configuration = $configurationFactory->getApplicationConfiguration();
+        $this->twig = $twig;
     }
 
     /**
@@ -70,6 +79,7 @@ class AdminExtension extends Twig_Extension
             new Twig_SimpleFunction('field', [$this, 'field']),
             new Twig_SimpleFunction('field_title', [$this, 'fieldTitle']),
             new Twig_SimpleFunction('route_parameters', [$this, 'routeParameters']),
+            new Twig_SimpleFunction('function_exists', [$this, 'functionExists']),
         ];
     }
 
@@ -241,5 +251,18 @@ class AdminExtension extends Twig_Extension
     public function getName()
     {
         return 'lag.admin';
+    }
+
+    /**
+     * Return true if the method exists in twig.
+     *
+     * @param string $functionName
+     * @return bool
+     */
+    public function functionExists($functionName)
+    {
+        return false !== $this
+            ->twig
+            ->getFunction($functionName);
     }
 }

@@ -46,6 +46,7 @@ services:
             - '@router'
             - '@translator'
             - '@lag.admin.configuration_factory'
+            - '@twig'
 
     # handler
     lag.admin.message_handler:
