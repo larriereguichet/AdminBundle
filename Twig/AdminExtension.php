@@ -126,6 +126,7 @@ class AdminExtension extends Twig_Extension
      *
      * @param ParameterBagInterface $parameters
      * @param $fieldName
+     *
      * @return array
      */
     public function getOrderQueryString(ParameterBagInterface $parameters, $fieldName)
@@ -147,6 +148,7 @@ class AdminExtension extends Twig_Extension
      * @param null $order
      * @param $fieldName
      * @param $sort
+     *
      * @return string
      */
     public function getSortColumnIconClass($order = null, $fieldName, $sort)
@@ -171,7 +173,7 @@ class AdminExtension extends Twig_Extension
      * @param FieldInterface $field
      * @param $entity
      *
-     * @return mixed
+     * @return string
      */
     public function field(FieldInterface $field, $entity)
     {
@@ -179,6 +181,7 @@ class AdminExtension extends Twig_Extension
             ->enableMagicCall()
             ->getPropertyAccessor();
         $value = null;
+
         // if name starts with a underscore, it is a custom field, not mapped to the entity
         if (substr($field->getName(), 0, 1) != '_') {
             // get raw value from object
@@ -197,6 +200,7 @@ class AdminExtension extends Twig_Extension
      *
      * @param $fieldName
      * @param null $adminName
+     *
      * @return string
      */
     public function fieldTitle($fieldName, $adminName = null)
@@ -215,6 +219,7 @@ class AdminExtension extends Twig_Extension
     /**
      * @param array $parameters
      * @param $entity
+     *
      * @return array
      */
     public function routeParameters(array $parameters, $entity)
@@ -236,6 +241,7 @@ class AdminExtension extends Twig_Extension
      * Camelize a string (using Container camelize method)
      *
      * @param $string
+     *
      * @return string
      */
     public function camelize($string)
@@ -257,6 +263,7 @@ class AdminExtension extends Twig_Extension
      * Return true if the method exists in twig.
      *
      * @param string $functionName
+     *
      * @return bool
      */
     public function functionExists($functionName)
