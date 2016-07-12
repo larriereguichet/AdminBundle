@@ -127,8 +127,10 @@ class CRUDController extends Controller
     {
         $admin = $this->getAdminFromRequest($request);
         $admin->handleRequest($request, $this->getUser());
+        
         // check permissions
         $this->forward404IfNotAllowed($admin);
+        
         // create form
         $form = $this->createForm($admin->getConfiguration()->getParameter('form'), $admin->create());
         $form->handleRequest($request);

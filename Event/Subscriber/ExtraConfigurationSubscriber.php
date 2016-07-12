@@ -8,7 +8,8 @@ use Doctrine\ORM\EntityManager;
 use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
-use LAG\AdminBundle\Event\AdminEvent;
+use LAG\AdminBundle\Admin\Event\AdminEvent;
+use LAG\AdminBundle\Admin\Event\AdminEvents;
 use LAG\AdminBundle\Utils\FieldTypeGuesser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -43,8 +44,8 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            AdminEvent::ADMIN_CREATE => 'adminCreate',
-            AdminEvent::ACTION_CREATE => 'actionCreate',
+            AdminEvents::ADMIN_CREATE => 'adminCreate',
+            AdminEvents::ACTION_CREATE => 'actionCreate',
         ];
     }
 
@@ -76,7 +77,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         if (!$this->extraConfigurationEnabled) {
             return;
         }
-        $configuration = $event->getConfiguration();
+        $configuration = $event->getAdminConfiguration();
 
         // if no actions are defined, we set default CRUD action
         if (!array_key_exists('actions', $configuration) || !count($configuration['actions'])) {
@@ -87,7 +88,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                 'delete' => [],
                 'batch' => []
             ];
-            $event->setConfiguration($configuration);
+            $event->setAdminConfiguration($configuration);
         }
     }
 
@@ -104,7 +105,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             return;
         }
         // action configuration array
-        $configuration = $event->getConfiguration();
+        $configuration = $event->getActionConfiguration();
         // current action admin
         $admin = $event->getAdmin();
         // allowed actions according to the admin
@@ -195,19 +196,19 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             }
         }
         // reset action configuration
-        $event->setConfiguration($configuration);
+        $event->setActionConfiguration($configuration);
     }
 
     /**
      * Add default menu configuration for an action.
      *
-     * @param string $admiName
+     * @param string $adminName
      * @param string $actionName
      * @param array $actionConfiguration
      * @param array $allowedActions
      * @return array The modified configuration
      */
-    protected function addDefaultMenuConfiguration($admiName, $actionName, array $actionConfiguration, array $allowedActions)
+    protected function addDefaultMenuConfiguration($adminName, $actionName, array $actionConfiguration, array $allowedActions)
     {
         // we add a default top menu item "create" only for list action
         if ($actionName === 'list') {
@@ -225,7 +226,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                         'top' => [
                             'items' => [
                                 'create' => [
-                                    'admin' => $admiName,
+                                    'admin' => $adminName,
                                     'action' => 'create',
                                     'icon' => 'fa fa-plus',
                                 ]
