@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Event;
 
+use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -20,14 +21,21 @@ class AdminEvent extends Event
     protected $adminName;
 
     /**
+     * Related Action name
+     * 
+     * @var string
+     */
+    protected $actionName;
+
+    /**
      * @var AdminInterface
      */
     protected $admin;
 
     /**
-     * @var string
+     * @var ActionInterface
      */
-    protected $actionName;
+    protected $action;
 
     /**
      * @param array $configuration

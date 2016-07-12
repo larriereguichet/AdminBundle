@@ -179,7 +179,8 @@ class AdminTestBase extends WebTestCase
             $name,
             $this->mockDataProvider(),
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
     }
 
@@ -293,7 +294,8 @@ class AdminTestBase extends WebTestCase
             $name,
             $this->mockDataProvider(),
             $configuration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
     }
 

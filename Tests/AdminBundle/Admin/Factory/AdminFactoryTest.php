@@ -25,6 +25,8 @@ class AdminFactoryTest extends AdminTestBase
             $admin = $adminFactory->getAdmin($name);
             $this->doTestAdmin($admin, $adminConfiguration, $name);
         }
+        // the second initialization should work too
+        $adminFactory->init();
     }
 
     /**

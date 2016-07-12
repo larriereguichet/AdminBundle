@@ -10,7 +10,7 @@ use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\DataProvider\DataProvider;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Event\AdminEvent;
-use LAG\AdminBundle\Event\AdminFactoryEvent;
+use LAG\AdminBundle\Admin\Event\AdminFactoryEvent;
 use Exception;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\Repository\RepositoryInterface;
@@ -87,7 +87,7 @@ class AdminFactory
         array $adminConfigurations,
         EventDispatcherInterface $eventDispatcher,
         EntityManager $entityManager,
-        ConfigurationFactory $configurationFactory,        
+        ConfigurationFactory $configurationFactory,
         ActionFactory $actionFactory,
         MessageHandlerInterface $messageHandler
     ) {
@@ -109,30 +109,30 @@ class AdminFactory
         if ($this->isInit) {
             return;
         }
+        // create an event with the configuration read from yml
         $event = new AdminFactoryEvent();
         $event->setAdminsConfiguration($this->adminConfigurations);
 
         // dispatch an event to allow configuration modification before resolving and creating admins
         $this
             ->eventDispatcher
-            ->dispatch(AdminFactoryEvent::ADMIN_CREATION, $event);
-        // set modified configuration
+            ->dispatch(AdminFactoryEvent::EVENT_BEFORE_CONFIGURATION_LOAD, $event);
+
+        // get back the modified configuration
         $this->adminConfigurations = $event->getAdminsConfiguration();
 
         foreach ($this->adminConfigurations as $name => $configuration) {
 
-            // dispatch an event to allow modification on this specific admin
-            $event = new AdminEvent();
-            $event
-                ->setConfiguration($configuration)
-                ->setAdminName($name)
-            ;
+            // dispatch an event to allow modification on a specific admin
+            $event = new AdminFactoryEvent();
+            $event->setAdminConfiguration($configuration);
+            $event->setAdminName($name);
             $this
                 ->eventDispatcher
                 ->dispatch(AdminEvent::ADMIN_CREATE, $event);
 
-            // create Admin object
-            $this->admins[$name] = $this->create($name, $event->getConfiguration());
+            // create Admin object, with the configuration modified by the events
+            $this->admins[$name] = $this->create($name, $event->getAdminConfiguration());
         }
         $this->isInit = true;
     }
@@ -163,7 +163,8 @@ class AdminFactory
             $name,
             $dataProvider,
             $adminConfiguration,
-            $this->messageHandler
+            $this->messageHandler,
+            $this->eventDispatcher
         );
 
         // adding actions
