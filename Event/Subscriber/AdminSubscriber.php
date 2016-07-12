@@ -39,6 +39,8 @@ class AdminSubscriber implements EventSubscriberInterface
     public function kernelRequest()
     {
         // init admin factory
-        $this->adminFactory->init();
+        $this
+            ->adminFactory
+            ->init();
     }
 }

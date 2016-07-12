@@ -29,6 +29,7 @@ use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -337,18 +338,21 @@ class AdminTestBase extends WebTestCase
 
     /**
      * @param array $configuration
+     * @param EventDispatcherInterface $eventDispatcher
      * @return AdminFactory
      */
-    protected function createAdminFactory(array $configuration = [])
+    protected function createAdminFactory(array $configuration = [], EventDispatcherInterface $eventDispatcher = null)
     {
-        /** @var EventDispatcher $mockEventDispatcher */
-        $mockEventDispatcher = $this
-            ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
-            ->getMock();
+        if (null === $eventDispatcher) {
+            /** @var EventDispatcher $eventDispatcher */
+            $eventDispatcher = $this
+                ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
+                ->getMock();
+        }
 
         return new AdminFactory(
             $configuration,
-            $mockEventDispatcher,
+            $eventDispatcher,
             $this->mockEntityManager(),
             $this->createConfigurationFactory(),
             $this->mockActionFactory(),
