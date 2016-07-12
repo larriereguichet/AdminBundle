@@ -2,7 +2,8 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\Event\Subscriber;
 
-use LAG\AdminBundle\Event\AdminEvent;
+use LAG\AdminBundle\Admin\Event\AdminEvent;
+use LAG\AdminBundle\Admin\Event\AdminEvents;
 use LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -16,8 +17,8 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
     {
         $subscribedEvents = ExtraConfigurationSubscriber::getSubscribedEvents();
 
-        $this->assertArrayHasKey(AdminEvent::ADMIN_CREATE, $subscribedEvents);
-        $this->assertArrayHasKey(AdminEvent::ACTION_CREATE, $subscribedEvents);
+        $this->assertArrayHasKey(AdminEvents::ADMIN_CREATE, $subscribedEvents);
+        $this->assertArrayHasKey(AdminEvents::ACTION_CREATE, $subscribedEvents);
         $this->assertContains('actionCreate', $subscribedEvents);
         $this->assertContains('adminCreate', $subscribedEvents);
     }
@@ -34,9 +35,9 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             $this->createConfigurationFactory()
         );
         $event = new AdminEvent();
-        $event->setConfiguration([]);
+        $event->setAdminConfiguration([]);
         $subscriber->adminCreate($event);
-        $this->assertEquals([], $event->getConfiguration());
+        $this->assertEquals([], $event->getAdminConfiguration());
 
         // with extra configuration enabled, adminCreate method SHOULD fill action configuration if it is empty
         $subscriber = new ExtraConfigurationSubscriber(
@@ -45,7 +46,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             $this->createConfigurationFactory()
         );
         $event = new AdminEvent();
-        $event->setConfiguration([]);
+        $event->setAdminConfiguration([]);
         $subscriber->adminCreate($event);
         $this->assertEquals([
             'actions' => [
@@ -55,11 +56,11 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
                 'delete' => [],
                 'batch' => [],
             ]
-        ], $event->getConfiguration());
+        ], $event->getAdminConfiguration());
 
         // adminCreate method SHOULD not modified actual configuration
         $event = new AdminEvent();
-        $event->setConfiguration([
+        $event->setAdminConfiguration([
             'actions' => [
                 'myAction' => []
             ]
@@ -69,7 +70,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             'actions' => [
                 'myAction' => []
             ]
-        ], $event->getConfiguration());
+        ], $event->getAdminConfiguration());
     }
 
     public function testConfigurationDisabled()
@@ -87,7 +88,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
         ;
         $adminEvent
             ->expects($this->never())
-            ->method('getConfiguration')
+            ->method('getAdminConfiguration')
         ;
 
         // no method should be called
@@ -107,14 +108,14 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             'entity' => 'test',
             'form' => 'test',
         ]));
-        $adminEvent->setConfiguration([
+        $adminEvent->setActionConfiguration([
             'fields' => [
                 'test' => []
             ]
         ]);
         $subscriber->actionCreate($adminEvent);
 
-        $configuration = $adminEvent->getConfiguration();
+        $configuration = $adminEvent->getActionConfiguration();
 
         $this->assertArrayHasKey('menus', $configuration);
         $this->assertArrayHasKey('top', $configuration['menus']);
