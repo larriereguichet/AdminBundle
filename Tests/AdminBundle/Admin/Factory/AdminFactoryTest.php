@@ -25,7 +25,9 @@ class AdminFactoryTest extends AdminTestBase
         $adminFactory->init();
 
         foreach ($configuration as $name => $adminConfiguration) {
-            $admin = $adminFactory->getAdmin($name);
+            $admin = $adminFactory
+                ->getRegistry()
+                ->get($name);
             $this->doTestAdmin($admin, $adminConfiguration, $name);
         }
         // the second initialization should work too
@@ -53,91 +55,17 @@ class AdminFactoryTest extends AdminTestBase
     }
 
     /**
-     * GetAdminFromRequest method should return a configured Admin from request parameters.
-     *
-     * @throws Exception
-     */
-    public function testGetAdminFromRequest()
-    {
-        $adminConfiguration = $this->getAdminsConfiguration();
-        $adminFactory = $this->createAdminFactory($adminConfiguration);
-        $adminFactory->init();
-
-        foreach ($adminConfiguration as $name => $configuration) {
-            $request = new Request([], [], [
-                '_route_params' => [
-                    '_admin' => $name,
-                    // see AdminTestBase->mockActionFactory
-                    '_action' => 'test'
-                ]
-            ]);
-            $admin = $adminFactory->getAdminFromRequest($request);
-            $this->doTestAdmin($admin, $configuration, $name);
-        }
-    }
-
-    /**
-     * GetAdmin method should return an configured Admin by its name.
-     *
-     * @throws Exception
-     */
-    public function testGetAdmin()
-    {
-        // test with no configuration
-        $adminFactory = $this->createAdminFactory();
-
-        // unknown admin not exists, it should throw an exception
-        $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
-            $adminFactory->getAdmin('unknown_admin');
-        });
-
-        // test with configurations samples
-        $adminsConfiguration = $this->getAdminsConfiguration();
-        $adminFactory = $this->createAdminFactory($adminsConfiguration);
-        $adminFactory->init();
-
-        foreach ($adminsConfiguration as $name => $configuration) {
-            $admin = $adminFactory->getAdmin($name);
-            $this->doTestAdmin($admin, $configuration, $name);
-        }
-    }
-
-    /**
-     * GetAdmins method should return all configured Admin.
-     *
-     * @throws Exception
-     */
-    public function testGetAdmins()
-    {
-        // test with no configuration
-        $adminFactory = $this->createAdminFactory();
-        // unknow admin not exists, it should throw an exception
-        $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
-            $adminFactory->getAdmin('unknown_admin');
-        });
-        // test with configurations samples
-        $adminsConfiguration = $this->getAdminsConfiguration();
-        $adminFactory = $this->createAdminFactory($adminsConfiguration);
-        $adminFactory->init();
-
-        $admins = $adminFactory->getAdmins();
-
-        foreach ($admins as $admin) {
-            $this->assertArrayHasKey($admin->getName(), $adminsConfiguration);
-            $this->doTestAdmin($admin, $adminsConfiguration[$admin->getName()], $admin->getName());
-        }
-    }
-
-    /**
      * AddDataProvider method must add a DataProviderInterface to the Admin.
      */
     public function testAddDataProvider()
     {
         // test with no configuration
         $adminFactory = $this->createAdminFactory();
-        // unknow admin not exists, it should throw an exception
+        // unknown admin not exists, it should throw an exception
         $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
-            $adminFactory->getAdmin('unknown_admin');
+            $adminFactory
+                ->getRegistry()
+                ->get('unknown_admin');
         });
         $dataProvider = $this->mockDataProvider();
         $adminFactory->addDataProvider('test', $dataProvider);

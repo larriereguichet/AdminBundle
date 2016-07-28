@@ -9,6 +9,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    /**
+     * @return TreeBuilder
+     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -97,6 +100,9 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
     public function getMenuConfiguration()
     {
         $builder = new TreeBuilder();

@@ -232,12 +232,11 @@ class AdminTestBase extends WebTestCase
     protected function createMenuFactory()
     {
         $knpFactory = $this->createKnpMenuFactory();
-        $adminFactory = $this->createAdminFactory();
         $configurationFactory = $this->createConfigurationFactory();
 
         $menuFactory = new \LAG\AdminBundle\Menu\Factory\MenuFactory(
             $knpFactory,
-            $adminFactory,
+            new \LAG\AdminBundle\Admin\Registry\Registry(),
             $configurationFactory,
             new IdentityTranslator()
         );
@@ -356,7 +355,8 @@ class AdminTestBase extends WebTestCase
             $this->mockEntityManager(),
             $this->createConfigurationFactory(),
             $this->mockActionFactory(),
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            $registry
         );
     }
 

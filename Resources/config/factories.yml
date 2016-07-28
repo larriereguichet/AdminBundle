@@ -13,6 +13,7 @@ services:
             - '@lag.admin.configuration_factory'
             - '@lag.admin.action_factory'
             - '@lag.admin.message_handler'
+            - '@lag.admin.registry'
 
     lag.admin.action_factory:
         class: LAG\AdminBundle\Action\Factory\ActionFactory
@@ -36,6 +37,6 @@ services:
         class: LAG\AdminBundle\Menu\Factory\MenuFactory
         arguments:
             - '@knp_menu.factory'
-            - '@lag.admin.factory'
+            - '@lag.admin.registry'
             - '@lag.admin.configuration_factory'
             - '@translator'

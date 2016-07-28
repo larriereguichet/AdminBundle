@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Menu;
 
 use Exception;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Admin\Factory\AdminFactory;
+use LAG\AdminBundle\Admin\Request\RequestHandler;
 use LAG\AdminBundle\Menu\Factory\MenuFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -24,9 +24,9 @@ class MenuBuilder
     protected $menuFactory;
 
     /**
-     * @var AdminFactory
+     * @var RequestHandler
      */
-    protected $adminFactory;
+    protected $requestHandler;
 
     /**
      * @var RequestStack
@@ -38,18 +38,18 @@ class MenuBuilder
      *
      * @param array $menusConfiguration
      * @param MenuFactory $menuFactory
-     * @param AdminFactory $adminFactory
+     * @param RequestHandler $requestHandler
      * @param RequestStack $requestStack
      */
     public function __construct(
         array $menusConfiguration,
         MenuFactory $menuFactory,
-        AdminFactory $adminFactory,
+        RequestHandler $requestHandler,
         RequestStack $requestStack
     ) {
         $this->menusConfiguration = $menusConfiguration;
         $this->menuFactory = $menuFactory;
-        $this->adminFactory = $adminFactory;
+        $this->requestHandler = $requestHandler;
         $this->requestStack = $requestStack;
     }
 
@@ -100,8 +100,8 @@ class MenuBuilder
         if ($request !== null && !empty($request->get('_route_params')['_admin'])) {
             // get current action from admin
             $admin = $this
-                ->adminFactory
-                ->getAdminFromRequest($request);
+                ->requestHandler
+                ->handle($request);
 
             if ($admin->isCurrentActionDefined()) {
                 // menu configuration
