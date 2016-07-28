@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Routing;
 
-use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use Exception;
@@ -29,7 +28,7 @@ class RoutingLoader implements LoaderInterface
 
     /**
      * RoutingLoader constructor.
-     * 
+     *
      * @param AdminFactory $adminFactory
      */
     public function __construct(AdminFactory $adminFactory)
@@ -49,20 +48,25 @@ class RoutingLoader implements LoaderInterface
             throw new RuntimeException('Do not add the "extra" loader twice');
         }
         $routes = new RouteCollection();
-        $this->adminFactory->init();
+
+        // init the AdminFactory to load the Admins
+        $this
+            ->adminFactory
+            ->init();
+
+        // get all the loaded Admins from the Registry
         $admins = $this
             ->adminFactory
-            ->getAdmins();
+            ->getRegistry()
+            ->all();
         
         // creating a route by admin and action
-        /** @var AdminInterface $admin */
         foreach ($admins as $admin) {
             $actions = $admin->getActions();
             
-            // by default, actions are create, edit, delete, list
-            /** @var Action $action */
+            // by default, the actions are create, edit, delete, list
             foreach ($actions as $action) {
-                // load route into collection
+                // load the route for the current action into the route collection
                 $this->loadRouteForAction($admin, $action, $routes);
             }
         }

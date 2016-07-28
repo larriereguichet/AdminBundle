@@ -265,7 +265,7 @@ class CRUDController extends Controller
     protected function getAdminFromRequest(Request $request)
     {
         return $this
-            ->get('lag.admin.factory')
-            ->getAdminFromRequest($request);
+            ->get('lag.admin.request_handler')
+            ->handle($request);
     }
 }

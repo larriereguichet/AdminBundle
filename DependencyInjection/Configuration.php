@@ -9,6 +9,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    /**
+     * @return TreeBuilder
+     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -37,6 +40,8 @@ class Configuration implements ConfigurationInterface
         $node = $builder->root('admins');
 
         $node
+            // useAttributeAsKey() method will preserve string key in associative Admins configuration array
+            ->useAttributeAsKey('name')
             ->prototype('array')
                 ->children()
                     ->scalarNode('entity')->end()
@@ -94,6 +99,9 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
     public function getMenuConfiguration()
     {
         $builder = new TreeBuilder();
