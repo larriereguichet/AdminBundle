@@ -84,7 +84,7 @@ class Link extends StringField implements EntityFieldInterface, TwigFieldInterfa
         ]);
         $resolver->setNormalizer('route', function(Options $options, $value) {
             // route or url should be defined
-            if (!$value && !$options->offsetGet('url') &&!$options->offsetGet('admin')) {
+            if (!$value && !$options->offsetGet('url') && !$options->offsetGet('admin')) {
                 throw new InvalidOptionsException(
                     'You must set either an url or a route for the property "'.$this->name.'"'
                 );
@@ -92,7 +92,7 @@ class Link extends StringField implements EntityFieldInterface, TwigFieldInterfa
 
             return $value;
         });
-        $resolver->setNormalizer('admin', function (Options $options, $value) {
+        $resolver->setNormalizer('admin', function(Options $options, $value) {
             // if a Admin is defined, an Action should be defined too
             if ($value && !$options->offsetGet('action')) {
                 throw new InvalidOptionsException(
