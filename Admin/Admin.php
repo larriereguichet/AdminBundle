@@ -226,7 +226,7 @@ class Admin implements AdminInterface
             $this
                 ->messageHandler
                 ->handleError(
-                    'lag.admin.saved_errors',
+                    $this->generateMessageTranslationKey('lag.admin.saved_errors'),
                     "An error has occurred while saving an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()}"
                 );
             $success = false;
@@ -256,7 +256,7 @@ class Admin implements AdminInterface
             $this
                 ->messageHandler
                 ->handleError(
-                    'lag.admin.deleted_errors',
+                    $this->generateMessageTranslationKey('lag.admin.deleted_errors'),
                     "An error has occurred while deleting an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} "
                 );
             $success = false;
