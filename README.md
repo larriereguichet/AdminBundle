@@ -5,16 +5,15 @@
 
 # AdminBundle
 
-AdminBundle allows you to create flexible and robust backoffice application, using a simple yml configuration,
-for your Symfony application.
+The AdminBundle let you creates a flexible and robust backoffice on any Symfony application, with simple yml configuration.
 
-AdminBumble creates Admin entities (like 'product' or 'store'), to handle your Doctrine entities CRUD views. Each Admin
-has Actions entities (like 'create' or 'list'). By default, the four actions of the CRUD (create, edit, list and delete)
-are available by default, but you can add your own actions. 
+Ease the handling of CRUD views by configuring Admin objects on top of your Doctrine entities. Each Admin has one or many Action.
+By default, the four actions of a classical CRUD are available (create, edit, delete and list) and the creation of new actions is painless.
 
 If you require more flexibility, you can easily override any part of the process (repositories, controllers, views...).
 The purpose of the bundle is to provide an Admin interface with default configuration, and allows the user to add his
-specific need where he wants.
+specific need where he wants, and allow to implements any specific needs without any hassles.
+
 
 ## Features
 
@@ -110,7 +109,7 @@ implements those methods for you. All you have to do is to extend this class wit
 
 ```
 
-Now your admin is ready, but as new routes will be generated, you should clear the Symfony's cache. 
+Your Admin is now ready, but as new routes will be generated, you should clear the Symfony's cache. 
 
 
 
