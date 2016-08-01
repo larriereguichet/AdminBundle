@@ -196,6 +196,11 @@ class Admin implements AdminInterface
             ->entities
             ->add($entity);
 
+        // inform the user that  the entity is created
+        $this
+            ->messageHandler
+            ->handleSuccess($this->generateMessageTranslationKey('created'));
+
         return $entity;
     }
 
@@ -212,16 +217,16 @@ class Admin implements AdminInterface
                     ->dataProvider
                     ->save($entity);
             }
-            // inform user everything went fine
+            // inform the user that the entity is saved
             $this
                 ->messageHandler
-                ->handleSuccess('lag.admin.'.$this->name.'.saved');
+                ->handleSuccess($this->generateMessageTranslationKey('lag.admin.'.$this->name.'.saved'));
             $success = true;
         } catch (Exception $e) {
             $this
                 ->messageHandler
                 ->handleError(
-                    'lag.admin.saved_errors',
+                    $this->generateMessageTranslationKey('lag.admin.saved_errors'),
                     "An error has occurred while saving an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()}"
                 );
             $success = false;
@@ -242,16 +247,16 @@ class Admin implements AdminInterface
                     ->dataProvider
                     ->remove($entity);
             }
-            // inform user everything went fine
+            // inform the user that the entity is removed
             $this
                 ->messageHandler
-                ->handleSuccess('lag.admin.'.$this->name.'.deleted');
+                ->handleSuccess($this->generateMessageTranslationKey('lag.admin.'.$this->name.'.deleted'));
             $success = true;
         } catch (Exception $e) {
             $this
                 ->messageHandler
                 ->handleError(
-                    'lag.admin.deleted_errors',
+                    $this->generateMessageTranslationKey('lag.admin.deleted_errors'),
                     "An error has occurred while deleting an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} "
                 );
             $success = false;
@@ -480,12 +485,27 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Return admin configuration object
+     * Return admin configuration object.
      *
      * @return AdminConfiguration
      */
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+
+    /**
+     * Return an translation key for a message according to the Admin's translation pattern.
+     *
+     * @param string $message
+     * @return string
+     */
+    protected function generateMessageTranslationKey($message)
+    {
+        return $this->getTranslationKey(
+            $this->configuration->getParameter('translation_pattern'),
+            $message,
+            $this->name
+        );
     }
 }

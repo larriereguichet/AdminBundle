@@ -9,6 +9,7 @@ trait AdminTrait
     use EntityLabelTrait {
         getEntityLabel as parentEntityLabel;
     }
+    use TranslationKeyTrait;
 
     /**
      * @var Pagerfanta

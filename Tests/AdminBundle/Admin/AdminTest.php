@@ -11,6 +11,7 @@ use LAG\AdminBundle\Tests\AdminTestBase;
 use stdClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\User;
 
 class AdminTest extends AdminTestBase
@@ -82,6 +83,15 @@ class AdminTest extends AdminTestBase
         ]);
 
         $admin->addAction(new Action('custom_list', $actionConfiguration));
+        $this->assertTrue($admin->hasAction('custom_list'));
+        $this->assertTrue($admin->isActionGranted('custom_list', [
+            'ROLE_ADMIN',
+            new Role('ROLE_ADMIN')
+        ]));
+        $this->assertFalse($admin->isActionGranted('custom_list', [
+            'WRONG_ROLE',
+            'IS_AUTHENTICATED_ANONYMOUSLY'
+        ]));
 
 
         $request = new Request([], [], [
@@ -116,7 +126,7 @@ class AdminTest extends AdminTestBase
     }
 
     /**
-     * checkPermissions method SHOULd throw an exception if the permissions are invalid.
+     * checkPermissions method SHOULD throw an exception if the permissions are invalid.
      */
     public function testCheckPermissions()
     {
@@ -152,7 +162,8 @@ class AdminTest extends AdminTestBase
                     ]
                 ]);
                 $user = new User('JohnKrovitch', 'john1234', [
-                    'ROLE_USER'
+                    'ROLE_USER',
+                    new Role('ROLE_USER')
                 ]);
                 $admin->handleRequest($request);
                 $admin->checkPermissions($user);
@@ -546,6 +557,80 @@ class AdminTest extends AdminTestBase
             $admin->handleRequest($request);
             $admin->load([]);
         });
+    }
+
+    /**
+     * load method SHOULD work without a pager.
+     */
+    public function testLoadWithoutPager()
+    {
+        $testEntities = [
+            new stdClass(),
+            new stdClass(),
+        ];
+        $dataProvider = $this->mockDataProvider($testEntities);
+
+        $applicationConfiguration = $this->createApplicationConfiguration();
+        $adminConfiguration = $this->createAdminConfiguration($applicationConfiguration, $this->getFakeAdminsConfiguration()['full_entity']);
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            $adminConfiguration,
+            $this->mockMessageHandler()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->addAction($this->createAction('custom_list', $admin, [
+            'load_strategy' => AdminInterface::LOAD_STRATEGY_MULTIPLE,
+            'route' => '',
+            'export' => '',
+            'order' => [],
+            'icon' => '',
+            'pager' => false,
+            'criteria' => [],
+        ]));
+        $admin->handleRequest($request);
+        $admin->load([]);
+    }
+
+    /**
+     * getCurrentAction method SHOULD throw an exception if no pager is configured.
+     */
+    public function testGetCurrentActionException()
+    {
+        $testEntities = [
+            new stdClass(),
+            new stdClass(),
+        ];
+        $dataProvider = $this->mockDataProvider($testEntities);
+
+        $applicationConfiguration = $this->createApplicationConfiguration();
+        $adminConfiguration = $this->createAdminConfiguration($applicationConfiguration, $this->getFakeAdminsConfiguration()['full_entity']);
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            $adminConfiguration,
+            $this->mockMessageHandler()
+        );
+        $admin->addAction($this->createAction('custom_list', $admin, [
+            'load_strategy' => AdminInterface::LOAD_STRATEGY_MULTIPLE,
+            'route' => '',
+            'export' => '',
+            'order' => [],
+            'icon' => '',
+            'pager' => false,
+            'criteria' => [],
+        ]));
+
+        $this->assertExceptionRaised(Exception::class, function () use ($admin) {
+            $admin->getCurrentAction();
+        });
+        $this->assertFalse($admin->isCurrentActionDefined());
     }
 
     protected function doTestAdmin(AdminInterface $admin, array $configuration, $adminName)
