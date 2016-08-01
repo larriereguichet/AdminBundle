@@ -5,12 +5,12 @@
 
 # AdminBundle
 
-The AdminBundle let you creates a flexible and robust backoffice on any Symfony application, with simple yml configuration.
+The AdminBundle let you creates a **flexible** and **robust backoffice** on any Symfony application, with simple `yml` configuration.
 
-Ease the handling of CRUD views by configuring Admin objects on top of your Doctrine entities. Each Admin has one or many Action.
-By default, the four actions of a classical CRUD are available (create, edit, delete and list) and the creation of new actions is painless.
+It eases the handling of CRUD views by configuring `Admin` objects on top of your Doctrine entities. Each `Admin` has one or many `Action`.
+By default, the four actions of a classical CRUD are available (`create`, `edit`, `delete` and `list`) and the creation of new actions is painless.
 
-If you require more flexibility, you can easily override any part of the process (repositories, controllers, views...).
+If you require *more flexibility*, you can easily override any part of the process (repositories, controllers, views...).
 The purpose of the bundle is to provide an Admin interface with default configuration, and allows the user to add his
 specific need where he wants, and allow to implements any specific needs without any hassles.
 
@@ -42,9 +42,8 @@ want to use those features, both bundles should be enabled in addition to AdminB
     new LAG\AdminBundle\LAGAdminBundle(),
     new Knp\Bundle\MenuBundle\KnpMenuBundle(),
     new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
-    
+
     ...
-    
 ```
 
 ## Configuration
@@ -57,7 +56,6 @@ separate file.
         
     imports:       
         - { resource: admin.yml }
-        
 ```
 
 ```yml
@@ -69,14 +67,13 @@ separate file.
     knp_menu:        
         twig:
             template: 'LAGAdminBundle:Menu:bootstrap_menu.html.twig'
-        
 ```
 
 
 ## Admin configuration
 
-An admin is based on an Doctrine entity and a Symfony form class (for create and edit actions). Both should be provided 
-to enable an Admin.
+An `Admin` is based on an Doctrine entity and a Symfony form class (for create and edit actions). Both should be provided
+to enable an `Admin`.
  
 ```yml
     app/config/admin.yml
@@ -86,15 +83,13 @@ to enable an Admin.
             planet:
                 entity: UniverseBundle\Entity\Planet
                 form: UniverseBundle\Form\Type\PlanetType
-   
-   
 ```
 
 AdminBundle use a data provider to retrieve and save entities. If you do not provide one, the default one will be used.
-It assumes that you have Doctrine repository implementing the LAG\AdminBundle\Repository\RepositoryInterface. It will 
+It assumes that you have Doctrine repository implementing the `LAG\AdminBundle\Repository\RepositoryInterface`. It will
 add the save and delete method to your repository.
 
-Fortunately, the AdminBundle provide the LAG\AdminBundle\Repository\DoctrineRepository abstract repository class which
+Fortunately, the AdminBundle provide the `LAG\AdminBundle\Repository\DoctrineRepository` abstract repository class which
 implements those methods for you. All you have to do is to extend this class with your repository
 
 ```php
@@ -106,11 +101,11 @@ implements those methods for you. All you have to do is to extend this class wit
     class PlanetRepository extends DoctrineRepository {
     
     ...
-
 ```
 
-Your Admin is now ready, but as new routes will be generated, you should clear the Symfony's cache. 
+Your admin is now ready!
 
+> As new routes will be generated, you may need to clear the Symfony's cache.
 
 
 ## Configuration Reference
@@ -213,5 +208,4 @@ Your Admin is now ready, but as new routes will be generated, you should clear t
                 entity: MyLittleTaunTaunBundle\Entity\TaunTaun
                 form: MyLittleTaunTaunBundle\Entity\TaunTaunType
                 actions: ~
-        
 ```
