@@ -100,7 +100,8 @@ class ActionConfiguration extends Configuration
                 'xls'
             ]);
 
-        // entity will be retrived with this order. It should be an array of field/order mapping
+        // retrieved entities are sorted according to this option it should be an array indexed by the field name
+        // with its order as a value
         $resolver
             ->setDefault('order', [])
             ->setAllowedTypes('order', 'array');
