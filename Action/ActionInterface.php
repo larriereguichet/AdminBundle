@@ -65,4 +65,11 @@ interface ActionInterface
      * @param Field $field
      */
     public function addField(Field $field);
+
+    /**
+     * Return true if the Action requires pagination.
+     *
+     * @return bool
+     */
+    public function requirePagination();
 }

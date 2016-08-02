@@ -502,6 +502,8 @@ class AdminTest extends AdminTestBase
         $admin->handleRequest($request);
         $admin->load([]);
 
+
+
         // if an array is returned from the data provider, it SHOULD wrapped into an array collection
         $this->assertEquals(new ArrayCollection($testEntities), $admin->getEntities());
 
@@ -529,6 +531,33 @@ class AdminTest extends AdminTestBase
         ]));
         $admin->handleRequest($request);
         $admin->load([]);
+
+
+
+        // test pagerfanta with multiple load strategy
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            $adminConfiguration,
+            $this->mockMessageHandler()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->addAction($this->createAction('custom_list', $admin, [
+            'load_strategy' => AdminInterface::LOAD_STRATEGY_MULTIPLE,
+            'route' => '',
+            'export' => '',
+            'order' => [],
+            'icon' => '',
+            'pager' => 'pagerfanta',
+            'criteria' => [],
+        ]));
+        $admin->handleRequest($request);
+        $admin->load([]);
+
 
         // test exception
         $dataProvider = $this->mockDataProvider(new stdClass());

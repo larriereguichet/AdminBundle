@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Action;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Filter;
 use LAG\AdminBundle\Field\Field;
 
@@ -150,5 +151,13 @@ class Action implements ActionInterface
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+
+    /**
+     * @return bool
+     */
+    public function requirePagination()
+    {
+        return $this->configuration->getParameter('load_strategy') === AdminInterface::LOAD_STRATEGY_MULTIPLE;
     }
 }

@@ -303,13 +303,16 @@ class Admin implements AdminInterface
      */
     public function load(array $criteria, $orderBy = [], $limit = 25, $offset = 1)
     {
-        $pager = $this
+        $actionConfiguration = $this
             ->getCurrentAction()
-            ->getConfiguration()
-            ->getParameter('pager');
+            ->getConfiguration();
+        $pager = $actionConfiguration->getParameter('pager');
+        $requirePagination = $this
+            ->getCurrentAction()
+            ->requirePagination();
 
-        if ($pager == 'pagerfanta') {
-            // adapter to pager fanta
+        if ($pager == 'pagerfanta' && $requirePagination) {
+            // adapter to pagerfanta
             $adapter = new PagerFantaAdminAdapter($this->dataProvider, $criteria, $orderBy);
             // create pager
             $this->pager = new Pagerfanta($adapter);
