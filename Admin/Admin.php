@@ -277,10 +277,10 @@ class Admin implements AdminInterface
     {
         if (!array_key_exists($actionName, $this->getConfiguration()->getParameter('actions'))) {
             throw new Exception(
-                sprintf('Invalid action name %s for admin %s (available action are: %s)', 
-                $actionName,
-                $this->getName(),
-                implode(', ', $this->getActionNames()))
+                sprintf('Invalid action name %s for admin %s (available action are: %s)',
+                    $actionName,
+                    $this->getName(),
+                    implode(', ', $this->getActionNames()))
             );
         }
         // get routing name pattern
@@ -323,6 +323,10 @@ class Admin implements AdminInterface
                 ->pager
                 ->getCurrentPageResults();
         } else {
+            // if the current action should retrieve only one entity, the offset should be zero
+            if ($actionConfiguration->getParameter('load_strategy') !== AdminInterface::LOAD_STRATEGY_MULTIPLE) {
+                $offset = 0;
+            }
             $entities = $this
                 ->dataProvider
                 ->findBy($criteria, $orderBy, $limit, $offset);
