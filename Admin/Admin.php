@@ -220,7 +220,7 @@ class Admin implements AdminInterface
             // inform the user that the entity is saved
             $this
                 ->messageHandler
-                ->handleSuccess($this->generateMessageTranslationKey('lag.admin.'.$this->name.'.saved'));
+                ->handleSuccess($this->generateMessageTranslationKey('saved'));
             $success = true;
         } catch (Exception $e) {
             $this
@@ -250,7 +250,7 @@ class Admin implements AdminInterface
             // inform the user that the entity is removed
             $this
                 ->messageHandler
-                ->handleSuccess($this->generateMessageTranslationKey('lag.admin.'.$this->name.'.deleted'));
+                ->handleSuccess($this->generateMessageTranslationKey('deleted'));
             $success = true;
         } catch (Exception $e) {
             $this
