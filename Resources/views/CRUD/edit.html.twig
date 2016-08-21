@@ -45,10 +45,3 @@
         </div>
     </div>
 {% endblock %}
-
-{% block javascripts %}
-
-    {% if function_exists('tinymce_init') %}
-        {{ tinymce_init() }}
-    {% endif %}
-{% endblock %}
