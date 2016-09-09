@@ -502,7 +502,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Return an translation key for a message according to the Admin's translation pattern.
+     * Return a translation key for a message according to the Admin's translation pattern.
      *
      * @param string $message
      * @return string
