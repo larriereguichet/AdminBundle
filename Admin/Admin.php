@@ -309,7 +309,7 @@ class Admin implements AdminInterface
         $pager = $actionConfiguration->getParameter('pager');
         $requirePagination = $this
             ->getCurrentAction()
-            ->requirePagination();
+            ->isPaginationRequired();
 
         if ($pager == 'pagerfanta' && $requirePagination) {
             // adapter to pagerfanta

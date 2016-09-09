@@ -71,5 +71,5 @@ interface ActionInterface
      *
      * @return bool
      */
-    public function requirePagination();
+    public function isPaginationRequired();
 }

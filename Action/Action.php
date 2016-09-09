@@ -154,9 +154,12 @@ class Action implements ActionInterface
     }
 
     /**
+     * Return true if the pagination is required for this action. Only action with a "multiple" load strategy require
+     * pagination.
+     *
      * @return bool
      */
-    public function requirePagination()
+    public function isPaginationRequired()
     {
         return $this->configuration->getParameter('load_strategy') === AdminInterface::LOAD_STRATEGY_MULTIPLE;
     }
