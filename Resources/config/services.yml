@@ -55,3 +55,9 @@ services:
             - '@logger'
             - '@session'
             - '@translator'
+
+    # form
+    lag.admin.form.factory:
+        class: LAG\AdminBundle\Form\Factory\FormFactory
+        arguments:
+            - '@form.factory'

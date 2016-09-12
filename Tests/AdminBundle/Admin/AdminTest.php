@@ -9,6 +9,7 @@ use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use stdClass;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Role\Role;
@@ -199,7 +200,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $admin->create();
     }
@@ -223,7 +225,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $admin->create();
         $this->assertTrue($admin->save());
@@ -242,7 +245,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $admin->create();
         $this->assertFalse($admin->save());
@@ -267,7 +271,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $admin->create();
         $this->assertTrue($admin->remove());
@@ -286,7 +291,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $admin->create();
         $this->assertFalse($admin->remove());
@@ -316,7 +322,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $this->assertEquals('lag.test.custom_list', $admin->generateRouteName('custom_list'));
         $this->assertEquals('lag.test.custom_edit', $admin->generateRouteName('custom_edit'));
@@ -343,7 +350,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -382,7 +390,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -411,7 +420,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -441,7 +451,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -483,7 +494,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -513,7 +525,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -566,7 +579,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
