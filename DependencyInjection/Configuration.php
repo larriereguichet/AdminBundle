@@ -37,6 +37,9 @@ class Configuration implements ConfigurationInterface
         $node = $builder->root('admins');
 
         $node
+            // useAttributeAsKey() method will preserve keys when multiple configurations files are used and then avoid
+            // admin not found by configuration override
+            ->useAttributeAsKey('name')
             ->prototype('array')
                 ->children()
                     ->scalarNode('entity')->end()

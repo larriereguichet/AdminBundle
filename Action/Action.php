@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Action;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Filter;
 use LAG\AdminBundle\Field\Field;
 
@@ -150,5 +151,16 @@ class Action implements ActionInterface
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+
+    /**
+     * Return true if the pagination is required for this action. Only action with a "multiple" load strategy require
+     * pagination.
+     *
+     * @return bool
+     */
+    public function isPaginationRequired()
+    {
+        return $this->configuration->getParameter('load_strategy') === AdminInterface::LOAD_STRATEGY_MULTIPLE;
     }
 }

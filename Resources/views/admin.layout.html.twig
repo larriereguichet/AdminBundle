@@ -17,58 +17,63 @@
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-{% import "LAGAdminBundle:CRUD:macros.html.twig" as AdminBundle %}
 
-{% if admin is not defined %}
- {% set admin = null %}
-{% endif %}
+{% block body %}
+    {% import "LAGAdminBundle:CRUD:macros.html.twig" as AdminBundle %}
 
-<div class="wrapper">
-    {% if app.user %}
-        <nav style="margin-bottom: 0" role="navigation" id="admin-top-menu" class="navbar navbar-default navbar-static-top">
-            <div class="navbar-header">
-                {# collapse button for responsive #}
-                <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                {% block mainTitle %}{% endblock %}
-
-                {% block topMenu %}
-                    {{ AdminBundle.adminMenu('top', admin) }}
-                {% endblock %}
-
-                {% block leftMenu %}
-                    <div role="navigation" class="navbar-default sidebar">
-                        <div class="sidebar-nav navbar-collapse">
-                            {{ AdminBundle.adminMenu('main', admin) }}
-                        </div>
-                    </div>
-                {% endblock %}
-            </div>
-        </nav>
+    {% if admin is not defined %}
+        {% set admin = null %}
     {% endif %}
 
-    {% block container %}
-        <div id="page-wrapper">
-            {# flash messages #}
-            {% include "LAGAdminBundle:Layout:flash_messages.html.twig" %}
+    <div class="wrapper">
+        {% if app.user %}
+            <nav style="margin-bottom: 0" role="navigation" id="admin-top-menu"
+                 class="navbar navbar-default navbar-static-top">
+                <div class="navbar-header">
+                    {# collapse button for responsive #}
+                    <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    {% block mainTitle %}{% endblock %}
 
-            <div class="row">
-                <div class="col-lg-12">
-                    {% block content %}{% endblock %}
+                    {% block topMenu %}
+                        {{ AdminBundle.adminMenu('top', admin) }}
+                    {% endblock %}
+
+                    {% block leftMenu %}
+                        <div role="navigation" class="navbar-default sidebar">
+                            <div class="sidebar-nav navbar-collapse">
+                                {{ AdminBundle.adminMenu('main', admin) }}
+                            </div>
+                        </div>
+                    {% endblock %}
+                </div>
+            </nav>
+        {% endif %}
+
+        {% block container %}
+            <div id="page-wrapper">
+                {# flash messages #}
+                {% include "LAGAdminBundle:Layout:flash_messages.html.twig" %}
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        {% block content %}{% endblock %}
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endblock %}
-</div>
-</body>
-<footer>
-    {% include "LAGAdminBundle:Layout:footer.html.twig" %}
+        {% endblock %}
+    </div>
+    <footer>
+        {% include "LAGAdminBundle:Layout:footer.html.twig" %}
 
-    {% block javascripts %}{% endblock %}
-</footer>
+        {% block javascripts %}{% endblock %}
+    </footer>
+
+{% endblock %}
+</body>
 
 </html>

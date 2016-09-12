@@ -196,6 +196,11 @@ class Admin implements AdminInterface
             ->entities
             ->add($entity);
 
+        // inform the user that  the entity is created
+        $this
+            ->messageHandler
+            ->handleSuccess($this->generateMessageTranslationKey('created'));
+
         return $entity;
     }
 
@@ -212,16 +217,16 @@ class Admin implements AdminInterface
                     ->dataProvider
                     ->save($entity);
             }
-            // inform user everything went fine
+            // inform the user that the entity is saved
             $this
                 ->messageHandler
-                ->handleSuccess('lag.admin.'.$this->name.'.saved');
+                ->handleSuccess($this->generateMessageTranslationKey('saved'));
             $success = true;
         } catch (Exception $e) {
             $this
                 ->messageHandler
                 ->handleError(
-                    'lag.admin.saved_errors',
+                    $this->generateMessageTranslationKey('lag.admin.saved_errors'),
                     "An error has occurred while saving an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()}"
                 );
             $success = false;
@@ -242,16 +247,16 @@ class Admin implements AdminInterface
                     ->dataProvider
                     ->remove($entity);
             }
-            // inform user everything went fine
+            // inform the user that the entity is removed
             $this
                 ->messageHandler
-                ->handleSuccess('lag.admin.'.$this->name.'.deleted');
+                ->handleSuccess($this->generateMessageTranslationKey('deleted'));
             $success = true;
         } catch (Exception $e) {
             $this
                 ->messageHandler
                 ->handleError(
-                    'lag.admin.deleted_errors',
+                    $this->generateMessageTranslationKey('lag.admin.deleted_errors'),
                     "An error has occurred while deleting an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} "
                 );
             $success = false;
@@ -272,10 +277,10 @@ class Admin implements AdminInterface
     {
         if (!array_key_exists($actionName, $this->getConfiguration()->getParameter('actions'))) {
             throw new Exception(
-                sprintf('Invalid action name %s for admin %s (available action are: %s)', 
-                $actionName,
-                $this->getName(),
-                implode(', ', $this->getActionNames()))
+                sprintf('Invalid action name %s for admin %s (available action are: %s)',
+                    $actionName,
+                    $this->getName(),
+                    implode(', ', $this->getActionNames()))
             );
         }
         // get routing name pattern
@@ -298,13 +303,16 @@ class Admin implements AdminInterface
      */
     public function load(array $criteria, $orderBy = [], $limit = 25, $offset = 1)
     {
-        $pager = $this
+        $actionConfiguration = $this
             ->getCurrentAction()
-            ->getConfiguration()
-            ->getParameter('pager');
+            ->getConfiguration();
+        $pager = $actionConfiguration->getParameter('pager');
+        $requirePagination = $this
+            ->getCurrentAction()
+            ->isPaginationRequired();
 
-        if ($pager == 'pagerfanta') {
-            // adapter to pager fanta
+        if ($pager == 'pagerfanta' && $requirePagination) {
+            // adapter to pagerfanta
             $adapter = new PagerFantaAdminAdapter($this->dataProvider, $criteria, $orderBy);
             // create pager
             $this->pager = new Pagerfanta($adapter);
@@ -315,6 +323,10 @@ class Admin implements AdminInterface
                 ->pager
                 ->getCurrentPageResults();
         } else {
+            // if the current action should retrieve only one entity, the offset should be zero
+            if ($actionConfiguration->getParameter('load_strategy') !== AdminInterface::LOAD_STRATEGY_MULTIPLE) {
+                $offset = 0;
+            }
             $entities = $this
                 ->dataProvider
                 ->findBy($criteria, $orderBy, $limit, $offset);
@@ -480,12 +492,27 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Return admin configuration object
+     * Return admin configuration object.
      *
      * @return AdminConfiguration
      */
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+
+    /**
+     * Return a translation key for a message according to the Admin's translation pattern.
+     *
+     * @param string $message
+     * @return string
+     */
+    protected function generateMessageTranslationKey($message)
+    {
+        return $this->getTranslationKey(
+            $this->configuration->getParameter('translation_pattern'),
+            $message,
+            $this->name
+        );
     }
 }
