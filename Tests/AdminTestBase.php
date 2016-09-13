@@ -356,7 +356,7 @@ class AdminTestBase extends WebTestCase
             $this->createConfigurationFactory(),
             $this->mockActionFactory(),
             $this->mockMessageHandler(),
-            $registry
+            new \LAG\AdminBundle\Admin\Registry\Registry()
         );
     }
 

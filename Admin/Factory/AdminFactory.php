@@ -3,14 +3,16 @@
 namespace LAG\AdminBundle\Admin\Factory;
 
 use Doctrine\ORM\EntityManager;
-use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Admin;
+use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Event\AdminCreatedEvent;
+use LAG\AdminBundle\Admin\Event\AdminCreateEvent;
+use LAG\AdminBundle\Admin\Event\BeforeConfigurationEvent;
 use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\DataProvider\DataProvider;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
-use LAG\AdminBundle\Admin\Event\AdminEvent;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
 use Exception;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
@@ -113,29 +115,31 @@ class AdminFactory
             return;
         }
         // dispatch an event to allow configuration modification before resolving and creating admins
-        $event = $this->dispatchEvent(
-            AdminEvents::BEFORE_CONFIGURATION
-        );
+        $event = new BeforeConfigurationEvent($this->adminConfigurations);
+        $this
+            ->eventDispatcher
+            ->dispatch(AdminEvents::BEFORE_CONFIGURATION, $event);
 
-        // get back the modified configuration
-        $this->adminConfigurations = $event->getAdminsConfiguration();
+        // get the modified configuration
+        $this->adminConfigurations = $event->getAdminConfigurations();
 
         // create Admins according to the given configuration
         foreach ($this->adminConfigurations as $name => $configuration) {
 
             // dispatch an event to allow modification on a specific admin
-            $event = $this->dispatchEvent(
-                AdminEvents::ADMIN_CREATE,
-                $name,
-                $configuration
-            );
+            $event = new AdminCreateEvent($name, $configuration);
+            $this
+                ->eventDispatcher
+                ->dispatch(AdminEvents::ADMIN_CREATE, $event);
 
             // create Admin object and add it to the registry
+            $admin = $this->create($name, $event->getAdminConfiguration());
             $this
                 ->registry
-                ->add($this->create($name, $event->getConfiguration()));
+                ->add($admin);
 
             // dispatch post-create event
+            $event = new AdminCreatedEvent($admin);
             $this
                 ->eventDispatcher
                 ->dispatch(AdminEvents::ADMIN_CREATED, $event);
@@ -196,6 +200,40 @@ class AdminFactory
     }
 
     /**
+     * @return boolean
+     */
+    public function isInit()
+    {
+        return $this->isInit;
+    }
+
+    /**
+     * @return Registry
+     */
+    public function getRegistry()
+    {
+        return $this->registry;
+    }
+
+    /**
+     * Create an Action from the configuration, and add it to the Admin.
+     *
+     * @param AdminInterface $admin
+     * @param $actionName
+     * @param array $actionConfiguration
+     */
+    protected function createAction(AdminInterface $admin, $actionName, array $actionConfiguration)
+    {
+        // creating action from configuration
+        $action = $this
+            ->actionFactory
+            ->create($actionName, $actionConfiguration, $admin);
+
+        // adding action to admin
+        $admin->addAction($action);
+    }
+
+    /**
      * Return a configured data provider or create an new instance of the default one.
      *
      * @param string $entityClass
@@ -232,45 +270,9 @@ class AdminFactory
                 $repositoryClass = get_class($repository);
                 throw new Exception("Repository {$repositoryClass} should implements ".RepositoryInterface::class);
             }
-
             $dataProvider = new DataProvider($repository);
         }
         return $dataProvider;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isInit()
-    {
-        return $this->isInit;
-    }
-
-    /**
-     * @return Registry
-     */
-    public function getRegistry()
-    {
-        return $this->registry;
-    }
-
-    /**
-     * Dispatch an AdminEvent to allow configuration override.
-     *
-     * @param $name
-     * @param array $configuration
-     * @return AdminEvent
-     */
-    protected function dispatchEvent($name, array $configuration)
-    {
-        $event = new AdminEvent();
-        $event
-            ->setConfiguration($configuration)
-            ->setAdminName($name);
-        $this
-            ->eventDispatcher
-            ->dispatch(AdminEvent::ADMIN_CREATE, $event);
-
-        return $event;
-    }
 }

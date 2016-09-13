@@ -3,12 +3,13 @@
 namespace LAG\AdminBundle\Tests\AdminBundle\Admin\Factory;
 
 use Exception;
+use LAG\AdminBundle\Admin\Event\AdminCreatedEvent;
+use LAG\AdminBundle\Admin\Event\AdminCreateEvent;
+use LAG\AdminBundle\Admin\Event\BeforeConfigurationEvent;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Event\AdminEvent;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\Request;
 
 class AdminFactoryTest extends AdminTestBase
 {
@@ -85,34 +86,39 @@ class AdminFactoryTest extends AdminTestBase
         // before configuration event SHOULD be dispatched
         $eventDispatcher->addListener(
             AdminEvents::BEFORE_CONFIGURATION,
-            function (AdminEvent $event) use (&$isConfigurationEventCalled) {
+            function (BeforeConfigurationEvent $event) use (&$isConfigurationEventCalled) {
                 $isConfigurationEventCalled = true;
-                $this->assertInternalType('array', $event->getAdminsConfiguration());
+                $this->assertInternalType('array', $event->getAdminConfigurations());
             }
         );
 
         // admin create event SHOULD be dispatched
         $eventDispatcher->addListener(
             AdminEvents::ADMIN_CREATE,
-            function (AdminEvent $event) use (&$adminCreateCount, $adminFactory) {
+            function (AdminCreateEvent $event) use (&$adminCreateCount, $adminFactory) {
                 $adminCreateCount++;
-                $this->assertInternalType('array', $event->getAdminsConfiguration());
-                $this->assertEquals($adminFactory->getAdmin($event->getAdminName()), $event->getAdminConfiguration());
+
+                $this->assertInternalType('array', $event->getAdminConfiguration());
+                $this->assertEquals(
+                    $adminFactory
+                        ->getRegistry()
+                        ->get($event->getAdminName()),
+                    $event->getAdminConfiguration()
+                );
             }
         );
 
         // admin after create event SHOULD be dispatched
         $eventDispatcher->addListener(
             AdminEvents::ADMIN_CREATED,
-            function (AdminEvent $event) {
+            function (AdminCreatedEvent $event) {
                 $this->assertInstanceOf(AdminInterface::class, $event->getAdmin());
             }
         );
-
         $adminFactory->init();
 
         $this->assertTrue($isConfigurationEventCalled);
-        $this->assertEquals(count($adminFactory->getAdmins()), $adminCreateCount);
+        $this->assertEquals(count($adminFactory->getRegistry()->all()), $adminCreateCount);
     }
 
     /**
