@@ -2,7 +2,9 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\Event\Subscriber;
 
-use LAG\AdminBundle\Admin\Event\AdminEvent;
+use LAG\AdminBundle\Action\Event\ActionCreateEvent;
+use LAG\AdminBundle\Action\Event\ActionEvents;
+use LAG\AdminBundle\Admin\Event\AdminCreateEvent;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
 use LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber;
 use LAG\AdminBundle\Tests\AdminTestBase;
@@ -11,42 +13,48 @@ use PHPUnit_Framework_MockObject_MockObject;
 class ExtraConfigurationSubscriberTest extends AdminTestBase
 {
     /**
-     * ExtraConfigurationSubscriber SHOULD subscribe to the Admin creation and the Action creation event
+     * ExtraConfigurationSubscriber SHOULD subscribe to the Admin creation and the Action creation event.
      */
     public function testGetSubscribedEvents()
     {
         $subscribedEvents = ExtraConfigurationSubscriber::getSubscribedEvents();
 
         $this->assertArrayHasKey(AdminEvents::ADMIN_CREATE, $subscribedEvents);
-        $this->assertArrayHasKey(AdminEvents::ACTION_CREATE, $subscribedEvents);
+        $this->assertArrayHasKey(ActionEvents::ACTION_CREATE, $subscribedEvents);
         $this->assertContains('actionCreate', $subscribedEvents);
         $this->assertContains('adminCreate', $subscribedEvents);
     }
 
     /**
-     * AdminCreate method SHOULD add the CRUD actions only if required
+     * with extra configuration disabled, adminCreate method SHOULD not modify the configuration.
      */
-    public function testAdminCreate()
+    public function testAdminCreateWithoutExtraConfiguration()
     {
-        // with extra configuration disabled, adminCreate method SHOULD not modifiy the configuration
         $subscriber = new ExtraConfigurationSubscriber(
             false,
             $this->mockDoctrine(),
             $this->createConfigurationFactory()
         );
-        $event = new AdminEvent();
-        $event->setAdminConfiguration([]);
+        $event = new AdminCreateEvent('test', [
+            'my_config'
+        ]);
         $subscriber->adminCreate($event);
-        $this->assertEquals([], $event->getAdminConfiguration());
+        $this->assertEquals([
+            'my_config'
+        ], $event->getAdminConfiguration());
+    }
 
-        // with extra configuration enabled, adminCreate method SHOULD fill action configuration if it is empty
+    /**
+     * with extra configuration enabled, adminCreate method SHOULD fill action configuration if it is empty.
+     */
+    public function testAdminCreateWithExtraConfiguration()
+    {
         $subscriber = new ExtraConfigurationSubscriber(
             true,
             $this->mockDoctrine(),
             $this->createConfigurationFactory()
         );
-        $event = new AdminEvent();
-        $event->setAdminConfiguration([]);
+        $event = new AdminCreateEvent('my_admin', []);
         $subscriber->adminCreate($event);
         $this->assertEquals([
             'actions' => [
@@ -57,19 +65,30 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
                 'batch' => [],
             ]
         ], $event->getAdminConfiguration());
+    }
 
-        // adminCreate method SHOULD not modified actual configuration
-        $event = new AdminEvent();
-        $event->setAdminConfiguration([
+    /**
+     * adminCreate method SHOULD not modified actual configuration.
+     */
+    public function testAdminCreate()
+    {
+        $subscriber = new ExtraConfigurationSubscriber(
+            true,
+            $this->mockDoctrine(),
+            $this->createConfigurationFactory()
+        );
+        $event = new AdminCreateEvent('my_admin', [
             'actions' => [
                 'myAction' => []
-            ]
+            ],
+            'an_other_key' => 'some value'
         ]);
         $subscriber->adminCreate($event);
         $this->assertEquals([
             'actions' => [
                 'myAction' => []
-            ]
+            ],
+            'an_other_key' => 'some value'
         ], $event->getAdminConfiguration());
     }
 
@@ -80,9 +99,9 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             $this->mockDoctrine(),
             $this->createConfigurationFactory()
         );
-        /** @var AdminEvent|PHPUnit_Framework_MockObject_MockObject $adminEvent */
+        /** @var AdminCreateEvent|PHPUnit_Framework_MockObject_MockObject $adminEvent */
         $adminEvent = $this
-            ->getMockBuilder(AdminEvent::class)
+            ->getMockBuilder(AdminCreateEvent::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -102,19 +121,18 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             $this->mockDoctrine(),
             $this->createConfigurationFactory()
         );
-        $adminEvent = new AdminEvent();
-        $adminEvent->setActionName('list');
-        $adminEvent->setAdmin($this->createAdmin('test', [
+        $adminEvent = new ActionCreateEvent(
+            'list',
+            [
+                'fields' => [
+                    'test' => []
+                ]
+            ],
+            $this->createAdmin('test', [
             'entity' => 'test',
             'form' => 'test',
         ]));
-        $adminEvent->setActionConfiguration([
-            'fields' => [
-                'test' => []
-            ]
-        ]);
         $subscriber->actionCreate($adminEvent);
-
         $configuration = $adminEvent->getActionConfiguration();
 
         $this->assertArrayHasKey('menus', $configuration);

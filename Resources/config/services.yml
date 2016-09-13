@@ -4,7 +4,7 @@ imports:
     - { resource: menus.yml }
 
 services:
-    # events subscribers
+    # Events subscribers
     lag.admin.template_subscriber:
         class: LAG\AdminBundle\Event\Subscriber\TemplateSubscriber
         tags:
@@ -29,15 +29,16 @@ services:
         arguments:
             - '@lag.admin.factory'
 
-    # routing
+    # Routing loader
     lag.admin.routing:
         class: LAG\AdminBundle\Routing\RoutingLoader
         tags:
             - { name: routing.loader }
         arguments:
             - '@lag.admin.factory'
+            - '@lag.admin.registry'
 
-    # twig
+    # Twig extension
     lag.admin.twig:
         class: LAG\AdminBundle\Twig\AdminExtension
         tags:
@@ -48,7 +49,7 @@ services:
             - '@lag.admin.configuration_factory'
             - '@twig'
 
-    # handler
+    # Message handlers
     lag.admin.message_handler:
         class: LAG\AdminBundle\Message\MessageHandler
         arguments:
@@ -56,7 +57,16 @@ services:
             - '@session'
             - '@translator'
 
-    # form
+    # Request handler
+    lag.admin.request_handler:
+        class: LAG\AdminBundle\Admin\Request\RequestHandler
+        arguments:
+            - '@lag.admin.registry'
+
+    lag.admin.registry:
+        class: LAG\AdminBundle\Admin\Registry\Registry
+
+    # Form
     lag.admin.form.factory:
         class: LAG\AdminBundle\Form\Factory\FormFactory
         arguments:

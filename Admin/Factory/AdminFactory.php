@@ -3,14 +3,16 @@
 namespace LAG\AdminBundle\Admin\Factory;
 
 use Doctrine\ORM\EntityManager;
-use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Event\AdminCreatedEvent;
+use LAG\AdminBundle\Admin\Event\AdminCreateEvent;
+use LAG\AdminBundle\Admin\Event\BeforeConfigurationEvent;
+use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\DataProvider\DataProvider;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
-use LAG\AdminBundle\Admin\Event\AdminEvent;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
 use Exception;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
@@ -18,7 +20,6 @@ use LAG\AdminBundle\Repository\RepositoryInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * AdminFactory.
@@ -27,11 +28,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminFactory
 {
-    /**
-     * @var array
-     */
-    protected $admins = [];
-
     /**
      * @var bool
      */
@@ -75,14 +71,20 @@ class AdminFactory
     protected $messageHandler;
 
     /**
+     * @var Registry
+     */
+    protected $registry;
+
+    /**
      * AdminFactory constructor.
      *
+     * @param array $adminConfigurations
      * @param EventDispatcherInterface $eventDispatcher
      * @param EntityManager $entityManager
      * @param ConfigurationFactory $configurationFactory
-     * @param array $adminConfigurations
      * @param ActionFactory $actionFactory
      * @param MessageHandlerInterface $messageHandler
+     * @param Registry $registry
      */
     public function __construct(
         array $adminConfigurations,
@@ -90,7 +92,8 @@ class AdminFactory
         EntityManager $entityManager,
         ConfigurationFactory $configurationFactory,
         ActionFactory $actionFactory,
-        MessageHandlerInterface $messageHandler
+        MessageHandlerInterface $messageHandler,
+        Registry $registry
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
@@ -99,6 +102,7 @@ class AdminFactory
         $this->actionFactory = $actionFactory;
         $this->messageHandler = $messageHandler;
         $this->dataProviders = new ParameterBag();
+        $this->registry = $registry;
     }
 
     /**
@@ -111,27 +115,31 @@ class AdminFactory
             return;
         }
         // dispatch an event to allow configuration modification before resolving and creating admins
-        $event = $this->dispatchEvent(
-            AdminEvents::BEFORE_CONFIGURATION
-        );
+        $event = new BeforeConfigurationEvent($this->adminConfigurations);
+        $this
+            ->eventDispatcher
+            ->dispatch(AdminEvents::BEFORE_CONFIGURATION, $event);
 
-        // get back the modified configuration
-        $this->adminConfigurations = $event->getAdminsConfiguration();
+        // get the modified configuration
+        $this->adminConfigurations = $event->getAdminConfigurations();
 
         // create Admins according to the given configuration
         foreach ($this->adminConfigurations as $name => $configuration) {
 
             // dispatch an event to allow modification on a specific admin
-            $event = $this->dispatchEvent(
-                AdminEvents::ADMIN_CREATE,
-                $name,
-                $configuration
-            );
+            $event = new AdminCreateEvent($name, $configuration);
+            $this
+                ->eventDispatcher
+                ->dispatch(AdminEvents::ADMIN_CREATE, $event);
 
-            // create Admin object, with the configuration modified by the events
-            $this->admins[$name] = $this->create($name, $event->getAdminConfiguration());
+            // create Admin object and add it to the registry
+            $admin = $this->create($name, $event->getAdminConfiguration());
+            $this
+                ->registry
+                ->add($admin);
 
             // dispatch post-create event
+            $event = new AdminCreatedEvent($admin);
             $this
                 ->eventDispatcher
                 ->dispatch(AdminEvents::ADMIN_CREATED, $event);
@@ -179,57 +187,6 @@ class AdminFactory
     }
 
     /**
-     * Return an admin from a Symfony request.
-     *
-     * @param Request $request
-     * @return AdminInterface
-     * @throws Exception
-     */
-    public function getAdminFromRequest(Request $request)
-    {
-        $routeParameters = $request->get('_route_params');
-
-        if (!$routeParameters) {
-            throw new Exception('Cannot find admin from request. _route_params parameters for request not found');
-        }
-        if (!array_key_exists('_admin', $routeParameters)) {
-            throw new Exception('Cannot find admin from request. "_admin" route parameter is missing');
-        }
-        if (!array_key_exists('_action', $routeParameters)) {
-            throw new Exception('Cannot find admin action from request. "_action" route parameter is missing');
-        }
-        $admin = $this->getAdmin($routeParameters['_admin']);
-
-        return $admin;
-    }
-
-    /**
-     * Return a admin by its name.
-     *
-     * @param $name
-     * @return Admin
-     * @throws Exception
-     */
-    public function getAdmin($name)
-    {
-        if (!array_key_exists($name, $this->admins)) {
-            throw new Exception(sprintf('Admin with name "%s" not found. Check your admin configuration', $name));
-        }
-
-        return $this->admins[$name];
-    }
-
-    /**
-     * Return all admins.
-     *
-     * @return AdminInterface[]
-     */
-    public function getAdmins()
-    {
-        return $this->admins;
-    }
-
-    /**
      * Add user custom repositories (called in the repository compiler pass), to avoid injecting the service container
      *
      * @param string $name
@@ -240,6 +197,40 @@ class AdminFactory
         $this
             ->dataProviders
             ->set($name, $dataProvider);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInit()
+    {
+        return $this->isInit;
+    }
+
+    /**
+     * @return Registry
+     */
+    public function getRegistry()
+    {
+        return $this->registry;
+    }
+
+    /**
+     * Create an Action from the configuration, and add it to the Admin.
+     *
+     * @param AdminInterface $admin
+     * @param $actionName
+     * @param array $actionConfiguration
+     */
+    protected function createAction(AdminInterface $admin, $actionName, array $actionConfiguration)
+    {
+        // creating action from configuration
+        $action = $this
+            ->actionFactory
+            ->create($actionName, $actionConfiguration, $admin);
+
+        // adding action to admin
+        $admin->addAction($action);
     }
 
     /**
@@ -279,84 +270,9 @@ class AdminFactory
                 $repositoryClass = get_class($repository);
                 throw new Exception("Repository {$repositoryClass} should implements ".RepositoryInterface::class);
             }
-
             $dataProvider = new DataProvider($repository);
         }
         return $dataProvider;
     }
 
-    /**
-     * Create an Action from the configuration, and add it to the Admin.
-     *
-     * @param AdminInterface $admin
-     * @param $actionName
-     * @param array $actionConfiguration
-     */
-    protected function createAction(AdminInterface $admin, $actionName, array $actionConfiguration)
-    {
-        // dispatching action create event for dynamic action creation
-        $event = $this->dispatchEvent(
-            AdminEvents::ACTION_CREATE,
-            $admin->getName(),
-            $admin
-                ->getConfiguration()
-                ->getParameters(),
-            $admin,
-            $actionName,
-            $actionConfiguration
-        );
-
-        // creating action from configuration
-        $action = $this
-            ->actionFactory
-            ->create($actionName, $event->getActionConfiguration(), $admin);
-
-        // adding action to admin
-        $admin->addAction($action);
-
-        // dispatch post-create event
-        $this->dispatchEvent(
-            AdminEvents::ACTION_CREATED,
-            $admin->getName(),
-            $admin
-                ->getConfiguration()
-                ->getParameters(),
-            $admin,
-            $actionName,
-            $actionConfiguration,
-            $action
-        );
-    }
-
-    protected function dispatchEvent(
-        $eventName,
-        $adminName = '',
-        array $adminConfiguration = [],
-        AdminInterface $admin = null,
-        $actionName = '',
-        array $actionConfiguration = [],
-        ActionInterface $action = null
-    ) {
-        // create the event instance and set parameters according to the context
-        $event = new AdminEvent();
-        $event->setAdminsConfiguration($this->adminConfigurations);
-        $event->setAdminConfiguration($adminConfiguration);
-        $event->setActionConfiguration($actionConfiguration);
-        $event->setActionName($actionName);
-        $event->setAdminName($adminName);
-
-        if (null !== $admin) {
-            $event->setAdmin($admin);
-        }
-        if (null !== $action) {
-            $event->setAction($action);
-        }
-
-        // dispatch the created event
-        $this
-            ->eventDispatcher
-            ->dispatch($eventName, $event);
-
-        return $event;
-    }
 }

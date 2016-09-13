@@ -5,10 +5,12 @@ namespace LAG\AdminBundle\Event\Subscriber;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
+use LAG\AdminBundle\Action\Event\ActionCreateEvent;
+use LAG\AdminBundle\Action\Event\ActionEvents;
 use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
+use LAG\AdminBundle\Admin\Event\AdminCreateEvent;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
-use LAG\AdminBundle\Admin\Event\AdminEvent;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
 use LAG\AdminBundle\Utils\FieldTypeGuesser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -45,7 +47,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     {
         return [
             AdminEvents::ADMIN_CREATE => 'adminCreate',
-            AdminEvents::ACTION_CREATE => 'actionCreate',
+            ActionEvents::ACTION_CREATE => 'actionCreate',
         ];
     }
 
@@ -70,9 +72,9 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     /**
      * Adding default CRUD if none is defined.
      *
-     * @param AdminEvent $event
+     * @param AdminCreateEvent $event
      */
-    public function adminCreate(AdminEvent $event)
+    public function adminCreate(AdminCreateEvent $event)
     {
         if (!$this->extraConfigurationEnabled) {
             return;
@@ -95,10 +97,10 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     /**
      * Add default linked actions and default menu actions.
      *
-     * @param AdminEvent $event
+     * @param ActionCreateEvent $event
      * @throws MappingException
      */
-    public function actionCreate(AdminEvent $event)
+    public function actionCreate(ActionCreateEvent $event)
     {
         // add configuration only if extra configuration is enabled
         if (!$this->extraConfigurationEnabled) {
@@ -208,8 +210,12 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      * @param array $allowedActions
      * @return array The modified configuration
      */
-    protected function addDefaultMenuConfiguration($adminName, $actionName, array $actionConfiguration, array $allowedActions)
-    {
+    protected function addDefaultMenuConfiguration(
+        $adminName,
+        $actionName,
+        array $actionConfiguration,
+        array $allowedActions
+    ) {
         // we add a default top menu item "create" only for list action
         if ($actionName === 'list') {
 

@@ -6,7 +6,8 @@ use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Factory\AdminFactory;
+use LAG\AdminBundle\Admin\Registry\Registry;
+use LAG\AdminBundle\Admin\Request\RequestHandler;
 use LAG\AdminBundle\Menu\MenuBuilder;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -20,8 +21,8 @@ class MenuBuilderTest extends AdminTestBase
      */
     public function testMenu()
     {
-        $stack = new RequestStack();
-        $menuBuilder = new MenuBuilder([
+        $requestStack = new RequestStack();
+        $mainMenuConfiguration = [
             'main' => [
                 'items' => [
                     'test' => [
@@ -37,14 +38,20 @@ class MenuBuilderTest extends AdminTestBase
                     ]
                 ],
             ]
-        ],
-            $this->createMenuFactory(),
-            $this->createAdminFactory(),
-            $stack
+        ];
+        $menuFactory = $this->createMenuFactory();
+        $registry = new Registry();
+
+        // create menu builder
+        $menuBuilder = new MenuBuilder(
+            $mainMenuConfiguration,
+            $menuFactory,
+            new RequestHandler($registry),
+            $requestStack
         );
 
+        // main menu SHOULD be a valid menu item instance
         $mainMenu = $menuBuilder->mainMenu();
-
         $this->assertTrue($mainMenu instanceof ItemInterface);
         $this->assertEquals('main', $mainMenu->getName());
         $this->assertEquals([
@@ -52,14 +59,13 @@ class MenuBuilderTest extends AdminTestBase
             'class' => 'nav in'
         ], $mainMenu->getChildrenAttributes());
 
+        // top menu SHOULD be a valid menu item instance
         $topMenu = $menuBuilder->topMenu();
-
         $this->assertTrue($topMenu instanceof ItemInterface);
         $this->assertEquals('top', $topMenu->getName());
 
 
-        $stack = new RequestStack();
-        $stack->push(new Request([
+        $requestStack->push(new Request([
             '_route_params' => [
                 '_admin' => 'test',
                 '_action' => 'test',
@@ -78,27 +84,22 @@ class MenuBuilderTest extends AdminTestBase
         ]);
 
         $admin
+            ->method('getName')
+            ->willReturn('test');
+        $admin
             ->method('getCurrentAction')
             ->willReturn(new Action('test', $actionConfiguration));
         $admin
             ->method('isCurrentActionDefined')
             ->willReturn(true);
 
-        /** @var AdminFactory|PHPUnit_Framework_MockObject_MockObject $adminFactory */
-        $adminFactory = $this
-            ->getMockBuilder(AdminFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $adminFactory
-            ->method('getAdminFromRequest')
-            ->willReturn($admin);
-
         $menuBuilder = new MenuBuilder(
             [],
             $this->createMenuFactory(),
-            $adminFactory,
-            $stack
+            new RequestHandler($registry),
+            $requestStack
         );
+        $registry->add($admin);
 
         $topMenu = $menuBuilder->topMenu();
         $this->assertTrue($topMenu instanceof ItemInterface);

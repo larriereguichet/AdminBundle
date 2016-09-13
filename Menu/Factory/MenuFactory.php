@@ -6,7 +6,7 @@ use Exception;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
-use LAG\AdminBundle\Admin\Factory\AdminFactory;
+use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Menu\Configuration\MenuConfiguration;
 use LAG\AdminBundle\Menu\Configuration\MenuItemConfiguration;
@@ -22,9 +22,9 @@ class MenuFactory
     use TranslationKeyTrait;
 
     /**
-     * @var AdminFactory
+     * @var Registry
      */
-    protected $adminFactory;
+    protected $registry;
 
     /**
      * @var FactoryInterface
@@ -45,17 +45,17 @@ class MenuFactory
      * MenuBuilder constructor.
      *
      * @param FactoryInterface $menuFactory
-     * @param AdminFactory $adminFactory
+     * @param Registry $registry
      * @param ConfigurationFactory $configurationFactory
      * @param TranslatorInterface $translator
      */
     public function __construct(
         FactoryInterface $menuFactory,
-        AdminFactory $adminFactory,
+        Registry $registry,
         ConfigurationFactory $configurationFactory,
         TranslatorInterface $translator
     ) {
-        $this->adminFactory = $adminFactory;
+        $this->registry = $registry;
         $this->menuFactory = $menuFactory;
         $this->configurationFactory = $configurationFactory;
         $this->translator = $translator;
@@ -193,8 +193,8 @@ class MenuFactory
         if ($adminName = $itemConfiguration->getParameter('admin')) {
             // retrieve an existing admin
             $admin = $this
-                ->adminFactory
-                ->getAdmin($adminName);
+                ->registry
+                ->get($adminName);
 
             $menuItemConfiguration['route'] = $admin->generateRouteName($itemConfiguration->getParameter('action'));
         } else if ($route = $itemConfiguration->getParameter('route')) {
