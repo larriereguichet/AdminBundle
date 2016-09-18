@@ -12,7 +12,7 @@ use LAG\AdminBundle\Admin\Factory\FilterFactory;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Field\Factory\FieldFactory;
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ActionFactory
 {
@@ -32,7 +32,7 @@ class ActionFactory
     protected $configurationFactory;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
 
@@ -42,13 +42,13 @@ class ActionFactory
      * @param FieldFactory $fieldFactory
      * @param FilterFactory $filterFactory
      * @param ConfigurationFactory $configurationFactory
-     * @param EventDispatcher $eventDispatcher
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         FieldFactory $fieldFactory,
         FilterFactory $filterFactory,
         ConfigurationFactory $configurationFactory,
-        EventDispatcher $eventDispatcher
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->fieldFactory = $fieldFactory;
         $this->filterFactory = $filterFactory;
