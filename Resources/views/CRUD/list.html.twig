@@ -86,7 +86,10 @@
                                 {{ pagerfanta(admin.pager, 'twitter_bootstrap3', {page: admin.pager.currentPage}) }}
                             </div>
                         {% endif %}
-                        {{ form_rest(form) }}
+
+                        {% if form is defined %}
+                            {{ form_rest(form) }}
+                        {% endif %}
                     </div>
                 </form>
             {% endspaceless %}
