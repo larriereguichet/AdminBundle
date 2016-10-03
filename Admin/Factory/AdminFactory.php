@@ -15,6 +15,7 @@ use LAG\AdminBundle\DataProvider\DataProvider;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
 use Exception;
+use LAG\AdminBundle\Filter\Factory\RequestFilterFactory;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\Repository\RepositoryInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -76,6 +77,11 @@ class AdminFactory
     protected $registry;
 
     /**
+     * @var RequestFilterFactory
+     */
+    protected $requestFilterFactory;
+
+    /**
      * AdminFactory constructor.
      *
      * @param array $adminConfigurations
@@ -85,6 +91,7 @@ class AdminFactory
      * @param ActionFactory $actionFactory
      * @param MessageHandlerInterface $messageHandler
      * @param Registry $registry
+     * @param RequestFilterFactory $requestFilterFactory
      */
     public function __construct(
         array $adminConfigurations,
@@ -93,7 +100,8 @@ class AdminFactory
         ConfigurationFactory $configurationFactory,
         ActionFactory $actionFactory,
         MessageHandlerInterface $messageHandler,
-        Registry $registry
+        Registry $registry,
+        RequestFilterFactory $requestFilterFactory
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
@@ -103,6 +111,7 @@ class AdminFactory
         $this->messageHandler = $messageHandler;
         $this->dataProviders = new ParameterBag();
         $this->registry = $registry;
+        $this->requestFilterFactory = $requestFilterFactory;
     }
 
     /**
@@ -168,13 +177,19 @@ class AdminFactory
             $adminConfiguration->getParameter('data_provider')
         );
 
+        // retrieve a request filter
+        $requestFilter = $this
+            ->requestFilterFactory
+            ->create($adminConfiguration);
+
         // create Admin object
         $admin = new Admin(
             $name,
             $dataProvider,
             $adminConfiguration,
             $this->messageHandler,
-            $this->eventDispatcher
+            $this->eventDispatcher,
+            $requestFilter
         );
 
         // adding actions

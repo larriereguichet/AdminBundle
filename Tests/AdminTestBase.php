@@ -22,6 +22,8 @@ use LAG\AdminBundle\Admin\Factory\FilterFactory;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Field\Factory\FieldFactory;
+use LAG\AdminBundle\Filter\Factory\RequestFilterFactory;
+use LAG\AdminBundle\Filter\RequestFilter;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\Repository\RepositoryInterface;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -181,7 +183,8 @@ class AdminTestBase extends WebTestCase
             $this->mockDataProvider(),
             $adminConfiguration,
             $this->mockMessageHandler(),
-            new EventDispatcher()
+            new EventDispatcher(),
+            new RequestFilter()
         );
     }
 
@@ -284,23 +287,6 @@ class AdminTestBase extends WebTestCase
 
     /**
      * @param $name
-     * @param $configuration
-     * @return Admin
-     * @deprecated
-     */
-    protected function mockAdmin($name, $configuration)
-    {
-        return new Admin(
-            $name,
-            $this->mockDataProvider(),
-            $configuration,
-            $this->mockMessageHandler(),
-            new EventDispatcher()
-        );
-    }
-
-    /**
-     * @param $name
      * @return ActionInterface | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockAction($name)
@@ -356,7 +342,8 @@ class AdminTestBase extends WebTestCase
             $this->createConfigurationFactory(),
             $this->mockActionFactory(),
             $this->mockMessageHandler(),
-            new \LAG\AdminBundle\Admin\Registry\Registry()
+            new \LAG\AdminBundle\Admin\Registry\Registry(),
+            new RequestFilterFactory()
         );
     }
 

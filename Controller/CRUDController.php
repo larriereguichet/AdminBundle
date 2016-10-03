@@ -51,7 +51,7 @@ class CRUDController extends Controller
             'action' => $admin->getCurrentAction(),
         ];
 
-        // if batch are configured, we handle a list of checboxes
+        // if batch are configured, we handle a list of checkboxes
         if ($batchActions) {
             // creating list form
             $form = $this->createForm(AdminListType::class, [
