@@ -205,11 +205,6 @@ class Admin implements AdminInterface
             ->entities
             ->add($entity);
 
-        // inform the user that  the entity is created
-        $this
-            ->messageHandler
-            ->handleSuccess($this->generateMessageTranslationKey('created'));
-
         return $entity;
     }
 
