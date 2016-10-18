@@ -2,8 +2,11 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\Event\Subscriber;
 
-use LAG\AdminBundle\Action\Event\ActionCreateEvent;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use LAG\AdminBundle\Action\Event\ActionEvents;
+use LAG\AdminBundle\Action\Event\BeforeConfigurationEvent;
 use LAG\AdminBundle\Admin\Event\AdminCreateEvent;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
 use LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber;
@@ -20,8 +23,8 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
         $subscribedEvents = ExtraConfigurationSubscriber::getSubscribedEvents();
 
         $this->assertArrayHasKey(AdminEvents::ADMIN_CREATE, $subscribedEvents);
-        $this->assertArrayHasKey(ActionEvents::ACTION_CREATE, $subscribedEvents);
-        $this->assertContains('actionCreate', $subscribedEvents);
+        $this->assertArrayHasKey(ActionEvents::BEFORE_CONFIGURATION, $subscribedEvents);
+        $this->assertContains('beforeActionConfiguration', $subscribedEvents);
         $this->assertContains('adminCreate', $subscribedEvents);
     }
 
@@ -121,7 +124,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             $this->mockDoctrine(),
             $this->createConfigurationFactory()
         );
-        $adminEvent = new ActionCreateEvent(
+        $adminEvent = new BeforeConfigurationEvent(
             'list',
             [
                 'fields' => [
@@ -132,7 +135,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             'entity' => 'test',
             'form' => 'test',
         ]));
-        $subscriber->actionCreate($adminEvent);
+        $subscriber->beforeActionConfiguration($adminEvent);
         $configuration = $adminEvent->getActionConfiguration();
 
         $this->assertArrayHasKey('menus', $configuration);
@@ -144,5 +147,52 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             'action' => 'create',
             'icon' => 'fa fa-plus',
         ], $configuration['menus']['top']['items']['create']);
+    }
+
+    public function testLinkedActionsForListAction()
+    {
+        $classMetadata = $this->createMock(ClassMetadata::class);
+        $classMetadata
+            ->method('getFieldNames')
+            ->willReturn([
+                'id'
+            ]);
+        $classMetadata
+            ->method('getTypeOfField')
+            ->willReturn('string');
+
+        $metadataFactory = $this->createMock(ClassMetadataFactory::class);
+        $metadataFactory
+            ->method('getMetadataFor')
+            ->willReturn($classMetadata);
+
+        $entityManager = $this->createMock(EntityManager::class);
+        $entityManager
+            ->method('getMetadataFactory')
+            ->willReturn($metadataFactory);
+
+        $doctrine = $this->mockDoctrine();
+        $doctrine
+            ->method('getManager')
+            ->willReturn($entityManager)
+        ;
+
+        $subscriber = new ExtraConfigurationSubscriber(
+            true,
+            $doctrine,
+            $this->createConfigurationFactory()
+        );
+        $adminEvent = new BeforeConfigurationEvent(
+            'list',
+            [
+            ],
+            $this->createAdmin('test', [
+                'entity' => 'test',
+                'form' => 'test',
+            ]));
+        $subscriber->beforeActionConfiguration($adminEvent);
+        $configuration = $adminEvent->getActionConfiguration();
+
+        $this->assertArrayHasKey('_actions', $configuration['fields']);
     }
 }

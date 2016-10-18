@@ -5,6 +5,9 @@ namespace LAG\AdminBundle\Action\Event;
 use LAG\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Event dispatch before the creation of an action to allow third-party modification
+ */
 class BeforeConfigurationEvent extends Event
 {
     /**
@@ -22,6 +25,13 @@ class BeforeConfigurationEvent extends Event
      */
     protected $actionConfiguration;
 
+    /**
+     * BeforeConfigurationEvent constructor.
+     *
+     * @param $actionName
+     * @param $actionConfiguration
+     * @param AdminInterface $admin
+     */
     public function __construct($actionName, $actionConfiguration, AdminInterface $admin)
     {
         $this->actionName = $actionName;
@@ -51,5 +61,13 @@ class BeforeConfigurationEvent extends Event
     public function getActionConfiguration()
     {
         return $this->actionConfiguration;
+    }
+
+    /**
+     * @param array $actionConfiguration
+     */
+    public function setActionConfiguration($actionConfiguration)
+    {
+        $this->actionConfiguration = $actionConfiguration;
     }
 }

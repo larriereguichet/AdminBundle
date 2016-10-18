@@ -3,10 +3,9 @@
 namespace LAG\AdminBundle\Event\Subscriber;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
-use LAG\AdminBundle\Action\Event\ActionCreateEvent;
 use LAG\AdminBundle\Action\Event\ActionEvents;
+use LAG\AdminBundle\Action\Event\BeforeConfigurationEvent;
 use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
 use LAG\AdminBundle\Admin\Event\AdminCreateEvent;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
@@ -47,7 +46,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     {
         return [
             AdminEvents::ADMIN_CREATE => 'adminCreate',
-            ActionEvents::ACTION_CREATE => 'actionCreate',
+            ActionEvents::BEFORE_CONFIGURATION => 'beforeActionConfiguration',
         ];
     }
 
@@ -97,10 +96,9 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     /**
      * Add default linked actions and default menu actions.
      *
-     * @param ActionCreateEvent $event
-     * @throws MappingException
+     * @param BeforeConfigurationEvent $event
      */
-    public function actionCreate(ActionCreateEvent $event)
+    public function beforeActionConfiguration(BeforeConfigurationEvent $event)
     {
         // add configuration only if extra configuration is enabled
         if (!$this->extraConfigurationEnabled) {
@@ -124,79 +122,20 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             $allowedActions
         );
 
-        // if no field was provided in configuration, we try to take fields from doctrine metadata
-        if (empty($configuration['fields']) || !count($configuration['fields'])) {
-            $fields = [];
-            $guesser = new FieldTypeGuesser();
-            $metadata = $this
-                ->entityManager
-                ->getMetadataFactory()
-                ->getMetadataFor($admin->getConfiguration()->getParameter('entity'));
-            $fieldsName = $metadata->getFieldNames();
+        // guess field configuration if required
+        $this->guessFieldConfiguration(
+            $configuration,
+            $event->getActionName(),
+            $admin->getConfiguration()->getParameter('entity')
+        );
 
-            foreach ($fieldsName as $name) {
-                $type = $metadata->getTypeOfField($name);
-                // get field type from doctrine type
-                $fieldConfiguration = $guesser->getTypeAndOptions($type);
+        // guess linked actions for list actions
+        $this->guessLinkedActionsConfiguration(
+            $configuration,
+            $allowedActions,
+            $event
+        );
 
-                // if a field configuration was found, we take it
-                if (count($fieldConfiguration)) {
-                    $fields[$name] = $fieldConfiguration;
-                }
-            }
-            if (count($fields)) {
-                // adding new fields to action configuration
-                $configuration['fields'] = $fields;
-
-                if ($event->getActionName() == 'list') {
-                    $configuration['fields']['_actions'] = null;
-                }
-            }
-        }
-        // configured linked actions :
-        // _action key should exists and be null
-        $_actionExists = array_key_exists('_actions', $configuration['fields']);
-        $_actionIsNull = $_actionExists && $configuration['fields']['_actions'] === null;
-        // _action is added extra configuration only for the "list" action
-        $isListAction = $event->getActionName() == 'list';
-
-        if ($_actionExists && $_actionIsNull && $isListAction) {
-            // in list view, we add by default and an edit and a delete button
-            $translationPattern = $this
-                ->applicationConfiguration
-                ->getParameter('translation')['pattern'];
-
-            // add a link to the "edit" action, if it is allowed
-            if (in_array('edit', $allowedActions)) {
-                $configuration['fields']['_actions']['type'] = 'collection';
-                $configuration['fields']['_actions']['options']['_edit'] = [
-                    'type' => 'action',
-                    'options' => [
-                        'title' => $this->getTranslationKey($translationPattern, 'edit', $event->getAdmin()->getName()),
-                        'route' => $admin->generateRouteName('edit'),
-                        'parameters' => [
-                            'id' => false
-                        ],
-                        'icon' => 'pencil'
-                    ]
-                ];
-            }
-            // add a link to the "delete" action, if it is allowed
-            if (in_array('delete', $allowedActions)) {
-                $configuration['fields']['_actions']['type'] = 'collection';
-                $configuration['fields']['_actions']['options']['_delete'] = [
-                    'type' => 'action',
-                    'options' => [
-                        'title' => $this->getTranslationKey($translationPattern, 'delete', $event->getAdmin()->getName()),
-                        'route' => $admin->generateRouteName('delete'),
-                        'parameters' => [
-                            'id' => false
-                        ],
-                        'icon' => 'remove'
-                    ]
-                ];
-            }
-        }
         // reset action configuration
         $event->setActionConfiguration($configuration);
     }
@@ -246,5 +185,108 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         }
 
         return $actionConfiguration;
+    }
+
+    /**
+     * If no field was provided, try to guess field
+     *
+     * @param array $configuration
+     * @param $actionName
+     * @param $entityClass
+     */
+    protected function guessFieldConfiguration(array &$configuration, $actionName, $entityClass)
+    {
+        // if no field was provided in configuration, we try to take fields from doctrine metadata
+        if (empty($configuration['fields']) || !count($configuration['fields'])) {
+            $fields = [];
+            $guesser = new FieldTypeGuesser();
+            $metadata = $this
+                ->entityManager
+                ->getMetadataFactory()
+                ->getMetadataFor($entityClass);
+            $fieldsName = $metadata->getFieldNames();
+
+            foreach ($fieldsName as $name) {
+                $type = $metadata->getTypeOfField($name);
+                // get field type from doctrine type
+                $fieldConfiguration = $guesser->getTypeAndOptions($type);
+
+                // if a field configuration was found, we take it
+                if (count($fieldConfiguration)) {
+                    $fields[$name] = $fieldConfiguration;
+                }
+            }
+            if (count($fields)) {
+                // adding new fields to action configuration
+                $configuration['fields'] = $fields;
+
+                if ($actionName == 'list') {
+                    $configuration['fields']['_actions'] = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Add fake link fields to edit and delete action for the list view.
+     *
+     * @param array $configuration
+     * @param array $allowedActions
+     * @param BeforeConfigurationEvent $event
+     */
+    protected function guessLinkedActionsConfiguration(
+        array &$configuration,
+        array $allowedActions,
+        BeforeConfigurationEvent $event
+    ) {
+        if (!array_key_exists('fields', $configuration)) {
+            return;
+        }
+
+        // configured linked actions :
+        // _action key should exists and be null
+        $_actionExists = array_key_exists('_actions', $configuration['fields']);
+        $_actionIsNull = $_actionExists && $configuration['fields']['_actions'] === null;
+
+        // _action is added extra configuration only for the "list" action
+        $isListAction = $event->getActionName() == 'list';
+
+        if ($_actionExists && $_actionIsNull && $isListAction) {
+            // in list view, we add by default and an edit and a delete button
+            $translationPattern = $this
+                ->applicationConfiguration
+                ->getParameter('translation')['pattern'];
+
+            // add a link to the "edit" action, if it is allowed
+            if (in_array('edit', $allowedActions)) {
+                $configuration['fields']['_actions']['type'] = 'collection';
+                $configuration['fields']['_actions']['options']['_edit'] = [
+                    'type' => 'action',
+                    'options' => [
+                        'title' => $this->getTranslationKey($translationPattern, 'edit', $event->getAdmin()->getName()),
+                        'route' => $event->getAdmin()->generateRouteName('edit'),
+                        'parameters' => [
+                            'id' => false
+                        ],
+                        'icon' => 'pencil'
+                    ]
+                ];
+            }
+            // add a link to the "delete" action, if it is allowed
+            if (in_array('delete', $allowedActions)) {
+                $configuration['fields']['_actions']['type'] = 'collection';
+                $configuration['fields']['_actions']['options']['_delete'] = [
+                    'type' => 'action',
+                    'options' => [
+                        'title' => $this->getTranslationKey($translationPattern, 'delete', $event->getAdmin()->getName()),
+                        'route' => $event->getAdmin()->generateRouteName('delete'),
+                        'parameters' => [
+                            'id' => false
+                        ],
+                        'icon' => 'remove'
+                    ]
+                ];
+            }
+        }
     }
 }
