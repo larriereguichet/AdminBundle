@@ -33,8 +33,6 @@ class ArrayField extends Field
             $value = $value->toArray();
         }
 
-        var_dump($value);
-
         return implode($this->glue, $value);
     }
 
