@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Field\Field;
 
-use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\Field\Field;
 use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,8 +39,6 @@ class ArrayField extends Field
      * Configure options resolver.
      *
      * @param OptionsResolver $resolver
-     *
-     * @return mixed
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -54,8 +51,6 @@ class ArrayField extends Field
      * Set options values after options resolving.
      *
      * @param array $options
-     *
-     * @return mixed
      */
     public function setOptions(array $options)
     {
