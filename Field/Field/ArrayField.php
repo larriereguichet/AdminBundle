@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Field\Field;
 
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use LAG\AdminBundle\Field\Field;
 use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -28,9 +29,11 @@ class ArrayField extends Field
         if (!is_array($value) && !($value instanceof Traversable)) {
             throw new Exception('Value should be an array instead of '.gettype($value));
         }
-        if ($value instanceof Collection) {
+        if ($value instanceof DoctrineCollection) {
             $value = $value->toArray();
         }
+
+        var_dump($value);
 
         return implode($this->glue, $value);
     }
