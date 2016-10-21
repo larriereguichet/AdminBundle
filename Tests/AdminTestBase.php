@@ -565,4 +565,21 @@ class AdminTestBase extends WebTestCase
 
         return $configurationFactory;
     }
+
+    /**
+     * Add missing method for php 5.5. In php 5.5, PHPUnit does not have this method yet.
+     *
+     * @param string $originalClassName
+     *
+     * @return PHPUnit_Framework_MockObject_MockObject|void
+     */
+    protected function createMock($originalClassName)
+    {
+        return $this->getMockBuilder($originalClassName)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->disableArgumentCloning()
+            ->disallowMockingUnknownTypes()
+            ->getMock();
+    }
 }
