@@ -38,6 +38,8 @@ class StringField extends Field
         if ($maximumStringLength && strlen($value) > $maximumStringLength) {
             $value = substr($value, 0, $maximumStringLength).$replaceString;
         }
+        // #69 : strip tags to avoid layout destruction when content contains html
+        $value = strip_tags($value);
 
         return $value;
     }
