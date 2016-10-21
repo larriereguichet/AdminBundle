@@ -17,7 +17,7 @@ specific need where he wants, and allow to implements any specific needs without
 
 ## Features
 
-Version 0.4 :
+Version 0.4.2 :
 * Dynamic CRUD for your entities (no code generation)
 * Simple configuration in yml (look alike symfony1 generators.yml syntax)
 * List with pagination, sorting and batch remove (filters are coming)
@@ -26,7 +26,50 @@ Version 0.4 :
 * Fully customizable (use your own controllers, data providers or templates)
 * Bootstrap integration (can be disabled or override)
 
+
 ## Installation
+
+### Step 1: Download the Bundle
+
+Open a command console, enter your project directory and execute the
+following command to download the latest stable version of this bundle:
+
+```console
+$ composer require lag/adminbundle
+```
+
+This command requires you to have Composer installed globally, as explained
+in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
+of the Composer documentation.
+
+### Step 2: Enable the Bundle
+
+Then, enable the bundle by adding it to the list of registered bundles
+in the `app/AppKernel.php` file of your project:
+
+```php
+<?php
+// app/AppKernel.php
+
+// ...
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
+
+            new LAG\AdminBundle\LAGAdminBundle(),
+            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
+        );
+
+        // ...
+    }
+
+    // ...
+}
+```
 ```
     composer require lag/adminbundle
 ```
@@ -34,17 +77,12 @@ Version 0.4 :
 AdminBundle rely on KnpMenuBundle to handle menus and on WhiteOctoberPagerfantaBundle to handle list pagination. If you
 want to use those features, both bundles should be enabled in addition to AdminBundle.
 
-```php
 
-    class AppKernel extends Kernel {
-    ...
 
-    new LAG\AdminBundle\LAGAdminBundle(),
-    new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-    new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
+## Documentation
 
-    ...
-```
+The documentation can be found [here](https://github.com/larriereguichet/AdminBundle/tree/master/Resources/docs/index.md)
+
 
 ## Configuration
 
@@ -207,5 +245,6 @@ Your admin is now ready!
             tauntaun:
                 entity: MyLittleTaunTaunBundle\Entity\TaunTaun
                 form: MyLittleTaunTaunBundle\Entity\TaunTaunType
+                # Will create a CRUD with create, edit, list and delete action for the entity Tauntaun
                 actions: ~
 ```
