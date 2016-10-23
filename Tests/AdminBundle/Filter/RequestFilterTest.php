@@ -49,10 +49,33 @@ class RequestFilterTest extends AdminTestBase
         $this->assertEquals([
             'filters' => 'bamboo'
         ], $filter->getCriteria());
+    }
 
-        function requestCallback()
-        {
-            die('ol');
-        }
+    public function testFilter()
+    {
+        $filter = new RequestFilter();
+        $filter->configure([
+            'name'
+        ], [
+            'orders'
+        ], 50);
+
+        $request = new Request([
+            'name' => 'toto',
+            'page' => 53,
+            'sort' => 'name',
+            'order' => 'asc'
+        ]);
+
+        $filter->filter($request);
+
+        $this->assertEquals([
+            'name' => 'toto'
+        ], $filter->getCriteria());
+        $this->assertEquals([
+            'name' => 'asc'
+        ], $filter->getOrder());
+        $this->assertEquals(50, $filter->getMaxPerPage());
+        $this->assertEquals(1, $filter->getCurrentPage());
     }
 }
