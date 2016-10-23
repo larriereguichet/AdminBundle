@@ -14,6 +14,7 @@ services:
             - '@lag.admin.action_factory'
             - '@lag.admin.message_handler'
             - '@lag.admin.registry'
+            - '@lag.admin.request_filter_factory'
 
     lag.admin.action_factory:
         class: LAG\AdminBundle\Action\Factory\ActionFactory
@@ -41,3 +42,6 @@ services:
             - '@lag.admin.registry'
             - '@lag.admin.configuration_factory'
             - '@translator'
+
+    lag.admin.request_filter_factory:
+        class: LAG\AdminBundle\Filter\Factory\RequestFilterFactory

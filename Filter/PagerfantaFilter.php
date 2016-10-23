@@ -5,35 +5,24 @@ namespace LAG\AdminBundle\Filter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class PagerfantaFilter
+class PagerfantaFilter extends RequestFilter
 {
+    protected $currentPage;
+
     /**
      * Filter request
      *
      * @param Request $request
-     * @return ParameterBag
      */
     public function filter(Request $request)
     {
-        $filteredValues = new ParameterBag();
-        // order column, like "name"
-        $order = $request->get('order');
-        // sort value, asc or desc
-        $sort = $request->get('sort');
-        // page number, like 2
-        $page = $request->get('page');
+        if ($request->get('page')) {
+            $this->currentPage = $request->get('page');
+        }
+    }
 
-        if ($order) {
-            if (!$sort) {
-                $sort = 'asc';
-            }
-            $filteredValues->set('order', [
-                $sort => $order
-            ]);
-        }
-        if ($page) {
-            $filteredValues->set('page', $page);
-        }
-        return $filteredValues;
+    public function getCurrentPage()
+    {
+        return $this->currentPage;
     }
 }

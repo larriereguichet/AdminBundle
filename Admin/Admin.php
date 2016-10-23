@@ -11,14 +11,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Exception\AdminException;
-use LAG\AdminBundle\Filter\PagerfantaFilter;
-use LAG\AdminBundle\Filter\RequestFilter;
+use LAG\AdminBundle\Filter\RequestFilterInterface;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\Pager\PagerFantaAdminAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Role\Role;
@@ -84,6 +82,11 @@ class Admin implements AdminInterface
     protected $eventDispatcher;
 
     /**
+     * @var RequestFilterInterface
+     */
+    protected $requestFilter;
+
+    /**
      * Admin constructor.
      *
      * @param string $name
@@ -91,13 +94,15 @@ class Admin implements AdminInterface
      * @param AdminConfiguration $configuration
      * @param MessageHandlerInterface $messageHandler
      * @param EventDispatcherInterface $eventDispatcher
+     * @param RequestFilterInterface $requestFilter
      */
     public function __construct(
         $name,
         DataProviderInterface $dataProvider,
         AdminConfiguration $configuration,
         MessageHandlerInterface $messageHandler,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        RequestFilterInterface $requestFilter
     ) {
         $this->name = $name;
         $this->dataProvider = $dataProvider;
@@ -105,10 +110,11 @@ class Admin implements AdminInterface
         $this->messageHandler = $messageHandler;
         $this->eventDispatcher = $eventDispatcher;
         $this->entities = new ArrayCollection();
+        $this->requestFilter = $requestFilter;
     }
 
     /**
-     * Load entities and set current action according to request
+     * Load entities and set current action according to request.
      *
      * @param Request $request
      * @param null $user
@@ -119,33 +125,34 @@ class Admin implements AdminInterface
     {
         // set current action
         $this->currentAction = $this->getAction($request->get('_route_params')['_action']);
+
         // check if user is logged have required permissions to get current action
         $this->checkPermissions($user);
 
-        // criteria filter request
-        $filter = new RequestFilter($this->currentAction->getConfiguration()->getParameter('criteria'));
-        $criteriaFilter = $filter->filter($request);
+        $actionConfiguration = $this
+            ->currentAction
+            ->getConfiguration();
 
-        // pager filter request
-        if ($this->currentAction->getConfiguration()->getParameter('pager') == 'pagerfanta') {
-            $filter = new PagerfantaFilter();
-            $pagerFilter = $filter->filter($request);
-        } else {
-            // empty bag
-            $pagerFilter = new ParameterBag();
-        }
+        // configure the request filter with the action and admin configured parameters
+        $this
+            ->requestFilter
+            ->configure(
+                $actionConfiguration->getParameter('criteria'),
+                $actionConfiguration->getParameter('order'),
+                $this->configuration->getParameter('max_per_page')
+            );
 
-        // if load strategy is none, no entity should be loaded
-        if ($this->currentAction->getConfiguration()->getParameter('load_strategy') == Admin::LOAD_STRATEGY_NONE) {
-            return;
-        }
+        // filter the request with the configured criteria, order and max_per_page parameter
+        $this
+            ->requestFilter
+            ->filter($request);
 
         // load entities according to action and request
         $this->load(
-            $criteriaFilter->all(),
-            $pagerFilter->get('order', []),
-            $this->configuration->getParameter('max_per_page'),
-            $pagerFilter->get('page', 1)
+            $this->requestFilter->getCriteria(),
+            $this->requestFilter->getOrder(),
+            $this->requestFilter->getMaxPerPage(),
+            $this->requestFilter->getCurrentPage()
         );
     }
 
