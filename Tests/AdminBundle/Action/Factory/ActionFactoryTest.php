@@ -2,12 +2,14 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\Action\Factory;
 
+use Exception;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
 use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Filter;
 use LAG\AdminBundle\Field\Field\StringField;
 use LAG\AdminBundle\Tests\AdminTestBase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class ActionFactoryTest extends AdminTestBase
 {
@@ -15,44 +17,8 @@ class ActionFactoryTest extends AdminTestBase
     {
         $field = new StringField();
         $field->setName('my_field');
-        $fieldFactory = $this->mockFieldFactory();
-        $fieldFactory
-            ->method('create')
-            ->willReturn($field);
 
-        $filterFactory = $this->mockFilterFactory();
-        $filterFactory
-            ->method('create')
-            ->willReturn(new Filter());
-
-        $actionFactory = new ActionFactory(
-            $fieldFactory,
-            $filterFactory,
-            $this->createConfigurationFactory()
-        );
-
-        // TEST 1 : permissions
-        $admin = $this->createAdmin(
-            'test_admin', [
-                'controller' => 'test',
-                'entity' => 'test',
-                'form' => 'test',
-                'actions' => [],
-                'max_per_page' => 'test',
-                'routing_name_pattern' => 'test',
-                'routing_url_pattern' => 'test',
-                'data_provider' => 'test',
-            ]
-        );
-
-        // create method SHOULD throw an exception if the action is not granted
-        $this
-            ->assertExceptionRaised(\Exception::class, function () use ($actionFactory, $admin) {
-                $actionFactory->create('test_action', [], $admin);
-            });
-        // END TEST 1
-
-        // TEST 2 : creation
+        $actionFactory = $this->initActionFactory();
         $admin = $this->createAdmin(
             'test_admin', [
                 'controller' => 'test',
@@ -82,8 +48,37 @@ class ActionFactoryTest extends AdminTestBase
         $this->assertEquals([
             'my_field' => $field
         ], $action->getFields());
-        // END TEST 2
 
+        // default action load strategy SHOULD be unique for create action
+        $this->assertEquals(Admin::LOAD_STRATEGY_UNIQUE, $action->getConfiguration()->getParameter('load_strategy'));
+    }
+
+    public function testCreatePermissions()
+    {
+        $actionFactory = $this->initActionFactory();
+        $admin = $this->createAdmin(
+            'test_admin', [
+                'controller' => 'test',
+                'entity' => 'test',
+                'form' => 'test',
+                'actions' => [],
+                'max_per_page' => 'test',
+                'routing_name_pattern' => 'test',
+                'routing_url_pattern' => 'test',
+                'data_provider' => 'test',
+            ]
+        );
+
+        // create method SHOULD throw an exception if the action is not granted
+        $this
+            ->assertExceptionRaised(Exception::class, function () use ($actionFactory, $admin) {
+                $actionFactory->create('test_action', [], $admin);
+            });
+    }
+
+    public function testCreateWithCriteria()
+    {
+        $actionFactory = $this->initActionFactory();
         $admin = $this->createAdmin(
             'test_admin',
             [
@@ -111,22 +106,32 @@ class ActionFactoryTest extends AdminTestBase
         $this->assertEquals([
             'id'
         ], $action->getConfiguration()->getParameter('criteria'));
+    }
 
-        $action = $actionFactory->create('delete', [
-            'title' => 'My Title',
-            'permissions' => ['ROLE_TEST'],
-        ], $admin);
+    /**
+     * @return ActionFactory
+     */
+    protected function initActionFactory()
+    {
+        $field = new StringField();
+        $field->setName('my_field');
+        $fieldFactory = $this->mockFieldFactory();
+        $fieldFactory
+            ->method('create')
+            ->willReturn($field);
 
-        $this->assertEquals([
-            'id'
-        ], $action->getConfiguration()->getParameter('criteria'));
+        $filterFactory = $this->mockFilterFactory();
+        $filterFactory
+            ->method('create')
+            ->willReturn(new Filter());
 
-        $action = $actionFactory->create('create', [
-            'title' => 'My Title',
-            'permissions' => ['ROLE_TEST'],
-        ], $admin);
+        $actionFactory = new ActionFactory(
+            $fieldFactory,
+            $filterFactory,
+            $this->createConfigurationFactory(),
+            new EventDispatcher()
+        );
 
-        // default action load strategy SHOULD be unique for create action
-        $this->assertEquals(Admin::LOAD_STRATEGY_NONE, $action->getConfiguration()->getParameter('load_strategy'));
+        return $actionFactory;
     }
 }

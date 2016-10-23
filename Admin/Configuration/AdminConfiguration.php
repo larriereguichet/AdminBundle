@@ -61,12 +61,12 @@ class AdminConfiguration extends Configuration implements ConfigurationInterface
             'data_provider' => null,
             'translation_pattern' => $this
                 ->applicationConfiguration
-                ->getParameter('translation')['pattern']
+                ->getParameter('translation')['pattern'],
+            'form' => null
         ]);
         // required options
         $resolver->setRequired([
             'entity',
-            'form',
         ]);
 
         $resolver->setDefault('menu', [

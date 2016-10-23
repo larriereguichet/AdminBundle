@@ -17,6 +17,7 @@ use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\Pager\PagerFantaAdminAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -78,23 +79,31 @@ class Admin implements AdminInterface
     protected $name;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
      * Admin constructor.
      *
      * @param string $name
      * @param DataProviderInterface $dataProvider
      * @param AdminConfiguration $configuration
      * @param MessageHandlerInterface $messageHandler
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         $name,
         DataProviderInterface $dataProvider,
         AdminConfiguration $configuration,
-        MessageHandlerInterface $messageHandler
+        MessageHandlerInterface $messageHandler,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->name = $name;
         $this->dataProvider = $dataProvider;
         $this->configuration = $configuration;
         $this->messageHandler = $messageHandler;
+        $this->eventDispatcher = $eventDispatcher;
         $this->entities = new ArrayCollection();
     }
 
@@ -195,11 +204,6 @@ class Admin implements AdminInterface
         $this
             ->entities
             ->add($entity);
-
-        // inform the user that  the entity is created
-        $this
-            ->messageHandler
-            ->handleSuccess($this->generateMessageTranslationKey('created'));
 
         return $entity;
     }

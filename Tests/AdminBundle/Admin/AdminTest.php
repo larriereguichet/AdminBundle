@@ -9,6 +9,7 @@ use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use stdClass;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Role\Role;
@@ -199,7 +200,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $admin->create();
     }
@@ -217,18 +219,30 @@ class AdminTest extends AdminTestBase
             ->method('create')
             ->willReturn(new stdClass());
         $applicationConfiguration = $this->createApplicationConfiguration();
-        $adminConfiguration = $this->createAdminConfiguration($applicationConfiguration, $this->getFakeAdminsConfiguration()['full_entity']);
+        $adminConfiguration = $this
+            ->createAdminConfiguration($applicationConfiguration, $this->getFakeAdminsConfiguration()['full_entity']);
 
         $admin = new Admin(
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $admin->create();
         $this->assertTrue($admin->save());
+    }
 
-        // test exception
+    /**
+     * save method SHOULD return false if an exception is thrown. This exception should be catch.
+     */
+    public function testSaveWithException()
+    {
+        $adminConfiguration = $this
+            ->createAdminConfiguration(
+                $this->createApplicationConfiguration(),
+                $this->getFakeAdminsConfiguration()['full_entity']
+            );
         $dataProvider = $this->mockDataProvider();
         $dataProvider
             ->expects($this->once())
@@ -242,7 +256,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $admin->create();
         $this->assertFalse($admin->save());
@@ -267,12 +282,22 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $admin->create();
         $this->assertTrue($admin->remove());
+    }
 
-        // test exception
+    /**
+     * save method SHOULD return false if an exception is thrown. This exception should be catch.
+     */
+    public function testRemoveWithException()
+    {
+        $adminConfiguration = $this->createAdminConfiguration(
+            $this->createApplicationConfiguration(),
+            $this->getFakeAdminsConfiguration()['full_entity']
+        );
         $dataProvider = $this->mockDataProvider();
         $dataProvider
             ->expects($this->once())
@@ -286,7 +311,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $admin->create();
         $this->assertFalse($admin->remove());
@@ -316,11 +342,11 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $this->assertEquals('lag.test.custom_list', $admin->generateRouteName('custom_list'));
         $this->assertEquals('lag.test.custom_edit', $admin->generateRouteName('custom_edit'));
-
         $this->assertExceptionRaised(Exception::class, function () use ($admin) {
             $admin->generateRouteName('wrong_action_name');
         });
@@ -343,7 +369,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -382,7 +409,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -411,7 +439,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -441,7 +470,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -476,14 +506,18 @@ class AdminTest extends AdminTestBase
         ];
         $dataProvider = $this->mockDataProvider($testEntities);
 
-        $applicationConfiguration = $this->createApplicationConfiguration();
-        $adminConfiguration = $this->createAdminConfiguration($applicationConfiguration, $this->getFakeAdminsConfiguration()['full_entity']);
+        $adminConfiguration = $this
+            ->createAdminConfiguration(
+                $this->createApplicationConfiguration(),
+                $this->getFakeAdminsConfiguration()['full_entity']
+            );
 
         $admin = new Admin(
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -501,19 +535,32 @@ class AdminTest extends AdminTestBase
         ]));
         $admin->handleRequest($request);
         $admin->load([]);
-
-
 
         // if an array is returned from the data provider, it SHOULD wrapped into an array collection
         $this->assertEquals(new ArrayCollection($testEntities), $admin->getEntities());
+    }
 
-        $dataProvider = $this->mockDataProvider($testEntities);
+    /**
+     * load method with unique strategy SHOULD run successfully.
+     */
+    public function testLoadWithUniqueStrategy()
+    {
+        $adminConfiguration = $this
+            ->createAdminConfiguration(
+                $this->createApplicationConfiguration(),
+                $this->getFakeAdminsConfiguration()['full_entity']
+            );
+        $dataProvider = $this->mockDataProvider([
+            new stdClass(),
+            new stdClass(),
+        ]);
 
         $admin = new Admin(
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -531,15 +578,28 @@ class AdminTest extends AdminTestBase
         ]));
         $admin->handleRequest($request);
         $admin->load([]);
+    }
 
-
-
-        // test pagerfanta with multiple load strategy
+    /**
+     * load method with multiple strategy SHOULD run successfully.
+     */
+    public function testLoadWithPagerWithMultipleStrategy()
+    {
+        $adminConfiguration = $this
+            ->createAdminConfiguration(
+                $this->createApplicationConfiguration(),
+                $this->getFakeAdminsConfiguration()['full_entity']
+            );
+        $dataProvider = $this->mockDataProvider([
+            new stdClass(),
+            new stdClass(),
+        ]);
         $admin = new Admin(
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -557,16 +617,26 @@ class AdminTest extends AdminTestBase
         ]));
         $admin->handleRequest($request);
         $admin->load([]);
+    }
 
-
-        // test exception
+    /**
+     * load method SHOULD handle exceptions.
+     */
+    public function testLoadWithException()
+    {
         $dataProvider = $this->mockDataProvider(new stdClass());
+        $adminConfiguration = $this
+            ->createAdminConfiguration(
+                $this->createApplicationConfiguration(),
+                $this->getFakeAdminsConfiguration()['full_entity']
+            );
 
         $admin = new Admin(
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -606,7 +676,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $request = new Request([], [], [
             '_route_params' => [
@@ -644,7 +715,8 @@ class AdminTest extends AdminTestBase
             'test',
             $dataProvider,
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
         $admin->addAction($this->createAction('custom_list', $admin, [
             'load_strategy' => AdminInterface::LOAD_STRATEGY_MULTIPLE,

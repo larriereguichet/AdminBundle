@@ -4,7 +4,7 @@ services:
         arguments:
             - '%lag.menus%'
             - '@lag.admin.menu_factory'
-            - '@lag.admin.factory'
+            - '@lag.admin.request_handler'
             - '@request_stack'
         tags:
             - {name: knp_menu.menu_builder, method: mainMenu, alias: main}

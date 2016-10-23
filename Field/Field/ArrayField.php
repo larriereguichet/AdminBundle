@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Field\Field;
 
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use LAG\AdminBundle\Field\Field;
 use Exception;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,7 +29,7 @@ class ArrayField extends Field
         if (!is_array($value) && !($value instanceof Traversable)) {
             throw new Exception('Value should be an array instead of '.gettype($value));
         }
-        if ($value instanceof Collection) {
+        if ($value instanceof DoctrineCollection) {
             $value = $value->toArray();
         }
 
@@ -40,8 +40,6 @@ class ArrayField extends Field
      * Configure options resolver.
      *
      * @param OptionsResolver $resolver
-     *
-     * @return mixed
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -54,8 +52,6 @@ class ArrayField extends Field
      * Set options values after options resolving.
      *
      * @param array $options
-     *
-     * @return mixed
      */
     public function setOptions(array $options)
     {

@@ -2,9 +2,14 @@
 
 namespace LAG\AdminBundle\Utils;
 
-
 class FieldTypeGuesser
 {
+    /**
+     * Return an array containing the field type and its default configuration for the given Doctrine type.
+     *
+     * @param $doctrineType
+     * @return array
+     */
     public function getTypeAndOptions($doctrineType)
     {
         $fieldOptions = [];
@@ -13,7 +18,6 @@ class FieldTypeGuesser
             $fieldOptions = [
                 'type' => 'string',
                 'options' => [
-
                     'length' => 100
                 ]
             ];

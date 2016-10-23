@@ -29,6 +29,7 @@ use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -179,7 +180,8 @@ class AdminTestBase extends WebTestCase
             $name,
             $this->mockDataProvider(),
             $adminConfiguration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
     }
 
@@ -230,12 +232,11 @@ class AdminTestBase extends WebTestCase
     protected function createMenuFactory()
     {
         $knpFactory = $this->createKnpMenuFactory();
-        $adminFactory = $this->createAdminFactory();
         $configurationFactory = $this->createConfigurationFactory();
 
         $menuFactory = new \LAG\AdminBundle\Menu\Factory\MenuFactory(
             $knpFactory,
-            $adminFactory,
+            new \LAG\AdminBundle\Admin\Registry\Registry(),
             $configurationFactory,
             new IdentityTranslator()
         );
@@ -293,7 +294,8 @@ class AdminTestBase extends WebTestCase
             $name,
             $this->mockDataProvider(),
             $configuration,
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new EventDispatcher()
         );
     }
 
@@ -335,22 +337,26 @@ class AdminTestBase extends WebTestCase
 
     /**
      * @param array $configuration
+     * @param EventDispatcherInterface $eventDispatcher
      * @return AdminFactory
      */
-    protected function createAdminFactory(array $configuration = [])
+    protected function createAdminFactory(array $configuration = [], EventDispatcherInterface $eventDispatcher = null)
     {
-        /** @var EventDispatcher $mockEventDispatcher */
-        $mockEventDispatcher = $this
-            ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
-            ->getMock();
+        if (null === $eventDispatcher) {
+            /** @var EventDispatcher $eventDispatcher */
+            $eventDispatcher = $this
+                ->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
+                ->getMock();
+        }
 
         return new AdminFactory(
             $configuration,
-            $mockEventDispatcher,
+            $eventDispatcher,
             $this->mockEntityManager(),
             $this->createConfigurationFactory(),
             $this->mockActionFactory(),
-            $this->mockMessageHandler()
+            $this->mockMessageHandler(),
+            new \LAG\AdminBundle\Admin\Registry\Registry()
         );
     }
 
