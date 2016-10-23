@@ -2,15 +2,15 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\Filter;
 
-use LAG\AdminBundle\Filter\RequestFilter;
+use LAG\AdminBundle\Filter\PagerfantaFilter;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
-class RequestFilterTest extends AdminTestBase
+class PagerfantaFilterTest extends AdminTestBase
 {
     public function testConfigure()
     {
-        $filter = new RequestFilter();
+        $filter = new PagerfantaFilter();
         $filter->configure([
             'filters'
         ], [
@@ -26,7 +26,7 @@ class RequestFilterTest extends AdminTestBase
 
     public function testFilter()
     {
-        $filter = new RequestFilter();
+        $filter = new PagerfantaFilter();
         $filter->configure([
             'name'
         ], [
@@ -49,6 +49,6 @@ class RequestFilterTest extends AdminTestBase
             'name' => 'asc'
         ], $filter->getOrder());
         $this->assertEquals(50, $filter->getMaxPerPage());
-        $this->assertEquals(1, $filter->getCurrentPage());
+        $this->assertEquals(53, $filter->getCurrentPage());
     }
 }

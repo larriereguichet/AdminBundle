@@ -3,10 +3,14 @@
 namespace LAG\AdminBundle\Filter;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 class PagerfantaFilter extends RequestFilter
 {
+    /**
+     * The current page that should be retrieved by the pager
+     *
+     * @var int
+     */
     protected $currentPage;
 
     /**
@@ -19,8 +23,15 @@ class PagerfantaFilter extends RequestFilter
         if ($request->get('page')) {
             $this->currentPage = $request->get('page');
         }
+        // filter normal request parameters
+        parent::filter($request);
     }
 
+    /**
+     * Return the current page that should be retrieved by the pager
+     *
+     * @return int
+     */
     public function getCurrentPage()
     {
         return $this->currentPage;
