@@ -16,7 +16,9 @@ class AppKernel extends Kernel
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
             new LAG\AdminBundle\LAGAdminBundle(),
-            new \Test\TestBundle\TestTestBundle(),
+            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
+            new Test\TestBundle\TestTestBundle(),
         ];
     }
 
