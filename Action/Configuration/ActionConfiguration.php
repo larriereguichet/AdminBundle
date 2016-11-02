@@ -102,9 +102,7 @@ class ActionConfiguration extends Configuration
 
         // retrieved entities are sorted according to this option it should be an array indexed by the field name
         // with its order as a value
-        $resolver
-            ->setDefault('order', [])
-            ->setAllowedTypes('order', 'array');
+        $this->configureOrder($resolver);
 
         // the action route should be a string
         $resolver
@@ -246,6 +244,34 @@ class ActionConfiguration extends Configuration
                 $batch = $resolver->resolve($batch);
 
                 return $batch;
+            })
+        ;
+    }
+
+    /**
+     * Configure the order option.
+     *
+     * @param OptionsResolver $resolver
+     */
+    protected function configureOrder(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefault('order', [])
+            ->setAllowedTypes('order', 'array')
+            ->setNormalizer('order', function(Options $options, $order) {
+                foreach ($order as $field => $sort) {
+
+                    if (is_string($sort)) {
+                        throw new ConfigurationException(
+                            'Order value should be an array of string (["field" => $key]), got '.gettype($sort),
+                            $this->actionName,
+                            $this->admin
+                        );
+                    }
+                    // TODO add test: if the field does not exists in the target entity, an exception should be thrown
+                }
+
+                return $order;
             })
         ;
     }

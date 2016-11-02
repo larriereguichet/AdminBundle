@@ -86,7 +86,9 @@ class DataProvider implements DataProviderInterface
      */
     public function create()
     {
-        $className = $this->repository->getClassName();
+        $className = $this
+            ->repository
+            ->getClassName();
 
         return new $className;
     }
