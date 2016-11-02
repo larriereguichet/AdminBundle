@@ -10,7 +10,7 @@ before_install:
     - cp Tests/Fixtures/app/config/parameters.yml.dist Tests/Fixtures/app/config/parameters.yml
 
 install:
-    - composer install
+    - composer install --profile --optimize-autoloader
 
 script:
   - bin/phpunit --coverage-text --coverage-clover=coverage.clover
