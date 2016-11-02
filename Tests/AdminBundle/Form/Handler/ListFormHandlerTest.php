@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Form\Handler;
 
 use LAG\AdminBundle\Form\Handler\ListFormHandler;
 use LAG\AdminBundle\Tests\AdminTestBase;
-use LAG\AdminBundle\Tests\Entity\TestEntity;
+use LAG\AdminBundle\Tests\Entity\TestSimpleEntity;
 use Symfony\Component\Form\Form;
 
 class ListFormHandlerTest extends AdminTestBase
@@ -20,9 +20,9 @@ class ListFormHandlerTest extends AdminTestBase
             ->willReturn([
                 'batch_action' => [],
                 'entities' => [
-                    new TestEntity(23, 'test'),
-                    new TestEntity(42, 'test'),
-                    new TestEntity(64, 'test'),
+                    new TestSimpleEntity(23, 'test'),
+                    new TestSimpleEntity(42, 'test'),
+                    new TestSimpleEntity(64, 'test'),
                 ],
                 'batch_23' => true,
                 'batch_42' => true,

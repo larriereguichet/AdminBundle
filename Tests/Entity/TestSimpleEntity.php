@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\Entity;
 
-class TestEntity
+class TestSimpleEntity
 {
     protected $id;
 
@@ -11,7 +11,7 @@ class TestEntity
     /**
      * TestEntity constructor.
      *
-     * @param null $id
+     * @param integer $id
      * @param string $name
      */
     public function __construct($id = null, $name = '')
@@ -21,7 +21,7 @@ class TestEntity
     }
 
     /**
-     * @return null
+     * @return integer
      */
     public function getId()
     {
