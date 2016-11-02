@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Action;
 
 use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Filter;
 use LAG\AdminBundle\Field\Field\StringField;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -43,5 +44,17 @@ class ActionTest extends AdminTestBase
             'name' => $field
         ], $action->getFields());
         $this->assertTrue($action->hasField('name'));
+
+        $action->setFilters([
+            'test'
+        ]);
+        $this->assertEquals(['test'], $action->getFilters());
+
+        $filter = new Filter();
+        $action->addFilter($filter);
+        $this->assertEquals([
+            'test',
+            $filter
+        ], $action->getFilters());
     }
 }
