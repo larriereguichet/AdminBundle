@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/larriereguichet/AdminBundle.svg?branch=master)](https://travis-ci.org/larriereguichet/AdminBundle)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/build.png?b=master)](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/build-status/master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0/mini.png)](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0)
 
 
