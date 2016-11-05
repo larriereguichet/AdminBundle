@@ -10,7 +10,7 @@ use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
-use LAG\AdminBundle\Exception\AdminException;
+use LAG\AdminBundle\Admin\Exception\AdminException;
 use LAG\AdminBundle\Filter\RequestFilterInterface;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\Pager\PagerFantaAdminAdapter;
@@ -304,7 +304,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Load entities manually according to criteria.
+     * Load entities according to the given criteria and the current action configuration.
      *
      * @param array $criteria
      * @param array $orderBy
@@ -312,44 +312,56 @@ class Admin implements AdminInterface
      * @param int $offset
      * @throws Exception
      */
-    public function load(array $criteria, $orderBy = [], $limit = 25, $offset = 1)
+    public function load(array $criteria, array $orderBy = [], $limit = 25, $offset = 1)
     {
-        $actionConfiguration = $this
-            ->getCurrentAction()
-            ->getConfiguration();
-        $pager = $actionConfiguration->getParameter('pager');
-        $requirePagination = $this
-            ->getCurrentAction()
-            ->isPaginationRequired();
+        $currentAction = $this->getCurrentAction();
+        $currentActionConfiguration = $currentAction->getConfiguration();
 
-        if ($pager == 'pagerfanta' && $requirePagination) {
-            // adapter to pagerfanta
-            $adapter = new PagerFantaAdminAdapter($this->dataProvider, $criteria, $orderBy);
-            // create pager
-            $this->pager = new Pagerfanta($adapter);
-            $this->pager->setMaxPerPage($limit);
-            $this->pager->setCurrentPage($offset);
+        // some action, such as create, does not require the entities to be loaded
+        if (!$currentAction->isLoadingRequired()) {
+            return;
+        }
+        $pager = $currentActionConfiguration->getParameter('pager');
 
-            $entities = $this
-                ->pager
-                ->getCurrentPageResults();
-        } else {
-            // if the current action should retrieve only one entity, the offset should be zero
-            if ($actionConfiguration->getParameter('load_strategy') !== AdminInterface::LOAD_STRATEGY_MULTIPLE) {
-                $offset = 0;
+        if ($currentAction->isPaginationRequired() && $pager) {
+            $loadStrategy = $currentActionConfiguration->getParameter('load_strategy');
+
+            // only pagerfanta adapter is yet supported
+            if ('pagerfanta' !== $pager) {
+                throw new AdminException(
+                    'Only pagerfanta value is allowed for pager parameter, given '.$pager,
+                    $currentAction->getName(),
+                    $this
+                );
             }
-            $entities = $this
-                ->dataProvider
-                ->findBy($criteria, $orderBy, $limit, $offset);
-        }
-        if (!is_array($entities) && !($entities instanceof Collection)) {
-            throw new Exception('The data provider should return either a collection or an array. Got '.gettype($entities).' instead');
+            // only load strategy multiple is allowed for pagination (ie, can not paginate if only one entity is loaded)
+            if (AdminInterface::LOAD_STRATEGY_MULTIPLE !== $loadStrategy) {
+                throw new AdminException(
+                    'Only "strategy_multiple" value is allowed for pager parameter, given '.$loadStrategy,
+                    $currentAction->getName(),
+                    $this
+                );
+            }
+            // load entities using a pager
+            $this->loadPaginate($criteria, $orderBy, $limit, $offset);
+        } else {
+            $this->loadWithoutPagination($criteria, $orderBy, $limit, $offset);
         }
 
-        if (is_array($entities)) {
-            $entities = new ArrayCollection($entities);
+        // the data provider should return an array or a collection of entities.
+        if (!is_array($this->entities) && !$this->entities instanceof Collection) {
+            throw new AdminException(
+                'The data provider should return either a collection or an array. Got '
+                .gettype($this->entities).' instead',
+                $currentAction->getName(),
+                $this
+            );
         }
-        $this->entities = $entities;
+
+        // if an array is provided, transform it to a collection to be more convenient
+        if (is_array($this->entities)) {
+            $this->entities = new ArrayCollection($this->entities);
+        }
     }
 
     /**
@@ -372,10 +384,12 @@ class Admin implements AdminInterface
     public function getUniqueEntity()
     {
         if ($this->entities->count() == 0) {
-            throw new Exception("Entity not found in admin \"{$this->getName()}\".");
+            throw new Exception('Entity not found in admin "'.$this->getName());
         }
         if ($this->entities->count() > 1) {
-            throw new Exception("Too much entities found in admin \"{$this->getName()}\".");
+            throw new Exception(
+                'Too much entities found in admin "{$this->getName()}" ('.$this->entities->count().').'
+            );
         }
         return $this->entities->first();
     }
@@ -525,5 +539,51 @@ class Admin implements AdminInterface
             $message,
             $this->name
         );
+    }
+
+    /**
+     * Load entities using PagerFanta.
+     *
+     * @param array $criteria
+     * @param array $orderBy
+     * @param int $limit
+     * @param int $offset
+     */
+    protected function loadPaginate(array $criteria, array $orderBy, $limit, $offset)
+    {
+        // adapter to pagerfanta
+        $adapter = new PagerFantaAdminAdapter($this->dataProvider, $criteria, $orderBy);
+        // create pager
+        $this->pager = new Pagerfanta($adapter);
+        $this->pager->setMaxPerPage($limit);
+        $this->pager->setCurrentPage($offset);
+
+        $this->entities = $this
+            ->pager
+            ->getCurrentPageResults();
+    }
+
+    /**
+     * Load entities using to configured data provider.
+     *
+     * @param array $criteria
+     * @param array $orderBy
+     * @param int $limit
+     * @param int $offset
+     */
+    protected function loadWithoutPagination(array $criteria, $orderBy, $limit, $offset)
+    {
+        $currentAction = $this->getCurrentAction();
+        $currentActionConfiguration = $currentAction->getConfiguration();
+
+        // if the current action should retrieve only one entity, the offset should be zero
+        if ($currentActionConfiguration->getParameter('load_strategy') !== AdminInterface::LOAD_STRATEGY_MULTIPLE) {
+            $offset = 0;
+            $limit = 1;
+        }
+        // load entities according to the given parameters
+        $this->entities = $this
+            ->dataProvider
+            ->findBy($criteria, $orderBy, $limit, $offset);
     }
 }

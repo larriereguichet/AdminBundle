@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AdminBundle\Admin\Behaviors;
+namespace LAG\AdminBundle\Tests\AdminBundle\Admin\Behaviors;
 
 use LAG\AdminBundle\Admin\Behaviors\EntityLabelTrait;
 use LAG\AdminBundle\Tests\AdminTestBase;
@@ -15,7 +15,6 @@ class EntityLabelTraitTest extends AdminTestBase
         $entity = new stdClass();
         $entity->label = 'panda';
         $this->assertEquals('panda', $this->getEntityLabel($entity));
-
 
         $entity = new stdClass();
         $entity->title = 'panda';
