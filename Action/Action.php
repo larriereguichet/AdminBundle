@@ -161,6 +161,20 @@ class Action implements ActionInterface
      */
     public function isPaginationRequired()
     {
-        return $this->configuration->getParameter('load_strategy') === AdminInterface::LOAD_STRATEGY_MULTIPLE;
+        return $this
+            ->configuration
+            ->getParameter('load_strategy') === AdminInterface::LOAD_STRATEGY_MULTIPLE;
+    }
+
+    /**
+     * Return true if one or more entities should be loaded ini this action.
+     *
+     * @return bool
+     */
+    public function isLoadingRequired()
+    {
+        return $this
+            ->configuration
+            ->getParameter('load_strategy') !== AdminInterface::LOAD_STRATEGY_NONE;
     }
 }
