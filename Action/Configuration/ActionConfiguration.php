@@ -207,7 +207,7 @@ class ActionConfiguration extends Configuration
             ->setDefault('batch', null)
             ->setNormalizer('batch', function(Options $options, $batch) {
 
-                // if batch is desactivated, no more checks should be done
+                // if batch is not activated, no more checks should be done
                 if ($batch === false) {
                     return $batch;
                 }
@@ -261,7 +261,7 @@ class ActionConfiguration extends Configuration
             ->setNormalizer('order', function(Options $options, $order) {
                 foreach ($order as $field => $sort) {
 
-                    if (is_string($sort)) {
+                    if (!is_string($sort) || !is_string($field) || !in_array(strtolower($sort), ['asc', 'desc'])) {
                         throw new ConfigurationException(
                             'Order value should be an array of string (["field" => $key]), got '.gettype($sort),
                             $this->actionName,
