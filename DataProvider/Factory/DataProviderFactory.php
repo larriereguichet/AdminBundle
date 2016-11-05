@@ -56,7 +56,7 @@ class DataProviderFactory
      * @param string|null $entityClass The class of the related entity. It will be used to find a repository in Doctrine
      * registry
      *
-     * @return DataProvider|DataProviderInterface
+     * @return DataProviderInterface
      *
      * @throws Exception
      */
@@ -93,7 +93,7 @@ class DataProviderFactory
      * Create a generic data provider.
      *
      * @param string $entityClass The class of the related entity
-     * @return DataProvider The created data provider
+     * @return DataProviderInterface The created data provider
      *
      * @throws Exception An exception is thrown if the found repository with given entity class does not implements
      * RepositoryInterface.

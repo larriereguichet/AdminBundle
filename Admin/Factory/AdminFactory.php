@@ -11,9 +11,9 @@ use LAG\AdminBundle\Admin\Event\AdminCreateEvent;
 use LAG\AdminBundle\Admin\Event\BeforeConfigurationEvent;
 use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
-use LAG\AdminBundle\DataProvider\DataProvider;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
 use Exception;
+use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
 use LAG\AdminBundle\Filter\Factory\RequestFilterFactory;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
@@ -231,7 +231,7 @@ class AdminFactory
      *
      * @param string $entityClass
      * @param string|null $name
-     * @return DataProvider|mixed
+     * @return DataProviderInterface
      * @throws Exception
      */
     protected function getDataProvider($entityClass, $name = null)
