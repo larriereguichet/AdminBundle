@@ -8,13 +8,18 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class DataProviderCompilerPass implements CompilerPassInterface
 {
+    /**
+     * Add the tagged data provider to the DataProviderFactory.
+     *
+     * @param ContainerBuilder $container
+     */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->has('lag.admin.factory')) {
+        if (!$container->has('lag.admin.data_providers_factory')) {
             return;
         }
 
-        $definition = $container->findDefinition('lag.admin.factory');
+        $definition = $container->findDefinition('lag.admin.data_providers_factory');
         $taggedServices = $container->findTaggedServiceIds('data_provider');
 
         foreach ($taggedServices as $id => $tags) {

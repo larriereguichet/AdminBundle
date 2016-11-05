@@ -203,7 +203,7 @@ class ActionConfiguration extends Configuration
 
         // batch actions
         $resolver
-            // by default, the batch actions is desactivated
+            // by default, the batch action is not activated
             ->setDefault('batch', null)
             ->setNormalizer('batch', function(Options $options, $batch) {
 

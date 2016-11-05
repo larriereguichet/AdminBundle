@@ -121,7 +121,7 @@ class CRUDController extends Controller
      *
      * @Template("LAGAdminBundle:CRUD:edit.html.twig")
      * @param Request $request
-     * @return array
+     * @return array|RedirectResponse
      */
     public function createAction(Request $request)
     {

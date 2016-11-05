@@ -56,7 +56,7 @@ interface AdminInterface
      * @param null $limit
      * @param null $offset
      */
-    public function load(array $criteria, $orderBy = [], $limit = null, $offset = null);
+    public function load(array $criteria, array $orderBy = [], $limit = null, $offset = null);
 
     /**
      * Save loaded entities.

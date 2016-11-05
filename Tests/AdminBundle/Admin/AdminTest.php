@@ -5,8 +5,11 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Admin;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use LAG\AdminBundle\Action\Action;
+use LAG\AdminBundle\Action\ActionInterface;
+use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Exception\AdminException;
 use LAG\AdminBundle\Filter\RequestFilter;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use stdClass;
@@ -552,6 +555,52 @@ class AdminTest extends AdminTestBase
     }
 
     /**
+     * Load method should not load entities if the strategy is NONE.
+     */
+    public function testLoadWithoutRequireLoad()
+    {
+        $testEntities = [
+            new stdClass(),
+            new stdClass(),
+        ];
+        $dataProvider = $this->mockDataProvider($testEntities);
+
+        $adminConfiguration = $this
+            ->createAdminConfiguration(
+                $this->createApplicationConfiguration(),
+                $this->getFakeAdminsConfiguration()['full_entity']
+            );
+
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            $adminConfiguration,
+            $this->mockMessageHandler(),
+            new EventDispatcher(),
+            new RequestFilter()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $admin->addAction($this->createAction('custom_list', $admin, [
+            'load_strategy' => AdminInterface::LOAD_STRATEGY_NONE,
+            'route' => '',
+            'export' => '',
+            'order' => [],
+            'icon' => '',
+            'pager' => 'pagerfanta',
+            'criteria' => [],
+        ]));
+        $admin->handleRequest($request);
+        $admin->load([]);
+
+        // if an array is returned from the data provider, it SHOULD wrapped into an array collection
+        $this->assertCount(0, $admin->getEntities());
+    }
+
+    /**
      * load method with unique strategy SHOULD run successfully.
      */
     public function testLoadWithUniqueStrategy()
@@ -633,6 +682,116 @@ class AdminTest extends AdminTestBase
     }
 
     /**
+     * load method with a wrong pager should throw an exception.
+     */
+    public function testLoadWithWrongPager()
+    {
+        $adminConfiguration = $this
+            ->createAdminConfiguration(
+                $this->createApplicationConfiguration(),
+                $this->getFakeAdminsConfiguration()['full_entity']
+            );
+        $dataProvider = $this->mockDataProvider([
+            new stdClass(),
+            new stdClass(),
+        ]);
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            $adminConfiguration,
+            $this->mockMessageHandler(),
+            new EventDispatcher(),
+            new RequestFilter()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $actionConfiguration = new ActionConfiguration('custom_list', $admin);
+        $actionConfiguration->setParameters([
+            'criteria' => [],
+            'order' => [],
+            'pager' => 'wrong',
+            'load_strategy' => AdminInterface::LOAD_STRATEGY_MULTIPLE
+        ]);
+        $action = $this->createMock(ActionInterface::class);
+        $action
+            ->method('getName')
+            ->willReturn('custom_list');
+        $action
+            ->method('getConfiguration')
+            ->willReturn($actionConfiguration);
+        $action
+            ->method('isPaginationRequired')
+            ->willReturn(true);
+        $action
+            ->method('isLoadingRequired')
+            ->willReturn(true);
+
+        $admin->addAction($action);
+
+        $this->assertExceptionRaised(AdminException::class, function () use ($admin, $request) {
+            $admin->handleRequest($request);
+        });
+    }
+
+    /**
+     * load method with a wrong pager should throw an exception.
+     */
+    public function testLoadWithPagerAndWrongStrategy()
+    {
+        $adminConfiguration = $this
+            ->createAdminConfiguration(
+                $this->createApplicationConfiguration(),
+                $this->getFakeAdminsConfiguration()['full_entity']
+            );
+        $dataProvider = $this->mockDataProvider([
+            new stdClass(),
+            new stdClass(),
+        ]);
+        $admin = new Admin(
+            'test',
+            $dataProvider,
+            $adminConfiguration,
+            $this->mockMessageHandler(),
+            new EventDispatcher(),
+            new RequestFilter()
+        );
+        $request = new Request([], [], [
+            '_route_params' => [
+                '_action' => 'custom_list'
+            ]
+        ]);
+        $actionConfiguration = new ActionConfiguration('custom_list', $admin);
+        $actionConfiguration->setParameters([
+            'criteria' => [],
+            'order' => [],
+            'pager' => 'pagerfanta',
+            'load_strategy' => AdminInterface::LOAD_STRATEGY_UNIQUE
+        ]);
+        $action = $this->createMock(ActionInterface::class);
+        $action
+            ->method('getName')
+            ->willReturn('custom_list');
+        $action
+            ->method('getConfiguration')
+            ->willReturn($actionConfiguration);
+        $action
+            ->method('isPaginationRequired')
+            ->willReturn(true);
+        $action
+            ->method('isLoadingRequired')
+            ->willReturn(true);
+
+        $admin->addAction($action);
+
+        $this->assertExceptionRaised(AdminException::class, function () use ($admin, $request) {
+            $admin->handleRequest($request);
+        });
+    }
+
+    /**
      * load method SHOULD handle exceptions.
      */
     public function testLoadWithException()
@@ -666,7 +825,7 @@ class AdminTest extends AdminTestBase
             'pager' => 'pagerfanta',
             'criteria' => [],
         ]));
-        $this->assertExceptionRaised(Exception::class, function () use ($admin, $request) {
+        $this->assertExceptionRaised(AdminException::class, function () use ($admin, $request) {
             $admin->handleRequest($request);
             $admin->load([]);
         });

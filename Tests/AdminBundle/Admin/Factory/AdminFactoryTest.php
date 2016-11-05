@@ -56,23 +56,6 @@ class AdminFactoryTest extends AdminTestBase
     }
 
     /**
-     * AddDataProvider method must add a DataProviderInterface to the Admin.
-     */
-    public function testAddDataProvider()
-    {
-        // test with no configuration
-        $adminFactory = $this->createAdminFactory();
-        // unknown admin not exists, it should throw an exception
-        $this->assertExceptionRaised('Exception', function () use ($adminFactory) {
-            $adminFactory
-                ->getRegistry()
-                ->get('unknown_admin');
-        });
-        $dataProvider = $this->mockDataProvider();
-        $adminFactory->addDataProvider('test', $dataProvider);
-    }
-
-    /**
      * Test dispatched events.
      */
     public function testEvents()

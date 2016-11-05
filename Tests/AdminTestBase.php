@@ -21,6 +21,7 @@ use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use LAG\AdminBundle\Admin\Factory\FilterFactory;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
+use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
 use LAG\AdminBundle\Field\Factory\FieldFactory;
 use LAG\AdminBundle\Filter\Factory\RequestFilterFactory;
 use LAG\AdminBundle\Filter\RequestFilter;
@@ -338,12 +339,12 @@ class AdminTestBase extends WebTestCase
         return new AdminFactory(
             $configuration,
             $eventDispatcher,
-            $this->mockEntityManager(),
             $this->createConfigurationFactory(),
             $this->mockActionFactory(),
             $this->mockMessageHandler(),
             new \LAG\AdminBundle\Admin\Registry\Registry(),
-            new RequestFilterFactory()
+            new RequestFilterFactory(),
+            new DataProviderFactory($this->mockEntityManager())
         );
     }
 
