@@ -6,7 +6,6 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Form\Handler\ListFormHandler;
 use LAG\AdminBundle\Form\Type\AdminListType;
 use LAG\AdminBundle\Form\Type\BatchActionType;
-use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use Exception;
 use LAG\AdminBundle\Form\Type\DeleteType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -24,8 +23,6 @@ use Symfony\Component\Security\Core\Role\Role;
  */
 class CRUDController extends Controller
 {
-    use ControllerTrait;
-
     /**
      * Generic list action.
      *
@@ -232,6 +229,19 @@ class CRUDController extends Controller
             'admin' => $admin,
             'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * Throw a 404 Exception if $boolean is false or null
+     *
+     * @param $boolean
+     * @param string $message
+     */
+    protected function forward404Unless($boolean, $message = '404 Not Found')
+    {
+        if (!$boolean) {
+            throw $this->createNotFoundException($message);
+        }
     }
 
     /**

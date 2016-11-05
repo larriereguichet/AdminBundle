@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Form\Type;
 
-use BlueBear\BaseBundle\Entity\Behaviors\Id;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Menu\Configuration\MenuItemConfiguration;
 use Symfony\Component\Form\AbstractType;
@@ -48,7 +47,6 @@ class AdminListType extends AbstractType
                 $form = $event->getForm();
 
                 if (!empty($data['entities'])) {
-                    /** @var Id $entity */
                     foreach ($data['entities'] as $entity) {
                         $form->add('batch_'.$entity->getId(), CheckboxType::class, [
                             'value' => $entity->getId(),
