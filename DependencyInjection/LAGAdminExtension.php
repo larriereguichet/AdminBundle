@@ -9,11 +9,13 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * This is the class that loads and manages your bundle configuration.
+ * Load AdminBundle configuration into the container.
  */
 class LAGAdminExtension extends Extension
 {
     /**
+     * Load the configuration into the container.
+     *
      * @param array $configs
      * @param ContainerBuilder $container
      */
@@ -27,9 +29,6 @@ class LAGAdminExtension extends Extension
 
         if (!array_key_exists('application', $config)) {
             throw new InvalidConfigurationException('Your section "application" is not found for AdminBundle configuration');
-        }
-        if (!array_key_exists('admins', $config)) {
-            throw new InvalidConfigurationException('Your section "admins" is not found for AdminBundle configuration');
         }
         if (!array_key_exists('enable_extra_configuration', $config['application'])) {
             $config['application']['enable_extra_configuration'] = true;
