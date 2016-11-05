@@ -22,7 +22,6 @@ class DataProviderCompilerPassTest extends AdminTestBase
         // create the data providers factory definition
         $factoryDefinition = new Definition();
 
-
         // add them to the container builder
         $containerBuilder = new ContainerBuilder();
         $containerBuilder->addDefinitions([
@@ -34,7 +33,9 @@ class DataProviderCompilerPassTest extends AdminTestBase
         $compilerPass = new DataProviderCompilerPass();
         $compilerPass->process($containerBuilder);
 
-        $calls = $containerBuilder->getDefinition('lag.admin.data_providers_factory')->getMethodCalls();
+        $calls = $containerBuilder
+            ->getDefinition('lag.admin.data_providers_factory')
+            ->getMethodCalls();
 
         $this->assertCount(1, $calls);
         $this->assertEquals('addDataProvider', $calls[0][0]);
@@ -61,12 +62,12 @@ class DataProviderCompilerPassTest extends AdminTestBase
     public function testProcessWithoutTaggedServices()
     {
         $containerBuilder = new ContainerBuilder();
-        $containerBuilder->set('lag.admin.factory', new Definition());
+        $containerBuilder->setDefinition('lag.admin.factory', new Definition());
 
         $compilerPass = new DataProviderCompilerPass();
         $compilerPass->process($containerBuilder);
 
-        $this->assertCount(0, $containerBuilder->getDefinitions());
+        $this->assertCount(1, $containerBuilder->getDefinitions());
         $this->assertFalse($containerBuilder->has('lag.admin.data_providers_factory'));
     }
 }
