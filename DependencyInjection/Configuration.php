@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @return ArrayNodeDefinition|NodeDefinition
      */
-    public function getAdminsConfigurationNode()
+    protected function getAdminsConfigurationNode()
     {
         $builder = new TreeBuilder();
         $node = $builder->root('admins');
@@ -61,7 +61,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @return ArrayNodeDefinition|NodeDefinition
      */
-    public function getApplicationNode()
+    protected function getApplicationNode()
     {
         $builder = new TreeBuilder();
         $node = $builder->root('application');
@@ -103,7 +103,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @return ArrayNodeDefinition|NodeDefinition
      */
-    public function getMenuConfiguration()
+    protected function getMenuConfiguration()
     {
         $builder = new TreeBuilder();
         $node = $builder->root('menus');
