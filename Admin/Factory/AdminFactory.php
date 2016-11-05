@@ -238,7 +238,7 @@ class AdminFactory
     {
         return $this
             ->dataProviderFactory
-            ->get($entityClass, $name);
+            ->get($name, $entityClass);
     }
 
 }
