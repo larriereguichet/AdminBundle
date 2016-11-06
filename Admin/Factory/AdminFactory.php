@@ -17,7 +17,6 @@ use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
 use LAG\AdminBundle\Filter\Factory\RequestFilterFactory;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -99,7 +98,6 @@ class AdminFactory
         $this->adminConfigurations = $adminConfigurations;
         $this->actionFactory = $actionFactory;
         $this->messageHandler = $messageHandler;
-        $this->dataProviders = new ParameterBag();
         $this->registry = $registry;
         $this->requestFilterFactory = $requestFilterFactory;
         $this->dataProviderFactory = $dataProviderFactory;
