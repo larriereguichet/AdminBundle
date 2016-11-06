@@ -76,7 +76,7 @@ interface ActionInterface
     /**
      * Return true if the Action requires the loading of one or more entities.
      *
-     * @return true
+     * @return bool
      */
     public function isLoadingRequired();
 }
