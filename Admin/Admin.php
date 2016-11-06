@@ -361,7 +361,7 @@ class Admin implements AdminInterface
 
         // if an array is provided, transform it to a collection to be more convenient
         if (is_array($entities)) {
-            $entities = new ArrayCollection($this->entities);
+            $entities = new ArrayCollection($entities);
         }
 
         // load the entities into the Admin
