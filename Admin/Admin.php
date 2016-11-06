@@ -343,25 +343,29 @@ class Admin implements AdminInterface
                 );
             }
             // load entities using a pager
-            $this->loadPaginate($criteria, $orderBy, $limit, $offset);
+            $entities = $this->loadPaginate($criteria, $orderBy, $limit, $offset);
         } else {
-            $this->loadWithoutPagination($criteria, $orderBy, $limit, $offset);
+            // load using the data provider
+            $entities = $this->loadWithoutPagination($criteria, $orderBy, $limit, $offset);
         }
 
         // the data provider should return an array or a collection of entities.
-        if (!is_array($this->entities) && !$this->entities instanceof Collection) {
+        if (!is_array($entities) && !$entities instanceof Collection) {
             throw new AdminException(
                 'The data provider should return either a collection or an array. Got '
-                .gettype($this->entities).' instead',
+                .gettype($entities).' instead',
                 $currentAction->getName(),
                 $this
             );
         }
 
         // if an array is provided, transform it to a collection to be more convenient
-        if (is_array($this->entities)) {
-            $this->entities = new ArrayCollection($this->entities);
+        if (is_array($entities)) {
+            $entities = new ArrayCollection($this->entities);
         }
+
+        // load the entities into the Admin
+        $this->entities = $entities;
     }
 
     /**
@@ -548,6 +552,8 @@ class Admin implements AdminInterface
      * @param array $orderBy
      * @param int $limit
      * @param int $offset
+     *
+     * @return array|\Traversable
      */
     protected function loadPaginate(array $criteria, array $orderBy, $limit, $offset)
     {
@@ -558,7 +564,7 @@ class Admin implements AdminInterface
         $this->pager->setMaxPerPage($limit);
         $this->pager->setCurrentPage($offset);
 
-        $this->entities = $this
+        return $this
             ->pager
             ->getCurrentPageResults();
     }
@@ -570,6 +576,8 @@ class Admin implements AdminInterface
      * @param array $orderBy
      * @param int $limit
      * @param int $offset
+     *
+     * @return array|Collection
      */
     protected function loadWithoutPagination(array $criteria, $orderBy, $limit, $offset)
     {
@@ -581,8 +589,8 @@ class Admin implements AdminInterface
             $offset = 0;
             $limit = 1;
         }
-        // load entities according to the given parameters
-        $this->entities = $this
+
+        return $this
             ->dataProvider
             ->findBy($criteria, $orderBy, $limit, $offset);
     }
