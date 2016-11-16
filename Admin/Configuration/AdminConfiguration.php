@@ -62,7 +62,8 @@ class AdminConfiguration extends Configuration implements ConfigurationInterface
             'translation_pattern' => $this
                 ->applicationConfiguration
                 ->getParameter('translation')['pattern'],
-            'form' => null
+            'form' => null,
+            'pager' => 'pagerfanta'
         ]);
         // required options
         $resolver->setRequired([
