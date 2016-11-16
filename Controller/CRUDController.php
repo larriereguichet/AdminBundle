@@ -63,18 +63,25 @@ class CRUDController extends Controller
                 // get ids and batch action from list form data
                 $formHandler = new ListFormHandler();
                 $data = $formHandler->handle($form);
-                $batchForm = $this->createForm(BatchActionType::class, [
-                    'batch_action' => $data['batch_action'],
-                    'entity_ids' => $data['ids']
-                ], [
-                    'labels' => $data['labels']
-                ]);
 
-                // render batch view
-                return $this->render('LAGAdminBundle:CRUD:batch.html.twig', [
-                    'admin' => $admin,
-                    'form' => $batchForm->createView()
-                ]);
+                if (count($data['ids'])) {
+                    $batchForm = $this->createForm(BatchActionType::class, [
+                        'batch_action' => $data['batch_action'],
+                        'entity_ids' => $data['ids']
+                    ], [
+                        'labels' => $data['labels']
+                    ]);
+
+                    // render batch view
+                    return $this->render('LAGAdminBundle:CRUD:batch.html.twig', [
+                        'admin' => $admin,
+                        'form' => $batchForm->createView()
+                    ]);
+                } else {
+                    $this
+                        ->addFlash('info', 'lag.admin.batch_no_entities');
+                }
+
             }
             $viewParameters['form'] = $form->createView();
         }
