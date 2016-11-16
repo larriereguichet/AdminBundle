@@ -11,7 +11,7 @@ class PagerfantaFilter extends RequestFilter
      *
      * @var int
      */
-    protected $currentPage;
+    protected $currentPage = 1;
 
     /**
      * Filter request
