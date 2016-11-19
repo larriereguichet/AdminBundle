@@ -37,9 +37,6 @@ trait AdminTrait
      */
     public function getUniqueEntityLabel()
     {
-        $entity = $this->getUniqueEntity();
-        $label = $this->getEntityLabel($entity);
-
-        return $label;
+        return $this->getEntityLabel($this->getUniqueEntity());
     }
 }
