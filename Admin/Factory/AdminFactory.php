@@ -59,7 +59,7 @@ class AdminFactory
     /**
      * @var Registry
      */
-    protected $registry;
+    protected $adminRegistry;
 
     /**
      * @var RequestFilterFactory
@@ -79,7 +79,7 @@ class AdminFactory
      * @param ConfigurationFactory $configurationFactory
      * @param ActionFactory $actionFactory
      * @param MessageHandlerInterface $messageHandler
-     * @param Registry $registry
+     * @param Registry $adminRegistry
      * @param RequestFilterFactory $requestFilterFactory
      * @param DataProviderFactory $dataProviderFactory
      */
@@ -89,7 +89,7 @@ class AdminFactory
         ConfigurationFactory $configurationFactory,
         ActionFactory $actionFactory,
         MessageHandlerInterface $messageHandler,
-        Registry $registry,
+        Registry $adminRegistry,
         RequestFilterFactory $requestFilterFactory,
         DataProviderFactory $dataProviderFactory
     ) {
@@ -98,7 +98,7 @@ class AdminFactory
         $this->adminConfigurations = $adminConfigurations;
         $this->actionFactory = $actionFactory;
         $this->messageHandler = $messageHandler;
-        $this->registry = $registry;
+        $this->adminRegistry = $adminRegistry;
         $this->requestFilterFactory = $requestFilterFactory;
         $this->dataProviderFactory = $dataProviderFactory;
     }
@@ -133,7 +133,7 @@ class AdminFactory
             // create Admin object and add it to the registry
             $admin = $this->create($name, $event->getAdminConfiguration());
             $this
-                ->registry
+                ->adminRegistry
                 ->add($admin);
 
             // dispatch post-create event
@@ -203,7 +203,7 @@ class AdminFactory
      */
     public function getRegistry()
     {
-        return $this->registry;
+        return $this->adminRegistry;
     }
 
     /**
