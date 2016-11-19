@@ -388,7 +388,7 @@ class Admin implements AdminInterface
     public function getUniqueEntity()
     {
         if ($this->entities->count() == 0) {
-            throw new Exception('Entity not found in admin "'.$this->getName());
+            throw new Exception('Entity not found in admin "'.$this->getName().'""');
         }
         if ($this->entities->count() > 1) {
             throw new Exception(
