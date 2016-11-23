@@ -99,7 +99,7 @@ class ActionConfiguration extends Configuration
                 // default criteria used to load entities
                 'criteria' => [],
                 'filters' => [],
-                'menu' => [],
+                'menus' => [],
                 'batch' => false,
             ]);
     }
@@ -140,7 +140,10 @@ class ActionConfiguration extends Configuration
             ->setAllowedTypes('icon', 'string')
             ->setAllowedTypes('criteria', 'array')
             ->setAllowedTypes('filters', 'array')
-            ->setAllowedTypes('menu', 'array')
+            ->setAllowedTypes('menus', [
+                'array',
+                'boolean',
+            ])
         ;
     }
 
@@ -157,7 +160,7 @@ class ActionConfiguration extends Configuration
             ->setNormalizer('route', $this->getRouteNormalizer())
             ->setNormalizer('load_strategy', $this->getLoadStrategyNormalizer())
             ->setNormalizer('criteria', $this->getCriteriaNormalizer())
-            ->setNormalizer('menu', $this->getMenuNormalizer())
+            ->setNormalizer('menus', $this->getMenuNormalizer())
             ->setNormalizer('batch', $this->getBatchNormalizer())
         ;
     }
