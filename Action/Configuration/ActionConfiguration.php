@@ -170,7 +170,7 @@ class ActionConfiguration extends Configuration
      */
     protected function getFieldsNormalizer()
     {
-        return function (Options $options, $fields) {
+        return function(Options $options, $fields) {
             $normalizedFields = [];
 
             foreach ($fields as $name => $field) {
@@ -193,7 +193,7 @@ class ActionConfiguration extends Configuration
      */
     protected function getOrderNormalizer()
     {
-        return function (Options $options, $order) {
+        return function(Options $options, $order) {
             foreach ($order as $field => $sort) {
 
                 if (!is_string($sort) || !is_string($field) || !in_array(strtolower($sort), ['asc', 'desc'])) {
@@ -216,7 +216,7 @@ class ActionConfiguration extends Configuration
      */
     protected function getRouteNormalizer()
     {
-        return function (Options $options, $value) {
+        return function(Options $options, $value) {
             if (!$value) {
                 // if no route was provided, it should be linked to an Admin
                 if (!$this->admin) {
@@ -241,7 +241,7 @@ class ActionConfiguration extends Configuration
      */
     protected function getLoadStrategyNormalizer()
     {
-        return function (Options $options, $value) {
+        return function(Options $options, $value) {
             if (!$value) {
                 if ($this->actionName == 'create') {
                     $value = AdminInterface::LOAD_STRATEGY_NONE;
@@ -264,7 +264,7 @@ class ActionConfiguration extends Configuration
      */
     protected function getMenuNormalizer()
     {
-        return function (Options $options, $menus) {
+        return function(Options $options, $menus) {
             // set default to an array
             if ($menus === false) {
                 $menus = [];
@@ -282,7 +282,7 @@ class ActionConfiguration extends Configuration
      */
     protected function getCriteriaNormalizer()
     {
-        return function (Options $options, $value) {
+        return function(Options $options, $value) {
             if (!$value) {
                 $idActions = [
                     'edit',
@@ -308,7 +308,7 @@ class ActionConfiguration extends Configuration
      */
     protected function getBatchNormalizer()
     {
-        return function (Options $options, $batch) {
+        return function(Options $options, $batch) {
             // if batch is not activated, no more checks should be done
             if ($batch === false) {
                 return $batch;
