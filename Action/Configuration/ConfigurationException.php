@@ -7,11 +7,17 @@ use LAG\AdminBundle\Admin\AdminInterface;
 
 class ConfigurationException extends Exception
 {
-    public function __construct($message, $actionName, AdminInterface $admin)
+    public function __construct($message, $actionName, AdminInterface $admin = null)
     {
+        if (null !== $admin) {
+            $adminName = $admin->getName();
+        } else {
+            $adminName = 'unknown';
+        }
+
         $message .= sprintf(
             ', for Admin %s and action %s',
-            $admin->getName(),
+            $adminName,
             $actionName
         );
 
