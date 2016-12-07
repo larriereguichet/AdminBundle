@@ -9,11 +9,12 @@ services:
         arguments:
             - '%lag.admins%'
             - '@event_dispatcher'
-            - '@doctrine.orm.entity_manager'
             - '@lag.admin.configuration_factory'
             - '@lag.admin.action_factory'
             - '@lag.admin.message_handler'
             - '@lag.admin.registry'
+            - '@lag.admin.request_filter_factory'
+            - '@lag.admin.data_providers_factory'
 
     lag.admin.action_factory:
         class: LAG\AdminBundle\Action\Factory\ActionFactory
@@ -41,3 +42,11 @@ services:
             - '@lag.admin.registry'
             - '@lag.admin.configuration_factory'
             - '@translator'
+
+    lag.admin.request_filter_factory:
+        class: LAG\AdminBundle\Filter\Factory\RequestFilterFactory
+
+    lag.admin.data_providers_factory:
+        class: LAG\AdminBundle\DataProvider\Factory\DataProviderFactory
+        arguments:
+            - '@doctrine.orm.entity_manager'

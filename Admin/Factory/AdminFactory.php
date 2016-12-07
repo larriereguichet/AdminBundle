@@ -2,23 +2,21 @@
 
 namespace LAG\AdminBundle\Admin\Factory;
 
-use Doctrine\ORM\EntityManager;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Admin\Event\AdminCreatedEvent;
 use LAG\AdminBundle\Admin\Event\AdminCreateEvent;
 use LAG\AdminBundle\Admin\Event\BeforeConfigurationEvent;
 use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
-use LAG\AdminBundle\DataProvider\DataProvider;
-use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
 use Exception;
+use LAG\AdminBundle\DataProvider\DataProviderInterface;
+use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
+use LAG\AdminBundle\Filter\Factory\RequestFilterFactory;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
-use LAG\AdminBundle\Repository\RepositoryInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -39,24 +37,12 @@ class AdminFactory
     protected $eventDispatcher;
 
     /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
      * @var ConfigurationFactory
      */
     protected $configurationFactory;
 
     /**
-     * User custom data provider, indexed by service id
-     *
-     * @var ParameterBagInterface
-     */
-    protected $dataProviders;
-
-    /**
-     * @var array
+     * @var AdminConfiguration[]
      */
     protected $adminConfigurations;
 
@@ -73,36 +59,48 @@ class AdminFactory
     /**
      * @var Registry
      */
-    protected $registry;
+    protected $adminRegistry;
+
+    /**
+     * @var RequestFilterFactory
+     */
+    protected $requestFilterFactory;
+
+    /**
+     * @var DataProviderFactory
+     */
+    protected $dataProviderFactory;
 
     /**
      * AdminFactory constructor.
      *
      * @param array $adminConfigurations
      * @param EventDispatcherInterface $eventDispatcher
-     * @param EntityManager $entityManager
      * @param ConfigurationFactory $configurationFactory
      * @param ActionFactory $actionFactory
      * @param MessageHandlerInterface $messageHandler
-     * @param Registry $registry
+     * @param Registry $adminRegistry
+     * @param RequestFilterFactory $requestFilterFactory
+     * @param DataProviderFactory $dataProviderFactory
      */
     public function __construct(
         array $adminConfigurations,
         EventDispatcherInterface $eventDispatcher,
-        EntityManager $entityManager,
         ConfigurationFactory $configurationFactory,
         ActionFactory $actionFactory,
         MessageHandlerInterface $messageHandler,
-        Registry $registry
+        Registry $adminRegistry,
+        RequestFilterFactory $requestFilterFactory,
+        DataProviderFactory $dataProviderFactory
     ) {
         $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
         $this->configurationFactory = $configurationFactory;
         $this->adminConfigurations = $adminConfigurations;
         $this->actionFactory = $actionFactory;
         $this->messageHandler = $messageHandler;
-        $this->dataProviders = new ParameterBag();
-        $this->registry = $registry;
+        $this->adminRegistry = $adminRegistry;
+        $this->requestFilterFactory = $requestFilterFactory;
+        $this->dataProviderFactory = $dataProviderFactory;
     }
 
     /**
@@ -135,7 +133,7 @@ class AdminFactory
             // create Admin object and add it to the registry
             $admin = $this->create($name, $event->getAdminConfiguration());
             $this
-                ->registry
+                ->adminRegistry
                 ->add($admin);
 
             // dispatch post-create event
@@ -168,13 +166,19 @@ class AdminFactory
             $adminConfiguration->getParameter('data_provider')
         );
 
+        // retrieve a request filter
+        $requestFilter = $this
+            ->requestFilterFactory
+            ->create($adminConfiguration);
+
         // create Admin object
         $admin = new Admin(
             $name,
             $dataProvider,
             $adminConfiguration,
             $this->messageHandler,
-            $this->eventDispatcher
+            $this->eventDispatcher,
+            $requestFilter
         );
 
         // adding actions
@@ -184,19 +188,6 @@ class AdminFactory
         }
 
         return $admin;
-    }
-
-    /**
-     * Add user custom repositories (called in the repository compiler pass), to avoid injecting the service container
-     *
-     * @param string $name
-     * @param DataProviderInterface $dataProvider
-     */
-    public function addDataProvider($name, DataProviderInterface $dataProvider)
-    {
-        $this
-            ->dataProviders
-            ->set($name, $dataProvider);
     }
 
     /**
@@ -212,7 +203,7 @@ class AdminFactory
      */
     public function getRegistry()
     {
-        return $this->registry;
+        return $this->adminRegistry;
     }
 
     /**
@@ -238,41 +229,14 @@ class AdminFactory
      *
      * @param string $entityClass
      * @param string|null $name
-     * @return DataProvider|mixed
+     * @return DataProviderInterface
      * @throws Exception
      */
     protected function getDataProvider($entityClass, $name = null)
     {
-        // create or get repository according to the configuration
-        if ($name) {
-            // removing arobase if exists
-            if (substr($name, 0, 1) == '@') {
-                $name = substr($name, 1);
-            }
-
-            // custom data provider class must be loaded by the compiler pass
-            if (!$this->dataProviders->has($name)) {
-                throw new Exception(sprintf(
-                    'Data provider %s not found. Did you add the @data_provider tag in your service ?',
-                    $name
-                ));
-            }
-            $dataProvider = $this
-                ->dataProviders
-                ->get($name);
-        } else {
-            // no data provider is configured, we create a new one
-            $repository = $this
-                ->entityManager
-                ->getRepository($entityClass);
-
-            if (!($repository instanceof RepositoryInterface)) {
-                $repositoryClass = get_class($repository);
-                throw new Exception("Repository {$repositoryClass} should implements ".RepositoryInterface::class);
-            }
-            $dataProvider = new DataProvider($repository);
-        }
-        return $dataProvider;
+        return $this
+            ->dataProviderFactory
+            ->get($name, $entityClass);
     }
 
 }

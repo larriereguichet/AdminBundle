@@ -72,4 +72,11 @@ interface ActionInterface
      * @return bool
      */
     public function isPaginationRequired();
+
+    /**
+     * Return true if the Action requires the loading of one or more entities.
+     *
+     * @return bool
+     */
+    public function isLoadingRequired();
 }

@@ -6,9 +6,7 @@ use Pagerfanta\Pagerfanta;
 
 trait AdminTrait
 {
-    use EntityLabelTrait {
-        getEntityLabel as parentEntityLabel;
-    }
+    use EntityLabelTrait;
     use TranslationKeyTrait;
 
     /**
@@ -17,6 +15,8 @@ trait AdminTrait
     protected $pager;
 
     /**
+     * Return the current unique entity.
+     *
      * @return object
      */
     public abstract function getUniqueEntity();
@@ -35,11 +35,8 @@ trait AdminTrait
      *
      * @return string
      */
-    public function getEntityLabel()
+    public function getUniqueEntityLabel()
     {
-        $entity = $this->getUniqueEntity();
-        $label = $this->parentEntityLabel($entity);
-
-        return $label;
+        return $this->getEntityLabel($this->getUniqueEntity());
     }
 }

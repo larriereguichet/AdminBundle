@@ -3,37 +3,37 @@
 namespace LAG\AdminBundle\Filter;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
-class PagerfantaFilter
+class PagerfantaFilter extends RequestFilter
 {
+    /**
+     * The current page that should be retrieved by the pager
+     *
+     * @var int
+     */
+    protected $currentPage = 1;
+
     /**
      * Filter request
      *
      * @param Request $request
-     * @return ParameterBag
      */
     public function filter(Request $request)
     {
-        $filteredValues = new ParameterBag();
-        // order column, like "name"
-        $order = $request->get('order');
-        // sort value, asc or desc
-        $sort = $request->get('sort');
-        // page number, like 2
-        $page = $request->get('page');
+        if ($request->get('page')) {
+            $this->currentPage = $request->get('page');
+        }
+        // filter normal request parameters
+        parent::filter($request);
+    }
 
-        if ($order) {
-            if (!$sort) {
-                $sort = 'asc';
-            }
-            $filteredValues->set('order', [
-                $sort => $order
-            ]);
-        }
-        if ($page) {
-            $filteredValues->set('page', $page);
-        }
-        return $filteredValues;
+    /**
+     * Return the current page that should be retrieved by the pager
+     *
+     * @return int
+     */
+    public function getCurrentPage()
+    {
+        return $this->currentPage;
     }
 }

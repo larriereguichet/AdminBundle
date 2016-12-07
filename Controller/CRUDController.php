@@ -6,7 +6,6 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Form\Handler\ListFormHandler;
 use LAG\AdminBundle\Form\Type\AdminListType;
 use LAG\AdminBundle\Form\Type\BatchActionType;
-use BlueBear\BaseBundle\Behavior\ControllerTrait;
 use Exception;
 use LAG\AdminBundle\Form\Type\DeleteType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -24,8 +23,6 @@ use Symfony\Component\Security\Core\Role\Role;
  */
 class CRUDController extends Controller
 {
-    use ControllerTrait;
-
     /**
      * Generic list action.
      *
@@ -51,7 +48,7 @@ class CRUDController extends Controller
             'action' => $admin->getCurrentAction(),
         ];
 
-        // if batch are configured, we handle a list of checboxes
+        // if batch are configured, we handle a list of checkboxes
         if ($batchActions) {
             // creating list form
             $form = $this->createForm(AdminListType::class, [
@@ -66,18 +63,25 @@ class CRUDController extends Controller
                 // get ids and batch action from list form data
                 $formHandler = new ListFormHandler();
                 $data = $formHandler->handle($form);
-                $batchForm = $this->createForm(BatchActionType::class, [
-                    'batch_action' => $data['batch_action'],
-                    'entity_ids' => $data['ids']
-                ], [
-                    'labels' => $data['labels']
-                ]);
 
-                // render batch view
-                return $this->render('LAGAdminBundle:CRUD:batch.html.twig', [
-                    'admin' => $admin,
-                    'form' => $batchForm->createView()
-                ]);
+                if (count($data['ids'])) {
+                    $batchForm = $this->createForm(BatchActionType::class, [
+                        'batch_action' => $data['batch_action'],
+                        'entity_ids' => $data['ids']
+                    ], [
+                        'labels' => $data['labels']
+                    ]);
+
+                    // render batch view
+                    return $this->render('LAGAdminBundle:CRUD:batch.html.twig', [
+                        'admin' => $admin,
+                        'form' => $batchForm->createView()
+                    ]);
+                } else {
+                    $this
+                        ->addFlash('info', 'lag.admin.batch_no_entities');
+                }
+
             }
             $viewParameters['form'] = $form->createView();
         }
@@ -121,7 +125,7 @@ class CRUDController extends Controller
      *
      * @Template("LAGAdminBundle:CRUD:edit.html.twig")
      * @param Request $request
-     * @return array
+     * @return array|RedirectResponse
      */
     public function createAction(Request $request)
     {
@@ -232,6 +236,19 @@ class CRUDController extends Controller
             'admin' => $admin,
             'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * Throw a 404 Exception if $boolean is false or null
+     *
+     * @param $boolean
+     * @param string $message
+     */
+    protected function forward404Unless($boolean, $message = '404 Not Found')
+    {
+        if (!$boolean) {
+            throw $this->createNotFoundException($message);
+        }
     }
 
     /**

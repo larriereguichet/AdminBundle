@@ -1,6 +1,6 @@
 <?php
 
-namespace BlueBear\AdminBundle\Tests\AdminBundle\DataProvider;
+namespace LAG\AdminBundle\Tests\AdminBundle\DataProvider;
 
 use LAG\AdminBundle\DataProvider\DataProvider;
 use LAG\AdminBundle\Tests\AdminTestBase;

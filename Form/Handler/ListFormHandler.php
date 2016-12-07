@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Form\Handler;
 
-use BlueBear\BaseBundle\Entity\Behaviors\Id;
 use LAG\AdminBundle\Admin\Behaviors\EntityLabelTrait;
 use Symfony\Component\Form\FormInterface;
 
@@ -50,7 +49,7 @@ class ListFormHandler
     protected function getLabels($entities)
     {
         $labels = [];
-        /** @var Id $entity */
+
         foreach ($entities as $entity) {
             $labels[$entity->getId()] = $this->getEntityLabel($entity);
         }

@@ -56,7 +56,7 @@ interface AdminInterface
      * @param null $limit
      * @param null $offset
      */
-    public function load(array $criteria, $orderBy = [], $limit = null, $offset = null);
+    public function load(array $criteria, array $orderBy = [], $limit = null, $offset = null);
 
     /**
      * Save loaded entities.
@@ -146,10 +146,10 @@ interface AdminInterface
     public function isActionGranted($actionName, array $roles);
 
     /**
-     * Try to find a property to get a label from an entity. If found, it returns the property value through the
+     * Try to find a property to get a label from an unique entity. If found, it returns the property value through the
      * property accessor.
      *
      * @return string
      */
-    public function getEntityLabel();
+    public function getUniqueEntityLabel();
 }
