@@ -237,7 +237,7 @@ Your admin is now ready!
                 routing_url_pattern: custom/planet/{admin}/{action}
                 routing_name_pattern: tauntaun.{admin}.{action}
                 # Your custom controller (can extends CRUDController to ease Admin management)
-                controller: MyLittleTaunTaunBundle:MyController
+                controller: MyLittleTaunTaunBundle:TaunTaun
                 max_per_page: 5
                 # Should implements DataProviderInterface
                 data_provider: 'my.custom.data_provider.service'
