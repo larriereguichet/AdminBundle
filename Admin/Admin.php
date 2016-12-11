@@ -268,7 +268,7 @@ class Admin implements AdminInterface
             $this
                 ->messageHandler
                 ->handleError(
-                    $this->generateMessageTranslationKey('lag.admin.deleted_errors'),
+                    $this->generateMessageTranslationKey('deleted_errors'),
                     "An error has occurred while deleting an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} "
                 );
             $success = false;
