@@ -1,0 +1,31 @@
+{% extends admin_config('base_template') %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-danger">
+                <div class="card-header border-danger bg-danger text-white">
+                    {{ 'lag.admin.delete_confirmation_title' | trans }}
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        {{ 'lag.admin.deleting' | trans({
+                            '%entity%' : admin.uniqueEntityLabel,
+                            '%id%': admin.uniqueEntity.id
+                        }) }}
+                    </h4>
+                    <p class="card-text">{{ 'lag.admin.delete_confirmation_warning' | trans }}</p>
+
+                    <div class="text-right button-list">
+                        <a href="{{ path(admin.generateRouteName('list')) }}" class="btn">
+                            <i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;{{ 'lag.admin.cancel' | trans }}</a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fa fa-remove"></i>&nbsp;{{ 'lag.admin.delete' | trans }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

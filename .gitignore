@@ -1,8 +1,6 @@
 bin
+!bin/sam.php
 build
-vendor
-phpunit.xml
-Tests/app/config/parameters.yml
-.sass-cache
-web
 composer.lock
+phpunit.xml
+vendor

@@ -9,15 +9,15 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="Tests/Fixtures/bootstrap.php">
+         bootstrap="src/LAG/AdminBundle/Tests/Fixtures/bootstrap.php">
     <testsuites>
         <testsuite name="AdminBundle Test Suite">
-            <directory>./Tests/</directory>
+            <directory>src/LAG/AdminBundle/Tests/</directory>
         </testsuite>
     </testsuites>
 
     <php>
-        <server name="KERNEL_DIR" value="./Tests/Fixtures/app" />
+        <server name="KERNEL_DIR" value="src/LAG/AdminBundle/Tests/Fixtures/app" />
     </php>
 
     <filter>

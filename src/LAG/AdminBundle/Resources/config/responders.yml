@@ -1,0 +1,9 @@
+services:
+    # Responders
+    lag.admin.action.list_responder:
+        class: LAG\AdminBundle\Action\Responder\ListResponder
+        autowire: true
+        tags: [responder]
+
+    lag.admin.responder.storage:
+        class: LAG\AdminBundle\Responder\Storage\ResponderStorage
