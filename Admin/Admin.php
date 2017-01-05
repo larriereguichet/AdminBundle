@@ -21,71 +21,72 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Traversable;
 
 class Admin implements AdminInterface
 {
     use AdminTrait;
-
+    
     /**
      * Entities collection.
      *
      * @var ArrayCollection
      */
     protected $entities;
-
+    
     /**
      * @var MessageHandlerInterface
      */
     protected $messageHandler;
-
+    
     /**
      * @var EntityManagerInterface
      */
     protected $entityManager;
-
+    
     /**
      * @var DataProviderInterface
      */
     protected $dataProvider;
-
+    
     /**
      * Admin configuration object
      *
      * @var AdminConfiguration
      */
     protected $configuration;
-
+    
     /**
      * Admin configured actions
      *
      * @var ActionInterface[]
      */
     protected $actions = [];
-
+    
     /**
      * Admin current action. It will be set after calling the handleRequest()
      *
      * @var ActionInterface
      */
     protected $currentAction;
-
+    
     /**
      * Admin name
      *
      * @var string
      */
     protected $name;
-
+    
     /**
      * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
-
+    
     /**
      * @var RequestFilterInterface
      */
     protected $requestFilter;
-
+    
     /**
      * Admin constructor.
      *
@@ -112,7 +113,7 @@ class Admin implements AdminInterface
         $this->entities = new ArrayCollection();
         $this->requestFilter = $requestFilter;
     }
-
+    
     /**
      * Load entities and set current action according to request.
      *
@@ -125,14 +126,14 @@ class Admin implements AdminInterface
     {
         // set current action
         $this->currentAction = $this->getAction($request->get('_route_params')['_action']);
-
+        
         // check if user is logged have required permissions to get current action
         $this->checkPermissions($user);
-
+        
         $actionConfiguration = $this
             ->currentAction
             ->getConfiguration();
-
+        
         // configure the request filter with the action and admin configured parameters
         $this
             ->requestFilter
@@ -141,12 +142,12 @@ class Admin implements AdminInterface
                 $actionConfiguration->getParameter('order'),
                 $this->configuration->getParameter('max_per_page')
             );
-
+        
         // filter the request with the configured criteria, order and max_per_page parameter
         $this
             ->requestFilter
             ->filter($request);
-
+        
         // load entities according to action and request
         $this->load(
             $this->requestFilter->getCriteria(),
@@ -155,7 +156,7 @@ class Admin implements AdminInterface
             $this->requestFilter->getCurrentPage()
         );
     }
-
+    
     /**
      * Check if user is allowed to be here
      *
@@ -174,19 +175,19 @@ class Admin implements AdminInterface
         $actionName = $this
             ->getCurrentAction()
             ->getName();
-
+        
         if (!$this->isActionGranted($actionName, $roles)) {
             $rolesStringArray = [];
-
+            
             foreach ($roles as $role) {
-
+                
                 if ($role instanceof Role) {
                     $rolesStringArray[] = $role->getRole();
                 } else {
                     $rolesStringArray[] = $role;
                 }
             }
-
+            
             $message = sprintf('User with roles %s not allowed for action "%s"',
                 implode(', ', $rolesStringArray),
                 $actionName
@@ -194,7 +195,7 @@ class Admin implements AdminInterface
             throw new NotFoundHttpException($message);
         }
     }
-
+    
     /**
      * Create and return a new entity.
      *
@@ -206,15 +207,15 @@ class Admin implements AdminInterface
         $entity = $this
             ->dataProvider
             ->create();
-
+        
         // add it to the collection
         $this
             ->entities
             ->add($entity);
-
+        
         return $entity;
     }
-
+    
     /**
      * Save entity via admin manager. Error are catch, logged and a flash message is added to session
      *
@@ -244,7 +245,7 @@ class Admin implements AdminInterface
         }
         return $success;
     }
-
+    
     /**
      * Remove an entity with data provider
      *
@@ -267,14 +268,14 @@ class Admin implements AdminInterface
             $this
                 ->messageHandler
                 ->handleError(
-                    $this->generateMessageTranslationKey('lag.admin.deleted_errors'),
+                    $this->generateMessageTranslationKey('deleted_errors'),
                     "An error has occurred while deleting an entity : {$e->getMessage()}, stackTrace: {$e->getTraceAsString()} "
                 );
             $success = false;
         }
         return $success;
     }
-
+    
     /**
      * Generate a route for admin and action name (like lag.admin.my_admin)
      *
@@ -299,10 +300,10 @@ class Admin implements AdminInterface
         // replace admin and action name in pattern
         $routeName = str_replace('{admin}', Container::underscore($this->getName()), $routingPattern);
         $routeName = str_replace('{action}', $actionName, $routeName);
-
+        
         return $routeName;
     }
-
+    
     /**
      * Load entities according to the given criteria and the current action configuration.
      *
@@ -316,16 +317,16 @@ class Admin implements AdminInterface
     {
         $currentAction = $this->getCurrentAction();
         $currentActionConfiguration = $currentAction->getConfiguration();
-
+        
         // some action, such as create, does not require the entities to be loaded
         if (!$currentAction->isLoadingRequired()) {
             return;
         }
         $pager = $currentActionConfiguration->getParameter('pager');
-
+        
         if ($currentAction->isPaginationRequired() && $pager) {
             $loadStrategy = $currentActionConfiguration->getParameter('load_strategy');
-
+            
             // only pagerfanta adapter is yet supported
             if ('pagerfanta' !== $pager) {
                 throw new AdminException(
@@ -345,10 +346,10 @@ class Admin implements AdminInterface
             // load entities using a pager
             $entities = $this->loadPaginate($criteria, $orderBy, $limit, $offset);
         } else {
-            // load using the data provider
-            $entities = $this->loadWithoutPagination($criteria, $orderBy, $limit, $offset);
+            // load using the data provider without pagination data
+            $entities = $this->loadWithoutPagination($criteria, $orderBy);
         }
-
+        
         // the data provider should return an array or a collection of entities.
         if (!is_array($entities) && !$entities instanceof Collection) {
             throw new AdminException(
@@ -358,16 +359,16 @@ class Admin implements AdminInterface
                 $this
             );
         }
-
+        
         // if an array is provided, transform it to a collection to be more convenient
         if (is_array($entities)) {
             $entities = new ArrayCollection($entities);
         }
-
+        
         // load the entities into the Admin
         $this->entities = $entities;
     }
-
+    
     /**
      * Return loaded entities
      *
@@ -377,7 +378,7 @@ class Admin implements AdminInterface
     {
         return $this->entities;
     }
-
+    
     /**
      * Return entity for current admin. If entity does not exist, it throws an exception.
      *
@@ -397,7 +398,7 @@ class Admin implements AdminInterface
         }
         return $this->entities->first();
     }
-
+    
     /**
      * Return admin name
      *
@@ -407,7 +408,7 @@ class Admin implements AdminInterface
     {
         return $this->name;
     }
-
+    
     /**
      * Return true if current action is granted for user.
      *
@@ -419,7 +420,7 @@ class Admin implements AdminInterface
     public function isActionGranted($actionName, array $roles)
     {
         $isGranted = array_key_exists($actionName, $this->actions);
-
+        
         // if action exists
         if ($isGranted) {
             $isGranted = false;
@@ -427,7 +428,7 @@ class Admin implements AdminInterface
             $action = $this->actions[$actionName];
             // checking roles permissions
             foreach ($roles as $role) {
-
+                
                 if ($role instanceof Role) {
                     $role = $role->getRole();
                 }
@@ -436,10 +437,10 @@ class Admin implements AdminInterface
                 }
             }
         }
-
+        
         return $isGranted;
     }
-
+    
     /**
      * @return ActionInterface[]
      */
@@ -447,7 +448,7 @@ class Admin implements AdminInterface
     {
         return $this->actions;
     }
-
+    
     /**
      * @return integer[]
      */
@@ -455,7 +456,7 @@ class Admin implements AdminInterface
     {
         return array_keys($this->actions);
     }
-
+    
     /**
      * @param $name
      * @return ActionInterface
@@ -468,10 +469,10 @@ class Admin implements AdminInterface
                 "Invalid action name \"{$name}\" for admin '{$this->getName()}'. Check your configuration"
             );
         }
-
+        
         return $this->actions[$name];
     }
-
+    
     /**
      * Return if an action with specified name exists form this admin.
      *
@@ -482,7 +483,7 @@ class Admin implements AdminInterface
     {
         return array_key_exists($name, $this->actions);
     }
-
+    
     /**
      * @param ActionInterface $action
      * @return void
@@ -491,7 +492,7 @@ class Admin implements AdminInterface
     {
         $this->actions[$action->getName()] = $action;
     }
-
+    
     /**
      * Return the current action or an exception if it is not set.
      *
@@ -506,10 +507,10 @@ class Admin implements AdminInterface
                 'Current action is null. You should initialize it (with handleRequest method for example)'
             );
         }
-
+        
         return $this->currentAction;
     }
-
+    
     /**
      * Return if the current action has been initialized and set.
      *
@@ -519,7 +520,7 @@ class Admin implements AdminInterface
     {
         return ($this->currentAction instanceof ActionInterface);
     }
-
+    
     /**
      * Return admin configuration object.
      *
@@ -529,7 +530,7 @@ class Admin implements AdminInterface
     {
         return $this->configuration;
     }
-
+    
     /**
      * Return a translation key for a message according to the Admin's translation pattern.
      *
@@ -544,7 +545,7 @@ class Admin implements AdminInterface
             $this->name
         );
     }
-
+    
     /**
      * Load entities using PagerFanta.
      *
@@ -553,7 +554,7 @@ class Admin implements AdminInterface
      * @param int $limit
      * @param int $offset
      *
-     * @return array|\Traversable
+     * @return array|Traversable
      */
     protected function loadPaginate(array $criteria, array $orderBy, $limit, $offset)
     {
@@ -563,35 +564,24 @@ class Admin implements AdminInterface
         $this->pager = new Pagerfanta($adapter);
         $this->pager->setMaxPerPage($limit);
         $this->pager->setCurrentPage($offset);
-
+        
         return $this
             ->pager
             ->getCurrentPageResults();
     }
-
+    
     /**
      * Load entities using to configured data provider.
      *
      * @param array $criteria
      * @param array $orderBy
-     * @param int $limit
-     * @param int $offset
      *
      * @return array|Collection
      */
-    protected function loadWithoutPagination(array $criteria, $orderBy, $limit, $offset)
+    protected function loadWithoutPagination(array $criteria, $orderBy)
     {
-        $currentAction = $this->getCurrentAction();
-        $currentActionConfiguration = $currentAction->getConfiguration();
-
-        // if the current action should retrieve only one entity, the offset should be zero
-        if ($currentActionConfiguration->getParameter('load_strategy') !== AdminInterface::LOAD_STRATEGY_MULTIPLE) {
-            $offset = 0;
-            $limit = 1;
-        }
-
         return $this
             ->dataProvider
-            ->findBy($criteria, $orderBy, $limit, $offset);
+            ->findBy($criteria, $orderBy, null, null);
     }
 }

@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Core\Role\Role;
@@ -28,7 +29,7 @@ class CRUDController extends Controller
      *
      * @Template("LAGAdminBundle:CRUD:list.html.twig")
      * @param Request $request
-     * @return array
+     * @return array|Response
      */
     public function listAction(Request $request)
     {

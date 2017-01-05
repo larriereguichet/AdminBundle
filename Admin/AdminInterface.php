@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Admin;
 use Exception;
 use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Field\Field\Collection;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -83,7 +84,7 @@ interface AdminInterface
     public function getName();
 
     /**
-     * @return mixed
+     * @return Collection|mixed
      */
     public function getEntities();
 

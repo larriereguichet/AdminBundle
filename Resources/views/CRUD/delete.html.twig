@@ -6,7 +6,7 @@
             <div class="well">
                 <form action="{{ path(admin.action('delete').configuration.getParameter('route'), {id: admin.uniqueEntity.id}) }}" method="post">
                     <div class="form-group">
-                        {{ 'lag.admin.deleting' | trans({'%entity%' : admin.entityLabel, '%id%': admin.uniqueEntity.id}) }}
+                        {{ 'lag.admin.deleting' | trans({'%entity%' : admin.uniqueEntityLabel, '%id%': admin.uniqueEntity.id}) }}
                     </div>
                     {{ form_rest(form) }}
                     <div class="form-group">
