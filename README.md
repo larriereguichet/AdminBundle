@@ -14,17 +14,17 @@ If you require *more flexibility*, you can easily override any part of the proce
 The purpose of the bundle is to provide an Admin interface with default configuration, and allows the user to add his
 specific need where he wants, and allow to implements any specific needs without any hassles.
 
+current version **v0.5**
 
 ## Features
 
-Version 0.4 :
 * Dynamic CRUD for your entities (no code generation)
 * Simple configuration in yml (look alike symfony1 generators.yml syntax)
 * List with pagination, sorting and batch remove (filters are coming)
-* Full translated
-* Main and left menu integration
+* Using Symfony translation system
+* Configurable menus
 * Fully customizable (use your own controllers, data providers or templates)
-* Bootstrap integration (can be disabled or override)
+* Bootstrap 3 integration (can be disabled or override)
 
 ## Installation
 ```
