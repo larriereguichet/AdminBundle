@@ -1,0 +1,38 @@
+services:
+    lag.admin.configuration_factory:
+        class: LAG\AdminBundle\Configuration\Factory\ConfigurationFactory
+        arguments:
+            - '%lag.admin.application_configuration%'
+
+    lag.admin.factory:
+        class: LAG\AdminBundle\Admin\Factory\AdminFactory
+        autowire: true
+        arguments:
+            - '%lag.admins%'
+            - '@event_dispatcher'
+
+    lag.admin.action_factory:
+        class: LAG\AdminBundle\Action\Factory\ActionFactory
+        arguments:
+            - '@lag.admin.configuration_factory'
+            - '@event_dispatcher'
+
+    lag.admin.field_factory:
+        class: LAG\AdminBundle\Field\Factory\FieldFactory
+        arguments:
+            - '@lag.admin.configuration_factory'
+            - '@translator'
+            - '@twig'
+
+    lag.admin.menu_factory:
+        class: LAG\AdminBundle\Menu\Factory\MenuFactory
+        arguments:
+            - '@knp_menu.factory'
+            - '@lag.admin.registry'
+            - '@lag.admin.configuration_factory'
+            - '@translator'
+
+    lag.admin.data_providers_factory:
+        class: LAG\AdminBundle\DataProvider\Factory\DataProviderFactory
+        arguments:
+            - '@doctrine.orm.entity_manager'

@@ -1,14 +1,12 @@
 language: php
 
 php:
-    # temporary remove php 5.6 from Travis build as composer consumes too much memory and fails the build
-    #- 5.6
+    - 5.6
     - 7.0
-    - hhvm
 
 before_install:
     - mysql -e "create database IF NOT EXISTS admin_bundle_test;"
-    - cp Tests/Fixtures/app/config/parameters.yml.dist Tests/Fixtures/app/config/parameters.yml
+    - cp src/LAG/AdminBundle/Tests/Fixtures/app/config/parameters.yml.dist src/LAG/AdminBundle/Tests/Fixtures/app/config/parameters.yml
 
 install:
     - composer install --profile --optimize-autoloader
