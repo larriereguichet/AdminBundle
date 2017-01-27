@@ -38,14 +38,10 @@ class TemplateSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => 'kernelView',
+            KernelEvents::CONTROLLER => 'kernelView',
         ];
     }
-
-    /**
-     *
-     * @return null
-     */
+    
     public function kernelView()
     {
         $this->twig->addGlobal('config', $this->configuration);
