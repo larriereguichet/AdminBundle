@@ -25,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Twig_Loader_Array;
 
 class LAGAdminExtensionTest extends AdminTestBase
 {
@@ -40,7 +41,7 @@ class LAGAdminExtensionTest extends AdminTestBase
                 'application' => []
             ]
         ], $container);
-        $this->assertCount(28, $container->getDefinitions());
+        $this->assertCount(29, $container->getDefinitions());
 
         $eventDispatcherExtension = new FrameworkExtension();
         $eventDispatcherExtension->load([], $container);
@@ -107,18 +108,23 @@ class LAGAdminExtensionTest extends AdminTestBase
      */
     protected function getWorkingContainer()
     {
-        $generic = new Definition();
-        $generic->setClass(stdClass::class);
-        $fileLocator = new Definition();
-        $fileLocator->setClass(FileLocator::class);
-        $templateNameParser = new Definition();
-        $templateNameParser->setClass(TemplateNameParser::class);
-        $templateNameParser->addArgument($this->createMock(KernelInterface::class));
-        $logger = new Definition();
-        $logger->setClass(Logger::class);
-        $logger->addArgument('default');
-        $session= new Definition();
-        $session->setClass(Session::class);
+        $kernel = $this
+            ->getMockBuilder(KernelInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        $generic = new Definition(stdClass::class);
+        $fileLocator = new Definition(FileLocator::class);
+        
+        $templateNameParser = new Definition(TemplateNameParser::class, [
+            $kernel,
+        ]);
+        
+        $logger = new Definition(Logger::class, [
+            'default'
+        ]);
+        $session= new Definition(Session::class);
+        $twigLoader = new Definition(Twig_Loader_Array::class);
 
         $entityManager = new Definition();
         $entityManager->setClass(FakeEntityManager::class);
@@ -130,6 +136,7 @@ class LAGAdminExtensionTest extends AdminTestBase
         $container->setParameter('kernel.charset', 'utf8');
         $container->setParameter('kernel.secret', 'MyLittleSecret');
         $container->setParameter('kernel.bundles', []);
+        $container->setParameter('kernel.bundles_metadata', []);
         $container->setParameter('kernel.environment', 'prod');
 
         $container->setDefinitions([
@@ -141,6 +148,7 @@ class LAGAdminExtensionTest extends AdminTestBase
             'form.factory' => $generic,
             'templating.locator' => $fileLocator,
             'templating.name_parser' => $templateNameParser,
+            'twig.loader' => $twigLoader,
         ]);
 
         return $container;

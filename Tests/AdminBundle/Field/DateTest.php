@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AdminBundle\Field;
+namespace LAG\AdminBundle\Tests\AdminBundle\Field;
 
 use DateTime;
 use LAG\AdminBundle\Field\Field\Date;
@@ -16,13 +16,19 @@ class DateTest extends AdminTestBase
             'format' => 'd/m/Y',
         ];
         $resolver = new OptionsResolver();
-
+    
+        $twig = $this
+            ->getMockBuilder(\Twig_Environment::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        
         $linkField = new Date();
         $linkField->setApplicationConfiguration($this->createApplicationConfiguration());
         $linkField->configureOptions($resolver);
         $linkField->setOptions($resolver->resolve($options));
         $linkField->setTranslator(new IdentityTranslator());
-        $linkField->setTwig($this->createTwigEnvironment());
+        $linkField->setTwig($twig);
 
         $now = new DateTime();
 
