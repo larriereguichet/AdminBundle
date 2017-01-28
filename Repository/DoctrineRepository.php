@@ -17,7 +17,7 @@ abstract class DoctrineRepository extends EntityRepository implements Repository
     public function save($entity)
     {
         $this->_em->persist($entity);
-        $this->_em->flush($entity);
+        $this->_em->flush();
     }
     /**
      * Delete an entity.
@@ -27,6 +27,6 @@ abstract class DoctrineRepository extends EntityRepository implements Repository
     public function delete($entity)
     {
         $this->_em->remove($entity);
-        $this->_em->flush($entity);
+        $this->_em->flush();
     }
 }
