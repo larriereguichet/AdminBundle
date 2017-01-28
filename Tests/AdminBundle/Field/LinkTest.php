@@ -7,6 +7,7 @@ use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\IdentityTranslator;
 use Test\TestBundle\Entity\TestEntity;
+use Twig_Environment;
 
 class LinkTest extends AdminTestBase
 {
@@ -19,26 +20,40 @@ class LinkTest extends AdminTestBase
             ],
             'target' => '_blank',
             'title' => 'MyTitle',
-            'icon' => 'fa-test'
+            'icon' => 'fa-test',
+            'template' => 'LAGAdminBundle:Render:link.html.twig',
         ];
         $resolver = new OptionsResolver();
-
+    
+        $twig = $this
+            ->getMockBuilder(Twig_Environment::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with('LAGAdminBundle:Render:link.html.twig', [
+                'text' => 'test',
+                'route' => 'route_test',
+                'parameters' => $options['parameters'],
+                'target' => '_blank',
+                'url' => '',
+                'title' => 'MyTitle',
+                'icon' => 'fa-test',
+            ])
+            ->willReturn('<p>lol man</p>')
+        ;
+        
         $linkField = new Link();
         $linkField->setApplicationConfiguration($this->createApplicationConfiguration());
         $linkField->configureOptions($resolver);
         $linkField->setOptions($resolver->resolve($options));
         $linkField->setTranslator(new IdentityTranslator());
-        $linkField->setTwig($this->createTwigEnvironment());
+        $linkField->setTwig($twig);
         $linkField->setEntity(new TestEntity());
 
         $result = $linkField->render('test');
-
-        $this->assertEquals('LAGAdminBundle:Render:link.html.twig', $result['template']);
-        $this->assertEquals('test', $result['parameters']['text']);
-        $this->assertEquals('route_test', $result['parameters']['route']);
-        $this->assertEquals($options['parameters'], $result['parameters']['parameters']);
-        $this->assertEquals('_blank', $result['parameters']['target']);
-        $this->assertEquals('MyTitle', $result['parameters']['title']);
-        $this->assertEquals('fa-test', $result['parameters']['icon']);
+        $this->assertInternalType('string', $result);
     }
 }
