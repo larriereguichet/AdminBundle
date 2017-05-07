@@ -1,0 +1,12 @@
+{% if filterForm is defined %}
+    <form action="" method="get" class="form-inline">
+        <span class="text-danger">
+            {{ form_errors(filterForm) }}
+        </span>
+
+        {{ form_row(filterForm) }}
+
+        <a href="{{ path(admin.generateRouteName('list')) }}">{{ 'lag.admin.filter_reset' | trans }}</a>
+        <input type="submit" value="{{ 'lag.admin.filter' | trans }}" class="btn btn-default"/>
+    </form>
+{% endif %}

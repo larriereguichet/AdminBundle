@@ -16,17 +16,18 @@ If you require *more flexibility*, you can easily override any part of the proce
 The purpose of the bundle is to provide an Admin interface with default configuration, and allows the user to add his
 specific need where he wants, and allow to implements any specific needs without any hassles.
 
+current version **v1.0**
 
 ## Features
 
-Version 0.4.2 :
+Version 0.4 :
 * Dynamic CRUD for your entities (no code generation)
 * Simple configuration in yml (look alike symfony1 generators.yml syntax)
 * List with pagination, sorting and batch remove (filters are coming)
 * Full translated
 * Main and left menu integration
 * Fully customizable (use your own controllers, data providers or templates)
-* Bootstrap integration (can be disabled or override)
+* Bootstrap 3 integration (can be disabled or override)
 
 
 ## Installation
@@ -129,14 +130,14 @@ AdminBundle use a data provider to retrieve and save entities. If you do not pro
 It assumes that you have Doctrine repository implementing the `LAG\AdminBundle\Repository\RepositoryInterface`. It will
 add the save and delete method to your repository.
 
-Fortunately, the AdminBundle provide the `LAG\AdminBundle\Repository\DoctrineRepository` abstract repository class which
+Fortunately, the AdminBundle provide the `LAG\AdminBundle\Doctrine\Repository\DoctrineRepository` abstract repository class which
 implements those methods for you. All you have to do is to extend this class with your repository
 
 ```php
 
     namespace UniverseBundle\Repository;
 
-    use LAG\AdminBundle\Repository\DoctrineRepository;
+    use LAG\AdminBundle\Doctrine\Repository\DoctrineRepository;
 
     class PlanetRepository extends DoctrineRepository {
     
