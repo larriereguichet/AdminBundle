@@ -18,6 +18,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class MenuBuilderTest extends AdminTestBase
 {
+    public function testTmp()
+    {
+        // TODO remove
+        $this->assertTrue(true);
+    }
+    
 //    /**
 //     * Top and main menus creation SHOULD return an ItemInterface instance.
 //     */

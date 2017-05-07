@@ -35,5 +35,8 @@ class ActionCompilerPassTest extends AdminTestBase
         
         $compilerPass = new ActionCompilerPass();
         $compilerPass->process($builder);
+    
+        // everything went fine
+        $this->assertTrue(true);
     }
 }
