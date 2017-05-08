@@ -40,10 +40,10 @@
     "knplabs/knp-menu-bundle": "^2.1",
     "lag/array-utils": "^0.1",
     "twbs/bootstrap": "^3.3",
-    "twig/extensions": "^1.2",
-    "sensio/framework-extra-bundle": "~3.0",
+    "twig/extensions": ">=1.2",
+    "sensio/framework-extra-bundle": ">=3.0",
     "stfalcon/tinymce-bundle": "~2.0",
-    "symfony/monolog-bundle": "~2.4",
+    "symfony/monolog-bundle": ">=2.4",
     "symfony/symfony": "~3.0",
     "white-october/pagerfanta-bundle": "~1.0"
   },
