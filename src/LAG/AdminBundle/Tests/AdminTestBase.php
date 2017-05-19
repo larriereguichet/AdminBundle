@@ -451,6 +451,11 @@ class AdminTestBase extends WebTestCase
         return $configurationFactory;
     }
     
+    /**
+     * @param $class
+     *
+     * @return PHPUnit_Framework_MockObject_MockObject|mixed
+     */
     protected function getMockWithoutConstructor($class)
     {
         return $this
