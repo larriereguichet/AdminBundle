@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Twig_Loader_Array;
@@ -92,7 +93,6 @@ class LAGAdminExtensionTest extends AdminTestBase
     {
         // assert factories are rightly instanciate
         $this->assertInstanceOf(ConfigurationFactory::class, $container->get('lag.admin.configuration_factory'));
-        //$this->assertInstanceOf(AdminFactory::class, $container->get('lag.admin.factory'));
         $this->assertInstanceOf(ActionFactory::class, $container->get('lag.admin.action_factory'));
         $this->assertInstanceOf(FieldFactory::class, $container->get('lag.admin.field_factory'));
         $this->assertInstanceOf(MenuFactory::class, $container->get('lag.admin.menu_factory'));
@@ -134,7 +134,8 @@ class LAGAdminExtensionTest extends AdminTestBase
         $tokenStorage->setClass(TokenStorage::class);
     
         $formFactory = new Definition(FormFactoryInterface::class);
-        
+    
+        $router = new Definition(RouterInterface::class);
 
         $container = new ContainerBuilder();
         $container->setParameter('kernel.debug', false);
@@ -149,7 +150,7 @@ class LAGAdminExtensionTest extends AdminTestBase
         $container->setDefinitions([
             'doctrine.orm.entity_manager' => $entityManager,
             'doctrine' => $generic,
-            'router' => $generic,
+            'router' => $router,
             'logger' => $logger,
             'session' => $session,
             'form.factory' => $formFactory,

@@ -8,30 +8,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
-use Twig_Environment;
 
-class EditResponder implements ResponderInterface
+class EditResponder extends AbstractResponder
 {
-    use ResponderTrait;
-    
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-    
-    /**
-     * EditResponder constructor.
-     *
-     * @param Twig_Environment $twig
-     * @param RouterInterface  $router
-     */
-    public function __construct(Twig_Environment $twig, RouterInterface $router)
-    {
-        $this->twig = $twig;
-        $this->router = $router;
-    }
-    
     /**
      * @param ActionConfiguration $configuration
      * @param AdminInterface      $admin

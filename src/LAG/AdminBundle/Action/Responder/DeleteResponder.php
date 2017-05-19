@@ -7,27 +7,9 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
 
-class DeleteResponder implements ResponderInterface
+class DeleteResponder extends AbstractResponder
 {
-    use ResponderTrait;
-    
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-    
-    /**
-     * CreateResponder constructor.
-     *
-     * @param RouterInterface $router
-     */
-    public function __construct(RouterInterface $router)
-    {
-        $this->router = $router;
-    }
-    
     /**
      * @param ActionConfiguration $configuration
      * @param AdminInterface      $admin
