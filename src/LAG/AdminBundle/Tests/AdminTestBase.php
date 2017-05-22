@@ -16,7 +16,6 @@ use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
-use LAG\AdminBundle\Admin\Factory\FilterFactory;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Field\Factory\FieldFactory;
@@ -32,7 +31,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-
 
 class AdminTestBase extends WebTestCase
 {
@@ -423,19 +421,6 @@ class AdminTestBase extends WebTestCase
             ->getMock();
 
         return $fieldFactory;
-    }
-
-    /**
-     * @return FilterFactory|PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function mockFilterFactory()
-    {
-        $filterFactory = $this
-            ->getMockBuilder(FilterFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        return $filterFactory;
     }
 
     /**
