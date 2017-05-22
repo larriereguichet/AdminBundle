@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Doctrine\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Repository\RepositoryInterface;
+use LogicException;
 
 /**
  * Abstract doctrine repository
@@ -15,9 +16,12 @@ abstract class DoctrineRepository extends EntityRepository implements Repository
      * Save an entity.
      *
      * @param $entity
+     *
+     * @throws LogicException
      */
     public function save($entity)
     {
+        $this->validateEntity($entity);
         $this
             ->_em
             ->persist($entity)
@@ -34,6 +38,7 @@ abstract class DoctrineRepository extends EntityRepository implements Repository
      */
     public function delete($entity)
     {
+        $this->validateEntity($entity);
         $this
             ->_em
             ->remove($entity)
@@ -105,7 +110,7 @@ abstract class DoctrineRepository extends EntityRepository implements Repository
      * @param array        $criteria
      * @param array        $options
      */
-    private function addCriteria(QueryBuilder $queryBuilder, array $criteria, array $options)
+    protected function addCriteria(QueryBuilder $queryBuilder, array $criteria, array $options)
     {
         foreach ($criteria as $criterion => $value) {
             // default values
@@ -132,6 +137,15 @@ abstract class DoctrineRepository extends EntityRepository implements Repository
                 ->andWhere($whereString)
                 ->setParameter($criterion.'_value', $value)
             ;
+        }
+    }
+    
+    protected function validateEntity($entity)
+    {
+        if ($this->_entityName !== get_class($entity)) {
+            throw new LogicException(
+                'Only instances of "'.$this->_entityName.'" can be saved or removed in this repository'
+            );
         }
     }
 }
