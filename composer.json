@@ -34,7 +34,7 @@
     "doctrine/doctrine-bundle": "~1.2",
     "doctrine/doctrine-fixtures-bundle": "*",
     "doctrine/orm": "^2.5",
-    "dunglas/action-bundle": "^0.3.1",
+    "dunglas/action-bundle": "^0.3",
     "gedmo/doctrine-extensions": "^2.4",
     "johnkrovitch/configuration": "~1.0",
     "knplabs/knp-menu-bundle": "^2.1",
