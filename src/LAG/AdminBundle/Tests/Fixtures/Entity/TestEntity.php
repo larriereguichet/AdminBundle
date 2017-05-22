@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Tests\Entity;
+namespace LAG\AdminBundle\Tests\Fixtures\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -76,7 +76,6 @@ class TestEntity
 
     /**
      * @ORM\PrePersist()
-     * @return $this
      */
     public function setCreatedAt()
     {
