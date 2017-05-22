@@ -26,9 +26,9 @@
   ],
   "require": {
     "php": ">=5.5 || >=7.0",
-    "components/font-awesome": "^4.5",
-    "components/jquery": "^2.2",
-    "components/jqueryui": "^1.11",
+    "components/font-awesome": ">=4.5",
+    "components/jquery": ">=2.2",
+    "components/jqueryui": ">=1.11",
     "egeloen/ckeditor-bundle": "^4.0",
     "doctrine/data-fixtures": "*",
     "doctrine/doctrine-bundle": "~1.2",
