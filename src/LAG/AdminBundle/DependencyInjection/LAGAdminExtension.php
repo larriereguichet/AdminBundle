@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -26,24 +25,34 @@ class LAGAdminExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($builder, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-
-        if (!array_key_exists('application', $config)) {
-            throw new InvalidConfigurationException(
-                'Your section "application" is not found for AdminBundle configuration'
-            );
-        }
-        if (!array_key_exists('enable_extra_configuration', $config['application'])) {
-            $config['application']['enable_extra_configuration'] = true;
-        }
-        $builder->setParameter('lag.admins', $config['admins']);
-        $builder->setParameter('lag.menus', $config['menus']);
-        $builder->setParameter('lag.admin.application_configuration', $config['application']);
-        $builder->setParameter('lag.enable_extra_configuration', $config['application']['enable_extra_configuration']);
+    
+        $applicationConfig = [];
+        $adminsConfig = [];
+        $menusConfig = [];
+        $enableExtraConfig = true;
+        $translationPattern = null;
         
-        if (!array_key_exists('pattern', $config['application']['translation'])) {
-            $config['application']['translation']['pattern'] = null;
+        if (array_key_exists('application', $config)) {
+            if (array_key_exists('enable_extra_configuration', $config['application'])) {
+                $enableExtraConfig = $config['application']['enable_extra_configuration'];
+            }
+            if (array_key_exists('translation', $config['application']) &&
+                array_key_exists('pattern', $config['application']['translation'])) {
+                $translationPattern = $config['application']['translation']['pattern'];
+            }
+            $applicationConfig = $config['application'];
         }
-        $builder->setParameter('lag.translation_pattern', $config['application']['translation']['pattern']);
+        if (array_key_exists('admin', $config)) {
+            $adminsConfig = $config['admin'];
+        }
+        if (array_key_exists('menu', $config)) {
+            $menusConfig = $config['menu'];
+        }
+        $builder->setParameter('lag.admin.enable_extra_configuration', $enableExtraConfig);
+        $builder->setParameter('lag.admin.application_configuration', $applicationConfig);
+        $builder->setParameter('lag.admins', $adminsConfig);
+        $builder->setParameter('lag.menus', $menusConfig);
+        $builder->setParameter('lag.translation_pattern', $translationPattern);
     }
 
     /**
