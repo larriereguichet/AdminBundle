@@ -20,7 +20,7 @@ services:
         tags:
             - {name: kernel.event_subscriber}
         arguments:
-            - '%lag.enable_extra_configuration%'
+            - '%lag.admin.enable_extra_configuration%'
             - '@doctrine'
             - '@lag.admin.configuration_factory'
 
