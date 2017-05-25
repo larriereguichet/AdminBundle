@@ -16,7 +16,6 @@ use stdClass;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
 use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -61,16 +60,16 @@ class LAGAdminExtensionTest extends AdminTestBase
     }
 
     /**
-     * Load method should throw an exception if no application section was found.
+     * Load method should not throw an exception if no application section was found.
      */
     public function testLoadWithoutApplication()
     {
         $container = new ContainerBuilder();
         $extension = new LAGAdminExtension();
-
-        $this->assertExceptionRaised(InvalidConfigurationException::class, function () use ($extension, $container) {
-            $extension->load([], $container);
-        });
+    
+        $extension->load([], $container);
+        // no exception raised
+        $this->assertTrue(true);
     }
 
     /**
