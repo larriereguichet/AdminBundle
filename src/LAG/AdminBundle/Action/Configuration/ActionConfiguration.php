@@ -389,8 +389,8 @@ class ActionConfiguration extends Configuration
                     throw new ConfigurationException(
                         'Invalid filter name "'.$filter.'"',
                         $this->actionName,
-                        $this->admin->getName())
-                    ;
+                        $this->admin
+                    );
                 }
                 
                 // normalize string notation
