@@ -16,7 +16,7 @@ class EditResponder extends AbstractResponder
      * @param ActionConfiguration $configuration
      * @param AdminInterface      $admin
      * @param FormInterface       $form
-     * @param                     $submitButtonName
+     * @param string|null         $submitButtonName
      *
      * @return Response|RedirectResponse
      */
@@ -24,7 +24,7 @@ class EditResponder extends AbstractResponder
         ActionConfiguration $configuration,
         AdminInterface $admin,
         FormInterface $form,
-        $submitButtonName
+        $submitButtonName = null
     ) {
         $template = $configuration->getParameter('template');
         

@@ -62,17 +62,13 @@ class CreateResponderTest extends AdminTest
     
         $twig = $this->getMockWithoutConstructor(Twig_Environment::class);
         
-        $request = new Request([], [
-            'submit' => 'save',
-        ]);
-        
         $responder = new CreateResponder($routing, $twig);
         
         $response = $responder->respond(
             $configuration,
             $admin,
             $form,
-            $request
+            'save'
         );
     
         $this->assertInstanceOf(RedirectResponse::class, $response);
