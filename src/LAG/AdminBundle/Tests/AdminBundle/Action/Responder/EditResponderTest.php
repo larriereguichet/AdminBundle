@@ -62,20 +62,17 @@ class EditResponderTest extends AdminTest
         
         $twig = $this->getMockWithoutConstructor(Twig_Environment::class);
         
-        $request = new Request([], [
-            'submit' => 'save',
-        ]);
-        
         $responder = new EditResponder($routing, $twig);
         
         $response = $responder->respond(
             $configuration,
             $admin,
             $form,
-            $request
+            'save'
         );
         
         $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertEquals('http://test.fr', $response->getTargetUrl());
     }
     
     public function testRespondWithSubmit()
@@ -84,6 +81,7 @@ class EditResponderTest extends AdminTest
         $routing
             ->expects($this->atLeastOnce())
             ->method('generate')
+            ->with('list_route')
             ->willReturn('http://test.fr')
         ;
         
@@ -97,6 +95,12 @@ class EditResponderTest extends AdminTest
         ;
         
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin
+            ->expects($this->atLeastOnce())
+            ->method('generateRouteName')
+            ->with('list')
+            ->willReturn('list_route')
+        ;
         
         $form = $this->getMockWithoutConstructor(FormInterface::class);
         $form
@@ -112,17 +116,13 @@ class EditResponderTest extends AdminTest
         
         $twig = $this->getMockWithoutConstructor(Twig_Environment::class);
         
-        $request = new Request([], [
-            'submit' => 'submit_and_save',
-        ]);
-        
         $responder = new EditResponder($routing, $twig);
         
         $response = $responder->respond(
             $configuration,
             $admin,
             $form,
-            $request
+            'submit_and_save'
         );
         
         $this->assertInstanceOf(RedirectResponse::class, $response);

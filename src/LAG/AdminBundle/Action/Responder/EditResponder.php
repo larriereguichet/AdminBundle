@@ -6,36 +6,32 @@ use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class EditResponder extends AbstractResponder
 {
     /**
+     * Display the edit form and redirect if required when the form is submitted.
+     *
      * @param ActionConfiguration $configuration
      * @param AdminInterface      $admin
      * @param FormInterface       $form
-     * @param Request             $request
+     * @param                     $submitButtonName
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     public function respond(
         ActionConfiguration $configuration,
         AdminInterface $admin,
         FormInterface $form,
-        Request $request
+        $submitButtonName
     ) {
         $template = $configuration->getParameter('template');
         
         // if the form is submitted and validated, the user should be redirected
         if ($form->isSubmitted() && $form->isValid()) {
-            $submitButton = $request
-                ->request
-                ->get('submit')
-            ;
-            
             // if the save button is pressed, the user will stay on the edit view
-            if ('save' === $submitButton) {
+            if ('save' === $submitButtonName) {
                 $url = $this
                     ->router
                     ->generate($admin->generateRouteName('edit'), [
