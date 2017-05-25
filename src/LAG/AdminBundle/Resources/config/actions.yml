@@ -4,8 +4,6 @@ services:
         autowire: true
         arguments:
             - list
-        calls:
-            - ['setFilterFormBuilder', ['@lag.admin.filter_form_builder']]
 
     lag.admin.actions.create:
         class: LAG\AdminBundle\Action\CreateAction

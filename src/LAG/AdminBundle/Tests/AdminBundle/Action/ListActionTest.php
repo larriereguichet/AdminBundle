@@ -96,10 +96,10 @@ class ListActionTest extends AdminTestBase
         $action = new ListAction(
             'list',
             $formFactory,
-            $responder
+            $responder,
+            $builder
         );
         $action->setConfiguration($actionConfiguration);
-        $action->setFilterFormBuilder($builder);
         $action->setAdmin($admin);
         
         $action->__invoke($request);
