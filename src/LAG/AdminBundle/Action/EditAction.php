@@ -68,7 +68,7 @@ class EditAction extends Action
         // return a Response using the EditResponder
         return $this
             ->responder
-            ->respond($this->configuration, $this->admin, $form, $request)
+            ->respond($this->configuration, $this->admin, $form, $request->request->get('submit'))
         ;
     }
 }

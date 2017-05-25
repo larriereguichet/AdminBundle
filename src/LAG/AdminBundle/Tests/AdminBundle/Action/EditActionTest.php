@@ -57,7 +57,7 @@ class EditActionTest extends AdminTestBase
         $responder = $this->getMockWithoutConstructor(EditResponder::class);
         $responder
             ->method('respond')
-            ->with($actionConfiguration, $admin, $form, $request)
+            ->with($actionConfiguration, $admin, $form, null)
         ;
         
         $action = new EditAction(

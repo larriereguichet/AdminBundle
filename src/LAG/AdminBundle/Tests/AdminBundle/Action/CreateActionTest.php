@@ -51,7 +51,7 @@ class CreateActionTest extends AdminTestBase
         $responder
             ->expects($this->once())
             ->method('respond')
-            ->with($actionConfiguration, $admin, $form, $request)
+            ->with($actionConfiguration, $admin, $form, null)
         ;
         
         $action = new CreateAction(
