@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Twig_Environment;
 
-abstract class AbstractResponder implements ResponderInterface
+abstract class AbstractResponder
 {
     /**
      * @var RouterInterface

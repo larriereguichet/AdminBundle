@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 class DeleteResponder extends AbstractResponder
 {
     /**
+     * Display the delete form (to ensure not deleting entities just with an url call) and redirect to the list Action
+     * when the form is submitted.
+     *
      * @param ActionConfiguration $configuration
      * @param AdminInterface      $admin
      * @param FormInterface       $form

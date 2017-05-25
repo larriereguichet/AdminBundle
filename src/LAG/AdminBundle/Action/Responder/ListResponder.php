@@ -10,13 +10,14 @@ use Symfony\Component\HttpFoundation\Response;
 class ListResponder extends AbstractResponder
 {
     /**
+     * Display the template "list" with an optional filter form.
+     *
      * @param ActionConfiguration $configuration
      * @param AdminInterface      $admin
      * @param FormInterface       $form
      * @param FormInterface       $filterForm
      *
      * @return Response
-     *
      */
     public function respond(
         ActionConfiguration $configuration,
