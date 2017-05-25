@@ -2,11 +2,35 @@
 
 namespace LAG\AdminBundle\Action;
 
+use LAG\AdminBundle\Action\Responder\DeleteResponder;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class DeleteAction extends Action
 {
+    /**
+     * @var DeleteResponder
+     */
+    protected $responder;
+    
+    /**
+     * Action constructor.
+     *
+     * @param string               $name
+     * @param FormFactoryInterface $formFactory
+     * @param DeleteResponder      $responder
+     */
+    public function __construct(
+        $name,
+        FormFactoryInterface $formFactory,
+        DeleteResponder $responder
+    ) {
+        $this->name = $name;
+        $this->formFactory = $formFactory;
+        $this->responder = $responder;
+    }
+    
     /**
      * Delete an entity.
      *
@@ -30,6 +54,8 @@ class DeleteAction extends Action
             ->configuration
             ->getParameter('form_options')
         ;
+        
+        // create the entity removal form type
         $form = $this
             ->formFactory
             ->create($formType, $this->admin->getUniqueEntity(), $formOptions)
@@ -44,9 +70,10 @@ class DeleteAction extends Action
             ;
         }
     
+        // return a Response using the DeleteResponder
         return $this
             ->responder
-            ->respond($this->configuration, $this->admin, $form, $request)
+            ->respond($this->configuration, $this->admin, $form)
         ;
     }
 }

@@ -2,11 +2,35 @@
 
 namespace LAG\AdminBundle\Action;
 
+use LAG\AdminBundle\Action\Responder\EditResponder;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class EditAction extends Action
 {
+    /**
+     * @var EditResponder
+     */
+    protected $responder;
+    
+    /**
+     * Action constructor.
+     *
+     * @param string               $name
+     * @param FormFactoryInterface $formFactory
+     * @param EditResponder        $responder
+     */
+    public function __construct(
+        $name,
+        FormFactoryInterface $formFactory,
+        EditResponder $responder
+    ) {
+        $this->name = $name;
+        $this->formFactory = $formFactory;
+        $this->responder = $responder;
+    }
+    
     /**
      * Edit and update an entity using the EditForm handler.
      *
@@ -41,6 +65,7 @@ class EditAction extends Action
             ;
         }
     
+        // return a Response using the EditResponder
         return $this
             ->responder
             ->respond($this->configuration, $this->admin, $form, $request)
