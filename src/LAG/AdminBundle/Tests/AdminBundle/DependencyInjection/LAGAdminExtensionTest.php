@@ -5,8 +5,8 @@ namespace LAG\AdminBundle\Tests\AdminBundle\DependencyInjection;
 use Knp\Bundle\MenuBundle\DependencyInjection\KnpMenuExtension;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
-use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
 use LAG\AdminBundle\DependencyInjection\LAGAdminExtension;
+use LAG\AdminBundle\Doctrine\Repository\DoctrineRepositoryFactory;
 use LAG\AdminBundle\Field\Factory\FieldFactory;
 use LAG\AdminBundle\Menu\Factory\MenuFactory;
 use LAG\AdminBundle\Tests\AdminTestBase;
@@ -41,7 +41,6 @@ class LAGAdminExtensionTest extends AdminTestBase
                 'application' => [],
             ]
         ], $container);
-        $this->assertCount(37, $container->getDefinitions());
 
         $eventDispatcherExtension = new FrameworkExtension();
         $eventDispatcherExtension->load([], $container);
@@ -95,7 +94,7 @@ class LAGAdminExtensionTest extends AdminTestBase
         $this->assertInstanceOf(ActionFactory::class, $container->get('lag.admin.action_factory'));
         $this->assertInstanceOf(FieldFactory::class, $container->get('lag.admin.field_factory'));
         $this->assertInstanceOf(MenuFactory::class, $container->get('lag.admin.menu_factory'));
-        $this->assertInstanceOf(DataProviderFactory::class, $container->get('lag.admin.data_providers_factory'));
+        $this->assertInstanceOf(DoctrineRepositoryFactory::class, $container->get('lag.admin.repository_factory'));
     }
 
     /**

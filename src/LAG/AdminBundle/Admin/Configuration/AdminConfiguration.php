@@ -107,6 +107,7 @@ class AdminConfiguration extends Configuration
                     'action' => 'list'
                 ]
             ],
+            'repository' => null,
         ]);
     }
 }

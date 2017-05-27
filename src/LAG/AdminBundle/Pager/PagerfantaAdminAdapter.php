@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Pager;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use Pagerfanta\Adapter\AdapterInterface;
 
+// TODO remove this class
 class PagerfantaAdminAdapter implements AdapterInterface
 {
     /**

@@ -7,10 +7,8 @@ use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use LAG\AdminBundle\DataProvider\DataProviderInterface;
-use LAG\AdminBundle\DataProvider\Loader\EntityLoaderInterface;
-use LAG\AdminBundle\Filter\RequestFilterInterface;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
+use LAG\AdminBundle\Repository\RepositoryInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Entity\TestSimpleEntity;
 use LogicException;
@@ -29,6 +27,13 @@ class AdminTest extends AdminTestBase
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $messageHandler = $this->getMockWithoutConstructor(MessageHandlerInterface::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+    
+        $repository = $this->getMockWithoutConstructor(RepositoryInterface::class);
+        $repository
+            ->expects($this->once())
+            ->method('findBy')
+            ->with([], [])
+        ;
         
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
         $authorizationChecker
@@ -64,8 +69,6 @@ class AdminTest extends AdminTestBase
             ->willReturn($token)
         ;
     
-        $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
-    
         $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $actionConfiguration
             ->method('getParameter')
@@ -94,7 +97,7 @@ class AdminTest extends AdminTestBase
     
         $admin = new Admin(
             'my_little_pony',
-            $entityLoader,
+            $repository,
             $configuration,
             $messageHandler,
             $eventDispatcher,
@@ -136,11 +139,11 @@ class AdminTest extends AdminTestBase
             ->willReturn($token)
         ;
     
-        $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
+        $repository = $this->getMockWithoutConstructor(RepositoryInterface::class);
     
         $admin = new Admin(
             'my_little_pony',
-            $entityLoader,
+            $repository,
             $configuration,
             $messageHandler,
             $eventDispatcher,
@@ -197,12 +200,12 @@ class AdminTest extends AdminTestBase
             ->method('getToken')
             ->willReturn($token)
         ;
-        
-        $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
+    
+        $repository = $this->getMockWithoutConstructor(RepositoryInterface::class);
         
         $admin = new Admin(
             'my_little_pony',
-            $entityLoader,
+            $repository,
             $configuration,
             $messageHandler,
             $eventDispatcher,
@@ -258,12 +261,12 @@ class AdminTest extends AdminTestBase
             ->method('getToken')
             ->willReturn($token)
         ;
-        
-        $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
+    
+        $repository = $this->getMockWithoutConstructor(RepositoryInterface::class);
         
         $admin = new Admin(
             'my_little_pony',
-            $entityLoader,
+            $repository,
             $configuration,
             $messageHandler,
             $eventDispatcher,
@@ -340,12 +343,12 @@ class AdminTest extends AdminTestBase
             ->method('getToken')
             ->willReturn($token)
         ;
-        
-        $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
+    
+        $repository = $this->getMockWithoutConstructor(RepositoryInterface::class);
         
         $admin = new Admin(
             'my_little_pony',
-            $entityLoader,
+            $repository,
             $configuration,
             $messageHandler,
             $eventDispatcher,
@@ -395,23 +398,17 @@ class AdminTest extends AdminTestBase
         $tokenStorage = $this->getMockWithoutConstructor(TokenStorageInterface::class);
     
         $entity = new TestSimpleEntity();
-        
-        $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
-        $dataProvider
+    
+        $repository = $this->getMockWithoutConstructor(RepositoryInterface::class);
+        $repository
             ->expects($this->once())
             ->method('create')
             ->willReturn($entity)
         ;
     
-        $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
-        $entityLoader
-            ->method('getDataProvider')
-            ->willReturn($dataProvider)
-        ;
-    
         $admin = new Admin(
             'my_little_pony',
-            $entityLoader,
+            $repository,
             $configuration,
             $messageHandler,
             $eventDispatcher,
@@ -438,21 +435,15 @@ class AdminTest extends AdminTestBase
             ->method('handleSuccess')
         ;
     
-        $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
-        $dataProvider
+        $repository = $this->getMockWithoutConstructor(RepositoryInterface::class);
+        $repository
             ->expects($this->exactly(2))
             ->method('save')
-        ;
-    
-        $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
-        $entityLoader
-            ->method('getDataProvider')
-            ->willReturn($dataProvider)
         ;
         
         $admin = new Admin(
             'my_little_pony',
-            $entityLoader,
+            $repository,
             $configuration,
             $messageHandler,
             $eventDispatcher,
@@ -476,22 +467,16 @@ class AdminTest extends AdminTestBase
             ->expects($this->once())
             ->method('handleSuccess')
         ;
-        
-        $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
-        $dataProvider
+    
+        $repository = $this->getMockWithoutConstructor(RepositoryInterface::class);
+        $repository
             ->expects($this->exactly(2))
-            ->method('remove')
+            ->method('delete')
         ;
     
-        $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
-        $entityLoader
-            ->method('getDataProvider')
-            ->willReturn($dataProvider)
-        ;
-        
         $admin = new Admin(
             'my_little_pony',
-            $entityLoader,
+            $repository,
             $configuration,
             $messageHandler,
             $eventDispatcher,
@@ -522,12 +507,12 @@ class AdminTest extends AdminTestBase
         ;
         
         $messageHandler = $this->getMockWithoutConstructor(MessageHandlerInterface::class);
-        
-        $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
+    
+        $repository = $this->getMockWithoutConstructor(RepositoryInterface::class);
         
         $admin = new Admin(
             'my_little_pony',
-            $entityLoader,
+            $repository,
             $configuration,
             $messageHandler,
             $eventDispatcher,
@@ -583,15 +568,17 @@ class AdminTest extends AdminTestBase
             ->willReturn($token)
         ;
     
-        $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
-        $entityLoader
-            ->method('load')
+        $repository = $this->getMockWithoutConstructor(RepositoryInterface::class);
+        $repository
+            ->expects($this->once())
+            ->method('findBy')
+            ->with([], [])
             ->willReturn([])
         ;
         
         $admin = new Admin(
             'my_little_pony',
-            $entityLoader,
+            $repository,
             $configuration,
             $messageHandler,
             $eventDispatcher,

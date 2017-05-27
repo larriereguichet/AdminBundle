@@ -103,6 +103,11 @@ abstract class DoctrineRepository extends EntityRepository implements Repository
         ;
     }
     
+    public function create()
+    {
+        return new $this->_entityName();
+    }
+    
     /**
      * Add criteria values from options.
      *

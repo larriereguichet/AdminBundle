@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Action\Responder;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\Responder\EditResponder;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Tests\AdminBundle\Admin\AdminTest;
+use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Test\TestBundle\Entity\TestEntity;
 use Twig_Environment;
 
-class EditResponderTest extends AdminTest
+class EditResponderTest extends AdminTestBase
 {
     public function testRespondWithSave()
     {

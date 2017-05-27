@@ -5,13 +5,13 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Action\Responder;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\Responder\ListResponder;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Tests\AdminBundle\Admin\AdminTest;
+use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Twig_Environment;
 
-class ListResponderTest extends AdminTest
+class ListResponderTest extends AdminTestBase
 {
     public function testRespondWithSave()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\DataProvider\Factory;
+namespace LAG\AdminBundle\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -8,7 +8,7 @@ use LAG\AdminBundle\DataProvider\DataProvider;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Repository\RepositoryInterface;
 
-class DataProviderFactory
+class DoctrineRepositoryFactory
 {
     /**
      * The loaded data providers
@@ -16,6 +16,11 @@ class DataProviderFactory
      * @var DataProviderInterface[]
      */
     protected $dataProviders = [];
+    
+    /**
+     * @var RepositoryInterface[]
+     */
+    protected $repositories = [];
 
     /**
      * @var EntityManagerInterface
@@ -25,28 +30,29 @@ class DataProviderFactory
     /**
      * DataProviderFactory constructor.
      *
-     * @param EntityManagerInterface $entityManager A Doctrine ORM entity manager
+     * @param EntityManagerInterface $entityManager The Doctrine ORM entity manager
      */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
-
+    
     /**
      * Add a data provider to the collection.
      *
-     * @param string $id The data provider service id
-     * @param DataProviderInterface $dataProvider The data provider
+     * @param string              $id The data provider service id
+     * @param RepositoryInterface $repository
      *
      * @throws Exception
      */
-    public function add($id, DataProviderInterface $dataProvider)
+    public function add($id, RepositoryInterface $repository)
     {
         if ($this->has($id)) {
-            throw new Exception('Trying to add the data provider '.$id.' twice');
+            // throw an exception if a repository is registered twice, it is probably an error
+            throw new Exception('The repository '.$id.' has already been registered');
         }
         // add the data provider to collection, indexed by ids
-        $this->dataProviders[$id] = $dataProvider;
+        $this->repositories[$id] = $repository;
     }
 
     /**
@@ -78,7 +84,7 @@ class DataProviderFactory
     }
 
     /**
-     * Return true if a data provider with the given id exists.
+     * Return true if the repository with the given id exists.
      *
      * @param string $id The data provider id
      *
@@ -86,7 +92,7 @@ class DataProviderFactory
      */
     public function has($id)
     {
-        return array_key_exists($id, $this->dataProviders);
+        return array_key_exists($id, $this->repositories);
     }
 
     /**
@@ -104,7 +110,8 @@ class DataProviderFactory
         // get the repository corresponding to the given entity class
         $repository = $this
             ->entityManager
-            ->getRepository($entityClass);
+            ->getRepository($entityClass)
+        ;
 
         // the repository should implements the RepositoryInterface, to ensure it has the methods create and save
         if (!($repository instanceof RepositoryInterface)) {

@@ -36,3 +36,8 @@ services:
         class: LAG\AdminBundle\DataProvider\Factory\DataProviderFactory
         arguments:
             - '@doctrine.orm.entity_manager'
+
+    lag.admin.repository_factory:
+        class: LAG\AdminBundle\Doctrine\Repository\DoctrineRepositoryFactory
+        arguments:
+            - '@doctrine.orm.entity_manager'

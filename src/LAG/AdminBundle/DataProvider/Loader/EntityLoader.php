@@ -3,30 +3,24 @@
 namespace LAG\AdminBundle\DataProvider\Loader;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityRepository;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\DataProvider\DataProviderInterface;
-use LAG\AdminBundle\Pager\PagerfantaAdminAdapter;
+use LAG\AdminBundle\Repository\RepositoryInterface;
 use LogicException;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 
 /**
- * The EntityLoader is responsible for loading one or multiple entities from the data provider, and if a pagination
+ * The EntityLoader is responsible for loading one or multiple entities from the repository, and if a pagination
  * system is required.
  */
-class EntityLoader implements EntityLoaderInterface
+class EntityLoader
 {
-    /**
-     * True if a pagination system is required for the current Action.
-     *
-     * @var bool
-     */
-    private $isPaginationRequired = false;
-    
     /**
      * The name of the pagination system. Only pagerfanta is yet supported.
      *
-     * @var string
+     * @var string|null
      */
     private $pagerName;
     
@@ -40,20 +34,20 @@ class EntityLoader implements EntityLoaderInterface
     private $loadStrategy;
     
     /**
-     * The provider used to retrieve data.
+     * The repository where the entities are stored.
      *
-     * @var DataProviderInterface
+     * @var RepositoryInterface
      */
-    private $dataProvider;
+    private $repository;
     
     /**
      * EntityLoader constructor.
      *
-     * @param DataProviderInterface $dataProvider
+     * @param RepositoryInterface $repository
      */
-    public function __construct(DataProviderInterface $dataProvider)
+    public function __construct(RepositoryInterface $repository)
     {
-        $this->dataProvider = $dataProvider;
+        $this->repository = $repository;
     }
     
     /**
@@ -61,8 +55,8 @@ class EntityLoader implements EntityLoaderInterface
      */
     public function configure(ActionConfiguration $configuration)
     {
-        $this->isPaginationRequired =
-            AdminInterface::LOAD_STRATEGY_MULTIPLE !== $configuration->getParameter('load_strategy');
+        $this->loadStrategy = $configuration->getParameter('load_strategy');
+        $this->pagerName = $configuration->getParameter('pager');
     }
     
     /***
@@ -75,9 +69,7 @@ class EntityLoader implements EntityLoaderInterface
      */
     public function load(array $criteria, array $orderBy = [], $limit = 25, $offset = 1)
     {
-        if (false === $this->isPaginationRequired) {
-            $limit = null;
-            $offset = null;
+        if ($this->isPaginationRequired()) {
             // load entities from the DataProvider using a pagination system
             $entities = $this->loadPaginate($criteria, $orderBy, $limit, $offset);
         }
@@ -105,7 +97,7 @@ class EntityLoader implements EntityLoaderInterface
         // only pagerfanta adapter is yet supported
         if ('pagerfanta' !== $this->pagerName) {
             throw new LogicException(
-                'Only pagerfanta value is allowed for pager parameter, given '.$this->pagerName
+                'Only pagerfanta value is allowed for pager parameter, given "'.$this->pagerName.'"'
             );
         }
     
@@ -115,9 +107,32 @@ class EntityLoader implements EntityLoaderInterface
                 'Only "strategy_multiple" value is allowed for pager parameter, given '.$this->loadStrategy
             );
         }
+    
+        if (!$this->repository instanceof EntityRepository) {
+            throw new LogicException('You can only paginate '.EntityRepository::class);
+        }
+        $queryBuilder = $this
+            ->repository
+            ->createQueryBuilder('entity')
+        ;
+    
+        // add criteria
+        foreach ($criteria as $criterion => $value) {
+            $queryBuilder
+                ->andWhere('entity.'.$criterion.' = :'.$criterion)
+                ->setParameter($criterion, $value)
+            ;
+        }
         
-        // adapter to pagerfanta
-        $adapter = new PagerfantaAdminAdapter($this->dataProvider, $criteria, $orderBy);
+        // add order by
+        foreach ($orderBy as $sort => $order) {
+            $queryBuilder
+                ->addOrderBy($sort, $order)
+            ;
+        }
+        // create an adapter for the pagerfanta
+        $adapter = new DoctrineORMAdapter($queryBuilder->getQuery());
+        
         // create pager
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit);
@@ -137,18 +152,26 @@ class EntityLoader implements EntityLoaderInterface
     private function loadWithoutPagination(array $criteria, $orderBy)
     {
         return $this
-            ->dataProvider
+            ->repository
             ->findBy($criteria, $orderBy, null, null)
         ;
     }
     
     /**
-     * Return the associated DataProvider.
+     * Return true if a pagination system is required for the current Action.
      *
-     * @return DataProviderInterface
+     * @return bool
      */
-    public function getDataProvider()
+    private function isPaginationRequired()
     {
-        return $this->dataProvider;
+        if (AdminInterface::LOAD_STRATEGY_MULTIPLE !== $this->loadStrategy) {
+            return false;
+        }
+    
+        if ('pagerfanta' !== $this->pagerName) {
+            return false;
+        }
+        
+        return true;
     }
 }

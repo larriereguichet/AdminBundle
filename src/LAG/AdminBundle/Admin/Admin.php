@@ -9,10 +9,10 @@ use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use LAG\AdminBundle\Admin\Request\LoadParameterExtractor;
-use LAG\AdminBundle\DataProvider\DataProviderInterface;
-use LAG\AdminBundle\DataProvider\Loader\EntityLoaderInterface;
+use LAG\AdminBundle\DataProvider\Loader\EntityLoader;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
+use LAG\AdminBundle\Repository\RepositoryInterface;
 use LogicException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -38,11 +38,6 @@ class Admin implements AdminInterface
      * @var MessageHandlerInterface
      */
     protected $messageHandler;
-    
-    /**
-     * @var DataProviderInterface
-     */
-    protected $dataProvider;
     
     /**
      * Admin configuration object
@@ -93,15 +88,15 @@ class Admin implements AdminInterface
     protected $filterForm;
     
     /**
-     * @var EntityLoaderInterface
+     * @var RepositoryInterface
      */
-    protected $entityLoader;
+    private $repository;
     
     /**
      * Admin constructor.
      *
      * @param string                        $name
-     * @param EntityLoaderInterface         $entityLoader
+     * @param RepositoryInterface           $repository
      * @param AdminConfiguration            $configuration
      * @param MessageHandlerInterface       $messageHandler
      * @param EventDispatcherInterface      $eventDispatcher
@@ -111,7 +106,7 @@ class Admin implements AdminInterface
      */
     public function __construct(
         $name,
-        EntityLoaderInterface $entityLoader,
+        RepositoryInterface $repository,
         AdminConfiguration $configuration,
         MessageHandlerInterface $messageHandler,
         EventDispatcherInterface $eventDispatcher,
@@ -127,8 +122,7 @@ class Admin implements AdminInterface
         $this->authorizationChecker = $authorizationChecker;
         $this->tokenStorage = $tokenStorage;
         $this->actions = $actions;
-        $this->entityLoader = $entityLoader;
-        $this->dataProvider = $entityLoader->getDataProvider();
+        $this->repository = $repository;
     }
     
     /**
@@ -164,15 +158,13 @@ class Admin implements AdminInterface
         $loader->load($request);
     
         // load entities according to action and request
-        $this
-            ->entityLoader
-            ->load(
-                $loader->getCriteria(),
-                $loader->getOrder(),
-                $loader->getMaxPerPage(),
-                $loader->getPage()
-            )
-        ;
+        $entityLoader = new EntityLoader($this->repository);
+        $entityLoader->load(
+            $loader->getCriteria(),
+            $loader->getOrder(),
+            $loader->getMaxPerPage(),
+            $loader->getPage()
+        );
     }
     
     /**
@@ -224,7 +216,7 @@ class Admin implements AdminInterface
     {
         // create an entity from the data provider
         $entity = $this
-            ->dataProvider
+            ->repository
             ->create();
         
         // add it to the collection
@@ -242,7 +234,7 @@ class Admin implements AdminInterface
     {
         foreach ($this->entities as $entity) {
             $this
-                ->dataProvider
+                ->repository
                 ->save($entity)
             ;
         }
@@ -260,8 +252,9 @@ class Admin implements AdminInterface
     {
         foreach ($this->entities as $entity) {
             $this
-                ->dataProvider
-                ->remove($entity);
+                ->repository
+                ->delete($entity)
+            ;
         }
         // inform the user that the entity is removed
         $this
@@ -278,7 +271,7 @@ class Admin implements AdminInterface
     public function count()
     {
         $count = $this
-            ->dataProvider
+            ->repository
             ->count()
         ;
     
@@ -338,11 +331,9 @@ class Admin implements AdminInterface
      */
     public function load(array $criteria, array $orderBy = [], $limit = 25, $offset = 1)
     {
-        // retrieve the data using the data provider via the entity loader
-        $entities = $this
-            ->entityLoader
-            ->load($criteria, $orderBy, $limit, $offset)
-        ;
+        // retrieve the data using the repository via the entity loader
+        $entityLoader = new EntityLoader($this->repository);
+        $entities = $entityLoader->load($criteria, $orderBy, $limit, $offset);
     
         // either, we have an instance of Pagerfanta, either we should have an array or a collection
         if ($entities instanceof Pagerfanta) {

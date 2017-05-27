@@ -5,6 +5,7 @@ namespace LAG\AdminBundle;
 use LAG\AdminBundle\DependencyInjection\CompilerPass\ActionCompilerPass;
 use LAG\AdminBundle\DependencyInjection\CompilerPass\DataProviderCompilerPass;
 use LAG\AdminBundle\DependencyInjection\CompilerPass\FieldCompilerPass;
+use LAG\AdminBundle\DependencyInjection\CompilerPass\RepositoryCompilerPass;
 use LogicException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -31,6 +32,7 @@ class LAGAdminBundle extends Bundle implements PrependExtensionInterface
     const SERVICE_ID_LIST_FORM_HANDLER = 'lag.admin.form.list_form_handler';
     
     // Service Tags
+    const SERVICE_TAG_REPOSITORY = 'lag.admin.repository';
     const SERVICE_TAG_ACTION = 'lag.admin.action';
     const SERVICE_TAG_FORM_HANDLER = 'lag.admin.form_handler';
     
@@ -62,8 +64,9 @@ class LAGAdminBundle extends Bundle implements PrependExtensionInterface
 
         // register field compiler pass
         $container->addCompilerPass(new FieldCompilerPass());
-        $container->addCompilerPass(new DataProviderCompilerPass());
         $container->addCompilerPass(new ActionCompilerPass());
+        $container->addCompilerPass(new DataProviderCompilerPass());
+        $container->addCompilerPass(new RepositoryCompilerPass());
     }
     
     /**

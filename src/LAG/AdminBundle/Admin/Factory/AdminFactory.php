@@ -15,8 +15,7 @@ use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\Admin\Request\RequestHandler;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
-use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
-use LAG\AdminBundle\DataProvider\Loader\EntityLoader;
+use LAG\AdminBundle\Doctrine\Repository\DoctrineRepositoryFactory;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LogicException;
@@ -66,11 +65,6 @@ class AdminFactory
      * @var Registry
      */
     private $adminRegistry;
-
-    /**
-     * @var DataProviderFactory
-     */
-    private $dataProviderFactory;
     
     /**
      * @var RequestHandler
@@ -93,6 +87,11 @@ class AdminFactory
     private $actionRegistry;
     
     /**
+     * @var DoctrineRepositoryFactory
+     */
+    private $doctrineRepositoryFactory;
+    
+    /**
      * AdminFactory constructor.
      *
      * @param array                         $adminConfigurations
@@ -102,7 +101,7 @@ class AdminFactory
      * @param ActionRegistry                $actionRegistry
      * @param ActionFactory                 $actionFactory
      * @param ConfigurationFactory          $configurationFactory
-     * @param DataProviderFactory           $dataProviderFactory
+     * @param DoctrineRepositoryFactory     $doctrineRepositoryFactory
      * @param RequestHandler                $requestHandler
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param TokenStorageInterface         $tokenStorage
@@ -115,7 +114,7 @@ class AdminFactory
         ActionRegistry $actionRegistry,
         ActionFactory $actionFactory,
         ConfigurationFactory $configurationFactory,
-        DataProviderFactory $dataProviderFactory,
+        DoctrineRepositoryFactory $doctrineRepositoryFactory,
         RequestHandler $requestHandler,
         AuthorizationCheckerInterface $authorizationChecker,
         TokenStorageInterface $tokenStorage
@@ -126,11 +125,11 @@ class AdminFactory
         $this->actionFactory = $actionFactory;
         $this->messageHandler = $messageHandler;
         $this->adminRegistry = $adminRegistry;
-        $this->dataProviderFactory = $dataProviderFactory;
         $this->requestHandler = $requestHandler;
         $this->authorizationChecker = $authorizationChecker;
         $this->tokenStorage = $tokenStorage;
         $this->actionRegistry = $actionRegistry;
+        $this->doctrineRepositoryFactory = $doctrineRepositoryFactory;
     }
 
     /**
@@ -193,14 +192,25 @@ class AdminFactory
             ->configurationFactory
             ->createAdminConfiguration($configuration)
         ;
-        
-        // retrieve a data provider and load it into the loader
-        $dataProvider = $this
-            ->dataProviderFactory
-            ->get($adminConfiguration->getParameter('data_provider'), $adminConfiguration->getParameter('entity'))
-        ;
-        $entityLoader = new EntityLoader($dataProvider);
     
+        if (null !== $adminConfiguration->getParameter('repository')) {
+            // if a repository service id configured, we retrieve this repository from the factory
+            $repository = $this
+                ->doctrineRepositoryFactory
+                ->get($adminConfiguration->getParameter('repository'))
+            ;
+        } else {
+            // if no repository is configured, we create one from the Doctrine repository
+            $repository = $this
+                ->doctrineRepositoryFactory
+                ->create($adminConfiguration->getParameter('entity'))
+            ;
+        }
+    
+        if (null === $repository) {
+            throw new LogicException('Unable to find a repository for admin "'.$name.'"');
+        }
+        
         // retrieve Admin dynamic class
         $adminClass = $this
             ->configurationFactory
@@ -214,7 +224,7 @@ class AdminFactory
         // create Admin object
         $admin = new $adminClass(
             $name,
-            $entityLoader,
+            $repository,
             $adminConfiguration,
             $this->messageHandler,
             $this->eventDispatcher,

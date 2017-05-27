@@ -41,6 +41,13 @@ interface RepositoryInterface extends ObjectRepository
      * @return object
      */
     public function findOneBy(array $criteria);
+    
+    /**
+     * Return a new instance of the entity class managed by the repository.
+     *
+     * @return mixed|object
+     */
+    public function create();
 
     /**
      * Save an entity
@@ -64,7 +71,7 @@ interface RepositoryInterface extends ObjectRepository
     public function getClassName();
     
     /**
-     * Return the number of entities in the Repository.
+     * Return the number of entities in the repository.
      *
      * @param array $criteria
      * @param array $options

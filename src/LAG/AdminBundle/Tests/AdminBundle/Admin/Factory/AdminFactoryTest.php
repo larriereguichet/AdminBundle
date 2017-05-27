@@ -14,9 +14,9 @@ use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\Admin\Request\RequestHandler;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
-use LAG\AdminBundle\DataProvider\DataProviderInterface;
-use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
+use LAG\AdminBundle\Doctrine\Repository\DoctrineRepositoryFactory;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
+use LAG\AdminBundle\Repository\RepositoryInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -55,7 +55,7 @@ class AdminFactoryTest extends AdminTestBase
             ->method('getParameter')
             ->willReturnMap([
                 ['entity', $entity],
-                ['data_provider', $dataProviderString],
+                ['repository', $dataProviderString],
             ])
         ;
     
@@ -86,14 +86,14 @@ class AdminFactoryTest extends AdminTestBase
         $registry = $this->getMockWithoutConstructor(Registry::class);
         
     
-        $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
+        $repository = $this->getMockWithoutConstructor(RepositoryInterface::class);
         
-        $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
-        $dataProviderFactory
+        $repositoryFactory = $this->getMockWithoutConstructor(DoctrineRepositoryFactory::class);
+        $repositoryFactory
             ->expects($this->once())
             ->method('get')
             ->with('data_provider')
-            ->willReturn($dataProvider)
+            ->willReturn($repository)
         ;
     
         $requestHandler = $this->getMockWithoutConstructor(RequestHandler::class);
@@ -110,7 +110,7 @@ class AdminFactoryTest extends AdminTestBase
             $actionRegistry,
             $actionFactory,
             $configurationFactory,
-            $dataProviderFactory,
+            $repositoryFactory,
             $requestHandler,
             $authorizationChecker,
             $tokenStorage
@@ -149,7 +149,7 @@ class AdminFactoryTest extends AdminTestBase
     
         $registry = $this->getMockWithoutConstructor(Registry::class);
     
-        $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
+        $repositoryFactory = $this->getMockWithoutConstructor(DoctrineRepositoryFactory::class);
     
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         
@@ -174,7 +174,7 @@ class AdminFactoryTest extends AdminTestBase
             $actionRegistry,
             $actionFactory,
             $configurationFactory,
-            $dataProviderFactory,
+            $repositoryFactory,
             $requestHandler,
             $authorizationChecker,
             $tokenStorage
