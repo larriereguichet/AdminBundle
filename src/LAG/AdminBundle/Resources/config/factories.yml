@@ -13,9 +13,7 @@ services:
 
     lag.admin.action_factory:
         class: LAG\AdminBundle\Action\Factory\ActionFactory
-        arguments:
-            - '@lag.admin.configuration_factory'
-            - '@event_dispatcher'
+        autowire: true
 
     lag.admin.field_factory:
         class: LAG\AdminBundle\Field\Factory\FieldFactory

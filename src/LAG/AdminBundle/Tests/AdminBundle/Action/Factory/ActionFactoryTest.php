@@ -5,9 +5,10 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Action\Factory;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
 use LAG\AdminBundle\Action\ActionInterface;
+use LAG\AdminBundle\Action\Factory\ConfigurationFactory;
+use LAG\AdminBundle\Action\Registry\Registry;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -50,6 +51,7 @@ class ActionFactoryTest extends AdminTestBase
             ->method('getAdmin')
             ->willReturn($admin)
         ;
+        $actionRegistry = $this->getMockWithoutConstructor(Registry::class);
         
         $request = new Request([], [], [
             '_route_params' => [
@@ -59,7 +61,8 @@ class ActionFactoryTest extends AdminTestBase
     
         $actionFactory = new ActionFactory(
             $configurationFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $actionRegistry
         );
     
         $actionFactory->injectConfiguration($controller, $request);
@@ -69,10 +72,12 @@ class ActionFactoryTest extends AdminTestBase
     {
         $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
+        $actionRegistry = $this->getMockWithoutConstructor(Registry::class);
     
         $actionFactory = new ActionFactory(
             $configurationFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $actionRegistry
         );
     
         $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
@@ -111,6 +116,7 @@ class ActionFactoryTest extends AdminTestBase
     public function testInjectConfigurationWithoutActionInterface()
     {
         $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
+        $actionRegistry = $this->getMockWithoutConstructor(Registry::class);
     
         // no event should be dispatched
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
@@ -121,7 +127,8 @@ class ActionFactoryTest extends AdminTestBase
         
         $actionFactory = new ActionFactory(
             $configurationFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $actionRegistry
         );
         $controller = $this->getMockWithoutConstructor(Controller::class);
         $request = new Request();
@@ -135,6 +142,7 @@ class ActionFactoryTest extends AdminTestBase
     public function testInjectConfigurationWithoutAdmin()
     {
         $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
+        $actionRegistry = $this->getMockWithoutConstructor(Registry::class);
     
         // no event should be dispatched
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
@@ -145,7 +153,8 @@ class ActionFactoryTest extends AdminTestBase
     
         $actionFactory = new ActionFactory(
             $configurationFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $actionRegistry
         );
         $controller = $this->getMockWithoutConstructor(ActionInterface::class);
         $request = new Request();

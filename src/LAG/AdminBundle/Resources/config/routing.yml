@@ -1,0 +1,6 @@
+admin.homepage:
+    path: /
+
+app_extra:
+    resource: .
+    type: extra

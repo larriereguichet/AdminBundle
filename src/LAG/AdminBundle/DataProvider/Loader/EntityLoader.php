@@ -46,6 +46,8 @@ class EntityLoader implements EntityLoaderInterface
      */
     private $dataProvider;
     
+    private $limit = 0;
+    
     /**
      * EntityLoader constructor.
      *
@@ -61,8 +63,14 @@ class EntityLoader implements EntityLoaderInterface
      */
     public function configure(ActionConfiguration $configuration)
     {
-        $this->isPaginationRequired =
-            AdminInterface::LOAD_STRATEGY_MULTIPLE !== $configuration->getParameter('load_strategy');
+        $this->loadStrategy = $configuration->getParameter('load_strategy');
+    
+        if (AdminInterface::LOAD_STRATEGY_MULTIPLE === $this->loadStrategy &&
+            $configuration->getParameter('pager')) {
+            $this->isPaginationRequired = true;
+        }
+        $this->pagerName = $configuration->getParameter('pager');
+        $this->limit = $configuration->getParameter('max_per_page');
     }
     
     /***
@@ -75,9 +83,7 @@ class EntityLoader implements EntityLoaderInterface
      */
     public function load(array $criteria, array $orderBy = [], $limit = 25, $offset = 1)
     {
-        if (false === $this->isPaginationRequired) {
-            $limit = null;
-            $offset = null;
+        if (false !== $this->isPaginationRequired) {
             // load entities from the DataProvider using a pagination system
             $entities = $this->loadPaginate($criteria, $orderBy, $limit, $offset);
         }
@@ -115,13 +121,23 @@ class EntityLoader implements EntityLoaderInterface
                 'Only "strategy_multiple" value is allowed for pager parameter, given '.$this->loadStrategy
             );
         }
-        
+    
+        if (null === $limit) {
+            $limit = $this->limit;
+        }
+    
+        if (null === $offset) {
+            $offset = 1;
+        }
+    
         // adapter to pagerfanta
         $adapter = new PagerfantaAdminAdapter($this->dataProvider, $criteria, $orderBy);
         // create pager
         $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($offset);
+        $pager->setMaxPerPage($limit);
+    
+        //dump($pager->getCurrentPageResults()[0]->getTitle());
         
         return $pager;
     }

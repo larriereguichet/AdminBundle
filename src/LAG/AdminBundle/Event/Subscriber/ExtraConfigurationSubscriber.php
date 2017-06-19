@@ -11,6 +11,7 @@ use LAG\AdminBundle\Admin\Event\AdminCreateEvent;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
+use LAG\AdminBundle\Routing\RouteNameGenerator;
 use LAG\AdminBundle\Utils\FieldTypeGuesser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -251,36 +252,26 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
         // _action is added extra configuration only for the "list" action
         $isListAction = $event->getActionName() == 'list';
+    
+        //dump($_actionExists, $_actionIsNull, $isListAction);
+        
 
         if ($_actionExists && $_actionIsNull && $isListAction) {
             // in list view, we add by default and an edit and a delete button
             $translationPattern = $this
                 ->applicationConfiguration
                 ->getParameter('translation')['pattern'];
-
-            // add a link to the "edit" action, if it is allowed
-            if (in_array('edit', $allowedActions)) {
-                $configuration['fields']['_actions']['type'] = 'collection';
-                $configuration['fields']['_actions']['options']['_edit'] = [
-                    'type' => 'action',
-                    'options' => [
-                        'title' => $this->getTranslationKey($translationPattern, 'edit', $event->getAdmin()->getName()),
-                        'route' => $event->getAdmin()->generateRouteName('edit'),
-                        'parameters' => [
-                            'id' => false
-                        ],
-                        'icon' => 'pencil'
-                    ]
-                ];
-            }
+            
             // add a link to the "delete" action, if it is allowed
             if (in_array('delete', $allowedActions)) {
-                $configuration['fields']['_actions']['type'] = 'collection';
-                $configuration['fields']['_actions']['options']['_delete'] = [
-                    'type' => 'action',
+                $generator = new RouteNameGenerator();
+                $admin = $event->getAdmin();
+                
+                $configuration['fields']['_actions'] = [
+                    'type'=> 'action',
                     'options' => [
-                        'title' => $this->getTranslationKey($translationPattern, 'delete', $event->getAdmin()->getName()),
-                        'route' => $event->getAdmin()->generateRouteName('delete'),
+                        'title' => $this->getTranslationKey($translationPattern, 'delete', $admin->getName()),
+                        'route' => $generator->generate('delete', $admin->getName(), $admin->getConfiguration()),
                         'parameters' => [
                             'id' => false
                         ],

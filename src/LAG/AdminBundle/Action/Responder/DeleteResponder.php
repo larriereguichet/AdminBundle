@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Action\Responder;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Routing\RouteNameGenerator;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,9 +29,11 @@ class DeleteResponder extends AbstractResponder
         $template = $configuration->getParameter('template');
         
         if ($form->isSubmitted() && $form->isValid()) {
+            $generator = new RouteNameGenerator();
+    
             $url = $this
                 ->router
-                ->generate($admin->generateRouteName('list'))
+                ->generate($generator->generate('list', $admin->getName(), $admin->getConfiguration()))
             ;
 
             return new RedirectResponse($url);

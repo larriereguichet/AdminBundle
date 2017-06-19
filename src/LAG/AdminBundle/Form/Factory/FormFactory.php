@@ -61,12 +61,16 @@ class FormFactory
      */
     protected function guessForm(AdminInterface $admin, $entity)
     {
-        $action = $admin->getCurrentAction();
+        $actionConfiguration = $admin
+            ->getView()
+            ->getConfiguration()
+        ;
         $form = $this
             ->formFactory
-            ->createNamed($admin->getName(), $entity);
+            ->createNamed($admin->getName(), $entity)
+        ;
 
-        foreach ($action->getConfiguration()->getParameter('fields') as $field => $configuration) {
+        foreach ($actionConfiguration->getParameter('fields') as $field => $configuration) {
             $form->add($field);
         }
 

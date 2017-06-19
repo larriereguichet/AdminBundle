@@ -10,6 +10,7 @@ use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Menu\Configuration\MenuConfiguration;
 use LAG\AdminBundle\Menu\Configuration\MenuItemConfiguration;
+use LAG\AdminBundle\Routing\RouteNameGenerator;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -82,8 +83,9 @@ class MenuFactory
             ->menuFactory
             ->createItem($name, [
                 'childrenAttributes' => $menuConfiguration->getParameter('attr')
-            ]);
-
+            ])
+        ;
+        
         /**
          * @var string $itemName
          * @var MenuItemConfiguration $itemConfiguration
@@ -107,10 +109,8 @@ class MenuFactory
             $menu->addChild($text, $menuItemConfiguration);
 
             if ($hasChildren) {
-
                 foreach ($subItems as $subItemName => $subItemConfiguration) {
                     $subMenuItemConfiguration = $this->createMenuItemConfiguration($subItemConfiguration);
-
                     $menu[$text]->addChild(
                         $this->guessItemText($subItemName, $subItemConfiguration),
                         $subMenuItemConfiguration
@@ -172,7 +172,7 @@ class MenuFactory
                 'icon' => $itemConfiguration->getParameter('icon'),
             ]
         ];
-
+        
         // add parameters value from entity
         if ($entity && count($menuItemConfiguration['routeParameters'])) {
             $routeParameters = [];
@@ -194,9 +194,15 @@ class MenuFactory
             // retrieve an existing admin
             $admin = $this
                 ->registry
-                ->get($adminName);
-
-            $menuItemConfiguration['route'] = $admin->generateRouteName($itemConfiguration->getParameter('action'));
+                ->get($adminName)
+            ;
+            $generator = new RouteNameGenerator();
+            $menuItemConfiguration['route'] = $generator->generate(
+                $itemConfiguration->getParameter('action'),
+                $admin->getName(),
+                $admin->getConfiguration()
+            );
+            
         } else if ($route = $itemConfiguration->getParameter('route')) {
             // route is provided so we take it
             $menuItemConfiguration['route'] = $route;

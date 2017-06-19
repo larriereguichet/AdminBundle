@@ -9,15 +9,19 @@ use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use LAG\AdminBundle\Admin\Request\LoadParameterExtractor;
+use LAG\AdminBundle\Admin\Request\RequestHandler;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\DataProvider\Loader\EntityLoaderInterface;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
+use LAG\AdminBundle\View\Factory\ViewFactory;
+use LAG\AdminBundle\View\ViewInterface;
 use LogicException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -98,6 +102,20 @@ class Admin implements AdminInterface
     protected $entityLoader;
     
     /**
+     * @var ViewFactory
+     */
+    private $viewFactory;
+    
+    /**
+     * @var ViewInterface
+     */
+    private $view;
+    /**
+     * @var RequestHandler
+     */
+    private $requestHandler;
+    
+    /**
      * Admin constructor.
      *
      * @param string                        $name
@@ -107,6 +125,8 @@ class Admin implements AdminInterface
      * @param EventDispatcherInterface      $eventDispatcher
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param TokenStorageInterface         $tokenStorage
+     * @param RequestHandler                $requestHandler
+     * @param ViewFactory                   $viewFactory
      * @param array                         $actions
      */
     public function __construct(
@@ -117,6 +137,8 @@ class Admin implements AdminInterface
         EventDispatcherInterface $eventDispatcher,
         AuthorizationCheckerInterface $authorizationChecker,
         TokenStorageInterface $tokenStorage,
+        RequestHandler $requestHandler,
+        ViewFactory $viewFactory,
         $actions = []
     ) {
         $this->name = $name;
@@ -129,6 +151,8 @@ class Admin implements AdminInterface
         $this->actions = $actions;
         $this->entityLoader = $entityLoader;
         $this->dataProvider = $entityLoader->getDataProvider();
+        $this->viewFactory = $viewFactory;
+        $this->requestHandler = $requestHandler;
     }
     
     /**
@@ -139,33 +163,50 @@ class Admin implements AdminInterface
      */
     public function handleRequest(Request $request, array $filters = [])
     {
+        if (!$this->requestHandler->supports($request)) {
+            throw new BadRequestHttpException(
+                'The given request can be processed. The route parameters "_admin" and "_action" probably missing'
+            );
+        }
+        $actionName = $request->get('_route_params')[LAGAdminBundle::REQUEST_PARAMETER_ACTION];
+    
+        $this->view = $this
+            ->viewFactory
+            ->create($actionName, $this->name, $this->configuration, $this->configuration->getParameter('actions')[$actionName])
+        ;
+        
         // set current action
-        $this->currentAction = $this->getAction(
-            $request->get('_route_params')[LAGAdminBundle::REQUEST_PARAMETER_ACTION]
-        );
+//        $this->currentAction = $this->getAction(
+//            $request->get('_route_params')[LAGAdminBundle::REQUEST_PARAMETER_ACTION]
+//        );
         
         // check if user is logged have required permissions to get current action
         $this->checkPermissions();
         
         // get the current action configuration bag
         $actionConfiguration = $this
-            ->currentAction
+            ->view
             ->getConfiguration()
         ;
     
         // if no loading is required, no more thing to do. Some actions do not require to load entities from
         // the DataProvider
-        if (true !== $this->currentAction->isLoadingRequired()) {
+        if (Admin::LOAD_STRATEGY_NONE === $actionConfiguration->getParameter('load_strategy')) {
             return;
         }
+        
         // retrieve the criteria to find one or more entities (from the request for sorting, pagination... and from
         // the filter form
-        $loader = new LoadParameterExtractor($actionConfiguration);
+        $loader = new LoadParameterExtractor($actionConfiguration, $filters);
         $loader->load($request);
     
         // load entities according to action and request
         $this
             ->entityLoader
+            ->configure($actionConfiguration)
+        ;
+        
+        $this
             ->load(
                 $loader->getCriteria(),
                 $loader->getOrder(),
@@ -173,6 +214,7 @@ class Admin implements AdminInterface
                 $loader->getPage()
             )
         ;
+        $this->view->setEntities($this->entities);
     }
     
     /**
@@ -188,15 +230,15 @@ class Admin implements AdminInterface
             ->getUser()
         ;
         
-        // must be authenticated to access to an Admin
+        // must be authenticated to access to an admin
         if (!($user instanceof UserInterface)) {
             throw new AccessDeniedException();
         }
         
-        // the current Action has to be defined
-        if (null === $this->currentAction) {
+        // a view must have been defined
+        if (null === $this->view) {
             throw new LogicException(
-                'Current action should be set before checking the permissions. Maybe you forget to call handleRequest()'
+                'A view must be defined before checking the permissions. Maybe you forget to call handleRequest()'
             );
         }
         // check if the current User is granted in Symfony security configuration
@@ -204,7 +246,7 @@ class Admin implements AdminInterface
             throw new AccessDeniedException();
         }
         $permissions = $this
-            ->currentAction
+            ->view
             ->getConfiguration()
             ->getParameter('permissions')
         ;
@@ -292,43 +334,6 @@ class Admin implements AdminInterface
     }
     
     /**
-     * Generate a route for admin and action name (like lag.admin.my_admin)
-     *
-     * @param $actionName
-     *
-     * @return string
-     *
-     * @throws Exception
-     */
-    public function generateRouteName($actionName)
-    {
-        $actions = $this
-            ->configuration
-            ->getParameter('actions')
-        ;
-        
-        if (!array_key_exists($actionName, $actions)) {
-            throw new Exception(
-                sprintf('Invalid action name %s for admin %s (available action are: %s)',
-                    $actionName,
-                    $this->getName(),
-                    implode(', ', $this->getActionNames()))
-            );
-        }
-        // get routing name pattern
-        $routingPattern = $this
-            ->configuration
-            ->getParameter('routing_name_pattern')
-        ;
-        
-        // replace admin and action name in pattern
-        $routeName = str_replace('{admin}', strtolower($this->name), $routingPattern);
-        $routeName = str_replace('{action}', $actionName, $routeName);
-        
-        return $routeName;
-    }
-    
-    /**
      * Load entities according to the given criteria and the current action configuration.
      *
      * @param array $criteria
@@ -347,7 +352,7 @@ class Admin implements AdminInterface
         // either, we have an instance of Pagerfanta, either we should have an array or a collection
         if ($entities instanceof Pagerfanta) {
             // if the entities are inside a pager, we get the result and we set the pager for the view
-            $this->entities = $entities->getCurrentPageResults();
+            $this->entities = new ArrayCollection($entities->getCurrentPageResults());
             $this->pager = $entities;
         } else {
             // the data provider should return an array or a collection of entities.
@@ -409,38 +414,6 @@ class Admin implements AdminInterface
     }
     
     /**
-     * @return ActionInterface[]
-     */
-    public function getActions()
-    {
-        return $this->actions;
-    }
-    
-    /**
-     * @return integer[]
-     */
-    public function getActionNames()
-    {
-        return array_keys($this->actions);
-    }
-    
-    /**
-     * @param $name
-     * @return ActionInterface
-     * @throws Exception
-     */
-    public function getAction($name)
-    {
-        if (!array_key_exists($name, $this->getActions())) {
-            throw new Exception(
-                "Invalid action name \"{$name}\" for admin '{$this->getName()}'. Check your configuration"
-            );
-        }
-        
-        return $this->actions[$name];
-    }
-    
-    /**
      * Return true if the Action with name $name exists in the Admin. If the method return true, it does not necessarily
      * means that the action is allowed in the current context.
      *
@@ -450,34 +423,27 @@ class Admin implements AdminInterface
      */
     public function hasAction($name)
     {
-        return array_key_exists($name, $this->actions);
-    }
-    
-    /**
-     * @param ActionInterface $action
-     * @return void
-     */
-    public function addAction(ActionInterface $action)
-    {
-        $this->actions[$action->getName()] = $action;
-    }
-    
-    /**
-     * Return the current action or an exception if it is not set.
-     *
-     * @return ActionInterface
-     * @throws Exception
-     */
-    public function getCurrentAction()
-    {
-        if ($this->currentAction === null) {
-            // current action should be defined
-            throw new Exception(
-                'Current action is null. You should initialize it (with handleRequest method for example)'
-            );
-        }
+        $actions = $this->configuration->getParameter('actions');
         
-        return $this->currentAction;
+        if (!key_exists($name, $actions)) {
+            return false;
+        }
+    
+        return null !== $actions[$name] && false !== $actions[$name];
+    }
+    
+    public function getView()
+    {
+        if (!$this->hasView()) {
+            throw new LogicException('The view is not defined. Maybe you forgot to call handleRequest() ?');
+        }
+    
+        return $this->view;
+    }
+    
+    public function hasView()
+    {
+        return null !== $this->view;
     }
     
     /**

@@ -3,7 +3,8 @@ imports:
     - {resource: forms.yml}
     - {resource: menus.yml}
     - {resource: actions.yml}
-    
+    - {resource: responders.yml}
+
 services:
     # Events subscribers
     lag.admin.kernel_subscriber:
@@ -37,12 +38,12 @@ services:
     # Twig extension
     lag.admin.twig:
         class: LAG\AdminBundle\Twig\AdminExtension
+        autowire: true
         tags:
             - {name: twig.extension}
         arguments:
-            - '@router'
-            - '@translator'
             - '%lag.translation_pattern%'
+            - '@knp_menu.menu_provider'
 
     # Message handlers
     lag.admin.message_handler:
@@ -70,7 +71,7 @@ services:
         class: LAG\AdminBundle\Filter\Factory\FilterFormBuilder
         autowire: true
 
-    # Responders
-    lag.admin.action.list_responder:
-        class: LAG\AdminBundle\Action\Responder\ListResponder
-        autowire: true
+    # Configuration
+    lag.admin.configuration_holder:
+        class: LAG\AdminBundle\Application\Configuration\ApplicationConfiguration
+

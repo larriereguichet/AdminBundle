@@ -6,9 +6,10 @@ use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Action\Event\ActionCreatedEvent;
 use LAG\AdminBundle\Action\Event\ActionEvents;
 use LAG\AdminBundle\Action\Event\BeforeConfigurationEvent;
+use LAG\AdminBundle\Action\Registry\Registry;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\LAGAdminBundle;
+use LogicException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,19 +27,27 @@ class ActionFactory
      * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
-
+    
+    /**
+     * @var Registry
+     */
+    protected $registry;
+    
     /**
      * ActionFactory constructor.
      *
-     * @param ConfigurationFactory $configurationFactory
+     * @param ConfigurationFactory     $configurationFactory
      * @param EventDispatcherInterface $eventDispatcher
+     * @param Registry                 $registry
      */
     public function __construct(
         ConfigurationFactory $configurationFactory,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        Registry $registry
     ) {
         $this->configurationFactory = $configurationFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->registry = $registry;
     }
     
     /**
@@ -78,16 +87,67 @@ class ActionFactory
         // retrieve the current Action configuration
         $configuration = $this
             ->configurationFactory
-            ->createActionConfiguration($actionName, $controller->getAdmin(), $event->getActionConfiguration());
+            ->create(
+                $actionName,
+                $controller->getAdmin()->getName(),
+                $controller->getAdmin()->getConfiguration(), $event->getActionConfiguration()
+            )
+        ;
         
         // allow users to listen after action creation
         $event = new ActionCreatedEvent($controller, $controller->getAdmin());
         $this
             ->eventDispatcher
             ->dispatch(
-                ActionEvents::ACTION_CREATED, $event);
+                ActionEvents::ACTION_CREATED, $event)
+        ;
         
         // inject the Action to the controller
         $controller->setConfiguration($configuration);
+    }
+    
+    /**
+     * @param $adminName
+     * @param array $configurations
+     *
+     * @return array
+     */
+    public function getActions($adminName, array $configurations)
+    {
+        $actions = [];
+        
+        foreach ($configurations['actions'] as $name => $configuration) {
+            if (null !== $configuration && key_exists('service', $configuration)) {
+                // if a service key is defined, take it
+                $serviceId = $configuration['service'];
+            } else {
+                // if no service key was provided, we take the default action service
+                $serviceId = $this->getActionServiceId($name, $adminName);
+            }
+            $action = $this
+                ->registry
+                ->get($serviceId)
+            ;
+            $actions[$name] = $action;
+        }
+        
+        return $actions;
+    }
+    
+    /**
+     * @param $name
+     * @param $adminName
+     *
+     * @return string
+     */
+    protected function getActionServiceId($name, $adminName)
+    {
+        $mapping = LAGAdminBundle::getDefaultActionServiceMapping();
+        
+        if (!key_exists($name, $mapping)) {
+            throw new LogicException('Action "'.$name.'" service id was not found for admin "'.$adminName.'"');
+        }
+        
+        return $mapping[$name];
     }
 }

@@ -27,7 +27,9 @@ class RequestHandler
     
     /**
      * @param Request $request
+     *
      * @return AdminInterface
+     *
      * @throws Exception
      */
     public function handle(Request $request)
@@ -39,16 +41,17 @@ class RequestHandler
                 'Cannot find admin from request. _route_params parameters for request not found or invalid'
             );
         }
-        if (!array_key_exists(LAGAdminBundle::REQUEST_PARAMETER_ADMIN, $routeParameters)) {
+        if (!key_exists(LAGAdminBundle::REQUEST_PARAMETER_ADMIN, $routeParameters)) {
             throw new Exception('Cannot find admin from request. "_admin" route parameter is missing');
         }
-        if (!array_key_exists(LAGAdminBundle::REQUEST_PARAMETER_ACTION, $routeParameters)) {
+        if (!key_exists(LAGAdminBundle::REQUEST_PARAMETER_ACTION, $routeParameters)) {
             throw new Exception('Cannot find admin action from request. "_action" route parameter is missing');
         }
 
         return $this
             ->registry
-            ->get($routeParameters['_admin']);
+            ->get($routeParameters['_admin'])
+        ;
     }
     
     /**
@@ -67,8 +70,8 @@ class RequestHandler
             return false;
         }
     
-        if (!array_key_exists(LAGAdminBundle::REQUEST_PARAMETER_ADMIN, $routeParameters) ||
-            !array_key_exists(LAGAdminBundle::REQUEST_PARAMETER_ACTION, $routeParameters)
+        if (!key_exists(LAGAdminBundle::REQUEST_PARAMETER_ADMIN, $routeParameters) ||
+            !key_exists(LAGAdminBundle::REQUEST_PARAMETER_ACTION, $routeParameters)
         ) {
             return false;
         }

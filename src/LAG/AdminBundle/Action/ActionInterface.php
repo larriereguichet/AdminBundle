@@ -4,6 +4,8 @@ namespace LAG\AdminBundle\Action;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminAwareInterface;
+use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Responder\ResponderInterface;
 
 interface ActionInterface extends AdminAwareInterface
 {
@@ -34,4 +36,24 @@ interface ActionInterface extends AdminAwareInterface
      * @return string
      */
     public function getName();
+    
+    /**
+     * @return FieldInterface[]
+     */
+    public function getFields();
+    
+    /**
+     * @param FieldInterface[] $fields
+     */
+    public function setFields(array $fields);
+    
+    /**
+     * @return ResponderInterface
+     */
+    public function getResponder();
+    
+    /**
+     * @param ResponderInterface $responder
+     */
+    public function setResponder(ResponderInterface $responder);
 }

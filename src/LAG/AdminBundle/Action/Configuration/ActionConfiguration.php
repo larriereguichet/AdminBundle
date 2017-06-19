@@ -6,10 +6,13 @@ use Closure;
 use JK\Configuration\Configuration;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Filter\Configuration\FilterConfiguration;
 use LAG\AdminBundle\Form\Type\DeleteType;
 use LAG\AdminBundle\Form\Type\ListType;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Menu\Configuration\MenuConfiguration;
+use LAG\AdminBundle\Routing\RouteNameGenerator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -26,24 +29,29 @@ class ActionConfiguration extends Configuration
     private $actionName;
     
     /**
-     * Related Admin (optional)
-     *
-     * @var AdminInterface
+     * @var AdminConfiguration
      */
-    private $admin = null;
+    private $adminConfiguration;
+    
+    /**
+     * @var string
+     */
+    private $adminName;
     
     /**
      * ActionConfiguration constructor.
      *
-     * @param string              $actionName
-     * @param AdminInterface|null $admin
+     * @param string             $actionName
+     * @param                    $adminName
+     * @param AdminConfiguration $adminConfiguration
      */
-    public function __construct($actionName, AdminInterface $admin)
+    public function __construct($actionName, $adminName, AdminConfiguration $adminConfiguration)
     {
         parent::__construct();
         
         $this->actionName = $actionName;
-        $this->admin = $admin;
+        $this->adminConfiguration = $adminConfiguration;
+        $this->adminName = $adminName;
     }
     
     /**
@@ -101,7 +109,7 @@ class ActionConfiguration extends Configuration
                 'load_strategy' => null,
                 // pager interface, only null or pagerfanta are allowed
                 'pager' => 'pagerfanta',
-                'max_per_page' => $this->admin->getConfiguration()->getParameter('max_per_page'),
+                'max_per_page' => $this->adminConfiguration->getParameter('max_per_page'),
                 // default criteria used to load entities
                 'criteria' => [],
                 // filters, should be an array of string (field name => filter options)
@@ -115,6 +123,8 @@ class ActionConfiguration extends Configuration
                 // twig template
                 'template' => $this->getDefaultTemplate(),
                 'sortable' => $this->getDefaultSortable(),
+                // responder
+                'responder' => $this->getDefaultResponder(),
             ]);
     }
     
@@ -183,6 +193,7 @@ class ActionConfiguration extends Configuration
             ->setNormalizer('menus', $this->getMenuNormalizer())
             ->setNormalizer('batch', $this->getBatchNormalizer())
             ->setNormalizer('filters', $this->getFiltersNormalizer())
+            ->setNormalizer('route_defaults', $this->getRouteDefaultNormalizer())
         ;
     }
     
@@ -224,7 +235,7 @@ class ActionConfiguration extends Configuration
                     throw new ConfigurationException(
                         'Order value should be an array of string (["field" => $key]), got '.gettype($sort),
                         $this->actionName,
-                        $this->admin
+                        $this->adminName
                     );
                 }
             }
@@ -241,11 +252,11 @@ class ActionConfiguration extends Configuration
     private function getRouteNormalizer()
     {
         return function(Options $options, $value) {
+            $generator = new RouteNameGenerator();
+            
             if (!$value) {
                 // generate default route from admin
-                return $this
-                    ->admin
-                    ->generateRouteName($this->actionName);
+                return $generator->generate($this->actionName, $this->adminName, $this->adminConfiguration);
             }
             
             return $value;
@@ -335,24 +346,24 @@ class ActionConfiguration extends Configuration
             // for list actions, we add a default configuration
             if ($batch === null) {
                 // delete action should be allowed in order to be place in batch actions
-                $allowedActions = array_keys($this
-                    ->admin
-                    ->getConfiguration()
-                    ->getParameter('actions'));
+                $actionConfigurations = $this
+                    ->adminConfiguration
+                    ->getParameter('actions')
+                ;
+                $allowedActions = array_keys($actionConfigurations);
                 
                 if ($this->actionName == 'list' && in_array('delete', $allowedActions)) {
                     $pattern = $this
-                        ->admin
-                        ->getConfiguration()
+                        ->adminConfiguration
                         ->getParameter('translation_pattern')
                     ;
                     
                     $batch = [
                         'items' => [
                             'delete' => [
-                                'admin' => $this->admin->getName(),
+                                'admin' => $this->adminName,
                                 'action' => 'delete',
-                                'text' => $this->getTranslationKey($pattern, 'delete', $this->admin->getName()),
+                                'text' => $this->getTranslationKey($pattern, 'delete', $this->adminName),
                             ],
                         ],
                     ];
@@ -378,21 +389,19 @@ class ActionConfiguration extends Configuration
     {
         return function(Options $options, $filters) {
             if (!is_array($filters)) {
-                return null;
+                return [];
             }
             $normalizedData = [];
-            
+            $resolver = new OptionsResolver();
+    
             foreach ($filters as $filter => $filterOptions) {
-                
                 // the filter name should be a string
                 if (!is_string($filter)) {
                     throw new ConfigurationException(
                         'Invalid filter name "'.$filter.'"',
-                        $this->actionName,
-                        $this->admin
+                        $this->actionName
                     );
                 }
-                
                 // normalize string notation
                 // transform "name" => 'string' into "name" => ['type' => 'string']
                 if (is_string($filterOptions)) {
@@ -400,12 +409,33 @@ class ActionConfiguration extends Configuration
                         'type' => $filterOptions,
                     ];
                 }
-                
+    
+                if (null === $filterOptions) {
+                    $filterOptions = [];
+                }
+                $configuration = new FilterConfiguration();
+                $configuration->configureOptions($resolver);
+                $filterOptions = $resolver->resolve($filterOptions);
+                $resolver->clear();
+    
                 // set the normalized data
                 $normalizedData[$filter] = $filterOptions;
             }
             
             return $normalizedData;
+        };
+    }
+    
+    private function getRouteDefaultNormalizer()
+    {
+        return function (Options $options, $value) {
+            if (!is_array($value)) {
+                $value = [];
+            }
+            $value['_admin'] = $this->adminName;
+            $value['_action'] = $this->actionName;
+    
+            return $value;
         };
     }
     
@@ -417,18 +447,17 @@ class ActionConfiguration extends Configuration
     private function getDefaultTitle()
     {
         $translationPattern = $this
-            ->admin
-            ->getConfiguration()
+            ->adminConfiguration
             ->getParameter('translation_pattern')
         ;
         
-        if ($this->admin && $translationPattern) {
+        if (false !== $translationPattern) {
             // by default, the action title is action name using the configured translation pattern
             
             $actionTitle = $this->getTranslationKey(
                 $translationPattern,
                 $this->actionName,
-                $this->admin->getName()
+                $this->adminName
             );
         } else {
             // no admin was provided, we camelize the action name
@@ -446,12 +475,11 @@ class ActionConfiguration extends Configuration
     private function getDefaultRoutePath()
     {
         $pattern = $this
-            ->admin
-            ->getConfiguration()
+            ->adminConfiguration
             ->getParameter('routing_url_pattern')
         ;
         
-        $path = str_replace('{admin}', $this->admin->getName(), $pattern);
+        $path = str_replace('{admin}', $this->adminName, $pattern);
         $path = str_replace('{action}', $this->actionName, $path);
         
         if (in_array($this->actionName, ['edit', 'delete'])) {
@@ -471,22 +499,22 @@ class ActionConfiguration extends Configuration
         $mapping = [
             'list' => [
                 '_controller' => LAGAdminBundle::SERVICE_ID_LIST_ACTION,
-                '_admin' => $this->admin->getName(),
+                '_admin' => $this->adminName,
                 '_action' => $this->actionName,
             ],
             'create' => [
                 '_controller' => LAGAdminBundle::SERVICE_ID_CREATE_ACTION,
-                '_admin' => $this->admin->getName(),
+                '_admin' => $this->adminName,
                 '_action' => $this->actionName,
             ],
             'edit' => [
                 '_controller' => LAGAdminBundle::SERVICE_ID_EDIT_ACTION,
-                '_admin' => $this->admin->getName(),
+                '_admin' => $this->adminName,
                 '_action' => $this->actionName,
             ],
             'delete' => [
                 '_controller' => LAGAdminBundle::SERVICE_ID_DELETE_ACTION,
-                '_admin' => $this->admin->getName(),
+                '_admin' => $this->adminName,
                 '_action' => $this->actionName,
             ],
         ];
@@ -554,8 +582,7 @@ class ActionConfiguration extends Configuration
         if (!array_key_exists($this->actionName, $mapping)) {
             // try to get an admin globally configured form
             $adminForm = $this
-                ->admin
-                ->getConfiguration()
+                ->adminConfiguration
                 ->getParameter('form')
             ;
             
@@ -634,6 +661,22 @@ class ActionConfiguration extends Configuration
     
         if (!$this->isActionInMapping($mapping)) {
             return false;
+        }
+    
+        return $mapping[$this->actionName];
+    }
+    
+    private function getDefaultResponder()
+    {
+        $mapping = [
+            'list' => 'lag.admin.action.list_responder',
+            'create' => 'lag.admin.action.create_responder',
+            'edit' => 'lag.admin.action.edit_responder',
+            'delete' => 'lag.admin.action.delete_responder',
+        ];
+    
+        if (!$this->isActionInMapping($mapping)) {
+            return null;
         }
     
         return $mapping[$this->actionName];

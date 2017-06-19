@@ -8,6 +8,11 @@ use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class ConfigurationFactory
+ * @deprecated
+ * @package LAG\AdminBundle\Configuration\Factory
+ */
 class ConfigurationFactory
 {
     /**
@@ -33,6 +38,8 @@ class ConfigurationFactory
     /**
      * Create an action configuration object.
      *
+     * @deprecated
+     *
      * @param $actionName
      * @param AdminInterface $admin
      * @param array $configuration
@@ -41,7 +48,7 @@ class ConfigurationFactory
     public function createActionConfiguration($actionName, AdminInterface $admin, array $configuration = [])
     {
         $resolver = new OptionsResolver();
-        $actionConfiguration = new ActionConfiguration($actionName, $admin);
+        $actionConfiguration = new ActionConfiguration($actionName, $admin->getName(), $admin->getConfiguration());
         $actionConfiguration->configureOptions($resolver);
         $actionConfiguration->setParameters($resolver->resolve($configuration));
 
@@ -50,6 +57,8 @@ class ConfigurationFactory
 
     /**
      * Create an admin configuration object.
+     *
+     * @deprecated
      *
      * @param array $configuration
      * @return AdminConfiguration
@@ -65,6 +74,8 @@ class ConfigurationFactory
     }
 
     /**
+     * @deprecated
+     *
      * Return the Application configuration.
      *
      * @return ApplicationConfiguration

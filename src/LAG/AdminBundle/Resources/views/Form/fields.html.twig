@@ -17,14 +17,14 @@
 {% block form_help -%}
     {% for attrname, attrvalue in attr %}
         {% if attrname == 'data-help' %}
-            <span class="help-block">{{ attrvalue | trans }}</span>
+            <small class="form-text text-muted">{{ attrvalue | trans }}</small>
         {% endif %}
     {% endfor %}
 {%- endblock form_help %}
 
 {% block form_errors -%}
     {% if errors|length > 0 -%}
-        {% if form.parent %}<span class="help-block">{% else %}<div class="alert alert-danger">{% endif %}
+        {% if form.parent %}<span class="form-text">{% else %}<div class="alert alert-danger">{% endif %}
 
         <ul class="list-unstyled">
             {%- for error in errors -%}

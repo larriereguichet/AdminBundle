@@ -40,7 +40,7 @@ class EditAction extends Action
      */
     public function __invoke(Request $request)
     {
-        // the Admin with auto injected with the KernelSubscriber
+        // the admin with automatically injected thanks to the KernelSubscriber
         $this
             ->admin
             ->handleRequest($request)

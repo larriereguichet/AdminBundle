@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Form\Type;
 
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Menu\Configuration\MenuItemConfiguration;
+use LAG\AdminBundle\Routing\RouteNameGenerator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -61,10 +62,13 @@ class AdminListType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        // TODO remove admin here ? only inject name and configuration ?
         /** @var AdminInterface $admin */
         $admin = $options['admin'];
-
-        $view->vars['action'] = $admin->generateRouteName('batch');
+    
+        $generator = new RouteNameGenerator();
+        
+        $view->vars['action'] = $generator->generate('batch', $admin->getName(), $admin->getConfiguration());
     }
 
     /**

@@ -88,8 +88,7 @@ class FieldCompilerPassTest extends AdminTestBase
         $containerBuilder = new ContainerBuilder();
         $compilerPass = new FieldCompilerPass();
         $compilerPass->process($containerBuilder);
-
-        $this->assertCount(0, $containerBuilder->getDefinitions());
+        
         $this->assertFalse($containerBuilder->has('lag.admin.data_providers_factory'));
     }
 
@@ -103,8 +102,7 @@ class FieldCompilerPassTest extends AdminTestBase
 
         $compilerPass = new FieldCompilerPass();
         $compilerPass->process($containerBuilder);
-
-        $this->assertCount(1, $containerBuilder->getDefinitions());
+        
         $this->assertTrue($containerBuilder->hasDefinition('lag.admin.field_factory'));
     }
 }

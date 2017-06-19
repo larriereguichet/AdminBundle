@@ -10,22 +10,20 @@ use LAG\AdminBundle\DependencyInjection\LAGAdminExtension;
 use LAG\AdminBundle\Field\Factory\FieldFactory;
 use LAG\AdminBundle\Menu\Factory\MenuFactory;
 use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\Tests\Fake\Twig_Environment;
 use LAG\AdminBundle\Tests\Utils\FakeEntityManager;
 use Monolog\Logger;
 use stdClass;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser;
-use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
-use Twig_Loader_Array;
+use Symfony\Component\Translation\IdentityTranslator;
+
 
 class LAGAdminExtensionTest extends AdminTestBase
 {
@@ -41,13 +39,9 @@ class LAGAdminExtensionTest extends AdminTestBase
                 'application' => [],
             ]
         ], $container);
-        $this->assertCount(37, $container->getDefinitions());
 
         $eventDispatcherExtension = new FrameworkExtension();
         $eventDispatcherExtension->load([], $container);
-
-        $twigExtension = new TwigExtension();
-        $twigExtension->load([], $container);
 
         $knpMenuExtension = new KnpMenuExtension();
         $knpMenuExtension->load([], $container);
@@ -105,23 +99,12 @@ class LAGAdminExtensionTest extends AdminTestBase
      */
     protected function getWorkingContainer()
     {
-        $kernel = $this
-            ->getMockBuilder(KernelInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
         $generic = new Definition(stdClass::class);
-        $fileLocator = new Definition(FileLocator::class);
-        
-        $templateNameParser = new Definition(TemplateNameParser::class, [
-            $kernel,
-        ]);
         
         $logger = new Definition(Logger::class, [
             'default'
         ]);
         $session= new Definition(Session::class);
-        $twigLoader = new Definition(Twig_Loader_Array::class);
 
         $entityManager = new Definition();
         $entityManager->setClass(FakeEntityManager::class);
@@ -134,7 +117,14 @@ class LAGAdminExtensionTest extends AdminTestBase
     
         $formFactory = new Definition(FormFactoryInterface::class);
     
+        $translator = new Definition(IdentityTranslator::class);
+    
         $router = new Definition(RouterInterface::class);
+    
+        $workflowTwigExtension = new Definition(stdClass::class);
+        $workflowTwigExtension->setAutowired(true);
+    
+        $twig = new Definition(Twig_Environment::class);
 
         $container = new ContainerBuilder();
         $container->setParameter('kernel.debug', false);
@@ -145,6 +135,7 @@ class LAGAdminExtensionTest extends AdminTestBase
         $container->setParameter('kernel.bundles', []);
         $container->setParameter('kernel.bundles_metadata', []);
         $container->setParameter('kernel.environment', 'prod');
+        $container->setParameter('kernel.project_dir', __DIR__);
 
         $container->setDefinitions([
             'doctrine.orm.entity_manager' => $entityManager,
@@ -153,11 +144,10 @@ class LAGAdminExtensionTest extends AdminTestBase
             'logger' => $logger,
             'session' => $session,
             'form.factory' => $formFactory,
-            'templating.locator' => $fileLocator,
-            'templating.name_parser' => $templateNameParser,
-            'twig.loader' => $twigLoader,
             'security.authorization_checker' => $authorizationChecker,
             'security.token_storage' => $tokenStorage,
+            'translator' => $translator,
+            'twig' => $twig,
         ]);
 
         return $container;

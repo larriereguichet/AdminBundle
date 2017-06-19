@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Action\Responder;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Routing\RouteNameGenerator;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,11 +31,13 @@ class EditResponder extends AbstractResponder
         
         // if the form is submitted and validated, the user should be redirected
         if ($form->isSubmitted() && $form->isValid()) {
+            $generator = new RouteNameGenerator();
+            
             // if the save button is pressed, the user will stay on the edit view
             if ('save' === $submitButtonName) {
                 $url = $this
                     ->router
-                    ->generate($admin->generateRouteName('edit'), [
+                    ->generate($generator->generate('edit', $admin->getName(), $admin->getConfiguration()), [
                         'id' => $admin->getUniqueEntity()->getId(),
                     ])
                 ;
@@ -44,7 +47,7 @@ class EditResponder extends AbstractResponder
                 // otherwise the user will be redirected to the list view
                 $url = $this
                     ->router
-                    ->generate($admin->generateRouteName('list'))
+                    ->generate($generator->generate('list', $admin->getName(), $admin->getConfiguration()))
                 ;
                 
                 return new RedirectResponse($url);
@@ -52,7 +55,7 @@ class EditResponder extends AbstractResponder
         }
         
         return $this->render($template, [
-            'admin' => $admin,
+            'admin' => $admin->getView(),
             'form' => $form->createView(),
         ]);
     }

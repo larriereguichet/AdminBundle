@@ -20,41 +20,41 @@ class ListType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('actions', ChoiceType::class, [
-                'choices' => $options['actions'],
-            ])
-            ->add('selectAll', CheckboxType::class, [
-                'label' => false,
-                'required' => false,
-                'mapped' => false,
-                'attr' => [
-                    'class' => 'select-all',
-                ],
-            ])
-            ->add('entities', EntityType::class, [
-                'required' => false,
-                'class' => 'JK\CmsBundle\Entity\Article',
-                //'property' => 'id',
-                'property_path' => '[id]',
-                'label' => false,
-                'choice_label' => false,
-                'query_builder' => function(EntityRepository $repository) use ($options) {
-                    $values = [];
-                    $accessor = PropertyAccess::createPropertyAccessor();
-    
-                    foreach ($options['entities'] as $entity) {
-                        $values[] = $accessor->getValue($entity, $options['entity_property']);
-                    }
-                    
-                    return $repository
-                        ->createQueryBuilder('entity')
-                        ->where('entity.'.$options['entity_property'].' IN (:values)')
-                        ->setParameter('values', $values)
-                    ;
-                },
-                'multiple' => true,
-                'expanded' => true,
-            ])
+//            ->add('actions', ChoiceType::class, [
+//                'choices' => $options['actions'],
+//            ])
+//            ->add('selectAll', CheckboxType::class, [
+//                'label' => false,
+//                'required' => false,
+//                'mapped' => false,
+//                'attr' => [
+//                    'class' => 'select-all',
+//                ],
+//            ])
+//            ->add('entities', EntityType::class, [
+//                'required' => false,
+//                'class' => 'JK\CmsBundle\Entity\Article',
+//                //'property' => 'id',
+//                'property_path' => '[id]',
+//                'label' => false,
+//                'choice_label' => false,
+//                'query_builder' => function(EntityRepository $repository) use ($options) {
+//                    $values = [];
+//                    $accessor = PropertyAccess::createPropertyAccessor();
+//
+//                    foreach ($options['entities'] as $entity) {
+//                        $values[] = $accessor->getValue($entity, $options['entity_property']);
+//                    }
+//
+//                    return $repository
+//                        ->createQueryBuilder('entity')
+//                        ->where('entity.'.$options['entity_property'].' IN (:values)')
+//                        ->setParameter('values', $values)
+//                    ;
+//                },
+//                'multiple' => true,
+//                'expanded' => true,
+//            ])
 
 //            ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($options) {
 //                $data = $event->getData();

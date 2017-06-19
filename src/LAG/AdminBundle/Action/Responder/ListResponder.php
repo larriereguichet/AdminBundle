@@ -26,7 +26,7 @@ class ListResponder extends AbstractResponder
         FormInterface $filterForm = null
     ) {
         $context = [
-            'admin' => $admin,
+            'admin' => $admin->getView(),
             'form' => $form->createView(),
         ];
     

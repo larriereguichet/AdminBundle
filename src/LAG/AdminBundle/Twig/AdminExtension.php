@@ -2,11 +2,18 @@
 
 namespace LAG\AdminBundle\Twig;
 
+use Knp\Menu\Provider\MenuProviderInterface;
+use Knp\Menu\Twig\Helper;
 use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
+use LAG\AdminBundle\Admin\Request\RequestHandler;
+use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Field\EntityAwareInterface;
 use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Routing\RouteNameGenerator;
+use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
@@ -40,20 +47,60 @@ class AdminExtension extends Twig_Extension
     private $translationPattern;
     
     /**
+     * @var Helper
+     */
+    private $menuHelper;
+    
+    /**
+     * @var RequestHandler
+     */
+    private $requestHandler;
+    
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+    
+    /**
+     * @var ConfigurationFactory
+     */
+    private $configurationFactory;
+    
+    /**
+     * @var MenuProviderInterface
+     */
+    private $menuProvider;
+    
+    /**
      * AdminExtension constructor.
      *
-     * @param RouterInterface $router
-     * @param TranslatorInterface $translator
-     * @param string $translationPattern
+     * @param string                $translationPattern
+     * @param RouterInterface       $router
+     * @param TranslatorInterface   $translator
+     * @param RequestHandler        $requestHandler
+     * @param RequestStack          $requestStack
+     * @param Helper                $menuHelper
+     * @param MenuProviderInterface $menuProvider
+     * @param ConfigurationFactory  $configurationFactory
      */
     public function __construct(
+        $translationPattern,
+        MenuProviderInterface $menuProvider,
         RouterInterface $router,
         TranslatorInterface $translator,
-        $translationPattern
+        RequestHandler $requestHandler,
+        RequestStack $requestStack,
+        Helper $menuHelper,
+        ConfigurationFactory $configurationFactory
     ) {
         $this->router = $router;
         $this->translator = $translator;
         $this->translationPattern = $translationPattern;
+        $this->menuHelper = $menuHelper;
+        $this->requestHandler = $requestHandler;
+        $this->requestStack = $requestStack;
+        $this->configurationFactory = $configurationFactory;
+        $this->menuProvider = $menuProvider;
     }
 
     /**
@@ -67,6 +114,9 @@ class AdminExtension extends Twig_Extension
             new Twig_SimpleFunction('field', [$this, 'field']),
             new Twig_SimpleFunction('field_title', [$this, 'fieldTitle']),
             new Twig_SimpleFunction('route_parameters', [$this, 'routeParameters']),
+            new Twig_SimpleFunction('admin_menu_render', [$this, 'renderMenu']),
+            new Twig_SimpleFunction('admin_config', [$this, 'getConfigParameter']),
+            new Twig_SimpleFunction('admin_url', [$this, 'generateUrl']),
         ];
     }
 
@@ -233,6 +283,44 @@ class AdminExtension extends Twig_Extension
     public function camelize($string)
     {
         return Container::camelize($string);
+    }
+    
+    public function renderMenu($menuName, array $options = [])
+    {
+        if (!$this->menuProvider->has($menuName)) {
+            return '';
+        }
+        
+        $request = $this->requestStack->getMasterRequest();
+    
+        if ($this->requestHandler->supports($request)) {
+            $menu = $this->menuHelper->get($menuName, [], $options);
+            $content = $this->menuHelper->render($menu);
+        } else {
+            $content = $this->menuHelper->render($menuName);
+        }
+        
+        return $content;
+    }
+    
+    public function getConfigParameter($parameter)
+    {
+        return $this
+            ->configurationFactory
+            ->getApplicationConfiguration()
+            ->getParameter($parameter)
+        ;
+    }
+    
+    public function generateUrl($actionName, ViewInterface $view, array $parameters = [])
+    {
+        $generator = new RouteNameGenerator();
+        $routeName = $generator->generate($actionName, $view->getName(), $view->getAdminConfiguration());
+    
+        return $this
+            ->router
+            ->generate($routeName, $parameters)
+        ;
     }
 
     /**

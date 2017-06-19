@@ -27,6 +27,8 @@ class PagerfantaAdminAdapter implements AdapterInterface
      */
     private $options;
     
+    private $data;
+    
     /**
      * PagerfantaAdminAdapter constructor.
      *
@@ -56,7 +58,7 @@ class PagerfantaAdminAdapter implements AdapterInterface
     {
         return $this
             ->dataProvider
-            ->count()
+            ->count($this->criteria)
         ;
     }
     
@@ -70,9 +72,16 @@ class PagerfantaAdminAdapter implements AdapterInterface
      */
     public function getSlice($offset, $length)
     {
-        return $this
+        $this->retrieveData($length, $offset);
+    
+        return $this->data;
+    }
+    
+    private function retrieveData($length, $offset)
+    {
+        $this->data = $this
             ->dataProvider
-            ->findBy($this->criteria, $this->orderBy, $length, $offset, $this->options)
+            ->findBy($this->criteria, $this->orderBy, $length, $offset)
         ;
     }
 }

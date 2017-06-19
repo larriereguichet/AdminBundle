@@ -32,22 +32,23 @@ class LAGAdminExtension extends Extension
         $enableExtraConfig = true;
         $translationPattern = null;
         
-        if (array_key_exists('application', $config)) {
-            if (array_key_exists('enable_extra_configuration', $config['application'])) {
+        if (key_exists('application', $config)) {
+            if (key_exists('enable_extra_configuration', $config['application'])) {
                 $enableExtraConfig = $config['application']['enable_extra_configuration'];
             }
-            if (array_key_exists('translation', $config['application']) &&
-                array_key_exists('pattern', $config['application']['translation'])) {
+            if (key_exists('translation', $config['application']) &&
+                key_exists('pattern', $config['application']['translation'])) {
                 $translationPattern = $config['application']['translation']['pattern'];
             }
             $applicationConfig = $config['application'];
         }
-        if (array_key_exists('admin', $config)) {
-            $adminsConfig = $config['admin'];
+        if (key_exists('admins', $config)) {
+            $adminsConfig = $config['admins'];
         }
-        if (array_key_exists('menu', $config)) {
-            $menusConfig = $config['menu'];
+        if (key_exists('menus', $config)) {
+            $menusConfig = $config['menus'];
         }
+        
         $builder->setParameter('lag.admin.enable_extra_configuration', $enableExtraConfig);
         $builder->setParameter('lag.admin.application_configuration', $applicationConfig);
         $builder->setParameter('lag.admins', $adminsConfig);

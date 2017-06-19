@@ -2,6 +2,8 @@
 
 namespace LAG\AdminBundle\Field\Field;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 class Action extends Link
 {
     /**
@@ -15,11 +17,24 @@ class Action extends Link
     {
         $value = $this
             ->options
-            ->get('title');
-
+            ->get('title')
+        ;
+        
         return parent::render($value);
     }
-
+    
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+    
+        $resolver
+            ->setDefaults([
+                'class' => 'btn btn-danger btn-sm',
+                'text' => '',
+            ])
+        ;
+    }
+    
     /**
      * @inheritdoc
      *

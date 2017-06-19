@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="{{ admin_config('locale') }}">
+<head>
+    {% block head %}
+        <title>
+            {% block title %}{{ admin_config('title') }}{% endblock %}
+        </title>
+
+        {% block meta %}
+            <meta charset="utf-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+            <meta name="description" content="{{ admin_config('description') }}" />
+        {% endblock %}
+
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('bundles/lagadmin/css/admin.css') }}">
+        {% endblock %}
+    {% endblock %}
+</head>
+
+{% block html %}
+<body>
+{% block body %}
+    {% set admin = admin|default(null) %}
+
+    {% block navbar %}
+        <header class="navbar navbar-light bg-light navbar navbar-expand flex-column flex-md-row bd-navbar">
+            <a href="{{ path('admin.homepage') }}" class="navbar-brand">
+                {% block brand %}{% endblock %}
+            </a>
+
+            {% if is_granted('ROLE_USER') %}
+                {% block top_menu %}
+                    <div class="navbar-nav">
+                        {{ admin_menu_render('top') | raw }}
+                    </div>
+                {% endblock %}
+            {% endif %}
+        </header>
+    {% endblock %}
+
+    {% block layout %}
+        <div class="container-fluid">
+            <div class="row">
+                {% include "LAGAdminBundle:Layout:flash_messages.html.twig" %}
+
+                <div id="main-menu-container"
+                     class="col-4 col-xl-2"
+                     role="navigation">
+                    {% block left_menu %}
+                        {{ admin_menu_render('main') | raw }}
+                    {% endblock %}
+                </div>
+
+                {% block content_container %}
+                    <main class="col-7 col-xl-8"
+                          role="main">
+                        {% block content %}{% endblock %}
+                    </main>
+                {% endblock %}
+
+                {% block right_menu_container %}
+                    <div class="col-1 col-xl-2">
+                        {% block right_menu %}
+                            {{ admin_menu_render('right') }}
+                        {% endblock %}
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block footer %}
+        <footer>
+
+            {% block javascripts %}
+                <script src="{{ asset('bundles/lagadmin/js/admin.js') }}"></script>
+            {% endblock %}
+        </footer>
+    {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {#<div class="wrapper">#}
+        {#{% if app.user %}#}
+            {#<nav style="margin-bottom: 0" role="navigation" id="admin-top-menu"#}
+                 {#class="navbar navbar-default navbar-static-top">#}
+                {#<div class="navbar-header">#}
+                    {# collapse button for responsive #}
+                    {#<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">#}
+                        {#<span class="sr-only">Toggle navigation</span>#}
+                        {#<span class="icon-bar"></span>#}
+                        {#<span class="icon-bar"></span>#}
+                        {#<span class="icon-bar"></span>#}
+                    {#</button>#}
+                    {#{% block mainTitle %}#}
+                        {#<a href="{{ path('bluebear.cms.homepage') }}" class="navbar-brand">Le comptoir des noisettes</a>#}
+                    {#{% endblock %}#}
+
+                    {#{% block topMenu %}#}
+                        {#<div class="pull-left">#}
+                            {#{{ AdminBundle.adminMenu('top', admin) }}#}
+                        {#</div>#}
+
+                        {#{% if app.user %}#}
+                            {#<div class="pull-right">#}
+                                {#<div class="profile-header-container">#}
+                                    {#<div class="profile-header-img">#}
+                                        {#Bienvenue {{ app.user.email }}#}
+                                        {#<img class="img-circle"#}
+                                             {#height="40"#}
+                                             {#style="margin-top: 5px"#}
+                                             {#src="{{ app.user.profilePicture }}" />#}
+                                    {#</div>#}
+                                {#</div>#}
+                            {#</div>#}
+                        {#{% endif %}#}
+                    {#{% endblock %}#}
+
+                    {#{% block leftMenu %}#}
+                        {#<div role="navigation" class="navbar-default sidebar">#}
+                            {#<div class="sidebar-nav navbar-collapse">#}
+                                {#{{ AdminBundle.adminMenu('main', admin) }}#}
+                            {#</div>#}
+                        {#</div>#}
+                    {#{% endblock %}#}
+                {#</div>#}
+            {#</nav>#}
+        {#{% endif %}#}
+
+        {#{% block container %}#}
+            {#<div id="page-wrapper">#}
+                {# flash messages #}
+                {#{% include "LAGAdminBundle:Layout:flash_messages.html.twig" %}#}
+
+                {#<div class="row">#}
+                    {#<div class="col-lg-12">#}
+                        {#{% block content %}{% endblock %}#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+        {#{% endblock %}#}
+    {#</div>#}
+    {#<footer>#}
+        {# jquery #}
+        {#<script src="{{ asset('bundles/lagadmin/js/jquery/jquery.min.js') }}"></script>#}
+        {#<script src="{{ asset('bundles/lagadmin/js/jquery/jquery-ui.min.js') }}"></script>#}
+
+        {#{% if config.getParameter('bootstrap') %}#}
+            {# bootstrap js #}
+
+            {#<script src="{{ asset('bundles/lagadmin/js/bootstrap/metisMenu.min.js') }}"></script>#}
+            {#<script src="{{ asset('bundles/lagadmin/js/bootstrap/sb-admin-2.js') }}"></script>#}
+        {#{% endif %}#}
+
+        {#{% block adminJs %}#}
+
+        {#{% endblock %}#}
+
+        {#{% block javascripts %}#}
+
+            {#<script src="{{ asset('bundles/lagadmin/js/bootstrap/bootstrap.min.js') }}"></script>#}
+            {#<script>#}
+                {#// AdminJS#}
+                {#$(document).ready(function () {#}
+                    {#/*var datetimePickerSelector = '.datepicker';#}
+
+                    {#$(datetimePickerSelector).datetimepicker({#}
+                        {#format: 'd/m/yyyy',#}
+                        {#language: 'fr'#}
+                    {#});*/#}
+                    {#var selectAllForm = $('.selectable-list');#}
+                    {#var selectAllInput = selectAllForm.find('.select-all');#}
+
+                    {#selectAllInput.on('change', function () {#}
+                        {#selectAllForm.find('input[type=checkbox]').prop('checked', $(this).prop('checked'));#}
+                    {#});#}
+                    {#selectAllForm.find('input[type=checkbox]').not('.select-all').on('change', function () {#}
+                        {#if (!$(this).prop('checked')) {#}
+                            {#selectAllInput.prop('checked', false);#}
+                        {#}#}
+                    {#});#}
+                {#});#}
+            {#</script>#}
+            {#<script>#}
+                {#$(document).on('ready', function () {#}
+                    {# TODO move in a separate script #}
+                    {#var routes = {#}
+                        {#modalGallery: '{{ path('cms.media.gallery.modal') }}',#}
+                        {#galleryContent: '{{ path('cms.media.gallery.content') }}'#}
+                    {#};#}
+                    {#var galleryModal = $('#gallery-modal');#}
+
+                    {#$('#file-upload').fileupload({#}
+                        {#done: function () {#}
+                            {#galleryModal.find('#media-container').load(routes.modalGallery);#}
+                        {#}#}
+                    {#});#}
+
+                    {#$('#add-gallery-btn').on('click', function () {#}
+                        {#var selectedMedias = galleryModal.find('.media a.selected');#}
+
+                        {#if (selectedMedias.length === 0) {#}
+                            {#return;#}
+                        {#}#}
+                        {#var ids = [];#}
+
+                        {#selectedMedias.each(function (index, value) {#}
+                            {#ids.push($(value).data('id'));#}
+                        {#});#}
+                        {#var route = routes.galleryContent + '?ids=' + ids.join(',');#}
+
+                        {#$.get(route, function (data) {#}
+                            {#tinymce.activeEditor.execCommand('mceInsertContent', false, data);#}
+                            {#galleryModal.modal('hide');#}
+                        {#});#}
+                    {#});#}
+                {#});#}
+            {#</script>#}
+
+            {# inject scripts in footer section #}
+            {#{{ cms_dump_scripts('footer') | raw }}#}
+
+            {# modal template #}
+            {#{% include '@JKCms/Modal/_modal.html.twig' %}#}
+        {#{% endblock %}#}
+    {#</footer>#}
+
+{% endblock %}
+</body>
+</html>
+
+{% endblock %}

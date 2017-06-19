@@ -5,8 +5,10 @@ namespace LAG\AdminBundle\Filter\Factory;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Handle the creation of Filters.
@@ -17,15 +19,21 @@ class FilterFormBuilder
      * @var FormFactoryInterface
      */
     private $formFactory;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
     
     /**
      * FilterFormBuilder constructor.
      *
      * @param FormFactoryInterface $formFactory
+     * @param TranslatorInterface  $translator
      */
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct(FormFactoryInterface $formFactory, TranslatorInterface $translator)
     {
         $this->formFactory = $formFactory;
+        $this->translator = $translator;
     }
     
     /**
@@ -54,7 +62,7 @@ class FilterFormBuilder
     
         foreach ($filters as $field => $options) {
             $type = $this->convertShortFormType($options['type']);
-            $options = $this->mergeDefaultFormOptions($options['options']);
+            $options = $this->mergeDefaultFormOptions($field, $options['options']);
             
             $builder->add($field, $type, $options);
         }
@@ -87,6 +95,7 @@ class FilterFormBuilder
     {
         $mapping = [
             'choice' => ChoiceType::class,
+            'string' => TextType::class,
         ];
     
         if (array_key_exists($type, $mapping)) {
@@ -103,13 +112,23 @@ class FilterFormBuilder
      *
      * @return array
      */
-    private function mergeDefaultFormOptions(array $formOptions = null)
+    private function mergeDefaultFormOptions($field, array $formOptions = null)
     {
         if (null === $formOptions) {
             $formOptions = [];
         }
+        $placeholder = $this
+            ->translator
+            ->trans('lag.admin.search_by', [
+                '%field%' => $field,
+            ])
+        ;
     
         return array_merge([
+            'attr' => [
+                'class' => 'form-control form-control-sm mb-2 mr-sm-2 mb-sm-0',
+                'placeholder' => $placeholder,
+            ],
             'required' => false,
         ], $formOptions);
     }

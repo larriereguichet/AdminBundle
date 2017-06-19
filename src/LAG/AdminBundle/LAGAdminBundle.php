@@ -5,6 +5,7 @@ namespace LAG\AdminBundle;
 use LAG\AdminBundle\DependencyInjection\CompilerPass\ActionCompilerPass;
 use LAG\AdminBundle\DependencyInjection\CompilerPass\DataProviderCompilerPass;
 use LAG\AdminBundle\DependencyInjection\CompilerPass\FieldCompilerPass;
+use LAG\AdminBundle\DependencyInjection\CompilerPass\ResponderCompilerPass;
 use LogicException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -64,6 +65,7 @@ class LAGAdminBundle extends Bundle implements PrependExtensionInterface
         $container->addCompilerPass(new FieldCompilerPass());
         $container->addCompilerPass(new DataProviderCompilerPass());
         $container->addCompilerPass(new ActionCompilerPass());
+        $container->addCompilerPass(new ResponderCompilerPass());
     }
     
     /**

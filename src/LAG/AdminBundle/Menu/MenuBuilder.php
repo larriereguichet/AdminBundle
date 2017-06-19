@@ -73,7 +73,7 @@ class MenuBuilder
         if (array_key_exists('entity', $options)) {
             $entity = $options['entity'];
         }
-
+       
         return $this
             ->menuFactory
             ->create('main', $this->menusConfiguration['main'], $entity);
@@ -93,38 +93,38 @@ class MenuBuilder
             ->requestStack
             ->getCurrentRequest();
         $entity = null;
-        $menusConfiguration = [];
-        $menusConfiguration['top'] = [];
-
+        $configuration = [];
+    
         // request should exists and should have admin parameters
-        if ($request !== null && !empty($request->get('_route_params')['_admin'])) {
+        if ($this->requestHandler->supports($request)) {
             // get current action from admin
             $admin = $this
                 ->requestHandler
-                ->handle($request);
+                ->handle($request)
+            ;
 
-            if ($admin->isCurrentActionDefined()) {
+            if ($admin->hasView()) {
                 // menu configuration
-                $menusConfiguration = $admin
-                    ->getCurrentAction()
+                $menus = $admin
+                    ->getView()
                     ->getConfiguration()
-                    ->getParameter('menus');
+                    ->getParameter('menus')
+                ;
 
-                if (!array_key_exists('top', $menusConfiguration)) {
-                    $menusConfiguration['top'] = [];
+                if (key_exists('top', $menus)) {
+                    //$configuration = $menus['top'];
+                    $configuration['attr'] = [
+                        //'class' => 'nav navbar-top-links navbar-right in',
+                        'class' => 'navbar-nav bd-navbar-nav flex-row',
+                    ];
+                    $entity = $admin->getView()->getEntities()->first();
                 }
-                $menusConfiguration['top']['attr'] = [
-                    'class' => 'nav navbar-top-links navbar-right in',
-                ];
             }
-        }
-
-        if (array_key_exists('entity', $options)) {
-            $entity = $options['entity'];
         }
 
         return $this
             ->menuFactory
-            ->create('top', $menusConfiguration['top'], $entity);
+            ->create('top', $configuration, $entity)
+        ;
     }
 }

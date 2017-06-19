@@ -17,8 +17,8 @@ use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
 use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
 use LAG\AdminBundle\DataProvider\Loader\EntityLoader;
-use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
+use LAG\AdminBundle\View\Factory\ViewFactory;
 use LogicException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,6 +91,10 @@ class AdminFactory
      * @var ActionRegistry
      */
     private $actionRegistry;
+    /**
+     * @var ViewFactory
+     */
+    private $viewFactory;
     
     /**
      * AdminFactory constructor.
@@ -103,6 +107,7 @@ class AdminFactory
      * @param ActionFactory                 $actionFactory
      * @param ConfigurationFactory          $configurationFactory
      * @param DataProviderFactory           $dataProviderFactory
+     * @param ViewFactory                   $viewFactory
      * @param RequestHandler                $requestHandler
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param TokenStorageInterface         $tokenStorage
@@ -116,6 +121,7 @@ class AdminFactory
         ActionFactory $actionFactory,
         ConfigurationFactory $configurationFactory,
         DataProviderFactory $dataProviderFactory,
+        ViewFactory $viewFactory,
         RequestHandler $requestHandler,
         AuthorizationCheckerInterface $authorizationChecker,
         TokenStorageInterface $tokenStorage
@@ -131,6 +137,7 @@ class AdminFactory
         $this->authorizationChecker = $authorizationChecker;
         $this->tokenStorage = $tokenStorage;
         $this->actionRegistry = $actionRegistry;
+        $this->viewFactory = $viewFactory;
     }
 
     /**
@@ -151,27 +158,29 @@ class AdminFactory
 
         // get the modified configuration
         $this->adminConfigurations = $event->getAdminConfigurations();
-
+        
         // create Admins according to the given configuration
         foreach ($this->adminConfigurations as $name => $configuration) {
-
             // dispatch an event to allow modification on a specific admin
             $event = new AdminCreateEvent($name, $configuration);
             $this
                 ->eventDispatcher
-                ->dispatch(AdminEvents::ADMIN_CREATE, $event);
+                ->dispatch(AdminEvents::ADMIN_CREATE, $event)
+            ;
 
             // create Admin object and add it to the registry
             $admin = $this->create($name, $event->getAdminConfiguration());
             $this
                 ->adminRegistry
-                ->add($admin);
+                ->add($admin)
+            ;
 
             // dispatch post-create event
             $event = new AdminCreatedEvent($admin);
             $this
                 ->eventDispatcher
-                ->dispatch(AdminEvents::ADMIN_CREATED, $event);
+                ->dispatch(AdminEvents::ADMIN_CREATED, $event)
+            ;
         }
         $this->isInit = true;
     }
@@ -209,7 +218,10 @@ class AdminFactory
         ;
     
         // retrieve the actions services
-        $actions = $this->retrieveActions($name, $configuration);
+        $actions = $this
+            ->actionFactory
+            ->getActions($name, $configuration)
+        ;
 
         // create Admin object
         $admin = new $adminClass(
@@ -220,6 +232,8 @@ class AdminFactory
             $this->eventDispatcher,
             $this->authorizationChecker,
             $this->tokenStorage,
+            $this->requestHandler,
+            $this->viewFactory,
             $actions
         );
     
@@ -250,6 +264,8 @@ class AdminFactory
         
         // inject the Admin in the controller
         $controller->setAdmin($admin);
+        
+        // dispatch an even to allow some custom logic
         $this
             ->eventDispatcher
             ->dispatch(AdminEvents::ADMIN_INJECTED, new AdminInjectedEvent($admin, $controller))
@@ -264,48 +280,5 @@ class AdminFactory
     public function isInit()
     {
         return $this->isInit;
-    }
-    
-    /**
-     * @param $adminName
-     * @param array $configuration
-     *
-     * @return array
-     */
-    private function retrieveActions($adminName, array $configuration)
-    {
-        $actions = [];
-    
-        foreach ($configuration['actions'] as $name => $actionConfiguration) {
-            if (null !== $actionConfiguration && array_key_exists('service', $actionConfiguration)) {
-                $serviceId = $actionConfiguration['service'];
-            } else {
-                $serviceId = $this->getActionServiceId($name, $adminName);
-            }
-            
-            $actions[$name] = $this
-                ->actionRegistry
-                ->get($serviceId)
-            ;
-        }
-    
-        return $actions;
-    }
-    
-    /**
-     * @param $name
-     * @param $adminName
-     *
-     * @return string
-     */
-    private function getActionServiceId($name, $adminName)
-    {
-        $mapping = LAGAdminBundle::getDefaultActionServiceMapping();
-    
-        if (!array_key_exists($name, $mapping)) {
-            throw new LogicException('Action "'.$name.'" service id was not found for admin "'.$adminName.'"');
-        }
-    
-        return $mapping[$name];
     }
 }

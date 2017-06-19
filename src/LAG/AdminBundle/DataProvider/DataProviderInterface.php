@@ -35,11 +35,10 @@ interface DataProviderInterface
      * @param array $orderBy
      * @param null|int  $limit
      * @param null|int  $offset
-     * @param array $options
      *
      * @return mixed
      */
-    public function findBy(array $criteria = [], $orderBy = [], $limit = null, $offset = null, array $options = []);
+    public function findBy(array $criteria = [], $orderBy = [], $limit = null, $offset = null);
 
     /**
      * Find an entity according to its unique id.

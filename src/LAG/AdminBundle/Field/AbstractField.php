@@ -98,5 +98,16 @@ abstract class AbstractField implements FieldInterface
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        $resolver->setDefaults([
+            'class' => '',
+        ]);
+    }
+    
+    /**
+     * @return string
+     */
+    public function getColumnClass()
+    {
+        return '';
     }
 }

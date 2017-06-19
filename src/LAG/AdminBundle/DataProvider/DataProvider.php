@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\DataProvider;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityRepository;
 use LAG\AdminBundle\Repository\RepositoryInterface;
 
 /**
@@ -32,16 +33,50 @@ class DataProvider implements DataProviderInterface
      * @param array    $orderBy
      * @param int|null $limit
      * @param int|null $offset
-     * @param array    $options
      *
      * @return array|Collection
      */
-    public function findBy(array $criteria = [], $orderBy = [], $limit = null, $offset = null, array $options = [])
+    public function findBy(array $criteria = [], $orderBy = [], $limit = null, $offset = null)
     {
-        return $this
-            ->repository
-            ->findBy($criteria, $orderBy, $limit, $offset, $options)
-        ;
+        if ($this->repository instanceof EntityRepository) {
+            $queryBuilder = $this
+                ->repository
+                ->createQueryBuilder('entity')
+            ;
+    
+            foreach ($criteria as $criterion => $value) {
+                $comparison = ' = ';
+    
+                if ($this->isWildCardValue($value)) {
+                    $comparison = ' like ';
+                }
+                $parameter = ':'.$criterion;
+                
+                $queryBuilder
+                    ->andWhere('entity.'.$criterion.$comparison.$parameter)
+                    ->setParameter($parameter, $value)
+                ;
+            }
+    
+            foreach ($orderBy as $sort => $order) {
+                $queryBuilder
+                    ->addOrderBy('entity.'.$sort, $order)
+                ;
+            }
+            $entities = $queryBuilder
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->getQuery()
+                ->getResult()
+            ;
+        } else {
+            $entities = $this
+                ->repository
+                ->findBy($criteria, $orderBy, $limit, $offset)
+            ;
+        }
+    
+        return $entities;
     }
 
     /**
@@ -113,5 +148,18 @@ class DataProvider implements DataProviderInterface
             ->repository
             ->count($criteria, $options)
         ;
+    }
+    
+    private function isWildCardValue($value)
+    {
+        if ('%' !== substr($value, 0, 1)) {
+            return false;
+        }
+        
+        if ('%' !== substr($value, -1, 1)) {
+            return false;
+        }
+        
+        return true;
     }
 }

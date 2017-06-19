@@ -38,12 +38,8 @@ class Link extends StringField implements EntityAwareInterface, TwigAwareInterfa
 
         $render = $this->twig->render($this->options->get('template'), [
             'text' => $text,
-            'route' => $this->options->get('route'),
             'parameters' => $parameters,
-            'target' => $this->options->get('target'),
-            'url' => $this->options->get('url'),
-            'title' => $this->options->get('title'),
-            'icon' => $this->options->get('icon'),
+            'options' => $this->options,
         ]);
 
         return $render;
@@ -61,9 +57,15 @@ class Link extends StringField implements EntityAwareInterface, TwigAwareInterfa
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'length' => $this->applicationConfiguration->getParameter('string_length'),
-            'replace' => $this->applicationConfiguration->getParameter('string_length_truncate'),
-            'template' => $this->applicationConfiguration->getParameter('fields_template_mapping')[AbstractField::TYPE_LINK],
+            'length' => $this
+                ->applicationConfiguration
+                ->getParameter('string_length'),
+            'replace' => $this
+                ->applicationConfiguration
+                ->getParameter('string_length_truncate'),
+            'template' => $this
+                ->applicationConfiguration
+                ->getParameter('fields_template_mapping')[AbstractField::TYPE_LINK],
             'title' => '',
             'icon' => '',
             'target' => '_self',
@@ -72,7 +74,7 @@ class Link extends StringField implements EntityAwareInterface, TwigAwareInterfa
             'url' => '',
             'text' => '',
             'admin' => null,
-            'action' => null
+            'action' => null,
         ]);
         $resolver->setAllowedTypes('route', 'string');
         $resolver->setAllowedTypes('parameters', 'array');

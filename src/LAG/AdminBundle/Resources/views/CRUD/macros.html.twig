@@ -1,16 +1,16 @@
 {# Display a link according ot the given entity and the given admin action #}
-{% macro actionLink(action, entity) %}
+{#{% macro actionLink(action, entity) %}#}
 
-    {% set url = path(action.configuration.route, route_parameters(action.configuration.parameters, entity)) %}
+    {#{% set url = path(action.configuration.route, route_parameters(action.configuration.parameters, entity)) %}#}
 
-    <a href="{{ url }}" target="{{ action.configuration.target }}" title="{{ action.title | trans }}">
-        {% if action.configuration.icon %}
-            <i class="fa fa-{{ action.configuration.icon }}"></i>
-        {% endif %}
-        {{ action.title | trans }}
-    </a>
+    {#<a href="{{ url }}" target="{{ action.configuration.target }}" title="{{ action.title | trans }}">#}
+        {#{% if action.configuration.icon %}#}
+            {#<i class="fa fa-{{ action.configuration.icon }}"></i>#}
+        {#{% endif %}#}
+        {#{{ action.title | trans }}#}
+    {#</a>#}
 
-{% endmacro %}
+{#{% endmacro %}#}
 
 
 {% macro adminMenu(menuName, admin) %}

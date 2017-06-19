@@ -57,4 +57,9 @@ interface FieldInterface
      * @param ApplicationConfiguration $configuration
      */
     public function setApplicationConfiguration($configuration);
+    
+    /**
+     * @return string
+     */
+    public function getColumnClass();
 }

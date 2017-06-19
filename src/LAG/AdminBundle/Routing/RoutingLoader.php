@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Routing;
 use Exception;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use LAG\AdminBundle\Admin\Registry\Registry;
-use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
+use LAG\AdminBundle\Action\Factory\ConfigurationFactory;
 use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -19,6 +19,9 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class RoutingLoader implements LoaderInterface
 {
+    /**
+     * @var bool
+     */
     private $loaded = false;
 
     /**
@@ -74,6 +77,7 @@ class RoutingLoader implements LoaderInterface
             ->registry
             ->all()
         ;
+        
         // creating a route by admin and action
         foreach ($admins as $admin) {
             $actions = $admin
@@ -84,16 +88,23 @@ class RoutingLoader implements LoaderInterface
             foreach ($actions as $name => $configuration) {
                 $actionConfiguration = $this
                     ->configurationFactory
-                    ->createActionConfiguration($name, $admin, $configuration);
-                
+                    ->create($name, $admin->getConfiguration(), $configuration)
+                ;
+    
+                if ($admin->getName() === 'media') {
+                    dump($actionConfiguration->getParameter('route_path'));
+                    dump($actionConfiguration->getParameter('route_defaults'));
+                }
+    
+    
                 // create the new route according to the resolved configuration parameters
                 $route = new Route(
                     $actionConfiguration->getParameter('route_path'),
                     $actionConfiguration->getParameter('route_defaults'),
                     $actionConfiguration->getParameter('route_requirements')
                 );
-    
-                $routeName = $admin->generateRouteName($name);
+                $generator = new RouteNameGenerator();
+                $routeName = $generator->generate($name, $admin->getName(), $admin->getConfiguration());
                 
                 // add the route to the collection
                 $routes->add($routeName, $route);

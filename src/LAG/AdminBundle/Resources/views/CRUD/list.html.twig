@@ -1,24 +1,20 @@
-{% extends config.getParameter('base_template') %}
-
-{% block topMenuItems %}
-    {% block leftList %}
-        {% include 'LAGAdminBundle:Action:customActions.html.twig' %}
-    {% endblock %}
-{% endblock %}
+{% extends admin_config('base_template') %}
 
 {% block content %}
-    <h1 class="page-header">{{ admin.currentAction.title | trans }}</h1>
+    <h1 class="page-header">
+        {{ admin.configuration.getParameter('title') | trans }}
+    </h1>
 
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-12">
             {% include '@LAGAdmin/List/filters.html.twig' %}
         </div>
 
-        {% if admin.pager and admin.pager.haveToPaginate %}
-            <div class="col-lg-6">
-                {% include '@LAGAdmin/List/pagination.html.twig' %}
-            </div>
-        {% endif %}
+        {#{% if admin.pager and admin.pager.haveToPaginate %}#}
+            {#<div class="col-lg-6">#}
+                {#{% include '@LAGAdmin/List/pagination.html.twig' %}#}
+            {#</div>#}
+        {#{% endif %}#}
     </div>
 
     <div class="{{ admin.name }}-list admin-list">
@@ -29,12 +25,12 @@
                     <form action="" method="post" class="selectable-list">
                     <div class="row">
                         <div class="col-lg-3">
-                            {{ form_widget(form.actions) }}
+                            {#{{ form_widget(form.actions) }}#}
                         </div>
                         <div class="col-lg-3">
-                            <input type="submit"
-                                   value="{{ 'lag.admin.mass_action' | trans }}"
-                                   class="btn btn-default"/>
+                            {#<input type="submit"#}
+                                   {#value="{{ 'lag.admin.mass_action' | trans }}"#}
+                                   {#class="btn btn-default"/>#}
                         </div>
                     </div>
                     <div class="row">
@@ -45,25 +41,27 @@
                 {% endif %}
 
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover table-sort">
-                        {% if admin.pager %}
-                            <caption>{{ admin.pager.nbResults }} elements</caption>
-                        {% else %}
-                            <caption>{{ admin.entities | length }} elements</caption>
-                        {% endif %}
+                    <table class="table table-hover table-sort">
+                        <caption>
+                            {{ 'lag.admin.element_count' | trans({
+                                '%page_count%': admin.entities | length,
+                                '%total_count%': admin.entities.count
+                            }) }}
+                        </caption>
                         <thead>
-                        <tr>
+                        <tr class="text-dark">
                             {% if form is defined %}
                                 <th>
-                                    {{ form_widget(form['selectAll']) }}
+                                    {#{{ form_widget(form['selectAll']) }}#}
                                 </th>
                             {% endif %}
 
-                            {% for field in admin.currentAction.fields %}
-                                <th>
+                            {% for field in admin.fields %}
+                                <th class="{{ field.columnClass }}">
                                     {% set sortClass = getSortColumnIconClass(app.request.get('order'), field.name, app.request.get('sort')) %}
 
-                                    <a href="{{ getSortColumnUrl(app.request, field.name) }}">
+                                    <a href="{{ getSortColumnUrl(app.request, field.name) }}"
+                                       class="text-dark">
                                         {{ field_title(field.name, admin.name) }}<i class="{{ sortClass }}"></i>
                                     </a>
                                 </th>
@@ -75,12 +73,12 @@
                             <tr>
                                 {% if form is defined %}
                                     <td class="batch-column">
-                                        {{ form_widget(form.entities[entity.id]) }}
+                                        {#{{ form_widget(form.entities[entity.id]) }}#}
                                     </td>
                                 {% endif %}
 
-                                {% for field in admin.currentAction.fields %}
-                                    <td>{{ field(field, entity) | raw }}</td>
+                                {% for field in admin.fields %}
+                                    <td class="{{ field.columnClass }}">{{ field(field, entity) | raw }}</td>
                                 {% endfor %}
                             </tr>
                         {% endfor %}
@@ -93,7 +91,7 @@
                 </div>
                 </form>
 
-                {% if admin.pager and admin.pager.haveToPaginate %}
+                {% if admin.entities.haveToPaginate | default(false) %}
                     <div class="row">
                         <div class="col-lg-6 col-lg-offset-6">
                             {% include '@LAGAdmin/List/pagination.html.twig' %}
@@ -102,7 +100,7 @@
                 {% endif %}
             {% endspaceless %}
         {% else %}
-            <p>No record yet</p>
+            <p>{{ 'lag.admin.no_record' | trans }}</p>
         {% endif %}
     </div>
 {% endblock %}

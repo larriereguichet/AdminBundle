@@ -13,6 +13,11 @@ class Boolean extends AbstractField implements TwigAwareInterface
      */
     protected $twig;
     
+    /**
+     * @param mixed $value
+     *
+     * @return string
+     */
     public function render($value)
     {
         $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
@@ -45,5 +50,10 @@ class Boolean extends AbstractField implements TwigAwareInterface
     public function setTwig(Twig_Environment $twig)
     {
         $this->twig = $twig;
+    }
+    
+    public function getColumnClass()
+    {
+        return 'text-center';
     }
 }

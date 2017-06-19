@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Field\Factory;
 
 use Exception;
+use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Field\FieldInterface;
@@ -64,6 +65,20 @@ class FieldFactory
         $this->translator = $translator;
         $this->twig = $twig;
     }
+    
+    public function getFields(ActionConfiguration $configuration)
+    {
+        $fields = [];
+//        dump($configuration);
+//        die;
+    
+        foreach ($configuration->getParameter('fields') as $field => $fieldConfiguration) {
+            $fields[] = $this->create($field, $fieldConfiguration);
+        }
+    
+        return $fields;
+    }
+    
 
     /**
      * Create a new field with its renderer.
@@ -95,7 +110,6 @@ class FieldFactory
             $items = [];
 
             foreach ($configuration['options'] as $itemFieldName => $itemFieldConfiguration) {
-
                 // configuration should be an array
                 if (!$itemFieldConfiguration) {
                     $itemFieldConfiguration = [];
@@ -116,7 +130,7 @@ class FieldFactory
         $fieldClass = $this->getFieldMapping($configuration['type']);
         $field = new $fieldClass();
 
-        if (!($field instanceof FieldInterface)) {
+        if (!$field instanceof FieldInterface) {
             throw new Exception("Field class {$fieldClass} must implements ".FieldInterface::class);
         }
         $field->setName($fieldName);

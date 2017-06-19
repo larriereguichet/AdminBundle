@@ -286,6 +286,7 @@ class CRUDController extends Controller
     {
         return $this
             ->get('lag.admin.request_handler')
-            ->handle($request);
+            ->handle($request)
+        ;
     }
 }

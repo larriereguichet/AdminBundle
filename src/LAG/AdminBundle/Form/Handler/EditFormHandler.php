@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Form\Handler;
 
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Routing\RouteNameGenerator;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,7 +14,7 @@ use Twig_Environment;
 /**
  * Create a response from the form data.
  */
-class EditFormHandler implements FormHandlerInterface
+class EditFormHandler
 {
     /**
      * @var Twig_Environment
@@ -56,7 +57,7 @@ class EditFormHandler implements FormHandlerInterface
     public function handle(FormInterface $form, AdminInterface $admin)
     {
         $template = $admin
-            ->getCurrentAction()
+            ->getView()
             ->getConfiguration()
             ->getParameter('template')
         ;
@@ -66,10 +67,12 @@ class EditFormHandler implements FormHandlerInterface
             $admin->save();
     
             if ($this->shouldRedirect($admin)) {
+                $generator = new RouteNameGenerator();
+                
                 // if the redirect input is clicked and the list action exists, we redirect to the list action
                 $url = $this
                     ->router
-                    ->generate($admin->generateRouteName('list'));
+                    ->generate($generator->generate('list', $admin->getName(), $admin->getConfiguration()));
                 
                 return new RedirectResponse($url);
             }

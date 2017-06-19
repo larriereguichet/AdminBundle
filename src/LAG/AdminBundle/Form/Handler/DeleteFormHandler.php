@@ -3,11 +3,12 @@
 namespace LAG\AdminBundle\Form\Handler;
 
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Routing\RouteNameGenerator;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class DeleteFormHandler implements FormHandlerInterface
+class DeleteFormHandler
 {
     /**
      * @var Router
@@ -32,6 +33,8 @@ class DeleteFormHandler implements FormHandlerInterface
      */
     public function handle(FormInterface $form, AdminInterface $admin)
     {
+        $generator = new RouteNameGenerator();
+        
         if ($form->isValid()) {
             // remove the current entity
             $admin->remove();
@@ -45,7 +48,8 @@ class DeleteFormHandler implements FormHandlerInterface
             if (array_key_exists('list', $allowedActions)) {
                 $url = $this
                     ->router
-                    ->generate($admin->generateRouteName('list'));
+                    ->generate($generator->generate('list', $admin->getName(), $admin->getConfiguration()))
+                ;
                 
                 return new RedirectResponse($url);
             }
@@ -53,7 +57,7 @@ class DeleteFormHandler implements FormHandlerInterface
         }
         $url = $this
             ->router
-            ->generate($admin->generateRouteName('delete'))
+            ->generate($generator->generate('delete', $admin->getName(), $admin->getConfiguration()))
         ;
         
         return new RedirectResponse($url);

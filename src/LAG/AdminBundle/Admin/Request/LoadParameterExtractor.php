@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Admin\Request;
 
+use Exception;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,10 +38,31 @@ class LoadParameterExtractor
      * LoadParameterExtractor constructor.
      *
      * @param ActionConfiguration $configuration
+     * @param array               $filters
+     *
+     * @throws Exception
      */
-    public function __construct(ActionConfiguration $configuration)
+    public function __construct(ActionConfiguration $configuration, array $filters = [])
     {
         $this->configuration = $configuration;
+    
+        $configuredFilters = $this->configuration->getParameter('filters');
+        
+        foreach ($filters as $filter => $value) {
+    
+            if (!key_exists($filter, $configuredFilters)) {
+                throw new Exception('The filter "'.$filter.'" is not configured');
+            }
+            
+            if (null !== $value) {
+                dump($configuredFilters);
+                dump($filter);
+                if ('string' === $configuredFilters[$filter]['type']) {
+                    $value = '%'.$value.'%';
+                }
+                $this->criteria[$filter] = $value;
+            }
+        }
     }
     
     /**
@@ -88,10 +110,16 @@ class LoadParameterExtractor
         if (true !== $sortable) {
             return;
         }
-        $this->order = [
-            'sort' => $request->get('sort'),
-            'order' => $request->get('order'),
-        ];
+        $this->order = $this->configuration->getParameter('order');
+        $sort = $request->get('sort');
+        $order = $request->get('order', 'ASC');
+    
+        if ($sort) {
+            $this->order = [
+                $sort => $order,
+            ];
+        }
+    
     }
     
     /**
@@ -115,7 +143,7 @@ class LoadParameterExtractor
         
         if ($isPaginationRequired) {
             // retrieve the page parameter value
-            $this->page = $request->get('page', 1);
+            $this->page = (int)$request->get('page', 1);
         }
         
         if (null !== $request->get('maxPerPage')) {

@@ -15,12 +15,21 @@ class ActionCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $builder)
     {
         if (!$builder->hasDefinition(LAGAdminBundle::SERVICE_ID_ACTION_REGISTRY)) {
+            //die('pas service');
             return;
         }
         $actionRegistry = $builder->getDefinition(LAGAdminBundle::SERVICE_ID_ACTION_REGISTRY);
-        $actions = $builder->findTaggedServiceIds(LAGAdminBundle::SERVICE_TAG_ACTION);
+        $defaultActions = LAGAdminBundle::getDefaultActionServiceMapping();
     
-        //var_dump($actions);
+        foreach ($defaultActions as $id) {
+            $actionRegistry
+                ->addMethodCall('add', [
+                        $id,
+                        new Reference($id),
+                    ]
+                );
+        }
+        $actions = $builder->findTaggedServiceIds(LAGAdminBundle::SERVICE_TAG_ACTION);
         
         foreach ($actions as $id => $attributes) {
             $actionRegistry
