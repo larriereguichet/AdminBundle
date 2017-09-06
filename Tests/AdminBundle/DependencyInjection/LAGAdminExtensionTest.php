@@ -41,7 +41,7 @@ class LAGAdminExtensionTest extends AdminTestBase
                 'application' => []
             ]
         ], $container);
-        $this->assertCount(29, $container->getDefinitions());
+        $this->assertCount(30, $container->getDefinitions());
 
         $eventDispatcherExtension = new FrameworkExtension();
         $eventDispatcherExtension->load([], $container);
@@ -133,6 +133,7 @@ class LAGAdminExtensionTest extends AdminTestBase
         $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.cache_dir', sys_get_temp_dir().'/AdminBundleTests/cache');
         $container->setParameter('kernel.root_dir', realpath(__DIR__.'/../../..'));
+        $container->setParameter('kernel.project_dir', realpath(__DIR__.'/../../../..'));
         $container->setParameter('kernel.charset', 'utf8');
         $container->setParameter('kernel.secret', 'MyLittleSecret');
         $container->setParameter('kernel.bundles', []);
@@ -149,6 +150,7 @@ class LAGAdminExtensionTest extends AdminTestBase
             'templating.locator' => $fileLocator,
             'templating.name_parser' => $templateNameParser,
             'twig.loader' => $twigLoader,
+            'translator' => $generic,
         ]);
 
         return $container;

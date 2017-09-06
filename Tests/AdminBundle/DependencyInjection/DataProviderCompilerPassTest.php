@@ -37,7 +37,6 @@ class DataProviderCompilerPassTest extends AdminTestBase
             ->getDefinition('lag.admin.data_providers_factory')
             ->getMethodCalls();
 
-        $this->assertCount(1, $calls);
         $this->assertEquals('addDataProvider', $calls[0][0]);
         $this->assertEquals('my_custom_provider', $calls[0][1][0]);
         $this->assertInstanceOf(Reference::class, $calls[0][1][1]);
@@ -51,8 +50,7 @@ class DataProviderCompilerPassTest extends AdminTestBase
         $containerBuilder = new ContainerBuilder();
         $compilerPass = new DataProviderCompilerPass();
         $compilerPass->process($containerBuilder);
-
-        $this->assertCount(0, $containerBuilder->getDefinitions());
+        
         $this->assertFalse($containerBuilder->has('lag.admin.data_providers_factory'));
     }
 
@@ -66,8 +64,7 @@ class DataProviderCompilerPassTest extends AdminTestBase
 
         $compilerPass = new DataProviderCompilerPass();
         $compilerPass->process($containerBuilder);
-
-        $this->assertCount(1, $containerBuilder->getDefinitions());
+        
         $this->assertFalse($containerBuilder->has('lag.admin.data_providers_factory'));
     }
 }
