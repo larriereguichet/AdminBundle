@@ -15,7 +15,7 @@ class DataProviderCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->has('lag.admin.data_providers_factory')) {
+         if (!$container->hasDefinition('lag.admin.data_providers_factory')) {
             return;
         }
 
