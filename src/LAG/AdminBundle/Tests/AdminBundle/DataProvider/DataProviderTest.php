@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\DataProvider;
 
+use Doctrine\ORM\EntityManagerInterface;
 use LAG\AdminBundle\DataProvider\DataProvider;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use stdClass;
@@ -16,13 +17,15 @@ class DataProviderTest extends AdminTestBase
      */
     public function testSave()
     {
-        // repository save method SHOULD be called
+        $entityManager = $this->getMockWithoutConstructor(EntityManagerInterface::class);
+        
+        // The repository save method SHOULD be called
         $repositoryMock = $this->mockEntityRepository();
         $repositoryMock
             ->expects($this->once())
             ->method('save');
 
-        $dataProvider = new DataProvider($repositoryMock);
+        $dataProvider = new DataProvider($repositoryMock, $entityManager);
         $dataProvider->save(new stdClass());
     }
 
@@ -31,13 +34,15 @@ class DataProviderTest extends AdminTestBase
      */
     public function testDelete()
     {
-        // entity manager delete method SHOULD be called
+        $entityManager = $this->getMockWithoutConstructor(EntityManagerInterface::class);
+        
+        // The entity manager delete method SHOULD be called
         $repositoryMock = $this->mockEntityRepository();
         $repositoryMock
             ->expects($this->once())
             ->method('delete');
 
-        $dataProvider = new DataProvider($repositoryMock);
+        $dataProvider = new DataProvider($repositoryMock, $entityManager);
         $dataProvider->remove(new stdClass());
     }
 
@@ -46,13 +51,15 @@ class DataProviderTest extends AdminTestBase
      */
     public function testFind()
     {
-        // repository find method SHOULD be called
+        $entityManager = $this->getMockWithoutConstructor(EntityManagerInterface::class);
+        
+        // The repository find method SHOULD be called
         $repositoryMock = $this->mockEntityRepository();
         $repositoryMock
             ->expects($this->once())
             ->method('find');
 
-        $dataProvider = new DataProvider($repositoryMock);
+        $dataProvider = new DataProvider($repositoryMock, $entityManager);
         $dataProvider->find('unique_id');
     }
 
@@ -61,13 +68,15 @@ class DataProviderTest extends AdminTestBase
      */
     public function testFindBy()
     {
+        $entityManager = $this->getMockWithoutConstructor(EntityManagerInterface::class);
+        
         // repository findBy method SHOULD be called
         $repositoryMock = $this->mockEntityRepository();
         $repositoryMock
             ->expects($this->once())
             ->method('findBy');
 
-        $dataProvider = new DataProvider($repositoryMock);
+        $dataProvider = new DataProvider($repositoryMock, $entityManager);
         $dataProvider->findBy([]);
     }
 
@@ -76,13 +85,15 @@ class DataProviderTest extends AdminTestBase
      */
     public function testCreate()
     {
+        $entityManager = $this->getMockWithoutConstructor(EntityManagerInterface::class);
+        
         // repository findBy method SHOULD be called
         $repositoryMock = $this->mockEntityRepository();
         $repositoryMock
             ->expects($this->once())
             ->method('getClassName')
             ->willReturn(self::class);
-        $dataProvider = new DataProvider($repositoryMock);
+        $dataProvider = new DataProvider($repositoryMock, $entityManager);
         $test = $dataProvider->create();
 
         $this->assertEquals(get_class($test), self::class);

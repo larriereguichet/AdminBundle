@@ -3,7 +3,9 @@
 namespace LAG\AdminBundle\DataProvider;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use LAG\AdminBundle\Repository\RepositoryInterface;
 
 /**
@@ -15,15 +17,22 @@ class DataProvider implements DataProviderInterface
      * @var RepositoryInterface
      */
     protected $repository;
-
+    
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+    
     /**
      * DataProvider constructor.
      *
-     * @param RepositoryInterface $repository
+     * @param RepositoryInterface    $repository
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(RepositoryInterface $repository)
+    public function __construct(RepositoryInterface $repository, EntityManagerInterface $entityManager)
     {
         $this->repository = $repository;
+        $this->entityManager = $entityManager;
     }
     
     /**
@@ -57,16 +66,35 @@ class DataProvider implements DataProviderInterface
                     ->setParameter($parameter, $value)
                 ;
             }
+            $metadata = $this
+                ->entityManager
+                ->getClassMetadata($this->repository->getClassName())
+            ;
+    
     
             foreach ($orderBy as $sort => $order) {
-                $queryBuilder
-                    ->addOrderBy('entity.'.$sort, $order)
-                ;
+                
+                if ($metadata->hasAssociation($sort)) {
+                    // TODO get id dynamically
+                    $queryBuilder
+                        ->leftJoin('entity.'.$sort, $sort)
+                        ->addSelect('COUNT('.$sort.'.id) AS HIDDEN '.$sort.'_count')
+                        ->addOrderBy($sort.'_count', $order)
+                        ->addGroupBy($sort.'.id')
+                    ;
+                } else {
+                    $queryBuilder
+                        ->addOrderBy('entity.'.$sort, $order)
+                    ;
+                }
+                // TODO fix bug with association
             }
             $entities = $queryBuilder
                 ->setFirstResult($offset)
                 ->setMaxResults($limit)
                 ->getQuery()
+                ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, [])
+                ->setHint(Query::HINT_CUSTOM_TREE_WALKERS, [])
                 ->getResult()
             ;
         } else {
