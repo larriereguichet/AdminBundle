@@ -101,7 +101,7 @@ class EditResponderTest extends AdminTestBase
         $routing
             ->expects($this->atLeastOnce())
             ->method('generate')
-            ->with('list_route')
+            ->with('my_little_admin.list')
             ->willReturn('http://test.fr')
         ;
         
@@ -113,13 +113,32 @@ class EditResponderTest extends AdminTestBase
                 ['template', 'my_template.twig'],
             ])
         ;
-        
+    
+        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration
+            ->expects($this->once())
+            ->method('isResolved')
+            ->willReturn(true)
+        ;
+        $adminConfiguration
+            ->expects($this->atLeastOnce())
+            ->method('getParameter')
+            ->willReturnMap([
+                ['actions', ['edit' => [], 'delete' => [], 'list' => []]],
+                ['routing_name_pattern', '{admin}.{action}'],
+            ])
+        ;
+    
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $admin
+            ->expects($this->once())
+            ->method('getConfiguration')
+            ->willReturn($adminConfiguration)
+        ;
+        $admin
             ->expects($this->atLeastOnce())
-            ->method('generateRouteName')
-            ->with('list')
-            ->willReturn('list_route')
+            ->method('getName')
+            ->willReturn('my_little_admin')
         ;
         
         $form = $this->getMockWithoutConstructor(FormInterface::class);
