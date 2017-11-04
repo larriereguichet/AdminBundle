@@ -10,14 +10,16 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
 use LAG\AdminBundle\Admin\Event\AdminInjectedEvent;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
+use LAG\AdminBundle\Admin\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\Admin\Request\RequestHandler;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\View\Factory\ViewFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,14 +73,9 @@ class AdminFactoryTest extends AdminTestBase
         $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
         $configurationFactory
             ->expects($this->once())
-            ->method('createAdminConfiguration')
+            ->method('create')
             ->with($adminConfiguration['my_admin'])
             ->willReturn($adminConfigurationObject)
-        ;
-        $configurationFactory
-            ->expects($this->atLeastOnce())
-            ->method('getApplicationConfiguration')
-            ->willReturn($applicationConfigurationObject)
         ;
         
         $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
@@ -101,6 +98,14 @@ class AdminFactoryTest extends AdminTestBase
         $tokenStorage = $this->getMockWithoutConstructor(TokenStorageInterface::class);
     
         $actionRegistry = $this->getMockWithoutConstructor(\LAG\AdminBundle\Action\Registry\Registry::class);
+        $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
+        
+        $applicationConfigurationStorage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
+        $applicationConfigurationStorage
+            ->expects($this->once())
+            ->method('getApplicationConfiguration')
+            ->willReturn($applicationConfigurationObject)
+        ;
         
         $factory = new AdminFactory(
             $adminConfiguration,
@@ -111,9 +116,11 @@ class AdminFactoryTest extends AdminTestBase
             $actionFactory,
             $configurationFactory,
             $dataProviderFactory,
+            $viewFactory,
             $requestHandler,
             $authorizationChecker,
-            $tokenStorage
+            $tokenStorage,
+            $applicationConfigurationStorage
         );
     
         $factory->init();
@@ -163,9 +170,10 @@ class AdminFactoryTest extends AdminTestBase
    
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
         $tokenStorage = $this->getMockWithoutConstructor(TokenStorageInterface::class);
-    
         $actionRegistry = $this->getMockWithoutConstructor(\LAG\AdminBundle\Action\Registry\Registry::class);
-    
+        $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
+        $applicationConfigurationStorage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
+        
         $factory = new AdminFactory(
             $adminConfiguration,
             $eventDispatcher,
@@ -175,9 +183,11 @@ class AdminFactoryTest extends AdminTestBase
             $actionFactory,
             $configurationFactory,
             $dataProviderFactory,
+            $viewFactory,
             $requestHandler,
             $authorizationChecker,
-            $tokenStorage
+            $tokenStorage,
+            $applicationConfigurationStorage
         );
     
         $controller = $this->getMockWithoutConstructor(ListAction::class);
