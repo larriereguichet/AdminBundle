@@ -6,6 +6,7 @@ use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use LAG\AdminBundle\Admin\Request\RequestHandler;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\Subscriber\KernelSubscriber;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,11 +70,14 @@ class KernelSubscriberTest extends AdminTestBase
             ->expects($this->once())
             ->method('injectConfiguration')
         ;
+    
+        $storage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
 
         $subscriber = new KernelSubscriber(
             $adminFactory,
             $actionFactory,
-            $requestHandler
+            $requestHandler,
+            $storage
         );
         $subscriber->onKernelController($event);
     }
@@ -88,11 +92,13 @@ class KernelSubscriberTest extends AdminTestBase
             ->method('init')
         ;
         $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
+        $storage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
 
         $subscriber = new KernelSubscriber(
             $adminFactory,
             $actionFactory,
-            $requestHandler
+            $requestHandler,
+            $storage
         );
         $subscriber->onKernelRequest();
     }
