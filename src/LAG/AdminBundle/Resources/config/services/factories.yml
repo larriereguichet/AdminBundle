@@ -1,0 +1,51 @@
+parameters:
+    field_mapping:
+        LAG\AdminBundle\Field\Field\Action: LAG\AdminBundle\Field\Configuration\ActionConfiguration
+        LAG\AdminBundle\Field\Field\ActionCollection: LAG\AdminBundle\Field\Configuration\ActionCollectionConfiguration
+        LAG\AdminBundle\Field\Field\ArrayField: LAG\AdminBundle\Field\Configuration\ArrayFieldConfiguration
+        LAG\AdminBundle\Field\Field\Boolean: LAG\AdminBundle\Field\Configuration\BooleanConfiguration
+        LAG\AdminBundle\Field\Field\Collection: LAG\AdminBundle\Field\Configuration\CollectionConfiguration
+        LAG\AdminBundle\Field\Field\Date: LAG\AdminBundle\Field\Configuration\DateConfiguration
+        LAG\AdminBundle\Field\Field\Link: LAG\AdminBundle\Field\Configuration\LinkConfiguration
+        LAG\AdminBundle\Field\Field\Mapped: LAG\AdminBundle\Field\Configuration\MappedConfiguration
+        LAG\AdminBundle\Field\Field\StringField: LAG\AdminBundle\Field\Configuration\StringConfiguration
+
+services:
+    lag.admin.factory:
+        class: LAG\AdminBundle\Admin\Factory\AdminFactory
+        autowire: true
+        arguments:
+            - '%lag.admins%'
+            - '@event_dispatcher'
+
+    lag.admin.action_factory:
+        class: LAG\AdminBundle\Action\Factory\ActionFactory
+        autowire: true
+
+    lag.admin.action_configuration_factory:
+        class: LAG\AdminBundle\Action\Factory\ConfigurationFactory
+        autowire: true
+
+    lag.admin.admin_configuration_factory:
+        class: LAG\AdminBundle\Admin\Factory\ConfigurationFactory
+        autowire: true
+
+    lag.admin.field_factory:
+        class: LAG\AdminBundle\Field\Factory\FieldFactory
+        autowire: true
+
+    lag.admin.menu_factory:
+        class: LAG\AdminBundle\Menu\Factory\MenuFactory
+        autowire: true
+
+    lag.admin.data_providers_factory:
+        class: LAG\AdminBundle\DataProvider\Factory\DataProviderFactory
+        autowire: true
+
+    lag.admin.field_configuration_factory:
+        class: LAG\AdminBundle\Field\Factory\ConfigurationFactory
+        arguments:
+            - '%field_mapping%'
+
+
+
