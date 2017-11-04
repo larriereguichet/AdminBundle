@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Action\Responder;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\Responder\DeleteResponder;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,7 +21,7 @@ class DeleteResponderTest extends AdminTestBase
         $routing
             ->expects($this->atLeastOnce())
             ->method('generate')
-            ->with('list_route')
+            ->with('my_little_admin.list')
             ->willReturn('http://test.fr')
         ;
     
@@ -32,13 +33,32 @@ class DeleteResponderTest extends AdminTestBase
                 ['template', 'my_template.twig'],
             ])
         ;
+        
+        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration
+            ->expects($this->once())
+            ->method('isResolved')
+            ->willReturn(true)
+        ;
+        $adminConfiguration
+            ->expects($this->atLeastOnce())
+            ->method('getParameter')
+            ->willReturnMap([
+                ['actions', ['edit' => [], 'delete' => [], 'list' => []]],
+                ['routing_name_pattern', '{admin}.{action}'],
+            ])
+        ;
     
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $admin
+            ->expects($this->once())
+            ->method('getConfiguration')
+            ->willReturn($adminConfiguration)
+        ;
+        $admin
             ->expects($this->atLeastOnce())
-            ->method('generateRouteName')
-            ->with('list')
-            ->willReturn('list_route')
+            ->method('getName')
+            ->willReturn('my_little_admin')
         ;
     
         $form = $this->getMockWithoutConstructor(FormInterface::class);
