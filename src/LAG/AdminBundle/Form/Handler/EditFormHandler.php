@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Twig_Environment;
 
 /**
@@ -35,10 +36,10 @@ class EditFormHandler
      * EditFormHandler constructor.
      *
      * @param Twig_Environment $twig
-     * @param Router           $router
+     * @param RouterInterface  $router
      * @param RequestStack     $requestStack
      */
-    public function __construct(Twig_Environment $twig, Router $router, RequestStack $requestStack)
+    public function __construct(Twig_Environment $twig, RouterInterface $router, RequestStack $requestStack)
     {
         $this->twig = $twig;
         $this->router = $router;
@@ -107,8 +108,12 @@ class EditFormHandler
         if ('save-and-redirect' !== $submit) {
             return false;
         }
+        $actions = $admin
+            ->getConfiguration()
+            ->getParameter('actions')
+        ;
     
-        if (!$admin->hasAction('list')) {
+        if (!key_exists('list', $actions)) {
             return false;
         }
         
