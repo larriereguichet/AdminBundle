@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Action\Responder;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\Responder\EditResponder;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -22,7 +23,7 @@ class EditResponderTest extends AdminTestBase
         $routing
             ->expects($this->atLeastOnce())
             ->method('generate')
-            ->with('edit_route')
+            ->with('my_little_admin.edit')
             ->willReturn('http://test.fr')
         ;
         
@@ -34,18 +35,37 @@ class EditResponderTest extends AdminTestBase
                 ['template', 'my_template.twig'],
             ])
         ;
-        
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
-        $admin
-            ->expects($this->atLeastOnce())
-            ->method('generateRouteName')
-            ->with('edit')
-            ->willReturn('edit_route')
+    
+        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration
+            ->expects($this->once())
+            ->method('isResolved')
+            ->willReturn(true)
         ;
+        $adminConfiguration
+            ->expects($this->atLeastOnce())
+            ->method('getParameter')
+            ->willReturnMap([
+                ['actions', ['edit' => [], 'delete' => []]],
+                ['routing_name_pattern', '{admin}.{action}'],
+            ])
+        ;
+    
+        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $admin
             ->expects($this->atLeastOnce())
             ->method('getUniqueEntity')
             ->willReturn(new TestEntity())
+        ;
+        $admin
+            ->expects($this->once())
+            ->method('getConfiguration')
+            ->willReturn($adminConfiguration)
+        ;
+        $admin
+            ->expects($this->atLeastOnce())
+            ->method('getName')
+            ->willReturn('my_little_admin')
         ;
         
         $form = $this->getMockWithoutConstructor(FormInterface::class);
