@@ -13,8 +13,8 @@ use LAG\AdminBundle\Admin\Event\AdminInjectedEvent;
 use LAG\AdminBundle\Admin\Event\BeforeConfigurationEvent;
 use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\Admin\Request\RequestHandler;
-use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
 use LAG\AdminBundle\DataProvider\Loader\EntityLoader;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
@@ -91,26 +91,33 @@ class AdminFactory
      * @var ActionRegistry
      */
     private $actionRegistry;
+    
     /**
      * @var ViewFactory
      */
     private $viewFactory;
     
     /**
+     * @var ApplicationConfigurationStorage
+     */
+    private $applicationConfigurationStorage;
+    
+    /**
      * AdminFactory constructor.
      *
-     * @param array                         $adminConfigurations
-     * @param EventDispatcherInterface      $eventDispatcher
-     * @param MessageHandlerInterface       $messageHandler
-     * @param Registry                      $adminRegistry
-     * @param ActionRegistry                $actionRegistry
-     * @param ActionFactory                 $actionFactory
-     * @param ConfigurationFactory          $configurationFactory
-     * @param DataProviderFactory           $dataProviderFactory
-     * @param ViewFactory                   $viewFactory
-     * @param RequestHandler                $requestHandler
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param TokenStorageInterface         $tokenStorage
+     * @param array                           $adminConfigurations
+     * @param EventDispatcherInterface        $eventDispatcher
+     * @param MessageHandlerInterface         $messageHandler
+     * @param Registry                        $adminRegistry
+     * @param ActionRegistry                  $actionRegistry
+     * @param ActionFactory                   $actionFactory
+     * @param ConfigurationFactory            $configurationFactory
+     * @param DataProviderFactory             $dataProviderFactory
+     * @param ViewFactory                     $viewFactory
+     * @param RequestHandler                  $requestHandler
+     * @param AuthorizationCheckerInterface   $authorizationChecker
+     * @param TokenStorageInterface           $tokenStorage
+     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      */
     public function __construct(
         array $adminConfigurations,
@@ -124,7 +131,8 @@ class AdminFactory
         ViewFactory $viewFactory,
         RequestHandler $requestHandler,
         AuthorizationCheckerInterface $authorizationChecker,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        ApplicationConfigurationStorage $applicationConfigurationStorage
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->configurationFactory = $configurationFactory;
@@ -138,6 +146,7 @@ class AdminFactory
         $this->tokenStorage = $tokenStorage;
         $this->actionRegistry = $actionRegistry;
         $this->viewFactory = $viewFactory;
+        $this->applicationConfigurationStorage = $applicationConfigurationStorage;
     }
 
     /**
@@ -189,7 +198,7 @@ class AdminFactory
      * Create an Admin from configuration values. It will be added to AdminFactory admin's list.
      *
      * @param string $name
-     * @param array $configuration
+     * @param array  $configuration
      *
      * @return AdminInterface
      *
@@ -200,7 +209,7 @@ class AdminFactory
         // create AdminConfiguration object
         $adminConfiguration = $this
             ->configurationFactory
-            ->createAdminConfiguration($configuration)
+            ->create($configuration)
         ;
         
         // retrieve a data provider and load it into the loader
@@ -212,7 +221,7 @@ class AdminFactory
     
         // retrieve Admin dynamic class
         $adminClass = $this
-            ->configurationFactory
+            ->applicationConfigurationStorage
             ->getApplicationConfiguration()
             ->getParameter('admin_class')
         ;
