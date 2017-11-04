@@ -2,9 +2,10 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\DependencyInjection;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Knp\Bundle\MenuBundle\DependencyInjection\KnpMenuExtension;
+use Knp\Menu\Provider\MenuProviderInterface;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
-use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
 use LAG\AdminBundle\DependencyInjection\LAGAdminExtension;
 use LAG\AdminBundle\Field\Factory\FieldFactory;
@@ -85,7 +86,6 @@ class LAGAdminExtensionTest extends AdminTestBase
     protected function assertServices(ContainerBuilder $container)
     {
         // assert factories are rightly instanciate
-        $this->assertInstanceOf(ConfigurationFactory::class, $container->get('lag.admin.configuration_factory'));
         $this->assertInstanceOf(ActionFactory::class, $container->get('lag.admin.action_factory'));
         $this->assertInstanceOf(FieldFactory::class, $container->get('lag.admin.field_factory'));
         $this->assertInstanceOf(MenuFactory::class, $container->get('lag.admin.menu_factory'));
@@ -124,7 +124,9 @@ class LAGAdminExtensionTest extends AdminTestBase
         $workflowTwigExtension = new Definition(stdClass::class);
         $workflowTwigExtension->setAutowired(true);
     
+        $registry = new Definition(Registry::class);
         $twig = new Definition(Twig_Environment::class);
+        $menuProvider = new Definition(MenuProviderInterface::class);
 
         $container = new ContainerBuilder();
         $container->setParameter('kernel.debug', false);
@@ -148,6 +150,8 @@ class LAGAdminExtensionTest extends AdminTestBase
             'security.token_storage' => $tokenStorage,
             'translator' => $translator,
             'twig' => $twig,
+            'registry' => $registry,
+            'knp_menu.menu_provider' => $menuProvider,
         ]);
 
         return $container;

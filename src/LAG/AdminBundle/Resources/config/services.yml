@@ -1,9 +1,9 @@
 imports:
-    - {resource: factories.yml}
-    - {resource: forms.yml}
-    - {resource: menus.yml}
-    - {resource: actions.yml}
-    - {resource: responders.yml}
+    - {resource: services/factories.yml}
+    - {resource: services/forms.yml}
+    - {resource: services/menus.yml}
+    - {resource: services/actions.yml}
+    - {resource: services/responders.yml}
 
 services:
     # Events subscribers
@@ -11,10 +11,7 @@ services:
         class: LAG\AdminBundle\Event\Subscriber\KernelSubscriber
         tags:
             - {name: kernel.event_subscriber}
-        arguments:
-            - '@lag.admin.factory'
-            - '@lag.admin.action_factory'
-            - '@lag.admin.request_handler'
+        autowire: true
 
     lag.admin.extra_configuration_subscriber:
         class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
@@ -22,18 +19,17 @@ services:
             - {name: kernel.event_subscriber}
         arguments:
             - '%lag.admin.enable_extra_configuration%'
-            - '@doctrine'
-            - '@lag.admin.configuration_factory'
+        autowire: true
 
-    # Routing loader
+    # Routing
     lag.admin.routing:
         class: LAG\AdminBundle\Routing\RoutingLoader
         tags:
             - { name: routing.loader }
-        arguments:
-            - '@lag.admin.factory'
-            - '@lag.admin.registry'
-            - '@lag.admin.configuration_factory'
+        autowire: true
+
+    lag.admin.routing.route_name_generator:
+        class: LAG\AdminBundle\Routing\RouteNameGenerator
 
     # Twig extension
     lag.admin.twig:
@@ -72,6 +68,7 @@ services:
         autowire: true
 
     # Configuration
-    lag.admin.configuration_holder:
-        class: LAG\AdminBundle\Application\Configuration\ApplicationConfiguration
-
+    lag.admin.configuration_storage:
+        class: LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage
+        arguments:
+            - '%lag.admin.application_configuration%'
