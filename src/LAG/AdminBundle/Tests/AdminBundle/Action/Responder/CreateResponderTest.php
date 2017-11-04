@@ -5,7 +5,8 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Action\Responder;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\Responder\CreateResponder;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Tests\AdminBundle\Admin\AdminTest;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Test\TestBundle\Entity\TestEntity;
 use Twig_Environment;
 
-class CreateResponderTest extends AdminTest
+class CreateResponderTest extends AdminTestBase
 {
     public function testRespondWithSave()
     {
@@ -91,8 +92,23 @@ class CreateResponderTest extends AdminTest
                 ['template', 'my_template.twig'],
             ])
         ;
+    
+        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration
+            ->expects($this->once())
+            ->method('isResolved')
+            ->willReturn(true)
+        ;
+        $adminConfiguration
+            ->expects($this->once())
+        ;
         
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin
+            ->expects($this->once())
+            ->method('getConfiguration')
+            ->willReturn($adminConfiguration)
+        ;
         
         $form = $this->getMockWithoutConstructor(FormInterface::class);
         $form
