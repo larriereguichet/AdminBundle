@@ -26,7 +26,7 @@ class ActionCompilerPassTest extends AdminTestBase
         $compilerPass = new ActionCompilerPass();
         $compilerPass->process($builder);
     
-        $this->assertCount(1, $actionRegistry->getMethodCalls());
+        $this->assertCount(5, $actionRegistry->getMethodCalls());
     }
     
     public function testProcessWithoutActionFactory()
