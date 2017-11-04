@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Event\Subscriber;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
 use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use LAG\AdminBundle\Admin\Request\RequestHandler;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -29,22 +30,30 @@ class KernelSubscriber implements EventSubscriberInterface
      * @var ActionFactory
      */
     private $actionFactory;
+   
+    /**
+     * @var ApplicationConfigurationStorage
+     */
+    private $applicationConfigurationStorage;
     
     /**
      * KernelSubscriber constructor.
      *
-     * @param AdminFactory $adminFactory
-     * @param ActionFactory $actionFactory
-     * @param RequestHandler $requestHandler
+     * @param AdminFactory                    $adminFactory
+     * @param ActionFactory                   $actionFactory
+     * @param RequestHandler                  $requestHandler
+     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      */
     public function __construct(
         AdminFactory $adminFactory,
         ActionFactory $actionFactory,
-        RequestHandler $requestHandler
+        RequestHandler $requestHandler,
+        ApplicationConfigurationStorage $applicationConfigurationStorage
     ) {
         $this->requestHandler = $requestHandler;
         $this->adminFactory = $adminFactory;
         $this->actionFactory = $actionFactory;
+        $this->applicationConfigurationStorage = $applicationConfigurationStorage;
     }
     
     /**
@@ -70,15 +79,15 @@ class KernelSubscriber implements EventSubscriberInterface
         $controller = $event->getController();
         $request = $event->getRequest();
         
-        // if the current request is supported by the request handler, we do load the requested Admin and its
+        // If the current request is supported by the request handler, we do load the requested Admin and its
         // configurations
         if ($this->requestHandler->supports($request)) {
-            // inject the current Admin into the Controller
+            // Inject the current Admin into the Controller
             $this
                 ->adminFactory
                 ->injectAdmin($controller, $request)
             ;
-            // inject the resolved Configuration into the Controller
+            // Inject the resolved Configuration into the Controller
             $this
                 ->actionFactory
                 ->injectConfiguration($controller, $request)
@@ -92,6 +101,7 @@ class KernelSubscriber implements EventSubscriberInterface
      */
     public function onKernelRequest()
     {
+        // Init the admin factory
         $this
             ->adminFactory
             ->init()
