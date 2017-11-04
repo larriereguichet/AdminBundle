@@ -31,23 +31,29 @@ class ActionFactoryTest extends AdminTestBase
         ;
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $admin
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getConfiguration')
             ->willReturn($adminConfiguration)
+        ;
+        $admin
+            ->expects($this->atLeastOnce())
+            ->method('getName')
+            ->willReturn('my_little_admin')
         ;
         
         $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
         $configurationFactory
             ->expects($this->once())
-            ->method('createActionConfiguration')
-            ->with('list', $admin)
+            ->method('create')
+            ->with('list', 'my_little_admin', $adminConfiguration, [])
             ->willReturn($actionConfiguration)
         ;
+        
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
         
         $controller = $this->getMockWithoutConstructor(ActionInterface::class);
         $controller
-            ->expects($this->exactly(5))
+            ->expects($this->atLeastOnce())
             ->method('getAdmin')
             ->willReturn($admin)
         ;
