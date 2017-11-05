@@ -1,0 +1,14 @@
+<th class="{{ field.columnClass }}">
+
+    {% if field.sortable %}
+        {% set sortClass = getSortColumnIconClass(app.request.get('order'), field.name, app.request.get('sort')) %}
+
+        <a href="{{ getSortColumnUrl(app.request, field.name) }}"
+           class="text-dark">
+            {{ field_title(field.name, admin.name) }}<i class="{{ sortClass }}"></i>
+        </a>
+    {% else %}
+        {{ field_title(field.name, admin.name) }}
+    {% endif %}
+    
+</th>
