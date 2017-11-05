@@ -9,7 +9,9 @@ before_install:
     - cp src/LAG/AdminBundle/Tests/Fixtures/app/config/parameters.yml.dist src/LAG/AdminBundle/Tests/Fixtures/app/config/parameters.yml
 
 install:
-    - composer install --profile --optimize-autoloader
+    - composer install --optimize-autoloader
+    - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
+    - composer update
 
 script:
   - bin/phpunit --coverage-text --coverage-clover=coverage.clover
@@ -17,3 +19,16 @@ script:
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
+env:
+  - SYMFONY_VERSION=2.3.*
+  - SYMFONY_VERSION=2.4.*
+  - SYMFONY_VERSION=2.5.*
+  - SYMFONY_VERSION=2.6.*
+  - SYMFONY_VERSION=2.7.*
+  - SYMFONY_VERSION=2.8.*
+  - SYMFONY_VERSION=3.0.*
+  - SYMFONY_VERSION=3.1.*
+  - SYMFONY_VERSION=3.2.*
+  - SYMFONY_VERSION=3.3.*
+  - SYMFONY_VERSION=3.4.*
