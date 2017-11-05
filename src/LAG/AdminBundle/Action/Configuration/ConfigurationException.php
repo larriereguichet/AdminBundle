@@ -10,24 +10,21 @@ class ConfigurationException extends Exception
     /**
      * ConfigurationException constructor.
      *
-     * @param string $message
-     * @param int $actionName
-     * @param AdminInterface|null $admin
+     * @param string      $message
+     * @param int         $actionName
+     * @param string|null $adminName
      */
-    public function __construct($message, $actionName, AdminInterface $admin = null)
+    public function __construct($message, $actionName, $adminName = null)
     {
-        if (null !== $admin) {
-            $adminName = $admin->getName();
-        } else {
+        if (!$adminName) {
             $adminName = 'unknown';
         }
-
         $message .= sprintf(
             ', for Admin %s and action %s',
             $adminName,
             $actionName
         );
-
+        
         parent::__construct($message);
     }
 }
