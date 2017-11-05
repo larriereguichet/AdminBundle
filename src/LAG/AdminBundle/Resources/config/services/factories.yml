@@ -1,15 +1,3 @@
-parameters:
-    field_mapping:
-        LAG\AdminBundle\Field\Field\Action: LAG\AdminBundle\Field\Configuration\ActionConfiguration
-        LAG\AdminBundle\Field\Field\ActionCollection: LAG\AdminBundle\Field\Configuration\ActionCollectionConfiguration
-        LAG\AdminBundle\Field\Field\ArrayField: LAG\AdminBundle\Field\Configuration\ArrayFieldConfiguration
-        LAG\AdminBundle\Field\Field\Boolean: LAG\AdminBundle\Field\Configuration\BooleanConfiguration
-        LAG\AdminBundle\Field\Field\Collection: LAG\AdminBundle\Field\Configuration\CollectionConfiguration
-        LAG\AdminBundle\Field\Field\Date: LAG\AdminBundle\Field\Configuration\DateConfiguration
-        LAG\AdminBundle\Field\Field\Link: LAG\AdminBundle\Field\Configuration\LinkConfiguration
-        LAG\AdminBundle\Field\Field\Mapped: LAG\AdminBundle\Field\Configuration\MappedConfiguration
-        LAG\AdminBundle\Field\Field\StringField: LAG\AdminBundle\Field\Configuration\StringConfiguration
-
 services:
     lag.admin.factory:
         class: LAG\AdminBundle\Admin\Factory\AdminFactory
@@ -44,8 +32,4 @@ services:
 
     lag.admin.field_configuration_factory:
         class: LAG\AdminBundle\Field\Factory\ConfigurationFactory
-        arguments:
-            - '%field_mapping%'
-
-
-
+        autowire: true
