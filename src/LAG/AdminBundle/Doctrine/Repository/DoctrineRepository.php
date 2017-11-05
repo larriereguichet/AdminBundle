@@ -95,9 +95,13 @@ abstract class DoctrineRepository extends EntityRepository implements Repository
             $pieces[] = 'entity.'.$identifier;
         }
         
-        return $this
+        $queryBuilder = $this
             ->createQueryBuilder('entity')
             ->select('count('.implode(',', $pieces).')')
+        ;
+        $this->addCriteria($queryBuilder, $criteria, $options);
+    
+        return $queryBuilder
             ->getQuery()
             ->getSingleScalarResult()
         ;
