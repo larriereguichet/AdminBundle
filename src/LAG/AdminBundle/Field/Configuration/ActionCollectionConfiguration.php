@@ -61,7 +61,6 @@ class ActionCollectionConfiguration extends Configuration
                 $options['class'] = $classMapping[$action];
             }
         }
-        $normalizedActions[$action] = $options;
     }
     
     protected function normalizeRoute(array &$options, $action)
