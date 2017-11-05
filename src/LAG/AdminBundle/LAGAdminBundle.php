@@ -103,7 +103,7 @@ class LAGAdminBundle extends Bundle implements PrependExtensionInterface
     {
         $container->prependExtensionConfig('twig', [
             'globals' => [
-                'config' => new Expression('service("lag.admin.configuration_factory").getApplicationConfiguration()'),
+                'config' => new Expression('service("lag.admin.configuration_storage").getApplicationConfiguration()'),
             ],
         ]);
     }
