@@ -3,11 +3,13 @@
 namespace LAG\AdminBundle\Filter\Factory;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -55,6 +57,7 @@ class FilterFormBuilder
         $builder = $this
             ->formFactory
             ->createBuilder(FormType::class, null, [
+                // TODO use the _csrf protection
                 'csrf_protection' => false,
             ])
             ->setMethod('get')
@@ -96,6 +99,7 @@ class FilterFormBuilder
         $mapping = [
             'choice' => ChoiceType::class,
             'string' => TextType::class,
+            'entity' => EntityType::class,
         ];
     
         if (array_key_exists($type, $mapping)) {
@@ -108,6 +112,7 @@ class FilterFormBuilder
     /**
      * Merge default form options with the configured ones.
      *
+     * @param string     $field
      * @param array|null $formOptions
      *
      * @return array
@@ -117,19 +122,33 @@ class FilterFormBuilder
         if (null === $formOptions) {
             $formOptions = [];
         }
-        $placeholder = $this
-            ->translator
-            ->trans('lag.admin.search_by', [
-                '%field%' => $field,
-            ])
-        ;
+        $accessor = PropertyAccess::createPropertyAccessor();
+        $defaultCssClass = 'form-control form-control-sm mb-2 mr-sm-2 mb-sm-0';
     
-        return array_merge([
-            'attr' => [
-                'class' => 'form-control form-control-sm mb-2 mr-sm-2 mb-sm-0',
-                'placeholder' => $placeholder,
-            ],
-            'required' => false,
-        ], $formOptions);
+        // merge default css class with user's ones
+        if ($accessor->isReadable($formOptions, '[attr][class]')) {
+            $value = $accessor->getValue($formOptions, '[attr][class]');
+            $accessor->setValue($formOptions, '[attr][class]', $defaultCssClass.' '.$value);
+        } else {
+            $accessor->setValue($formOptions, '[attr][class]', $defaultCssClass);
+        }
+    
+        // provide a default placeholder
+        if (!$accessor->isReadable($formOptions, 'attr[placeholder]')) {
+            $placeholder = $this
+                ->translator
+                ->trans('lag.admin.search_by', [
+                    '%field%' => $field,
+                ])
+            ;
+            $accessor->setValue($formOptions, '[attr][placeholder]', $placeholder);
+        }
+        
+        // filters inputs should be optional by default
+        if (!$accessor->isReadable($formOptions, 'required')) {
+            $accessor->setValue($formOptions, '[required]', false);
+        }
+        
+        return $formOptions;
     }
 }
