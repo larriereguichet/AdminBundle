@@ -244,7 +244,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         if (!array_key_exists('fields', $configuration)) {
             return;
         }
-
         // configured linked actions :
         // _action key should exists and be null
         $_actionExists = array_key_exists('_actions', $configuration['fields']);
@@ -252,9 +251,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
         // _action is added extra configuration only for the "list" action
         $isListAction = $event->getActionName() == 'list';
-    
-        //dump($_actionExists, $_actionIsNull, $isListAction);
-        
 
         if ($_actionExists && $_actionIsNull && $isListAction) {
             // in list view, we add by default and an edit and a delete button
