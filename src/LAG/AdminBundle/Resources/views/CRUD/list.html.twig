@@ -45,7 +45,7 @@
                         <caption>
                             {{ 'lag.admin.element_count' | trans({
                                 '%page_count%': admin.entities | length,
-                                '%total_count%': admin.entities.count
+                                '%total_count%': admin.totalCount
                             }) }}
                         </caption>
                         <thead>
@@ -57,14 +57,7 @@
                             {% endif %}
 
                             {% for field in admin.fields %}
-                                <th class="{{ field.columnClass }}">
-                                    {% set sortClass = getSortColumnIconClass(app.request.get('order'), field.name, app.request.get('sort')) %}
-
-                                    <a href="{{ getSortColumnUrl(app.request, field.name) }}"
-                                       class="text-dark">
-                                        {{ field_title(field.name, admin.name) }}<i class="{{ sortClass }}"></i>
-                                    </a>
-                                </th>
+                                {% include '@LAGAdmin/List/_columns.httml.twig' %}
                             {% endfor %}
                         </tr>
                         </thead>
@@ -91,7 +84,7 @@
                 </div>
                 </form>
 
-                {% if admin.entities.haveToPaginate | default(false) %}
+                {% if admin.haveToPaginate | default(false) %}
                     <div class="row">
                         <div class="col-lg-6 col-lg-offset-6">
                             {% include '@LAGAdmin/List/pagination.html.twig' %}
