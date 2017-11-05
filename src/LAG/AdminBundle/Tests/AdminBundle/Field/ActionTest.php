@@ -4,57 +4,46 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Field;
 
 use LAG\AdminBundle\Field\Field\Action;
 use LAG\AdminBundle\Tests\AdminTestBase;
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\IdentityTranslator;
-use Twig_Environment;
 
 class ActionTest extends AdminTestBase
 {
     public function testRender()
     {
-        $options = [];
-        $resolver = new OptionsResolver();
-        
-        $linkField = new Action();
-        $linkField->setApplicationConfiguration($this->createApplicationConfiguration());
-        $linkField->configureOptions($resolver);
-        
-        // an url or a route SHOULD be provided
-        $this->assertExceptionRaised(InvalidOptionsException::class, function() use ($linkField, $resolver, $options) {
-            $linkField->setOptions($resolver->resolve($options));
-        });
-        
-        $options = [
-            'url' => 'http:/test.fr/',
-            'title' => 'MyAction'
-        ];
-        
-        $twig = $this
-            ->getMockBuilder(Twig_Environment::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $twig = $this->getMockWithoutConstructor(\Twig_Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
-            ->with('LAGAdminBundle:Render:link.html.twig', [
-                'text' => 'MyAction',
-                'url' => $options['url'],
-                'route' => '',
+            ->with('test.html.twig', [
+                'text' => 'Some Title',
                 'parameters' => [],
-                'target' => '_self',
-                'title' => 'MyAction',
-                'icon' => '',
+                'options' => [
+                    'length' => null,
+                    'parameters' => [],
+                    'replace' => null,
+                    'template' => 'test.html.twig',
+                    'text' => null,
+                    'translation' => false,
+                    'title' => 'Some Title',
+                ],
             ])
-            ->willReturn('<p>a string yeah !!! </p>')
+            ->willReturn('html content')
         ;
         
-        $linkField->setOptions($resolver->resolve($options));
-        $linkField->setTranslator(new IdentityTranslator());
+        $linkField = new Action('my-field');
         $linkField->setTwig($twig);
         
-        $result = $linkField->render('test');
-        $this->assertInternalType('string', $result);
+        $this->setPrivateProperty($linkField, 'options', [
+            'length' => null,
+            'parameters' => [],
+            'replace' => null,
+            'template' => 'test.html.twig',
+            'text' => null,
+            'translation' => false,
+            'title' => 'Some Title',
+        ]);
+    
+        $content = $linkField->render('a value');
+        
+        $this->assertEquals('html content', $content);
     }
 }
