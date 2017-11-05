@@ -7,6 +7,8 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
 use LAG\AdminBundle\Admin\Registry\Registry;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Menu\Configuration\MenuConfiguration;
 use LAG\AdminBundle\Menu\Configuration\MenuItemConfiguration;
@@ -36,29 +38,34 @@ class MenuFactory
      * @var ConfigurationFactory
      */
     protected $configurationFactory;
+    
+    /**
+     * @var ApplicationConfiguration
+     */
+    protected $applicationConfiguration;
 
     /**
      * @var TranslatorInterface
      */
     protected $translator;
-
+    
     /**
      * MenuBuilder constructor.
      *
-     * @param FactoryInterface $menuFactory
-     * @param Registry $registry
-     * @param ConfigurationFactory $configurationFactory
-     * @param TranslatorInterface $translator
+     * @param FactoryInterface                $menuFactory
+     * @param Registry                        $registry
+     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
+     * @param TranslatorInterface             $translator
      */
     public function __construct(
         FactoryInterface $menuFactory,
         Registry $registry,
-        ConfigurationFactory $configurationFactory,
+        ApplicationConfigurationStorage $applicationConfigurationStorage,
         TranslatorInterface $translator
     ) {
         $this->registry = $registry;
         $this->menuFactory = $menuFactory;
-        $this->configurationFactory = $configurationFactory;
+        $this->applicationConfiguration = $applicationConfigurationStorage->getApplicationConfiguration();
         $this->translator = $translator;
     }
 
@@ -136,12 +143,10 @@ class MenuFactory
         if ($text) {
             return $text;
         }
-
         // if an admin is defined, we get the text using the translation pattern and the admin action's name
         if ($admin = $itemConfiguration->getParameter('admin')) {
             $translationPattern = $this
-                ->configurationFactory
-                ->getApplicationConfiguration()
+                ->applicationConfiguration
                 ->getParameter('translation')['pattern'];
             $action = $itemConfiguration->getParameter('action');
 
