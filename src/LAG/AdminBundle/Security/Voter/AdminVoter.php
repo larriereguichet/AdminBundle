@@ -2,8 +2,7 @@
 
 namespace LAG\AdminBundle\Security\Voter;
 
-use LAG\AdminBundle\Admin\Request\RequestHandler;
-use Symfony\Component\Form\RequestHandlerInterface;
+use LAG\AdminBundle\Admin\Request\RequestHandlerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -12,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class AdminVoter extends Voter
 {
     /**
-     * @var RequestHandler
+     * @var RequestHandlerInterface
      */
     private $requestHandler;
     
