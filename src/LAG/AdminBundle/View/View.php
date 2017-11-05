@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\View;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Field\FieldInterface;
@@ -26,7 +27,7 @@ class View implements ViewInterface
     private $adminName;
     
     /**
-     * @var array
+     * @var array|Collection
      */
     private $entities = [];
     
