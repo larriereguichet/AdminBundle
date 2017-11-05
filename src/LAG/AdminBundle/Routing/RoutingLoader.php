@@ -54,9 +54,13 @@ class RoutingLoader implements LoaderInterface
     }
 
     /**
-     * @param mixed $resource
-     * @param null $type
+     * Load the Admin's route.
+     *
+     * @param mixed  $resource
+     * @param string $type
+     *
      * @return RouteCollection
+     *
      * @throws Exception
      */
     public function load($resource, $type = null)
@@ -66,19 +70,17 @@ class RoutingLoader implements LoaderInterface
         }
         $routes = new RouteCollection();
 
-        // init the AdminFactory to load the Admins
+        // Load the Admins
         $this
             ->adminFactory
             ->init()
         ;
-        
-        // get all the loaded Admins from the Registry
         $admins = $this
             ->registry
             ->all()
         ;
         
-        // creating a route by admin and action
+        // Creating a route by Admin and Action
         foreach ($admins as $admin) {
             $actions = $admin
                 ->getConfiguration()
@@ -88,16 +90,9 @@ class RoutingLoader implements LoaderInterface
             foreach ($actions as $name => $configuration) {
                 $actionConfiguration = $this
                     ->configurationFactory
-                    ->create($name, $admin->getConfiguration(), $configuration)
+                    ->create($name, $admin->getName(), $admin->getConfiguration(), $configuration)
                 ;
-    
-                if ($admin->getName() === 'media') {
-                    dump($actionConfiguration->getParameter('route_path'));
-                    dump($actionConfiguration->getParameter('route_defaults'));
-                }
-    
-    
-                // create the new route according to the resolved configuration parameters
+                // Create the new route according to the resolved configuration parameters
                 $route = new Route(
                     $actionConfiguration->getParameter('route_path'),
                     $actionConfiguration->getParameter('route_defaults'),
@@ -106,29 +101,28 @@ class RoutingLoader implements LoaderInterface
                 $generator = new RouteNameGenerator();
                 $routeName = $generator->generate($name, $admin->getName(), $admin->getConfiguration());
                 
-                // add the route to the collection
+                // Add the route to the collection
                 $routes->add($routeName, $route);
             }
         }
-        // loader is loaded
         $this->loaded = true;
 
         return $routes;
     }
 
     /**
+     * Return true for the extra resource.
+     *
      * @param mixed $resource
-     * @param null $type
+     * @param string $type
+     *
      * @return bool
      */
     public function supports($resource, $type = null)
     {
         return 'extra' === $type;
     }
-
-    /**
-     * 
-     */
+    
     public function getResolver()
     {
     }
