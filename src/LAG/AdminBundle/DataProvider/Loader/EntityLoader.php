@@ -84,15 +84,14 @@ class EntityLoader implements EntityLoaderInterface
     public function load(array $criteria, array $orderBy = [], $limit = 25, $offset = 1)
     {
         if (false !== $this->isPaginationRequired) {
-            // load entities from the DataProvider using a pagination system
+            // Load entities from the DataProvider using a pagination system
             $entities = $this->loadPaginate($criteria, $orderBy, $limit, $offset);
         }
         else {
-            // if no pagination is required (edit action for example)
+            // If no pagination is required (edit action for example)
             $entities = $this->loadWithoutPagination($criteria, $orderBy);
         }
-    
-        // load the entities into the Admin
+        
         return $entities;
     }
     
