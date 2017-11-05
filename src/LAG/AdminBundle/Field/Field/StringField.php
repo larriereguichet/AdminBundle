@@ -3,9 +3,9 @@
 namespace LAG\AdminBundle\Field\Field;
 
 use LAG\AdminBundle\Field\AbstractField;
+use LAG\AdminBundle\Field\Configuration\StringFieldConfiguration;
 use LAG\AdminBundle\Field\TranslatorAwareInterface;
 use LAG\AdminBundle\Field\TwigAwareInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Environment;
 
@@ -35,42 +35,23 @@ class StringField extends AbstractField implements TranslatorAwareInterface, Twi
      */
     public function render($value)
     {
-        if ($this->options->get('translation')) {
+        if ($this->options['translation']) {
             $value = $this
                 ->translator
-                ->trans($value);
+                ->trans($value)
+            ;
         }
-        $maximumStringLength = $this
-            ->options
-            ->get('length');
-        $replaceString = $this
-            ->options
-            ->get('replace');
+        $maximumStringLength = $this->options['length'];
+        $replaceString = $this->options['replace'];
 
-        // truncate string if required
+        // Truncate string if required
         if ($maximumStringLength && strlen($value) > $maximumStringLength) {
             $value = substr($value, 0, $maximumStringLength).$replaceString;
         }
-        // #69 : strip tags to avoid layout destruction when content contains html
+        // #69 : strip tags to avoid to break the layout when content contains html
         $value = strip_tags($value);
 
         return $value;
-    }
-
-    /**
-     * Configure options resolver.
-     *
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-        
-        $resolver->setDefaults([
-            'length' => $this->applicationConfiguration->getParameter('string_length'),
-            'replace' => $this->applicationConfiguration->getParameter('string_length_truncate'),
-            'translation' => true,
-        ]);
     }
 
     /**
@@ -105,5 +86,15 @@ class StringField extends AbstractField implements TranslatorAwareInterface, Twi
     public function setTwig(Twig_Environment $twig)
     {
         $this->twig = $twig;
+    }
+    
+    /**
+     * Return the Field's configuration class.
+     *
+     * @return string
+     */
+    public function getConfigurationClass()
+    {
+        return StringFieldConfiguration::class;
     }
 }

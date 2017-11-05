@@ -3,47 +3,38 @@
 namespace LAG\AdminBundle\Field\Field;
 
 use LAG\AdminBundle\Field\AbstractField;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use LAG\AdminBundle\Field\Configuration\CountConfiguration;
 
 /**
  * Count field.
  */
 class Count extends AbstractField
 {
-    /**
-     * String displayed if rendered value is empty (or null or 0).
-     *
-     * @var string
-     */
-    protected $emptyString;
-
     public function render($value)
     {
         $count = count($value);
-
-        if ($count > 0 || $this->emptyString === null) {
+    
+        if ($count > 0 || $this->options['empty_string'] === null) {
             $render = $count;
         } else {
-            $render = $this->emptyString;
+            $render = $this->options['empty_string'];
         }
-
+    
         return $render;
     }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'empty_string' => null,
-        ]);
-    }
-
-    public function setOptions(array $options)
-    {
-        $this->emptyString = $options['empty_string'];
-    }
-
+    
     public function getType()
     {
         return 'count';
+    }
+    
+    /**
+     * Return the Field's configuration class.
+     *
+     * @return string
+     */
+    public function getConfigurationClass()
+    {
+        return CountConfiguration::class;
     }
 }

@@ -2,8 +2,7 @@
 
 namespace LAG\AdminBundle\Field;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use JK\Configuration\Configuration;
 
 interface FieldInterface
 {
@@ -15,51 +14,39 @@ interface FieldInterface
      * @return mixed
      */
     public function render($value);
-
+    
     /**
-     * Configure options resolver.
-     *
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver);
-
-    /**
-     * Set options values after options resolving.
-     *
-     * @param array $options
-     */
-    public function setOptions(array $options);
-
-    /**
-     * Field name.
+     * Return the Field's name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Define field name.
-     *
-     * @param $name
-     */
-    public function setName($name);
-
-    /**
-     * Return field type.
+     * Return the Field's type.
      *
      * @return string
      */
     public function getType();
-
-    /**
-     * Defines application configuration.
-     *
-     * @param ApplicationConfiguration $configuration
-     */
-    public function setApplicationConfiguration($configuration);
     
     /**
+     * Return a configuration parameter value.
+     *
+     * @param string $name The name of the parameter name
+     *
+     * @return mixed The configuration value
+     */
+    public function getConfiguration($name);
+    
+    /**
+     * Return the Field's configuration class.
+     *
      * @return string
      */
-    public function getColumnClass();
+    public function getConfigurationClass();
+    
+    /**
+     * @param Configuration $configuration
+     */
+    public function setConfiguration(Configuration $configuration);
 }

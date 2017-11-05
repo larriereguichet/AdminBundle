@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Field\Field;
 
 use LAG\AdminBundle\Field\AbstractField;
+use LAG\AdminBundle\Field\Configuration\BooleanConfiguration;
 use LAG\AdminBundle\Field\TwigAwareInterface;
 use Twig_Environment;
 
@@ -55,5 +56,15 @@ class Boolean extends AbstractField implements TwigAwareInterface
     public function getColumnClass()
     {
         return 'text-center';
+    }
+    
+    /**
+     * Return the Field's configuration class.
+     *
+     * @return string
+     */
+    public function getConfigurationClass()
+    {
+        return BooleanConfiguration::class;
     }
 }

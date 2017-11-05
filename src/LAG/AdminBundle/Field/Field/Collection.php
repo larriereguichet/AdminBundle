@@ -3,7 +3,9 @@
 namespace LAG\AdminBundle\Field\Field;
 
 use LAG\AdminBundle\Field\AbstractField;
+use LAG\AdminBundle\Field\Configuration\CollectionConfiguration;
 use LAG\AdminBundle\Field\EntityAwareInterface;
+use LAG\AdminBundle\Field\FieldInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Twig_Environment;
@@ -14,11 +16,6 @@ class Collection extends AbstractField implements EntityAwareInterface
      * @var Twig_Environment
      */
     protected $twig;
-
-    /**
-     * @var AbstractField[]
-     */
-    protected $fields = [];
 
     /**
      * @var Object
@@ -36,7 +33,8 @@ class Collection extends AbstractField implements EntityAwareInterface
             ->enableMagicCall()
             ->getPropertyAccessor();
 
-        foreach ($this->fields as $field) {
+        /** @var FieldInterface $field */
+        foreach ($this->options['field'] as $field) {
             $value = null;
             // if name starts with a underscore, it is a custom field, not mapped to the entity
             if (substr($field->getName(), 0, 1) != '_') {
@@ -64,16 +62,6 @@ class Collection extends AbstractField implements EntityAwareInterface
             ->setAllowedTypes('fields', 'array');
     }
 
-    /**
-     * Set options values after options resolving.
-     *
-     * @param array $options
-     */
-    public function setOptions(array $options)
-    {
-        $this->fields = $options['fields'];
-    }
-
     public function getType()
     {
         return 'collection';
@@ -87,5 +75,15 @@ class Collection extends AbstractField implements EntityAwareInterface
     public function setEntity($entity)
     {
         $this->entity = $entity;
+    }
+    
+    /**
+     * Return the Field's configuration class.
+     *
+     * @return string
+     */
+    public function getConfigurationClass()
+    {
+        return CollectionConfiguration::class;
     }
 }
