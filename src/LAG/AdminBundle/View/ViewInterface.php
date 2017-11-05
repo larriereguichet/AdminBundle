@@ -29,4 +29,19 @@ interface ViewInterface
      * @return AdminConfiguration
      */
     public function getAdminConfiguration();
+    
+    /**
+     * @return bool
+     */
+    public function haveToPaginate();
+    
+    /**
+     * @return int
+     */
+    public function getTotalCount();
+    
+    /**
+     * @return Pagerfanta|null
+     */
+    public function getPager();
 }
