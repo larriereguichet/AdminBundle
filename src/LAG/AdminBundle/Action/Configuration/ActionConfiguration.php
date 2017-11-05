@@ -402,8 +402,8 @@ class ActionConfiguration extends Configuration
                         $this->actionName
                     );
                 }
-                // normalize string notation
-                // transform "name" => 'string' into "name" => ['type' => 'string']
+                // Normalize string notation : if only a string is provided (instead of an array), this string is
+                // taken as the filter type
                 if (is_string($filterOptions)) {
                     $filterOptions = [
                         'type' => $filterOptions,
