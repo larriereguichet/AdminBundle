@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\DataProvider\Loader;
 use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
-use Traversable;
+use Pagerfanta\Pagerfanta;
 
 interface EntityLoaderInterface
 {
@@ -17,7 +17,7 @@ interface EntityLoaderInterface
      * @param int   $limit
      * @param int   $offset
      *
-     * @return ArrayCollection|Traversable
+     * @return ArrayCollection|array|Pagerfanta
      */
     public function load(array $criteria, array $orderBy = [], $limit = 25, $offset = 1);
     
