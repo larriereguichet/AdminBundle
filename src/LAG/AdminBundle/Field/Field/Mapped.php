@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Field\Field;
 
 use LAG\AdminBundle\Field\AbstractField;
+use LAG\AdminBundle\Field\Configuration\MappedConfiguration;
 use LAG\AdminBundle\Field\TranslatorAwareInterface;
 use LogicException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,10 +25,7 @@ class Mapped extends AbstractField implements TranslatorAwareInterface
      */
     public function render($value)
     {
-        $mapping = $this
-            ->options
-            ->get('mapping')
-        ;
+        $mapping = $this->options['mapping'];
     
         if (!array_key_exists($value, $mapping)) {
             throw new LogicException('Value "'.$value.' " not found in mapping '.implode(',', $mapping));
@@ -72,4 +70,15 @@ class Mapped extends AbstractField implements TranslatorAwareInterface
     public function setTranslator(TranslatorInterface $translator)
     {
         $this->translator = $translator;
-    }}
+    }
+    
+    /**
+     * Return the Field's configuration class.
+     *
+     * @return string
+     */
+    public function getConfigurationClass()
+    {
+        return MappedConfiguration::class;
+    }
+}

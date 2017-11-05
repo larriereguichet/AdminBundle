@@ -2,9 +2,9 @@
 
 namespace LAG\AdminBundle\Field;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Exception;
+use JK\Configuration\Configuration;
+use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 
 abstract class AbstractField implements FieldInterface
 {
@@ -25,27 +25,30 @@ abstract class AbstractField implements FieldInterface
      * @var string
      */
     protected $name;
-
+    
     /**
-     * Application configuration for default options
-     *
-     * @var ApplicationConfiguration
+     * @var Configuration
      */
-    protected $applicationConfiguration;
-
+    protected $configuration;
+    
     /**
-     * Field's resolved options
-     *
-     * @var ParameterBag
+     * @var ActionConfiguration
      */
-    protected $options;
-
+    protected $actionConfiguration;
+    
+    /**
+     * @var array
+     */
+    protected $options = [];
+    
     /**
      * Field constructor.
+     *
+     * @param string              $name
      */
-    public function __construct()
+    public function __construct($name)
     {
-        $this->options = new ParameterBag();
+        $this->name = $name;
     }
 
     /**
@@ -55,59 +58,39 @@ abstract class AbstractField implements FieldInterface
     {
         return $this->name;
     }
-
+    
     /**
      * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Return application configuration.
      *
-     * @return ApplicationConfiguration
+     * @return mixed
      */
-    public function getApplicationConfiguration()
+    public function getConfiguration($name)
     {
-        return $this->applicationConfiguration;
-    }
-
-    /**
-     * @param ApplicationConfiguration $configuration
-     */
-    public function setApplicationConfiguration($configuration)
-    {
-        $this->applicationConfiguration = $configuration;
-    }
-
-    /**
-     * Set resolved options.
-     *
-     * @param array $options
-     * @return void
-     */
-    public function setOptions(array $options)
-    {
-        $this->options = new ParameterBag($options);
+        return $this
+            ->configuration
+            ->getParameter($name)
+        ;
     }
     
     /**
-     * @inheritdoc
+     * @param ActionConfiguration $actionConfiguration
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function setActionConfiguration(ActionConfiguration $actionConfiguration)
     {
-        $resolver->setDefaults([
-            'class' => '',
-        ]);
+        $this->actionConfiguration = $actionConfiguration;
     }
     
     /**
-     * @return string
+     * @param Configuration $configuration
+     *
+     * @throws Exception
      */
-    public function getColumnClass()
+    public function setConfiguration(Configuration $configuration)
     {
-        return '';
+        if (!$configuration->isResolved()) {
+            throw new Exception('The configuration must be resolved');
+        }
+        $this->configuration = $configuration;
+        $this->options = $configuration->getParameters();
     }
 }

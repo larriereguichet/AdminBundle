@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Field\Field;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use LAG\AdminBundle\Field\AbstractField;
 use Exception;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use LAG\AdminBundle\Field\Configuration\ArrayFieldConfiguration;
 use Traversable;
 
 /**
@@ -15,8 +15,6 @@ use Traversable;
  */
 class ArrayField extends AbstractField
 {
-    protected $glue;
-
     /**
      * Render field value
      *
@@ -33,36 +31,24 @@ class ArrayField extends AbstractField
             $value = $value->toArray();
         }
 
-        return implode($this->glue, $value);
+        return implode($this->options['glue'], $value);
     }
-
-    /**
-     * Configure options resolver.
-     *
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'glue' => ', ',
-        ]);
-    }
-
-    /**
-     * Set options values after options resolving.
-     *
-     * @param array $options
-     */
-    public function setOptions(array $options)
-    {
-        $this->glue = $options['glue'];
-    }
-
+    
     /**
      * @return string
      */
     public function getType()
     {
         return 'array';
+    }
+    
+    /**
+     * Return the Field's configuration class.
+     *
+     * @return string
+     */
+    public function getConfigurationClass()
+    {
+        return ArrayFieldConfiguration::class;
     }
 }

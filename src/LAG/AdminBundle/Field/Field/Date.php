@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Field\Field;
 
 use LAG\AdminBundle\Field\AbstractField;
 use DateTime;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use LAG\AdminBundle\Field\Configuration\DateConfiguration;
 
 /**
  * Date field.
@@ -12,53 +12,38 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class Date extends AbstractField
 {
     /**
-     * Date format.
-     *
-     * @var string
-     */
-    protected $format;
-
-    /**
      * Render and format a Datetime.
      *
-     * @param $value
+     * @param mixed $value
      *
      * @return string
+     *
+     * @throws \Exception
      */
     public function render($value)
     {
-        if ($value instanceof DateTime) {
-            $value = $value->format($this->format);
+        if (!$value instanceof DateTime) {
+            throw new \Exception('Expected Datetime, got '.gettype($value));
         }
 
-        return $value;
+        return $value->format($this->options['format']);
     }
-
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'format' => $this
-                ->applicationConfiguration
-                ->getParameter('date_format'),
-        ]);
-    }
-
-    /**
-     * @param array $options
-     */
-    public function setOptions(array $options)
-    {
-        $this->format = $options['format'];
-    }
-
+    
     /**
      * @return string
      */
     public function getType()
     {
         return 'date';
+    }
+    
+    /**
+     * Return the Field's configuration class.
+     *
+     * @return string
+     */
+    public function getConfigurationClass()
+    {
+        return DateConfiguration::class;
     }
 }

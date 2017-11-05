@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Field\Field;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use LAG\AdminBundle\Field\Configuration\ActionConfiguration;
 
 class Action extends Link
 {
@@ -15,24 +15,11 @@ class Action extends Link
      */
     public function render($value)
     {
-        $value = $this
-            ->options
-            ->get('title')
-        ;
-        
+        if (null !== $this->options['title']) {
+            $value = $this->options['title'];
+        }
+    
         return parent::render($value);
-    }
-    
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-    
-        $resolver
-            ->setDefaults([
-                'class' => 'btn btn-danger btn-sm',
-                'text' => '',
-            ])
-        ;
     }
     
     /**
@@ -43,5 +30,15 @@ class Action extends Link
     public function getType()
     {
         return 'action';
+    }
+    
+    /**
+     * Return the Field's configuration class.
+     *
+     * @return string
+     */
+    public function getConfigurationClass()
+    {
+        return ActionConfiguration::class;
     }
 }
