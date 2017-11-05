@@ -55,8 +55,6 @@ class LoadParameterExtractor
             }
             
             if (null !== $value) {
-                dump($configuredFilters);
-                dump($filter);
                 if ('string' === $configuredFilters[$filter]['type']) {
                     $value = '%'.$value.'%';
                 }

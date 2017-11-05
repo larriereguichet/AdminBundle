@@ -8,7 +8,7 @@ use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\LAGAdminBundle;
 use Symfony\Component\HttpFoundation\Request;
 
-class RequestHandler
+class RequestHandler implements RequestHandlerInterface
 {
     /**
      * @var Registry
