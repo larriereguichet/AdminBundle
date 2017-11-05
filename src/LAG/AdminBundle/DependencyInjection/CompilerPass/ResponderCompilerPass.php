@@ -16,7 +16,7 @@ class ResponderCompilerPass implements CompilerPassInterface
         $storage = $container->getDefinition('lag.admin.responder.storage');
         $responderIds = $container->findTaggedServiceIds('responder');
     
-        foreach ($responderIds as $responderId) {
+        foreach ($responderIds as $responderId => $attributes) {
             $storage->addMethodCall('add', [
                 $responderId,
                 new Reference($responderId),
