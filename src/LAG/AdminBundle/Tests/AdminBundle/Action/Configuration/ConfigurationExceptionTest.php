@@ -24,7 +24,7 @@ class ConfigurationExceptionTest extends AdminTestBase
         $exception = new ConfigurationException(
             'My little message',
             'an_action',
-            $admin
+            $admin->getName()
         );
 
         $this->assertInstanceOf(Exception::class, $exception);
