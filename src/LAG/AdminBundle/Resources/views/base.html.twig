@@ -43,8 +43,6 @@
     {% block layout %}
         <div class="container-fluid">
             <div class="row">
-                {% include "LAGAdminBundle:Layout:flash_messages.html.twig" %}
-
                 <div id="main-menu-container"
                      class="col-4 col-xl-2"
                      role="navigation">
@@ -56,6 +54,11 @@
                 {% block content_container %}
                     <main class="col-7 col-xl-8"
                           role="main">
+
+                        {% block flash_messages %}
+                            {% include "LAGAdminBundle:Layout:flash_messages.html.twig" %}
+                        {% endblock %}
+
                         {% block content %}{% endblock %}
                     </main>
                 {% endblock %}
