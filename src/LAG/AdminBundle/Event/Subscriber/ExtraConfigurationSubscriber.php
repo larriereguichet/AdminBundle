@@ -9,8 +9,8 @@ use LAG\AdminBundle\Action\Event\BeforeConfigurationEvent;
 use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
 use LAG\AdminBundle\Admin\Event\AdminCreateEvent;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Admin\Event\AdminEvents;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Routing\RouteNameGenerator;
 use LAG\AdminBundle\Utils\FieldTypeGuesser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -50,23 +50,23 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             ActionEvents::BEFORE_CONFIGURATION => 'beforeActionConfiguration',
         ];
     }
-
+    
     /**
      * ExtraConfigurationSubscriber constructor.
      *
-     * @param boolean $extraConfigurationEnabled
-     * @param Registry $doctrine
-     * @param ConfigurationFactory $configurationFactory
+     * @param boolean                         $extraConfigurationEnabled
+     * @param Registry                        $doctrine
+     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      */
     public function __construct(
         $extraConfigurationEnabled = true,
         Registry $doctrine,
-        ConfigurationFactory $configurationFactory
+        ApplicationConfigurationStorage $applicationConfigurationStorage
     ) {
         $this->extraConfigurationEnabled = $extraConfigurationEnabled;
         // entity manager can be closed, so its better to inject the Doctrine registry instead
         $this->entityManager = $doctrine->getManager();
-        $this->applicationConfiguration = $configurationFactory->getApplicationConfiguration();
+        $this->applicationConfiguration = $applicationConfigurationStorage->getApplicationConfiguration();
     }
 
     /**
