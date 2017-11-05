@@ -9,7 +9,7 @@ use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use LAG\AdminBundle\Admin\Request\LoadParameterExtractor;
-use LAG\AdminBundle\Admin\Request\RequestHandler;
+use LAG\AdminBundle\Admin\Request\RequestHandlerInterface;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\DataProvider\Loader\EntityLoaderInterface;
 use LAG\AdminBundle\LAGAdminBundle;
@@ -110,8 +110,9 @@ class Admin implements AdminInterface
      * @var ViewInterface
      */
     private $view;
+    
     /**
-     * @var RequestHandler
+     * @var RequestHandlerInterface
      */
     private $requestHandler;
     
@@ -125,7 +126,7 @@ class Admin implements AdminInterface
      * @param EventDispatcherInterface      $eventDispatcher
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param TokenStorageInterface         $tokenStorage
-     * @param RequestHandler                $requestHandler
+     * @param RequestHandlerInterface       $requestHandler
      * @param ViewFactory                   $viewFactory
      * @param array                         $actions
      */
@@ -137,7 +138,7 @@ class Admin implements AdminInterface
         EventDispatcherInterface $eventDispatcher,
         AuthorizationCheckerInterface $authorizationChecker,
         TokenStorageInterface $tokenStorage,
-        RequestHandler $requestHandler,
+        RequestHandlerInterface $requestHandler,
         ViewFactory $viewFactory,
         $actions = []
     ) {
@@ -160,6 +161,8 @@ class Admin implements AdminInterface
      *
      * @param Request $request
      * @param array   $filters
+     *
+     * @throws Exception
      */
     public function handleRequest(Request $request, array $filters = [])
     {
@@ -170,37 +173,37 @@ class Admin implements AdminInterface
         }
         $actionName = $request->get('_route_params')[LAGAdminBundle::REQUEST_PARAMETER_ACTION];
     
+        if (!key_exists($actionName, $this->actions)) {
+            throw new Exception('Invalid action name "'.$actionName.'"');
+        }
+        $action = $this->actions[$actionName];
+        
         $this->view = $this
             ->viewFactory
-            ->create($actionName, $this->name, $this->configuration, $this->configuration->getParameter('actions')[$actionName])
+            ->create($actionName, $this->name, $this->configuration, $action->getConfiguration())
         ;
         
-        // set current action
-//        $this->currentAction = $this->getAction(
-//            $request->get('_route_params')[LAGAdminBundle::REQUEST_PARAMETER_ACTION]
-//        );
-        
-        // check if user is logged have required permissions to get current action
+        // Check if user is logged have required permissions to get current action
         $this->checkPermissions();
         
-        // get the current action configuration bag
+        // Get the current action configuration bag
         $actionConfiguration = $this
             ->view
             ->getConfiguration()
         ;
     
-        // if no loading is required, no more thing to do. Some actions do not require to load entities from
+        // If no loading is required, no more thing to do. Some actions do not require to load entities from
         // the DataProvider
         if (Admin::LOAD_STRATEGY_NONE === $actionConfiguration->getParameter('load_strategy')) {
             return;
         }
         
-        // retrieve the criteria to find one or more entities (from the request for sorting, pagination... and from
+        // Retrieve the criteria to find one or more entities (from the request for sorting, pagination... and from
         // the filter form
         $loader = new LoadParameterExtractor($actionConfiguration, $filters);
         $loader->load($request);
     
-        // load entities according to action and request
+        // Load entities according to action and request
         $this
             ->entityLoader
             ->configure($actionConfiguration)
@@ -214,11 +217,10 @@ class Admin implements AdminInterface
                 $loader->getPage()
             )
         ;
-        $this->view->setEntities($this->entities);
     }
     
     /**
-     * Check if user is allowed to be here.
+     * Check if the user is allowed to be here.
      *
      * @throws LogicException|AccessDeniedException
      */
@@ -230,18 +232,19 @@ class Admin implements AdminInterface
             ->getUser()
         ;
         
-        // must be authenticated to access to an admin
+        // The user must be authenticated to access to an admin
         if (!($user instanceof UserInterface)) {
             throw new AccessDeniedException();
         }
         
-        // a view must have been defined
+        // A view must have been defined
         if (null === $this->view) {
             throw new LogicException(
                 'A view must be defined before checking the permissions. Maybe you forget to call handleRequest()'
             );
         }
-        // check if the current User is granted in Symfony security configuration
+        
+        // Check if the current user is granted in Symfony's security configuration
         if (!$this->authorizationChecker->isGranted($user->getRoles(), $user)) {
             throw new AccessDeniedException();
         }
@@ -251,7 +254,7 @@ class Admin implements AdminInterface
             ->getParameter('permissions')
         ;
         
-        // check if the User is granted according to Admin configuration
+        // Check if the user is granted according to Admin configuration
         if (!$this->authorizationChecker->isGranted($permissions, $user)) {
             throw new AccessDeniedException();
         }
@@ -264,12 +267,13 @@ class Admin implements AdminInterface
      */
     public function create()
     {
-        // create an entity from the data provider
+        // Create an entity from the data provider
         $entity = $this
-            ->dataProvider
+            ->entityLoader
+            ->getDataProvider()
             ->create();
         
-        // add it to the collection
+        // Add it to the collection
         $this
             ->entities
             ->add($entity);
@@ -288,7 +292,7 @@ class Admin implements AdminInterface
                 ->save($entity)
             ;
         }
-        // inform the user that the entity is saved
+        // Inform the user that the entity is successfully saved
         $this
             ->messageHandler
             ->handleSuccess($this->generateMessageTranslationKey('saved'))
@@ -305,7 +309,7 @@ class Admin implements AdminInterface
                 ->dataProvider
                 ->remove($entity);
         }
-        // inform the user that the entity is removed
+        // Inform the user that the entity is successfully removed
         $this
             ->messageHandler
             ->handleSuccess($this->generateMessageTranslationKey('deleted'))
@@ -341,33 +345,26 @@ class Admin implements AdminInterface
      * @param int   $limit
      * @param int   $offset
      */
-    public function load(array $criteria, array $orderBy = [], $limit = 25, $offset = 1)
+    public function load(array $criteria = [], array $orderBy = [], $limit = 25, $offset = 1)
     {
         // retrieve the data using the data provider via the entity loader
         $entities = $this
             ->entityLoader
             ->load($criteria, $orderBy, $limit, $offset)
         ;
-    
-        // either, we have an instance of Pagerfanta, either we should have an array or a collection
-        if ($entities instanceof Pagerfanta) {
-            // if the entities are inside a pager, we get the result and we set the pager for the view
-            $this->entities = new ArrayCollection($entities->getCurrentPageResults());
-            $this->pager = $entities;
-        } else {
-            // the data provider should return an array or a collection of entities.
-            if (!is_array($entities) && !$entities instanceof Collection) {
-                throw new LogicException(
-                    'The data provider should return either a collection or an array. Got '.gettype($entities).' instead'
-                );
-            }
-    
-            // if an array is provided, transform it to a collection to be more convenient
-            if (is_array($entities)) {
-                $entities = new ArrayCollection($entities);
-            }
-            $this->entities = $entities;
+        // the data provider should return an array or a collection of entities.
+        if (!is_array($entities) && !$entities instanceof Collection && !$entities instanceof Pagerfanta) {
+            throw new LogicException(
+                'The data provider should return either a collection or an array. Got '.gettype($entities).' instead'
+            );
         }
+
+        // if an array is provided, transform it to a collection to be more convenient
+        if (is_array($entities)) {
+            $entities = new ArrayCollection($entities);
+        }
+        $this->view->setEntities($entities);
+        $this->entities = $entities;
     }
     
     /**
@@ -432,6 +429,13 @@ class Admin implements AdminInterface
         return null !== $actions[$name] && false !== $actions[$name];
     }
     
+    /**
+     * Return the current view.
+     *
+     * @return ViewInterface
+     *
+     * @throws Exception If the view has not been defined, an exception is thrown.
+     */
     public function getView()
     {
         if (!$this->hasView()) {
@@ -441,6 +445,11 @@ class Admin implements AdminInterface
         return $this->view;
     }
     
+    /**
+     * Return true if the current view is defined.
+     *
+     * @return bool
+     */
     public function hasView()
     {
         return null !== $this->view;
