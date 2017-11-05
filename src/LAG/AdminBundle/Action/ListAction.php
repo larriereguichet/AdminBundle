@@ -79,10 +79,6 @@ class ListAction extends Action
         ;
         $form->handleRequest($request);
     
-        if ($form->isSubmitted() && $form->isValid()) {
-            // TODO do something with the selected entities
-        }
-    
         return $this
             ->responder
             ->respond($this->configuration, $this->admin, $form, $filterForm)
