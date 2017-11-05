@@ -40,17 +40,17 @@ class CreateAction extends Action
      */
     public function __invoke(Request $request)
     {
-        // the Admin with auto injected in the KernelSubscriber
+        // The Admin with auto injected in the KernelSubscriber
         $this
             ->admin
             ->handleRequest($request)
         ;
-        // create the new entity
         $entity = $this
             ->admin
             ->create()
         ;
-        // create the associated form type
+        
+        // Create the associated form type
         $formType = $this
             ->configuration
             ->getParameter('form')
@@ -59,8 +59,6 @@ class CreateAction extends Action
             ->configuration
             ->getParameter('form_options')
         ;
-        
-        // create the entity form
         $form = $this
             ->formFactory
             ->create($formType, $entity, $formOptions)
@@ -68,14 +66,12 @@ class CreateAction extends Action
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            // persist the new entity
             $this
                 ->admin
                 ->save()
             ;
         }
     
-        // return a Response using the CreateResponder
         return $this
             ->responder
             ->respond($this->configuration, $this->admin, $form, $request->request->get('submit'))
