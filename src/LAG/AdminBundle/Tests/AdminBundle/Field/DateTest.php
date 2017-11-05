@@ -5,27 +5,29 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Field;
 use DateTime;
 use LAG\AdminBundle\Field\Field\Date;
 use LAG\AdminBundle\Tests\AdminTestBase;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DateTest extends AdminTestBase
 {
     public function testRender()
     {
-        $options = [
-            'format' => 'd/m/Y',
-        ];
-        $resolver = new OptionsResolver();
+        $linkField = new Date('my-field');
         
-        $linkField = new Date();
-        $linkField->setApplicationConfiguration($this->createApplicationConfiguration());
-        $linkField->configureOptions($resolver);
-        $linkField->setOptions($resolver->resolve($options));
-
+        $this->setPrivateProperty($linkField, 'options', [
+            'format' => 'd/m/Y',
+        ]);
+    
         $now = new DateTime();
-
-        $result = $linkField->render($now);
-
-        $this->assertEquals($now->format($options['format']), $result);
-        $this->assertEquals('test', $linkField->render('test'));
+        $content = $linkField->render($now);
+    
+        $this->assertEquals($now->format('d/m/Y'), $content);
+    }
+    
+    public function testRenderInvalidValue()
+    {
+        $linkField = new Date('my-field');
+    
+        $this->assertExceptionRaised(\Exception::class, function () use ($linkField) {
+            $linkField->render('2017-10-05');
+        });
     }
 }
