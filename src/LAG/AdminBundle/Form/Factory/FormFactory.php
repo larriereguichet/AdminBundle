@@ -7,6 +7,7 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
+// TODO class still useful ?
 class FormFactory
 {
     /**
@@ -46,7 +47,8 @@ class FormFactory
             // a form type is defined, we use the form factory
             $form = $this
                 ->formFactory
-                ->create($formType, $entity);
+                ->create($formType, $entity)
+            ;
         }
 
         return $form;
@@ -71,7 +73,7 @@ class FormFactory
         ;
 
         foreach ($actionConfiguration->getParameter('fields') as $field => $configuration) {
-            $form->add($field);
+            $form->add($field, $configuration);
         }
 
         return $form;
