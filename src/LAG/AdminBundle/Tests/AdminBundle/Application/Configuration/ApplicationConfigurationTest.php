@@ -4,8 +4,13 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Application\Configuration;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Field\AbstractField;
+use LAG\AdminBundle\Field\Field\Action;
 use LAG\AdminBundle\Field\Field\ActionCollection;
+use LAG\AdminBundle\Field\Field\ArrayField;
+use LAG\AdminBundle\Field\Field\Boolean;
+use LAG\AdminBundle\Field\Field\Collection;
 use LAG\AdminBundle\Field\Field\Mapped;
+use LAG\AdminBundle\Field\Field\StringField;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -19,7 +24,7 @@ class ApplicationConfigurationTest extends AdminTestBase
     {
         $resolver = new OptionsResolver();
 
-        $applicationConfiguration = new ApplicationConfiguration($this->mockKernel());
+        $applicationConfiguration = new ApplicationConfiguration();
         $applicationConfiguration->configureOptions($resolver);
         $parameters = $resolver->resolve([
             'enable_extra_configuration' => true,
@@ -63,14 +68,11 @@ class ApplicationConfigurationTest extends AdminTestBase
         $this->assertEquals(25, $applicationConfiguration->getParameter('max_per_page'));
         $this->assertEquals([
             'custom' => 'custom',
-            AbstractField::TYPE_STRING => 'LAG\AdminBundle\Field\Field\StringField',
-            AbstractField::TYPE_ARRAY => 'LAG\AdminBundle\Field\Field\ArrayField',
-            AbstractField::TYPE_LINK => 'LAG\AdminBundle\Field\Field\LinkConfiguration',
-            AbstractField::TYPE_DATE => 'LAG\AdminBundle\Field\Field\DateConfiguration',
-            AbstractField::TYPE_COUNT => 'LAG\AdminBundle\Field\Field\CountConfiguration',
-            AbstractField::TYPE_ACTION => 'LAG\AdminBundle\Field\Field\Action',
-            AbstractField::TYPE_COLLECTION => 'LAG\AdminBundle\Field\Field\Collection',
-            AbstractField::TYPE_BOOLEAN => 'LAG\AdminBundle\Field\Field\Boolean',
+            AbstractField::TYPE_STRING => StringField::class,
+            AbstractField::TYPE_ARRAY => ArrayField::class,
+            AbstractField::TYPE_ACTION => Action::class,
+            AbstractField::TYPE_COLLECTION => Collection::class,
+            AbstractField::TYPE_BOOLEAN => Boolean::class,
             AbstractField::TYPE_MAPPED => Mapped::class,
             AbstractField::TYPE_ACTION_COLLECTION => ActionCollection::class,
         ], $applicationConfiguration->getParameter('fields_mapping'));

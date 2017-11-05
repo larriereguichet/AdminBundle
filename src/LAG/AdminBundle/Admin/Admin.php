@@ -34,7 +34,7 @@ class Admin implements AdminInterface
     /**
      * Entities collection.
      *
-     * @var ArrayCollection
+     * @var ArrayCollection|Pagerfanta
      */
     protected $entities;
     

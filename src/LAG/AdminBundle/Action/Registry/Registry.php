@@ -5,6 +5,9 @@ namespace LAG\AdminBundle\Action\Registry;
 use Exception;
 use LAG\AdminBundle\Action\ActionInterface;
 
+/**
+ * Store the Action in a typed collection
+ */
 class Registry
 {
     /**

@@ -51,16 +51,6 @@ class ListActionTest extends AdminTestBase
             ->method('handleRequest')
             ->with($request)
         ;
-        $form
-            ->expects($this->once())
-            ->method('isSubmitted')
-            ->willReturn(true)
-        ;
-        $form
-            ->expects($this->once())
-            ->method('isValid')
-            ->willReturn(true)
-        ;
         
         $filterForm = $this->getMockWithoutConstructor(FormInterface::class);
         $filterForm
