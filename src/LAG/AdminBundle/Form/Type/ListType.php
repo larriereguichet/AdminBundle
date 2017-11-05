@@ -104,7 +104,7 @@ class ListType extends AbstractType
             ])
             ->setRequired([
                 'actions',
-                'entities',
+                //'entities',
             ])
             ->setAllowedTypes('entity_property', 'string')
             ->setAllowedTypes('actions', 'array')
