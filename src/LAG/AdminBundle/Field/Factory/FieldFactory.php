@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Field\Factory;
 use Exception;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\TwigAwareInterface;
 use LAG\AdminBundle\Field\TranslatorAwareInterface;
@@ -45,114 +45,67 @@ class FieldFactory
      * @var Twig_Environment
      */
     protected $twig;
-
+    
+    /**
+     * @var ConfigurationFactory
+     */
+    protected $configurationFactory;
+    
     /**
      * FieldFactory constructor.
      *
+     * @param ApplicationConfigurationStorage                     $applicationConfigurationStorage
      * @param ConfigurationFactory $configurationFactory
-     * @param TranslatorInterface $translator
-     * @param Twig_Environment $twig
+     * @param TranslatorInterface                                 $translator
+     * @param Twig_Environment                                    $twig
      */
     public function __construct(
+        ApplicationConfigurationStorage $applicationConfigurationStorage,
         ConfigurationFactory $configurationFactory,
         TranslatorInterface $translator,
         Twig_Environment $twig
     ) {
-        $this->configuration = $configurationFactory->getApplicationConfiguration();
+        $this->configuration = $applicationConfigurationStorage->getApplicationConfiguration();
         $this->fieldsMapping = $this
             ->configuration
             ->getParameter('fields_mapping'); // shortcut to field mapping array
         $this->translator = $translator;
         $this->twig = $twig;
+        $this->configurationFactory = $configurationFactory;
     }
     
     public function getFields(ActionConfiguration $configuration)
     {
         $fields = [];
-//        dump($configuration);
-//        die;
     
         foreach ($configuration->getParameter('fields') as $field => $fieldConfiguration) {
-            $fields[] = $this->create($field, $fieldConfiguration);
+            $fields[] = $this->create($field, $fieldConfiguration, $configuration);
         }
     
         return $fields;
     }
     
-
+    
     /**
      * Create a new field with its renderer.
      *
-     * @param $fieldName
-     * @param array $configuration
+     * @param                     $fieldName
+     * @param array               $configuration
+     * @param ActionConfiguration $actionConfiguration
      *
      * @return FieldInterface
-     *
      * @throws Exception
      */
-    public function create($fieldName, array $configuration = [])
+    public function create($fieldName, array $configuration = [], ActionConfiguration $actionConfiguration)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setDefaults([
-            'type' => 'string',
-            'options' => [],
-        ]);
-        // set allowed fields type from tagged services
-        $resolver->setAllowedValues('type', array_keys($this->fieldsMapping));
-        $resolver->setAllowedTypes('type', 'string');
-        $resolver->setAllowedTypes('options', 'array');
-
-        // resolve options
-        $configuration = $resolver->resolve($configuration);
-
-        // for collection of fields, we resolve the configuration of each item
-        if ($configuration['type'] == 'collection') {
-            $items = [];
-
-            foreach ($configuration['options'] as $itemFieldName => $itemFieldConfiguration) {
-                // configuration should be an array
-                if (!$itemFieldConfiguration) {
-                    $itemFieldConfiguration = [];
-                }
-                // type should exists
-                if (!array_key_exists('type', $configuration)) {
-                    throw new Exception("Missing type configuration for field {$itemFieldName}");
-                }
-                // create collection item
-                $items[] = $this->create($itemFieldName, $itemFieldConfiguration);
-            }
-            // add created item to the field options
-            $configuration['options'] = [
-                'fields' => $items,
-            ];
-        }
-        // instanciate field
-        $fieldClass = $this->getFieldMapping($configuration['type']);
-        $field = new $fieldClass();
-
-        if (!$field instanceof FieldInterface) {
-            throw new Exception("Field class {$fieldClass} must implements ".FieldInterface::class);
-        }
-        $field->setName($fieldName);
-        $field->setApplicationConfiguration($this->configuration);
-
-        if ($field instanceof TranslatorAwareInterface) {
-            $field->setTranslator($this->translator);
-        }
-        if ($field instanceof TwigAwareInterface) {
-            $field->setTwig($this->twig);
-        }
-        // clear revolver from previous default configuration
-        $resolver->clear();
-
-        // configure field default options
-        $field->configureOptions($resolver);
+        $configuration = $this->resolveTopLevelConfiguration($configuration, $actionConfiguration);
+        $field = $this->instanciateField($fieldName, $configuration['type']);
         
-        // resolve options
-        $options = $resolver->resolve($configuration['options']);
-
-        // set options
-        $field->setOptions($options);
+        $fieldConfiguration = $this
+            ->configurationFactory
+            ->create($field, $configuration)
+        ;
+        $field->setConfiguration($fieldConfiguration);
         
         return $field;
     }
@@ -165,12 +118,79 @@ class FieldFactory
      * @return string
      * @throws Exception
      */
-    public function getFieldMapping($type)
+    private function getFieldMapping($type)
     {
         if (!array_key_exists($type, $this->fieldsMapping)) {
             throw new Exception("Field type {$type} not found in field mapping. Check your configuration");
         }
 
         return $this->fieldsMapping[$type];
+    }
+    
+    /**
+     * @param $name
+     * @param $type
+     *
+     * @return FieldInterface
+     *
+     * @throws Exception
+     */
+    private function instanciateField($name, $type)
+    {
+        $fieldClass = $this->getFieldMapping($type);
+        $field = new $fieldClass($name);
+    
+        if (!$field instanceof FieldInterface) {
+            throw new Exception("Field class {$fieldClass} must implements ".FieldInterface::class);
+        }
+    
+        if ($field instanceof TranslatorAwareInterface) {
+            $field->setTranslator($this->translator);
+        }
+        if ($field instanceof TwigAwareInterface) {
+            $field->setTwig($this->twig);
+        }
+    
+        return $field;
+    }
+    
+    private function resolveTopLevelConfiguration(array $configuration, ActionConfiguration $actionConfiguration)
+    {
+        $resolver = new OptionsResolver();
+        $resolver
+            ->setDefaults([
+                'type' => 'string',
+                'options' => [],
+            ])
+            // Set allowed fields type from tagged services
+            ->setAllowedValues('type', array_keys($this->fieldsMapping))
+            ->setAllowedTypes('type', 'string')
+            ->setAllowedTypes('options', 'array')
+        ;
+        $configuration = $resolver->resolve($configuration);
+    
+        // for collection of fields, we resolve the configuration of each item
+        if ($configuration['type'] == 'collection') {
+            $items = [];
+        
+            foreach ($configuration['options'] as $itemFieldName => $itemFieldConfiguration) {
+                // configuration should be an array
+                if (!$itemFieldConfiguration) {
+                    $itemFieldConfiguration = [];
+                }
+                // type should exists
+                if (!array_key_exists('type', $configuration)) {
+                    throw new Exception("Missing type configuration for field {$itemFieldName}");
+                }
+                // create collection item
+                $items[] = $this->create($itemFieldName, $itemFieldConfiguration, $actionConfiguration);
+            }
+            // add created item to the field options
+            $configuration['options'] = [
+                'fields' => $items,
+            ];
+        }
+    
+        return $configuration;
     }
 }
