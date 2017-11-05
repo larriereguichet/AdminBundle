@@ -6,7 +6,7 @@ use Knp\Menu\Provider\MenuProviderInterface;
 use Knp\Menu\Twig\Helper;
 use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
 use LAG\AdminBundle\Admin\Request\RequestHandler;
-use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Field\EntityAwareInterface;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Routing\RouteNameGenerator;
@@ -62,26 +62,28 @@ class AdminExtension extends Twig_Extension
     private $requestStack;
     
     /**
-     * @var ConfigurationFactory
-     */
-    private $configurationFactory;
-    
-    /**
      * @var MenuProviderInterface
      */
     private $menuProvider;
     
     /**
+     * @var ApplicationConfigurationStorage
+     */
+    private $applicationConfigurationStorage;
+    
+    /**
      * AdminExtension constructor.
      *
-     * @param string                $translationPattern
-     * @param RouterInterface       $router
-     * @param TranslatorInterface   $translator
-     * @param RequestHandler        $requestHandler
-     * @param RequestStack          $requestStack
-     * @param Helper                $menuHelper
-     * @param MenuProviderInterface $menuProvider
-     * @param ConfigurationFactory  $configurationFactory
+     * @param string                          $translationPattern
+     * @param MenuProviderInterface           $menuProvider
+     * @param RouterInterface                 $router
+     * @param TranslatorInterface             $translator
+     * @param RequestHandler                  $requestHandler
+     * @param RequestStack                    $requestStack
+     * @param Helper                          $menuHelper
+     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
+     *
+     * @internal param ConfigurationFactory $configurationFactory
      */
     public function __construct(
         $translationPattern,
@@ -91,7 +93,7 @@ class AdminExtension extends Twig_Extension
         RequestHandler $requestHandler,
         RequestStack $requestStack,
         Helper $menuHelper,
-        ConfigurationFactory $configurationFactory
+        ApplicationConfigurationStorage $applicationConfigurationStorage
     ) {
         $this->router = $router;
         $this->translator = $translator;
@@ -99,8 +101,8 @@ class AdminExtension extends Twig_Extension
         $this->menuHelper = $menuHelper;
         $this->requestHandler = $requestHandler;
         $this->requestStack = $requestStack;
-        $this->configurationFactory = $configurationFactory;
         $this->menuProvider = $menuProvider;
+        $this->applicationConfigurationStorage = $applicationConfigurationStorage;
     }
 
     /**
@@ -306,7 +308,7 @@ class AdminExtension extends Twig_Extension
     public function getConfigParameter($parameter)
     {
         return $this
-            ->configurationFactory
+            ->applicationConfigurationStorage
             ->getApplicationConfiguration()
             ->getParameter($parameter)
         ;
