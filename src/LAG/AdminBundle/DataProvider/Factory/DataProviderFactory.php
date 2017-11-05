@@ -119,7 +119,7 @@ class DataProviderFactory
             );
         }
         // create a new generic data provider from the found repository
-        $dataProvider = new DataProvider($repository);
+        $dataProvider = new DataProvider($repository, $this->entityManager);
 
         return $dataProvider;
     }
