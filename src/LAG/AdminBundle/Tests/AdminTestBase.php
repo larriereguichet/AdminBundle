@@ -22,6 +22,7 @@ use LAG\AdminBundle\Field\Factory\FieldFactory;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\Repository\RepositoryInterface;
 use PHPUnit_Framework_MockObject_MockObject;
+use ReflectionClass;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -448,5 +449,13 @@ class AdminTestBase extends WebTestCase
             ->disableOriginalConstructor()
             ->getMock()
         ;
+    }
+    
+    protected function setPrivateProperty($object, $property, $value)
+    {
+        $reflection = new ReflectionClass($object);
+        $property = $reflection->getProperty($property);
+        $property->setAccessible(true);
+        $property->setValue($object, $value);
     }
 }
