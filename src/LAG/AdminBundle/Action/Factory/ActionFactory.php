@@ -90,7 +90,8 @@ class ActionFactory
             ->create(
                 $actionName,
                 $controller->getAdmin()->getName(),
-                $controller->getAdmin()->getConfiguration(), $event->getActionConfiguration()
+                $controller->getAdmin()->getConfiguration(),
+                $event->getActionConfiguration()
             )
         ;
         
