@@ -10,9 +10,6 @@ use LAG\AdminBundle\Field\Field\ActionCollection;
 use LAG\AdminBundle\Field\Field\ArrayField;
 use LAG\AdminBundle\Field\Field\Boolean;
 use LAG\AdminBundle\Field\Field\Collection;
-use LAG\AdminBundle\Field\Field\Count;
-use LAG\AdminBundle\Field\Field\Date;
-use LAG\AdminBundle\Field\Field\Link;
 use LAG\AdminBundle\Field\Field\Mapped;
 use LAG\AdminBundle\Field\Field\StringField;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -158,9 +155,6 @@ class ApplicationConfiguration extends Configuration
         $defaultMapping = [
             AbstractField::TYPE_STRING => StringField::class,
             AbstractField::TYPE_ARRAY => ArrayField::class,
-            AbstractField::TYPE_LINK => Link::class,
-            AbstractField::TYPE_DATE => Date::class,
-            AbstractField::TYPE_COUNT => Count::class,
             AbstractField::TYPE_ACTION => Action::class,
             AbstractField::TYPE_COLLECTION => Collection::class,
             AbstractField::TYPE_BOOLEAN => Boolean::class,
