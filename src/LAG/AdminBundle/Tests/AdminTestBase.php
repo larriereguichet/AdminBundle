@@ -11,20 +11,18 @@ use Exception;
 use Knp\Menu\MenuFactory;
 use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
-use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
-use LAG\AdminBundle\Configuration\Factory\ConfigurationFactory;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Field\Factory\FieldFactory;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\Repository\RepositoryInterface;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use ReflectionClass;
 use Symfony\Bridge\Monolog\Logger;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -33,7 +31,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class AdminTestBase extends WebTestCase
+class AdminTestBase extends TestCase
 {
     /**
      * @var bool
@@ -113,20 +111,6 @@ class AdminTestBase extends WebTestCase
     }
 
     /**
-     * @param array $configuration
-     * @return ApplicationConfiguration
-     */
-    protected function createApplicationConfiguration(array $configuration = [])
-    {
-        $resolver = new OptionsResolver();
-        $applicationConfiguration = new ApplicationConfiguration($this->mockKernel());
-        $applicationConfiguration->configureOptions($resolver);
-        $applicationConfiguration->setParameters($resolver->resolve($configuration));
-
-        return $applicationConfiguration;
-    }
-
-    /**
      * @param ApplicationConfiguration $applicationConfiguration
      * @param array $configuration
      * @return AdminConfiguration
@@ -139,25 +123,6 @@ class AdminTestBase extends WebTestCase
         $adminConfiguration->setParameters($resolver->resolve($configuration));
 
         return $adminConfiguration;
-    }
-
-    /**
-     * @param $actionName
-     * @param AdminInterface $admin
-     * @param array $configuration
-     *
-     * @deprecated
-     *
-     * @return ActionConfiguration
-     */
-    protected function createActionConfiguration($actionName, AdminInterface $admin, array $configuration = [])
-    {
-        $resolver = new OptionsResolver();
-        $actionConfiguration = new ActionConfiguration($actionName, $admin);
-        $actionConfiguration->configureOptions($resolver);
-        $actionConfiguration->setParameters($resolver->resolve($configuration));
-
-        return $actionConfiguration;
     }
 
     /**
@@ -422,19 +387,6 @@ class AdminTestBase extends WebTestCase
             ->getMock();
 
         return $fieldFactory;
-    }
-
-    /**
-     * @return ConfigurationFactory|PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function mockConfigurationFactory()
-    {
-        $configurationFactory = $this
-            ->getMockBuilder(ConfigurationFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        return $configurationFactory;
     }
     
     /**

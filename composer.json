@@ -37,7 +37,7 @@
     "doctrine/orm": "^2.5",
     "dunglas/action-bundle": "^0.4",
     "gedmo/doctrine-extensions": "^2.4",
-    "johnkrovitch/configuration": "~1.0",
+    "johnkrovitch/configuration": "dev-release/v1.0.1",
     "knplabs/knp-menu-bundle": "^2.1",
     "lag/array-utils": "^0.1",
     "twbs/bootstrap": "^3.3",
