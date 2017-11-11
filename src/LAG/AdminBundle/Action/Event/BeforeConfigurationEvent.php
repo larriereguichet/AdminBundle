@@ -28,11 +28,11 @@ class BeforeConfigurationEvent extends Event
     /**
      * BeforeConfigurationEvent constructor.
      *
-     * @param $actionName
-     * @param $actionConfiguration
+     * @param string $actionName
+     * @param array $actionConfiguration
      * @param AdminInterface $admin
      */
-    public function __construct($actionName, $actionConfiguration, AdminInterface $admin)
+    public function __construct($actionName, array $actionConfiguration, AdminInterface $admin)
     {
         $this->actionName = $actionName;
         $this->actionConfiguration = $actionConfiguration;

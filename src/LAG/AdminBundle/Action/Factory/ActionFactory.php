@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Action\Factory;
 
+use Exception;
 use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Action\Event\ActionCreatedEvent;
 use LAG\AdminBundle\Action\Event\ActionEvents;
@@ -108,22 +109,33 @@ class ActionFactory
     }
     
     /**
-     * @param $adminName
-     * @param array $configurations
+     * Return the Actions of an Admin configuration. Each Action will be retrieved from the Action registry. The key
+     * will be retrieved either in the service configuration key if provided, either from the default service mapping
+     * configuration.
      *
-     * @return array
+     * @param string $adminName
+     * @param array  $configuration
+     *
+     * @return ActionInterface[]
+     *
+     * @throws Exception
      */
-    public function getActions($adminName, array $configurations)
+    public function getActions($adminName, array $configuration)
     {
         $actions = [];
+    
+        if (!key_exists('actions', $configuration)) {
+            throw new Exception('Invalid configuration for admin "'.$adminName.'"');
+        }
         
-        foreach ($configurations['actions'] as $name => $configuration) {
-            if (null !== $configuration && key_exists('service', $configuration)) {
+        foreach ($configuration['actions'] as $name => $actionConfiguration) {
+            
+            if (null !== $actionConfiguration && key_exists('service', $actionConfiguration)) {
                 // if a service key is defined, take it
-                $serviceId = $configuration['service'];
+                $serviceId = $actionConfiguration['service'];
             } else {
                 // if no service key was provided, we take the default action service
-                $serviceId = $this->getActionServiceId($name, $adminName);
+                $serviceId = $this->getDefaultActionServiceId($name, $adminName);
             }
             $action = $this
                 ->registry
@@ -136,12 +148,14 @@ class ActionFactory
     }
     
     /**
-     * @param $name
-     * @param $adminName
+     * Return the default action service id, according to the Action and Admin names.
+     *
+     * @param string $name
+     * @param string $adminName
      *
      * @return string
      */
-    protected function getActionServiceId($name, $adminName)
+    protected function getDefaultActionServiceId($name, $adminName)
     {
         $mapping = LAGAdminBundle::getDefaultActionServiceMapping();
         
