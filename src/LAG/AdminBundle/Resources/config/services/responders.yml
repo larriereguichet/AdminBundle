@@ -3,7 +3,8 @@ services:
     lag.admin.action.list_responder:
         class: LAG\AdminBundle\Action\Responder\ListResponder
         autowire: true
-        tags: {name: responder}
+        tags:
+            - {name: responder}
 
     lag.admin.responder.storage:
         class: LAG\AdminBundle\Responder\Storage\ResponderStorage
