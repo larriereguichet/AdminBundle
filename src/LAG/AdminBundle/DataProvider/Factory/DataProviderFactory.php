@@ -66,11 +66,15 @@ class DataProviderFactory
             throw new Exception('You should either provide an data provider or a entity class to get a data provider');
         }
 
-        if (null !== $id && $this->has($id)) {
-            // a name is provided and the data provider exist, so we return the found data provider
+        if (null !== $entityClass) {
+            // The provider should be registered if an id is given
+            if (!$this->has($id)) {
+                throw new Exception('The provider "'.$id.'" is not registered"');
+            }
+            // The data provider exist, so we return the found data provider
             $dataProvider = $this->dataProviders[$id];
         } else {
-            // no name was provided, so we try to create a generic data provider with th given entity class
+            // Create a generic data provider with th given entity class
             $dataProvider = $this->create($entityClass);
         }
 
