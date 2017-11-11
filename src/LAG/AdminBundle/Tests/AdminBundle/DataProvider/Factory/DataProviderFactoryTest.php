@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Tests\AdminBundle\DataProvider\Factory;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use LAG\AdminBundle\DataProvider\DataProvider;
@@ -97,7 +98,7 @@ class DataProviderFactoryTest extends AdminTestBase
 
     public function testGet()
     {
-        $entityManager = $this->createMock(EntityManager::class);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
         $dataProvider = $this->createMock(DataProvider::class);
 
         $factory = new DataProviderFactory($entityManager);
