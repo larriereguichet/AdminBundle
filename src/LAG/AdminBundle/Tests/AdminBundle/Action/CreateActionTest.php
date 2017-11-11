@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\AdminBundle\Action;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Action\CreateAction;
+use LAG\AdminBundle\Controller\CreateAction;
 use LAG\AdminBundle\Action\Responder\CreateResponder;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
@@ -22,7 +22,7 @@ class CreateActionTest extends AdminTestBase
             ->willReturnMap([
                 ['form', 'MyForm'],
                 ['form_options', [
-                    'my_option' => 'my_value'
+                    'my_option' => 'my_value',
                 ]],
             ])
         ;

@@ -1,16 +1,17 @@
 <?php
 
-namespace LAG\AdminBundle\Action;
+namespace LAG\AdminBundle\Controller;
 
-use LAG\AdminBundle\Action\Responder\CreateResponder;
+use LAG\AdminBundle\Action\Action;
+use LAG\AdminBundle\Action\Responder\EditResponder;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CreateAction extends Action
+class EditAction extends Action
 {
     /**
-     * @var CreateResponder
+     * @var EditResponder
      */
     protected $responder;
     
@@ -19,12 +20,12 @@ class CreateAction extends Action
      *
      * @param string               $name
      * @param FormFactoryInterface $formFactory
-     * @param CreateResponder      $responder
+     * @param EditResponder        $responder
      */
     public function __construct(
         $name,
         FormFactoryInterface $formFactory,
-        CreateResponder $responder
+        EditResponder $responder
     ) {
         $this->name = $name;
         $this->formFactory = $formFactory;
@@ -32,7 +33,7 @@ class CreateAction extends Action
     }
     
     /**
-     * Create an action using the create action form handler.
+     * Edit and update an entity using the EditForm handler.
      *
      * @param Request $request
      *
@@ -40,38 +41,32 @@ class CreateAction extends Action
      */
     public function __invoke(Request $request)
     {
-        // The Admin with auto injected in the KernelSubscriber
+        // the admin with automatically injected thanks to the KernelSubscriber
         $this
             ->admin
             ->handleRequest($request)
         ;
-        $entity = $this
-            ->admin
-            ->create()
-        ;
         
-        // Create the associated form type
-        $formType = $this
-            ->configuration
-            ->getParameter('form')
-        ;
-        $formOptions = $this
-            ->configuration
-            ->getParameter('form_options')
-        ;
+        // create the associated form type
         $form = $this
             ->formFactory
-            ->create($formType, $entity, $formOptions)
+            ->create(
+                $this->configuration->getParameter('form'),
+                $this->admin->getUniqueEntity(),
+                $this->configuration->getParameter('form_options')
+            )
         ;
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
+            // save the updated entity
             $this
                 ->admin
                 ->save()
             ;
         }
     
+        // return a Response using the EditResponder
         return $this
             ->responder
             ->respond($this->configuration, $this->admin, $form, $request->request->get('submit'))

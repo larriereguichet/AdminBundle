@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\AdminBundle\Action;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Action\ListAction;
+use LAG\AdminBundle\Controller\ListAction;
 use LAG\AdminBundle\Action\Responder\ListResponder;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Filter\Factory\FilterFormBuilder;

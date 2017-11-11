@@ -406,8 +406,19 @@ class AdminTestBase extends TestCase
     protected function setPrivateProperty($object, $property, $value)
     {
         $reflection = new ReflectionClass($object);
+        
         $property = $reflection->getProperty($property);
         $property->setAccessible(true);
         $property->setValue($object, $value);
+    }
+    
+    protected function getPrivateProperty($object, $property)
+    {
+        $reflection = new ReflectionClass($object);
+        
+        $property = $reflection->getProperty($property);
+        $property->setAccessible(true);
+        
+        return $property->getValue($object);
     }
 }

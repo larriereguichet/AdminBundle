@@ -1,16 +1,17 @@
 <?php
 
-namespace LAG\AdminBundle\Action;
+namespace LAG\AdminBundle\Controller;
 
-use LAG\AdminBundle\Action\Responder\DeleteResponder;
+use LAG\AdminBundle\Action\Action;
+use LAG\AdminBundle\Action\Responder\CreateResponder;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class DeleteAction extends Action
+class CreateAction extends Action
 {
     /**
-     * @var DeleteResponder
+     * @var CreateResponder
      */
     protected $responder;
     
@@ -19,12 +20,12 @@ class DeleteAction extends Action
      *
      * @param string               $name
      * @param FormFactoryInterface $formFactory
-     * @param DeleteResponder      $responder
+     * @param CreateResponder      $responder
      */
     public function __construct(
         $name,
         FormFactoryInterface $formFactory,
-        DeleteResponder $responder
+        CreateResponder $responder
     ) {
         $this->name = $name;
         $this->formFactory = $formFactory;
@@ -32,7 +33,7 @@ class DeleteAction extends Action
     }
     
     /**
-     * Delete an entity.
+     * Create an action using the create action form handler.
      *
      * @param Request $request
      *
@@ -40,12 +41,17 @@ class DeleteAction extends Action
      */
     public function __invoke(Request $request)
     {
-        // the Admin with auto injected with the KernelSubscriber
+        // The Admin with auto injected in the KernelSubscriber
         $this
             ->admin
             ->handleRequest($request)
         ;
-        // create the configured form type
+        $entity = $this
+            ->admin
+            ->create()
+        ;
+        
+        // Create the associated form type
         $formType = $this
             ->configuration
             ->getParameter('form')
@@ -54,26 +60,22 @@ class DeleteAction extends Action
             ->configuration
             ->getParameter('form_options')
         ;
-        
-        // create the entity removal form type
         $form = $this
             ->formFactory
-            ->create($formType, $this->admin->getUniqueEntity(), $formOptions)
+            ->create($formType, $entity, $formOptions)
         ;
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            // remove the entity
             $this
                 ->admin
-                ->remove()
+                ->save()
             ;
         }
     
-        // return a Response using the DeleteResponder
         return $this
             ->responder
-            ->respond($this->configuration, $this->admin, $form)
+            ->respond($this->configuration, $this->admin, $form, $request->request->get('submit'))
         ;
     }
 }

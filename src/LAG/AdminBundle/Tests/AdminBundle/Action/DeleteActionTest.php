@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\AdminBundle\Action;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Action\DeleteAction;
+use LAG\AdminBundle\Controller\DeleteAction;
 use LAG\AdminBundle\Action\Responder\DeleteResponder;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
