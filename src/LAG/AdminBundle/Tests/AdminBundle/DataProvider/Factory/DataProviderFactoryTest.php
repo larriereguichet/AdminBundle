@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use LAG\AdminBundle\DataProvider\DataProvider;
+use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
 use LAG\AdminBundle\Doctrine\Repository\DoctrineRepository;
 use LAG\AdminBundle\Tests\AdminTestBase;
@@ -19,13 +20,15 @@ class DataProviderFactoryTest extends AdminTestBase
     public function testAdd()
     {
         $entityManager = $this->createMock(EntityManager::class);
-        $dataProvider = $this->createMock(DataProvider::class);
+        $dataProvider = $this->createMock(DataProviderInterface::class);
 
         $factory = new DataProviderFactory($entityManager);
         $factory->add('a_data_provider', $dataProvider);
 
         $this->assertTrue($factory->has('a_data_provider'));
-        $this->assertEquals($dataProvider, $factory->get('a_data_provider'));
+    
+        $this->assertEquals($dataProvider, $this->getPrivateProperty($factory, 'dataProviders')['a_data_provider']);
+        
     }
 
     /**

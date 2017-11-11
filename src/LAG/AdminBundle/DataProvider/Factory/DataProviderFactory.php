@@ -66,7 +66,7 @@ class DataProviderFactory
             throw new Exception('You should either provide an data provider or a entity class to get a data provider');
         }
 
-        if (null !== $entityClass) {
+        if (null === $entityClass) {
             // The provider should be registered if an id is given
             if (!$this->has($id)) {
                 throw new Exception('The provider "'.$id.'" is not registered"');
@@ -105,13 +105,13 @@ class DataProviderFactory
      */
     public function create($entityClass)
     {
-        // get the repository corresponding to the given entity class
         $repository = $this
             ->entityManager
-            ->getRepository($entityClass);
+            ->getRepository($entityClass)
+        ;
 
-        // the repository should implements the RepositoryInterface, to ensure it has the methods create and save
-        if (!($repository instanceof RepositoryInterface)) {
+        // The RepositoryInterface ensure the methods create and save exists
+        if (!$repository instanceof RepositoryInterface) {
             $repositoryClass = get_class($repository);
 
             throw new Exception(
@@ -122,7 +122,6 @@ class DataProviderFactory
                 )
             );
         }
-        // create a new generic data provider from the found repository
         $dataProvider = new DataProvider($repository, $this->entityManager);
 
         return $dataProvider;
