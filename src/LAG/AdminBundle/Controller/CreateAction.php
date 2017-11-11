@@ -1,7 +1,8 @@
 <?php
 
-namespace LAG\AdminBundle\Action;
+namespace LAG\AdminBundle\Controller;
 
+use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Action\Responder\CreateResponder;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
