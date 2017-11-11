@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\AdminBundle\Admin\Factory;
 
 use LAG\AdminBundle\Action\Factory\ActionFactory;
-use LAG\AdminBundle\Action\ListAction;
+use LAG\AdminBundle\Controller\ListAction;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;

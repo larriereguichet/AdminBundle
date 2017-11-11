@@ -46,14 +46,4 @@ interface ActionInterface extends AdminAwareInterface
      * @param FieldInterface[] $fields
      */
     public function setFields(array $fields);
-    
-    /**
-     * @return ResponderInterface
-     */
-    public function getResponder();
-    
-    /**
-     * @param ResponderInterface $responder
-     */
-    public function setResponder(ResponderInterface $responder);
 }

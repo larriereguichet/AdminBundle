@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\AdminBundle\Action\Event;
 
 use LAG\AdminBundle\Action\Event\ActionCreatedEvent;
-use LAG\AdminBundle\Action\ListAction;
+use LAG\AdminBundle\Controller\ListAction;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
 

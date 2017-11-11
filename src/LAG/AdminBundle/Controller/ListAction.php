@@ -1,7 +1,8 @@
 <?php
 
-namespace LAG\AdminBundle\Action;
+namespace LAG\AdminBundle\Controller;
 
+use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Action\Responder\ListResponder;
 use LAG\AdminBundle\Filter\Factory\FilterFormBuilder;
 use Symfony\Component\Form\FormFactoryInterface;

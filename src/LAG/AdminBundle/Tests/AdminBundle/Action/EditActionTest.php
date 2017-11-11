@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\AdminBundle\Action;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Action\EditAction;
+use LAG\AdminBundle\Controller\EditAction;
 use LAG\AdminBundle\Action\Responder\EditResponder;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;

@@ -1,24 +1,24 @@
 services:
     lag.admin.actions.list:
-        class: LAG\AdminBundle\Action\ListAction
+        class: LAG\AdminBundle\Controller\ListAction
         autowire: true
         arguments:
             - list
 
     lag.admin.actions.create:
-        class: LAG\AdminBundle\Action\CreateAction
+        class: LAG\AdminBundle\Controller\CreateAction
         autowire: true
         arguments:
             - create
 
     lag.admin.actions.edit:
-        class: LAG\AdminBundle\Action\EditAction
+        class: LAG\AdminBundle\Controller\EditAction
         autowire: true
         arguments:
             - edit
 
     lag.admin.actions.delete:
-        class: LAG\AdminBundle\Action\DeleteAction
+        class: LAG\AdminBundle\Controller\DeleteAction
         autowire: true
         arguments:
             - delete

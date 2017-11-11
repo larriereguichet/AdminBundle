@@ -97,14 +97,4 @@ abstract class Action implements ActionInterface
     {
         $this->fields = $fields;
     }
-    
-    public function getResponder()
-    {
-        // TODO: Implement getResponder() method.
-    }
-    
-    public function setResponder(ResponderInterface $responder)
-    {
-        // TODO: Implement setResponder() method.
-    }
 }
