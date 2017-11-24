@@ -22,7 +22,7 @@ class CreateActionTest extends AdminTestBase
             ->willReturnMap([
                 ['form', 'MyForm'],
                 ['form_options', [
-                    'my_option' => 'my_value'
+                    'my_option' => 'my_value',
                 ]],
             ])
         ;
