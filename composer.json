@@ -62,7 +62,5 @@
   "config": {
     "bin-dir": "bin",
     "component-dir": "components"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+  }
 }
