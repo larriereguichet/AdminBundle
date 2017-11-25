@@ -25,7 +25,7 @@
     {% set admin = admin|default(null) %}
 
     {% block navbar %}
-        <header class="navbar navbar-light bg-light navbar navbar-expand flex-column flex-md-row bd-navbar">
+        <header class="navbar navbar-light bg-light flex-column flex-md-row bd-navbar">
             <a href="{{ path('admin.homepage') }}" class="navbar-brand">
                 {% block brand %}{% endblock %}
             </a>
@@ -34,6 +34,15 @@
                 {% block top_menu %}
                     <div class="navbar-nav">
                         {{ admin_menu_render('top') | raw }}
+                    </div>
+                {% endblock %}
+
+                {% block user_menu %}
+                    <div class="pull-right2">
+                        {{ 'lag.admin.welcome_message' | trans({'%username%': app.user.username }) }}&nbsp;
+                        <a href="{{ path('logout') }}">
+                            <i class="fa fa-sign-out"></i>
+                        </a>
                     </div>
                 {% endblock %}
             {% endif %}
@@ -117,148 +126,148 @@
 
 
     {#<div class="wrapper">#}
-        {#{% if app.user %}#}
-            {#<nav style="margin-bottom: 0" role="navigation" id="admin-top-menu"#}
-                 {#class="navbar navbar-default navbar-static-top">#}
-                {#<div class="navbar-header">#}
-                    {# collapse button for responsive #}
-                    {#<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">#}
-                        {#<span class="sr-only">Toggle navigation</span>#}
-                        {#<span class="icon-bar"></span>#}
-                        {#<span class="icon-bar"></span>#}
-                        {#<span class="icon-bar"></span>#}
-                    {#</button>#}
-                    {#{% block mainTitle %}#}
-                        {#<a href="{{ path('bluebear.cms.homepage') }}" class="navbar-brand">Le comptoir des noisettes</a>#}
-                    {#{% endblock %}#}
+    {#{% if app.user %}#}
+    {#<nav style="margin-bottom: 0" role="navigation" id="admin-top-menu"#}
+    {#class="navbar navbar-default navbar-static-top">#}
+    {#<div class="navbar-header">#}
+    {# collapse button for responsive #}
+    {#<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">#}
+    {#<span class="sr-only">Toggle navigation</span>#}
+    {#<span class="icon-bar"></span>#}
+    {#<span class="icon-bar"></span>#}
+    {#<span class="icon-bar"></span>#}
+    {#</button>#}
+    {#{% block mainTitle %}#}
+    {#<a href="{{ path('bluebear.cms.homepage') }}" class="navbar-brand">Le comptoir des noisettes</a>#}
+    {#{% endblock %}#}
 
-                    {#{% block topMenu %}#}
-                        {#<div class="pull-left">#}
-                            {#{{ AdminBundle.adminMenu('top', admin) }}#}
-                        {#</div>#}
+    {#{% block topMenu %}#}
+    {#<div class="pull-left">#}
+    {#{{ AdminBundle.adminMenu('top', admin) }}#}
+    {#</div>#}
 
-                        {#{% if app.user %}#}
-                            {#<div class="pull-right">#}
-                                {#<div class="profile-header-container">#}
-                                    {#<div class="profile-header-img">#}
-                                        {#Bienvenue {{ app.user.email }}#}
-                                        {#<img class="img-circle"#}
-                                             {#height="40"#}
-                                             {#style="margin-top: 5px"#}
-                                             {#src="{{ app.user.profilePicture }}" />#}
-                                    {#</div>#}
-                                {#</div>#}
-                            {#</div>#}
-                        {#{% endif %}#}
-                    {#{% endblock %}#}
+    {#{% if app.user %}#}
+    {#<div class="pull-right">#}
+    {#<div class="profile-header-container">#}
+    {#<div class="profile-header-img">#}
+    {#Bienvenue {{ app.user.email }}#}
+    {#<img class="img-circle"#}
+    {#height="40"#}
+    {#style="margin-top: 5px"#}
+    {#src="{{ app.user.profilePicture }}" />#}
+    {#</div>#}
+    {#</div>#}
+    {#</div>#}
+    {#{% endif %}#}
+    {#{% endblock %}#}
 
-                    {#{% block leftMenu %}#}
-                        {#<div role="navigation" class="navbar-default sidebar">#}
-                            {#<div class="sidebar-nav navbar-collapse">#}
-                                {#{{ AdminBundle.adminMenu('main', admin) }}#}
-                            {#</div>#}
-                        {#</div>#}
-                    {#{% endblock %}#}
-                {#</div>#}
-            {#</nav>#}
-        {#{% endif %}#}
+    {#{% block leftMenu %}#}
+    {#<div role="navigation" class="navbar-default sidebar">#}
+    {#<div class="sidebar-nav navbar-collapse">#}
+    {#{{ AdminBundle.adminMenu('main', admin) }}#}
+    {#</div>#}
+    {#</div>#}
+    {#{% endblock %}#}
+    {#</div>#}
+    {#</nav>#}
+    {#{% endif %}#}
 
-        {#{% block container %}#}
-            {#<div id="page-wrapper">#}
-                {# flash messages #}
-                {#{% include "LAGAdminBundle:Layout:flash_messages.html.twig" %}#}
+    {#{% block container %}#}
+    {#<div id="page-wrapper">#}
+    {# flash messages #}
+    {#{% include "LAGAdminBundle:Layout:flash_messages.html.twig" %}#}
 
-                {#<div class="row">#}
-                    {#<div class="col-lg-12">#}
-                        {#{% block content %}{% endblock %}#}
-                    {#</div>#}
-                {#</div>#}
-            {#</div>#}
-        {#{% endblock %}#}
+    {#<div class="row">#}
+    {#<div class="col-lg-12">#}
+    {#{% block content %}{% endblock %}#}
+    {#</div>#}
+    {#</div>#}
+    {#</div>#}
+    {#{% endblock %}#}
     {#</div>#}
     {#<footer>#}
-        {# jquery #}
-        {#<script src="{{ asset('bundles/lagadmin/js/jquery/jquery.min.js') }}"></script>#}
-        {#<script src="{{ asset('bundles/lagadmin/js/jquery/jquery-ui.min.js') }}"></script>#}
+    {# jquery #}
+    {#<script src="{{ asset('bundles/lagadmin/js/jquery/jquery.min.js') }}"></script>#}
+    {#<script src="{{ asset('bundles/lagadmin/js/jquery/jquery-ui.min.js') }}"></script>#}
 
-        {#{% if config.getParameter('bootstrap') %}#}
-            {# bootstrap js #}
+    {#{% if config.getParameter('bootstrap') %}#}
+    {# bootstrap js #}
 
-            {#<script src="{{ asset('bundles/lagadmin/js/bootstrap/metisMenu.min.js') }}"></script>#}
-            {#<script src="{{ asset('bundles/lagadmin/js/bootstrap/sb-admin-2.js') }}"></script>#}
-        {#{% endif %}#}
+    {#<script src="{{ asset('bundles/lagadmin/js/bootstrap/metisMenu.min.js') }}"></script>#}
+    {#<script src="{{ asset('bundles/lagadmin/js/bootstrap/sb-admin-2.js') }}"></script>#}
+    {#{% endif %}#}
 
-        {#{% block adminJs %}#}
+    {#{% block adminJs %}#}
 
-        {#{% endblock %}#}
+    {#{% endblock %}#}
 
-        {#{% block javascripts %}#}
+    {#{% block javascripts %}#}
 
-            {#<script src="{{ asset('bundles/lagadmin/js/bootstrap/bootstrap.min.js') }}"></script>#}
-            {#<script>#}
-                {#// AdminJS#}
-                {#$(document).ready(function () {#}
-                    {#/*var datetimePickerSelector = '.datepicker';#}
+    {#<script src="{{ asset('bundles/lagadmin/js/bootstrap/bootstrap.min.js') }}"></script>#}
+    {#<script>#}
+    {#// AdminJS#}
+    {#$(document).ready(function () {#}
+    {#/*var datetimePickerSelector = '.datepicker';#}
 
-                    {#$(datetimePickerSelector).datetimepicker({#}
-                        {#format: 'd/m/yyyy',#}
-                        {#language: 'fr'#}
-                    {#});*/#}
-                    {#var selectAllForm = $('.selectable-list');#}
-                    {#var selectAllInput = selectAllForm.find('.select-all');#}
+    {#$(datetimePickerSelector).datetimepicker({#}
+    {#format: 'd/m/yyyy',#}
+    {#language: 'fr'#}
+    {#});*/#}
+    {#var selectAllForm = $('.selectable-list');#}
+    {#var selectAllInput = selectAllForm.find('.select-all');#}
 
-                    {#selectAllInput.on('change', function () {#}
-                        {#selectAllForm.find('input[type=checkbox]').prop('checked', $(this).prop('checked'));#}
-                    {#});#}
-                    {#selectAllForm.find('input[type=checkbox]').not('.select-all').on('change', function () {#}
-                        {#if (!$(this).prop('checked')) {#}
-                            {#selectAllInput.prop('checked', false);#}
-                        {#}#}
-                    {#});#}
-                {#});#}
-            {#</script>#}
-            {#<script>#}
-                {#$(document).on('ready', function () {#}
-                    {# TODO move in a separate script #}
-                    {#var routes = {#}
-                        {#modalGallery: '{{ path('cms.media.gallery.modal') }}',#}
-                        {#galleryContent: '{{ path('cms.media.gallery.content') }}'#}
-                    {#};#}
-                    {#var galleryModal = $('#gallery-modal');#}
+    {#selectAllInput.on('change', function () {#}
+    {#selectAllForm.find('input[type=checkbox]').prop('checked', $(this).prop('checked'));#}
+    {#});#}
+    {#selectAllForm.find('input[type=checkbox]').not('.select-all').on('change', function () {#}
+    {#if (!$(this).prop('checked')) {#}
+    {#selectAllInput.prop('checked', false);#}
+    {#}#}
+    {#});#}
+    {#});#}
+    {#</script>#}
+    {#<script>#}
+    {#$(document).on('ready', function () {#}
+    {# TODO move in a separate script #}
+    {#var routes = {#}
+    {#modalGallery: '{{ path('cms.media.gallery.modal') }}',#}
+    {#galleryContent: '{{ path('cms.media.gallery.content') }}'#}
+    {#};#}
+    {#var galleryModal = $('#gallery-modal');#}
 
-                    {#$('#file-upload').fileupload({#}
-                        {#done: function () {#}
-                            {#galleryModal.find('#media-container').load(routes.modalGallery);#}
-                        {#}#}
-                    {#});#}
+    {#$('#file-upload').fileupload({#}
+    {#done: function () {#}
+    {#galleryModal.find('#media-container').load(routes.modalGallery);#}
+    {#}#}
+    {#});#}
 
-                    {#$('#add-gallery-btn').on('click', function () {#}
-                        {#var selectedMedias = galleryModal.find('.media a.selected');#}
+    {#$('#add-gallery-btn').on('click', function () {#}
+    {#var selectedMedias = galleryModal.find('.media a.selected');#}
 
-                        {#if (selectedMedias.length === 0) {#}
-                            {#return;#}
-                        {#}#}
-                        {#var ids = [];#}
+    {#if (selectedMedias.length === 0) {#}
+    {#return;#}
+    {#}#}
+    {#var ids = [];#}
 
-                        {#selectedMedias.each(function (index, value) {#}
-                            {#ids.push($(value).data('id'));#}
-                        {#});#}
-                        {#var route = routes.galleryContent + '?ids=' + ids.join(',');#}
+    {#selectedMedias.each(function (index, value) {#}
+    {#ids.push($(value).data('id'));#}
+    {#});#}
+    {#var route = routes.galleryContent + '?ids=' + ids.join(',');#}
 
-                        {#$.get(route, function (data) {#}
-                            {#tinymce.activeEditor.execCommand('mceInsertContent', false, data);#}
-                            {#galleryModal.modal('hide');#}
-                        {#});#}
-                    {#});#}
-                {#});#}
-            {#</script>#}
+    {#$.get(route, function (data) {#}
+    {#tinymce.activeEditor.execCommand('mceInsertContent', false, data);#}
+    {#galleryModal.modal('hide');#}
+    {#});#}
+    {#});#}
+    {#});#}
+    {#</script>#}
 
-            {# inject scripts in footer section #}
-            {#{{ cms_dump_scripts('footer') | raw }}#}
+    {# inject scripts in footer section #}
+    {#{{ cms_dump_scripts('footer') | raw }}#}
 
-            {# modal template #}
-            {#{% include '@JKCms/Modal/_modal.html.twig' %}#}
-        {#{% endblock %}#}
+    {# modal template #}
+    {#{% include '@JKCms/Modal/_modal.html.twig' %}#}
+    {#{% endblock %}#}
     {#</footer>#}
 
 {% endblock %}

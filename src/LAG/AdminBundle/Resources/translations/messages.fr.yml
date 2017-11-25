@@ -7,6 +7,7 @@ lag:
         cancel: Annuler
         edit: Editer
         saved: Les modifications ont été sauvegardées
+        welcome_message: Bienvenue %username%
 
         # List
         true: Oui
