@@ -21,8 +21,6 @@ class StringFieldConfiguration extends Configuration implements ApplicationConfi
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
-        
         $resolver->setDefaults([
             'length' => $this->applicationConfiguration->getParameter('string_length'),
             'replace' => $this->applicationConfiguration->getParameter('string_length_truncate'),
