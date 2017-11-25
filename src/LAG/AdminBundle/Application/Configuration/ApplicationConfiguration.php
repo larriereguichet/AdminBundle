@@ -10,6 +10,8 @@ use LAG\AdminBundle\Field\Field\ActionCollection;
 use LAG\AdminBundle\Field\Field\ArrayField;
 use LAG\AdminBundle\Field\Field\Boolean;
 use LAG\AdminBundle\Field\Field\Collection;
+use LAG\AdminBundle\Field\Field\Count;
+use LAG\AdminBundle\Field\Field\Date;
 use LAG\AdminBundle\Field\Field\Link;
 use LAG\AdminBundle\Field\Field\Mapped;
 use LAG\AdminBundle\Field\Field\StringField;
@@ -162,6 +164,8 @@ class ApplicationConfiguration extends Configuration
             AbstractField::TYPE_MAPPED => Mapped::class,
             AbstractField::TYPE_ACTION_COLLECTION => ActionCollection::class,
             AbstractField::TYPE_LINK => Link::class,
+            AbstractField::TYPE_DATE => Date::class,
+            AbstractField::TYPE_COUNT => Count::class,
         ];
 
         $resolver->setDefault('fields_mapping', $defaultMapping);
