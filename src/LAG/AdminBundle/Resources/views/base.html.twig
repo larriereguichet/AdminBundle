@@ -46,8 +46,10 @@
                 <div id="main-menu-container"
                      class="col-4 col-xl-2"
                      role="navigation">
-                    {% block left_menu %}
-                        {{ admin_menu_render('main') | raw }}
+                    {% if is_granted('ROLE_USER') %}
+                        {% block left_menu %}
+                            {{ admin_menu_render('main') | raw }}
+                        {% endblock %}
                     {% endblock %}
                 </div>
 
