@@ -17,11 +17,11 @@ class LinkConfiguration extends Configuration implements ApplicationConfiguratio
      */
     protected $applicationConfiguration;
     
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
-        // inherit parent's option
-        parent::configureOptions($resolver);
-
         $resolver->setDefaults([
             'length' => $this
                 ->applicationConfiguration
