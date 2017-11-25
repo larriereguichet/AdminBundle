@@ -9,6 +9,7 @@ use LAG\AdminBundle\Field\Field\ActionCollection;
 use LAG\AdminBundle\Field\Field\ArrayField;
 use LAG\AdminBundle\Field\Field\Boolean;
 use LAG\AdminBundle\Field\Field\Collection;
+use LAG\AdminBundle\Field\Field\Link;
 use LAG\AdminBundle\Field\Field\Mapped;
 use LAG\AdminBundle\Field\Field\StringField;
 use LAG\AdminBundle\Tests\AdminTestBase;
@@ -75,6 +76,7 @@ class ApplicationConfigurationTest extends AdminTestBase
             AbstractField::TYPE_BOOLEAN => Boolean::class,
             AbstractField::TYPE_MAPPED => Mapped::class,
             AbstractField::TYPE_ACTION_COLLECTION => ActionCollection::class,
+            AbstractField::TYPE_LINK => Link::class,
         ], $applicationConfiguration->getParameter('fields_mapping'));
 
         // test exception raising
