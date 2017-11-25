@@ -10,6 +10,7 @@ use LAG\AdminBundle\Field\Field\ActionCollection;
 use LAG\AdminBundle\Field\Field\ArrayField;
 use LAG\AdminBundle\Field\Field\Boolean;
 use LAG\AdminBundle\Field\Field\Collection;
+use LAG\AdminBundle\Field\Field\Link;
 use LAG\AdminBundle\Field\Field\Mapped;
 use LAG\AdminBundle\Field\Field\StringField;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -160,18 +161,19 @@ class ApplicationConfiguration extends Configuration
             AbstractField::TYPE_BOOLEAN => Boolean::class,
             AbstractField::TYPE_MAPPED => Mapped::class,
             AbstractField::TYPE_ACTION_COLLECTION => ActionCollection::class,
+            AbstractField::TYPE_LINK => Link::class,
         ];
 
         $resolver->setDefault('fields_mapping', $defaultMapping);
         $resolver->setAllowedTypes('fields_mapping', 'array');
         $resolver->setNormalizer('fields_mapping', function(Options $options, $value) use ($defaultMapping) {
-            // merge with default mapping to allow override
+            // Merge with default mapping to allow override
             $value = array_merge($defaultMapping, $value);
 
             return $value;
         });
 
-        // fields templates mapping
+        // Fields templates mapping
         $defaultMapping = [
             AbstractField::TYPE_LINK => 'LAGAdminBundle:Render:link.html.twig',
         ];
@@ -179,7 +181,7 @@ class ApplicationConfiguration extends Configuration
         $resolver->setDefault('fields_template_mapping', $defaultMapping);
         $resolver->setAllowedTypes('fields_template_mapping', 'array');
         $resolver->setNormalizer('fields_template_mapping', function(Options $options, $value) use ($defaultMapping) {
-            // merge with default mapping to allow override
+            // Merge with default mapping to allow override
             $value = array_merge($defaultMapping, $value);
 
             return $value;
