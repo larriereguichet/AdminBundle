@@ -47,16 +47,11 @@ class ViewFactory
         AdminConfiguration $adminConfiguration,
         ActionConfiguration $actionConfiguration
     ) {
-        $configuration = $this
-            ->configurationFactory
-            ->create($actionName, $adminName, $adminConfiguration, $actionConfiguration)
-        ;
-    
         $fields = $this
             ->fieldFactory
-            ->getFields($configuration)
+            ->getFields($actionConfiguration)
         ;
-        $view = new View($actionName, $adminName, $configuration, $adminConfiguration, $fields);
+        $view = new View($actionName, $adminName, $actionConfiguration, $adminConfiguration, $fields);
     
         return $view;
     }
