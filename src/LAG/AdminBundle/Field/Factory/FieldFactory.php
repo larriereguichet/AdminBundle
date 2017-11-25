@@ -74,6 +74,11 @@ class FieldFactory
         $this->configurationFactory = $configurationFactory;
     }
     
+    /**
+     * @param ActionConfiguration $configuration
+     *
+     * @return array
+     */
     public function getFields(ActionConfiguration $configuration)
     {
         $fields = [];
@@ -103,7 +108,7 @@ class FieldFactory
         
         $fieldConfiguration = $this
             ->configurationFactory
-            ->create($field, $configuration)
+            ->create($field, $configuration['options'])
         ;
         $field->setConfiguration($fieldConfiguration);
         
@@ -118,7 +123,7 @@ class FieldFactory
      * @return string
      * @throws Exception
      */
-    private function getFieldMapping($type)
+    private function getFieldClass($type)
     {
         if (!array_key_exists($type, $this->fieldsMapping)) {
             throw new Exception("Field type {$type} not found in field mapping. Check your configuration");
@@ -137,7 +142,7 @@ class FieldFactory
      */
     private function instanciateField($name, $type)
     {
-        $fieldClass = $this->getFieldMapping($type);
+        $fieldClass = $this->getFieldClass($type);
         $field = new $fieldClass($name);
     
         if (!$field instanceof FieldInterface) {
@@ -169,21 +174,28 @@ class FieldFactory
         ;
         $configuration = $resolver->resolve($configuration);
     
-        // for collection of fields, we resolve the configuration of each item
+        // For collection of fields, we resolve the configuration of each item
         if ($configuration['type'] == 'collection') {
             $items = [];
         
             foreach ($configuration['options'] as $itemFieldName => $itemFieldConfiguration) {
-                // configuration should be an array
+                // The configuration should be an array
                 if (!$itemFieldConfiguration) {
                     $itemFieldConfiguration = [];
                 }
-                // type should exists
-                if (!array_key_exists('type', $configuration)) {
+                
+                // The type should be defined
+                if (!array_key_exists('type', $itemFieldConfiguration)) {
                     throw new Exception("Missing type configuration for field {$itemFieldName}");
                 }
+    
+                // The field options are optional
+                if (!array_key_exists('options', $itemFieldConfiguration)) {
+                    $itemFieldConfiguration['options'] = [];
+                }
+                
                 // create collection item
-                $items[] = $this->create($itemFieldName, $itemFieldConfiguration, $actionConfiguration);
+                $items[] = $this->create($itemFieldName, $itemFieldConfiguration['options'], $actionConfiguration);
             }
             // add created item to the field options
             $configuration['options'] = [
