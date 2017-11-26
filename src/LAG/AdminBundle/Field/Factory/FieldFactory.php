@@ -195,7 +195,7 @@ class FieldFactory
                 }
                 
                 // create collection item
-                $items[] = $this->create($itemFieldName, $itemFieldConfiguration['options'], $actionConfiguration);
+                $items[] = $this->create($itemFieldName, $itemFieldConfiguration, $actionConfiguration);
             }
             // add created item to the field options
             $configuration['options'] = [
