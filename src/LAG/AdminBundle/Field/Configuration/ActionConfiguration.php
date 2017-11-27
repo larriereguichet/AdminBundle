@@ -9,8 +9,6 @@ class ActionConfiguration extends Configuration
 {
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
-    
         $resolver
             ->setDefaults([
                 'class' => 'btn btn-danger btn-sm',
