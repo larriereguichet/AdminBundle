@@ -1,16 +1,16 @@
 {% spaceless %}
-    {% if options.get('route') %}
-        {% set url = path(options.get('route'), parameters) %}
+    {% if options.route %}
+        {% set url = path(options.route, parameters) %}
     {% elseif not url %}
         {% set url = text %}
     {% endif %}
 
     <a href="{{ url }}"
-       target="{{ options.get('target') }}"
-       class="{{ options.get('class') }}"
-       title="{{ options.get('title') | trans }}">
+       target="{{ options.target }}"
+       class="{{ options.css_class }}"
+       title="{{ options.title | trans }}">
         {# font awesome icons #}
-        {% if options.get('icon') %}<i class="fa fa-{{ options.get('icon') }}"></i>&nbsp;{% endif %}{{ text | trans }}
+        {% if options.icon %}<i class="fa fa-{{ options.icon }}"></i>&nbsp;{% endif %}{{ text | trans }}
     </a>
 
 {% endspaceless %}
