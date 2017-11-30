@@ -23,7 +23,7 @@
 
     <filter>
         <whitelist>
-            <directory>./</directory>
+            <directory>src/LAG/AdminBundle</directory>
             <exclude>
                 <directory>./Resources</directory>
                 <directory>./Tests</directory>
