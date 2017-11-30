@@ -18,7 +18,7 @@ abstract class AbstractField implements FieldInterface
     const TYPE_BOOLEAN = 'boolean';
     const TYPE_MAPPED = 'mapped';
     const TYPE_ACTION_COLLECTION = 'action_collection';
-
+    
     /**
      * Field's name
      *
@@ -44,13 +44,13 @@ abstract class AbstractField implements FieldInterface
     /**
      * Field constructor.
      *
-     * @param string              $name
+     * @param string $name
      */
     public function __construct($name)
     {
         $this->name = $name;
     }
-
+    
     /**
      * @return string
      */
@@ -60,12 +60,20 @@ abstract class AbstractField implements FieldInterface
     }
     
     /**
-     * @param string $name
+     * Return the value of a configuration parameter.
+     *
+     * @param string    $name
+     *
+     * @param mixed|null $default
      *
      * @return mixed
      */
-    public function getConfiguration($name)
+    public function getConfiguration($name, $default = null)
     {
+        if (!$this->configuration->hasParameter($name)) {
+            return $default;
+        }
+        
         return $this
             ->configuration
             ->getParameter($name)
@@ -89,6 +97,10 @@ abstract class AbstractField implements FieldInterface
     {
         if (!$configuration->isResolved()) {
             throw new Exception('The configuration must be resolved');
+        }
+
+        if (null !== $this->configuration) {
+            throw new Exception('The configuration has already been defined');
         }
         $this->configuration = $configuration;
         $this->options = $configuration->getParameters();

@@ -30,13 +30,15 @@ interface FieldInterface
     public function getType();
     
     /**
-     * Return a configuration parameter value.
+     * Return the value of a configuration parameter.
      *
-     * @param string $name The name of the parameter name
+     * @param string    $name
      *
-     * @return mixed The configuration value
+     * @param mixed|null $default
+     *
+     * @return mixed
      */
-    public function getConfiguration($name);
+    public function getConfiguration($name, $default = null);
     
     /**
      * Return the Field's configuration class.
