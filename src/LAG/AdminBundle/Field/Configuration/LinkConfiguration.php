@@ -14,13 +14,9 @@ class LinkConfiguration extends StringFieldConfiguration
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
-            'length' => $this
-                ->applicationConfiguration
-                ->getParameter('string_length'),
-            'replace' => $this
-                ->applicationConfiguration
-                ->getParameter('string_length_truncate'),
             'template' => $this
                 ->applicationConfiguration
                 ->getParameter('fields_template_mapping')[AbstractField::TYPE_LINK],
@@ -33,6 +29,7 @@ class LinkConfiguration extends StringFieldConfiguration
             'text' => '',
             'admin' => null,
             'action' => null,
+            'css_class' => '',
         ]);
         $resolver->setAllowedTypes('route', 'string');
         $resolver->setAllowedTypes('parameters', 'array');

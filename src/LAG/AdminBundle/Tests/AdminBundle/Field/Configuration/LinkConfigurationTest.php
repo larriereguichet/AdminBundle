@@ -5,7 +5,6 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Field\Configuration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Field\AbstractField;
 use LAG\AdminBundle\Field\Configuration\LinkConfiguration;
-use LAG\AdminBundle\Field\Configuration\StringFieldConfiguration;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -37,5 +36,6 @@ class LinkConfigurationTest extends AdminTestBase
         ]);
     
         $this->assertEquals('my_route', $options['route']);
+        $this->assertArrayHasKey('translation', $options);
     }
 }
