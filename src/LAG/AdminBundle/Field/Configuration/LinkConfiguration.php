@@ -2,21 +2,13 @@
 
 namespace LAG\AdminBundle\Field\Configuration;
 
-use JK\Configuration\Configuration;
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Application\Configuration\ApplicationConfigurationAwareInterface;
 use LAG\AdminBundle\Field\AbstractField;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class LinkConfiguration extends Configuration implements ApplicationConfigurationAwareInterface
+class LinkConfiguration extends StringFieldConfiguration
 {
-    /**
-     * @var ApplicationConfiguration
-     */
-    protected $applicationConfiguration;
-    
     /**
      * @param OptionsResolver $resolver
      */
@@ -70,15 +62,5 @@ class LinkConfiguration extends Configuration implements ApplicationConfiguratio
 
             return $value;
         });
-    }
-    
-    /**
-     * Define the application configuration.
-     *
-     * @param ApplicationConfiguration $configuration
-     */
-    public function setApplicationConfiguration(ApplicationConfiguration $configuration)
-    {
-        $this->applicationConfiguration = $configuration;
     }
 }

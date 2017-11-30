@@ -14,5 +14,10 @@ class BooleanConfiguration extends Configuration
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        $resolver
+            ->setDefaults([
+                'column_class' => 'text-center',
+            ])
+        ;
     }
 }

@@ -54,6 +54,10 @@ class ConfigurationFactory
                     ->getApplicationConfiguration()
             );
         }
+        $resolver->setDefaults([
+            'sortable' => true,
+            'column_class' => '',
+        ]);
         $fieldConfiguration->configureOptions($resolver);
         $fieldConfiguration->setParameters($resolver->resolve($configuration));
     
