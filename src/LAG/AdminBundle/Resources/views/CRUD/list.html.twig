@@ -71,7 +71,7 @@
                                 {% endif %}
 
                                 {% for field in admin.fields %}
-                                    <td class="{{ field.columnClass }}">{{ field(field, entity) | raw }}</td>
+                                    <td class="{{ field.configuration('column_class') }}">{{ field(field, entity) | raw }}</td>
                                 {% endfor %}
                             </tr>
                         {% endfor %}
