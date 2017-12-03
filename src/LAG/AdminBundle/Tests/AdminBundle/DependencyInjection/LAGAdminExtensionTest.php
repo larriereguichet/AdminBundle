@@ -152,6 +152,7 @@ class LAGAdminExtensionTest extends AdminTestBase
             'twig' => $twig,
             'registry' => $registry,
             'knp_menu.menu_provider' => $menuProvider,
+            'service_container' => $generic,
         ]);
 
         return $container;
