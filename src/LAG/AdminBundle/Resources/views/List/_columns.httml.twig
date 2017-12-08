@@ -1,6 +1,4 @@
 <th class="{{ field.configuration('class') }}">
-    {{ dump(field) }}
-
     {% if field.configuration('sortable') %}
         {% set sortClass = getSortColumnIconClass(app.request.get('order'), field.name, app.request.get('sort')) %}
 
@@ -11,5 +9,4 @@
     {% else %}
         {{ field_title(field.name, admin.name) }}
     {% endif %}
-
 </th>
