@@ -29,7 +29,7 @@ class LinkConfiguration extends StringFieldConfiguration
             'text' => '',
             'admin' => null,
             'action' => null,
-            'css_class' => '',
+            'class' => '',
         ]);
         $resolver->setAllowedTypes('route', 'string');
         $resolver->setAllowedTypes('parameters', 'array');

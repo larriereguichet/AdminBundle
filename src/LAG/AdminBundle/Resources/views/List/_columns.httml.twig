@@ -1,4 +1,5 @@
-<th class="{{ field.configuration('column_class') }}">
+<th class="{{ field.configuration('class') }}">
+    {{ dump(field) }}
 
     {% if field.configuration('sortable') %}
         {% set sortClass = getSortColumnIconClass(app.request.get('order'), field.name, app.request.get('sort')) %}
