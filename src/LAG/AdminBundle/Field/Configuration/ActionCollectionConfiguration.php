@@ -56,10 +56,10 @@ class ActionCollectionConfiguration extends Configuration
     
         if (!array_key_exists('class', $options)) {
             $options['class'] = '';
-        
-            if (array_key_exists($action, $classMapping)) {
-                $options['class'] = $classMapping[$action];
-            }
+
+        }
+        if (array_key_exists($action, $classMapping)) {
+            $options['class'] = $classMapping[$action];
         }
     }
     
