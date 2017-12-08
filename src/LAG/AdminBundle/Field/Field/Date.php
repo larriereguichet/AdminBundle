@@ -22,6 +22,10 @@ class Date extends AbstractField
      */
     public function render($value)
     {
+        if (null === $value) {
+            return '';
+        }
+
         if (!$value instanceof DateTime) {
             throw new \Exception('Expected Datetime, got '.gettype($value));
         }

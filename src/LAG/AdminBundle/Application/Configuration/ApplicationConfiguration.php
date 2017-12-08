@@ -38,10 +38,9 @@ class ApplicationConfiguration extends Configuration
                 'title' => 'AdminBundle application',
                 'description' => '',
                 'locale' => 'en',
-                // main base template
-                // as bundles are not loaded when reading the configuration, the kernel locateResources will always failed.
-                // So we must not check resource existence here.
-                'base_template' => 'LAGAdminBundle::admin.layout.html.twig',
+                // Main base template as bundles are not loaded when reading the configuration, the kernel
+                // locateResources will always failed. So we must not check resource existence here.
+                'base_template' => '@LAGAdmin/two_columns.layout.html.twig',
                 'block_template' => 'LAGAdminBundle:Form:fields.html.twig',
                 'bootstrap' => true,
                 'date_format' => 'Y/m/d',

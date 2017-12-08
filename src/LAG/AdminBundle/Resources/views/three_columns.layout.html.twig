@@ -1,0 +1,33 @@
+{% extends '@LAGAdmin/base.html.twig' %}
+
+{% block layout %}
+    <div id="main-menu-container"
+         class="col-4 col-xl-2"
+         role="navigation">
+        {% if is_granted('ROLE_USER') %}
+            {% block left_menu %}
+                {{ admin_menu_render('main') | raw }}
+            {% endblock %}
+        {% endif %}
+    </div>
+
+    {% block content_container %}
+        <main class="col-7 col-xl-8"
+              role="main">
+
+            {% block flash_messages %}
+                {% include "LAGAdminBundle:Layout:flash_messages.html.twig" %}
+            {% endblock %}
+
+            {% block content %}{% endblock %}
+        </main>
+    {% endblock %}
+
+    {% block right_menu_container %}
+        <div class="col-1 col-xl-2">
+            {% block right_menu %}
+                {{ admin_menu_render('right') }}
+            {% endblock %}
+        </div>
+    {% endblock %}
+{% endblock %}
