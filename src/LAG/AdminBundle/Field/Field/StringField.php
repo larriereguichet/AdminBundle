@@ -45,8 +45,8 @@ class StringField extends AbstractField implements TranslatorAwareInterface, Twi
         $replaceString = $this->options['replace'];
 
         // Truncate string if required
-        if ($maximumStringLength && strlen($value) > $maximumStringLength) {
-            $value = substr($value, 0, $maximumStringLength).$replaceString;
+        if ($maximumStringLength && mb_strlen($value) > $maximumStringLength) {
+            $value = mb_substr($value, 0, $maximumStringLength).$replaceString;
         }
         // #69 : strip tags to avoid to break the layout when content contains html
         $value = strip_tags($value);
