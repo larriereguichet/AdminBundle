@@ -55,7 +55,12 @@ class View implements ViewInterface
      * @var Pagerfanta
      */
     private $pager;
-    
+
+    /**
+     * @var FieldInterface[]
+     */
+    private $headers;
+
     /**
      * View constructor.
      *
@@ -63,20 +68,23 @@ class View implements ViewInterface
      * @param                     $adminName
      * @param ActionConfiguration $configuration
      * @param AdminConfiguration  $adminConfiguration
-     * @param array               $fields
+     * @param FieldInterface[]    $fields
+     * @param FieldInterface[]    $headers
      */
     public function __construct(
         $actionName,
         $adminName,
         ActionConfiguration $configuration,
         AdminConfiguration $adminConfiguration,
-        array $fields = []
+        array $fields = [],
+        array $headers = []
     ) {
         $this->actionName = $actionName;
         $this->configuration = $configuration;
         $this->adminName = $adminName;
         $this->fields = $fields;
         $this->adminConfiguration = $adminConfiguration;
+        $this->headers = $headers;
     }
     
     /**
@@ -165,5 +173,13 @@ class View implements ViewInterface
     public function getPager()
     {
         return $this->pager;
+    }
+
+    /**
+     * @return FieldInterface[]
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 }

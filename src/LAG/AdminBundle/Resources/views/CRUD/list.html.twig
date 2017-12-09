@@ -49,27 +49,21 @@
                             }) }}
                         </caption>
                         <thead>
-                        <tr class="text-dark">
-                            {% if form is defined %}
-                                <th>
-                                    {#{{ form_widget(form['selectAll']) }}#}
-                                </th>
-                            {% endif %}
+                        {% block table_headers %}
+                            <tr class="text-dark">
+                                {% for field in admin.fields %}
 
-                            {% for field in admin.fields %}
-                                {% include '@LAGAdmin/List/_columns.httml.twig' %}
-                            {% endfor %}
-                        </tr>
+                                    {% if field.name != '_actions' %}
+                                        {% include '@LAGAdmin/List/_columns.httml.twig' %}
+                                    {% endif %}
+
+                                {% endfor %}
+                            </tr>
+                        {% endblock %}
                         </thead>
                         <tbody>
                         {% for entity in admin.entities %}
                             <tr>
-                                {% if form is defined %}
-                                    <td class="batch-column">
-                                        {#{{ form_widget(form.entities[entity.id]) }}#}
-                                    </td>
-                                {% endif %}
-
                                 {% for field in admin.fields %}
                                     <td class="{{ field.configuration('column_class') }}">{{ field(field, entity) | raw }}</td>
                                 {% endfor %}

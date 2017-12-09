@@ -18,6 +18,7 @@ class Link extends StringField implements EntityAwareInterface, TwigAwareInterfa
      * Render link template filled with configured options.
      *
      * @param mixed $value
+     *
      * @return string
      */
     public function render($value)

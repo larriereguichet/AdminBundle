@@ -22,7 +22,7 @@
     {% block navbar %}
         <header class="navbar navbar-light bg-light flex-column flex-md-row bd-navbar">
             <a href="{{ path('admin.homepage') }}" class="navbar-brand">
-                {% block brand %}{% endblock %}
+                {% block brand %}{{ admin_config('title') }}{% endblock %}
             </a>
 
             {% if is_granted('ROLE_USER') %}

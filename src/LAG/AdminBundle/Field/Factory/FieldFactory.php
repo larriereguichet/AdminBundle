@@ -14,7 +14,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Environment;
 
 /**
- * Field factory. Instances fields with its renderer.
+ * Field factory. Instances fields.
  */
 class FieldFactory
 {
