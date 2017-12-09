@@ -3,9 +3,8 @@
 namespace LAG\AdminBundle\Routing;
 
 use Exception;
-use LAG\AdminBundle\Admin\Factory\AdminFactory;
-use LAG\AdminBundle\Admin\Registry\Registry;
-use LAG\AdminBundle\Action\Factory\ConfigurationFactory;
+use LAG\AdminBundle\Action\Factory\ConfigurationFactory as ActionConfigurationFactory;
+use LAG\AdminBundle\Admin\Factory\ConfigurationFactory;
 use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -25,32 +24,35 @@ class RoutingLoader implements LoaderInterface
     private $loaded = false;
 
     /**
-     * @var AdminFactory
+     * @var array
      */
-    private $adminFactory;
-    
-    /**
-     * @var Registry
-     */
-    private $registry;
-    
+    private $adminConfigurations;
+
     /**
      * @var ConfigurationFactory
      */
-    private $configurationFactory;
-    
+    private $adminConfigurationFactory;
+
+    /**
+     * @var ActionConfigurationFactory
+     */
+    private $actionConfigurationFactory;
+
     /**
      * RoutingLoader constructor.
      *
-     * @param AdminFactory $adminFactory
-     * @param Registry $registry
-     * @param ConfigurationFactory $configurationFactory
+     * @param array                      $adminConfigurations
+     * @param ConfigurationFactory       $adminConfigurationFactory
+     * @param ActionConfigurationFactory $actionConfigurationFactory
      */
-    public function __construct(AdminFactory $adminFactory, Registry $registry, ConfigurationFactory $configurationFactory)
-    {
-        $this->adminFactory = $adminFactory;
-        $this->registry = $registry;
-        $this->configurationFactory = $configurationFactory;
+    public function __construct(
+        array $adminConfigurations = [],
+        ConfigurationFactory $adminConfigurationFactory,
+        ActionConfigurationFactory $actionConfigurationFactory
+    ) {
+        $this->adminConfigurations = $adminConfigurations;
+        $this->adminConfigurationFactory = $adminConfigurationFactory;
+        $this->actionConfigurationFactory = $actionConfigurationFactory;
     }
 
     /**
@@ -70,27 +72,17 @@ class RoutingLoader implements LoaderInterface
         }
         $routes = new RouteCollection();
 
-        // Load the Admins
-        $this
-            ->adminFactory
-            ->init()
-        ;
-        $admins = $this
-            ->registry
-            ->all()
-        ;
-        
         // Creating a route by Admin and Action
-        foreach ($admins as $admin) {
-            $actions = $admin
-                ->getConfiguration()
-                ->getParameter('actions')
+        foreach ($this->adminConfigurations as $adminName => $adminConfiguration) {
+            $adminConfiguration = $this
+                ->adminConfigurationFactory
+                ->create($adminConfiguration)
             ;
-    
-            foreach ($actions as $name => $configuration) {
+
+            foreach ($adminConfiguration->getParameter('actions') as $actionName => $actionConfiguration) {
                 $actionConfiguration = $this
-                    ->configurationFactory
-                    ->create($name, $admin->getName(), $admin->getConfiguration(), $configuration)
+                    ->actionConfigurationFactory
+                    ->create($actionName, $adminName, $adminConfiguration, $actionConfiguration)
                 ;
                 // Create the new route according to the resolved configuration parameters
                 $route = new Route(
@@ -99,13 +91,12 @@ class RoutingLoader implements LoaderInterface
                     $actionConfiguration->getParameter('route_requirements')
                 );
                 $generator = new RouteNameGenerator();
-                $routeName = $generator->generate($name, $admin->getName(), $admin->getConfiguration());
-                
+                $routeName = $generator->generate($actionName, $adminName, $adminConfiguration);
+
                 // Add the route to the collection
                 $routes->add($routeName, $route);
             }
         }
-        $this->loaded = true;
 
         return $routes;
     }

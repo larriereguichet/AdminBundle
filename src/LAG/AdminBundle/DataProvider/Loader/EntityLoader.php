@@ -105,7 +105,7 @@ class EntityLoader implements EntityLoaderInterface
      *
      * @return Pagerfanta
      */
-    private function loadPaginate(array $criteria, array $orderBy, $limit, $offset)
+    private function loadPaginate(array $criteria, array $orderBy = [], $limit = 25, $offset = 1)
     {
         // only pagerfanta adapter is yet supported
         if ('pagerfanta' !== $this->pagerName) {

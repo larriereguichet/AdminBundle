@@ -6,16 +6,10 @@ use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminAwareInterface;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Responder\ResponderInterface;
+use Symfony\Component\Form\FormInterface;
 
-interface ActionInterface extends AdminAwareInterface
+interface ActionInterfaceOLD
 {
-    /**
-     * Define the Action configuration.
-     *
-     * @param ActionConfiguration $actionConfiguration
-     */
-    public function setConfiguration(ActionConfiguration $actionConfiguration);
-    
     /**
      * Return the Action's configuration.
      *
@@ -41,9 +35,18 @@ interface ActionInterface extends AdminAwareInterface
      * @return FieldInterface[]
      */
     public function getFields();
-    
+
     /**
-     * @param FieldInterface[] $fields
+     * Return the array of form for the current action.
+     *
+     * @return FormInterface[]
      */
-    public function setFields(array $fields);
+    public function getForms();
+
+    /**
+     * Return true if all the submitted form in the request are valid.
+     *
+     * @return bool
+     */
+    public function isValid();
 }

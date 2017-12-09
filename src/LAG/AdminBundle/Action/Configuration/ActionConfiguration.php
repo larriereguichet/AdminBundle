@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Action\Configuration;
 
 use Closure;
 use JK\Configuration\Configuration;
+use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Behaviors\TranslationKeyTrait;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
@@ -17,7 +18,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ActionConfiguration extends Configuration
+class ActionConfigurationOLD extends Configuration
 {
     use TranslationKeyTrait;
     
@@ -79,7 +80,7 @@ class ActionConfiguration extends Configuration
             ->setDefaults([
                 // the default action title is a translation key using the translation pattern and the action name
                 'title' => $this->getDefaultTitle(),
-                'service' => $this->getDefaultServiceId(),
+                'class' => Action::class,
                 'fields' => [
                     'id' => [],
                 ],
@@ -549,22 +550,6 @@ class ActionConfiguration extends Configuration
         }
         
         return $requirements;
-    }
-    
-    /**
-     * Return the default service id according to the action name.
-     *
-     * @return string|null
-     */
-    private function getDefaultServiceId()
-    {
-        $mapping = LAGAdminBundle::getDefaultActionServiceMapping();
-        
-        if (!array_key_exists($this->actionName, $mapping)) {
-            return null;
-        }
-        
-        return $mapping[$this->actionName];
     }
     
     /**

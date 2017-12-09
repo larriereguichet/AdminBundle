@@ -100,45 +100,37 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      */
     public function beforeActionConfiguration(BeforeConfigurationEvent $event)
     {
-        // add configuration only if extra configuration is enabled
         if (!$this->extraConfigurationEnabled) {
             return;
         }
-        // Action configuration array
         $configuration = $event->getActionConfiguration();
-        
-        // current Admin
-        $admin = $event->getAdmin();
-        
-        // allowed Actions according to the admin
-        $keys = $admin
-            ->getConfiguration()
+
+        // Get the allowed Actions according to the admin
+        $keys = $event
+            ->getAdminConfiguration()
             ->getParameter('actions');
         $allowedActions = array_keys($keys);
 
-        // add default menu configuration
         $configuration = $this->addDefaultMenuConfiguration(
-            $admin->getName(),
+            $event->getAdminName(),
             $event->getActionName(),
             $configuration,
             $allowedActions
         );
 
-        // guess field configuration if required
         $this->guessFieldConfiguration(
             $configuration,
             $event->getActionName(),
-            $admin->getConfiguration()->getParameter('entity')
+            $event->getAdminConfiguration()->getParameter('entity')
         );
 
-        // guess linked actions for list actions
         $this->guessLinkedActionsConfiguration(
             $configuration,
             $allowedActions,
             $event
         );
 
-        // reset action configuration
+        // Define the new configuration
         $event->setActionConfiguration($configuration);
     }
 
@@ -261,13 +253,20 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             // add a link to the "delete" action, if it is allowed
             if (in_array('delete', $allowedActions)) {
                 $generator = new RouteNameGenerator();
-                $admin = $event->getAdmin();
-                
+
                 $configuration['fields']['_actions'] = [
                     'type'=> 'action',
                     'options' => [
-                        'title' => $this->getTranslationKey($translationPattern, 'delete', $admin->getName()),
-                        'route' => $generator->generate('delete', $admin->getName(), $admin->getConfiguration()),
+                        'title' => $this->getTranslationKey(
+                            $translationPattern,
+                            'delete',
+                            $event->getAdminName()
+                        ),
+                        'route' => $generator->generate(
+                            'delete',
+                            $event->getAdminName(),
+                            $event->getAdminConfiguration()
+                        ),
                         'parameters' => [
                             'id' => false
                         ],

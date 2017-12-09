@@ -5,12 +5,23 @@ namespace LAG\AdminBundle\Tests\AdminBundle\Action\Factory;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Tests\AdminTestBase;
 
 class ConfigurationFactoryTest extends AdminTestBase
 {
     public function testCreate()
     {
+        $applicationConfiguration = $this->getMockWithoutConstructor(ApplicationConfiguration::class);
+        $applicationConfiguration
+            ->expects($this->once())
+            ->method('getParameter')
+            ->with('fields_mapping')
+            ->willReturn([
+                ''
+            ])
+        ;
+
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $configuration
             ->expects($this->once())
@@ -31,8 +42,8 @@ class ConfigurationFactoryTest extends AdminTestBase
             ])
         ;
         
-        $factory = new ConfigurationFactory();
-        $actionConfiguration = $factory->create('my-action', 'my-admin', $configuration, []);
+        $factory = new ConfigurationFactory($applicationConfiguration);
+        $actionConfiguration = $factory->create($configuration);
     
         $this->assertInstanceOf(ActionConfiguration::class, $actionConfiguration);
     }

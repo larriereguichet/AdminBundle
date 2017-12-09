@@ -9,10 +9,10 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="src/LAG/AdminBundle/Tests/Fixtures/bootstrap.php">
+         bootstrap="tests/bootstrap.php">
     <testsuites>
         <testsuite name="AdminBundle Test Suite">
-            <directory>src/LAG/AdminBundle/Tests/</directory>
+            <directory>tests/AdminBundle</directory>
         </testsuite>
     </testsuites>
 
@@ -23,12 +23,12 @@
 
     <filter>
         <whitelist>
-            <directory>src/LAG/AdminBundle</directory>
+            <directory>src/</directory>
             <exclude>
-                <directory>./Resources</directory>
-                <directory>./Tests</directory>
-                <directory>./vendor</directory>
-                <directory>./DataFixtures</directory>
+                <directory>Resources</directory>
+                <directory>Tests</directory>
+                <directory>vendor</directory>
+                <directory>DataFixtures</directory>
             </exclude>
         </whitelist>
     </filter>

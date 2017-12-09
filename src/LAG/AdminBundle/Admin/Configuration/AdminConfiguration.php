@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Admin\Configuration;
 
+use Exception;
 use JK\Configuration\Configuration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use Symfony\Component\OptionsResolver\Options;
@@ -10,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Ease Admin configuration manipulation.
  */
-class AdminConfiguration extends Configuration
+class AdminConfigurationOLD extends Configuration
 {
     /**
      * @var ApplicationConfiguration
@@ -35,38 +36,44 @@ class AdminConfiguration extends Configuration
     public function configureOptions(OptionsResolver $resolver)
     {
         $this->configureDefaultOptions($resolver);
-        
+
         // required options
-        $resolver->setRequired([
-            'entity',
-        ]);
-        $resolver->setNormalizer('actions', function(Options $options, $actions) {
-            $normalizedActions = [];
-            $addBatchAction = false;
+        $resolver
+            ->setRequired([
+                'entity',
+            ])
+            ->setAllowedValues('pager', [
+                null,
+                'pagerfanta',
+            ])
+            ->setNormalizer('actions', function (Options $options, $actions) {
+                $normalizedActions = [];
+                $addBatchAction = false;
 
-            foreach ($actions as $name => $action) {
+                foreach ($actions as $name => $action) {
 
-                // action configuration is an array by default
-                if ($action === null) {
-                    $action = [];
+                    // action configuration is an array by default
+                    if ($action === null) {
+                        $action = [];
+                    }
+                    $normalizedActions[$name] = $action;
+
+                    // in list action, if no batch was configured or disabled, we add a batch action
+                    if ($name == 'list' && (!array_key_exists('batch', $action) || $action['batch'] === null)) {
+                        $addBatchAction = true;
+                    }
                 }
-                $normalizedActions[$name] = $action;
 
-                // in list action, if no batch was configured or disabled, we add a batch action
-                if ($name == 'list' && (!array_key_exists('batch', $action) || $action['batch'] === null)) {
-                    $addBatchAction = true;
+                // add empty default batch action
+                if ($addBatchAction) {
+                    $normalizedActions['batch'] = [];
                 }
-            }
 
-            // add empty default batch action
-            if ($addBatchAction) {
-                $normalizedActions['batch'] = [];
-            }
-
-            return $normalizedActions;
-        });
+                return $normalizedActions;
+            })
+        ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
@@ -76,12 +83,12 @@ class AdminConfiguration extends Configuration
         $routing = $this
             ->applicationConfiguration
             ->getParameter('routing');
-    
+
         // inherited max per page configuration
         $maxPerPage = $this
             ->applicationConfiguration
             ->getParameter('max_per_page');
-    
+
         // optional options
         $resolver->setDefaults([
             'actions' => [

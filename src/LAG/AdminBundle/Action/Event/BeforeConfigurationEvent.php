@@ -2,49 +2,60 @@
 
 namespace LAG\AdminBundle\Action\Event;
 
-use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Event dispatch before the creation of an action to allow third-party modification
+ * Event dispatch before the creation of an action to allow third-party modification.
  */
 class BeforeConfigurationEvent extends Event
 {
     /**
-     * @var AdminInterface
+     * @var string
      */
-    protected $admin;
+    private $adminName;
 
     /**
      * @var string
      */
-    protected $actionName;
+    private $actionName;
 
     /**
      * @var array
      */
-    protected $actionConfiguration;
+    private $actionConfiguration;
+
+    /**
+     * @var AdminConfiguration
+     */
+    private $adminConfiguration;
 
     /**
      * BeforeConfigurationEvent constructor.
      *
-     * @param string $actionName
-     * @param array $actionConfiguration
-     * @param AdminInterface $admin
+     * @param string             $actionName
+     * @param array              $actionConfiguration
+     * @param string             $adminName
+     * @param AdminConfiguration $adminConfiguration
      */
-    public function __construct($actionName, array $actionConfiguration, AdminInterface $admin)
-    {
+    public function __construct(
+        $actionName,
+        array $actionConfiguration,
+        $adminName,
+        AdminConfiguration $adminConfiguration
+    ) {
         $this->actionName = $actionName;
         $this->actionConfiguration = $actionConfiguration;
-        $this->admin = $admin;
+        $this->adminName = $adminName;
+        $this->adminConfiguration = $adminConfiguration;
     }
 
     /**
-     * @return AdminInterface
+     * @return string
      */
-    public function getAdmin()
+    public function getAdminName()
     {
-        return $this->admin;
+        return $this->adminName;
     }
 
     /**
@@ -69,5 +80,13 @@ class BeforeConfigurationEvent extends Event
     public function setActionConfiguration($actionConfiguration)
     {
         $this->actionConfiguration = $actionConfiguration;
+    }
+
+    /**
+     * @return AdminConfiguration
+     */
+    public function getAdminConfiguration()
+    {
+        return $this->adminConfiguration;
     }
 }

@@ -1,0 +1,90 @@
+services:
+    ### Resources ###
+    lag.admin.resource_collection:
+        class: LAG\AdminBundle\Resource\ResourceCollection
+    #################
+
+    ### Subscribers ###
+    lag.admin.subscriber.security:
+        class: LAG\AdminBundle\Event\Subscriber\SecuritySubscriber
+        autowire: true
+        autoconfigure: true
+
+    lag.admin.subscriber.admin:
+        class: LAG\AdminBundle\Event\Subscriber\AdminSubscriber
+        autowire: true
+        autoconfigure: true
+
+    lag.admin.subscriber.form:
+        class: LAG\AdminBundle\Event\Subscriber\FormSubscriber
+        autowire: true
+        autoconfigure: true
+
+    lag.admin.subscriber.extra_configuration:
+        class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
+        autowire: true
+        autoconfigure: true
+
+    lag.admin.subscriber.menu:
+        class: LAG\AdminBundle\Event\Subscriber\MenuSubscriber
+        autowire: true
+        autoconfigure: true
+    ###################
+
+    ### Configuration ###
+    lag.admin.configuration:
+        class: LAG\AdminBundle\Configuration\ApplicationConfigurationStorage
+    #####################
+
+    ### Routing ###
+    lag.admin.routing:
+        class: LAG\AdminBundle\Routing\RoutingLoader
+        autowire: true
+        autoconfigure: true
+        tags:
+            - {name: routing.loader}
+    ################
+
+    ### Controllers ###
+    LAG\AdminBundle\Controller\AdminAction:
+        class: LAG\AdminBundle\Controller\AdminAction
+        autowire: true
+        autoconfigure: true
+
+    LAG\AdminBundle\Controller\HomeAction:
+        class: LAG\AdminBundle\Controller\HomeAction
+        autowire: true
+        autoconfigure: true
+        tags:
+            - {name: controller.argument_value_resolver}
+    ###################
+
+    ### Factories ###
+    lag.admin.action_factory:
+        class: LAG\AdminBundle\Factory\ActionFactory
+        autowire: true
+
+    lag.admin.admin_factory:
+        class: LAG\AdminBundle\Factory\AdminFactory
+        autowire: true
+
+    lag.admin.configuration_factory:
+        class: LAG\AdminBundle\Factory\ConfigurationFactory
+        autowire: true
+
+    lag.admin.menu_factory:
+        class: LAG\AdminBundle\Factory\MenuFactory
+        autowire: true
+
+    lag.admin.view_factory:
+        class: LAG\AdminBundle\Factory\ViewFactory
+        autowire: true
+    #################
+
+    ### Twig extension ###
+    lag.admin.twig_extension:
+        class: LAG\AdminBundle\Twig\AdminExtension
+        autowire: true
+        tags:
+            - {name: twig.extension}
+    ######################

@@ -25,20 +25,19 @@
     }
   ],
   "require": {
-    "php": ">=5.5.9 || >=7.0",
-    "components/bootstrap": "4.0.0-beta",
+    "php": "^7.0",
+    "twbs/bootstrap": "^4.0",
     "components/font-awesome": "~4.5",
-    "components/jquery": "~2.0 || ~3.0",
+    "components/jquery": "~3.0",
     "components/jqueryui": "~1.0",
     "egeloen/ckeditor-bundle": "^4.0",
     "doctrine/doctrine-bundle": "~1.2",
     "doctrine/orm": "^2.5",
     "dunglas/action-bundle": "^0.4",
     "gedmo/doctrine-extensions": "^2.4",
-    "johnkrovitch/configuration": "dev-release/v1.0.1",
+    "johnkrovitch/configuration": "^1.0",
     "knplabs/knp-menu-bundle": "^2.1",
     "lag/array-utils": "^0.1",
-    "twbs/bootstrap": "^3.3",
     "twig/extensions": "~1.2",
     "sensio/framework-extra-bundle": "~3.0 || ~4.0 || ~5.0",
     "stfalcon/tinymce-bundle": "~2.0",
@@ -54,7 +53,12 @@
   },
   "autoload": {
     "psr-4": {
-      "LAG\\AdminBundle\\": "src/LAG/AdminBundle/"
+      "LAG\\AdminBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "LAG\\AdminBundle\\Tests\\": "tests/AdminBundle/"
     }
   },
   "config": {

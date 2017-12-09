@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Filter\Factory;
 
+use Exception;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,6 +22,7 @@ class FilterFormBuilder
      * @var FormFactoryInterface
      */
     private $formFactory;
+
     /**
      * @var TranslatorInterface
      */
@@ -44,16 +46,16 @@ class FilterFormBuilder
      * @param ActionConfiguration $configuration
      *
      * @return FormInterface|null
+     *
+     * @throws Exception
      */
     public function build(ActionConfiguration $configuration)
     {
-        if (true !== $this->isFilterFormRequired($configuration)) {
-           return null;
-        }
-        // retrieve the filters from the Action configuration
         $filters = $configuration->getParameter('filters');
-        
-        // create the filter form
+
+        if (0 === count($filters)) {
+            return null;
+        }
         $builder = $this
             ->formFactory
             ->createBuilder(FormType::class, null, [
@@ -71,20 +73,6 @@ class FilterFormBuilder
         }
     
         return $builder->getForm();
-    }
-    
-    /**
-     * Return true if the filter form require to be built.
-     *
-     * @param ActionConfiguration $configuration
-     *
-     * @return bool
-     */
-    public function isFilterFormRequired(ActionConfiguration $configuration)
-    {
-        $filters = $configuration->getParameter('filters');
-    
-        return 0 < count($filters);
     }
     
     /**
@@ -108,7 +96,7 @@ class FilterFormBuilder
     
         return $type;
     }
-    
+
     /**
      * Merge default form options with the configured ones.
      *
@@ -116,6 +104,8 @@ class FilterFormBuilder
      * @param array|null $formOptions
      *
      * @return array
+     *
+     * @throws \TypeError
      */
     private function mergeDefaultFormOptions($field, array $formOptions = null)
     {

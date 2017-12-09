@@ -2,8 +2,7 @@
 
 namespace LAG\AdminBundle\DataProvider\Loader;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
+use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use Pagerfanta\Pagerfanta;
 
@@ -17,16 +16,9 @@ interface EntityLoaderInterface
      * @param int   $limit
      * @param int   $offset
      *
-     * @return ArrayCollection|array|Pagerfanta
+     * @return Collection|Pagerfanta
      */
     public function load(array $criteria, array $orderBy = [], $limit = 25, $offset = 1);
-    
-    /**
-     * Configure the entity loader.
-     *
-     * @param ActionConfiguration $configuration
-     */
-    public function configure(ActionConfiguration $configuration);
     
     /**
      * Return the associated DataProvider.

@@ -17,6 +17,7 @@ use LAG\AdminBundle\Admin\Event\AdminEvents;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
 use LAG\AdminBundle\DataProvider\Loader\EntityLoader;
+use LAG\AdminBundle\DataProvider\Loader\PaginatedEntityLoader;
 use LAG\AdminBundle\Message\MessageHandlerInterface;
 use LAG\AdminBundle\View\Factory\ViewFactory;
 use LogicException;
@@ -206,37 +207,28 @@ class AdminFactory
      */
     public function create($name, array $configuration)
     {
-        // create AdminConfiguration object
-        $adminConfiguration = $this
+        $configuration = $this
             ->configurationFactory
             ->create($configuration)
         ;
-        
-        // retrieve a data provider and load it into the loader
-        $dataProvider = $this
-            ->dataProviderFactory
-            ->get($adminConfiguration->getParameter('data_provider'), $adminConfiguration->getParameter('entity'))
-        ;
-        $entityLoader = new EntityLoader($dataProvider);
-    
-        // retrieve Admin dynamic class
+
         $adminClass = $this
             ->applicationConfigurationStorage
             ->getApplicationConfiguration()
             ->getParameter('admin_class')
         ;
-    
-        // retrieve the actions services
-        $actions = $this
-            ->actionFactory
-            ->getActions($name, $configuration)
-        ;
+        $actions = [];
 
-        // create Admin object
+        foreach ($configuration->getParameter('actions') as $actionName => $actionConfiguration) {
+            $actions[$name] = $this
+                ->actionFactory
+                ->create($actionName, $actionConfiguration, $name, $configuration)
+            ;
+        }
+
         $admin = new $adminClass(
             $name,
-            $entityLoader,
-            $adminConfiguration,
+            $configuration,
             $this->messageHandler,
             $this->eventDispatcher,
             $this->authorizationChecker,
@@ -245,7 +237,8 @@ class AdminFactory
             $this->viewFactory,
             $actions
         );
-    
+
+        // As the admin class is dynamic, we should check if the class is correct
         if (!$admin instanceof AdminInterface) {
             throw new LogicException('Class "'.get_class($admin).'" should implements '.AdminInterface::class);
         }
