@@ -79,6 +79,5 @@ $runner = new TaskRunner(
 
 // run your task
 foreach ($tasks as $task) {
-    //var_dump($task);
     $runner->run($task);
 }
