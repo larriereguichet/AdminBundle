@@ -14,6 +14,7 @@ class ViewFactory
      * @var ConfigurationFactory
      */
     private $configurationFactory;
+
     /**
      * @var FieldFactory
      */

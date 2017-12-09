@@ -12,6 +12,7 @@ use LAG\AdminBundle\Field\Field\Boolean;
 use LAG\AdminBundle\Field\Field\Collection;
 use LAG\AdminBundle\Field\Field\Count;
 use LAG\AdminBundle\Field\Field\Date;
+use LAG\AdminBundle\Field\Field\Header;
 use LAG\AdminBundle\Field\Field\Link;
 use LAG\AdminBundle\Field\Field\Mapped;
 use LAG\AdminBundle\Field\Field\StringField;

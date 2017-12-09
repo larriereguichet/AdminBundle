@@ -18,6 +18,7 @@ abstract class AbstractField implements FieldInterface
     const TYPE_BOOLEAN = 'boolean';
     const TYPE_MAPPED = 'mapped';
     const TYPE_ACTION_COLLECTION = 'action_collection';
+    const TYPE_HEADER = 'header';
     
     /**
      * Field's name

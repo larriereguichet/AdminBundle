@@ -13,6 +13,13 @@ table {
         display: block;
         float: right;
         padding-left: 2px;
+
+        &.fa-sort-asc {
+          margin-top: 6px;
+        }
+        &.fa-sort-desc {
+          margin-top: 2px;
+        }
       }
     }
   }
