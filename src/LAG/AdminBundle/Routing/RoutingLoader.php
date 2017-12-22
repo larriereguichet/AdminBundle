@@ -4,9 +4,7 @@ namespace LAG\AdminBundle\Routing;
 
 use Exception;
 use LAG\AdminBundle\Action\Factory\ConfigurationFactory as ActionConfigurationFactory;
-use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use LAG\AdminBundle\Admin\Factory\ConfigurationFactory;
-use LAG\AdminBundle\Admin\Registry\Registry;
 use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -24,21 +22,6 @@ class RoutingLoader implements LoaderInterface
      * @var bool
      */
     private $loaded = false;
-
-    /**
-     * @var AdminFactory
-     */
-    private $adminFactory;
-
-    /**
-     * @var Registry
-     */
-    private $registry;
-
-    /**
-     * @var ConfigurationFactory
-     */
-    private $configurationFactory;
 
     /**
      * @var array
