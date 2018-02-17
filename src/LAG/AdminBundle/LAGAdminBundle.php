@@ -2,9 +2,7 @@
 
 namespace LAG\AdminBundle;
 
-use LAG\AdminBundle\DependencyInjection\CompilerPass\ActionCompilerPass;
 use LAG\AdminBundle\DependencyInjection\CompilerPass\DataProviderCompilerPass;
-use LAG\AdminBundle\DependencyInjection\CompilerPass\FieldCompilerPass;
 use LAG\AdminBundle\DependencyInjection\CompilerPass\ResponderCompilerPass;
 use LogicException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,8 +20,7 @@ class LAGAdminBundle extends Bundle implements PrependExtensionInterface
     const SERVICE_ID_DELETE_ACTION = 'lag.admin.actions.delete';
     
     const SERVICE_ID_ACTION_FACTORY = 'lag.admin.action_factory';
-    const SERVICE_ID_ACTION_REGISTRY = 'lag.admin.action_registry';
-    
+
     // Responders
     const SERVICE_ID_LIST_RESPONDER = 'lag.admin.action.list_responder';
     
@@ -32,7 +29,6 @@ class LAGAdminBundle extends Bundle implements PrependExtensionInterface
     const SERVICE_ID_LIST_FORM_HANDLER = 'lag.admin.form.list_form_handler';
     
     // Service Tags
-    const SERVICE_TAG_ACTION = 'lag.admin.action';
     const SERVICE_TAG_FORM_HANDLER = 'lag.admin.form_handler';
     
     // Request Admin parameters
@@ -40,31 +36,13 @@ class LAGAdminBundle extends Bundle implements PrependExtensionInterface
     const REQUEST_PARAMETER_ACTION = '_action';
     
     /**
-     * @return string[]
-     */
-    public static function getDefaultActionServiceMapping()
-    {
-        return [
-            'list' => LAGAdminBundle::SERVICE_ID_LIST_ACTION,
-            'edit' => LAGAdminBundle::SERVICE_ID_EDIT_ACTION,
-            'delete' => LAGAdminBundle::SERVICE_ID_DELETE_ACTION,
-            'create' => LAGAdminBundle::SERVICE_ID_CREATE_ACTION,
-        ];
-    }
-    
-    /**
-     * Add the field and the data provider compiler pass
-     *
      * @param ContainerBuilder $container
      */
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
 
-        // register field compiler pass
-        $container->addCompilerPass(new FieldCompilerPass());
         $container->addCompilerPass(new DataProviderCompilerPass());
-        $container->addCompilerPass(new ActionCompilerPass());
         $container->addCompilerPass(new ResponderCompilerPass());
     }
     

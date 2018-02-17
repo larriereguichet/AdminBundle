@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Admin;
 
 use Doctrine\Common\Collections\Collection;
+use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,11 +32,9 @@ interface AdminInterface
      *
      * @param Request $request
      *
-     * @param array   $filters
-     *
      * @return void
      */
-    public function handleRequest(Request $request, array $filters = []);
+    public function handleRequest(Request $request);
 
     /**
      * Load entities according to given criteria. OrderBy, limit and offset can be used.
@@ -94,14 +93,23 @@ interface AdminInterface
      * @return AdminConfiguration
      */
     public function getConfiguration();
-    
+
     /**
      * @return ViewInterface
      */
-    public function getView();
-    
+    public function createView();
+
     /**
+     * Return true if all the submitted form in the request are valid.
+     *
      * @return bool
      */
-    public function hasView();
+    public function isValid();
+
+    /**
+     * Return the action set by the handleRequest().
+     *
+     * @return ActionInterface
+     */
+    public function getCurrentAction();
 }

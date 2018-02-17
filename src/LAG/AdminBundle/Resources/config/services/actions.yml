@@ -2,8 +2,6 @@ services:
     lag.admin.actions.list:
         class: LAG\AdminBundle\Controller\ListAction
         autowire: true
-        arguments:
-            - list
 
     lag.admin.actions.create:
         class: LAG\AdminBundle\Controller\CreateAction

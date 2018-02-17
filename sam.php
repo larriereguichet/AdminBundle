@@ -9,7 +9,7 @@ use JK\Sam\Task\TaskBuilder;
 use JK\Sam\Task\TaskRunner;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-require __DIR__.'/../vendor/autoload.php';
+require 'vendor/autoload.php';
 
 $configuration = [
     'compass' => [],
@@ -68,7 +68,7 @@ $tasks = [
 $builder = new TaskBuilder();
 $tasks = $builder->build($tasks);
 
-$normalizer = new Normalizer(realpath(__DIR__.'/..'));
+$normalizer = new Normalizer(realpath(__DIR__ . '/AdminBundle'));
 $locator = new Locator($normalizer);
 
 $runner = new TaskRunner(

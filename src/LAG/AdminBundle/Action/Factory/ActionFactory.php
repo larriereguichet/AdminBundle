@@ -3,16 +3,21 @@
 namespace LAG\AdminBundle\Action\Factory;
 
 use Exception;
+use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Action\Event\ActionCreatedEvent;
 use LAG\AdminBundle\Action\Event\ActionEvents;
-use LAG\AdminBundle\Action\Event\BeforeConfigurationEvent;
 use LAG\AdminBundle\Action\Registry\Registry;
-use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\DataProvider\Factory\DataProviderFactory;
+use LAG\AdminBundle\DataProvider\Loader\EntityLoader;
+use LAG\AdminBundle\DataProvider\Loader\PaginatedEntityLoader;
+use LAG\AdminBundle\Field\Factory\FieldFactory;
+use LAG\AdminBundle\Filter\Factory\FilterFormBuilder;
 use LAG\AdminBundle\LAGAdminBundle;
 use LogicException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * This class allow to inject an Admin into a Controller.
@@ -22,90 +27,136 @@ class ActionFactory
     /**
      * @var ConfigurationFactory
      */
-    protected $configurationFactory;
+    private $configurationFactory;
 
     /**
      * @var EventDispatcherInterface
      */
-    protected $eventDispatcher;
+    private $eventDispatcher;
     
     /**
      * @var Registry
      */
-    protected $registry;
+    private $registry;
+
+    /**
+     * @var FieldFactory
+     */
+    private $fieldFactory;
+
+    /**
+     * @var FilterFormBuilder
+     */
+    private $filterFormBuilder;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
     
+    /**
+     * @var DataProviderFactory
+     */
+    private $dataProviderFactory;
+
     /**
      * ActionFactory constructor.
      *
      * @param ConfigurationFactory     $configurationFactory
      * @param EventDispatcherInterface $eventDispatcher
-     * @param Registry                 $registry
+     * @param FieldFactory             $fieldFactory
+     * @param FilterFormBuilder        $filterFormBuilder
+     * @param FormFactoryInterface     $formFactory
+     * @param DataProviderFactory      $dataProviderFactory
      */
     public function __construct(
         ConfigurationFactory $configurationFactory,
         EventDispatcherInterface $eventDispatcher,
-        Registry $registry
+        FieldFactory $fieldFactory,
+        FilterFormBuilder $filterFormBuilder,
+        FormFactoryInterface $formFactory,
+        DataProviderFactory $dataProviderFactory
     ) {
         $this->configurationFactory = $configurationFactory;
         $this->eventDispatcher = $eventDispatcher;
-        $this->registry = $registry;
+        $this->fieldFactory = $fieldFactory;
+        $this->filterFormBuilder = $filterFormBuilder;
+        $this->formFactory = $formFactory;
+        $this->dataProviderFactory = $dataProviderFactory;
     }
-    
+
     /**
-     * Inject an ActionConfiguration into an Action controller.
+     * @param string             $name
+     * @param array              $configuration
+     * @param string             $adminName
+     * @param AdminConfiguration $adminConfiguration
      *
-     * @param mixed $controller
-     * @param Request $request
+     * @return Action
+     *
+     * @throws Exception
      */
-    public function injectConfiguration($controller, Request $request)
+    public function create($name, array $configuration, $adminName, AdminConfiguration $adminConfiguration)
     {
-        if (!$controller instanceof ActionInterface) {
-            return;
-        }
-        
-        if (!$controller->getAdmin() instanceof AdminInterface) {
-            return;
-        }
-        // retrieve actions configuration
-        $actionsConfiguration = $controller
-            ->getAdmin()
-            ->getConfiguration()
-            ->getParameter('actions')
-        ;
-        $actionName = $request->get('_route_params')[LAGAdminBundle::REQUEST_PARAMETER_ACTION];
-        
-        // if the current action name is not supported, we do nothing
-        if (!array_key_exists($actionName, $actionsConfiguration)) {
-            return;
-        }
-        // BeforeConfigurationEvent allows users to override action configuration
-        $event = new BeforeConfigurationEvent($actionName, $actionsConfiguration[$actionName], $controller->getAdmin());
-        $this
-            ->eventDispatcher
-            ->dispatch(ActionEvents::BEFORE_CONFIGURATION, $event)
-        ;
-        
-        // retrieve the current Action configuration
         $configuration = $this
             ->configurationFactory
-            ->create(
-                $actionName,
-                $controller->getAdmin()->getName(),
-                $controller->getAdmin()->getConfiguration(),
-                $event->getActionConfiguration()
-            )
+            ->create($name, $adminName, $adminConfiguration, $configuration)
+        ;
+        $fields = [];
+
+        foreach ($configuration->getParameter('fields') as $fieldName => $fieldConfiguration) {
+            $fields[$name] = $this
+                ->fieldFactory
+                ->create($fieldName, $fieldConfiguration, $configuration)
+            ;
+        }
+
+        // Retrieve a data provider and load it into the entity loader
+        $dataProvider = $this
+            ->dataProviderFactory
+            ->get($configuration->getParameter('data_provider'), $configuration->getParameter('entity'))
         ;
         
-        // allow users to listen after action creation
-        $event = new ActionCreatedEvent($controller, $controller->getAdmin());
+        if ($configuration->getParameter('pager')) {
+            $entityLoader = new PaginatedEntityLoader($dataProvider);
+        } else {
+            $entityLoader = new EntityLoader($dataProvider);
+        }
+
+        // Build the configured forms
+        $forms = [];
+        $filterForm = $this
+            ->filterFormBuilder
+            ->build($configuration)
+        ;
+
+        if (null !== $filterForm) {
+            $forms['filter_form'] = $filterForm;
+        }
+
+        if (null !== $configuration->getParameter('form')) {
+            $forms['form'] = $this
+                ->formFactory
+                ->create($configuration->getParameter('form'), $configuration->getParameter('form_options'))
+            ;
+        }
+
+        $action = new Action(
+            $name,
+            $configuration,
+            $entityLoader,
+            $fields,
+            $forms
+        );
+
+        // Allow users to listen after action creation
+        $event = new ActionCreatedEvent($action, $adminName, $adminConfiguration);
         $this
             ->eventDispatcher
             ->dispatch(
                 ActionEvents::ACTION_CREATED, $event)
         ;
-        
-        // inject the Action to the controller
-        $controller->setConfiguration($configuration);
+
+        return $action;
     }
     
     /**
@@ -145,24 +196,5 @@ class ActionFactory
         }
         
         return $actions;
-    }
-    
-    /**
-     * Return the default action service id, according to the Action and Admin names.
-     *
-     * @param string $name
-     * @param string $adminName
-     *
-     * @return string
-     */
-    protected function getDefaultActionServiceId($name, $adminName)
-    {
-        $mapping = LAGAdminBundle::getDefaultActionServiceMapping();
-        
-        if (!key_exists($name, $mapping)) {
-            throw new LogicException('Action "'.$name.'" service id was not found for admin "'.$adminName.'"');
-        }
-        
-        return $mapping[$name];
     }
 }

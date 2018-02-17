@@ -4,43 +4,24 @@ namespace LAG\AdminBundle\Controller;
 
 use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Action\Responder\ListResponder;
+use LAG\AdminBundle\Admin\Request\RequestHandlerInterface;
 use LAG\AdminBundle\Filter\Factory\FilterFormBuilder;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ListAction extends Action
+class ListAction
 {
     /**
-     * @var ListResponder
+     * @var RequestHandlerInterface
      */
-    protected $responder;
-    
-    /**
-     * @var FilterFormBuilder
-     */
-    protected $filterFormBuilder;
-    
-    /**
-     * Action constructor.
-     *
-     * @param string               $name
-     * @param FormFactoryInterface $formFactory
-     * @param ListResponder        $responder
-     * @param FilterFormBuilder    $filterFormBuilder
-     */
-    public function __construct(
-        $name,
-        FormFactoryInterface $formFactory,
-        ListResponder $responder,
-        FilterFormBuilder $filterFormBuilder
-    ) {
-        $this->name = $name;
-        $this->formFactory = $formFactory;
-        $this->responder = $responder;
-        $this->filterFormBuilder = $filterFormBuilder;
+    private $requestHandler;
+
+    public function __construct(RequestHandlerInterface $requestHandler)
+    {
+        $this->requestHandler = $requestHandler;
     }
-    
+
     /**
      * @param Request $request
      *
@@ -48,6 +29,13 @@ class ListAction extends Action
      */
     public function __invoke(Request $request)
     {
+        $admin = $this
+            ->requestHandler
+            ->handle($request)
+        ;
+        $admin->handleRequest($request);
+
+
         // build the filters form
         $filterForm = $this
             ->filterFormBuilder

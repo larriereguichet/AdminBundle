@@ -92,23 +92,24 @@ class FieldFactory
     
     
     /**
-     * Create a new field with its renderer.
+     * Create a new field instance according to the given configuration.
      *
-     * @param                     $fieldName
+     * @param string              $name
      * @param array               $configuration
      * @param ActionConfiguration $actionConfiguration
      *
      * @return FieldInterface
+     *
      * @throws Exception
      */
-    public function create($fieldName, array $configuration = [], ActionConfiguration $actionConfiguration)
+    public function create($name, array $configuration = [], ActionConfiguration $actionConfiguration)
     {
         $configuration = $this->resolveTopLevelConfiguration($configuration, $actionConfiguration);
-        $field = $this->instanciateField($fieldName, $configuration['type']);
+        $field = $this->instanciateField($name, $configuration['type']);
         
         $fieldConfiguration = $this
             ->configurationFactory
-            ->create($field, $configuration['options'])
+            ->create($configuration['options'])
         ;
         $field->setConfiguration($fieldConfiguration);
         

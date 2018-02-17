@@ -52,8 +52,7 @@ services:
     # Request handler
     lag.admin.request_handler:
         class: LAG\AdminBundle\Admin\Request\RequestHandler
-        arguments:
-            - '@lag.admin.registry'
+        autowire: true
 
     # Registry
     lag.admin.registry:

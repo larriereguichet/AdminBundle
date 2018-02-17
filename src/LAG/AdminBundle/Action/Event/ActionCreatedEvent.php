@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Action\Event;
 
 use LAG\AdminBundle\Action\ActionInterface;
-use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use Symfony\Component\EventDispatcher\Event;
 
 class ActionCreatedEvent extends Event
@@ -11,23 +11,30 @@ class ActionCreatedEvent extends Event
     /**
      * @var ActionInterface
      */
-    protected $action;
+    private $action;
 
     /**
-     * @var AdminInterface
+     * @var string
      */
-    protected $admin;
+    private $adminName;
+
+    /**
+     * @var AdminConfiguration
+     */
+    private $adminConfiguration;
 
     /**
      * ActionCreatedEvent constructor.
      *
-     * @param ActionInterface $action
-     * @param AdminInterface $admin
+     * @param ActionInterface    $action
+     * @param string             $adminName
+     * @param AdminConfiguration $adminConfiguration
      */
-    public function __construct(ActionInterface $action, AdminInterface $admin)
+    public function __construct(ActionInterface $action, $adminName, AdminConfiguration $adminConfiguration)
     {
         $this->action = $action;
-        $this->admin = $admin;
+        $this->adminName = $adminName;
+        $this->adminConfiguration = $adminConfiguration;
     }
 
     /**
@@ -39,10 +46,18 @@ class ActionCreatedEvent extends Event
     }
 
     /**
-     * @return AdminInterface
+     * @return string
      */
-    public function getAdmin()
+    public function getAdminName()
     {
-        return $this->admin;
+        return $this->adminName;
+    }
+
+    /**
+     * @return AdminConfiguration
+     */
+    public function getAdminConfiguration()
+    {
+        return $this->adminConfiguration;
     }
 }
