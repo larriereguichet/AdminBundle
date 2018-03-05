@@ -6,6 +6,16 @@ use JK\Configuration\Configuration;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Field\AbstractField;
+use LAG\AdminBundle\Field\ActionCollectionField;
+use LAG\AdminBundle\Field\ActionField;
+use LAG\AdminBundle\Field\ArrayField;
+use LAG\AdminBundle\Field\BooleanField;
+use LAG\AdminBundle\Field\CollectionField;
+use LAG\AdminBundle\Field\CountField;
+use LAG\AdminBundle\Field\DateField;
+use LAG\AdminBundle\Field\LinkField;
+use LAG\AdminBundle\Field\MappedField;
+use LAG\AdminBundle\Field\StringField;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,6 +39,7 @@ class ApplicationConfiguration extends Configuration
                 'enable_security' => true,
                 'enable_menus' => true,
                 'enable_homepage' => true,
+                'enable_translation' => false,
                 'title' => 'AdminBundle application',
                 'description' => '',
                 'locale' => 'en',
@@ -43,7 +54,7 @@ class ApplicationConfiguration extends Configuration
                 'bootstrap' => true,
                 'date_format' => 'Y/m/d',
                 // string length before truncation (0 means no truncation)
-                'string_length' => 0,
+                'string_length' => 200,
                 'string_length_truncate' =>  '...',
                 'max_per_page' => 25,
                 'admin_class' => Admin::class,
@@ -139,15 +150,16 @@ class ApplicationConfiguration extends Configuration
     {
         $defaultMapping = [
             AbstractField::TYPE_STRING => StringField::class,
+            AbstractField::TYPE_INTEGER => StringField::class,
             AbstractField::TYPE_ARRAY => ArrayField::class,
-            AbstractField::TYPE_ACTION => Action::class,
-            AbstractField::TYPE_COLLECTION => Collection::class,
-            AbstractField::TYPE_BOOLEAN => Boolean::class,
-            AbstractField::TYPE_MAPPED => Mapped::class,
-            AbstractField::TYPE_ACTION_COLLECTION => ActionCollection::class,
-            AbstractField::TYPE_LINK => Link::class,
-            AbstractField::TYPE_DATE => Date::class,
-            AbstractField::TYPE_COUNT => Count::class,
+            AbstractField::TYPE_ACTION => ActionField::class,
+            AbstractField::TYPE_COLLECTION => CollectionField::class,
+            AbstractField::TYPE_BOOLEAN => BooleanField::class,
+            AbstractField::TYPE_MAPPED => MappedField::class,
+            AbstractField::TYPE_ACTION_COLLECTION => ActionCollectionField::class,
+            AbstractField::TYPE_LINK => LinkField::class,
+            AbstractField::TYPE_DATE => DateField::class,
+            AbstractField::TYPE_COUNT => CountField::class,
         ];
 
         $resolver->setDefault('fields_mapping', $defaultMapping);

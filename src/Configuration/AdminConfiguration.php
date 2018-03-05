@@ -48,7 +48,6 @@ class AdminConfiguration extends Configuration
                 'routing_name_pattern' => $this->applicationConfiguration->getParameter('routing_name_pattern'),
                 'controller' => AdminAction::class,
                 'max_per_page' => $this->applicationConfiguration->getParameter('max_per_page'),
-                'data_provider' => null,
                 'translation_pattern' => $this
                     ->applicationConfiguration
                     ->getParameter('translation')['pattern'],
@@ -61,10 +60,16 @@ class AdminConfiguration extends Configuration
                     ]
                 ],
                 'permissions' => $this->applicationConfiguration->getParameter('permissions'),
+                'string_length' => $this->applicationConfiguration->getParameter('string_length'),
+                'string_length_truncate' => $this->applicationConfiguration->getParameter('string_length_truncate'),
+                'date_format' => $this->applicationConfiguration->getParameter('date_format'),
+                'data_provider' => 'lag.admin.orm_data_provider',
             ])
             ->setRequired([
                 'entity',
             ])
+            ->setAllowedTypes('string_length', 'integer')
+            ->setAllowedTypes('string_length_truncate', 'string')
             ->setAllowedValues('pager', [
                 null,
                 'pagerfanta',

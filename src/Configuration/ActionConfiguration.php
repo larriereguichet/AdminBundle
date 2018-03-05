@@ -5,10 +5,10 @@ namespace LAG\AdminBundle\Configuration;
 use Closure;
 use JK\Configuration\Configuration;
 use LAG\AdminBundle\Admin\Action;
-use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\LAGAdminBundle;
+use LAG\AdminBundle\Routing\RoutingLoader;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -82,6 +82,9 @@ class ActionConfiguration extends Configuration
                 'forms' => [],
                 'template' => $this->getDefaultTemplate(),
                 'sortable' => false,
+                'string_length' => $this->adminConfiguration->getParameter('string_length'),
+                'string_length_truncate' => $this->adminConfiguration->getParameter('string_length_truncate'),
+                'date_format' => $this->adminConfiguration->getParameter('date_format'),
             ])
             ->setAllowedTypes('title', 'string')
             ->setAllowedTypes('class', 'string')
@@ -94,6 +97,8 @@ class ActionConfiguration extends Configuration
             ->setAllowedTypes('route_path', 'string')
             ->setAllowedTypes('route_defaults', 'array')
             ->setAllowedTypes('route_requirements', 'array')
+            ->setAllowedTypes('string_length', 'integer')
+            ->setAllowedTypes('string_length_truncate', 'string')
             ->setNormalizer('fields', $this->getFieldsNormalizer())
             ->setNormalizer('order', $this->getOrderNormalizer())
             ->setNormalizer('load_strategy', $this->getLoadStrategyNormalizer())
@@ -137,16 +142,10 @@ class ActionConfiguration extends Configuration
                     implode(', ', array_keys($this->adminConfiguration->getParameter('actions'))))
             );
         }
-        // generate the route name using the configured pattern
-        $routeName = str_replace(
-            '{admin}',
-            strtolower($this->adminName),
-            $this->adminConfiguration->getParameter('routing_name_pattern')
-        );
-        $routeName = str_replace(
-            '{action}',
+        $routeName = RoutingLoader::generateRouteName(
+            $this->adminName,
             $this->actionName,
-            $routeName
+            $this->adminConfiguration->getParameter('routing_name_pattern')
         );
 
         return $routeName;
@@ -220,11 +219,11 @@ class ActionConfiguration extends Configuration
         return function (Options $options, $value) {
             if (!$value) {
                 if ($this->actionName == 'create') {
-                    $value = AdminInterface::LOAD_STRATEGY_NONE;
+                    $value = LAGAdminBundle::LOAD_STRATEGY_NONE;
                 } else if ($this->actionName == 'list') {
-                    $value = AdminInterface::LOAD_STRATEGY_MULTIPLE;
+                    $value = LAGAdminBundle::LOAD_STRATEGY_MULTIPLE;
                 } else {
-                    $value = AdminInterface::LOAD_STRATEGY_UNIQUE;
+                    $value = LAGAdminBundle::LOAD_STRATEGY_UNIQUE;
                 }
             }
 
@@ -274,6 +273,30 @@ class ActionConfiguration extends Configuration
 
             return $value;
         };
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdminName(): string
+    {
+        return $this->adminName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getActionName(): string
+    {
+        return $this->actionName;
+    }
+
+    /**
+     * @return AdminConfiguration
+     */
+    public function getAdminConfiguration(): AdminConfiguration
+    {
+        return $this->adminConfiguration;
     }
 
     /**
