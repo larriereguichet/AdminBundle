@@ -39,7 +39,7 @@ class ViewFactory
         $this->fieldFactory = $fieldFactory;
         $this->menuFactory = $menuFactory;
     }
-    
+
     /**
      * Create a view for a given Admin and Action.
      *
@@ -48,19 +48,22 @@ class ViewFactory
      * @param AdminConfiguration  $adminConfiguration
      * @param ActionConfiguration $actionConfiguration
      *
+     * @param                     $entities
      * @return View
      */
     public function create(
         $actionName,
         $adminName,
         AdminConfiguration $adminConfiguration,
-        ActionConfiguration $actionConfiguration
+        ActionConfiguration $actionConfiguration,
+        $entities
     ) {
         $fields = $this
             ->fieldFactory
             ->getFields($actionConfiguration)
         ;
         $view = new View($actionName, $adminName, $actionConfiguration, $adminConfiguration, $fields);
+        $view->setEntities($entities);
     
         return $view;
     }

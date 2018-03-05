@@ -3,12 +3,14 @@
 namespace LAG\AdminBundle\Factory;
 
 use Exception;
+use LAG\AdminBundle\Admin\Exception\AdminException;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Field\TwigAwareFieldInterface;
 use LAG\AdminBundle\Field\TwigAwareInterface;
-use LAG\AdminBundle\Field\TranslatorAwareInterface;
+use LAG\AdminBundle\Field\TranslatorAwareFieldInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Environment;
@@ -104,15 +106,22 @@ class FieldFactory
      */
     public function create($name, array $configuration = [], ActionConfiguration $actionConfiguration)
     {
+        $resolver = new OptionsResolver();
         $configuration = $this->resolveTopLevelConfiguration($configuration, $actionConfiguration);
+
         $field = $this->instanciateField($name, $configuration['type']);
-        
-        $fieldConfiguration = $this
-            ->configurationFactory
-            ->create($configuration['options'])
-        ;
-        $field->setConfiguration($fieldConfiguration);
-        
+        $field->configureOptions($resolver, $actionConfiguration);
+
+        try {
+            $field->setOptions($resolver->resolve($configuration['options']));
+        } catch (Exception $exception) {
+            throw new \LAG\AdminBundle\Exception\Exception(
+                'An error has occurred when resolving the options for the field "'.$name.'"',
+                $exception->getCode(),
+                $exception
+            );
+        }
+
         return $field;
     }
 
@@ -150,10 +159,10 @@ class FieldFactory
             throw new Exception("Field class {$fieldClass} must implements ".FieldInterface::class);
         }
     
-        if ($field instanceof TranslatorAwareInterface) {
+        if ($field instanceof TranslatorAwareFieldInterface) {
             $field->setTranslator($this->translator);
         }
-        if ($field instanceof TwigAwareInterface) {
+        if ($field instanceof TwigAwareFieldInterface) {
             $field->setTwig($this->twig);
         }
     
