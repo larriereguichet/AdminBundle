@@ -79,6 +79,10 @@ services:
     lag.admin.view_factory:
         class: LAG\AdminBundle\Factory\ViewFactory
         autowire: true
+
+    lag.admin.data_provider_factory:
+        class: LAG\AdminBundle\Factory\DataProviderFactory
+        autowire: true
     #################
 
     ### Twig extension ###
@@ -88,3 +92,11 @@ services:
         tags:
             - {name: twig.extension}
     ######################
+
+    ### DataProviders ###
+    lag.admin.orm_data_provider:
+        class: LAG\AdminBundle\DataProvider\DoctrineOrmDataProvider
+        autowire: true
+        tags:
+            - {name: lag.admin.data_provider}
+    #####################
