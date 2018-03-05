@@ -1,0 +1,126 @@
+{% extends admin_config('base_template') %}
+
+{% block content %}
+    <h1>{{ admin.configuration.getParameter('title') | trans }}</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            {% for field in admin.fields %}
+                <th class="text-dark">
+                    {% if field.sortable %}
+                        <a href="" class="text-dark">
+                            {{ admin_field_header(field) }}
+                        </a>
+                    {% else %}
+                        {{ field.name | capitalize }}
+                    {% endif %}
+                </th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for entity in admin.entities %}
+            <tr>
+                {% for field in admin.fields %}
+                    <td>
+                        {{ admin_field(field, entity) | raw }}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{#{% block content2 %}#}
+    {#<h1 class="page-header">#}
+        {#{{ admin.configuration.getParameter('title') | trans }}#}
+    {#</h1>#}
+
+    {#<div class="row">#}
+        {#<div class="col-12">#}
+            {#{% include '@LAGAdmin/List/filters.html.twig' %}#}
+        {#</div>#}
+
+        {#{% if admin.pager and admin.pager.haveToPaginate %}#}
+            {#<div class="col-lg-6">#}
+                {#{% include '@LAGAdmin/List/pagination.html.twig' %}#}
+            {#</div>#}
+        {#{% endif %}#}
+    {#</div>#}
+
+    {#<div class="{{ admin.name }}-list admin-list">#}
+        {#{% if admin.entities | length > 0 %}#}
+
+            {#{% spaceless %}#}
+                {#{% if form is defined %}#}
+                    {#<form action="" method="post" class="selectable-list">#}
+                    {#<div class="row">#}
+                        {#<div class="col-lg-3">#}
+                            {#{{ form_widget(form.actions) }}#}
+                        {#</div>#}
+                        {#<div class="col-lg-3">#}
+                            {#<input type="submit"#}
+                                   {#value="{{ 'lag.admin.mass_action' | trans }}"#}
+                                   {#class="btn btn-default"/>#}
+                        {#</div>#}
+                    {#</div>#}
+                    {#<div class="row">#}
+                        {#<div class="col-lg-12 text-danger">#}
+                            {#{{ form_errors(form) }}#}
+                        {#</div>#}
+                    {#</div>#}
+                {#{% endif %}#}
+
+                {#<div class="table-responsive">#}
+                    {#<table class="table table-hover table-sort">#}
+                        {#<caption>#}
+                            {#{{ 'lag.admin.element_count' | trans({#}
+                                {#'%page_count%': admin.entities | length,#}
+                                {#'%total_count%': admin.totalCount#}
+                            {#}) }}#}
+                        {#</caption>#}
+                        {#<thead>#}
+                        {#{% block table_headers %}#}
+                            {#<tr class="text-dark">#}
+                                {#{% for field in admin.fields %}#}
+
+                                    {#{% if field.name != '_actions' %}#}
+                                        {#{% include '@LAGAdmin/List/_columns.httml.twig' %}#}
+                                    {#{% endif %}#}
+
+                                {#{% endfor %}#}
+                            {#</tr>#}
+                        {#{% endblock %}#}
+                        {#</thead>#}
+                        {#<tbody>#}
+                        {#{% for entity in admin.entities %}#}
+                            {#<tr>#}
+                                {#{% for field in admin.fields %}#}
+                                    {#<td class="{{ field.configuration('column_class') }}">{{ field(field, entity) | raw }}</td>#}
+                                {#{% endfor %}#}
+                            {#</tr>#}
+                        {#{% endfor %}#}
+                        {#</tbody>#}
+                    {#</table>#}
+
+                    {#{% if form is defined %}#}
+                        {#{{ form_rest(form) }}#}
+                    {#{% endif %}#}
+                {#</div>#}
+                {#</form>#}
+
+                {#{% if admin.haveToPaginate | default(false) %}#}
+                    {#<div class="row">#}
+                        {#<div class="col-lg-6 col-lg-offset-6">#}
+                            {#{% include '@LAGAdmin/List/pagination.html.twig' %}#}
+                        {#</div>#}
+                    {#</div>#}
+                {#{% endif %}#}
+            {#{% endspaceless %}#}
+        {#{% else %}#}
+            {#<p>{{ 'lag.admin.no_record' | trans }}</p>#}
+        {#{% endif %}#}
+    {#</div>#}
+{#{% endblock %}#}

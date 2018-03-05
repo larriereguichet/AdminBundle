@@ -1,0 +1,15 @@
+{% spaceless %}
+    {% set url = options.url %}
+
+    {% if options.route %}
+        {% set url = path(options.route, options.parameters) %}
+    {% endif %}
+
+    <a href="{{ url }}"
+       target="{{ options.target }}"
+       class="{{ options.class }}"
+       title="{{ options.title | default(options.text) | trans({}, 'admin') }}">
+        {# font awesome icons #}
+        {% if options.icon %}<i class="fa fa-{{ options.icon }}"></i>&nbsp;{% endif %}{{ options.text | trans }}
+    </a>
+{% endspaceless %}
