@@ -5,17 +5,13 @@ namespace LAG\AdminBundle\Routing;
 use Exception;
 use LAG\AdminBundle\Controller\HomeAction;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Event\AdminEvents;
-use LAG\AdminBundle\Event\ConfigurationEvent;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -69,6 +65,30 @@ class RoutingLoader implements LoaderInterface
         $this->eventDispatcher = $eventDispatcher;
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
         $this->configurationFactory = $configurationFactory;
+    }
+
+    /**
+     * @param string $adminName
+     * @param string $actionName
+     * @param string $routingPattern
+     *
+     * @return string
+     */
+    public static function generateRouteName(string $adminName, string $actionName, string $routingPattern)
+    {
+        // generate the route name using the configured pattern
+        $routeName = str_replace(
+            '{admin}',
+            strtolower($adminName),
+            $routingPattern
+        );
+        $routeName = str_replace(
+            '{action}',
+            $actionName,
+            $routeName
+        );
+
+        return $routeName;
     }
 
     /**
