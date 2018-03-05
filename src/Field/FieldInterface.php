@@ -2,53 +2,22 @@
 
 namespace LAG\AdminBundle\Field;
 
-use JK\Configuration\Configuration;
+use LAG\AdminBundle\Configuration\ActionConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 interface FieldInterface
 {
-    /**
-     * Render value of the field.
-     *
-     * @param mixed $value Value to render
-     *
-     * @return mixed
-     */
-    public function render($value);
-    
-    /**
-     * Return the Field's name.
-     *
-     * @return string
-     */
-    public function getName();
+    public function getName(): string;
 
-    /**
-     * Return the Field's type.
-     *
-     * @return string
-     */
-    public function getType();
-    
-    /**
-     * Return the value of a configuration parameter.
-     *
-     * @param string    $name
-     *
-     * @param mixed|null $default
-     *
-     * @return mixed
-     */
-    public function getConfiguration($name, $default = null);
-    
-    /**
-     * Return the Field's configuration class.
-     *
-     * @return string
-     */
-    public function getConfigurationClass();
-    
-    /**
-     * @param Configuration $configuration
-     */
-    public function setConfiguration(Configuration $configuration);
+    public function getOptions(): array;
+
+    public function getOption(string $name);
+
+    public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration);
+
+    public function setOptions(array $options);
+
+    public function isSortable(): bool;
+
+    public function render($value): string;
 }
