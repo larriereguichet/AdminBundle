@@ -15,16 +15,15 @@ class DataProviderCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->has('lag.admin.data_providers_factory')) {
+        if (!$container->has('lag.admin.data_provider_factory')) {
             return;
         }
-
-        $definition = $container->findDefinition('lag.admin.data_providers_factory');
-        $taggedServices = $container->findTaggedServiceIds('data_provider');
+        $definition = $container->findDefinition('lag.admin.data_provider_factory');
+        $taggedServices = $container->findTaggedServiceIds('lag.admin.data_provider');
 
         foreach ($taggedServices as $id => $tags) {
             $definition->addMethodCall(
-                'addDataProvider',
+                'add',
                 [
                     $id,
                     new Reference($id),
