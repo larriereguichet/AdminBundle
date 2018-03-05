@@ -6,6 +6,6 @@ class ActionField extends LinkField
 {
     public function isSortable(): bool
     {
-        return false;
+        return true;
     }
 }
