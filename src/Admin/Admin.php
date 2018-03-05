@@ -2,9 +2,11 @@
 
 namespace LAG\AdminBundle\Admin;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\EntityEvent;
 use LAG\AdminBundle\Event\FormEvent;
 use LAG\AdminBundle\Event\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
@@ -41,6 +43,11 @@ class Admin implements AdminInterface
     private $action;
 
     /**
+     * @var array
+     */
+    private $entities;
+
+    /**
      * Admin constructor.
      *
      * @param Resource                 $resource
@@ -56,6 +63,7 @@ class Admin implements AdminInterface
         $this->configuration = $configuration;
         $this->resource = $resource;
         $this->eventDispatcher = $eventDispatcher;
+        $this->entities = new ArrayCollection();
     }
 
     /**
@@ -76,6 +84,9 @@ class Admin implements AdminInterface
         $event = new FormEvent();
         $this->eventDispatcher->dispatch(AdminEvents::HANDLE_FORM, $event);
 
+        $event = new EntityEvent($this->configuration, $this->action->getConfiguration());
+        $this->eventDispatcher->dispatch(AdminEvents::ENTITY, $event);
+        $this->entities = $event->getEntities();
     }
 
     /**
@@ -139,5 +150,10 @@ class Admin implements AdminInterface
         }
 
         return $this->action;
+    }
+
+    public function getEntities()
+    {
+        return $this->entities;
     }
 }

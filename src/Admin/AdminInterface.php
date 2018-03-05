@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Admin;
 
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Resource\Resource;
+use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,4 +21,8 @@ interface AdminInterface
     public function getConfiguration(): AdminConfiguration;
 
     public function getAction(): ActionInterface;
+
+    public function getEntities();
+
+    public function createView(): ViewInterface;
 }
