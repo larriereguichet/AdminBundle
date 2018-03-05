@@ -3,10 +3,12 @@
 namespace LAG\AdminBundle\Event\Subscriber;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\ConfigurationEvent;
+use LAG\AdminBundle\LAGAdminBundle;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -58,7 +60,8 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
         $this->addDefaultActions($configuration);
         $this->addDefaultTopMenu($configuration, $event->getAdminName());
-        $this->addDefaultFields($configuration, $event->getEntityClass());
+        $this->addDefaultFields($configuration, $event->getEntityClass(), $event->getAdminName());
+        $this->addDefaultStrategy($configuration);
 
         $event->setConfiguration($configuration);
     }
@@ -70,7 +73,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      */
     private function addDefaultActions(array &$configuration)
     {
-        if (!array_key_exists('actions', $configuration) || is_array($configuration['actions'])) {
+        if (!key_exists('actions', $configuration) || !is_array($configuration['actions'])) {
             $configuration['actions'] = [];
         }
 
@@ -87,14 +90,14 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
     private function addDefaultTopMenu(array &$configuration, $adminName)
     {
-        if (!array_key_exists('list', $configuration)) {
+        if (!key_exists('list', $configuration)) {
             return;
         }
-        if (!array_key_exists('create', $configuration)) {
+        if (!key_exists('create', $configuration)) {
             return;
         }
 
-        if (!array_key_exists('menus', $configuration['list'])) {
+        if (!key_exists('menus', $configuration['list'])) {
             $configuration['list']['menus'] = [];
         }
 
@@ -114,9 +117,9 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         ];
     }
 
-    private function addDefaultFields(array &$configuration, $entityClass)
+    private function addDefaultFields(array &$configuration, $entityClass, $adminName)
     {
-        $fieldMapping = [
+        $fieldsMapping = [
             'string' => [
                 'type' => 'string',
                 'options' => [
@@ -134,28 +137,119 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         ];
 
         foreach ($configuration['actions'] as $actionName => $action) {
+            if (null === $action) {
+                $action = [];
+            }
+            $metadata = null;
+
+            try {
+                // We could not use the hasMetadataFor() method as it is not working if the entity is not loaded. But
+                // the getMetadataFor() method could throw an exception if the class is not found
+                $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($entityClass);
+            } catch (Exception $exception) {}
+
             // If fields are already defined, nothing to do
-            if (array_key_exists('fields', $action) && is_array($action['fields']) && count($action['fields'])) {
-                continue;
+            if (key_exists('fields', $action) && is_array($action['fields']) && count($action['fields'])) {
+                $fields = $action['fields'];
+            } else {
+                $fields = [];
+
+                // Get fields names from the metadata if no configuration is defined
+                foreach ($metadata->getFieldNames() as $fieldName) {
+                    $fields[$fieldName] = null;
+                }
             }
+            $actionField = $this->getActionField($metadata->getFieldNames());
 
-            if (!$this->entityManager->getMetadataFactory()->hasMetadataFor($entityClass)) {
-                continue;
-            }
-            $metadata = $this
-                ->entityManager
-                ->getMetadataFactory()
-                ->getMetadataFor($entityClass)
-            ;
+            foreach ($fields as $fieldName => $fieldConfiguration) {
+                $fieldType = $metadata->getTypeOfField($fieldName);
 
-            foreach ($metadata->getFieldNames() as $fieldName) {
-                $fieldConfiguration = [];
+                if (
+                    'list' === $actionName &&
+                    $fieldName === $actionField &&
+                    key_exists('edit', $configuration['actions'])
+                ) {
+                    $fieldConfiguration = [
+                        'type' => 'action',
+                        'options' => [
+                            'admin' => $adminName,
+                            'action' => 'edit',
+                            'parameters' => [
+                                'id' => null,
+                            ],
+                        ]
+                    ];
 
-                if (!array_key_exists($metadata->getTypeOfField($fieldName), $fieldMapping)) {
-                    $fieldConfiguration = $fieldMapping[$metadata->getTypeOfField($fieldName)];
+                } else if (
+                    '_delete' === $fieldName &&
+                    !$metadata->hasField('_delete') &&
+                    null === $fieldConfiguration &&
+                    key_exists('delete', $configuration['actions'])
+                ) {
+                    // If a "delete" field is declared, and if it is not configured in the metadata, and if no
+                    // configuration is declared for this field, and if the "delete" action is allowed, we add a default
+                    // "button" configuration
+                    $fieldConfiguration = [
+                        'type' => 'link',
+                        'options' => [
+                            'admin' => $adminName,
+                            'action' => 'delete',
+                            'parameters' => [
+                                'id' => null,
+                            ],
+                            'text' => 'test',
+                            'class' => 'btn btn-sm btn-danger',
+                            'icon' => 'remove',
+                        ],
+                    ];
+
+                } else if (key_exists($fieldType, $fieldsMapping)) {
+                    $fieldConfiguration = $fieldsMapping[$metadata->getTypeOfField($fieldName)];
                 }
                 $configuration['actions'][$actionName]['fields'][$fieldName] = $fieldConfiguration;
             }
         }
+    }
+
+    private function addDefaultStrategy(array &$configuration)
+    {
+        $mapping = [
+            'list' => LAGAdminBundle::LOAD_STRATEGY_MULTIPLE,
+            'create' => LAGAdminBundle::LOAD_STRATEGY_NONE,
+            'delete' => LAGAdminBundle::LOAD_STRATEGY_UNIQUE,
+            'edit' => LAGAdminBundle::LOAD_STRATEGY_UNIQUE,
+        ];
+
+        foreach ($configuration['actions'] as $name => $action) {
+            if (null === $action) {
+                continue;
+            }
+
+            if (key_exists('load_strategy', $action)) {
+                continue;
+            }
+
+            if (!key_exists($name, $mapping)) {
+                continue;
+            }
+            $configuration['actions'][$name]['load_strategy'] = $mapping[$name];
+        }
+    }
+
+    private function getActionField(array $fields)
+    {
+        $mapping = [
+            'title',
+            'name',
+            'id',
+        ];
+
+        foreach ($mapping as $name) {
+            if (in_array($name, $fields)) {
+                return $name;
+            }
+        }
+
+        return null;
     }
 }
