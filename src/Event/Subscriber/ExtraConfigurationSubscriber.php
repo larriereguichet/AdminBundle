@@ -197,7 +197,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                             'parameters' => [
                                 'id' => null,
                             ],
-                            'text' => 'test',
+                            'text' => 'Delete',
                             'class' => 'btn btn-sm btn-danger',
                             'icon' => 'remove',
                         ],
