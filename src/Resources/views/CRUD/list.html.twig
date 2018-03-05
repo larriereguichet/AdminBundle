@@ -13,7 +13,7 @@
                             {{ admin_field_header(field) }}
                         </a>
                     {% else %}
-                        {{ field.name | capitalize }}
+                        {{ admin_field_header(field) }}
                     {% endif %}
                 </th>
             {% endfor %}

@@ -119,8 +119,21 @@ class AdminExtension extends Twig_Extension
         return $this->router->generate($configuration->getParameter('route'));
     }
 
+    /**
+     * @param FieldInterface $field
+     * @return string
+     *
+     * @throws Exception
+     */
     public function getFieldHeader(FieldInterface $field)
     {
+        dump($field->getName());
+        dump($this->startWith($field->getName(), '_'));
+
+        if ($this->startWith($field->getName(), '_')) {
+            return '';
+        }
+
         if ($this->applicationConfiguration->getParameter('enable_translation')) {
             throw new Exception('Translation is not implemented yet');
         } else {

@@ -11,7 +11,7 @@ trait StringUtilTrait
      *
      * @return string The camelized string
      */
-    public function camelize($id)
+    public function camelize($id): string
     {
         return strtr(ucwords(strtr($id, ['_' => ' ', '.' => '_ ', '\\' => '_ '])), [' ' => '']);
     }
@@ -23,7 +23,7 @@ trait StringUtilTrait
      *
      * @return string The underscored string
      */
-    public function underscore($id)
+    public function underscore($id): string
     {
         return strtolower(preg_replace([
             '/([A-Z]+)([A-Z][a-z])/',
@@ -34,5 +34,10 @@ trait StringUtilTrait
             ],
             str_replace('_', '.', $id))
         );
+    }
+
+    public function startWith($string, $start): bool
+    {
+        return substr($string, 0, strlen($start)) === $start;
     }
 }
