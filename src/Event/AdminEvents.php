@@ -13,4 +13,6 @@ class AdminEvents
     const VIEW = 'lag.admin.view';
 
     const MENU = 'lag.admin.menu';
+
+    const ENTITY = 'lag.admin.entity';
 }
