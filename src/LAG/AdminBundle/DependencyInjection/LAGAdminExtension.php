@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 /**
  * Load AdminBundle configuration into the container.
  */
-class LAGAdminExtension extends Extension
+class LAGAdminExtensionOLD extends Extension
 {
     /**
      * Load the configuration into the container.

@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Field\Configuration;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ActionConfiguration extends LinkConfiguration
+class ActionConfigurationOLD extends LinkConfiguration
 {
     public function configureOptions(OptionsResolver $resolver)
     {

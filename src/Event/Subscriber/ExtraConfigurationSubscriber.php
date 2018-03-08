@@ -45,8 +45,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
         EntityManagerInterface $entityManager
-    )
-    {
+    ) {
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
         $this->entityManager = $entityManager;
     }
@@ -62,6 +61,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         $this->addDefaultTopMenu($configuration, $event->getAdminName());
         $this->addDefaultFields($configuration, $event->getEntityClass(), $event->getAdminName());
         $this->addDefaultStrategy($configuration);
+        $this->addDefaultRouteParameters($configuration);
 
         $event->setConfiguration($configuration);
     }
@@ -233,6 +233,26 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                 continue;
             }
             $configuration['actions'][$name]['load_strategy'] = $mapping[$name];
+        }
+    }
+
+    private function addDefaultRouteParameters(array &$configuration)
+    {
+        $mapping = [
+            'edit' => [
+                'id' => '\d+',
+            ],
+            'delete' => [
+                'id' => '\d+',
+            ],
+        ];
+
+        foreach ($configuration['actions'] as $name => $actionConfiguration) {
+            if (key_exists($name, $mapping) && !key_exists('route_requirements', $actionConfiguration)) {
+                $configuration['actions'][$name]['route_requirements'] = [
+                    'id' => '*',
+                ];
+            }
         }
     }
 

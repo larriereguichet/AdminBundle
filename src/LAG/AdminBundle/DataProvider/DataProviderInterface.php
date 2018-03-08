@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\DataProvider;
 /**
  * Generic data provider interface
  */
-interface DataProviderInterface
+interface DataProviderInterfaceOLD
 {
     /**
      * Save an entity.

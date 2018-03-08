@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * Admin utils functions for twig
  */
-class AdminExtension extends Twig_Extension
+class AdminExtensionOLD extends Twig_Extension
 {
     use TranslationKeyTrait;
 
@@ -103,33 +103,6 @@ class AdminExtension extends Twig_Extension
         $this->requestStack = $requestStack;
         $this->menuProvider = $menuProvider;
         $this->applicationConfigurationStorage = $applicationConfigurationStorage;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFunctions()
-    {
-        return [
-            new Twig_SimpleFunction('getSortColumnUrl', [$this, 'getSortColumnUrl']),
-            new Twig_SimpleFunction('getSortColumnIconClass', [$this, 'getSortColumnIconClass']),
-            new Twig_SimpleFunction('field', [$this, 'field']),
-            new Twig_SimpleFunction('field_title', [$this, 'fieldTitle']),
-            new Twig_SimpleFunction('route_parameters', [$this, 'routeParameters']),
-            new Twig_SimpleFunction('admin_menu_render', [$this, 'renderMenu']),
-            new Twig_SimpleFunction('admin_config', [$this, 'getConfigParameter']),
-            new Twig_SimpleFunction('admin_url', [$this, 'generateUrl']),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getFilters()
-    {
-        return [
-            new Twig_SimpleFilter('camelize', [$this, 'camelize']),
-        ];
     }
 
     /**

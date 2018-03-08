@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Field;
 
 use Symfony\Component\Translation\TranslatorInterface;
 
-interface TranslatorAwareInterface
+interface TranslatorAwareInterfaceOLD
 {
     /**
      * Defines translator.

@@ -4,12 +4,12 @@ namespace LAG\AdminBundle\Field\Field;
 
 use LAG\AdminBundle\Field\AbstractField;
 use LAG\AdminBundle\Field\Configuration\MappedConfiguration;
-use LAG\AdminBundle\Field\TranslatorAwareInterface;
+use LAG\AdminBundle\Field\TranslatorAwareFieldInterface;
 use LogicException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class Mapped extends AbstractField implements TranslatorAwareInterface
+class Mapped extends AbstractField implements TranslatorAwareFieldInterface
 {
     /**
      * @var TranslatorInterface

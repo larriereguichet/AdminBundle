@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Event;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Request;
 
 class EntityEvent extends Event
 {
@@ -20,10 +21,26 @@ class EntityEvent extends Event
      */
     private $actionConfiguration;
 
-    public function __construct(AdminConfiguration $configuration, ActionConfiguration $actionConfiguration)
-    {
+    /**
+     * @var Request
+     */
+    private $request;
+
+    /**
+     * EntityEvent constructor.
+     *
+     * @param AdminConfiguration  $configuration
+     * @param ActionConfiguration $actionConfiguration
+     * @param Request             $request
+     */
+    public function __construct(
+        AdminConfiguration $configuration,
+        ActionConfiguration $actionConfiguration,
+        Request $request
+    ) {
         $this->configuration = $configuration;
         $this->actionConfiguration = $actionConfiguration;
+        $this->request = $request;
     }
 
     /**
@@ -56,5 +73,13 @@ class EntityEvent extends Event
     public function getActionConfiguration(): ActionConfiguration
     {
         return $this->actionConfiguration;
+    }
+
+    /**
+     * @return Request
+     */
+    public function getRequest(): Request
+    {
+        return $this->request;
     }
 }

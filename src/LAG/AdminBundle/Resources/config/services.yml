@@ -1,73 +1,73 @@
-imports:
-    - {resource: services/factories.yml}
-    - {resource: services/forms.yml}
-    - {resource: services/menus.yml}
-    - {resource: services/actions.yml}
-    - {resource: services/responders.yml}
-
-services:
-    # Events subscribers
-    lag.admin.kernel_subscriber:
-        class: LAG\AdminBundle\Event\Subscriber\KernelSubscriber
-        tags:
-            - {name: kernel.event_subscriber}
-        autowire: true
-
-    lag.admin.extra_configuration_subscriber:
-        class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
-        tags:
-            - {name: kernel.event_subscriber}
-        arguments:
-            - '%lag.admin.enable_extra_configuration%'
-        autowire: true
-
-    # Routing
-    lag.admin.routing:
-        class: LAG\AdminBundle\Routing\RoutingLoader
-        tags:
-            - { name: routing.loader }
-        autowire: true
-
-    lag.admin.routing.route_name_generator:
-        class: LAG\AdminBundle\Routing\RouteNameGenerator
-
-    # Twig extension
-    lag.admin.twig:
-        class: LAG\AdminBundle\Twig\AdminExtension
-        autowire: true
-        tags:
-            - {name: twig.extension}
-        arguments:
-            - '%lag.translation_pattern%'
-            - '@knp_menu.menu_provider'
-
-    # Message handlers
-    lag.admin.message_handler:
-        class: LAG\AdminBundle\Message\MessageHandler
-        arguments:
-            - '@logger'
-            - '@session'
-            - '@translator'
-
-    # Request handler
-    lag.admin.request_handler:
-        class: LAG\AdminBundle\Admin\Request\RequestHandler
-        autowire: true
-
-    # Registry
-    lag.admin.registry:
-        class: LAG\AdminBundle\Admin\Registry\Registry
-
-    lag.admin.action_registry:
-        class: LAG\AdminBundle\Action\Registry\Registry
-
-    # Filters
-    lag.admin.filter_form_builder:
-        class: LAG\AdminBundle\Filter\Factory\FilterFormBuilder
-        autowire: true
-
-    # Configuration
-    lag.admin.configuration_storage:
-        class: LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage
-        arguments:
-            - '%lag.admin.application_configuration%'
+#imports:
+#    - {resource: services/factories.yml}
+#    - {resource: services/forms.yml}
+#    - {resource: services/menus.yml}
+#    - {resource: services/actions.yml}
+#    - {resource: services/responders.yml}
+#
+#services:
+#    # Events subscribers
+#    lag.admin.kernel_subscriber:
+#        class: LAG\AdminBundle\Event\Subscriber\KernelSubscriber
+#        tags:
+#            - {name: kernel.event_subscriber}
+#        autowire: true
+#
+#    lag.admin.extra_configuration_subscriber:
+#        class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
+#        tags:
+#            - {name: kernel.event_subscriber}
+#        arguments:
+#            - '%lag.admin.enable_extra_configuration%'
+#        autowire: true
+#
+#    # Routing
+#    lag.admin.routing:
+#        class: LAG\AdminBundle\Routing\RoutingLoader
+#        tags:
+#            - { name: routing.loader }
+#        autowire: true
+#
+#    lag.admin.routing.route_name_generator:
+#        class: LAG\AdminBundle\Routing\RouteNameGenerator
+#
+#    # Twig extension
+#    lag.admin.twig:
+#        class: LAG\AdminBundle\Twig\AdminExtension
+#        autowire: true
+#        tags:
+#            - {name: twig.extension}
+#        arguments:
+#            - '%lag.translation_pattern%'
+#            - '@knp_menu.menu_provider'
+#
+#    # Message handlers
+#    lag.admin.message_handler:
+#        class: LAG\AdminBundle\Message\MessageHandler
+#        arguments:
+#            - '@logger'
+#            - '@session'
+#            - '@translator'
+#
+#    # Request handler
+#    lag.admin.request_handler:
+#        class: LAG\AdminBundle\Admin\Request\RequestHandler
+#        autowire: true
+#
+#    # Registry
+#    lag.admin.registry:
+#        class: LAG\AdminBundle\Admin\Registry\Registry
+#
+#    lag.admin.action_registry:
+#        class: LAG\AdminBundle\Action\Registry\Registry
+#
+#    # Filters
+#    lag.admin.filter_form_builder:
+#        class: LAG\AdminBundle\Filter\Factory\FilterFormBuilder
+#        autowire: true
+#
+#    # Configuration
+#    lag.admin.configuration_storage:
+#        class: LAG\AdminBundle\Application\Configuration\ApplicationConfigurationStorage
+#        arguments:
+#            - '%lag.admin.application_configuration%'

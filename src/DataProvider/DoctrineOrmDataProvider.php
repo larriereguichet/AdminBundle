@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\DataProvider;
 
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -24,12 +25,31 @@ class DoctrineOrmDataProvider implements DataProviderInterface
 
     public function getCollection(string $entityClass)
     {
-        /** @var EntityRepository $repository */
-        $repository = $this->entityManager->getRepository($entityClass);
-        $queryBuilder = $repository->createQueryBuilder('entity');
+        $queryBuilder = $this
+            ->getRepository($entityClass)
+            ->createQueryBuilder('entity')
+        ;
 
         $entities = $queryBuilder->getQuery()->getResult();
 
         return $entities;
+    }
+
+    public function getItem(string $entityClass, $identifier)
+    {
+        $item = $this
+            ->getRepository($entityClass)
+            ->find($identifier)
+        ;
+    }
+
+    /**
+     * @param string $entityClass
+     *
+     * @return EntityRepository|ObjectRepository
+     */
+    private function getRepository(string $entityClass)
+    {
+        return $this->entityManager->getRepository($entityClass);
     }
 }

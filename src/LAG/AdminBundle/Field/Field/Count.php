@@ -8,7 +8,7 @@ use LAG\AdminBundle\Field\Configuration\CountConfiguration;
 /**
  * Count field.
  */
-class Count extends AbstractField
+class CountOLD extends AbstractFieldOLD
 {
     public function render($value)
     {

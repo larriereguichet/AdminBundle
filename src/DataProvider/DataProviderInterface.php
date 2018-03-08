@@ -8,4 +8,6 @@ namespace LAG\AdminBundle\DataProvider;
 interface DataProviderInterface
 {
     public function getCollection(string $entityClass);
+
+    public function getItem(string $entityClass, $identifier);
 }

@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Field;
 
 use Twig_Environment;
 
-interface TwigAwareInterface
+interface TwigAwareInterfaceOLD
 {
     /**
      * Define twig environment.

@@ -112,14 +112,35 @@ class AdminSubscriber implements EventSubscriberInterface
 
         $dataProvider = $this->dataProviderFactory->get($configuration->getParameter('data_provider'));
         $strategy = $actionConfiguration->getParameter('load_strategy');
+        $class = $configuration->getParameter('entity');
 
         if (LAGAdminBundle::LOAD_STRATEGY_NONE === $strategy) {
             return;
         }
-
-        if (LAGAdminBundle::LOAD_STRATEGY_MULTIPLE === $strategy) {
-            $entities = $dataProvider->getCollection($configuration->getParameter('entity'));
+        else if (LAGAdminBundle::LOAD_STRATEGY_MULTIPLE === $strategy) {
+            $entities = $dataProvider->getCollection($class);
             $event->setEntities($entities);
         }
+        else if (LAGAdminBundle::LOAD_STRATEGY_UNIQUE === $strategy) {
+            $requirements = $actionConfiguration->getParameter('route_requirements');
+            $identifier = null;
+
+            foreach ($requirements as $name => $requirement) {
+                if (null !== $event->getRequest()->get($name)) {
+                    $identifier = $event->getRequest()->get($name);
+                    break;
+                }
+            }
+
+            if (null === $identifier) {
+                throw new Exception('Unable to find a identifier for the class "'.$class.'"');
+            }
+            $entity = $dataProvider->getItem($class, $identifier);
+
+            $event->setEntities([
+                $entity,
+            ]);
+        }
+
     }
 }

@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Add extra default configuration for actions and fields. Bind to ADMIN_CREATE and ACTION_CREATE events
  */
-class ExtraConfigurationSubscriber implements EventSubscriberInterface
+class ExtraConfigurationSubscriberOLD implements EventSubscriberInterface
 {
     use TranslationKeyTrait;
 

@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Field\Field;
 
 use LAG\AdminBundle\Field\Configuration\ActionConfiguration;
 
-class Action extends Link
+class ActionOLD extends Link
 {
     /**
      * Display a link to an Action.

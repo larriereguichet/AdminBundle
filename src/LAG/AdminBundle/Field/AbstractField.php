@@ -6,7 +6,7 @@ use Exception;
 use JK\Configuration\Configuration;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 
-abstract class AbstractField implements FieldInterface
+abstract class AbstractFieldOLD implements FieldInterface
 {
     const TYPE_STRING = 'string';
     const TYPE_LINK = 'link';

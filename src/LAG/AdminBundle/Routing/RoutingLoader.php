@@ -16,7 +16,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * Creates routing for configured entities
  */
-class RoutingLoader implements LoaderInterface
+class RoutingLoaderOLD implements LoaderInterface
 {
     /**
      * @var bool

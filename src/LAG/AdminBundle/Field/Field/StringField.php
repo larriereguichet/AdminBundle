@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Field\Field;
 
 use LAG\AdminBundle\Field\AbstractField;
 use LAG\AdminBundle\Field\Configuration\StringFieldConfiguration;
-use LAG\AdminBundle\Field\TranslatorAwareInterface;
+use LAG\AdminBundle\Field\TranslatorAwareFieldInterface;
 use LAG\AdminBundle\Field\TwigAwareInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Environment;
@@ -15,7 +15,7 @@ use Twig_Environment;
  * It render a string that can be truncated according to is length
  * Note : according php7 (nightly), class can not be named String anymore
  */
-class StringField extends AbstractField implements TranslatorAwareInterface, TwigAwareInterface
+class StringField extends AbstractField implements TranslatorAwareFieldInterface, TwigAwareInterface
 {
     /**
      * @var TranslatorInterface

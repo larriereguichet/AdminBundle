@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class DataProviderCompilerPass implements CompilerPassInterface
+class DataProviderCompilerPassOLD implements CompilerPassInterface
 {
     /**
      * Add the tagged data provider to the DataProviderFactory.

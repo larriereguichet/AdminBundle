@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Field;
 
-interface EntityAwareInterface
+interface EntityAwareInterfaceOLD
 {
     /**
      * Defines entiy for field.
