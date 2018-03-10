@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Factory;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\View\View;
+use Symfony\Component\Form\FormInterface;
 
 class ViewFactory
 {
@@ -49,6 +50,8 @@ class ViewFactory
      * @param ActionConfiguration $actionConfiguration
      *
      * @param                     $entities
+     * @param FormInterface[]     $forms
+     *
      * @return View
      */
     public function create(
@@ -56,13 +59,27 @@ class ViewFactory
         $adminName,
         AdminConfiguration $adminConfiguration,
         ActionConfiguration $actionConfiguration,
-        $entities
+        $entities,
+        array $forms = []
     ) {
         $fields = $this
             ->fieldFactory
             ->getFields($actionConfiguration)
         ;
-        $view = new View($actionName, $adminName, $actionConfiguration, $adminConfiguration, $fields);
+        $formViews = [];
+
+        foreach ($forms as $identifier => $form) {
+            $formViews[$identifier] = $form->createView();
+        }
+
+        $view = new View(
+            $actionName,
+            $adminName,
+            $actionConfiguration,
+            $adminConfiguration,
+            $fields,
+            $formViews
+        );
         $view->setEntities($entities);
     
         return $view;

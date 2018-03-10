@@ -62,6 +62,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         $this->addDefaultFields($configuration, $event->getEntityClass(), $event->getAdminName());
         $this->addDefaultStrategy($configuration);
         $this->addDefaultRouteParameters($configuration);
+        $this->addDefaultFormUse($configuration);
 
         $event->setConfiguration($configuration);
     }
@@ -253,6 +254,22 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                     'id' => '*',
                 ];
             }
+        }
+    }
+
+    private function addDefaultFormUse(array &$configuration)
+    {
+        $mapping = [
+            'edit',
+            'create',
+            'delete',
+        ];
+
+        foreach ($configuration['actions'] as $name => $action) {
+            if (!in_array($name, $mapping) && !isset($action['use_form'])) {
+                continue;
+            }
+            $configuration['actions'][$name]['use_form'] = true;
         }
     }
 

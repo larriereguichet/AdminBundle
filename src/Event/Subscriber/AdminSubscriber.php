@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\EntityEvent;
@@ -45,7 +46,7 @@ class AdminSubscriber implements EventSubscriberInterface
         return [
             AdminEvents::HANDLE_REQUEST => 'handleRequest',
             AdminEvents::VIEW => 'handleView',
-            AdminEvents::ENTITY => 'handleEntity',
+            AdminEvents::ENTITY => 'loadEntities',
         ];
     }
 
@@ -99,13 +100,21 @@ class AdminSubscriber implements EventSubscriberInterface
             $admin->getName(),
             $admin->getConfiguration(),
             $action->getConfiguration(),
-            $admin->getEntities()
+            $admin->getEntities(),
+            $admin->getForms()
         );
 
         $event->setView($view);
     }
 
-    public function handleEntity(EntityEvent $event)
+    /**
+     * Load entities into the event data to pass them to the Admin.
+     *
+     * @param EntityEvent $event
+     *
+     * @throws Exception
+     */
+    public function loadEntities(EntityEvent $event)
     {
         $configuration = $event->getConfiguration();
         $actionConfiguration = $event->getActionConfiguration();
@@ -137,9 +146,9 @@ class AdminSubscriber implements EventSubscriberInterface
             }
             $entity = $dataProvider->getItem($class, $identifier);
 
-            $event->setEntities([
+            $event->setEntities(new ArrayCollection([
                 $entity,
-            ]);
+            ]));
         }
 
     }

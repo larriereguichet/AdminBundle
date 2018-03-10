@@ -41,6 +41,8 @@ class DoctrineOrmDataProvider implements DataProviderInterface
             ->getRepository($entityClass)
             ->find($identifier)
         ;
+
+        return $item;
     }
 
     /**

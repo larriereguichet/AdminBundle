@@ -9,6 +9,7 @@ use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Menu\MenuItem;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\Form\FormInterface;
 
 class View implements ViewInterface
 {
@@ -62,10 +63,16 @@ class View implements ViewInterface
      */
     private $headers;
 
+
     /**
      * @var MenuItem[]
      */
     private $menus;
+
+    /**
+     * @var FormInterface[]
+     */
+    private $forms;
 
     /**
      * View constructor.
@@ -75,6 +82,7 @@ class View implements ViewInterface
      * @param ActionConfiguration $configuration
      * @param AdminConfiguration  $adminConfiguration
      * @param FieldInterface[]    $fields
+     * @param FormInterface[]     $forms
      * @param array               $menus
      * @param FieldInterface[]    $headers
      */
@@ -84,6 +92,7 @@ class View implements ViewInterface
         ActionConfiguration $configuration,
         AdminConfiguration $adminConfiguration,
         array $fields = [],
+        array $forms = [],
         array $menus = [],
         array $headers = []
     ) {
@@ -94,6 +103,7 @@ class View implements ViewInterface
         $this->adminConfiguration = $adminConfiguration;
         $this->headers = $headers;
         $this->menus = $menus;
+        $this->forms = $forms;
     }
 
     public function __call($name, $arguments)
@@ -208,5 +218,13 @@ class View implements ViewInterface
     public function getTemplate(): string
     {
         return $this->configuration->getParameter('template');
+    }
+
+    /**
+     * @return FormInterface[]
+     */
+    public function getForms(): array
+    {
+        return $this->forms;
     }
 }

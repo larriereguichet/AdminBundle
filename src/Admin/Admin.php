@@ -13,6 +13,7 @@ use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\Resource;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class Admin implements AdminInterface
@@ -48,6 +49,11 @@ class Admin implements AdminInterface
     private $entities;
 
     /**
+     * @var FormInterface[]
+     */
+    private $forms = [];
+
+    /**
      * Admin constructor.
      *
      * @param Resource                 $resource
@@ -81,12 +87,13 @@ class Admin implements AdminInterface
         }
         $this->action = $event->getAction();
 
-        $event = new FormEvent();
-        $this->eventDispatcher->dispatch(AdminEvents::HANDLE_FORM, $event);
-
         $event = new EntityEvent($this->configuration, $this->action->getConfiguration(), $request);
         $this->eventDispatcher->dispatch(AdminEvents::ENTITY, $event);
         $this->entities = $event->getEntities();
+
+        $event = new FormEvent($this, $request);
+        $this->eventDispatcher->dispatch(AdminEvents::HANDLE_FORM, $event);
+        $this->forms = $event->getForms();
     }
 
     /**
@@ -155,5 +162,13 @@ class Admin implements AdminInterface
     public function getEntities()
     {
         return $this->entities;
+    }
+
+    /**
+     * @return FormInterface[]
+     */
+    public function getForms(): array
+    {
+        return $this->forms;
     }
 }

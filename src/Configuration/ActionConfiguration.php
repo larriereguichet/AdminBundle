@@ -79,12 +79,12 @@ class ActionConfiguration extends Configuration
                 'criteria' => [],
                 'filters' => [],
                 'menus' => [],
-                'forms' => [],
                 'template' => $this->getDefaultTemplate(),
                 'sortable' => false,
                 'string_length' => $this->adminConfiguration->getParameter('string_length'),
                 'string_length_truncate' => $this->adminConfiguration->getParameter('string_length_truncate'),
                 'date_format' => $this->adminConfiguration->getParameter('date_format'),
+                'use_form' => false,
             ])
             ->setAllowedTypes('title', 'string')
             ->setAllowedTypes('class', 'string')
@@ -106,23 +106,17 @@ class ActionConfiguration extends Configuration
             ->setNormalizer('menus', $this->getMenuNormalizer())
             ->setNormalizer('filters', $this->getFiltersNormalizer())
             ->setNormalizer('route_defaults', $this->getRouteDefaultNormalizer())
-//            ->setAllowedTypes('icon', [
-//                'string',
-//                null,
-//            ])
-//            ->setAllowedValues('load_strategy', [
-//                LAGAdminBundle::LOAD_STRATEGY_NONE,
-//                LAGAdminBundle::LOAD_STRATEGY_UNIQUE,
-//                LAGAdminBundle::LOAD_STRATEGY_MULTIPLE,
-//            ])
-//            ->setAllowedValues('pager', [
-//                'pagerfanta',
-//                false,
-//            ])
+            ->setAllowedValues('load_strategy', [
+                LAGAdminBundle::LOAD_STRATEGY_NONE,
+                LAGAdminBundle::LOAD_STRATEGY_UNIQUE,
+                LAGAdminBundle::LOAD_STRATEGY_MULTIPLE,
+            ])
+            ->setAllowedValues('pager', [
+                'pagerfanta',
+                false,
+            ])
 ;
         $this->configureNormalizers($resolver);
-
-        //$this->setAllowedTypes($resolver);
     }
 
     /**
