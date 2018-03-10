@@ -114,6 +114,7 @@ class ActionConfiguration extends Configuration
             ->setAllowedValues('pager', [
                 'pagerfanta',
                 false,
+                null,
             ])
 ;
         $this->configureNormalizers($resolver);
