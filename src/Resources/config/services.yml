@@ -29,6 +29,11 @@ services:
         class: LAG\AdminBundle\Event\Subscriber\MenuSubscriber
         autowire: true
         autoconfigure: true
+
+    lag.admin.subscirber.doctrine_orm_event:
+        class: LAG\AdminBundle\Event\Subscriber\DoctrineOrmSubscriber
+        autowire: true
+        autoconfigure: true
     ###################
 
     ### Configuration ###
@@ -95,7 +100,7 @@ services:
 
     ### DataProviders ###
     lag.admin.orm_data_provider:
-        class: LAG\AdminBundle\DataProvider\DoctrineOrmDataProvider
+        class: LAG\AdminBundle\Bridge\Doctrine\Orm\DataProvider\OrmDataProvider
         autowire: true
         tags:
             - {name: lag.admin.data_provider}

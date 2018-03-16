@@ -127,9 +127,6 @@ class AdminExtension extends Twig_Extension
      */
     public function getFieldHeader(FieldInterface $field)
     {
-        dump($field->getName());
-        dump($this->startWith($field->getName(), '_'));
-
         if ($this->startWith($field->getName(), '_')) {
             return '';
         }

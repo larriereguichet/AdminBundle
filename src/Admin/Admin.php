@@ -87,7 +87,7 @@ class Admin implements AdminInterface
         }
         $this->action = $event->getAction();
 
-        $event = new EntityEvent($this->configuration, $this->action->getConfiguration(), $request);
+        $event = new EntityEvent($this, $request);
         $this->eventDispatcher->dispatch(AdminEvents::ENTITY, $event);
         $this->entities = $event->getEntities();
 

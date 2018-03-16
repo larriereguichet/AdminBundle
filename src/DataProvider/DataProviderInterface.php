@@ -2,12 +2,29 @@
 
 namespace LAG\AdminBundle\DataProvider;
 
+use LAG\AdminBundle\Admin\AdminInterface;
+
 /**
  * Generic data provider interface
  */
 interface DataProviderInterface
 {
-    public function getCollection(string $entityClass);
+    /**
+     * Return a collection of entities.
+     *
+     * @param AdminInterface $admin
+     *
+     * @return mixed
+     */
+    public function getCollection(AdminInterface $admin);
 
-    public function getItem(string $entityClass, $identifier);
+    /**
+     * Return a single entity.
+     *
+     * @param AdminInterface $admin
+     * @param string         $identifier
+     *
+     * @return mixed
+     */
+    public function getItem(AdminInterface $admin, string $identifier);
 }

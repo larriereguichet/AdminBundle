@@ -2,8 +2,7 @@
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -12,35 +11,25 @@ class EntityEvent extends Event
     private $entities;
 
     /**
-     * @var AdminConfiguration
-     */
-    private $configuration;
-
-    /**
-     * @var ActionConfiguration
-     */
-    private $actionConfiguration;
-
-    /**
      * @var Request
      */
     private $request;
 
     /**
+     * @var AdminInterface
+     */
+    private $admin;
+
+    /**
      * EntityEvent constructor.
      *
-     * @param AdminConfiguration  $configuration
-     * @param ActionConfiguration $actionConfiguration
-     * @param Request             $request
+     * @param AdminInterface $admin
+     * @param Request        $request
      */
-    public function __construct(
-        AdminConfiguration $configuration,
-        ActionConfiguration $actionConfiguration,
-        Request $request
-    ) {
-        $this->configuration = $configuration;
-        $this->actionConfiguration = $actionConfiguration;
+    public function __construct(AdminInterface $admin, Request $request)
+    {
         $this->request = $request;
+        $this->admin = $admin;
     }
 
     /**
@@ -60,26 +49,18 @@ class EntityEvent extends Event
     }
 
     /**
-     * @return AdminConfiguration
-     */
-    public function getConfiguration(): AdminConfiguration
-    {
-        return $this->configuration;
-    }
-
-    /**
-     * @return ActionConfiguration
-     */
-    public function getActionConfiguration(): ActionConfiguration
-    {
-        return $this->actionConfiguration;
-    }
-
-    /**
      * @return Request
      */
     public function getRequest(): Request
     {
         return $this->request;
+    }
+
+    /**
+     * @return AdminInterface
+     */
+    public function getAdmin(): AdminInterface
+    {
+        return $this->admin;
     }
 }
