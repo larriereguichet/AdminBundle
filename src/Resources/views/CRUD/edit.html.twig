@@ -3,7 +3,7 @@
 {% block content %}
     <h1>{{ admin.title | trans }}</h1>
 
-    {% set form = admin.forms.main %}
+    {% set form = admin.forms.entity %}
     {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
     <form action=""
@@ -22,10 +22,10 @@
             {#{{ 'lag.admin.cancel' | trans }}</a>#}
 
             {% if admin.entities.first.id %}
-                {#<a href="{{ admin_url('delete', admin, {id: admin.entities.first.id}) }}"#}
-                {#class="btn btn-danger">{{ 'lag.admin.delete' | trans }}#}
-                {#<i class="fa fa-remove"></i>#}
-                {#</a>#}
+                <a href="{{ admin_url(admin, 'delete', admin.entities.first) }}"
+                    class="btn btn-danger">{{ 'lag.admin.delete' | trans }}
+                    <i class="fa fa-remove"></i>
+                </a>
             {% endif %}
 
             {% block submitButtons %}
@@ -35,7 +35,9 @@
                         class="btn btn-default">
                     {{ 'lag.admin.save' | trans }}
                     <i class="fa fa-floppy-o"></i></button>
-                <button type="submit" value="save-and-redirect" name="submit"
+                <button type="submit"
+                        value="submit_and_redirect"
+                        name="submit_and_redirect"
                         class="btn btn-success">{{ 'lag.admin.save_and_return_to_list' | trans }}
                     <i class="fa fa-check"></i>
                 </button>

@@ -27,4 +27,11 @@ interface DataProviderInterface
      * @return mixed
      */
     public function getItem(AdminInterface $admin, string $identifier);
+
+    /**
+     * Save an entity loaded into an admin..
+     *
+     * @param AdminInterface $admin
+     */
+    public function saveItem(AdminInterface $admin);
 }

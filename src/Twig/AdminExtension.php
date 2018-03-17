@@ -6,10 +6,13 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Configuration\MenuItemConfiguration;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Field\EntityAwareFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Routing\RoutingLoader;
 use LAG\AdminBundle\Utils\StringUtilTrait;
+use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -47,26 +50,34 @@ class AdminExtension extends Twig_Extension
     private $translator;
 
     /**
+     * @var ConfigurationFactory
+     */
+    private $configurationFactory;
+
+    /**
      * AdminExtension constructor.
      *
      * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      * @param MenuFactory                     $menuFactory
-     * @param Twig_Environment               $twig
+     * @param Twig_Environment                $twig
      * @param RouterInterface                 $router
      * @param TranslatorInterface             $translator
+     * @param ConfigurationFactory            $configurationFactory
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
         MenuFactory $menuFactory,
         Twig_Environment $twig,
         RouterInterface $router,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        ConfigurationFactory $configurationFactory
     ) {
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
         $this->menuFactory = $menuFactory;
         $this->twig = $twig;
         $this->router = $router;
         $this->translator = $translator;
+        $this->configurationFactory = $configurationFactory;
     }
 
     public function getFunctions()
@@ -77,6 +88,7 @@ class AdminExtension extends Twig_Extension
             new Twig_SimpleFunction('admin_menu_action', [$this, 'getMenuAction']),
             new Twig_SimpleFunction('admin_field_header', [$this, 'getFieldHeader']),
             new Twig_SimpleFunction('admin_field', [$this, 'getField']),
+            new Twig_SimpleFunction('admin_url', [$this, 'getAdminUrl']),
         ];
     }
 
@@ -172,5 +184,47 @@ class AdminExtension extends Twig_Extension
         $render = $field->render($value);
 
         return $render;
+    }
+
+    /**
+     * Return the url of an Admin action.
+     *
+     * @param ViewInterface $view
+     * @param string        $actionName
+     * @param mixed|null    $entity
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    public function getAdminUrl(ViewInterface $view, string $actionName, $entity = null)
+    {
+        $configuration = $view->getAdminConfiguration();
+
+        if (!key_exists($actionName, $configuration->getParameter('actions'))) {
+            throw new Exception('The action "'.$actionName.'" is not allowed for the admin "'.$view->getName().'"');
+        }
+        $parameters = [];
+        $routeName = RoutingLoader::generateRouteName(
+            $view->getName(),
+            $actionName,
+            $configuration->getParameter('routing_name_pattern')
+        );
+
+        if (null !== $entity) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+            $actionConfiguration = $this->configurationFactory->createActionConfiguration(
+                $actionName,
+                $configuration->getParameter('actions')[$actionName],
+                $view->getName(),
+                $view->getAdminConfiguration()
+            );
+
+            foreach ($actionConfiguration->getParameter('route_requirements') as $name => $requirements) {
+                $parameters[$name] = $accessor->getValue($entity, $name);
+            }
+        }
+
+        return $this->router->generate($routeName, $parameters);
     }
 }

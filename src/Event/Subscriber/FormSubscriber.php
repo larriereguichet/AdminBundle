@@ -2,8 +2,6 @@
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
-use LAG\AdminBundle\Admin\Admin;
-use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\FormEvent;
 use LAG\AdminBundle\LAGAdminBundle;
@@ -34,6 +32,11 @@ class FormSubscriber implements EventSubscriberInterface
         $this->formFactory = $formFactory;
     }
 
+    /**
+     * Create a form for the loaded entity
+     *
+     * @param FormEvent $event
+     */
     public function createForm(FormEvent $event)
     {
         $admin = $event->getAdmin();
@@ -52,6 +55,6 @@ class FormSubscriber implements EventSubscriberInterface
             ->formFactory
             ->create($admin->getConfiguration()->getParameter('form'), $entity)
         ;
-        $event->addForm($form, 'main');
+        $event->addForm($form, 'entity');
     }
 }

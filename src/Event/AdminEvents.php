@@ -14,7 +14,9 @@ class AdminEvents
 
     const MENU = 'lag.admin.menu';
 
-    const ENTITY = 'lag.admin.entity';
+    const ENTITY_LOAD = 'lag.admin.entity_load';
+
+    const ENTITY_SAVE = 'lag.admin.entity_save';
 
     const DOCTRINE_ORM_FILTER = 'lag.admin.doctrine_orm_filter';
 }

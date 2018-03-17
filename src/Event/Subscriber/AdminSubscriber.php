@@ -45,8 +45,9 @@ class AdminSubscriber implements EventSubscriberInterface
     {
         return [
             AdminEvents::HANDLE_REQUEST => 'handleRequest',
-            AdminEvents::VIEW => 'handleView',
-            AdminEvents::ENTITY => 'loadEntities',
+            AdminEvents::VIEW => 'createView',
+            AdminEvents::ENTITY_LOAD => 'loadEntities',
+            AdminEvents::ENTITY_SAVE => 'saveEntity',
         ];
     }
 
@@ -71,6 +72,8 @@ class AdminSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Define the current action according to the routing configuration.
+     *
      * @param AdminEvent $event
      *
      * @throws Exception
@@ -88,7 +91,7 @@ class AdminSubscriber implements EventSubscriberInterface
         $event->setAction($action);
     }
 
-    public function handleView(ViewEvent $event)
+    public function createView(ViewEvent $event)
     {
         $admin = $event->getAdmin();
         $action = $admin->getAction();
@@ -96,6 +99,7 @@ class AdminSubscriber implements EventSubscriberInterface
         $this->eventDispatcher->dispatch(AdminEvents::MENU, $menuEvent);
 
         $view = $this->viewFactory->create(
+            $event->getRequest(),
             $action->getName(),
             $admin->getName(),
             $admin->getConfiguration(),
@@ -152,5 +156,19 @@ class AdminSubscriber implements EventSubscriberInterface
             ]));
         }
 
+    }
+
+    /**
+     * Save an entity.
+     *
+     * @param EntityEvent $event
+     */
+    public function saveEntity(EntityEvent $event)
+    {
+        $admin = $event->getAdmin();
+        $configuration = $admin->getConfiguration();
+        $dataProvider = $this->dataProviderFactory->get($configuration->getParameter('data_provider'));
+
+        $dataProvider->saveItem($admin);
     }
 }

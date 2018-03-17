@@ -86,6 +86,17 @@ class OrmDataProvider implements DataProviderInterface
     }
 
     /**
+     * Save an entity.
+     *
+     * @param AdminInterface $admin
+     */
+    public function saveItem(AdminInterface $admin)
+    {
+        $this->entityManager->persist($admin->getEntities()->first());
+        $this->entityManager->flush();
+    }
+
+    /**
      * @param string $entityClass
      *
      * @return EntityRepository|ObjectRepository

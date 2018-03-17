@@ -3,6 +3,8 @@
 namespace LAG\AdminBundle\Controller;
 
 use LAG\AdminBundle\Factory\AdminFactory;
+use LAG\AdminBundle\View\RedirectView;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig_Environment;
@@ -41,6 +43,10 @@ class AdminAction
         $admin = $this->adminFactory->createFromRequest($request);
         $admin->handleRequest($request);
         $view = $admin->createView();
+
+        if ($view instanceof RedirectView) {
+            return new RedirectResponse($view->getUrl());
+        }
 
         $content = $this->twig->render($view->getTemplate(), [
             'admin' => $view,

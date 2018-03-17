@@ -54,6 +54,11 @@ class Admin implements AdminInterface
     private $forms = [];
 
     /**
+     * @var Request
+     */
+    private $request;
+
+    /**
      * Admin constructor.
      *
      * @param Resource                 $resource
@@ -79,6 +84,7 @@ class Admin implements AdminInterface
      */
     public function handleRequest(Request $request)
     {
+        $this->request = $request;
         $event = new AdminEvent($this, $request);
         $this->eventDispatcher->dispatch(AdminEvents::HANDLE_REQUEST, $event);
 
@@ -88,12 +94,14 @@ class Admin implements AdminInterface
         $this->action = $event->getAction();
 
         $event = new EntityEvent($this, $request);
-        $this->eventDispatcher->dispatch(AdminEvents::ENTITY, $event);
+        $this->eventDispatcher->dispatch(AdminEvents::ENTITY_LOAD, $event);
         $this->entities = $event->getEntities();
 
         $event = new FormEvent($this, $request);
         $this->eventDispatcher->dispatch(AdminEvents::HANDLE_FORM, $event);
         $this->forms = $event->getForms();
+
+        $this->handleForm($request);
     }
 
     /**
@@ -135,7 +143,7 @@ class Admin implements AdminInterface
      */
     public function createView(): ViewInterface
     {
-        $event = new ViewEvent($this);
+        $event = new ViewEvent($this, $this->request);
         $this->eventDispatcher->dispatch(AdminEvents::VIEW, $event);
 
         if (null === $event->getView()) {
@@ -170,5 +178,29 @@ class Admin implements AdminInterface
     public function getForms(): array
     {
         return $this->forms;
+    }
+
+    /**
+     * Submit a form linked to the Admin's entity if required.
+     *
+     * @param Request $request
+     */
+    private function handleForm(Request $request)
+    {
+        if (!key_exists('entity', $this->forms)) {
+            return;
+        }
+        $form = $this->forms['entity'];
+        $entity = $this->entities->first();
+
+        if (null === $entity) {
+            return;
+        }
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $event = new EntityEvent($this, $request);
+            $this->eventDispatcher->dispatch(AdminEvents::ENTITY_SAVE, $event);
+        }
     }
 }
