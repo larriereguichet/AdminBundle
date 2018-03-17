@@ -89,7 +89,7 @@ class AdminExtension extends Twig_Extension
             new Twig_SimpleFunction('admin_field_header', [$this, 'getFieldHeader']),
             new Twig_SimpleFunction('admin_field', [$this, 'getField']),
             new Twig_SimpleFunction('admin_url', [$this, 'getAdminUrl']),
-            new Twig_SimpleFunction('admin_action_allowed', [$this, 'getAdminActionAllowed']),
+            new Twig_SimpleFunction('admin_action_allowed', [$this, 'isAdminActionAllowed']),
         ];
     }
 
