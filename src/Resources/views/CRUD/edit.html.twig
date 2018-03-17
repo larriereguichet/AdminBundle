@@ -21,7 +21,7 @@
             {#class="btn"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;#}
             {#{{ 'lag.admin.cancel' | trans }}</a>#}
 
-            {% if admin.entities.first.id %}
+            {% if admin.entities.first and admin_action_allowed(admin, 'delete') %}
                 <a href="{{ admin_url(admin, 'delete', admin.entities.first) }}"
                     class="btn btn-danger">{{ 'lag.admin.delete' | trans }}
                     <i class="fa fa-remove"></i>

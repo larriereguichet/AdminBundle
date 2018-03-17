@@ -89,6 +89,7 @@ class AdminExtension extends Twig_Extension
             new Twig_SimpleFunction('admin_field_header', [$this, 'getFieldHeader']),
             new Twig_SimpleFunction('admin_field', [$this, 'getField']),
             new Twig_SimpleFunction('admin_url', [$this, 'getAdminUrl']),
+            new Twig_SimpleFunction('admin_action_allowed', [$this, 'getAdminActionAllowed']),
         ];
     }
 
@@ -199,11 +200,10 @@ class AdminExtension extends Twig_Extension
      */
     public function getAdminUrl(ViewInterface $view, string $actionName, $entity = null)
     {
-        $configuration = $view->getAdminConfiguration();
-
-        if (!key_exists($actionName, $configuration->getParameter('actions'))) {
+        if (!$this->isAdminActionAllowed($view, $actionName)) {
             throw new Exception('The action "'.$actionName.'" is not allowed for the admin "'.$view->getName().'"');
         }
+        $configuration = $view->getAdminConfiguration();
         $parameters = [];
         $routeName = RoutingLoader::generateRouteName(
             $view->getName(),
@@ -226,5 +226,12 @@ class AdminExtension extends Twig_Extension
         }
 
         return $this->router->generate($routeName, $parameters);
+    }
+
+    public function isAdminActionAllowed(ViewInterface $view, string $actionName)
+    {
+        $configuration = $view->getAdminConfiguration();
+
+        return key_exists($actionName, $configuration->getParameter('actions'));
     }
 }
