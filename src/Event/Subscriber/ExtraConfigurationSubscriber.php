@@ -9,6 +9,7 @@ use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\ConfigurationEvent;
 use LAG\AdminBundle\LAGAdminBundle;
+use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -27,12 +28,17 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     private $entityManager;
 
     /**
+     * @var ResourceCollection
+     */
+    private $resourceCollection;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
     {
         return [
-            AdminEvents::ACTION_CONFIGURATION => 'actionConfiguration',
+            AdminEvents::ADMIN_CONFIGURATION => 'enrichAdminConfiguration',
         ];
     }
 
@@ -41,16 +47,19 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      *
      * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      * @param EntityManagerInterface          $entityManager
+     * @param ResourceCollection              $resourceCollection
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ResourceCollection $resourceCollection
     ) {
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
         $this->entityManager = $entityManager;
+        $this->resourceCollection = $resourceCollection;
     }
 
-    public function actionConfiguration(ConfigurationEvent $event)
+    public function enrichAdminConfiguration(ConfigurationEvent $event)
     {
         if (!$this->applicationConfiguration->getParameter('enable_extra_configuration')) {
             return;
@@ -63,6 +72,8 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         $this->addDefaultStrategy($configuration);
         $this->addDefaultRouteParameters($configuration);
         $this->addDefaultFormUse($configuration);
+        $this->addDefaultRightMenu($configuration, $event->getAdminName());
+        $this->addDefaultLeftMenu($configuration);
 
         $event->setConfiguration($configuration);
     }
@@ -91,6 +102,11 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
     private function addDefaultTopMenu(array &$configuration, $adminName)
     {
+        if (!$this->applicationConfiguration->getParameter('enable_menus')) {
+            return;
+        }
+        return;
+        // TODO fix method
         if (!key_exists('list', $configuration)) {
             return;
         }
@@ -273,6 +289,76 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * Add the default left menu configuration. One item for each Admin.
+     *
+     * @param array $configuration
+     */
+    private function addDefaultLeftMenu(array &$configuration)
+    {
+        if (!$this->applicationConfiguration->getParameter('enable_menus')) {
+            return;
+        }
+        $menuConfiguration = [];
+
+        foreach ($this->resourceCollection->all() as $resource) {
+            $resourceConfiguration = $resource->getConfiguration();
+
+            // Add only entry for the "list" action
+            if (!array_key_exists('list', $resourceConfiguration['actions'])) {
+                continue;
+            }
+            $menuConfiguration[] = [
+                'text' => ucfirst($resource->getName()),
+                'admin' => $resource->getName(),
+                'action' => 'list',
+            ];
+        }
+        foreach ($configuration['actions'] as $name => $action) {
+            if (key_exists('menus', $action) && key_exists('left', $action)) {
+                continue;
+            }
+
+            $configuration['actions'][$name]['menus']['left'] = [
+                'items' => $menuConfiguration,
+            ];
+        }
+    }
+
+    /**
+     * Add the default right menu.
+     *
+     * @param array  $configuration
+     */
+    private function addDefaultRightMenu(array &$configuration)
+    {
+        if (!$this->applicationConfiguration->getParameter('enable_menus')) {
+            return;
+        }
+
+        if (!key_exists('list', $configuration['actions'])) {
+            return;
+        }
+
+        if (
+            key_exists('menus', $configuration['actions']['list']) &&
+            is_array($configuration['actions']['list']['menus']) &&
+            key_exists('right', $configuration['actions']['list']['menus'])
+        ) {
+            return;
+        }
+
+        $configuration['actions']['list']['menus']['right'] = [
+        ];
+    }
+
+    /**
+     * Return the default action field if found.
+     *
+     * @param array $fields
+     *
+     * @return string|null
+     */
     private function getActionField(array $fields)
     {
         $mapping = [
