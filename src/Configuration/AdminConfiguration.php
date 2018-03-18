@@ -64,12 +64,14 @@ class AdminConfiguration extends Configuration
                 'string_length_truncate' => $this->applicationConfiguration->getParameter('string_length_truncate'),
                 'date_format' => $this->applicationConfiguration->getParameter('date_format'),
                 'data_provider' => 'lag.admin.orm_data_provider',
+                'page_parameter' => $this->applicationConfiguration->getParameter('page_parameter'),
             ])
             ->setRequired([
                 'entity',
             ])
             ->setAllowedTypes('string_length', 'integer')
             ->setAllowedTypes('string_length_truncate', 'string')
+            ->setAllowedTypes('page_parameter', 'string')
             ->setAllowedValues('pager', [
                 null,
                 'pagerfanta',

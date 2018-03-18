@@ -30,7 +30,14 @@
             </tr>
         {% endfor %}
         </tbody>
+        <tfoot>
+        </tfoot>
     </table>
+    <div>
+        {% if admin.pager %}
+            {{ pagerfanta(admin.pager, 'twitter_bootstrap4', {page: admin.pager.currentPage}) }}
+        {% endif %}
+    </div>
 {% endblock %}
 
 {#{% block content2 %}#}

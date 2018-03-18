@@ -56,10 +56,11 @@ class ApplicationConfiguration extends Configuration
                 // string length before truncation (0 means no truncation)
                 'string_length' => 200,
                 'string_length_truncate' =>  '...',
-                'max_per_page' => 25,
+                'max_per_page' => 20,
                 'admin_class' => Admin::class,
                 'action_class' => Action::class,
                 'permissions' => 'ROLE_ADMIN',
+                'page_parameter' => 'page',
             ])
             ->setAllowedTypes('enable_extra_configuration', 'boolean')
             ->setAllowedTypes('enable_security', 'boolean')
@@ -77,6 +78,7 @@ class ApplicationConfiguration extends Configuration
             ->setAllowedTypes('admin_class', 'string')
             ->setAllowedTypes('routing_name_pattern', 'string')
             ->setAllowedTypes('routing_url_pattern', 'string')
+            ->setAllowedTypes('page_parameter', 'string')
             ->setNormalizer('routing_name_pattern', function (Options $options, $value) {
                 if (strstr($value, '{admin}') === false) {
                     throw new InvalidOptionsException(

@@ -10,7 +10,10 @@ use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\DoctrineOrmFilterEvent;
 use LAG\AdminBundle\Exception\Exception;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class OrmDataProvider implements DataProviderInterface
 {
@@ -25,15 +28,25 @@ class OrmDataProvider implements DataProviderInterface
     private $eventDispatcher;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * DoctrineOrmDataProvider constructor.
      *
      * @param EntityManagerInterface $entityManager
      * @param EventDispatcher        $eventDispatcher
+     * @param RequestStack           $requestStack
      */
-    public function __construct(EntityManagerInterface $entityManager, EventDispatcher $eventDispatcher)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        EventDispatcher $eventDispatcher,
+        RequestStack $requestStack
+    ) {
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -47,11 +60,25 @@ class OrmDataProvider implements DataProviderInterface
     {
         $queryBuilder = $this
             ->getRepository($admin->getConfiguration()->getParameter('entity'))
-            ->createQueryBuilder('entity')
-        ;
+            ->createQueryBuilder('entity');
         $event = new DoctrineOrmFilterEvent($queryBuilder, $admin);
         $this->eventDispatcher->dispatch(AdminEvents::DOCTRINE_ORM_FILTER, $event);
-        $entities = $queryBuilder->getQuery()->getResult();
+        $configuration = $admin->getConfiguration();
+        $entities = null;
+
+        if ('pagerfanta' === $configuration->getParameter('pager')) {
+            $pageParameter = $configuration->getParameter('page_parameter');
+            $request = $this->requestStack->getCurrentRequest();
+            $page = (int)$request->get($pageParameter, 1);
+
+            $adapter = new DoctrineORMAdapter($queryBuilder);
+            $pager = new Pagerfanta($adapter);
+            $pager->setCurrentPage($page);
+            $pager->setMaxPerPage($configuration->getParameter('max_per_page'));
+            $entities = $pager;
+        } else {
+            $entities = $queryBuilder->getQuery()->getResult();
+        }
 
         return $entities;
     }
@@ -71,8 +98,7 @@ class OrmDataProvider implements DataProviderInterface
         $class = $admin->getConfiguration()->getParameter('entity');
         $item = $this
             ->getRepository($class)
-            ->find($identifier)
-        ;
+            ->find($identifier);
 
         if (null === $item) {
             throw new Exception(sprintf(

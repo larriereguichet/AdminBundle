@@ -142,7 +142,7 @@ class View implements ViewInterface
     {
         if ($entities instanceof Pagerfanta) {
             $this->pager = $entities;
-            $this->entities = new ArrayCollection($entities->getCurrentPageResults());
+            $this->entities = new ArrayCollection($entities->getCurrentPageResults()->getArrayCopy());
             $this->haveToPaginate = true;
             $this->totalCount = $entities->count();
         } else {
@@ -215,6 +215,9 @@ class View implements ViewInterface
         return $this->menus;
     }
 
+    /**
+     * @return string
+     */
     public function getTemplate(): string
     {
         return $this->configuration->getParameter('template');

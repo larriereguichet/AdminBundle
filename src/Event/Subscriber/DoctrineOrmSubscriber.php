@@ -14,7 +14,10 @@ class DoctrineOrmSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            AdminEvents::DOCTRINE_ORM_FILTER => 'addOrder'
+            AdminEvents::DOCTRINE_ORM_FILTER => [
+                ['addOrder'],
+                ['addFilter'],
+            ],
         ];
     }
 
@@ -33,5 +36,9 @@ class DoctrineOrmSubscriber implements EventSubscriberInterface
             $alias = $queryBuilder->getRootAliases()[0];
             $queryBuilder->addOrderBy($alias.'.'.$field, $order);
         }
+    }
+
+    public function addFilter(DoctrineOrmFilterEvent $event)
+    {
     }
 }

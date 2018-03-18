@@ -91,6 +91,11 @@ class AdminSubscriber implements EventSubscriberInterface
         $event->setAction($action);
     }
 
+    /**
+     * Create a view using the view factory.
+     *
+     * @param ViewEvent $event
+     */
     public function createView(ViewEvent $event)
     {
         $admin = $event->getAdmin();

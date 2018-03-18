@@ -228,6 +228,14 @@ class AdminExtension extends Twig_Extension
         return $this->router->generate($routeName, $parameters);
     }
 
+    /**
+     * Return true if the given action is allowed for the given Admin.
+     *
+     * @param ViewInterface $view
+     * @param string        $actionName
+     *
+     * @return bool
+     */
     public function isAdminActionAllowed(ViewInterface $view, string $actionName)
     {
         $configuration = $view->getAdminConfiguration();

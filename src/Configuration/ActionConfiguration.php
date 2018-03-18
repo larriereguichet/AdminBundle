@@ -74,7 +74,7 @@ class ActionConfiguration extends Configuration
                 ],
                 'icon' => null,
                 'load_strategy' => LAGAdminBundle::LOAD_STRATEGY_NONE,
-                'pager' => null,
+                'pager' => false,
                 'max_per_page' => 30,
                 'criteria' => [],
                 'filters' => [],
