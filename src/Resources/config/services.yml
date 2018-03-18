@@ -31,7 +31,7 @@ services:
         autoconfigure: true
 
     lag.admin.subscirber.doctrine_orm_event:
-        class: LAG\AdminBundle\Event\Subscriber\DoctrineOrmSubscriber
+        class: LAG\AdminBundle\Bridge\Doctrine\Orm\Event\Subscriber\OrmSubscriber
         autowire: true
         autoconfigure: true
     ###################

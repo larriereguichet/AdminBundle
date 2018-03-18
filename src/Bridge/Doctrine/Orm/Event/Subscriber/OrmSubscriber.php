@@ -1,12 +1,12 @@
 <?php
 
-namespace LAG\AdminBundle\Event\Subscriber;
+namespace LAG\AdminBundle\Bridge\Doctrine\Orm\Event\Subscriber;
 
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\DoctrineOrmFilterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class DoctrineOrmSubscriber implements EventSubscriberInterface
+class OrmSubscriber implements EventSubscriberInterface
 {
     /**
      * @return array
