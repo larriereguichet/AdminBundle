@@ -15,11 +15,23 @@ class MenuFactory
      */
     private $menus = [];
 
-    public function create($name, array $configuration)
+    /**
+     * Create a menu item from a configuration array.
+     *
+     * @param string $name
+     * @param array  $configuration
+     *
+     * @return Menu
+     */
+    public function create(string $name, array $configuration)
     {
         $menu = new Menu();
 
-        foreach ($configuration as $item) {
+        if (!key_exists('items', $configuration)) {
+            return $menu;
+        }
+
+        foreach ($configuration['items'] as $item) {
             $menu->addItem($this->createMenuItem($item));
         }
         $this->menus[$name] = $menu;

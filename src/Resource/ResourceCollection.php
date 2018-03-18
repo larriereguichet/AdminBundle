@@ -7,11 +7,11 @@ use LAG\AdminBundle\Exception\Exception;
 class ResourceCollection
 {
     /**
-     * @var Resource[]
+     * @var \LAG\AdminBundle\Resource\Resource[]
      */
     protected $items = [];
 
-    public function add(Resource $resource)
+    public function add(\LAG\AdminBundle\Resource\Resource $resource)
     {
         $this->items[$resource->getName()] = $resource;
     }
@@ -24,7 +24,7 @@ class ResourceCollection
     /**
      * @param string $resourceName
      *
-     * @return Resource
+     * @return \LAG\AdminBundle\Resource\Resource
      *
      * @throws Exception
      */
@@ -38,7 +38,7 @@ class ResourceCollection
     }
 
     /**
-     * @return Resource[]
+     * @return \LAG\AdminBundle\Resource\Resource[]
      */
     public function all()
     {

@@ -17,9 +17,12 @@
 
         <div class="text-right btn-group"
              role="group">
-            {#<a href="{{ admin_url('list', admin) }}"#}
-            {#class="btn"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;#}
-            {#{{ 'lag.admin.cancel' | trans }}</a>#}
+
+            {% if admin_action_allowed(admin, 'list') %}
+                <a href="{{ admin_url(admin, 'list') }}"
+                   class="btn"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
+                    {{ 'lag.admin.cancel' | trans }}</a>
+            {% endif %}
 
             {% if admin.entities.first and admin_action_allowed(admin, 'delete') %}
                 <a href="{{ admin_url(admin, 'delete', admin.entities.first) }}"

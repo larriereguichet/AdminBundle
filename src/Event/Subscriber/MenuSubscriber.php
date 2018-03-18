@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Event\Subscriber;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\MenuEvent;
 use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,10 +27,13 @@ class MenuSubscriber implements EventSubscriberInterface
      */
     private $resourceCollection;
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [
-            AdminEvents::MENU => 'buildLeftMenu',
+            AdminEvents::MENU => 'buildMenus',
         ];
     }
 
@@ -50,34 +54,28 @@ class MenuSubscriber implements EventSubscriberInterface
         $this->resourceCollection = $resourceCollection;
     }
 
-    public function buildLeftMenu()
+    /**
+     * Build menus according to the Admin configuration.
+     *
+     * @param MenuEvent $event
+     */
+    public function buildMenus(MenuEvent $event)
     {
         if (!$this->applicationConfiguration->getParameter('enable_menus')) {
             return;
         }
-        $menuConfiguration = [];
+        $configuration = $event->getAdmin()->getAction()->getConfiguration();
 
-        foreach ($this->resourceCollection->all() as $resource) {
-            $configuration = $resource->getConfiguration();
+        foreach ($configuration->getParameter('menus') as $name => $menuConfiguration) {
+            if (!$this->menuFactory->hasMenu($name)) {
+                $this->menuFactory->create($name, $menuConfiguration);
+            } else {
+                $menu = $this->menuFactory->getMenu($name);
 
-            // Add only entry for the "list" action
-            if (!array_key_exists('list', $configuration['actions'])) {
-                continue;
-            }
-            $menuConfiguration[] = [
-                'text' => ucfirst($resource->getName()),
-                'admin' => $resource->getName(),
-                'action' => 'list',
-            ];
-        }
-
-        if (!$this->menuFactory->hasMenu('left')) {
-            $this->menuFactory->create('left', $menuConfiguration);
-        } else {
-            $menu = $this->menuFactory->getMenu('left');
-
-            foreach ($menuConfiguration as $item) {
-                $menu->addItem($this->menuFactory->createMenuItem($item));
+                foreach ($menuConfiguration['items'] as $itemConfiguration) {
+                    $menuItem = $this->menuFactory->createMenuItem($itemConfiguration);
+                    $menu->addItem($menuItem);
+                }
             }
         }
     }

@@ -21,69 +21,49 @@
 {% block body %}
     <body>
     {% block navbar %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand"
-           href="#">{{ admin_config('title') }}</a>
-        <button class="navbar-toggler"
-                type="button"
-                data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            {% if admin_config('enable_homepage') %}
+                <a class="navbar-brand"
+                   href="{{ path('lag.admin.homepage') }}">{{ admin_config('title') }}</a>
+            {% endif %}
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
-    </nav>
+            <button class="navbar-toggler"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                {% if admin_has_menu('top') %}
+                    {{ admin_menu('top') }}
+                {% endif %}
+            </div>
+        </nav>
         {#<header class="navbar navbar-light bg-light flex-column flex-md-row bd-navbar">#}
-            {#<a href="{{ path('admin.homepage') }}" class="navbar-brand">#}
-                {#{% block brand %}{{ admin_config('title') }}{% endblock %}#}
-            {#</a>#}
+        {#<a href="{{ path('admin.homepage') }}" class="navbar-brand">#}
+        {#{% block brand %}{{ admin_config('title') }}{% endblock %}#}
+        {#</a>#}
 
-            {#{% if is_granted('ROLE_USER') %}#}
-                {#{% block top_menu %}#}
-                    {#<div class="navbar-nav">#}
-                        {#{{ admin_menu_render('top') | raw }}#}
-                    {#</div>#}
-                {#{% endblock %}#}
+        {#{% if is_granted('ROLE_USER') %}#}
+        {#{% block top_menu %}#}
+        {#<div class="navbar-nav">#}
+        {#{{ admin_menu_render('top') | raw }}#}
+        {#</div>#}
+        {#{% endblock %}#}
 
-                {#{% block user_menu %}#}
-                    {#<div class="pull-right2">#}
-                        {#{{ 'lag.admin.welcome_message' | trans({'%username%': app.user.username }) }}&nbsp;#}
-                        {#<a href="{{ path('logout') }}">#}
-                            {#<i class="fa fa-sign-out"></i>#}
-                        {#</a>#}
-                    {#</div>#}
-                {#{% endblock %}#}
-            {#{% endif %}#}
+        {#{% block user_menu %}#}
+        {#<div class="pull-right2">#}
+        {#{{ 'lag.admin.welcome_message' | trans({'%username%': app.user.username }) }}&nbsp;#}
+        {#<a href="{{ path('logout') }}">#}
+        {#<i class="fa fa-sign-out"></i>#}
+        {#</a>#}
+        {#</div>#}
+        {#{% endblock %}#}
+        {#{% endif %}#}
         {#</header>#}
     {% endblock %}
     <br/>
@@ -95,39 +75,30 @@
 
                 {% block layout %}
                     {% block left_menu %}
-                        {{ admin_menu('left') | raw }}
+                        {% if admin_has_menu('left') %}
+                            {{ admin_menu('left') | raw }}
+                        {% endif %}
                     {% endblock %}
-                    {#<div id="main-menu-container"#}
-                         {#class="col-4 col-xl-2"#}
-                         {#role="navigation">#}
 
-                        {#{% if is_granted('ROLE_USER') %}#}
-                            {#{% block left_menu %}#}
-                                {#test ?#}
-                                {#{{ admin_menu_render('main') | raw }}#}
-                            {#{% endblock %}#}
-                        {#{% endif %}#}
-                    {#</div>#}
+                    {% block content_container %}
+                        <main class="col-8"
+                              role="main">
 
-                {% block content_container %}
-                    <main class="col-8"
-                          role="main">
+                            {% block flash_messages %}
+                                {% include "LAGAdminBundle:Layout:flash_messages.html.twig" %}
+                            {% endblock %}
 
-                        {% block flash_messages %}
-                            {% include "LAGAdminBundle:Layout:flash_messages.html.twig" %}
-                        {% endblock %}
+                            {% block content %}{% endblock %}
+                        </main>
+                    {% endblock %}
 
-                        {% block content %}{% endblock %}
-                    </main>
-                {% endblock %}
-                {% endblock %}
-
-                {% block right_menu_container %}
-                    <div class="col-1 col-xl-2">
-                        {% block right_menu %}
-                            {#{{ admin_menu_render('right') }}#}
-                        {% endblock %}
-                    </div>
+                    {% block right_menu %}
+                        <div class="col-1 col-xl-2">
+                            {% if admin_has_menu('right') %}
+                                {{ admin_menu('right') }}
+                            {% endif %}
+                        </div>
+                    {% endblock %}
                 {% endblock %}
             </div>
         </div>

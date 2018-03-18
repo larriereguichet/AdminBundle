@@ -8,6 +8,8 @@ class AdminEvents
 
     const HANDLE_FORM = 'lag.admin.handleForm';
 
+    const ADMIN_CONFIGURATION = 'lag.admin.admin_configuration';
+
     const ACTION_CONFIGURATION = 'lag.admin.action_configuration';
 
     const VIEW = 'lag.admin.view';

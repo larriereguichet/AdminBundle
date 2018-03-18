@@ -100,7 +100,7 @@ class AdminSubscriber implements EventSubscriberInterface
     {
         $admin = $event->getAdmin();
         $action = $admin->getAction();
-        $menuEvent = new MenuEvent();
+        $menuEvent = new MenuEvent($admin);
         $this->eventDispatcher->dispatch(AdminEvents::MENU, $menuEvent);
 
         $view = $this->viewFactory->create(

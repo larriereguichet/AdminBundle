@@ -85,6 +85,7 @@ class AdminExtension extends Twig_Extension
         return [
             new Twig_SimpleFunction('admin_config', [$this, 'getApplicationParameter']),
             new Twig_SimpleFunction('admin_menu', [$this, 'getMenu']),
+            new Twig_SimpleFunction('admin_has_menu', [$this, 'hasMenu']),
             new Twig_SimpleFunction('admin_menu_action', [$this, 'getMenuAction']),
             new Twig_SimpleFunction('admin_field_header', [$this, 'getFieldHeader']),
             new Twig_SimpleFunction('admin_field', [$this, 'getField']),
@@ -98,7 +99,14 @@ class AdminExtension extends Twig_Extension
         return $this->applicationConfiguration->getParameter($name);
     }
 
-    public function getMenu($name)
+    /**
+     * Render a menu according to given name.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public function getMenu(string $name)
     {
         $menu = $this->menuFactory->getMenu($name);
 
@@ -107,6 +115,25 @@ class AdminExtension extends Twig_Extension
         ]);
     }
 
+    /**
+     * Return true if a menu with the given name exists.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasMenu(string $name)
+    {
+        return $this->menuFactory->hasMenu($name);
+    }
+
+    /**
+     * Return the url of an menu item.
+     *
+     * @param MenuItemConfiguration $configuration
+     *
+     * @return string
+     */
     public function getMenuAction(MenuItemConfiguration $configuration)
     {
         if ($configuration->getParameter('url')) {
