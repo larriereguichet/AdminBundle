@@ -25,7 +25,15 @@ class MenuFactory
      */
     public function create(string $name, array $configuration)
     {
-        $menu = new Menu();
+        $options = array_merge([
+            'container_classes' => ['nav', 'flex-column', 'navbar-nav', 'menu-'.$name],
+            'item_classes' => [],
+        ], $configuration);
+
+        if ('top' === $name) {
+            $options['item_classes'][] = 'nav-item';
+        }
+        $menu = new Menu($name, $options['container_classes'], $options['item_classes']);
 
         if (!key_exists('items', $configuration)) {
             return $menu;
@@ -39,6 +47,13 @@ class MenuFactory
         return $menu;
     }
 
+    /**
+     * Create a menu item according to the given configuration.
+     *
+     * @param array $configuration
+     *
+     * @return MenuItem
+     */
     public function createMenuItem(array $configuration): MenuItem
     {
         $resolver = new OptionsResolver();
@@ -50,6 +65,8 @@ class MenuFactory
     }
 
     /**
+     * Return true if the menu exists.
+     *
      * @param string $name
      *
      * @return bool
@@ -60,6 +77,8 @@ class MenuFactory
     }
 
     /**
+     * Return a menu with the given name.
+     *
      * @param string $name
      *
      * @return Menu
@@ -76,6 +95,8 @@ class MenuFactory
     }
 
     /**
+     * Return all the menus.
+     *
      * @return Menu[]
      */
     public function getMenus(): array

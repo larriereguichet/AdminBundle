@@ -1,7 +1,5 @@
 <div class="btn-group" role="group" aria-label="Actions">
 
-    {#{{ dump(actions) }}#}
-
     {% for action, options in actions %}
         <a href="{{ path(options.route, options.parameters) }}" class="{{ options.class }}">
             {% if options.icon %}

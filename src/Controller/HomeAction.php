@@ -27,6 +27,13 @@ class HomeAction
      */
     private $applicationConfiguration;
 
+    /**
+     * HomeAction constructor.
+     *
+     * @param Twig_Environment                $twig
+     * @param EventDispatcherInterface        $eventDispatcher
+     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
+     */
     public function __construct(
         Twig_Environment $twig,
         EventDispatcherInterface $eventDispatcher,
@@ -37,6 +44,9 @@ class HomeAction
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
     }
 
+    /**
+     * @return Response
+     */
     public function __invoke()
     {
         $event = new MenuEvent();

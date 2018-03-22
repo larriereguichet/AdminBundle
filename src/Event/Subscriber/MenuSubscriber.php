@@ -6,6 +6,7 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\MenuEvent;
+use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -28,6 +29,11 @@ class MenuSubscriber implements EventSubscriberInterface
     private $resourceCollection;
 
     /**
+     * @var ConfigurationFactory
+     */
+    private $configurationFactory;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
@@ -42,20 +48,23 @@ class MenuSubscriber implements EventSubscriberInterface
      *
      * @param ApplicationConfigurationStorage $storage
      * @param MenuFactory                     $menuFactory
+     * @param ConfigurationFactory            $configurationFactory
      * @param ResourceCollection              $resourceCollection
      */
     public function __construct(
         ApplicationConfigurationStorage $storage,
         MenuFactory $menuFactory,
+        ConfigurationFactory $configurationFactory,
         ResourceCollection $resourceCollection
     ) {
         $this->applicationConfiguration = $storage->getConfiguration();
         $this->menuFactory = $menuFactory;
         $this->resourceCollection = $resourceCollection;
+        $this->configurationFactory = $configurationFactory;
     }
 
     /**
-     * Build menus according to the Admin configuration.
+     * Build menus according to the given configuration.
      *
      * @param MenuEvent $event
      */
@@ -64,9 +73,14 @@ class MenuSubscriber implements EventSubscriberInterface
         if (!$this->applicationConfiguration->getParameter('enable_menus')) {
             return;
         }
-        $configuration = $event->getAdmin()->getAction()->getConfiguration();
+        $menuConfigurations = [];
 
-        foreach ($configuration->getParameter('menus') as $name => $menuConfiguration) {
+        if ($event->isBuildResourceMenu()) {
+            $menuConfigurations['left'] = $this->configurationFactory->createResourceMenuConfiguration();
+        }
+        $menuConfigurations = array_merge($menuConfigurations, $event->getMenuConfigurations());
+
+        foreach ($menuConfigurations as $name => $menuConfiguration) {
             if (!$this->menuFactory->hasMenu($name)) {
                 $this->menuFactory->create($name, $menuConfiguration);
             } else {

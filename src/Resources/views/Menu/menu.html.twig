@@ -1,12 +1,11 @@
-<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-    <ul class="nav flex-column">
-
-        {% for item in menu.items %}
-            <li class="nav-item">
-                <a href="{{ admin_menu_action(item.configuration) }}" class="nav-link">
-                    {{ item.text | trans }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-</nav>
+<ul class="{{ menu.containerCssClasses | join(' ') }}">
+    {% for item in menu.items %}
+        <li class="{{ menu.itemCssClasses | join(' ') }}">
+            <a href="{{ admin_menu_action(item.configuration, admin) }}"
+               class="nav-link"
+               title="{{ item.text | trans }}">
+                {{ item.text | trans }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

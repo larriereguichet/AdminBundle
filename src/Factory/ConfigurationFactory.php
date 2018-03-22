@@ -7,6 +7,7 @@ use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\ConfigurationEvent;
+use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,19 +19,27 @@ class ConfigurationFactory
     private $eventDispatcher;
 
     /**
+     * @var ResourceCollection
+     */
+    private $resourceCollection;
+
+    /**
      * ConfigurationFactory constructor.
      *
      * @param EventDispatcherInterface $eventDispatcher
+     * @param ResourceCollection       $resourceCollection
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(EventDispatcherInterface $eventDispatcher, ResourceCollection $resourceCollection)
     {
         $this->eventDispatcher = $eventDispatcher;
+        $this->resourceCollection = $resourceCollection;
     }
 
     /**
      * @param string                   $adminName
      * @param array                    $configuration
      * @param ApplicationConfiguration $applicationConfiguration
+     *
      * @return AdminConfiguration
      */
     public function createAdminConfiguration(
@@ -79,5 +88,31 @@ class ConfigurationFactory
         $actionConfiguration->setParameters($resolver->resolve($configuration));
 
         return $actionConfiguration;
+    }
+
+    /**
+     * Build the resources menu items.
+     *
+     * @return array
+     */
+    public function createResourceMenuConfiguration()
+    {
+        $menuConfiguration = [];
+
+        foreach ($this->resourceCollection->all() as $resource) {
+            $resourceConfiguration = $resource->getConfiguration();
+
+            // Add only entry for the "list" action
+            if (!array_key_exists('list', $resourceConfiguration['actions'])) {
+                continue;
+            }
+            $menuConfiguration['items'][] = [
+                'text' => ucfirst($resource->getName()),
+                'admin' => $resource->getName(),
+                'action' => 'list',
+            ];
+        }
+
+        return $menuConfiguration;
     }
 }

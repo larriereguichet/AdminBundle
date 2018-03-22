@@ -2,30 +2,53 @@
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 class MenuEvent extends Event
 {
     /**
-     * @var AdminInterface
+     * @var array
      */
-    private $admin;
+    private $menuConfigurations;
+
+    /**
+     * @var bool
+     */
+    private $buildResourceMenu;
 
     /**
      * MenuEvent constructor.
-     * @param AdminInterface $admin
+     *
+     * @param array $menuConfigurations
+     * @param bool  $buildResourceMenu
      */
-    public function __construct(AdminInterface $admin)
+    public function __construct(array $menuConfigurations = [], bool $buildResourceMenu = true)
     {
-        $this->admin = $admin;
+        $this->menuConfigurations = $menuConfigurations;
+        $this->buildResourceMenu = $buildResourceMenu;
     }
 
     /**
-     * @return AdminInterface
+     * @return array
      */
-    public function getAdmin(): AdminInterface
+    public function getMenuConfigurations(): array
     {
-        return $this->admin;
+        return $this->menuConfigurations;
+    }
+
+    /**
+     * @param array $menuConfigurations
+     */
+    public function setMenuConfigurations(array $menuConfigurations)
+    {
+        $this->menuConfigurations = $menuConfigurations;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBuildResourceMenu(): bool
+    {
+        return $this->buildResourceMenu;
     }
 }

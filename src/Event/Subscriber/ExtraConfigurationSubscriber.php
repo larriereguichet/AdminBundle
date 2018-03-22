@@ -8,6 +8,7 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\ConfigurationEvent;
+use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -33,6 +34,11 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     private $resourceCollection;
 
     /**
+     * @var ConfigurationFactory
+     */
+    private $configurationFactory;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
@@ -48,15 +54,18 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      * @param EntityManagerInterface          $entityManager
      * @param ResourceCollection              $resourceCollection
+     * @param ConfigurationFactory            $configurationFactory
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
         EntityManagerInterface $entityManager,
-        ResourceCollection $resourceCollection
+        ResourceCollection $resourceCollection,
+        ConfigurationFactory $configurationFactory
     ) {
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
         $this->entityManager = $entityManager;
         $this->resourceCollection = $resourceCollection;
+        $this->configurationFactory = $configurationFactory;
     }
 
     public function enrichAdminConfiguration(ConfigurationEvent $event)
@@ -66,12 +75,17 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         }
         $configuration = $event->getConfiguration();
 
+        // Actions
         $this->addDefaultActions($configuration);
-        $this->addDefaultTopMenu($configuration, $event->getAdminName());
+
+        // Fields
         $this->addDefaultFields($configuration, $event->getEntityClass(), $event->getAdminName());
         $this->addDefaultStrategy($configuration);
         $this->addDefaultRouteParameters($configuration);
         $this->addDefaultFormUse($configuration);
+
+        // Menus
+        $this->addDefaultTopMenu($configuration, $event->getAdminName());
         $this->addDefaultRightMenu($configuration, $event->getAdminName());
         $this->addDefaultLeftMenu($configuration);
 
@@ -267,7 +281,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         foreach ($configuration['actions'] as $name => $actionConfiguration) {
             if (key_exists($name, $mapping) && !key_exists('route_requirements', $actionConfiguration)) {
                 $configuration['actions'][$name]['route_requirements'] = [
-                    'id' => '*',
+                    'id' => '\d+',
                 ];
             }
         }
@@ -299,29 +313,15 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         if (!$this->applicationConfiguration->getParameter('enable_menus')) {
             return;
         }
-        $menuConfiguration = [];
+        $menus = $this->configurationFactory->createResourceMenuConfiguration();
 
-        foreach ($this->resourceCollection->all() as $resource) {
-            $resourceConfiguration = $resource->getConfiguration();
-
-            // Add only entry for the "list" action
-            if (!array_key_exists('list', $resourceConfiguration['actions'])) {
-                continue;
-            }
-            $menuConfiguration[] = [
-                'text' => ucfirst($resource->getName()),
-                'admin' => $resource->getName(),
-                'action' => 'list',
-            ];
-        }
+        // Add the resources menu for each action of the admin
         foreach ($configuration['actions'] as $name => $action) {
             if (key_exists('menus', $action) && key_exists('left', $action)) {
                 continue;
             }
 
-            $configuration['actions'][$name]['menus']['left'] = [
-                'items' => $menuConfiguration,
-            ];
+            $configuration['actions'][$name]['menus']['left'] = $menus;
         }
     }
 

@@ -84,7 +84,7 @@ class AdminExtension extends Twig_Extension
     {
         return [
             new Twig_SimpleFunction('admin_config', [$this, 'getApplicationParameter']),
-            new Twig_SimpleFunction('admin_menu', [$this, 'getMenu']),
+            new Twig_SimpleFunction('admin_menu', [$this, 'getMenu'], ['is_safe' => ['html']]),
             new Twig_SimpleFunction('admin_has_menu', [$this, 'hasMenu']),
             new Twig_SimpleFunction('admin_menu_action', [$this, 'getMenuAction']),
             new Twig_SimpleFunction('admin_field_header', [$this, 'getFieldHeader']),
@@ -102,16 +102,18 @@ class AdminExtension extends Twig_Extension
     /**
      * Render a menu according to given name.
      *
-     * @param string $name
+     * @param string             $name
+     * @param ViewInterface|null $view
      *
      * @return string
      */
-    public function getMenu(string $name)
+    public function getMenu(string $name, ViewInterface $view = null)
     {
         $menu = $this->menuFactory->getMenu($name);
 
         return $this->twig->render('LAGAdminBundle:Menu:menu.html.twig', [
             'menu' => $menu,
+            'admin' => $view,
         ]);
     }
 
@@ -131,32 +133,54 @@ class AdminExtension extends Twig_Extension
      * Return the url of an menu item.
      *
      * @param MenuItemConfiguration $configuration
+     * @param ViewInterface         $view
      *
      * @return string
+     *
+     * @throws Exception
      */
-    public function getMenuAction(MenuItemConfiguration $configuration)
+    public function getMenuAction(MenuItemConfiguration $configuration, ViewInterface $view = null)
     {
         if ($configuration->getParameter('url')) {
             return $configuration->getParameter('url');
         }
 
         if ($configuration->getParameter('admin')) {
-            // generate the route name using the configured pattern
+            $adminName = $configuration->getParameter('admin');
+            $actionName = $configuration->getParameter('action');
+
+            // Generate the route name using the configured pattern
             $routeName = str_replace(
                 '{admin}',
-                strtolower($configuration->getParameter('admin')),
+                strtolower($adminName),
                 $this->applicationConfiguration->getParameter('routing_name_pattern')
             );
             $routeName = str_replace(
                 '{action}',
-                $configuration->getParameter('action'),
+                $actionName,
                 $routeName
             );
+        } else {
+            $routeName = $configuration->getParameter('route');
+        }
+        // Map the eventual parameters to the entity
+        $routeParameters = [];
+        $configuredParameters = $configuration->getParameter('parameters');
 
-            return $this->router->generate($routeName);
+        if (0 !== count($configuredParameters)) {
+            $entity = $view->getEntities()->first();
+            $accessor = PropertyAccess::createPropertyAccessor();
+
+            if (1 !== $view->getEntities()->count()) {
+                throw new Exception('You can not map route parameters if multiple entities are loaded');
+            }
+
+            foreach ($configuredParameters as $name => $requirements) {
+                $routeParameters[$name] = $accessor->getValue($entity, $name);
+            }
         }
 
-        return $this->router->generate($configuration->getParameter('route'));
+        return $this->router->generate($routeName, $routeParameters);
     }
 
     /**
@@ -190,7 +214,7 @@ class AdminExtension extends Twig_Extension
      * Render a field of an entity.
      *
      * @param FieldInterface $field
-     * @param $entity
+     * @param                $entity
      *
      * @return string
      */
