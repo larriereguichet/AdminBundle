@@ -40,6 +40,29 @@
     </div>
 {% endblock %}
 
+{% block right_menu %}
+    <div class="col-1 col-xl-2">
+
+        <form action=""
+              method="post">
+            {{ form_errors(admin.forms.filter) }}
+            {{ form_widget(admin.forms.filter) }}
+
+            <div class="text-right btn-group"
+                 role="group">
+                <a href="{{ admin_url(admin, 'list') }}" class="btn">
+                    <i class="fa fa-refresh"></i>
+                    Reset
+                </a>
+                <button type="submit" class="btn btn-success">
+                    Filter
+                    <i class="fa fa-filter"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
 {#{% block content2 %}#}
     {#<h1 class="page-header">#}
         {#{{ admin.configuration.getParameter('title') | trans }}#}

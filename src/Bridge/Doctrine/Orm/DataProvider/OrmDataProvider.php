@@ -53,15 +53,17 @@ class OrmDataProvider implements DataProviderInterface
      * Load a collection of entities.
      *
      * @param AdminInterface $admin
+     * @param array          $filters
      *
      * @return mixed
      */
-    public function getCollection(AdminInterface $admin)
+    public function getCollection(AdminInterface $admin, array $filters = [])
     {
         $queryBuilder = $this
             ->getRepository($admin->getConfiguration()->getParameter('entity'))
-            ->createQueryBuilder('entity');
-        $event = new DoctrineOrmFilterEvent($queryBuilder, $admin);
+            ->createQueryBuilder('entity')
+        ;
+        $event = new DoctrineOrmFilterEvent($queryBuilder, $admin, $filters);
         $this->eventDispatcher->dispatch(AdminEvents::DOCTRINE_ORM_FILTER, $event);
         $configuration = $admin->getConfiguration();
         $entities = null;

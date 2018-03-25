@@ -3,10 +3,16 @@
 namespace LAG\AdminBundle\Event;
 
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Filter\Filter;
 use Symfony\Component\Form\FormInterface;
 
-class FormEvent extends AbstractEvent
+class FilterEvent extends AbstractEvent
 {
+    /**
+     * @var Filter[]
+     */
+    private $filters = [];
+
     /**
      * @var FormInterface[]
      */
@@ -32,5 +38,23 @@ class FormEvent extends AbstractEvent
     public function getForms()
     {
         return $this->forms;
+    }
+
+    /**
+     * Add a filter and its value.
+     *
+     * @param Filter $filter
+     */
+    public function addFilter(Filter $filter)
+    {
+        $this->filters[] = $filter;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilters(): array
+    {
+        return $this->filters;
     }
 }

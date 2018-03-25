@@ -89,6 +89,9 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         $this->addDefaultRightMenu($configuration, $event->getAdminName());
         $this->addDefaultLeftMenu($configuration);
 
+        // Filters
+        $this->addDefaultFilters($configuration);
+
         $event->setConfiguration($configuration);
     }
 
@@ -171,13 +174,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             if (null === $action) {
                 $action = [];
             }
-            $metadata = null;
-
-            try {
-                // We could not use the hasMetadataFor() method as it is not working if the entity is not loaded. But
-                // the getMetadataFor() method could throw an exception if the class is not found
-                $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($entityClass);
-            } catch (Exception $exception) {}
+            $metadata = $this->findMetadata($entityClass);
 
             // If fields are already defined, nothing to do
             if (key_exists('fields', $action) && is_array($action['fields']) && count($action['fields'])) {
@@ -374,5 +371,75 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         }
 
         return null;
+    }
+
+    /**
+     * Add default filters for the list actions, guessed using the entity metadata.
+     *
+     * @param array $configuration
+     */
+    private function addDefaultFilters(array &$configuration)
+    {
+        // Add the filters only for the "list" action
+        if (!key_exists('list', $configuration['actions'])) {
+            return;
+        }
+
+        // If some filters are already configured, we do not add the default filters
+        if (key_exists('filter', $configuration['actions']['list'])) {
+            return;
+        }
+        $metadata = $this->findMetadata($configuration['entity']);
+
+        if (null === $metadata) {
+            return;
+        }
+        $filters = [];
+
+        foreach ($metadata->getFieldNames() as $fieldName) {
+            $type = $metadata->getTypeOfField($fieldName);
+            $operator = $this->getOperatorFromFieldType($type);
+
+            $filters[$fieldName] = [
+                'type' => $type,
+                'options' => [],
+                'operator' => $operator,
+            ];
+        }
+        $configuration['actions']['list']['filters'] = $filters;
+    }
+
+    /**
+     * Return the Doctrine metadata of the given class.
+     *
+     * @param $class
+     *
+     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata|null
+     */
+    private function findMetadata($class)
+    {
+        $metadata = null;
+
+        try {
+            // We could not use the hasMetadataFor() method as it is not working if the entity is not loaded. But
+            // the getMetadataFor() method could throw an exception if the class is not found
+            $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($class);
+        } catch (Exception $exception) {}
+
+        return $metadata;
+    }
+
+    private function getOperatorFromFieldType($type)
+    {
+        $mapping = [
+            'string' => 'like',
+            'text' => 'like',
+        ];
+
+        if (key_exists($type, $mapping)) {
+            return $mapping[$type];
+        }
+
+        return '=';
     }
 }

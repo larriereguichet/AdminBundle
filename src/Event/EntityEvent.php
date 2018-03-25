@@ -2,35 +2,17 @@
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Admin\AdminInterface;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\HttpFoundation\Request;
-
-class EntityEvent extends Event
+class EntityEvent extends AbstractEvent
 {
+    /**
+     * @var mixed
+     */
     private $entities;
 
     /**
-     * @var Request
+     * @var array
      */
-    private $request;
-
-    /**
-     * @var AdminInterface
-     */
-    private $admin;
-
-    /**
-     * EntityEvent constructor.
-     *
-     * @param AdminInterface $admin
-     * @param Request        $request
-     */
-    public function __construct(AdminInterface $admin, Request $request)
-    {
-        $this->request = $request;
-        $this->admin = $admin;
-    }
+    private $filters = [];
 
     /**
      * @return mixed
@@ -49,18 +31,18 @@ class EntityEvent extends Event
     }
 
     /**
-     * @return Request
+     * @return array
      */
-    public function getRequest(): Request
+    public function getFilters(): array
     {
-        return $this->request;
+        return $this->filters;
     }
 
     /**
-     * @return AdminInterface
+     * @param array $filters
      */
-    public function getAdmin(): AdminInterface
+    public function setFilters(array $filters)
     {
-        return $this->admin;
+        $this->filters = $filters;
     }
 }

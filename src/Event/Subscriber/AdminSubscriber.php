@@ -137,7 +137,7 @@ class AdminSubscriber implements EventSubscriberInterface
             return;
         }
         else if (LAGAdminBundle::LOAD_STRATEGY_MULTIPLE === $strategy) {
-            $entities = $dataProvider->getCollection($admin);
+            $entities = $dataProvider->getCollection($admin, $event->getFilters());
             $event->setEntities($entities);
         }
         else if (LAGAdminBundle::LOAD_STRATEGY_UNIQUE === $strategy) {

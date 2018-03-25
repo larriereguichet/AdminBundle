@@ -16,7 +16,7 @@ class OrmSubscriber implements EventSubscriberInterface
         return [
             AdminEvents::DOCTRINE_ORM_FILTER => [
                 ['addOrder'],
-                ['addFilter'],
+                ['addFilters'],
             ],
         ];
     }
@@ -38,7 +38,32 @@ class OrmSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function addFilter(DoctrineOrmFilterEvent $event)
+    /**
+     * Add filter to the query builder.
+     *
+     * @param DoctrineOrmFilterEvent $event
+     */
+    public function addFilters(DoctrineOrmFilterEvent $event)
     {
+        $queryBuilder = $event->getQueryBuilder();
+
+        foreach ($event->getFilters() as $filter) {
+            $alias = $queryBuilder->getRootAliases()[0];
+            $parameterName = ':filter_'.$filter->getName();
+            $value = $filter->getValue();
+
+            if ('like' === $filter->getOperator()) {
+                $value = '%'.$value.'%';
+            }
+
+            $queryBuilder->andWhere(sprintf(
+                '%s.%s %s %s',
+                $alias,
+                $filter->getName(),
+                $filter->getOperator(),
+                $parameterName
+            ));
+            $queryBuilder->setParameter($parameterName, $value);
+        }
     }
 }

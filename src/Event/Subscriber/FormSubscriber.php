@@ -3,9 +3,13 @@
 namespace LAG\AdminBundle\Event\Subscriber;
 
 use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\FilterEvent;
 use LAG\AdminBundle\Event\FormEvent;
+use LAG\AdminBundle\Filter\Filter;
 use LAG\AdminBundle\LAGAdminBundle;
+use LAG\AdminBundle\Utils\FormUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class FormSubscriber implements EventSubscriberInterface
@@ -15,10 +19,14 @@ class FormSubscriber implements EventSubscriberInterface
      */
     private $formFactory;
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [
-            AdminEvents::HANDLE_FORM => 'createForm',
+            AdminEvents::HANDLE_FORM => 'createEntityForm',
+            AdminEvents::FILTER => 'createFilterForm',
         ];
     }
 
@@ -33,11 +41,11 @@ class FormSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Create a form for the loaded entity
+     * Create a form for the loaded entity.
      *
      * @param FormEvent $event
      */
-    public function createForm(FormEvent $event)
+    public function createEntityForm(FormEvent $event)
     {
         $admin = $event->getAdmin();
         $action = $admin->getAction();
@@ -56,5 +64,64 @@ class FormSubscriber implements EventSubscriberInterface
             ->create($admin->getConfiguration()->getParameter('form'), $entity)
         ;
         $event->addForm($form, 'entity');
+    }
+
+    /**
+     * Create a filter form from configuration and handle the form submission if required.
+     *
+     * @param FilterEvent $event
+     */
+    public function createFilterForm(FilterEvent $event)
+    {
+        $admin = $event->getAdmin();
+        $action = $admin->getAction();
+        $configuration = $action->getConfiguration();
+        $filters = $configuration->getParameter('filters');
+
+        if (0 === count($filters)) {
+            return;
+        }
+        $form = $this
+            ->formFactory
+            ->createNamed('filter', FormType::class)
+        ;
+
+        foreach ($filters as $name => $filter) {
+            $options = array_merge([
+                'required' => false,
+            ], $filter['options']);
+            $type = FormUtils::convertShortFormType($filter['type']);
+
+            $form->add($name, $type, $options);
+        }
+        $form->handleRequest($event->getRequest());
+
+        if ($form->isValid() && $form->isSubmitted()) {
+            $data = $form->getData();
+
+            foreach ($filters as $name => $options) {
+                // If the data is not submitted or if it is null, we should do nothing
+                if (
+                    !key_exists($name, $data) ||
+                    null === $data[$name]
+                ) {
+                    continue;
+                }
+
+                // Do not submit false boolean values to improve user experience
+                if (
+                    is_bool($data[$name]) &&
+                    false === $data[$name]
+                    ) {
+                    continue;
+                }
+
+                // Create a new filter with submitted and configured values
+                $filter = new Filter($options['name'], $data[$name], $options['operator']);
+                $event->addFilter($filter);
+            }
+        }
+
+        $event->addForm($form, 'filter');
     }
 }

@@ -3,10 +3,12 @@
 namespace LAG\AdminBundle\Admin;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\EntityEvent;
+use LAG\AdminBundle\Event\FilterEvent;
 use LAG\AdminBundle\Event\FormEvent;
 use LAG\AdminBundle\Event\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
@@ -93,13 +95,20 @@ class Admin implements AdminInterface
         }
         $this->action = $event->getAction();
 
+        // Dispatch an event to allow entities to be filtered
+        $filterEvent = new FilterEvent($this, $request);
+        $this->eventDispatcher->dispatch(AdminEvents::FILTER, $filterEvent);
+
         $event = new EntityEvent($this, $request);
+        $event->setFilters($filterEvent->getFilters());
         $this->eventDispatcher->dispatch(AdminEvents::ENTITY_LOAD, $event);
         $this->entities = $event->getEntities();
 
         $event = new FormEvent($this, $request);
         $this->eventDispatcher->dispatch(AdminEvents::HANDLE_FORM, $event);
-        $this->forms = $event->getForms();
+
+        // Merge the regular forms and the filter forms
+        $this->forms = array_merge($event->getForms(), $filterEvent->getForms());
 
         $this->handleForm($request);
     }
@@ -167,6 +176,11 @@ class Admin implements AdminInterface
         return $this->action;
     }
 
+    /**
+     * Return the entities loaded from the data provider.
+     *
+     * @return Collection
+     */
     public function getEntities()
     {
         return $this->entities;

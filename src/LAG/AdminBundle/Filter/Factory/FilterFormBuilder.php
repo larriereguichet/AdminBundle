@@ -16,7 +16,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Handle the creation of Filters.
  */
-class FilterFormBuilder
+class FilterFormBuilderOLD
 {
     /**
      * @var FormFactoryInterface

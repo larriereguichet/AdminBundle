@@ -12,6 +12,8 @@ class AdminEvents
 
     const ACTION_CONFIGURATION = 'lag.admin.action_configuration';
 
+    const FILTER = 'lag.admin.filter';
+
     const VIEW = 'lag.admin.view';
 
     const MENU = 'lag.admin.menu';

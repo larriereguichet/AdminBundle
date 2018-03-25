@@ -13,10 +13,11 @@ interface DataProviderInterface
      * Return a collection of entities.
      *
      * @param AdminInterface $admin
+     * @param array          $filters
      *
      * @return mixed
      */
-    public function getCollection(AdminInterface $admin);
+    public function getCollection(AdminInterface $admin, array $filters = []);
 
     /**
      * Return a single entity.

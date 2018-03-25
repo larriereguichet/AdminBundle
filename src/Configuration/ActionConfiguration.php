@@ -349,39 +349,24 @@ class ActionConfiguration extends Configuration
      */
     private function getFiltersNormalizer()
     {
-        return function (Options $options, $filters) {
-            if (!is_array($filters)) {
-                return [];
-            }
+        return function (Options $options, $data) {
             $normalizedData = [];
-            $resolver = new OptionsResolver();
 
-            foreach ($filters as $filter => $filterOptions) {
-                // the filter name should be a string
-                if (!is_string($filter)) {
-                    throw new ConfigurationException(
-                        'Invalid filter name "'.$filter.'"',
-                        $this->actionName
-                    );
-                }
-                // Normalize string notation : if only a string is provided (instead of an array), this string is
-                // taken as the filter type
-                if (is_string($filterOptions)) {
-                    $filterOptions = [
-                        'type' => $filterOptions,
+            foreach ($data as $name => $field) {
+                if (is_string($field)) {
+                    $field = [
+                        'type' => $field,
+                        'options' => [],
                     ];
                 }
+                $field['name'] = $name;
 
-                if (null === $filterOptions) {
-                    $filterOptions = [];
-                }
-                $configuration = new FilterConfiguration();
-                $configuration->configureOptions($resolver);
-                $filterOptions = $resolver->resolve($filterOptions);
-                $resolver->clear();
+                $resolver = new OptionsResolver();
+                $filterConfiguration = new FilterConfiguration();
+                $filterConfiguration->configureOptions($resolver);
+                $filterConfiguration->setParameters($resolver->resolve($field));
 
-                // set the normalized data
-                $normalizedData[$filter] = $filterOptions;
+                $normalizedData[$name] = $filterConfiguration->getParameters();
             }
 
             return $normalizedData;
