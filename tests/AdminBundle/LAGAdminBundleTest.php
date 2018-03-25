@@ -12,7 +12,7 @@ class LAGAdminBundleTest extends AdminTestBase
     {
         $container = $this->getMockWithoutConstructor(ContainerBuilder::class);
         $container
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('addCompilerPass')
             ->willReturnMap([
                 [new ResourceCompilerPass()],

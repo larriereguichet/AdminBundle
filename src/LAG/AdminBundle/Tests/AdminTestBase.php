@@ -31,7 +31,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class AdminTestBase extends TestCase
+class AdminTestBaseOLD extends TestCase
 {
     /**
      * @var bool
