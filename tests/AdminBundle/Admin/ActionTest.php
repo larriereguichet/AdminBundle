@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Tests\Action;
+namespace LAG\AdminBundle\Tests\Admin;
 
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Configuration\ActionConfiguration;

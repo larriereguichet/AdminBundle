@@ -49,7 +49,7 @@ class OrmSubscriber implements EventSubscriberInterface
 
         foreach ($event->getFilters() as $filter) {
             $alias = $queryBuilder->getRootAliases()[0];
-            $parameterName = ':filter_'.$filter->getName();
+            $parameterName = 'filter_'.$filter->getName();
             $value = $filter->getValue();
 
             if ('like' === $filter->getOperator()) {
@@ -61,7 +61,7 @@ class OrmSubscriber implements EventSubscriberInterface
                 $alias,
                 $filter->getName(),
                 $filter->getOperator(),
-                $parameterName
+                ':'.$parameterName
             ));
             $queryBuilder->setParameter($parameterName, $value);
         }

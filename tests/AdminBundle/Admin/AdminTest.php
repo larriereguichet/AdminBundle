@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Tests\Action;
+namespace LAG\AdminBundle\Tests\Admin;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Admin\ActionInterface;
