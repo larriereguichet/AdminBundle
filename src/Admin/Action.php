@@ -19,10 +19,10 @@ class Action implements ActionInterface
     /**
      * Action constructor.
      *
-     * @param                     $name
+     * @param string              $name
      * @param ActionConfiguration $configuration
      */
-    public function __construct($name, ActionConfiguration $configuration)
+    public function __construct(string $name, ActionConfiguration $configuration)
     {
         $this->name = $name;
         $this->configuration = $configuration;

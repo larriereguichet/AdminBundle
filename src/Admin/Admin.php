@@ -90,7 +90,7 @@ class Admin implements AdminInterface
         $event = new AdminEvent($this, $request);
         $this->eventDispatcher->dispatch(AdminEvents::HANDLE_REQUEST, $event);
 
-        if (null === $event->getAction()) {
+        if (!$event->hasAction()) {
             throw new Exception('The current action was not set during the dispatch of the event');
         }
         $this->action = $event->getAction();
@@ -147,33 +147,29 @@ class Admin implements AdminInterface
 
     /**
      * @return ViewInterface
-     *
-     * @throws Exception
      */
     public function createView(): ViewInterface
     {
         $event = new ViewEvent($this, $this->request);
         $this->eventDispatcher->dispatch(AdminEvents::VIEW, $event);
 
-        if (null === $event->getView()) {
-            throw new Exception('No event subscribers were able to create a view');
-        }
-
         return $event->getView();
     }
 
     /**
      * @return ActionInterface
-     *
-     * @throws Exception
      */
     public function getAction(): ActionInterface
     {
-        if (null === $this->action) {
-            throw new Exception('The current action is not set. did you forget to call the handleRequest() method');
-        }
-
         return $this->action;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAction(): bool
+    {
+        return null !== $this->action;
     }
 
     /**
@@ -207,7 +203,7 @@ class Admin implements AdminInterface
         $form = $this->forms['entity'];
         $entity = $this->entities->first();
 
-        if (null === $entity) {
+        if (!$entity) {
             return;
         }
         $form->handleRequest($request);

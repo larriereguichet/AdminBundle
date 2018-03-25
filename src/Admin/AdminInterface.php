@@ -55,6 +55,13 @@ interface AdminInterface
     public function getAction(): ActionInterface;
 
     /**
+     * Return true if the current action is defined.
+     *
+     * @return bool
+     */
+    public function hasAction(): bool;
+
+    /**
      * Return the loaded entities in the Admin.
      *
      * @return Collection

@@ -53,6 +53,14 @@ class AdminEvent extends Event
     }
 
     /**
+     * @return bool
+     */
+    public function hasAction(): bool
+    {
+        return null !== $this->action;
+    }
+
+    /**
      * @param ActionInterface $action
      */
     public function setAction(ActionInterface $action)
