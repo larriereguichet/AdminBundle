@@ -37,11 +37,7 @@
     "johnkrovitch/configuration": "^1.0",
     "twig/extensions": "~1.2",
     "sensio/framework-extra-bundle": "~4.0 || ~5.0",
-    "symfony/console": "~3.0|~4.0",
-    "symfony/dependency-injection": "~3.0|~4.0",
-    "symfony/form": "~3.0",
-    "symfony/framework-bundle": "~3.0|~4.0",
-    "symfony/monolog-bundle": "~3.0",
+    "symfony/symfony": "~3.0|~4.0",
     "white-october/pagerfanta-bundle": "~1.0"
   },
   "require-dev": {
