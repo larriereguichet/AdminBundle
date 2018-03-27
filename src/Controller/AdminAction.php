@@ -36,7 +36,7 @@ class AdminAction
     /**
      * @param Request $request
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     public function __invoke(Request $request)
     {
