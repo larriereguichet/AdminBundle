@@ -12,7 +12,7 @@ use LAG\AdminBundle\Event\DoctrineOrmFilterEvent;
 use LAG\AdminBundle\Exception\Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class OrmDataProvider implements DataProviderInterface
@@ -23,7 +23,7 @@ class OrmDataProvider implements DataProviderInterface
     private $entityManager;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     private $eventDispatcher;
 
@@ -36,12 +36,12 @@ class OrmDataProvider implements DataProviderInterface
      * DoctrineOrmDataProvider constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param EventDispatcher        $eventDispatcher
-     * @param RequestStack           $requestStack
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param RequestStack $requestStack
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        EventDispatcher $eventDispatcher,
+        EventDispatcherInterface $eventDispatcher,
         RequestStack $requestStack
     ) {
         $this->entityManager = $entityManager;
