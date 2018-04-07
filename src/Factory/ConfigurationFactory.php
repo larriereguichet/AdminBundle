@@ -103,7 +103,11 @@ class ConfigurationFactory
             $resourceConfiguration = $resource->getConfiguration();
 
             // Add only entry for the "list" action
-            if (!array_key_exists('list', $resourceConfiguration['actions'])) {
+            if (
+                !key_exists('actions', $resourceConfiguration) ||
+                null === $resourceConfiguration['actions'] ||
+                !array_key_exists('list', $resourceConfiguration['actions'])
+            ) {
                 continue;
             }
             $menuConfiguration['items'][] = [
