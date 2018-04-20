@@ -1,48 +1,52 @@
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
     ### Resources ###
-    lag.admin.resource_collection:
+    LAG\AdminBundle\Resource\ResourceCollection:
         class: LAG\AdminBundle\Resource\ResourceCollection
     #################
 
     ### Subscribers ###
-    lag.admin.subscriber.security:
+    LAG\AdminBundle\Event\Subscriber\SecuritySubscriber:
         class: LAG\AdminBundle\Event\Subscriber\SecuritySubscriber
         autowire: true
         autoconfigure: true
 
-    lag.admin.subscriber.admin:
+    LAG\AdminBundle\Event\Subscriber\AdminSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\AdminSubscriber
         autowire: true
         autoconfigure: true
 
-    lag.admin.subscriber.form:
+    LAG\AdminBundle\Event\Subscriber\FormSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\FormSubscriber
         autowire: true
         autoconfigure: true
 
-    lag.admin.subscriber.extra_configuration:
+    LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
         autowire: true
         autoconfigure: true
 
-    lag.admin.subscriber.menu:
+    LAG\AdminBundle\Event\Subscriber\MenuSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\MenuSubscriber
         autowire: true
         autoconfigure: true
 
-    lag.admin.subscirber.doctrine_orm_event:
+    LAG\AdminBundle\Bridge\Doctrine\Orm\Event\Subscriber\OrmSubscriber:
         class: LAG\AdminBundle\Bridge\Doctrine\Orm\Event\Subscriber\OrmSubscriber
         autowire: true
         autoconfigure: true
     ###################
 
     ### Configuration ###
-    lag.admin.configuration:
+    LAG\AdminBundle\Configuration\ApplicationConfigurationStorage:
         class: LAG\AdminBundle\Configuration\ApplicationConfigurationStorage
     #####################
 
     ### Routing ###
-    lag.admin.routing:
+    LAG\AdminBundle\Routing\RoutingLoader:
         class: LAG\AdminBundle\Routing\RoutingLoader
         autowire: true
         autoconfigure: true
@@ -65,33 +69,33 @@ services:
     ###################
 
     ### Factories ###
-    lag.admin.action_factory:
+    LAG\AdminBundle\Factory\ActionFactory:
         class: LAG\AdminBundle\Factory\ActionFactory
         autowire: true
 
-    lag.admin.admin_factory:
+    LAG\AdminBundle\Factory\AdminFactory:
         class: LAG\AdminBundle\Factory\AdminFactory
         autowire: true
 
-    lag.admin.configuration_factory:
+    LAG\AdminBundle\Factory\ConfigurationFactory:
         class: LAG\AdminBundle\Factory\ConfigurationFactory
         autowire: true
 
-    lag.admin.menu_factory:
+    LAG\AdminBundle\Factory\MenuFactory:
         class: LAG\AdminBundle\Factory\MenuFactory
         autowire: true
 
-    lag.admin.view_factory:
+    LAG\AdminBundle\Factory\ViewFactory:
         class: LAG\AdminBundle\Factory\ViewFactory
         autowire: true
 
-    lag.admin.data_provider_factory:
+    LAG\AdminBundle\Factory\DataProviderFactory:
         class: LAG\AdminBundle\Factory\DataProviderFactory
         autowire: true
     #################
 
     ### Twig extension ###
-    lag.admin.twig_extension:
+    LAG\AdminBundle\Twig\AdminExtension:
         class: LAG\AdminBundle\Twig\AdminExtension
         autowire: true
         tags:
@@ -99,7 +103,7 @@ services:
     ######################
 
     ### DataProviders ###
-    lag.admin.orm_data_provider:
+    LAG\AdminBundle\Bridge\Doctrine\Orm\DataProvider\OrmDataProvider:
         class: LAG\AdminBundle\Bridge\Doctrine\Orm\DataProvider\OrmDataProvider
         autowire: true
         tags:

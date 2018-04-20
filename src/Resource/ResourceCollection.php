@@ -7,16 +7,24 @@ use LAG\AdminBundle\Exception\Exception;
 class ResourceCollection
 {
     /**
-     * @var \LAG\AdminBundle\Resource\Resource[]
+     * @var Resource[]
      */
     protected $items = [];
 
-    public function add(\LAG\AdminBundle\Resource\Resource $resource)
+    /**
+     * @param Resource $resource
+     */
+    public function add(Resource $resource)
     {
         $this->items[$resource->getName()] = $resource;
     }
 
-    public function has($resourceName)
+    /**
+     * @param string $resourceName
+     *
+     * @return bool
+     */
+    public function has(string $resourceName)
     {
         return array_key_exists($resourceName, $this->items);
     }
@@ -24,7 +32,7 @@ class ResourceCollection
     /**
      * @param string $resourceName
      *
-     * @return \LAG\AdminBundle\Resource\Resource
+     * @return Resource
      *
      * @throws Exception
      */
@@ -38,7 +46,7 @@ class ResourceCollection
     }
 
     /**
-     * @return \LAG\AdminBundle\Resource\Resource[]
+     * @return Resource[]
      */
     public function all()
     {
