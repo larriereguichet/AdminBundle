@@ -2,6 +2,7 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        public: false
 
     ### Resources ###
     LAG\AdminBundle\Resource\ResourceCollection:
@@ -11,33 +12,21 @@ services:
     ### Subscribers ###
     LAG\AdminBundle\Event\Subscriber\SecuritySubscriber:
         class: LAG\AdminBundle\Event\Subscriber\SecuritySubscriber
-        autowire: true
-        autoconfigure: true
 
     LAG\AdminBundle\Event\Subscriber\AdminSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\AdminSubscriber
-        autowire: true
-        autoconfigure: true
 
     LAG\AdminBundle\Event\Subscriber\FormSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\FormSubscriber
-        autowire: true
-        autoconfigure: true
 
     LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
-        autowire: true
-        autoconfigure: true
 
     LAG\AdminBundle\Event\Subscriber\MenuSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\MenuSubscriber
-        autowire: true
-        autoconfigure: true
 
     LAG\AdminBundle\Bridge\Doctrine\Orm\Event\Subscriber\OrmSubscriber:
         class: LAG\AdminBundle\Bridge\Doctrine\Orm\Event\Subscriber\OrmSubscriber
-        autowire: true
-        autoconfigure: true
     ###################
 
     ### Configuration ###
@@ -48,8 +37,6 @@ services:
     ### Routing ###
     LAG\AdminBundle\Routing\RoutingLoader:
         class: LAG\AdminBundle\Routing\RoutingLoader
-        autowire: true
-        autoconfigure: true
         tags:
             - {name: routing.loader}
     ################
@@ -57,13 +44,9 @@ services:
     ### Controllers ###
     LAG\AdminBundle\Controller\AdminAction:
         class: LAG\AdminBundle\Controller\AdminAction
-        autowire: true
-        autoconfigure: true
 
     LAG\AdminBundle\Controller\HomeAction:
         class: LAG\AdminBundle\Controller\HomeAction
-        autowire: true
-        autoconfigure: true
         tags:
             - {name: controller.argument_value_resolver}
     ###################
@@ -71,33 +54,29 @@ services:
     ### Factories ###
     LAG\AdminBundle\Factory\ActionFactory:
         class: LAG\AdminBundle\Factory\ActionFactory
-        autowire: true
 
     LAG\AdminBundle\Factory\AdminFactory:
         class: LAG\AdminBundle\Factory\AdminFactory
-        autowire: true
 
     LAG\AdminBundle\Factory\ConfigurationFactory:
         class: LAG\AdminBundle\Factory\ConfigurationFactory
-        autowire: true
 
     LAG\AdminBundle\Factory\MenuFactory:
         class: LAG\AdminBundle\Factory\MenuFactory
-        autowire: true
 
     LAG\AdminBundle\Factory\ViewFactory:
         class: LAG\AdminBundle\Factory\ViewFactory
-        autowire: true
 
     LAG\AdminBundle\Factory\DataProviderFactory:
         class: LAG\AdminBundle\Factory\DataProviderFactory
-        autowire: true
+
+    LAG\AdminBundle\Factory\FieldFactory:
+        class: LAG\AdminBundle\Factory\FieldFactory
     #################
 
     ### Twig extension ###
     LAG\AdminBundle\Twig\AdminExtension:
         class: LAG\AdminBundle\Twig\AdminExtension
-        autowire: true
         tags:
             - {name: twig.extension}
     ######################
@@ -105,7 +84,6 @@ services:
     ### DataProviders ###
     LAG\AdminBundle\Bridge\Doctrine\Orm\DataProvider\OrmDataProvider:
         class: LAG\AdminBundle\Bridge\Doctrine\Orm\DataProvider\OrmDataProvider
-        autowire: true
         tags:
             - {name: lag.admin.data_provider}
     #####################
