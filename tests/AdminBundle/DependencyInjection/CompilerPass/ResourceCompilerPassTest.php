@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Tests\DependencyInjection\CompilerPass;
 
 use LAG\AdminBundle\DependencyInjection\CompilerPass\ResourceCompilerPass;
+use LAG\AdminBundle\Resource\ResourceCollection;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -27,7 +28,7 @@ class ResourceCompilerPassTest extends AdminTestBase
         $builder
             ->expects($this->once())
             ->method('getDefinition')
-            ->with('lag.admin.resource_collection')
+            ->with(ResourceCollection::class)
             ->willReturn($resourceCollection)
         ;
         $builder

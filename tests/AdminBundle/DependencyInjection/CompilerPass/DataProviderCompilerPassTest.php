@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Tests\DependencyInjection\CompilerPass;
 
 use LAG\AdminBundle\DependencyInjection\CompilerPass\DataProviderCompilerPass;
+use LAG\AdminBundle\Factory\DataProviderFactory;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -28,13 +29,13 @@ class DataProviderCompilerPassTest extends AdminTestBase
         $builder
             ->expects($this->once())
             ->method('findDefinition')
-            ->with('lag.admin.data_provider_factory')
+            ->with(DataProviderFactory::class)
             ->willReturn($definition)
         ;
         $builder
             ->expects($this->once())
             ->method('has')
-            ->with('lag.admin.data_provider_factory')
+            ->with(DataProviderFactory::class)
             ->willReturn(true)
         ;
         $builder
