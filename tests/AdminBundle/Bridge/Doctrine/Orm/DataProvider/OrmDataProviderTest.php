@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Bridge\Doctrine\Orm\DataProvider\OrmDataProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\OrmDataProvider;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;

@@ -25,8 +25,8 @@ services:
     LAG\AdminBundle\Event\Subscriber\MenuSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\MenuSubscriber
 
-    LAG\AdminBundle\Bridge\Doctrine\Orm\Event\Subscriber\OrmSubscriber:
-        class: LAG\AdminBundle\Bridge\Doctrine\Orm\Event\Subscriber\OrmSubscriber
+    LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\OrmSubscriber:
+        class: LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\OrmSubscriber
     ###################
 
     ### Configuration ###
@@ -82,8 +82,8 @@ services:
     ######################
 
     ### DataProviders ###
-    LAG\AdminBundle\Bridge\Doctrine\Orm\DataProvider\OrmDataProvider:
-        class: LAG\AdminBundle\Bridge\Doctrine\Orm\DataProvider\OrmDataProvider
+    LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\OrmDataProvider:
+        class: LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\OrmDataProvider
         tags:
             - {name: lag.admin.data_provider}
     #####################

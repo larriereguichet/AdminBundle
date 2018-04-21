@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Bridge\Doctrine\Orm\DataProvider;
+namespace LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +15,7 @@ use Pagerfanta\Pagerfanta;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class OrmDataProvider implements DataProviderInterface
+class ORMDataProvider implements DataProviderInterface
 {
     /**
      * @var EntityManagerInterface
@@ -33,7 +33,7 @@ class OrmDataProvider implements DataProviderInterface
     private $requestStack;
 
     /**
-     * DoctrineOrmDataProvider constructor.
+     * DoctrineORMDataProvider constructor.
      *
      * @param EntityManagerInterface $entityManager
      * @param EventDispatcherInterface $eventDispatcher
