@@ -82,8 +82,8 @@ services:
     ######################
 
     ### DataProviders ###
-    LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\OrmDataProvider:
-        class: LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\OrmDataProvider
+    LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider:
+        class: LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider
         tags:
             - {name: lag.admin.data_provider}
     #####################
