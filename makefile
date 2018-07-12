@@ -10,3 +10,8 @@ update:
 
 assets-build:
 	php sam.php
+
+### PHPUnit ###
+phpunit:
+	bin/phpunit
+###############
