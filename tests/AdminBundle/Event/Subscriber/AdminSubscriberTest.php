@@ -210,7 +210,7 @@ class AdminSubscriberTest extends AdminTestBase
     }
 
     /**
-     * Test the entity loading with the none strategy.
+     * Test entity loading with the none strategy.
      */
     public function testLoadEntitiesWithNoneStrategy()
     {
@@ -283,7 +283,7 @@ class AdminSubscriberTest extends AdminTestBase
     }
 
     /**
-     * Test the entity loading with the multiple strategy.
+     * Test entity loading with the multiple strategy.
      */
     public function testLoadEntitiesWithMultipleStrategy()
     {
@@ -363,7 +363,7 @@ class AdminSubscriberTest extends AdminTestBase
     }
 
     /**
-     * Test the entity loading with the unique strategy.
+     * Test entity loading with the unique strategy.
      */
     public function testLoadEntitiesWithUniqueStrategy()
     {
@@ -447,6 +447,9 @@ class AdminSubscriberTest extends AdminTestBase
         $this->assertEquals($test, $event->getEntities()->first());
     }
 
+    /**
+     * Test entity loading without identifier parameter.
+     */
     public function testLoadEntitiesWithoutIdentifier()
     {
         $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
@@ -521,5 +524,62 @@ class AdminSubscriberTest extends AdminTestBase
         $this->assertExceptionRaised(Exception::class, function () use ($subscriber, $event) {
             $subscriber->loadEntities($event);
         });
+    }
+
+    /**
+     * Test the save item process.
+     */
+    public function testSaveEntity()
+    {
+        $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
+        $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
+
+        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration
+            ->expects($this->atLeastOnce())
+            ->method('getParameter')
+            ->willReturnMap([
+                ['data_provider', 'my_data_provider'],
+                ['entity', 'MyClass'],
+            ])
+        ;
+
+        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin
+            ->expects($this->atLeastOnce())
+            ->method('getConfiguration')
+            ->willReturn($adminConfiguration)
+        ;
+
+        $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
+        $dataProvider
+            ->expects($this->atLeastOnce())
+            ->method('saveItem')
+            ->with($admin)
+        ;
+
+        $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
+        $dataProviderFactory
+            ->expects($this->atLeastOnce())
+            ->method('get')
+            ->with('my_data_provider')
+            ->willReturn($dataProvider)
+        ;
+        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+
+        $subscriber = new AdminSubscriber(
+            $actionFactory,
+            $viewFactory,
+            $dataProviderFactory,
+            $eventDispatcher
+        );
+
+        $request = new Request([], [], [
+            '_action' => 'list',
+        ]);
+
+        $event = new EntityEvent($admin, $request);
+
+        $subscriber->saveEntity($event);
     }
 }
