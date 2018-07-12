@@ -23,7 +23,7 @@ class OrmDataProviderTest extends AdminTestBase
     public function testGetCollection()
     {
         // FIX tests
-        $this->assertTrue(true);
+        //$this->assertTrue(true);
         return;
         $platform = $this->getMockWithoutConstructor(MySqlPlatform::class);
         $connection = $this->getMockWithoutConstructor(Connection::class);
