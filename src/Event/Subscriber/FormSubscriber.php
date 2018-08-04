@@ -96,7 +96,7 @@ class FormSubscriber implements EventSubscriberInterface
         }
         $form->handleRequest($event->getRequest());
 
-        if ($form->isValid() && $form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             foreach ($filters as $name => $options) {
