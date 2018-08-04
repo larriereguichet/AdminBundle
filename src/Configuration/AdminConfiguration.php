@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Configuration;
 
 use JK\Configuration\Configuration;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider;
 use LAG\AdminBundle\Controller\AdminAction;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -63,7 +64,7 @@ class AdminConfiguration extends Configuration
                 'string_length' => $this->applicationConfiguration->getParameter('string_length'),
                 'string_length_truncate' => $this->applicationConfiguration->getParameter('string_length_truncate'),
                 'date_format' => $this->applicationConfiguration->getParameter('date_format'),
-                'data_provider' => 'lag.admin.orm_data_provider',
+                'data_provider' => ORMDataProvider::class,
                 'page_parameter' => $this->applicationConfiguration->getParameter('page_parameter'),
             ])
             ->setRequired([
