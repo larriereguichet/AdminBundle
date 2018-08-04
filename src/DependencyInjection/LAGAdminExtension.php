@@ -35,6 +35,7 @@ class LAGAdminExtension extends Extension
             if (key_exists('enable_extra_configuration', $config['application'])) {
                 $enableExtraConfig = $config['application']['enable_extra_configuration'];
             }
+            $applicationConfig = $config['application'];
         }
         if (key_exists('admins', $config)) {
             $adminsConfig = $config['admins'];
