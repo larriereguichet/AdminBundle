@@ -111,7 +111,7 @@ class AdminExtension extends Twig_Extension
     {
         $menu = $this->menuFactory->getMenu($name);
 
-        return $this->twig->render('LAGAdminBundle:Menu:menu.html.twig', [
+        return $this->twig->render('@LAGAdmin/Menu/menu.html.twig', [
             'menu' => $menu,
             'admin' => $view,
         ]);
