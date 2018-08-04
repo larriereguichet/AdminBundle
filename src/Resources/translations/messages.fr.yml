@@ -6,11 +6,11 @@ lag:
         save_and_return_to_list: Sauvegarder et retourner à la liste
         cancel: Annuler
         saved: Les modifications ont été sauvegardées
-        welcome_message: Bienvenue %username%
+        welcome_message: 'Bienvenue %username%'
 
         # List
-        true: Oui
-        false: Non
+        'true': Oui
+        'false': Non
         batch_action: Exécuter
         batch_empty: Choisissez une action
         edit: Editer
@@ -19,7 +19,7 @@ lag:
         # deletion
         delete: Supprimer
         deleting: 'Vous allez supprimer l''entité "%entity%" (#%id%). Etes-vous sûr(e) ?'
-        deleted: Entity "%entity%" has been succesfully removed
+        deleted: 'Entity "%entity%" has been succesfully removed'
         deleted_errors: Une erreur a été rencontrée durant la suppression
 
         # Batch
@@ -31,7 +31,7 @@ lag:
         filter: Filtrer
         filter_reset: Réinitialiser
 
-        search_by: Recherche par %field%
+        search_by: 'Recherche par %field%'
         no_record: Aucun élément n'a été trouvé
         delete_confirmation_title: Attention
         delete_confirmation_warning: Vous allez supprimer un élément. Cette action n'est pas réversible
