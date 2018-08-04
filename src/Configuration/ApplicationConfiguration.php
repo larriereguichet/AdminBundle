@@ -45,10 +45,10 @@ class ApplicationConfiguration extends Configuration
                 'locale' => 'en',
                 // Main base template as bundles are not loaded when reading the configuration, the kernel
                 // locateResources will always failed. So we must not check resource existence here.
-                'base_template' => '@LAGAdmin/two_columns.layout.html.twig',
-                'block_template' => 'LAGAdminBundle:Form:fields.html.twig',
-                'menu_template' => 'LAGAdminBundle:Menu:menu.html.twig',
-                'homepage_template' => 'LAGAdminBundle:Pages:home.html.twig',
+                'base_template' => '@LAGAdmin/base.html.twig',
+                'block_template' => '@LAGAdminBundle/Form/fields.html.twig',
+                'menu_template' => '@LAGAdminBundle/Menu/menu.html.twig',
+                'homepage_template' => '@LAGAdminBundle/Pages/home.html.twig',
                 'routing_url_pattern' => '/{admin}/{action}',
                 'routing_name_pattern' => 'lag.admin.{admin}.{action}',
                 'bootstrap' => true,
