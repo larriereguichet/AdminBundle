@@ -45,12 +45,12 @@ services:
     LAG\AdminBundle\Controller\AdminAction:
         class: LAG\AdminBundle\Controller\AdminAction
         tags:
-            - {name: controller.argument_value_resolver}
+            - {name: controller.service_arguments}
 
     LAG\AdminBundle\Controller\HomeAction:
         class: LAG\AdminBundle\Controller\HomeAction
         tags:
-            - {name: controller.argument_value_resolver}
+            - {name: controller.service_arguments}
     ###################
 
     ### Factories ###
