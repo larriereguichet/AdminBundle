@@ -104,7 +104,7 @@ class FieldFactory
      *
      * @throws Exception
      */
-    public function create($name, array $configuration = [], ActionConfiguration $actionConfiguration)
+    public function create($name, array $configuration, ActionConfiguration $actionConfiguration)
     {
         $resolver = new OptionsResolver();
         $configuration = $this->resolveTopLevelConfiguration($configuration, $actionConfiguration);
@@ -116,7 +116,7 @@ class FieldFactory
             $field->setOptions($resolver->resolve($configuration['options']));
         } catch (Exception $exception) {
             throw new \LAG\AdminBundle\Exception\Exception(
-                'An error has occurred when resolving the options for the field "'.$name.'"',
+                'An error has occurred when resolving the options for the field "'.$name.'": '.$exception->getMessage(),
                 $exception->getCode(),
                 $exception
             );
