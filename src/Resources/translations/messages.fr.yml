@@ -16,7 +16,7 @@ lag:
         edit: Editer
         element_count: '%page_count% éléments sur %total_count%'
 
-        # deletion
+        # Delete
         delete: Supprimer
         deleting: 'Vous allez supprimer l''entité "%entity%" (#%id%). Etes-vous sûr(e) ?'
         deleted: 'Entity "%entity%" has been succesfully removed'
@@ -30,6 +30,7 @@ lag:
         mass_action: Exécuter
         filter: Filtrer
         filter_reset: Réinitialiser
+        show_filter: Montrer les filtres
 
         search_by: 'Recherche par %field%'
         no_record: Aucun élément n'a été trouvé
