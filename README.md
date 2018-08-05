@@ -108,3 +108,19 @@ to `http://127.0.0.1:8000/app_dev.php/admin/` the see an homepage of your admin 
   a. Application configuration
   b. Admin configuration
 
+## Road map
+
+### v1.1
+
+- add dynamic id column (instead of required "id" column)
+
+## History
+
+Version 0.4 :
+* Dynamic CRUD for your entities (no code generation)
+* Simple configuration in yml (look alike symfony1 generators.yml syntax)
+* List with pagination, sorting and batch remove (filters are coming)
+* Full translated
+* Main and left menu integration
+* Fully customizable (use your own controllers, data providers or templates)
+* Bootstrap 3 integration (can be disabled or override)
