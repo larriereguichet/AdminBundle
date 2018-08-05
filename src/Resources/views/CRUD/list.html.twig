@@ -3,6 +3,48 @@
 {% block content %}
     <h1>{{ admin.configuration.getParameter('title') | trans }}</h1>
 
+        <a class=""
+           data-toggle="collapse"
+           href="#filters-container"
+           role="button"
+           aria-expanded="false"
+           aria-controls="collapseExample"
+           style="">
+            {{ 'lag.admin.show_filter' | trans }}
+        </a>
+
+        <style>
+            #filters-container {
+
+            }
+        </style>
+
+        <div class="collapse"
+             id="filters-container">
+            <div class="card card-body">
+                <form action=""
+                      method="post">
+
+                    <h2>{{ 'lag.admin.filter' | trans }}</h2>
+
+                    {{ form_errors(admin.forms.filter) }}
+                    {{ form_widget(admin.forms.filter) }}
+
+                    <div class="text-right btn-group"
+                         role="group">
+                        <a href="{{ admin_url(admin, 'list') }}" class="btn">
+                            <i class="fa fa-refresh"></i>
+                            Reset
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            Filter
+                            <i class="fa fa-filter"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     <table class="table">
         <thead>
         <tr>
@@ -37,29 +79,6 @@
         {% if admin.pager %}
             {{ pagerfanta(admin.pager, 'twitter_bootstrap4', {page: admin.pager.currentPage}) }}
         {% endif %}
-    </div>
-{% endblock %}
-
-{% block right_menu %}
-    <div class="col-1 col-xl-2">
-
-        <form action=""
-              method="post">
-            {{ form_errors(admin.forms.filter) }}
-            {{ form_widget(admin.forms.filter) }}
-
-            <div class="text-right btn-group"
-                 role="group">
-                <a href="{{ admin_url(admin, 'list') }}" class="btn">
-                    <i class="fa fa-refresh"></i>
-                    Reset
-                </a>
-                <button type="submit" class="btn btn-success">
-                    Filter
-                    <i class="fa fa-filter"></i>
-                </button>
-            </div>
-        </form>
     </div>
 {% endblock %}
 

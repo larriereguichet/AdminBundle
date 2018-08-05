@@ -8,8 +8,11 @@
     <a href="{{ url }}"
        target="{{ options.target }}"
        class="{{ options.class }}"
-       title="{{ options.title | default(options.text) | trans({}, 'admin') }}">
+       title="{{ options.title | default(options.text) | trans }}">
         {# font awesome icons #}
-        {% if options.icon %}<i class="fa fa-{{ options.icon }}"></i>&nbsp;{% endif %}{{ options.text | trans }}
+        {% if options.icon %}
+            <i class="fa fa-{{ options.icon }}"></i>&nbsp;
+        {% endif %}
+        {{ options.text | trans }}
     </a>
 {% endspaceless %}
