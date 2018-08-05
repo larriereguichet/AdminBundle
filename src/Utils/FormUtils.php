@@ -22,6 +22,7 @@ class FormUtils
     {
         $mapping = [
             'choice' => ChoiceType::class,
+            'array' => ChoiceType::class,
             'string' => TextType::class,
             'entity' => EntityType::class,
             'date' => DateType::class,
