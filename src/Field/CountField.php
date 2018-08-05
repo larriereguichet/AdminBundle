@@ -19,7 +19,7 @@ class CountField extends AbstractField
         ]);
     }
 
-    public function render($value): string
+    public function render($value = null): string
     {
         $count = count($value);
 

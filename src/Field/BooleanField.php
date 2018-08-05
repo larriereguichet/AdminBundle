@@ -9,7 +9,7 @@ class BooleanField extends AbstractField
         return true;
     }
 
-    public function render($value): string
+    public function render($value = null): string
     {
         if (true === $value) {
             $content = '<i class="fa fa-check text-success"></i>';

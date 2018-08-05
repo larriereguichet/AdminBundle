@@ -19,5 +19,5 @@ interface FieldInterface
 
     public function isSortable(): bool;
 
-    public function render($value): string;
+    public function render($value = null): string;
 }

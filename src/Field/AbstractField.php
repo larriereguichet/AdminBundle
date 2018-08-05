@@ -67,6 +67,8 @@ abstract class AbstractField implements FieldInterface
     /**
      * @param string $name
      *
+     * @return mixed
+     *
      * @throws Exception
      */
     public function getOption(string $name)
@@ -74,6 +76,8 @@ abstract class AbstractField implements FieldInterface
         if (!array_key_exists($name, $this->options)) {
             throw new Exception('Invalid option "'.$name.'" for field "'.$this->name.'"');
         }
+
+        return $this->options[$name];
     }
 
     public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)

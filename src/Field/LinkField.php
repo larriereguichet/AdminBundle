@@ -90,7 +90,7 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
         ;
     }
 
-    public function render($value): string
+    public function render($value = null): string
     {
         $value = parent::render($value);
         $accessor = PropertyAccess::createPropertyAccessor();
@@ -99,6 +99,7 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
         foreach ($options['parameters'] as $name => $method) {
             $options['parameters'][$name] = $accessor->getValue($this->entity, $method);
         }
+
         if ('' === $options['text']) {
             $options['text'] = $value;
         }

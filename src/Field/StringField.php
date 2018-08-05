@@ -27,7 +27,7 @@ class StringField extends AbstractField implements TranslatorAwareFieldInterface
         return true;
     }
 
-    public function render($value): string
+    public function render($value = null): string
     {
         if ($this->options['translation']) {
             $value = $this

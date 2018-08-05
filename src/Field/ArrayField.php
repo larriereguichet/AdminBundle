@@ -9,7 +9,7 @@ class ArrayField extends AbstractField
         return false;
     }
 
-    public function render($value): string
+    public function render($value = null): string
     {
         return 'in progress';
     }

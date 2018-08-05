@@ -35,7 +35,7 @@ class DateField extends AbstractField
      *
      * @throws Exception
      */
-    public function render($value): string
+    public function render($value = null): string
     {
         if (null === $value) {
             return '';

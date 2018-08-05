@@ -24,7 +24,7 @@ class CollectionField extends AbstractField implements EntityAwareFieldInterface
         ;
     }
 
-    public function render($value): string
+    public function render($value = null): string
     {
         $render = '';
         $accessor = PropertyAccess::createPropertyAccessorBuilder()
