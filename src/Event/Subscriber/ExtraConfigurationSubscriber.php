@@ -86,7 +86,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
         // Menus
         $this->addDefaultTopMenu($configuration, $event->getAdminName());
-        $this->addDefaultRightMenu($configuration, $event->getAdminName());
+        $this->addDefaultRightMenu($configuration);
         $this->addDefaultLeftMenu($configuration);
 
         // Filters
@@ -122,7 +122,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         if (!$this->applicationConfiguration->getParameter('enable_menus')) {
             return;
         }
-        return;
         // TODO fix method
         if (!key_exists('list', $configuration)) {
             return;
