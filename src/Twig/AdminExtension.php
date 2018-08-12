@@ -111,7 +111,7 @@ class AdminExtension extends Twig_Extension
     {
         $menu = $this->menuFactory->getMenu($name);
 
-        return $this->twig->render('@LAGAdmin/Menu/menu.html.twig', [
+        return $this->twig->render($menu->get('template'), [
             'menu' => $menu,
             'admin' => $view,
         ]);
@@ -146,19 +146,10 @@ class AdminExtension extends Twig_Extension
         }
 
         if ($configuration->getParameter('admin')) {
-            $adminName = $configuration->getParameter('admin');
-            $actionName = $configuration->getParameter('action');
-
-            // Generate the route name using the configured pattern
-            $routeName = str_replace(
-                '{admin}',
-                strtolower($adminName),
+            $routeName = RoutingLoader::generateRouteName(
+                $configuration->getParameter('admin'),
+                $configuration->getParameter('action'),
                 $this->applicationConfiguration->getParameter('routing_name_pattern')
-            );
-            $routeName = str_replace(
-                '{action}',
-                $actionName,
-                $routeName
             );
         } else {
             $routeName = $configuration->getParameter('route');
