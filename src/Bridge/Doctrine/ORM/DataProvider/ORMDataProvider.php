@@ -59,24 +59,35 @@ class ORMDataProvider implements DataProviderInterface
      */
     public function getCollection(AdminInterface $admin, array $filters = [])
     {
+        $adminConfiguration = $admin->getConfiguration();
+        $actionConfiguration = $admin->getAction()->getConfiguration();
+
+        // Create a query builder for the configured entity class
         $queryBuilder = $this
-            ->getRepository($admin->getConfiguration()->getParameter('entity'))
+            ->getRepository($adminConfiguration->getParameter('entity'))
             ->createQueryBuilder('entity')
         ;
+
+        // Add configured order by
+        if (count($actionConfiguration->getParameter('order'))) {
+            foreach ($actionConfiguration->getParameter('order') as $sort => $order) {
+                $queryBuilder->addOrderBy('entity.'.$sort, $order);
+            }
+        }
+
+        // Dispatch an event to allow filter modification on the query builder
         $event = new DoctrineOrmFilterEvent($queryBuilder, $admin, $filters);
         $this->eventDispatcher->dispatch(AdminEvents::DOCTRINE_ORM_FILTER, $event);
-        $configuration = $admin->getConfiguration();
-        $entities = null;
 
-        if ('pagerfanta' === $configuration->getParameter('pager')) {
-            $pageParameter = $configuration->getParameter('page_parameter');
+        if ('pagerfanta' === $actionConfiguration->getParameter('pager')) {
+            $pageParameter = $actionConfiguration->getParameter('page_parameter');
             $request = $this->requestStack->getCurrentRequest();
             $page = (int)$request->get($pageParameter, 1);
 
             $adapter = new DoctrineORMAdapter($queryBuilder);
             $pager = new Pagerfanta($adapter);
             $pager->setCurrentPage($page);
-            $pager->setMaxPerPage($configuration->getParameter('max_per_page'));
+            $pager->setMaxPerPage($actionConfiguration->getParameter('max_per_page'));
             $entities = $pager;
         } else {
             $entities = $queryBuilder->getQuery()->getResult();
