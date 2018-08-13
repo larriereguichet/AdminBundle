@@ -1,0 +1,5 @@
+services:
+    lag.admin.data_collector:
+        class: LAG\AdminBundle\Debug\DataCollector\AdminDataCollector
+        autowire: true
+        public: false
