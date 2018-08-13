@@ -15,13 +15,14 @@ class LAGAdminExtensionTest extends AdminTestBase
     {
         $builder = $this->getMockWithoutConstructor(ContainerBuilder::class);
         $builder
-            ->expects($this->exactly(3))
+            ->expects($this->atLeastOnce())
             ->method('setParameter')
             ->willReturnCallback(function ($parameter, $value) {
                 $this->assertContains($parameter, [
                     'lag.admin.enable_extra_configuration',
                     'lag.admin.application_configuration',
                     'lag.admins',
+                    'lag.menus',
                 ]);
 
                 if ('lag.admin.enable_extra_configuration' === $parameter) {
