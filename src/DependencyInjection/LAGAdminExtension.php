@@ -25,9 +25,13 @@ class LAGAdminExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($builder, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-    
+
+        if ('dev' === $builder->getParameter('kernel.environment')) {
+            $loader->load('services_dev.yml');
+        }
         $applicationConfig = [];
         $adminsConfig = [];
+        $menusConfig = [];
         $enableExtraConfig = true;
         $translationPattern = null;
         
@@ -37,13 +41,24 @@ class LAGAdminExtension extends Extension
             }
             $applicationConfig = $config['application'];
         }
+
         if (key_exists('admins', $config)) {
             $adminsConfig = $config['admins'];
         }
-        
+
+        if (key_exists('menus', $config)) {
+            $menusConfig = $config['menus'];
+
+            foreach ($menusConfig as $name => $menu) {
+                if (null === $menu) {
+                    $menusConfig[$name] = [];
+                }
+            }
+        }
         $builder->setParameter('lag.admin.enable_extra_configuration', $enableExtraConfig);
         $builder->setParameter('lag.admin.application_configuration', $applicationConfig);
         $builder->setParameter('lag.admins', $adminsConfig);
+        $builder->setParameter('lag.menus', $menusConfig);
     }
 
     /**
