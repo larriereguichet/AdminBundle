@@ -55,11 +55,6 @@ class AdminConfiguration extends Configuration
                 'form' => null,
                 'form_options' => [],
                 'pager' => 'pagerfanta',
-                'menu', [
-                    'main' => [
-                        'action' => 'list'
-                    ]
-                ],
                 'permissions' => $this->applicationConfiguration->getParameter('permissions'),
                 'string_length' => $this->applicationConfiguration->getParameter('string_length'),
                 'string_length_truncate' => $this->applicationConfiguration->getParameter('string_length_truncate'),
