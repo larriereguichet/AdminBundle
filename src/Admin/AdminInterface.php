@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Admin;
 
 use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Resource\Resource;
+use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
@@ -29,9 +29,9 @@ interface AdminInterface
     /**
      * Return the Resource use for creating the Admin.
      *
-     * @return Resource
+     * @return AdminResource
      */
-    public function getResource(): Resource;
+    public function getResource(): AdminResource;
 
     /**
      * Return the event dispatcher associated to the Admin.

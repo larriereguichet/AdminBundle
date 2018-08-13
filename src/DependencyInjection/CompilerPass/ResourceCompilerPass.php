@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\DependencyInjection\CompilerPass;
 
-use LAG\AdminBundle\Resource\Resource;
+use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -18,7 +18,7 @@ class ResourceCompilerPass implements CompilerPassInterface
 
         foreach ($admins as $name => $admin) {
             $serviceId = 'lag.admin.resource.'.$name;
-            $definition = new Definition(Resource::class, [
+            $definition = new Definition(AdminResource::class, [
                 $name,
                 $admin,
             ]);

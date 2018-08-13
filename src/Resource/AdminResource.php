@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Resource;
 
-class Resource
+class AdminResource
 {
     /**
      * @var string

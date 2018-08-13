@@ -12,7 +12,7 @@ use LAG\AdminBundle\Event\EntityEvent;
 use LAG\AdminBundle\Event\FormEvent;
 use LAG\AdminBundle\Event\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Resource\Resource;
+use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -23,7 +23,7 @@ class AdminTest extends AdminTestBase
 {
     public function testHandleRequest()
     {
-        $resource = $this->getMockWithoutConstructor(Resource::class);
+        $resource = $this->getMockWithoutConstructor(AdminResource::class);
         $resource
             ->expects($this->once())
             ->method('getName')
@@ -91,7 +91,7 @@ class AdminTest extends AdminTestBase
 
     public function testHandleRequestWithoutAction()
     {
-        $resource = $this->getMockWithoutConstructor(Resource::class);
+        $resource = $this->getMockWithoutConstructor(AdminResource::class);
         $resource
             ->expects($this->once())
             ->method('getName')
@@ -119,7 +119,7 @@ class AdminTest extends AdminTestBase
 
     public function testCreateView()
     {
-        $resource = $this->getMockWithoutConstructor(Resource::class);
+        $resource = $this->getMockWithoutConstructor(AdminResource::class);
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $view = $this->getMockWithoutConstructor(ViewInterface::class);
 
@@ -151,7 +151,7 @@ class AdminTest extends AdminTestBase
 
     public function testGetAction()
     {
-        $resource = $this->getMockWithoutConstructor(Resource::class);
+        $resource = $this->getMockWithoutConstructor(AdminResource::class);
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
 
@@ -169,7 +169,7 @@ class AdminTest extends AdminTestBase
 
     public function testHandleFormWithoutForm()
     {
-        $resource = $this->getMockWithoutConstructor(Resource::class);
+        $resource = $this->getMockWithoutConstructor(AdminResource::class);
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $action = $this->getMockWithoutConstructor(ActionInterface::class);
         $form = $this->getMockWithoutConstructor(FormInterface::class);
@@ -199,7 +199,7 @@ class AdminTest extends AdminTestBase
 
     public function testHandleFormWithoutEntities()
     {
-        $resource = $this->getMockWithoutConstructor(Resource::class);
+        $resource = $this->getMockWithoutConstructor(AdminResource::class);
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $action = $this->getMockWithoutConstructor(ActionInterface::class);
         $form = $this->getMockWithoutConstructor(FormInterface::class);

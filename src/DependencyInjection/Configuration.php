@@ -89,7 +89,6 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')
                     ->end()
                 ->end()
-                ->variableNode('menus')->end()
             ->end()
         ->end();
 

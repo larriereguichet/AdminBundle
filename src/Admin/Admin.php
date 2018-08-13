@@ -12,7 +12,7 @@ use LAG\AdminBundle\Event\FilterEvent;
 use LAG\AdminBundle\Event\FormEvent;
 use LAG\AdminBundle\Event\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Resource\Resource;
+use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
@@ -31,7 +31,7 @@ class Admin implements AdminInterface
     private $configuration;
 
     /**
-     * @var Resource
+     * @var AdminResource
      */
     private $resource;
 
@@ -63,12 +63,12 @@ class Admin implements AdminInterface
     /**
      * Admin constructor.
      *
-     * @param Resource                 $resource
+     * @param AdminResource            $resource
      * @param AdminConfiguration       $configuration
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
-        Resource $resource,
+        AdminResource $resource,
         AdminConfiguration $configuration,
         EventDispatcherInterface $eventDispatcher
     ) {
@@ -122,9 +122,9 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return Resource
+     * @return AdminResource
      */
-    public function getResource(): Resource
+    public function getResource(): AdminResource
     {
         return $this->resource;
     }
