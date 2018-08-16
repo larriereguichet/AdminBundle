@@ -159,6 +159,9 @@ class AdminExtension extends Twig_Extension
         $configuredParameters = $configuration->getParameter('parameters');
 
         if (0 !== count($configuredParameters)) {
+            if (null === $view) {
+                throw new Exception('A view should be provided if the menu item route requires parameters');
+            }
             $entity = $view->getEntities()->first();
             $accessor = PropertyAccess::createPropertyAccessor();
 
