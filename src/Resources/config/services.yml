@@ -27,8 +27,8 @@ services:
     LAG\AdminBundle\Event\Subscriber\MenuSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\MenuSubscriber
 
-    LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\OrmSubscriber:
-        class: LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\OrmSubscriber
+    LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\ORMSubscriber:
+        class: LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\ORMSubscriber
     ###################
 
     ### Configuration ###
