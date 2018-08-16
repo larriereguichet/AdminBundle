@@ -10,6 +10,30 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MenuItemConfiguration extends Configuration
 {
     /**
+     * @var string
+     */
+    private $position;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * MenuItemConfiguration constructor.
+     *
+     * @param string $name
+     * @param string $position
+     */
+    public function __construct(string $name, string $position)
+    {
+        $this->position = $position;
+        $this->name = $name;
+
+        parent::__construct();
+    }
+
+    /**
      * Define allowed parameters and values for this configuration, using optionsResolver component.
      *
      * @param OptionsResolver $resolver
@@ -27,6 +51,7 @@ class MenuItemConfiguration extends Configuration
             ->setDefault('attr', [])
             ->setDefault('items', [])
             ->setDefault('icon', null)
+            ->setDefault('link_css_class', 'nav-link')
             ->setNormalizer('admin', function(Options $options, $adminName) {
 
                 // user has to defined either an admin name and an action name, or a route name with optional
@@ -71,6 +96,10 @@ class MenuItemConfiguration extends Configuration
                     $attr['id'] = uniqid('admin-menu-');
                 }
 
+                if ('horizontal' === $this->position && !key_exists('class', $attr)) {
+                    $attr['class'] = 'nav-item';
+                }
+
                 return $attr;
             })
             ->setNormalizer('items', function(Options $options, $items) {
@@ -81,7 +110,7 @@ class MenuItemConfiguration extends Configuration
                 $resolvedItems = [];
 
                 foreach ($items as $name => $item) {
-                    $itemConfiguration = new MenuItemConfiguration();
+                    $itemConfiguration = new MenuItemConfiguration($name, $this->position);
                     $itemConfiguration->configureOptions($resolver);
                     $itemConfiguration->setParameters($resolver->resolve($item));
 
@@ -89,6 +118,14 @@ class MenuItemConfiguration extends Configuration
                 }
 
                 return $resolvedItems;
+            })
+            ->setNormalizer('text', function (Options $options, $text) {
+                if (!$text) {
+                    // TODO use translation pattern key instead
+                    $text = ucfirst($this->name);
+                }
+
+                return $text;
             })
         ;
     }
