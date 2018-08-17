@@ -13,13 +13,28 @@ class MenuConfiguration extends Configuration
      */
     private $menuName;
 
-    public function __construct(string $menuName)
+    /**
+     * @var string
+     */
+    private $applicationName;
+
+    /**
+     * MenuConfiguration constructor.
+     *
+     * @param string $menuName
+     * @param string $applicationName
+     */
+    public function __construct(string $menuName, string $applicationName)
     {
         $this->menuName = $menuName;
 
         parent::__construct();
+        $this->applicationName = $applicationName;
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
@@ -29,10 +44,9 @@ class MenuConfiguration extends Configuration
                 'position' => null,
                 'css_class' => 'list-group nav flex-column navbar-nav menu-'.$this->menuName,
                 'item_css_class' => '',
-                //list-group-item list-group-item-action',
                 'link_css_class' => 'nav-link',
                 'template' => '',
-                'brand' => false,
+                'brand' => null,
             ])
             ->setAllowedValues('position', [
                 'horizontal',
@@ -90,7 +104,7 @@ class MenuConfiguration extends Configuration
                 }
 
                 if ('horizontal' === $position) {
-                    $value .= ' ';
+                    $value .= ' navbar-nav mr-auto';
                 }
 
                 if ('vertical' === $position) {
@@ -98,6 +112,13 @@ class MenuConfiguration extends Configuration
                 }
 
                 return trim($value);
+            })
+            ->setNormalizer('brand', function (Options $options, $value) {
+                if (null === $value && 'horizontal' === $options->offsetGet('position')) {
+                    $value = $this->applicationName;
+                }
+
+                return $value;
             })
         ;
     }
