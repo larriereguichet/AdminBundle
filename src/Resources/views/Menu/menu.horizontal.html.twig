@@ -1,0 +1,99 @@
+<nav class="{{ menu.get('attr').class | default }}">
+    {% block brand %}
+        {% set homepageUrl = '' %}
+
+        {% if admin_config('enable_homepage') %}
+            {% set homepageUrl = 'lag.admin.homepage' %}
+        {% endif %}
+
+        {% if menu.get('brand') %}
+            <a class="navbar-brand"
+               href="{{ homepageUrl }}">{{ menu.get('brand') }}
+            </a>
+        {% endif %}
+    {% endblock %}
+
+    {% block navbarToggler %}
+        <button class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    {% endblock %}
+
+    <div class="collapse navbar-collapse text-light mr-auto"
+         id="navbarSupportedContent">
+        {% if menu.items | length %}
+            <ul class="navbar-nav mr-auto">
+                {% for item in menu.items %}
+                    <li class="{{ item.get('attr').class | default }}">
+                        <a class="{{ item.get('link_css_class') }}"
+                           href="{{ admin_menu_action(item.configuration, admin) }}">
+                            {% if item.get('icon') %}
+                                <i class="fa fa-{{ item.get('icon') }}"></i>
+                            {% endif %}
+
+                            {{ item.get('text') }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <div class="user-navbar">
+
+        {% if app.user %}
+            <div class="pull-right">
+                <div class="profile-header-container text-light">
+                    <div class="profile-header-img">
+
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a href="#"
+                                   class="dropdown-toggle text-light"
+                                   role="button"
+                                   data-toggle="dropdown"
+                                   aria-haspopup="true"
+                                   aria-expanded="false">
+                                    {{ 'lag.admin.welcome_message' | trans({
+                                        '%username%': app.user.email
+                                    }) }}
+                                </a>
+
+                                {% if app.user.profilePicture %}
+                                    <img class="rounded-circle"
+                                         height="40"
+                                         style="margin-top: 5px"
+                                         src="{{ app.user.profilePicture | default }}"/>
+                                {% else %}
+                                    {# If no profile picture is defined, we display the Symfony user image #}
+                                    <svg version="1.1"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         class="rounded-circle"
+                                         x="0px"
+                                         y="0px"
+                                         width="24"
+                                         height="24"
+                                         viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                                        <path fill="#AAAAAA"
+                                          d="M21,20.4V22H3v-1.6c0-3.7,2.4-6.9,5.8-8c-1.7-1.1-2.9-3-2.9-5.2c0-3.4,2.7-6.1,6.1-6.1s6.1,2.7,6.1,6.1c0,2.2-1.2,4.1-2.9,5.2C18.6,13.5,21,16.7,21,20.4z"></path>
+                                    </svg>
+                                {% endif %}
+
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a href="{{ logout_path() }}" class="dropdown-item">{{ 'lag.admin.logout' | trans }}</a>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</nav>

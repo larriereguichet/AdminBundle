@@ -1,0 +1,10 @@
+<div {% for attr, value in menu.get('attr') %}{{ attr }}="{{ value | e }}"{% endfor %}>
+
+    {% for item in menu.items %}
+        <a href="{{ admin_menu_action(item.configuration, admin) }}"
+           class="{{ menu.get('item_css_class') ~ ' ' ~ item.get('attr').class | default }}"
+           title="{{ item.get('text') | trans }}">
+            {{ item.get('text') | trans }}
+        </a>
+    {% endfor %}
+</div>
