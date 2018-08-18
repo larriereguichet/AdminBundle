@@ -2,6 +2,8 @@
 
 namespace LAG\AdminBundle\Menu;
 
+use LAG\AdminBundle\Configuration\MenuConfiguration;
+
 class Menu
 {
     /**
@@ -15,27 +17,20 @@ class Menu
     private $name;
 
     /**
-     * @var array
+     * @var MenuConfiguration
      */
-    private $containerCssClasses = [];
-
-    /**
-     * @var array
-     */
-    private $itemCssClasses = [];
+    private $configuration;
 
     /**
      * Menu constructor.
      *
-     * @param string $name
-     * @param array  $containerCssClasses
-     * @param array  $itemCssClasses
+     * @param string            $name
+     * @param MenuConfiguration $configuration
      */
-    public function __construct(string $name, array $containerCssClasses = [], array $itemCssClasses = [])
+    public function __construct(string $name, MenuConfiguration $configuration)
     {
         $this->name = $name;
-        $this->containerCssClasses = $containerCssClasses;
-        $this->itemCssClasses = $itemCssClasses;
+        $this->configuration = $configuration;
     }
 
     public function addItem(MenuItem $item)
@@ -60,18 +55,12 @@ class Menu
     }
 
     /**
-     * @return array
+     * @param string $parameter
+     *
+     * @return mixed
      */
-    public function getContainerCssClasses(): array
+    public function get(string $parameter)
     {
-        return $this->containerCssClasses;
-    }
-
-    /**
-     * @return array
-     */
-    public function getItemCssClasses(): array
-    {
-        return $this->itemCssClasses;
+        return $this->configuration->getParameter($parameter);
     }
 }

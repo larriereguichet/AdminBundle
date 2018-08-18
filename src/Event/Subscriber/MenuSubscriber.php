@@ -5,10 +5,12 @@ namespace LAG\AdminBundle\Event\Subscriber;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Event\MenuEvent;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Resource\ResourceCollection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class MenuSubscriber implements EventSubscriberInterface
@@ -34,6 +36,16 @@ class MenuSubscriber implements EventSubscriberInterface
     private $configurationFactory;
 
     /**
+     * @var array
+     */
+    private $adminMenuConfigurations;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
@@ -50,17 +62,23 @@ class MenuSubscriber implements EventSubscriberInterface
      * @param MenuFactory                     $menuFactory
      * @param ConfigurationFactory            $configurationFactory
      * @param ResourceCollection              $resourceCollection
+     * @param EventDispatcherInterface        $eventDispatcher
+     * @param array                           $adminMenuConfigurations
      */
     public function __construct(
         ApplicationConfigurationStorage $storage,
         MenuFactory $menuFactory,
         ConfigurationFactory $configurationFactory,
-        ResourceCollection $resourceCollection
+        ResourceCollection $resourceCollection,
+        EventDispatcherInterface $eventDispatcher,
+        array $adminMenuConfigurations = []
     ) {
         $this->applicationConfiguration = $storage->getConfiguration();
         $this->menuFactory = $menuFactory;
         $this->resourceCollection = $resourceCollection;
         $this->configurationFactory = $configurationFactory;
+        $this->adminMenuConfigurations = $adminMenuConfigurations;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -73,24 +91,21 @@ class MenuSubscriber implements EventSubscriberInterface
         if (!$this->applicationConfiguration->getParameter('enable_menus')) {
             return;
         }
-        $menuConfigurations = [];
+        $menuConfigurations = array_merge_recursive(
+            $this->adminMenuConfigurations,
+            $event->getMenuConfigurations()
+        );
+        $configurationEvent = new MenuConfigurationEvent($menuConfigurations);
 
-        if ($event->isBuildResourceMenu()) {
-            $menuConfigurations['left'] = $this->configurationFactory->createResourceMenuConfiguration();
-        }
-        $menuConfigurations = array_merge($menuConfigurations, $event->getMenuConfigurations());
+        // Dispatch a pre-menu build event to allow dynamic configuration modifications
+        $this
+            ->eventDispatcher
+            ->dispatch(AdminEvents::MENU_CONFIGURATION, $configurationEvent)
+        ;
+        $menuConfigurations = $configurationEvent->getMenuConfigurations();
 
         foreach ($menuConfigurations as $name => $menuConfiguration) {
-            if (!$this->menuFactory->hasMenu($name)) {
-                $this->menuFactory->create($name, $menuConfiguration);
-            } else {
-                $menu = $this->menuFactory->getMenu($name);
-
-                foreach ($menuConfiguration['items'] as $itemConfiguration) {
-                    $menuItem = $this->menuFactory->createMenuItem($itemConfiguration);
-                    $menu->addItem($menuItem);
-                }
-            }
+            $this->menuFactory->create($name, $menuConfiguration);
         }
     }
 }

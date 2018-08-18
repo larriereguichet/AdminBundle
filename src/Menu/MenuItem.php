@@ -30,13 +30,12 @@ class MenuItem
     }
 
     /**
-     * @param string $name
-     * @param array $arguments
+     * @param string $parameter
      *
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function get(string $parameter)
     {
-        return $this->configuration->getParameter($name);
+        return $this->configuration->getParameter($parameter);
     }
 }
