@@ -132,15 +132,9 @@ class RoutingLoader implements LoaderInterface
             }
 
             if ($this->applicationConfiguration->getParameter('enable_homepage')) {
-                $routes->add('lag.admin.homepage', new Route(
-                    '/',
-                    [
-                        '_controller' => HomeAction::class,
-                    ],
-                    []
-                ));
+                $route = new Route('/', ['_controller' => HomeAction::class,], []);
+                $routes->add('lag.admin.homepage', $route);
             }
-
         }
 
         return $routes;
