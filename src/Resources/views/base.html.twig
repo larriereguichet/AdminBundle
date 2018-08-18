@@ -23,29 +23,9 @@
 
     <body>
     {% block navbar %}
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-            {% if admin_config('enable_homepage') %}
-                <a class="navbar-brand"
-                   href="{{ path('lag.admin.homepage') }}">{{ admin_config('title') }}</a>
-            {% endif %}
-
-            <button class="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse text-light"
-                 id="navbarSupportedContent">
-                {% if admin_has_menu('top') %}
-                    {{ admin_menu('top', admin) }}
-                {% endif %}
-            </div>
-        </nav>
+        {% if admin_has_menu('top') %}
+            {{ admin_menu('top', admin) | raw }}
+        {% endif %}
     {% endblock %}
 
     {% block container %}
@@ -53,7 +33,7 @@
             <div class="row">
                 {% block layout %}
                     {% block left_menu %}
-                        <nav class="col-2 d-none d-md-block bg-light sidebar">
+                        <nav class="col-2 d-none d-md-block sidebar">
                             {% if admin_has_menu('left') %}
                                 {{ admin_menu('left', admin) | raw }}
                             {% endif %}
@@ -61,7 +41,7 @@
                     {% endblock %}
 
                     {% block content_container %}
-                        <main class="col-10"
+                        <main class="col-10 content-container"
                               role="main">
 
                             {% block flash_messages %}
@@ -78,10 +58,10 @@
 
     {% block footer %}
         <footer>
-
             {% block javascripts %}
                 <script src="{{ asset('bundles/lagadmin/js/admin.js') }}"></script>
             {% endblock %}
+            {% block custom_javascripts %}{% endblock %}
         </footer>
     {% endblock %}
     </body>
