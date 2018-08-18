@@ -5,9 +5,25 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\DoctrineOrmFilterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ORMSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * ORMSubscriber constructor.
+     *
+     * @param RequestStack $requestStack
+     */
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+
     /**
      * @return array
      */
@@ -32,9 +48,19 @@ class ORMSubscriber implements EventSubscriberInterface
         $admin = $event->getAdmin();
         $actionConfiguration = $admin->getAction()->getConfiguration();
 
-        foreach ($actionConfiguration->getParameter('order') as $field => $order) {
-            $alias = $queryBuilder->getRootAliases()[0];
-            $queryBuilder->addOrderBy($alias.'.'.$field, $order);
+        $request = $this->requestStack->getMasterRequest();
+        $sort = $request->get('sort');
+        $alias = $queryBuilder->getRootAliases()[0];
+
+        if ($sort) {
+            $order = $request->get('order', 'asc');
+
+            $queryBuilder->addOrderBy($alias.'.'.$sort, $order);
+        } else {
+            foreach ($actionConfiguration->getParameter('order') as $field => $order) {
+
+                $queryBuilder->addOrderBy($alias.'.'.$field, $order);
+            }
         }
     }
 
