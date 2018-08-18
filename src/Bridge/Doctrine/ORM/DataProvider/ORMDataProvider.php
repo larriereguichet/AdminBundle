@@ -68,13 +68,6 @@ class ORMDataProvider implements DataProviderInterface
             ->createQueryBuilder('entity')
         ;
 
-        // Add configured order by
-        if (count($actionConfiguration->getParameter('order'))) {
-            foreach ($actionConfiguration->getParameter('order') as $sort => $order) {
-                $queryBuilder->addOrderBy('entity.'.$sort, $order);
-            }
-        }
-
         // Dispatch an event to allow filter modification on the query builder
         $event = new DoctrineOrmFilterEvent($queryBuilder, $admin, $filters);
         $this->eventDispatcher->dispatch(AdminEvents::DOCTRINE_ORM_FILTER, $event);
