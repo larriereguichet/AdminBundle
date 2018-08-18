@@ -2,10 +2,14 @@
 
 namespace LAG\AdminBundle\Factory;
 
+use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
+use LAG\AdminBundle\Configuration\MenuConfiguration;
 use LAG\AdminBundle\Configuration\MenuItemConfiguration;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Menu\Menu;
 use LAG\AdminBundle\Menu\MenuItem;
+use LAG\AdminBundle\Routing\RoutingLoader;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MenuFactory
@@ -14,6 +18,24 @@ class MenuFactory
      * @var Menu[]
      */
     private $menus = [];
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var \LAG\AdminBundle\Configuration\ApplicationConfiguration
+     */
+    private $applicationConfiguration;
+
+    public function __construct(
+        RequestStack $requestStack,
+        ApplicationConfigurationStorage $applicationConfigurationStorage
+    ){
+        $this->requestStack = $requestStack;
+        $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
+    }
 
     /**
      * Create a menu item from a configuration array.
@@ -25,22 +47,15 @@ class MenuFactory
      */
     public function create(string $name, array $configuration)
     {
-        $options = array_merge([
-            'container_classes' => ['nav', 'flex-column', 'navbar-nav', 'menu-'.$name],
-            'item_classes' => [],
-        ], $configuration);
+        $resolver = new OptionsResolver();
+        $menuConfiguration = new MenuConfiguration($name, $this->applicationConfiguration->getParameter('title'));
+        $menuConfiguration->configureOptions($resolver);
 
-        if ('top' === $name) {
-            $options['item_classes'][] = 'nav-item';
-        }
-        $menu = new Menu($name, $options['container_classes'], $options['item_classes']);
+        $menuConfiguration->setParameters($resolver->resolve($configuration));
+        $menu = new Menu($name, $menuConfiguration);
 
-        if (!key_exists('items', $configuration)) {
-            return $menu;
-        }
-
-        foreach ($configuration['items'] as $item) {
-            $menu->addItem($this->createMenuItem($item));
+        foreach ($menuConfiguration->getParameter('items') as $itemName => $item) {
+            $menu->addItem($this->createMenuItem($itemName, $item, $menuConfiguration));
         }
         $this->menus[$name] = $menu;
 
@@ -50,16 +65,24 @@ class MenuFactory
     /**
      * Create a menu item according to the given configuration.
      *
-     * @param array $configuration
+     * @param string            $name
+     * @param array             $configuration
+     * @param MenuConfiguration $parentConfiguration
      *
      * @return MenuItem
      */
-    public function createMenuItem(array $configuration): MenuItem
+    public function createMenuItem(string $name, array $configuration, MenuConfiguration $parentConfiguration): MenuItem
     {
+        // Resolve configuration for the current item
         $resolver = new OptionsResolver();
-        $menuItemConfiguration = new MenuItemConfiguration();
+        $menuItemConfiguration = new MenuItemConfiguration($name, $parentConfiguration->getParameter('position'));
         $menuItemConfiguration->configureOptions($resolver);
-        $menuItemConfiguration->setParameters($resolver->resolve($configuration));
+        $resolvedConfiguration = $resolver->resolve($configuration);
+
+        if ($this->applicationConfiguration->getParameter('enable_extra_configuration')) {
+            $this->addExtraMenuItemConfiguration($resolvedConfiguration);
+        }
+        $menuItemConfiguration->setParameters($resolvedConfiguration);
 
         return new MenuItem($menuItemConfiguration);
     }
@@ -102,5 +125,31 @@ class MenuFactory
     public function getMenus(): array
     {
         return $this->menus;
+    }
+
+    private function addExtraMenuItemConfiguration(&$resolvedConfiguration)
+    {
+        // Determine the current route to add an active css class if the current item route is the current route
+        $route = $this->requestStack->getCurrentRequest()->attributes->get('_route');
+        $itemRoute = null;
+
+        // A route string is not required, an admin and an action can also be provided
+        if ($resolvedConfiguration['route']) {
+            $itemRoute = $resolvedConfiguration['route'];
+        } else if (key_exists('admin', $resolvedConfiguration)) {
+            $itemRoute = RoutingLoader::generateRouteName(
+                $resolvedConfiguration['admin'],
+                $resolvedConfiguration['action'],
+                $this->applicationConfiguration->getParameter('routing_name_pattern')
+            );
+        }
+
+        // Add an "active" css class dor the current route
+        if ($route === $itemRoute) {
+            if (!key_exists('class', $resolvedConfiguration['attr'])) {
+                $resolvedConfiguration['attr']['class'] = '';
+            }
+            $resolvedConfiguration['attr']['class'] .= ' active';
+        }
     }
 }
