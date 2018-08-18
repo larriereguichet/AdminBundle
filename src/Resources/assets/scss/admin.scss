@@ -1,5 +1,7 @@
 #admin-main-container {
   margin-top: 60px;
+  padding-left: 0;
+  padding-bottom: 25px;
 }
 
 .form-horizontal .form-group {
@@ -32,12 +34,6 @@ table {
   }
   .checkbox label, .radio label {
     min-height: 15px;
-  }
-
-  td {
-    a {
-      //padding: 10px;
-    }
   }
 }
 // overriding sb-admin brand display
@@ -73,4 +69,8 @@ table {
 .pagination {
   margin: auto;
   width: 50%;
+}
+
+.content-container {
+  padding-top: 25px;
 }
