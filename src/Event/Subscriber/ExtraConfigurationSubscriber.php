@@ -8,6 +8,7 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\ConfigurationEvent;
+use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Resource\ResourceCollection;
@@ -45,6 +46,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     {
         return [
             AdminEvents::ADMIN_CONFIGURATION => 'enrichAdminConfiguration',
+            AdminEvents::MENU_CONFIGURATION => 'enrichMenuConfiguration',
         ];
     }
 
@@ -70,7 +72,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
     public function enrichAdminConfiguration(ConfigurationEvent $event)
     {
-        if (!$this->applicationConfiguration->getParameter('enable_extra_configuration')) {
+        if (!$this->isExtraConfigurationEnabled()) {
             return;
         }
         $configuration = $event->getConfiguration();
@@ -85,7 +87,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         $this->addDefaultFormUse($configuration);
 
         // Menus
-        $this->addDefaultTopMenu($configuration, $event->getAdminName());
         $this->addDefaultRightMenu($configuration);
         $this->addDefaultLeftMenu($configuration);
 
@@ -93,6 +94,26 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         $this->addDefaultFilters($configuration);
 
         $event->setConfiguration($configuration);
+    }
+
+    public function enrichMenuConfiguration(MenuConfigurationEvent $event)
+    {
+        if (!$this->isExtraConfigurationEnabled()) {
+            return;
+        }
+        $configuration = $event->getMenuConfigurations();
+
+        if (!key_exists('top', $configuration) || [] === $configuration['top']) {
+            $configuration['top'] = [
+                'brand' => $this->applicationConfiguration->getParameter('title'),
+            ];
+        }
+
+        if (!key_exists('left', $configuration) || [] === $configuration['left']) {
+            $configuration['left'] = $this->configurationFactory->createResourceMenuConfiguration();
+        }
+
+        $event->setMenuConfigurations($configuration);
     }
 
     /**
@@ -114,39 +135,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             'list' => [],
             'edit' => [],
             'delete' => [],
-        ];
-    }
-
-    private function addDefaultTopMenu(array &$configuration, $adminName)
-    {
-        if (!$this->applicationConfiguration->getParameter('enable_menus')) {
-            return;
-        }
-        // TODO fix method
-        if (!key_exists('list', $configuration)) {
-            return;
-        }
-        if (!key_exists('create', $configuration)) {
-            return;
-        }
-
-        if (!key_exists('menus', $configuration['list'])) {
-            $configuration['list']['menus'] = [];
-        }
-
-        // If the menu is set to false, menus are disabled for this action
-        if (false !== $configuration['list']['menus']) {
-            return;
-        }
-
-        $configuration['list']['menus']['top'] = [
-            'items' => [
-                'create' => [
-                    'admin' => $adminName,
-                    'action' => 'create',
-                    'icon' => 'fa fa-plus',
-                ],
-            ],
         ];
     }
 
@@ -174,6 +162,10 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
                 $action = [];
             }
             $metadata = $this->findMetadata($entityClass);
+
+            if (null === $metadata) {
+                continue;
+            }
 
             // If fields are already defined, nothing to do
             if (key_exists('fields', $action) && is_array($action['fields']) && count($action['fields'])) {
@@ -440,5 +432,13 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         }
 
         return '=';
+    }
+
+    /**
+     * @return bool
+     */
+    private function isExtraConfigurationEnabled(): bool
+    {
+        return $this->applicationConfiguration->getParameter('enable_extra_configuration');
     }
 }
