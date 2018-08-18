@@ -4,7 +4,7 @@ services:
         autoconfigure: true
         public: false
         bind:
-            $adminMenuMenuConfigurations: '%lag.menus%'
+            $adminMenuConfigurations: '%lag.menus%'
 
     ### Resources ###
     LAG\AdminBundle\Resource\ResourceCollection:
@@ -79,8 +79,8 @@ services:
     #################
 
     ### Twig extension ###
-    LAG\AdminBundle\Twig\AdminExtension:
-        class: LAG\AdminBundle\Twig\AdminExtension
+    LAG\AdminBundle\Bridge\Twig\Extension\AdminExtension:
+        class: LAG\AdminBundle\Bridge\Twig\Extension\AdminExtension
         tags:
             - {name: twig.extension}
     ######################

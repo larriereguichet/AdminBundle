@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Twig;
+namespace LAG\AdminBundle\Bridge\Twig\Extension;
 
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
@@ -226,7 +226,6 @@ class AdminExtension extends Twig_Extension
         if ($field instanceof EntityAwareFieldInterface) {
             $field->setEntity($entity);
         }
-
         $render = $field->render($value);
 
         return $render;
