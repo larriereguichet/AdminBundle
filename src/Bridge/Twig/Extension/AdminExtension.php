@@ -11,7 +11,7 @@ use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Field\EntityAwareFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Routing\RoutingLoader;
-use LAG\AdminBundle\Utils\StringUtilTrait;
+use LAG\AdminBundle\Utils\StringUtils;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Routing\RouterInterface;
@@ -22,8 +22,6 @@ use Twig_SimpleFunction;
 
 class AdminExtension extends Twig_Extension
 {
-    use StringUtilTrait;
-
     /**
      * @var ApplicationConfiguration
      */
@@ -185,14 +183,14 @@ class AdminExtension extends Twig_Extension
      */
     public function getFieldHeader(FieldInterface $field)
     {
-        if ($this->startWith($field->getName(), '_')) {
+        if (StringUtils::startWith($field->getName(), '_')) {
             return '';
         }
 
         if ($this->applicationConfiguration->getParameter('enable_translation')) {
             throw new Exception('Translation is not implemented yet');
         } else {
-            $title = $this->camelize($field->getName());
+            $title = StringUtils::camelize($field->getName());
             $title = preg_replace('/(?<!\ )[A-Z]/', ' $0', $title);
             $title = trim($title);
 
