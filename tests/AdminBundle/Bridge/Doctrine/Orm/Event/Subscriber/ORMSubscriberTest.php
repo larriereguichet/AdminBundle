@@ -11,8 +11,10 @@ use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\DoctrineOrmFilterEvent;
 use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-class OrmSubscriberTest extends AdminTestBase
+class ORMSubscriberTest extends AdminTestBase
 {
     public function testGetSubscribedEvents()
     {
@@ -24,6 +26,14 @@ class OrmSubscriberTest extends AdminTestBase
 
     public function testAddOrder()
     {
+        $request = new Request();
+
+        $requestStack = $this->getMockWithoutConstructor(RequestStack::class);
+        $requestStack
+            ->expects($this->atLeastOnce())
+            ->method('getMasterRequest')
+            ->willReturn($request)
+        ;
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $action = $this->getMockWithoutConstructor(ActionInterface::class);
 
@@ -73,12 +83,13 @@ class OrmSubscriberTest extends AdminTestBase
             ->willReturn($configuration)
         ;
 
-        $subscriber = new ORMSubscriber();
+        $subscriber = new ORMSubscriber($requestStack);
         $subscriber->addOrder($event);
     }
 
     public function testAddFilters()
     {
+        $requestStack = $this->getMockWithoutConstructor(RequestStack::class);
         $queryBuilder = $this->getMockWithoutConstructor(QueryBuilder::class);
         $queryBuilder
             ->expects($this->once())
@@ -127,7 +138,7 @@ class OrmSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $subscriber = new ORMSubscriber();
+        $subscriber = new ORMSubscriber($requestStack);
         $subscriber->addFilters($event);
     }
 }
