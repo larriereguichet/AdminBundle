@@ -109,10 +109,8 @@ class FormSubscriber implements EventSubscriberInterface
                 }
 
                 // Do not submit false boolean values to improve user experience
-                if (
-                    is_bool($data[$name]) &&
-                    false === $data[$name]
-                    ) {
+                if (is_bool($data[$name]) &&
+                    false === $data[$name]) {
                     continue;
                 }
 
