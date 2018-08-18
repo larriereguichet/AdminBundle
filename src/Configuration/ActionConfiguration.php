@@ -295,54 +295,6 @@ class ActionConfiguration extends Configuration
     }
 
     /**
-     * Return the batch normalizer. If null value is provided, it will add the delete batch action if the delete
-     * actions is allowed .
-     *
-     * @return Closure
-     */
-    private function getBatchNormalizer()
-    {
-        return function (Options $options, $batch) {
-            // if batch is not activated, no more checks should be done
-            if ($batch === false) {
-                return $batch;
-            }
-            // for list actions, we add a default configuration
-            if ($batch === null) {
-                // delete action should be allowed in order to be place in batch actions
-                $actionConfigurations = $this
-                    ->adminConfiguration
-                    ->getParameter('actions');
-                $allowedActions = array_keys($actionConfigurations);
-
-                if ($this->actionName == 'list' && in_array('delete', $allowedActions)) {
-                    $pattern = $this
-                        ->adminConfiguration
-                        ->getParameter('translation_pattern');
-
-                    $batch = [
-                        'items' => [
-                            'delete' => [
-                                'admin' => $this->adminName,
-                                'action' => 'delete',
-                                'text' => $this->getTranslationKey($pattern, 'delete', $this->adminName),
-                            ],
-                        ],
-                    ];
-                } else {
-                    return $batch;
-                }
-            }
-            $resolver = new OptionsResolver();
-            $configuration = new MenuConfiguration();
-            $configuration->configureOptions($resolver);
-            $batch = $resolver->resolve($batch);
-
-            return $batch;
-        };
-    }
-
-    /**
      * Return the filters normalizer.
      *
      * @return Closure
