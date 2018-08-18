@@ -35,7 +35,7 @@
 
     <logging>
         <log type="coverage-html"
-             target="build/coverage"
+             target="var/phpunit/coverage"
              title="AdminBundle"
              charset="UTF-8"
              yui="true"
@@ -43,9 +43,9 @@
              lowUpperBound="35"
              highLowerBound="70"/>
         <log type="coverage-clover"
-             target="build/logs/clover.xml"/>
+             target="var/phpunit/logs/clover.xml"/>
         <log type="junit"
-             target="build/logs/junit.xml"
+             target="var/phpunit/logs/junit.xml"
              logIncompleteSkipped="false"/>
     </logging>
 </phpunit>
