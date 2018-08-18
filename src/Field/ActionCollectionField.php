@@ -6,6 +6,7 @@ use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Field\Traits\EntityAwareTrait;
 use LAG\AdminBundle\Field\Traits\TwigAwareTrait;
 use LAG\AdminBundle\Routing\RoutingLoader;
+use LAG\AdminBundle\Utils\StringUtils;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,23 +41,19 @@ class ActionCollectionField extends CollectionField implements TwigAwareFieldInt
             ])
             ->setNormalizer('actions', function (Options $options, $value) use ($actionConfiguration, $defaultActions) {
                 if (!is_array($value) || 0 === count($value)) {
-                    $value = $defaultActions;
+                    $value = [
+                        'edit' => [],
+                        'delete' => [],
+                    ];
                 }
                 $data = [];
 
-                foreach ($value as $name => $action) {
-                    $actionData = [
-                        'admin' => $actionConfiguration->getAdminName(),
-                        'action' => $name,
-                        'title' => $actionConfiguration->getParameter('title'),
-                        'text' => $actionConfiguration->getParameter('title'),
-                        'parameters' => [
-                            // TODO get dynamic id key
-                            'id' => '',
-                        ],
-                    ];
-
-                    $data[$name] = $this->resolveActionConfiguration($actionConfiguration, $actionData);
+                foreach ($value as $name => $actionLinkConfiguration) {
+                    $data[$name] = $this->resolveActionLinkConfiguration(
+                        $actionConfiguration,
+                        $name,
+                        $actionLinkConfiguration
+                    );
                 }
 
                 return $data;
@@ -86,21 +83,53 @@ class ActionCollectionField extends CollectionField implements TwigAwareFieldInt
         ]);
     }
 
-    protected function resolveActionConfiguration(ActionConfiguration $actionConfiguration, $value)
-    {
+    protected function resolveActionLinkConfiguration(
+        ActionConfiguration $actionConfiguration,
+        string $actionName,
+        array $actionLinkConfiguration = []
+    ): array {
+        $translationPattern = $actionConfiguration
+            ->getAdminConfiguration()
+            ->getParameter('translation_pattern')
+        ;
+
+        $icon = '';
+        $cssClass = '';
+        $routeParameters = [];
+
+        if ('delete' === $actionName) {
+            $icon = 'remove';
+            $cssClass = 'btn btn-danger btn-sm';
+            $routeParameters = [
+                'id' => ''
+            ];
+        }
+        if ('edit' === $actionName) {
+            $icon = 'pencil';
+            $cssClass = 'btn btn-secondary btn-sm';
+        }
+
         $resolver = new OptionsResolver();
         $resolver
             ->setDefaults([
-                'title' => '',
-                'icon' => '',
+                'title' => StringUtils::getTranslationKey(
+                    $translationPattern,
+                    $actionConfiguration->getAdminName(),
+                    $actionName
+                ),
+                'icon' => $icon,
                 'target' => '_self',
                 'route' => '',
-                'parameters' => [],
+                'parameters' => $routeParameters,
                 'url' => '',
-                'text' => '',
-                'admin' => null,
-                'action' => null,
-                'class' => '',
+                'text' => StringUtils::getTranslationKey(
+                    $translationPattern,
+                    $actionConfiguration->getAdminName(),
+                    $actionName
+                ),
+                'admin' => $actionConfiguration->getAdminName(),
+                'action' => $actionConfiguration->getActionName(),
+                'class' => $cssClass,
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('parameters', 'array')
@@ -152,6 +181,6 @@ class ActionCollectionField extends CollectionField implements TwigAwareFieldInt
             })
         ;
 
-        return $resolver->resolve($value);
+        return $resolver->resolve($actionLinkConfiguration);
     }
 }
