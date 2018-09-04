@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Tests\Bridge\Doctrine\Orm\Event\Subscriber;
+namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\Event\Subscriber;
 
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\ActionInterface;

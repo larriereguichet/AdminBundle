@@ -104,7 +104,8 @@ class ORMDataProvider implements DataProviderInterface
         $class = $admin->getConfiguration()->getParameter('entity');
         $item = $this
             ->getRepository($class)
-            ->find($identifier);
+            ->find($identifier)
+        ;
 
         if (null === $item) {
             throw new Exception(sprintf(
