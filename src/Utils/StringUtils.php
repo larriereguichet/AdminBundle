@@ -25,6 +25,26 @@ class StringUtils
     }
 
     /**
+     * Return the translation pattern with keys "{admin}" and "{key}" replaced by their values.
+     *
+     * @param string $translationPattern
+     * @param string $adminName
+     * @param string $actionName
+     *
+     * @return string
+     */
+    public static function getActionTranslationKey(
+        string $translationPattern,
+        string $adminName,
+        string $actionName
+    ): string {
+        $translationPattern = str_replace('{key}', $actionName, $translationPattern);
+        $translationPattern = str_replace('{admin}', $adminName, $translationPattern);
+
+        return $translationPattern;
+    }
+
+    /**
      * Camelize a string.
      *
      * @param string $id A string to camelize
