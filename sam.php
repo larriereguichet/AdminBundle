@@ -18,7 +18,7 @@ $configuration = [
     'copy' => [],
 ];
 $eventDispatcher = new EventDispatcher();
-$eventDispatcher->addListener(NotificationEvent::NAME, function (NotificationEvent $event) {
+$eventDispatcher->addListener(NotificationEvent::NAME, function(NotificationEvent $event) {
     echo $event->getMessage()."\n";
 });
 
@@ -68,7 +68,7 @@ $tasks = [
 $builder = new TaskBuilder();
 $tasks = $builder->build($tasks);
 
-$normalizer = new Normalizer(realpath(__DIR__ . '/AdminBundle'));
+$normalizer = new Normalizer(realpath(__DIR__.'/AdminBundle'));
 $locator = new Locator($normalizer);
 
 $runner = new TaskRunner(

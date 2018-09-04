@@ -135,12 +135,10 @@ class AdminSubscriber implements EventSubscriberInterface
 
         if (LAGAdminBundle::LOAD_STRATEGY_NONE === $strategy) {
             return;
-        }
-        else if (LAGAdminBundle::LOAD_STRATEGY_MULTIPLE === $strategy) {
+        } else if (LAGAdminBundle::LOAD_STRATEGY_MULTIPLE === $strategy) {
             $entities = $dataProvider->getCollection($admin, $event->getFilters());
             $event->setEntities($entities);
-        }
-        else if (LAGAdminBundle::LOAD_STRATEGY_UNIQUE === $strategy) {
+        } else if (LAGAdminBundle::LOAD_STRATEGY_UNIQUE === $strategy) {
             $requirements = $actionConfiguration->getParameter('route_requirements');
             $identifier = null;
 

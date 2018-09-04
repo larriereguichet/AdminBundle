@@ -17,7 +17,7 @@ class ResourceCompilerPassTest extends AdminTestBase
         $resourceCollection
             ->expects($this->once())
             ->method('addMethodCall')
-            ->willReturnCallback(function ($name, $parameters) {
+            ->willReturnCallback(function($name, $parameters) {
                 $this->assertEquals('add', $name);
                 $this->assertCount(1, $parameters);
                 $this->assertInstanceOf(Reference::class, $parameters[0]);
