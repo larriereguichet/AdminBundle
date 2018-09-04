@@ -3,13 +3,11 @@
 namespace LAG\AdminBundle\Factory;
 
 use Exception;
-use LAG\AdminBundle\Admin\Exception\AdminException;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\TwigAwareFieldInterface;
-use LAG\AdminBundle\Field\TwigAwareInterface;
 use LAG\AdminBundle\Field\TranslatorAwareFieldInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -56,10 +54,10 @@ class FieldFactory
     /**
      * FieldFactory constructor.
      *
-     * @param ApplicationConfigurationStorage                     $applicationConfigurationStorage
-     * @param ConfigurationFactory $configurationFactory
-     * @param TranslatorInterface                                 $translator
-     * @param Twig_Environment                                    $twig
+     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
+     * @param ConfigurationFactory            $configurationFactory
+     * @param TranslatorInterface             $translator
+     * @param Twig_Environment                $twig
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
@@ -81,7 +79,7 @@ class FieldFactory
      *
      * @return array
      */
-    public function getFields(ActionConfiguration $configuration)
+    public function getFields(ActionConfiguration $configuration): array
     {
         $fields = [];
     
@@ -104,7 +102,7 @@ class FieldFactory
      *
      * @throws Exception
      */
-    public function create($name, array $configuration, ActionConfiguration $actionConfiguration)
+    public function create(string $name, array $configuration, ActionConfiguration $actionConfiguration): FieldInterface
     {
         $resolver = new OptionsResolver();
         $configuration = $this->resolveTopLevelConfiguration($configuration, $actionConfiguration);
@@ -129,11 +127,13 @@ class FieldFactory
      * Return field class according to the field type. If the type is not present in the field mapping array, an
      * exception will be thrown.
      *
-     * @param $type
+     * @param string $type
+     *
      * @return string
+     *
      * @throws Exception
      */
-    private function getFieldClass($type)
+    private function getFieldClass(string $type): string
     {
         if (!array_key_exists($type, $this->fieldsMapping)) {
             throw new Exception("Field type {$type} not found in field mapping. Check your configuration");
@@ -143,14 +143,14 @@ class FieldFactory
     }
     
     /**
-     * @param $name
-     * @param $type
+     * @param string $name
+     * @param string $type
      *
      * @return FieldInterface
      *
      * @throws Exception
      */
-    private function instanciateField($name, $type)
+    private function instanciateField(string $name, string $type): FieldInterface
     {
         $fieldClass = $this->getFieldClass($type);
         $field = new $fieldClass($name);
