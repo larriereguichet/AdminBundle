@@ -77,8 +77,8 @@ class View implements ViewInterface
     /**
      * View constructor.
      *
-     * @param                     $actionName
-     * @param                     $adminName
+     * @param string              $actionName
+     * @param string              $adminName
      * @param ActionConfiguration $configuration
      * @param AdminConfiguration  $adminConfiguration
      * @param FieldInterface[]    $fields
@@ -87,8 +87,8 @@ class View implements ViewInterface
      * @param FieldInterface[]    $headers
      */
     public function __construct(
-        $actionName,
-        $adminName,
+        string $actionName,
+        string $adminName,
         ActionConfiguration $configuration,
         AdminConfiguration $adminConfiguration,
         array $fields = [],
