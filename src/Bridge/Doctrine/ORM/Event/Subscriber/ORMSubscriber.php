@@ -52,6 +52,7 @@ class ORMSubscriber implements EventSubscriberInterface
         $sort = $request->get('sort');
         $alias = $queryBuilder->getRootAliases()[0];
 
+        // The sort from the request override the configured one
         if ($sort) {
             $order = $request->get('order', 'asc');
 

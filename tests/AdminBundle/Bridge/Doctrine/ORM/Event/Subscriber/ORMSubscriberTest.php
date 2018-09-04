@@ -87,6 +87,63 @@ class ORMSubscriberTest extends AdminTestBase
         $subscriber->addOrder($event);
     }
 
+    public function testAddOrderWithSort()
+    {
+        $request = new Request([
+            'sort' => 'name',
+        ]);
+
+        $requestStack = $this->getMockWithoutConstructor(RequestStack::class);
+        $requestStack
+            ->expects($this->atLeastOnce())
+            ->method('getMasterRequest')
+            ->willReturn($request)
+        ;
+        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $action = $this->getMockWithoutConstructor(ActionInterface::class);
+
+        $configuration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+
+        $queryBuilder = $this->getMockWithoutConstructor(QueryBuilder::class);
+        $queryBuilder
+            ->expects($this->once())
+            ->method('getRootAliases')
+            ->willReturn([
+                'entity',
+            ])
+        ;
+        $queryBuilder
+            ->expects($this->once())
+            ->method('addOrderBy')
+            ->with('entity.name', 'asc')
+        ;
+
+        $event = $this->getMockWithoutConstructor(DoctrineOrmFilterEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getQueryBuilder')
+            ->willReturn($queryBuilder)
+        ;
+        $event
+            ->expects($this->once())
+            ->method('getAdmin')
+            ->willReturn($admin)
+        ;
+        $admin
+            ->expects($this->once())
+            ->method('getAction')
+            ->willReturn($action)
+        ;
+        $action
+            ->expects($this->once())
+            ->method('getConfiguration')
+            ->willReturn($configuration)
+        ;
+
+        $subscriber = new ORMSubscriber($requestStack);
+        $subscriber->addOrder($event);
+    }
+
     public function testAddFilters()
     {
         $requestStack = $this->getMockWithoutConstructor(RequestStack::class);
