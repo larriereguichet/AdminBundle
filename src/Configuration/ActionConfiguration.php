@@ -9,6 +9,7 @@ use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Routing\RoutingLoader;
+use LAG\AdminBundle\Utils\StringUtils;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -36,10 +37,10 @@ class ActionConfiguration extends Configuration
      * ActionConfiguration constructor.
      *
      * @param string             $actionName
-     * @param                    $adminName
+     * @param string             $adminName
      * @param AdminConfiguration $adminConfiguration
      */
-    public function __construct($actionName, $adminName, AdminConfiguration $adminConfiguration)
+    public function __construct(string $actionName, string $adminName, AdminConfiguration $adminConfiguration)
     {
         parent::__construct();
 
@@ -57,7 +58,7 @@ class ActionConfiguration extends Configuration
     {
         $resolver
             ->setDefaults([
-                'title' => 'AdminBundle',
+                'title' => $this->getDefaultTitle(),
                 'class' => Action::class,
                 'fields' => [],
                 'permissions' => [
@@ -116,8 +117,7 @@ class ActionConfiguration extends Configuration
                 false,
                 null,
             ])
-;
-        $this->configureNormalizers($resolver);
+        ;
     }
 
     /**
@@ -127,7 +127,7 @@ class ActionConfiguration extends Configuration
      *
      * @throws Exception
      */
-    private function generateRouteName()
+    private function generateRouteName(): string
     {
         if (!array_key_exists($this->actionName, $this->adminConfiguration->getParameter('actions'))) {
             throw new Exception(
@@ -144,16 +144,6 @@ class ActionConfiguration extends Configuration
         );
 
         return $routeName;
-    }
-
-    /**
-     * Configure the normalizers.
-     *
-     * @param OptionsResolver $resolver
-     */
-    private function configureNormalizers(OptionsResolver $resolver)
-    {
-
     }
 
     /**
@@ -352,7 +342,7 @@ class ActionConfiguration extends Configuration
         if (false !== $translationPattern) {
             // by default, the action title is action name using the configured translation pattern
 
-            $actionTitle = $this->getTranslationKey(
+            $actionTitle = StringUtils::getTranslationKey(
                 $translationPattern,
                 $this->actionName,
                 $this->adminName
@@ -386,132 +376,6 @@ class ActionConfiguration extends Configuration
         return $path;
     }
 
-    /**
-     * Return the defaults route parameters according to a mapping based on the action name.
-     *
-     * @return array
-     */
-    private function getDefaultRouteDefaults()
-    {
-        $mapping = [
-            'list' => [
-                '_controller' => LAGAdminBundle::SERVICE_ID_LIST_ACTION,
-                '_admin' => $this->adminName,
-                '_action' => $this->actionName,
-            ],
-            'create' => [
-                '_controller' => LAGAdminBundle::SERVICE_ID_CREATE_ACTION,
-                '_admin' => $this->adminName,
-                '_action' => $this->actionName,
-            ],
-            'edit' => [
-                '_controller' => LAGAdminBundle::SERVICE_ID_EDIT_ACTION,
-                '_admin' => $this->adminName,
-                '_action' => $this->actionName,
-            ],
-            'delete' => [
-                '_controller' => LAGAdminBundle::SERVICE_ID_DELETE_ACTION,
-                '_admin' => $this->adminName,
-                '_action' => $this->actionName,
-            ],
-        ];
-        $defaults = [];
-
-        if (array_key_exists($this->actionName, $mapping)) {
-            $defaults = $mapping[$this->actionName];
-        }
-
-        return $defaults;
-    }
-
-    /**
-     * Return the default route requirements according to the action name.
-     *
-     * @return array
-     */
-    private function getDefaultRouteRequirements()
-    {
-        $mapping = [
-            'edit' => [
-                'id' => '\d+',
-            ],
-            'delete' => [
-                'id' => '\d+',
-            ],
-        ];
-        $requirements = [];
-
-        if (array_key_exists($this->actionName, $mapping)) {
-            $requirements = $mapping[$this->actionName];
-        }
-
-        return $requirements;
-    }
-
-    /**
-     * Return the default form according to the action name.
-     *
-     * @return string|null
-     */
-    private function getDefaultForm()
-    {
-        $mapping = [
-            'list' => ListType::class,
-            'delete' => DeleteType::class,
-        ];
-
-        if (!array_key_exists($this->actionName, $mapping)) {
-            // try to get an admin globally configured form
-            $adminForm = $this
-                ->adminConfiguration
-                ->getParameter('form');
-
-            if (null !== $adminForm) {
-                return $adminForm;
-            }
-
-            return null;
-        }
-
-        return $mapping[$this->actionName];
-    }
-
-    /**
-     * Return a default form handler service id, or null, according to to the action name.
-     *
-     * @return mixed|null
-     */
-    private function getDefaultFormHandler()
-    {
-        $mapping = [
-            'edit' => LAGAdminBundle::SERVICE_ID_EDIT_FORM_HANDLER,
-            'list' => LAGAdminBundle::SERVICE_ID_LIST_FORM_HANDLER,
-        ];
-
-        if (!array_key_exists($this->actionName, $mapping)) {
-            return null;
-        }
-
-        return $mapping[$this->actionName];
-    }
-
-    private function getDefaultFormOptions()
-    {
-        $mapping = [
-            'list' => [
-                'actions' => [
-                    'lag.admin.delete' => 'delete',
-                ]
-            ],
-        ];
-
-        if (!$this->isActionInMapping($mapping)) {
-            return [];
-        }
-
-        return $mapping[$this->actionName];
-    }
-
     private function getDefaultTemplate()
     {
         $mapping = [
@@ -531,34 +395,5 @@ class ActionConfiguration extends Configuration
     private function isActionInMapping(array $mapping)
     {
         return array_key_exists($this->actionName, $mapping);
-    }
-
-    private function getDefaultSortable()
-    {
-        $mapping = [
-            'list' => true,
-        ];
-
-        if (!$this->isActionInMapping($mapping)) {
-            return false;
-        }
-
-        return $mapping[$this->actionName];
-    }
-
-    private function getDefaultResponder()
-    {
-        $mapping = [
-            'list' => 'lag.admin.action.list_responder',
-            'create' => 'lag.admin.action.create_responder',
-            'edit' => 'lag.admin.action.edit_responder',
-            'delete' => 'lag.admin.action.delete_responder',
-        ];
-
-        if (!$this->isActionInMapping($mapping)) {
-            return null;
-        }
-
-        return $mapping[$this->actionName];
     }
 }
