@@ -79,7 +79,7 @@ class ApplicationConfiguration extends Configuration
             ->setAllowedTypes('routing_name_pattern', 'string')
             ->setAllowedTypes('routing_url_pattern', 'string')
             ->setAllowedTypes('page_parameter', 'string')
-            ->setNormalizer('routing_name_pattern', function (Options $options, $value) {
+            ->setNormalizer('routing_name_pattern', function(Options $options, $value) {
                 if (strstr($value, '{admin}') === false) {
                     throw new InvalidOptionsException(
                         'Admin routing configuration pattern name should contains the {admin} placeholder'
@@ -93,7 +93,7 @@ class ApplicationConfiguration extends Configuration
 
                 return $value;
             })
-            ->setNormalizer('routing_url_pattern', function (Options $options, $value) {
+            ->setNormalizer('routing_url_pattern', function(Options $options, $value) {
                 if (strstr($value, '{admin}') === false) {
                     throw new InvalidOptionsException('Admin routing configuration url pattern should contains {admin} placeholder');
                 }
