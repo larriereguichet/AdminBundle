@@ -20,28 +20,36 @@ Current version **v1.0**
 
 ## Features
 
-Version 0.4 :
 * Dynamic CRUD for your entities (no code generation)
-* Simple configuration in yml (look alike symfony1 generators.yml syntax)
-* List with pagination, sorting and batch remove (filters are coming)
-* Full translated
-* Main and left menu integration
+* Simple yaml configuration
+* List with pagination, sorting and filters
+* Menus integrations
 * Fully customizable (use your own controllers, data providers or templates)
-* Bootstrap 3 integration (can be disabled or override)
+* Bootstrap 4 integration (can be disabled or override)
 
 
-## Getting Started
+## Installation
+
+### Download
 
 ### Step 1: Download the Bundle
 
-Open a command console, enter your project directory and execute the
-following command to download the latest stable version of this bundle:
+Open a command console, execute the
+following command in your project directory to install the latest stable version of the bundle:
 
 ```console
 $ composer require lag/adminbundle
 ```
 
 ### Step 2: Enable the Bundle
+
+```
+    If you use Symfony 4, you can skip this step.
+    
+    AdminBundle rely on KnpMenuBundle to handle menus and on WhiteOctoberPagerfantaBundle to handle list pagination. If you
+    want to use those features, both bundles should be enabled in addition to AdminBundle.
+    
+```
 
 Then, enable the bundle by adding it to the list of registered bundles
 in the `app/AppKernel.php` file of your project:
@@ -68,17 +76,23 @@ class AppKernel extends Kernel
 }
 ```
 
-If you use Symfony 4, you can skip this step.
+### Step 3: Configure the routing
 
-AdminBundle rely on KnpMenuBundle to handle menus and on WhiteOctoberPagerfantaBundle to handle list pagination. If you
-want to use those features, both bundles should be enabled in addition to AdminBundle.
+Import the routing configuration to have the admin generated routes :
 
+```yml
+    # config/routes.yaml
+        
+    lag_admin:
+        resource: .
+        type: extra
+```
 
-### Step 3 : Configuring an entity
+### Step 4 : Configuring an entity
 
 
 ```yml
-    #app/config/config.yml
+    # config/packages/lag_admin.yml
 
     lag_admin:
         application:
@@ -90,12 +104,12 @@ want to use those features, both bundles should be enabled in addition to AdminB
             
 ```
 
-And now you could go to `http://127.0.0.1:8000/app_dev.php/admin/planet/list` to see a list of your entities. Yan can go
+And now you could go to `http://127.0.0.1:8000/admin/planet/list` to see a list of your entities. Yan can go
 to `http://127.0.0.1:8000/app_dev.php/admin/` the see an homepage of your admin interface
 
-## Going further
+## Documentation
 
-1. Main concept
+1. Main concepts
   a. Admins and Actions
   b. Events
   c. Data Providers
