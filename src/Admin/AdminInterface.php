@@ -20,14 +20,14 @@ interface AdminInterface
     public function handleRequest(Request $request);
 
     /**
-     * Return the Admin's name.
+     * Return the Admin name.
      *
      * @return string
      */
     public function getName(): string;
 
     /**
-     * Return the Resource use for creating the Admin.
+     * Return the Resource used to create the Admin.
      *
      * @return AdminResource
      */
@@ -41,14 +41,14 @@ interface AdminInterface
     public function getEventDispatcher(): EventDispatcherInterface;
 
     /**
-     * Return the Admin's configuration.
+     * Return the Admin configuration.
      *
      * @return AdminConfiguration
      */
     public function getConfiguration(): AdminConfiguration;
 
     /**
-     * Return the current action if defined.
+     * Return the current Action if defined. If it is not defined, an exception will be thrown.
      *
      * @return ActionInterface
      */
