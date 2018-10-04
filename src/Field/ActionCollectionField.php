@@ -128,7 +128,7 @@ class ActionCollectionField extends CollectionField implements TwigAwareFieldInt
                     $actionName
                 ),
                 'admin' => $actionConfiguration->getAdminName(),
-                'action' => $actionConfiguration->getActionName(),
+                'action' => $actionName,
                 'class' => $cssClass,
             ])
             ->setAllowedTypes('route', 'string')
