@@ -2,4 +2,9 @@ services:
     lag.admin.data_collector:
         class: LAG\AdminBundle\Debug\DataCollector\AdminDataCollector
         autowire: true
+        tags:
+            -
+                name: data_collector
+                template: '@LAGAdmin/Debug/template.html.twig'
+                id: 'admin.data_collector'
         public: false

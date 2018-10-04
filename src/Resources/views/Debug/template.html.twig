@@ -1,0 +1,88 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        <div class="sf-toolbar-icon">
+            {{ include('@LAGAdmin/Debug/icon.svg') }}
+            <span class="sf-toolbar-value">
+                Admin
+            </span>
+        </div>
+    {% endset %}
+
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            {% for name, admin in collector.data %}
+                <div class="sf-toolbar-info-piece">
+                    <b>{{ name }}</b>
+                    <span class="sf-toolbar-status ">
+                        {{ admin.entity_class }}
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { 'link': true }) }}
+{% endblock %}
+
+{% block menu %}
+
+    <span class="label">
+        <span class="icon">
+            {{ include('@LAGAdmin/Debug/icon.svg') }}
+        </span>
+        <strong>Admin</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Admins</h2>
+
+    {% for name, admin in collector.data %}
+        <h3>{{ name | capitalize }} ({{ name }})</h3>
+        <table>
+            <thead>
+            <tr>
+                <th class="key">Key</th>
+                <th scope="col">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ name }}</td>
+                <td>{{ admin.entity_class }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        {% for actionName, action in admin.configuration.actions %}
+            <h4>{{ actionName }}</h4>
+        <table>
+            <thead>
+            <tr>
+                <th class="key">Key</th>
+                <th scope="col">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for key, value in action %}
+                <tr>
+
+                    <td>{{ key }}</td>
+                    <td>
+                        {% if value is iterable %}
+                            {{ dump(value) }}
+                        {% else %}
+                            {{ value }}
+                        {% endif %}
+                    </td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endfor %}
+    {% endfor %}
+
+{% endblock %}

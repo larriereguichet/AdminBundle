@@ -51,11 +51,16 @@ class AdminDataCollector extends DataCollector
      */
     public function getName()
     {
-        return 'Admin';
+        return 'admin.data_collector';
     }
 
     public function reset()
     {
         $this->data = [];
+    }
+
+    public function getData()
+    {
+        return $this->data;
     }
 }
