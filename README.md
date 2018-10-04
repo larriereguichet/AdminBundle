@@ -10,7 +10,7 @@
 The AdminBundle let you creates a **flexible** and **robust backoffice** on any Symfony application, with simple `yml` configuration.
 
 It eases the handling of CRUD views by configuring `Admin` objects on top of your Doctrine entities. Each `Admin` has one or many `Action`.
-By default, the four actions of a classical CRUD are available (`create`, `edit`, `delete` and `list`) and the creation of new actions is easy.
+By default, the four actions of a classical CRUD are available (`create`, `edit`, `delete` and `list`) and the creation of custom actions is easy.
 
 If you require *more flexibility*, you can easily override any part of the process (data providers, controllers, views...).
 The purpose of the bundle is to provide an Admin interface with default configuration, and allows the user to add his
@@ -88,7 +88,7 @@ Import the routing configuration to have the admin generated routes :
         type: extra
 ```
 
-### Step 4 : Configuring an entity
+### Step 4 : Configure an entity
 
 
 ```yml
@@ -109,18 +109,21 @@ to `http://127.0.0.1:8000/app_dev.php/admin/` the see an homepage of your admin 
 
 ## Documentation
 
-1. Main concepts
+1. [Main Concepts](https://github.com/larriereguichet/AdminBundle/tree/master/Resources/docs)
   a. Admins and Actions
   b. Events
   c. Data Providers
   d. Filters
   e. Views
-
 2. Customization
-
+  a. Custom actions
+  b. Custom rendering
+  c. Custom data
 3. Reference
   a. Application configuration
   b. Admin configuration
+4. FAQ
+5. Configuration reference
 
 ## Road map
 
