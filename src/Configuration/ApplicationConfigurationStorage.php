@@ -56,7 +56,6 @@ class ApplicationConfigurationStorage
         if ($this->frozen) {
             throw new Exception('The application configuration is already defined');
         }
-        dump($configuration);
         $this->configuration = $this->createApplicationConfiguration($configuration);
         $this->frozen = true;
     }
