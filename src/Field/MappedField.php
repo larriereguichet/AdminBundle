@@ -23,7 +23,7 @@ class MappedField extends AbstractField implements TranslatorAwareFieldInterface
             ->setRequired('map')
             ->setAllowedTypes('map', 'array')
         ;
-        $this->translationEnabled = $actionConfiguration->getAdminConfiguration()->getParameter('translation_enabled');
+        $this->translationEnabled = $actionConfiguration->getAdminConfiguration()->getParameter('translation');
     }
 
     public function render($value = null): string

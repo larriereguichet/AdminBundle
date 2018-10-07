@@ -29,6 +29,11 @@ class MenuFactory
      */
     private $applicationConfiguration;
 
+    /**
+     * MenuFactory constructor.
+     * @param RequestStack                    $requestStack
+     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
+     */
     public function __construct(
         RequestStack $requestStack,
         ApplicationConfigurationStorage $applicationConfigurationStorage

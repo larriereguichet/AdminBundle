@@ -11,16 +11,39 @@
     {% endset %}
 
     {% set text %}
+        <b>Application</b>
+
         <div class="sf-toolbar-info-piece">
-            {% for name, admin in collector.data %}
-                <div class="sf-toolbar-info-piece">
-                    <b>{{ name }}</b>
-                    <span class="sf-toolbar-status ">
-                        {{ admin.entity_class }}
-                    </span>
-                </div>
-            {% endfor %}
+            <b>Locale</b>
+            <span class="sf-toolbar-status">
+                {{ collector.data.application.locale }}
+            </span>
         </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Pagination</b>
+            <span class="sf-toolbar-status">
+                {{ collector.data.application.pager ?: 'false' }}
+            </span>
+        </div>
+        <br>
+        <div class="sf-toolbar-info-piece">
+            <b>Translation</b>
+            <span>
+                {{ collector.data.application.translation ?: 'false' }}<br>
+            </span>
+        </div>
+        <hr>
+        <b>Admins</b>
+
+        {% for name, admin in collector.data.admins %}
+            <div class="sf-toolbar-info-piece">
+                <b>{{ name | capitalize }}</b>
+                <span class="sf-toolbar-status ">
+                    {{ admin.entity_class }}
+                </span>
+            </div>
+        {% endfor %}
+
     {% endset %}
 
     {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { 'link': true }) }}
@@ -39,7 +62,7 @@
 {% block panel %}
     <h2>Admins</h2>
 
-    {% for name, admin in collector.data %}
+    {% for name, admin in collector.data.admins %}
         <h3>{{ name | capitalize }} ({{ name }})</h3>
         <table>
             <thead>

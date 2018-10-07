@@ -39,7 +39,8 @@ class ApplicationConfiguration extends Configuration
                 'enable_security' => true,
                 'enable_menus' => true,
                 'enable_homepage' => true,
-                'enable_translation' => false,
+                'translation' => false,
+                'translation_pattern' => false,
                 'title' => 'AdminBundle application',
                 'description' => '',
                 'locale' => 'en',
@@ -53,6 +54,7 @@ class ApplicationConfiguration extends Configuration
                 'routing_name_pattern' => 'lag.admin.{admin}.{action}',
                 'bootstrap' => true,
                 'date_format' => 'Y/m/d',
+                'pager' => 'pagerfanta',
                 // string length before truncation (0 means no truncation)
                 'string_length' => 200,
                 'string_length_truncate' =>  '...',
@@ -105,10 +107,6 @@ class ApplicationConfiguration extends Configuration
                 return $value;
             })
         ;
-
-        // translation configuration
-        $this->setTranslationOptions($resolver);
-
         // admin field type mapping
         $this->setFieldsOptions($resolver);
     }

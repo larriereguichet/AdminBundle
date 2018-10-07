@@ -2,8 +2,6 @@
 
 namespace LAG\AdminBundle\Bridge\Twig\Extension;
 
-use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Configuration\MenuItemConfiguration;
 use LAG\AdminBundle\Exception\Exception;
@@ -11,7 +9,6 @@ use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Field\EntityAwareFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
-use LAG\AdminBundle\Field\TranslatorAwareFieldInterface;
 use LAG\AdminBundle\Routing\RoutingLoader;
 use LAG\AdminBundle\Utils\StringUtils;
 use LAG\AdminBundle\View\ViewInterface;
@@ -24,11 +21,6 @@ use Twig_SimpleFunction;
 
 class AdminExtension extends Twig_Extension
 {
-    /**
-     * @var ApplicationConfiguration
-     */
-    private $applicationConfiguration;
-
     /**
      * @var MenuFactory
      */
@@ -55,6 +47,11 @@ class AdminExtension extends Twig_Extension
     private $configurationFactory;
 
     /**
+     * @var ApplicationConfigurationStorage
+     */
+    private $applicationConfigurationStorage;
+
+    /**
      * AdminExtension constructor.
      *
      * @param ApplicationConfigurationStorage $applicationConfigurationStorage
@@ -72,12 +69,12 @@ class AdminExtension extends Twig_Extension
         TranslatorInterface $translator,
         ConfigurationFactory $configurationFactory
     ) {
-        $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
         $this->menuFactory = $menuFactory;
         $this->twig = $twig;
         $this->router = $router;
         $this->translator = $translator;
         $this->configurationFactory = $configurationFactory;
+        $this->applicationConfigurationStorage = $applicationConfigurationStorage;
     }
 
     public function getFunctions()
@@ -96,7 +93,11 @@ class AdminExtension extends Twig_Extension
 
     public function getApplicationParameter($name)
     {
-        return $this->applicationConfiguration->getParameter($name);
+        return $this
+            ->applicationConfigurationStorage
+            ->getConfiguration()
+            ->getParameter($name)
+        ;
     }
 
     /**
@@ -149,7 +150,10 @@ class AdminExtension extends Twig_Extension
             $routeName = RoutingLoader::generateRouteName(
                 $configuration->getParameter('admin'),
                 $configuration->getParameter('action'),
-                $this->applicationConfiguration->getParameter('routing_name_pattern')
+                $this
+                    ->applicationConfigurationStorage
+                    ->getConfiguration()
+                    ->getParameter('routing_name_pattern')
             );
         } else {
             $routeName = $configuration->getParameter('route');
@@ -178,20 +182,24 @@ class AdminExtension extends Twig_Extension
     }
 
     /**
+     * Return the field header label.
+     *
+     * @param ViewInterface  $admin
      * @param FieldInterface $field
+     *
      * @return string
      *
-     * @throws Exception
      */
     public function getFieldHeader(ViewInterface $admin, FieldInterface $field)
     {
         if (StringUtils::startWith($field->getName(), '_')) {
             return '';
         }
+        $configuration = $this->applicationConfigurationStorage->getConfiguration();
 
-        if ($this->applicationConfiguration->getParameter('enable_translation')) {
+        if ($configuration->getParameter('translation')) {
             $key = StringUtils::getTranslationKey(
-                $this->applicationConfiguration->getParameter('translation')['pattern'],
+                $configuration->getParameter('translation_pattern'),
                 $admin->getName(),
                 $field->getName()
             );

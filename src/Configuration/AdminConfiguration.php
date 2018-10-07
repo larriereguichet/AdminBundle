@@ -49,13 +49,11 @@ class AdminConfiguration extends Configuration
                 'routing_name_pattern' => $this->applicationConfiguration->getParameter('routing_name_pattern'),
                 'controller' => AdminAction::class,
                 'max_per_page' => $this->applicationConfiguration->getParameter('max_per_page'),
-                'translation_enabled' => $this->applicationConfiguration->getParameter('translation')['enabled'],
-                'translation_pattern' => $this
-                    ->applicationConfiguration
-                    ->getParameter('translation')['pattern'],
+                'translation' => $this->applicationConfiguration->getParameter('translation'),
+                'translation_pattern' => $this->applicationConfiguration->getParameter('translation_pattern'),
                 'form' => null,
                 'form_options' => [],
-                'pager' => 'pagerfanta',
+                'pager' => $this->applicationConfiguration->getParameter('pager'),
                 'permissions' => $this->applicationConfiguration->getParameter('permissions'),
                 'string_length' => $this->applicationConfiguration->getParameter('string_length'),
                 'string_length_truncate' => $this->applicationConfiguration->getParameter('string_length_truncate'),
@@ -69,7 +67,7 @@ class AdminConfiguration extends Configuration
             ->setAllowedTypes('string_length', 'integer')
             ->setAllowedTypes('string_length_truncate', 'string')
             ->setAllowedTypes('page_parameter', 'string')
-            ->setAllowedTypes('translation_enabled', 'boolean')
+            ->setAllowedTypes('translation', 'boolean')
             ->setAllowedValues('pager', [
                 null,
                 'pagerfanta',
