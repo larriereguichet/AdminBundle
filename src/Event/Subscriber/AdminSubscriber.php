@@ -200,7 +200,7 @@ class AdminSubscriber implements EventSubscriberInterface
         $dataProvider->saveItem($admin);
 
         // Inform the user that the save is successful
-        $message = $this->translateMessage('lag.admin.save_success', $admin->getName(), $configuration);
+        $message = $this->translateMessage('save_success', $admin->getName(), $configuration);
 
         $this
             ->session
@@ -211,7 +211,7 @@ class AdminSubscriber implements EventSubscriberInterface
 
     private function translateMessage(string $message, string $adminName, AdminConfiguration $configuration): string
     {
-        $pattern = $configuration->get('translation_pattern');
+        $pattern = $configuration->getParameter('translation_pattern');
         $message = StringUtils::getTranslationKey($pattern, $adminName, $message);
 
         return $this->translator->trans($message);

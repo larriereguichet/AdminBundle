@@ -23,6 +23,9 @@ use LAG\AdminBundle\View\ViewInterface;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AdminSubscriberTest extends AdminTestBase
 {
@@ -55,12 +58,16 @@ class AdminSubscriberTest extends AdminTestBase
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+        $session = $this->getMockWithoutConstructor(Session::class);
+        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
 
         $subscriber = new AdminSubscriber(
             $actionFactory,
             $viewFactory,
             $dataProviderFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $session,
+            $translator
         );
 
         $request = new Request([], [], [
@@ -93,12 +100,16 @@ class AdminSubscriberTest extends AdminTestBase
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+        $session = $this->getMockWithoutConstructor(Session::class);
+        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
 
         $subscriber = new AdminSubscriber(
             $actionFactory,
             $viewFactory,
             $dataProviderFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $session,
+            $translator
         );
 
         $request = new Request();
@@ -196,11 +207,16 @@ class AdminSubscriberTest extends AdminTestBase
             ->willReturn($view)
         ;
 
+        $session = $this->getMockWithoutConstructor(Session::class);
+        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
+
         $subscriber = new AdminSubscriber(
             $actionFactory,
             $viewFactory,
             $dataProviderFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $session,
+            $translator
         );
         $event = new ViewEvent($admin, $request);
 
@@ -266,12 +282,16 @@ class AdminSubscriberTest extends AdminTestBase
             ->willReturn($dataProvider)
         ;
 
+        $session = $this->getMockWithoutConstructor(Session::class);
+        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
 
         $subscriber = new AdminSubscriber(
             $actionFactory,
             $viewFactory,
             $dataProviderFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $session,
+            $translator
         );
 
         $request = new Request();
@@ -346,12 +366,16 @@ class AdminSubscriberTest extends AdminTestBase
             ->with('my_data_provider')
             ->willReturn($dataProvider)
         ;
+        $session = $this->getMockWithoutConstructor(Session::class);
+        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
 
         $subscriber = new AdminSubscriber(
             $actionFactory,
             $viewFactory,
             $dataProviderFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $session,
+            $translator
         );
 
         $request = new Request();
@@ -429,12 +453,16 @@ class AdminSubscriberTest extends AdminTestBase
             ->with('my_data_provider')
             ->willReturn($dataProvider)
         ;
+        $session = $this->getMockWithoutConstructor(Session::class);
+        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
 
         $subscriber = new AdminSubscriber(
             $actionFactory,
             $viewFactory,
             $dataProviderFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $session,
+            $translator
         );
 
         $request = new Request([
@@ -510,12 +538,16 @@ class AdminSubscriberTest extends AdminTestBase
             ->with('my_data_provider')
             ->willReturn($dataProvider)
         ;
+        $session = $this->getMockWithoutConstructor(Session::class);
+        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
 
         $subscriber = new AdminSubscriber(
             $actionFactory,
             $viewFactory,
             $dataProviderFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $session,
+            $translator
         );
 
         $request = new Request();
@@ -541,6 +573,7 @@ class AdminSubscriberTest extends AdminTestBase
             ->willReturnMap([
                 ['data_provider', 'my_data_provider'],
                 ['entity', 'MyClass'],
+                ['translation_pattern', 'test.{admin}.{key}'],
             ])
         ;
 
@@ -549,6 +582,11 @@ class AdminSubscriberTest extends AdminTestBase
             ->expects($this->atLeastOnce())
             ->method('getConfiguration')
             ->willReturn($adminConfiguration)
+        ;
+        $admin
+            ->expects($this->atLeastOnce())
+            ->method('getName')
+            ->willReturn('stefany')
         ;
 
         $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
@@ -567,11 +605,35 @@ class AdminSubscriberTest extends AdminTestBase
         ;
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
 
+        $bag = $this->getMockWithoutConstructor(FlashBag::class);
+        $bag
+            ->expects($this->atLeastOnce())
+            ->method('add')
+            ->with('success', 'Save')
+        ;
+
+        $session = $this->getMockWithoutConstructor(Session::class);
+        $session
+            ->expects($this->atLeastOnce())
+            ->method('getFlashBag')
+            ->willReturn($bag)
+        ;
+
+        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
+        $translator
+            ->expects($this->atLeastOnce())
+            ->method('trans')
+            ->with('test.stefany.save_success')
+            ->willReturn('Save')
+        ;
+
         $subscriber = new AdminSubscriber(
             $actionFactory,
             $viewFactory,
             $dataProviderFactory,
-            $eventDispatcher
+            $eventDispatcher,
+            $session,
+            $translator
         );
 
         $request = new Request([], [], [
