@@ -101,16 +101,12 @@ class FormSubscriber implements EventSubscriberInterface
 
             foreach ($filters as $name => $options) {
                 // If the data is not submitted or if it is null, we should do nothing
-                if (
-                    !key_exists($name, $data) ||
-                    null === $data[$name]
-                ) {
+                if (!key_exists($name, $data) || null === $data[$name]) {
                     continue;
                 }
 
                 // Do not submit false boolean values to improve user experience
-                if (is_bool($data[$name]) &&
-                    false === $data[$name]) {
+                if (is_bool($data[$name]) && false === $data[$name]) {
                     continue;
                 }
 

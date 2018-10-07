@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Event\Subscriber;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\EntityEvent;
@@ -13,8 +14,12 @@ use LAG\AdminBundle\Factory\ActionFactory;
 use LAG\AdminBundle\Factory\DataProviderFactory;
 use LAG\AdminBundle\Factory\ViewFactory;
 use LAG\AdminBundle\LAGAdminBundle;
+use LAG\AdminBundle\Utils\StringUtils;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AdminSubscriber implements EventSubscriberInterface
 {
@@ -39,6 +44,16 @@ class AdminSubscriber implements EventSubscriberInterface
     private $dataProviderFactory;
 
     /**
+     * @var Session
+     */
+    private $session;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
@@ -58,17 +73,23 @@ class AdminSubscriber implements EventSubscriberInterface
      * @param ViewFactory              $viewFactory
      * @param DataProviderFactory      $dataProviderFactory
      * @param EventDispatcherInterface $eventDispatcher
+     * @param SessionInterface         $session
+     * @param TranslatorInterface      $translator
      */
     public function __construct(
         ActionFactory $actionFactory,
         ViewFactory $viewFactory,
         DataProviderFactory $dataProviderFactory,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        SessionInterface $session,
+        TranslatorInterface $translator
     ) {
         $this->actionFactory = $actionFactory;
         $this->viewFactory = $viewFactory;
         $this->eventDispatcher = $eventDispatcher;
         $this->dataProviderFactory = $dataProviderFactory;
+        $this->session = $session;
+        $this->translator = $translator;
     }
 
     /**
@@ -170,8 +191,29 @@ class AdminSubscriber implements EventSubscriberInterface
     {
         $admin = $event->getAdmin();
         $configuration = $admin->getConfiguration();
-        $dataProvider = $this->dataProviderFactory->get($configuration->getParameter('data_provider'));
 
+        // Save the entity changes using the configured data provider
+        $dataProvider = $this
+            ->dataProviderFactory
+            ->get($configuration->getParameter('data_provider'))
+        ;
         $dataProvider->saveItem($admin);
+
+        // Inform the user that the save is successful
+        $message = $this->translateMessage('lag.admin.save_success', $admin->getName(), $configuration);
+
+        $this
+            ->session
+            ->getFlashBag()
+            ->add('success', $message)
+        ;
+    }
+
+    private function translateMessage(string $message, string $adminName, AdminConfiguration $configuration): string
+    {
+        $pattern = $configuration->get('translation_pattern');
+        $message = StringUtils::getTranslationKey($pattern, $adminName, $message);
+
+        return $this->translator->trans($message);
     }
 }
