@@ -61,10 +61,10 @@
                                     {% endif %}
 
                                     <a href="?sort={{ sort }}&order={{ order }}" class="text-dark">
-                                        {{ admin_field_header(field) }}
+                                        {{ admin_field_header(admin, field) }}
                                     </a>
                                 {% else %}
-                                    {{ admin_field_header(field) }}
+                                    {{ admin_field_header(admin, field) }}
                                 {% endif %}
                             </th>
                         {% endfor %}

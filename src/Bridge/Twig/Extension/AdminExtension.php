@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Bridge\Twig\Extension;
 
+use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Configuration\MenuItemConfiguration;
@@ -10,6 +11,7 @@ use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Field\EntityAwareFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Field\TranslatorAwareFieldInterface;
 use LAG\AdminBundle\Routing\RoutingLoader;
 use LAG\AdminBundle\Utils\StringUtils;
 use LAG\AdminBundle\View\ViewInterface;
@@ -181,14 +183,19 @@ class AdminExtension extends Twig_Extension
      *
      * @throws Exception
      */
-    public function getFieldHeader(FieldInterface $field)
+    public function getFieldHeader(ViewInterface $admin, FieldInterface $field)
     {
         if (StringUtils::startWith($field->getName(), '_')) {
             return '';
         }
 
         if ($this->applicationConfiguration->getParameter('enable_translation')) {
-            throw new Exception('Translation is not implemented yet');
+            $key = StringUtils::getTranslationKey(
+                $this->applicationConfiguration->getParameter('translation')['pattern'],
+                $admin->getName(),
+                $field->getName()
+            );
+            $title = $this->translator->trans($key);
         } else {
             $title = StringUtils::camelize($field->getName());
             $title = preg_replace('/(?<!\ )[A-Z]/', ' $0', $title);
