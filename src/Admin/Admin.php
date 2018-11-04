@@ -102,7 +102,10 @@ class Admin implements AdminInterface
         $event = new EntityEvent($this, $request);
         $event->setFilters($filterEvent->getFilters());
         $this->eventDispatcher->dispatch(AdminEvents::ENTITY_LOAD, $event);
-        $this->entities = $event->getEntities();
+
+        if (null !== $event->getEntities()) {
+            $this->entities = $event->getEntities();
+        }
 
         $event = new FormEvent($this, $request);
         $this->eventDispatcher->dispatch(AdminEvents::HANDLE_FORM, $event);
@@ -201,11 +204,11 @@ class Admin implements AdminInterface
             return;
         }
         $form = $this->forms['entity'];
-        $entity = $this->entities->first();
-
-        if (!$entity) {
-            return;
-        }
+//        $entity = $this->entities->first();
+//
+//        if (!$entity) {
+//            return;
+//        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Event\Subscriber;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\FilterEvent;
 use LAG\AdminBundle\Event\FormEvent;
+use LAG\AdminBundle\Factory\DataProviderFactory;
 use LAG\AdminBundle\Filter\Filter;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Utils\FormUtils;
@@ -18,6 +19,11 @@ class FormSubscriber implements EventSubscriberInterface
      * @var FormFactoryInterface
      */
     private $formFactory;
+
+    /**
+     * @var DataProviderFactory
+     */
+    private $dataProviderFactory;
 
     /**
      * @return array
@@ -34,10 +40,12 @@ class FormSubscriber implements EventSubscriberInterface
      * FormSubscriber constructor.
      *
      * @param FormFactoryInterface $formFactory
+     * @param DataProviderFactory  $dataProviderFactory
      */
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct(FormFactoryInterface $formFactory, DataProviderFactory $dataProviderFactory)
     {
         $this->formFactory = $formFactory;
+        $this->dataProviderFactory = $dataProviderFactory;
     }
 
     /**
@@ -56,9 +64,18 @@ class FormSubscriber implements EventSubscriberInterface
         }
         $entity = null;
 
-        if (LAGAdminBundle::LOAD_STRATEGY_UNIQUE === $configuration->getParameter('load_strategy')) {
+        if (LAGAdminBundle::LOAD_STRATEGY_UNIQUE === $configuration->get('load_strategy')) {
             $entity = $admin->getEntities()->first();
         }
+
+        if (!$entity) {
+            $dataProvider = $this
+                ->dataProviderFactory
+                ->get($admin->getConfiguration()->get('data_provider'))
+            ;
+            $entity = $dataProvider->create($admin);
+        }
+
         $form = $this
             ->formFactory
             ->create($admin->getConfiguration()->getParameter('form'), $entity)

@@ -342,11 +342,10 @@ class ActionConfiguration extends Configuration
 
         if (false !== $translationPattern) {
             // by default, the action title is action name using the configured translation pattern
-
             $actionTitle = StringUtils::getTranslationKey(
                 $translationPattern,
-                $this->actionName,
-                $this->adminName
+                $this->adminName,
+                $this->actionName
             );
         } else {
             // no admin was provided, we camelize the action name

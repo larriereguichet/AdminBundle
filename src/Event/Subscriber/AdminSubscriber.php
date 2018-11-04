@@ -173,7 +173,7 @@ class AdminSubscriber implements EventSubscriberInterface
             if (null === $identifier) {
                 throw new Exception('Unable to find a identifier for the class "'.$class.'"');
             }
-            $entity = $dataProvider->getItem($admin, $identifier);
+            $entity = $dataProvider->get($admin, $identifier);
 
             $event->setEntities(new ArrayCollection([
                 $entity,
@@ -197,7 +197,7 @@ class AdminSubscriber implements EventSubscriberInterface
             ->dataProviderFactory
             ->get($configuration->getParameter('data_provider'))
         ;
-        $dataProvider->saveItem($admin);
+        $dataProvider->save($admin);
 
         // Inform the user that the save is successful
         $message = $this->translateMessage('save_success', $admin->getName(), $configuration);

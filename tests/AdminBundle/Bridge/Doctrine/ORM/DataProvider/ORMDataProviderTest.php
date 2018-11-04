@@ -162,7 +162,7 @@ class ORMDataProviderTest extends AdminTestBase
             $requestStack
         );
 
-        $item = $provider->getItem($admin, 42);
+        $item = $provider->get($admin, 42);
 
         $this->assertEquals(42, $item->getId());
     }
@@ -218,7 +218,7 @@ class ORMDataProviderTest extends AdminTestBase
         );
 
         $this->assertExceptionRaised(Exception::class, function () use ($provider, $admin) {
-            $provider->getItem($admin, 42);
+            $provider->get($admin, 42);
         });
     }
 
@@ -260,6 +260,6 @@ class ORMDataProviderTest extends AdminTestBase
             $requestStack
         );
 
-        $provider->saveItem($admin);
+        $provider->save($admin);
     }
 }
