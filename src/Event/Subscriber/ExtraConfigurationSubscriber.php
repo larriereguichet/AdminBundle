@@ -12,6 +12,7 @@ use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Resource\ResourceCollection;
+use LAG\AdminBundle\Utils\StringUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -89,6 +90,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         // Menus
         $this->addDefaultRightMenu($configuration);
         $this->addDefaultLeftMenu($configuration);
+        $this->addDefaultTopMenu($configuration, $event->getAdminName());
 
         // Filters
         $this->addDefaultFilters($configuration);
@@ -336,7 +338,32 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $configuration['actions']['list']['menus']['right'] = [
+        $configuration['actions']['list']['menus']['right'] = [];
+    }
+
+    private function addDefaultTopMenu(array &$configuration, string $adminName)
+    {
+        if (!$this->applicationConfiguration->getParameter('enable_menus')) {
+            return;
+        }
+
+        if (!key_exists('list', $configuration['actions'])) {
+            return;
+        }
+
+        if (!key_exists('create', $configuration['actions'])) {
+            return;
+        }
+
+        $configuration['actions']['list']['menus']['top']['items'][] = [
+            'admin' => $adminName,
+            'action' => 'create',
+            'text' => StringUtils::getTranslationKey(
+                $this->applicationConfiguration->getParameter('translation_pattern'),
+                $adminName,
+                'create'
+            ),
+            'icon' => 'plus',
         ];
     }
 
