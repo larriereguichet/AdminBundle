@@ -37,7 +37,7 @@
                                 <i class="fa fa-{{ item.get('icon') }}"></i>
                             {% endif %}
 
-                            {{ item.get('text') }}
+                            {{ item.get('text') | trans }}
                         </a>
                     </li>
                 {% endfor %}
