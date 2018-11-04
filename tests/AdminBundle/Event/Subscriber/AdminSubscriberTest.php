@@ -441,7 +441,7 @@ class AdminSubscriberTest extends AdminTestBase
         $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
         $dataProvider
             ->expects($this->atLeastOnce())
-            ->method('getItem')
+            ->method('get')
             ->with($admin, 42)
             ->willReturn($test)
         ;
@@ -528,7 +528,7 @@ class AdminSubscriberTest extends AdminTestBase
         $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
         $dataProvider
             ->expects($this->never())
-            ->method('getItem')
+            ->method('get')
         ;
 
         $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
@@ -592,7 +592,7 @@ class AdminSubscriberTest extends AdminTestBase
         $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
         $dataProvider
             ->expects($this->atLeastOnce())
-            ->method('saveItem')
+            ->method('save')
             ->with($admin)
         ;
 
