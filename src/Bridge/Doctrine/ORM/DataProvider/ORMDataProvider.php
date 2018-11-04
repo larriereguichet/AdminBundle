@@ -90,16 +90,9 @@ class ORMDataProvider implements DataProviderInterface
     }
 
     /**
-     * Return a single entity.
-     *
-     * @param AdminInterface $admin
-     * @param string         $identifier
-     *
-     * @return mixed
-     *
-     * @throws Exception
+     * @inheritdoc
      */
-    public function getItem(AdminInterface $admin, string $identifier)
+    public function get(AdminInterface $admin, string $identifier)
     {
         $class = $admin->getConfiguration()->getParameter('entity');
         $item = $this
@@ -119,20 +112,28 @@ class ORMDataProvider implements DataProviderInterface
     }
 
     /**
-     * Save an entity.
-     *
-     * @param AdminInterface $admin
+     * @inheritdoc
      */
-    public function saveItem(AdminInterface $admin)
+    public function save(AdminInterface $admin)
     {
         $this->entityManager->persist($admin->getEntities()->first());
         $this->entityManager->flush();
     }
 
     /**
+     * @inheritdoc
+     */
+    public function create(AdminInterface $admin)
+    {
+        $class = $admin->getConfiguration()->getParameter('entity');
+
+        return new $class();
+    }
+
+    /**
      * @param string $entityClass
      *
-     * @return EntityRepository|ObjectRepository
+     * @return ObjectRepository|EntityRepository
      */
     private function getRepository(string $entityClass)
     {
