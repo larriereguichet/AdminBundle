@@ -60,52 +60,171 @@
 {% endblock %}
 
 {% block panel %}
-    <h2>Admins</h2>
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('.tab-navigation li a').on('click', function () {
+                let targetSelector = $(this).attr('href');
+                $('.tabs .tab').hide();
+                $(targetSelector).show();
+                $('.tab-navigation li').removeClass('active');
+                $(this).parents('li').addClass('active');
 
-    {% for name, admin in collector.data.admins %}
-        <h3>{{ name | capitalize }} ({{ name }})</h3>
-        <table>
-            <thead>
-            <tr>
-                <th class="key">Key</th>
-                <th scope="col">Value</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{ name }}</td>
-                <td>{{ admin.entity_class }}</td>
-            </tr>
-            </tbody>
-        </table>
+                return false;
+            });
 
-        {% for actionName, action in admin.configuration.actions %}
-            <h4>{{ actionName }}</h4>
-        <table>
-            <thead>
-            <tr>
-                <th class="key">Key</th>
-                <th scope="col">Value</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for key, value in action %}
-                <tr>
+            $('.toggle-icon').on('click', function () {
+                $(this).toggleClass('closed');
 
-                    <td>{{ key }}</td>
-                    <td>
-                        {% if value is iterable %}
-                            {{ dump(value) }}
-                        {% else %}
-                            {{ value }}
-                        {% endif %}
-                    </td>
+                $(this).parent().next('table').toggleClass('hidden');
+            });
+        });
+    </script>
+    <style>
+        .tab {
+            display: none;
+        }
 
-                </tr>
+        .tab.active {
+            display: block;
+        }
+        table tbody tr td:first-child {
+            font-weight: bold;
+        }
+        .toggle-icon {
+            background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgBAMAAADpp+X/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QweDgwx4LcKwAAAABVQTFRFAAAA////////////////ZmZm////bvjBwAAAAAV0Uk5TABZwsuCVEUjgAAAAAWJLR0QF+G/pxwAAAE1JREFUGNNjSHMSYGBgUEljSGYAAzMGBwiDhUEBwmBiEIAwGBmwgTQgQGWgA7h2uIFwK+CWwp1BpHvYEqDuATEYkBlY3IOmBq6dCPcAAIT5Eg2IksjQAAAAAElFTkSuQmCC") no-repeat top left #5eb5e0;
+            cursor: pointer;
+            display: inline-block;
+            height: 16px;
+            width: 16px;
+        }
+        .closed .toggle-icon, .closed.toggle-icon {
+            background-position: bottom left;
+        }
+    </style>
+
+    <ul class="tab-navigation">
+        <li class="active">
+            <a href="#tab-admins">Admins</a>
+        </li>
+        <li>
+            <a href="#tab-application">Application</a>
+        </li>
+        <li>
+            <a href="#tab-menus">Menus</a>
+        </li>
+    </ul>
+
+    <div class="tabs">
+        <div id="tab-admins"
+             class="tab">
+            <h1>Admins</h1>
+
+            {% for name, admin in collector.data.admins %}
+                <h3>{{ name | capitalize }} ({{ name }})</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="key">Key</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>{{ admin.entity_class }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                {% for actionName, action in admin.configuration.actions %}
+                    <h4>{{ actionName }}</h4>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th class="key">Key</th>
+                            <th scope="col">Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, value in action %}
+                            <tr>
+
+                                <td>{{ key }}</td>
+                                <td>
+                                    {% if value is iterable %}
+                                        {{ dump(value) }}
+                                    {% else %}
+                                        {{ value }}
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endfor %}
             {% endfor %}
-            </tbody>
-        </table>
-        {% endfor %}
-    {% endfor %}
+        </div>
+        <div id="tab-application"
+             class="tab">
+            <h1>Application</h1>
+        </div>
+        <div id="tab-menus"
+             class="tab">
+            <h1>Menus</h1>
+
+            {% for name, menu in collector.data.menus %}
+                <h2>
+                    Menu "{{ name }}"
+                    <span class="toggle-icon"></span>
+                </h2>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="key">Key</th>
+                        <th class="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Items :</td>
+                    </tr>
+                    {% for name, item in menu.items %}
+                        {% set configuration = item.configuration.getParameters() %}
+                        <tr>
+                            <td>Name</td>
+                            <td>{{ name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Route/Url</td>
+                            <td>{{ configuration.route | default(configuration.url | default('null')) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Admin/Action</td>
+                            <td>
+                                {{ configuration.admin | default('null')
+                                    ~ '/' ~
+                                    configuration.action | default('null') }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Text</td>
+                            <td>{{ configuration.text }}</td>
+                        </tr>
+                        <tr>
+                            <td>--------------</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            {% endfor %}
+        </div>
+    </div>
 
 {% endblock %}

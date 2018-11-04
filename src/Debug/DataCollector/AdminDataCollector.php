@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Debug\DataCollector;
 
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
+use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,22 +16,32 @@ class AdminDataCollector extends DataCollector
      * @var ResourceCollection
      */
     private $resourceCollection;
+
     /**
      * @var ApplicationConfigurationStorage
      */
     private $applicationConfigurationStorage;
 
     /**
+     * @var MenuFactory
+     */
+    private $menuFactory;
+
+    /**
      * AdminDataCollector constructor.
      *
-     * @param ResourceCollection $resourceCollection
+     * @param ResourceCollection              $resourceCollection
+     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
+     * @param MenuFactory                     $menuFactory
      */
     public function __construct(
         ResourceCollection $resourceCollection,
-        ApplicationConfigurationStorage $applicationConfigurationStorage
+        ApplicationConfigurationStorage $applicationConfigurationStorage,
+        MenuFactory $menuFactory
     ) {
         $this->resourceCollection = $resourceCollection;
         $this->applicationConfigurationStorage = $applicationConfigurationStorage;
+        $this->menuFactory = $menuFactory;
     }
 
     /**
@@ -43,9 +54,9 @@ class AdminDataCollector extends DataCollector
         $data = [
             'admins' => [],
             'application' => $this->applicationConfigurationStorage->getConfiguration()->getParameters(),
+            'menus' => $this->menuFactory->getMenus(),
         ];
 
-        /** @var AdminResource $resource */
         foreach ($this->resourceCollection->all() as $resource) {
             $data['admins'][$resource->getName()] = [
                 'entity_class' => $resource->getEntityClass(),
