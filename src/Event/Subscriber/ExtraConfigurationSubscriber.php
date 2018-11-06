@@ -347,24 +347,56 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (!key_exists('list', $configuration['actions'])) {
-            return;
+        if (key_exists('list', $configuration['actions'])) {
+            // Add a "Create" link in the top bar if the create action is allowed
+            if (!key_exists('create', $configuration['actions'])) {
+                return;
+            }
+            $configuration['actions']['list']['menus']['top']['items'][] = [
+                'admin' => $adminName,
+                'action' => 'create',
+                'text' => StringUtils::getTranslationKey(
+                    $this->applicationConfiguration->getParameter('translation_pattern'),
+                    $adminName,
+                    'create'
+                ),
+                'icon' => 'plus',
+            ];
         }
 
-        if (!key_exists('create', $configuration['actions'])) {
-            return;
+        if (key_exists('create', $configuration['actions'])) {
+            // Add a "Return" link in the top bar if the list action is allowed
+            if (!key_exists('list', $configuration['actions'])) {
+                return;
+            }
+            $configuration['actions']['create']['menus']['top']['items'][] = [
+                'admin' => $adminName,
+                'action' => 'list',
+                'text' => StringUtils::getTranslationKey(
+                    $this->applicationConfiguration->getParameter('translation_pattern'),
+                    $adminName,
+                    'return'
+                ),
+                'icon' => 'arrow-left',
+            ];
         }
 
-        $configuration['actions']['list']['menus']['top']['items'][] = [
-            'admin' => $adminName,
-            'action' => 'create',
-            'text' => StringUtils::getTranslationKey(
-                $this->applicationConfiguration->getParameter('translation_pattern'),
-                $adminName,
-                'create'
-            ),
-            'icon' => 'plus',
-        ];
+        if (key_exists('edit', $configuration['actions'])) {
+            // Add a "Return" link in the top bar if the list action is allowed
+            if (!key_exists('list', $configuration['actions'])) {
+                return;
+            }
+            array_unshift($configuration['actions']['edit']['menus']['top']['items'], [
+                'admin' => $adminName,
+                'action' => 'list',
+                'text' => StringUtils::getTranslationKey(
+                    $this->applicationConfiguration->getParameter('translation_pattern'),
+                    $adminName,
+                    'return'
+                ),
+                'icon' => 'arrow-left',
+            ]);
+        }
     }
 
     /**
