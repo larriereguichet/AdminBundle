@@ -3,7 +3,6 @@
 namespace LAG\AdminBundle\Admin;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminEvents;
@@ -80,9 +79,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @param Request $request
-     *
-     * @throws Exception
+     * @inheritdoc
      */
     public function handleRequest(Request $request)
     {
@@ -113,11 +110,11 @@ class Admin implements AdminInterface
         // Merge the regular forms and the filter forms
         $this->forms = array_merge($event->getForms(), $filterEvent->getForms());
 
-        $this->handleForm($request);
+        $this->handleEntityForm($request);
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getName(): string
     {
@@ -125,7 +122,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return AdminResource
+     * @inheritdoc
      */
     public function getResource(): AdminResource
     {
@@ -133,7 +130,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return EventDispatcherInterface
+     * @inheritdoc
      */
     public function getEventDispatcher(): EventDispatcherInterface
     {
@@ -141,7 +138,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return AdminConfiguration
+     * @inheritdoc
      */
     public function getConfiguration(): AdminConfiguration
     {
@@ -149,7 +146,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return ViewInterface
+     * @inheritdoc
      */
     public function createView(): ViewInterface
     {
@@ -160,7 +157,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return ActionInterface
+     * @inheritdoc
      */
     public function getAction(): ActionInterface
     {
@@ -168,7 +165,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function hasAction(): bool
     {
@@ -176,9 +173,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Return the entities loaded from the data provider.
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getEntities()
     {
@@ -186,7 +181,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @return FormInterface[]
+     * @inheritdoc
      */
     public function getForms(): array
     {
@@ -194,24 +189,40 @@ class Admin implements AdminInterface
     }
 
     /**
-     * Submit a form linked to the Admin's entity if required.
-     *
-     * @param Request $request
+     * @inheritdoc
      */
-    private function handleForm(Request $request)
+    public function hasForm(string $name): bool
+    {
+        return key_exists($name, $this->forms);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getForm(string $name): FormInterface
+    {
+        if (!$this->hasForm($name)) {
+            throw new Exception('Form "'.$name.'" does not exists in Admin "'.$this->name.'"');
+        }
+
+        return $this->forms[$name];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    private function handleEntityForm(Request $request)
     {
         if (!key_exists('entity', $this->forms)) {
             return;
         }
         $form = $this->forms['entity'];
-//        $entity = $this->entities->first();
-//
-//        if (!$entity) {
-//            return;
-//        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->entities->isEmpty()) {
+                $this->entities->add($form->getData());
+            }
             $event = new EntityEvent($this, $request);
             $this->eventDispatcher->dispatch(AdminEvents::ENTITY_SAVE, $event);
         }

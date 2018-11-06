@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Admin;
 
 use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -16,6 +17,8 @@ interface AdminInterface
      * Handle the request: load the forms and the entities.
      *
      * @param Request $request
+     *
+     * @throws Exception
      */
     public function handleRequest(Request $request);
 
@@ -74,6 +77,26 @@ interface AdminInterface
      * @return FormInterface[]
      */
     public function getForms(): array;
+
+    /**
+     * Return the form associated to the given name. An exception will be thrown if the form does not exists.
+     *
+     * @param string $name
+     *
+     * @return FormInterface
+     *
+     * @throws Exception
+     */
+    public function getForm(string $name): FormInterface;
+
+    /**
+     * Return true if a form with the given name exists.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasForm(string $name): bool;
 
     /**
      * Create a new view for the template.

@@ -3,6 +3,8 @@
 namespace LAG\AdminBundle\Event\Subscriber;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminEvents;
@@ -14,11 +16,16 @@ use LAG\AdminBundle\Factory\ActionFactory;
 use LAG\AdminBundle\Factory\DataProviderFactory;
 use LAG\AdminBundle\Factory\ViewFactory;
 use LAG\AdminBundle\LAGAdminBundle;
+use LAG\AdminBundle\Routing\RoutingLoader;
 use LAG\AdminBundle\Utils\StringUtils;
+use LAG\AdminBundle\View\RedirectView;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class AdminSubscriber implements EventSubscriberInterface
@@ -54,6 +61,11 @@ class AdminSubscriber implements EventSubscriberInterface
     private $translator;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
@@ -75,6 +87,7 @@ class AdminSubscriber implements EventSubscriberInterface
      * @param EventDispatcherInterface $eventDispatcher
      * @param SessionInterface         $session
      * @param TranslatorInterface      $translator
+     * @param RouterInterface          $router
      */
     public function __construct(
         ActionFactory $actionFactory,
@@ -82,7 +95,8 @@ class AdminSubscriber implements EventSubscriberInterface
         DataProviderFactory $dataProviderFactory,
         EventDispatcherInterface $eventDispatcher,
         SessionInterface $session,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        RouterInterface $router
     ) {
         $this->actionFactory = $actionFactory;
         $this->viewFactory = $viewFactory;
@@ -90,6 +104,7 @@ class AdminSubscriber implements EventSubscriberInterface
         $this->dataProviderFactory = $dataProviderFactory;
         $this->session = $session;
         $this->translator = $translator;
+        $this->router = $router;
     }
 
     /**
@@ -124,16 +139,33 @@ class AdminSubscriber implements EventSubscriberInterface
         $menuEvent = new MenuEvent($admin->getAction()->getConfiguration()->getParameter('menus'));
         $this->eventDispatcher->dispatch(AdminEvents::MENU, $menuEvent);
 
-        $view = $this->viewFactory->create(
-            $event->getRequest(),
-            $action->getName(),
-            $admin->getName(),
-            $admin->getConfiguration(),
-            $action->getConfiguration(),
-            $admin->getEntities(),
-            $admin->getForms()
-        );
+        if ($admin->hasForm('entity') &&
+            $this->shouldRedirect($action, $admin->getForm('entity'), $event->getRequest(), $admin->getConfiguration())) {
+            $url = $this->getRedirectionUrl(
+                $admin,
+                $action,
+                $admin->getConfiguration(),
+                $event->getRequest()
+            );
 
+            $view = new RedirectView(
+                $action->getName(),
+                $admin->getName(),
+                $action->getConfiguration(),
+                $admin->getConfiguration()
+            );
+            $view->setUrl($url);
+        } else {
+            $view = $this->viewFactory->create(
+                $event->getRequest(),
+                $action->getName(),
+                $admin->getName(),
+                $admin->getConfiguration(),
+                $action->getConfiguration(),
+                $admin->getEntities(),
+                $admin->getForms()
+            );
+        }
         $event->setView($view);
     }
 
@@ -215,5 +247,84 @@ class AdminSubscriber implements EventSubscriberInterface
         $message = StringUtils::getTranslationKey($pattern, $adminName, $message);
 
         return $this->translator->trans($message);
+    }
+
+    /**
+     * Return true if a redirection view should be created.
+     *
+     * @param FormInterface      $form
+     * @param Request            $request
+     * @param AdminConfiguration $configuration
+     *
+     * @return bool
+     */
+    private function shouldRedirect(
+        ActionInterface $action,
+        FormInterface $form,
+        Request $request,
+        AdminConfiguration $configuration
+    ) {
+        if (!$form->isSubmitted()) {
+            return false;
+        }
+
+        if (!$form->isValid()) {
+            return false;
+        }
+
+        if (!key_exists('list', $configuration->getParameter('actions'))) {
+            return false;
+        }
+
+        if ('create' === $action->getName()) {
+            return true;
+        }
+
+        if (!$request->get('submit_and_redirect')) {
+            return false;
+        }
+
+        if ('submit_and_redirect' !== $request->get('submit_and_redirect')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function getRedirectionUrl(
+        AdminInterface $admin,
+        ActionInterface $action,
+        AdminConfiguration $configuration,
+        Request $request
+    ): string
+    {
+        $url = '';
+
+        if ('edit' === $action->getName()) {
+            $routeName = RoutingLoader::generateRouteName(
+                $admin->getName(),
+                'list',
+                $configuration->get('routing_name_pattern')
+            );
+            $url = $this->router->generate($routeName);
+        } else if ('create' === $action->getName()) {
+            $targetAction = 'list';
+            $routeParameters = [];
+
+            if (!$request->get('submit_and_redirect')) {
+                $targetAction = 'edit';
+                $routeParameters = [
+                    'id' => $admin->getEntities()->first()->getId(),
+                ];
+            }
+            $routeName = RoutingLoader::generateRouteName(
+                $admin->getName(),
+                $targetAction,
+                $configuration->get('routing_name_pattern')
+            );
+            $url = $this->router->generate($routeName, $routeParameters);
+        }
+
+        return $url;
     }
 }

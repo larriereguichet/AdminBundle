@@ -1,7 +1,7 @@
 lag:
     admin:
         save: Sauvegarder
-        saved_errors: Une erreur d'est porduite durant la sauvegarde
+        save_errors: Une erreur d'est porduite durant la sauvegarde
         create: Ajouter
         save_and_return_to_list: Sauvegarder et retourner à la liste
         cancel: Annuler
