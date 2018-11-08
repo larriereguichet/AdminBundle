@@ -25,10 +25,19 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class AdminSubscriberTest extends AdminTestBase
 {
+    /**
+     * Test if the service declaration is correct.
+     */
+    public function testServiceExists()
+    {
+        $this->assertServiceExists(AdminSubscriber::class);
+    }
+
     /**
      * Test subscribed events.
      */
@@ -47,33 +56,18 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testHandleRequest()
     {
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
+        list($subscriber, $actionFactory) = $this->createAdminSubscriberMock();
 
-        $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
+        $action = $this->createMock(ActionInterface::class);
         $actionFactory
             ->method('create')
             ->with('list', 'panda')
             ->willReturn($action)
         ;
-        $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
-        $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
-        $session = $this->getMockWithoutConstructor(Session::class);
-        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
-
-        $subscriber = new AdminSubscriber(
-            $actionFactory,
-            $viewFactory,
-            $dataProviderFactory,
-            $eventDispatcher,
-            $session,
-            $translator
-        );
-
         $request = new Request([], [], [
             '_action' => 'list',
         ]);
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->once())
             ->method('getName')
@@ -96,25 +90,10 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testHandleRequestWithoutRequestParameter()
     {
-        $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
-        $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
-        $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
-        $session = $this->getMockWithoutConstructor(Session::class);
-        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
-
-        $subscriber = new AdminSubscriber(
-            $actionFactory,
-            $viewFactory,
-            $dataProviderFactory,
-            $eventDispatcher,
-            $session,
-            $translator
-        );
+        list($subscriber) = $this->createAdminSubscriberMock();
 
         $request = new Request();
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
-
+        $admin = $this->createMock(AdminInterface::class);
         $event = new AdminEvent($admin, $request);
 
         $this->assertExceptionRaised(Exception::class, function () use ($subscriber, $event) {
@@ -127,13 +106,10 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testCreateView()
     {
-        $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
-        $view = $this->getMockWithoutConstructor(ViewInterface::class);
+        list($subscriber, , $viewFactory) = $this->createAdminSubscriberMock();
+        $view = $this->createMock(ViewInterface::class);
 
-        $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
-
-        $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -141,7 +117,7 @@ class AdminSubscriberTest extends AdminTestBase
             ->willReturn([])
         ;
 
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
+        $action = $this->createMock(ActionInterface::class);
         $action
             ->expects($this->once())
             ->method('getName')
@@ -153,9 +129,9 @@ class AdminSubscriberTest extends AdminTestBase
             ->willReturn($actionConfiguration)
         ;
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
 
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->atLeastOnce())
             ->method('getAction')
@@ -187,7 +163,6 @@ class AdminSubscriberTest extends AdminTestBase
         ;
         $request = new Request();
 
-        $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $viewFactory
             ->expects($this->once())
             ->method('create')
@@ -206,20 +181,7 @@ class AdminSubscriberTest extends AdminTestBase
             )
             ->willReturn($view)
         ;
-
-        $session = $this->getMockWithoutConstructor(Session::class);
-        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
-
-        $subscriber = new AdminSubscriber(
-            $actionFactory,
-            $viewFactory,
-            $dataProviderFactory,
-            $eventDispatcher,
-            $session,
-            $translator
-        );
         $event = new ViewEvent($admin, $request);
-
         $subscriber->createView($event);
 
         $this->assertEquals($view, $event->getView());
@@ -230,11 +192,9 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testLoadEntitiesWithNoneStrategy()
     {
-        $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
-        $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+        list($subscriber) = $this->createAdminSubscriberMock();
 
-        $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -243,14 +203,14 @@ class AdminSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
+        $action = $this->createMock(ActionInterface::class);
         $action
             ->expects($this->atLeastOnce())
             ->method('getConfiguration')
             ->willReturn($actionConfiguration)
         ;
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -260,7 +220,7 @@ class AdminSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->atLeastOnce())
             ->method('getAction')
@@ -271,29 +231,6 @@ class AdminSubscriberTest extends AdminTestBase
             ->method('getConfiguration')
             ->willReturn($adminConfiguration)
         ;
-
-        $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
-
-        $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
-        $dataProviderFactory
-            ->expects($this->atLeastOnce())
-            ->method('get')
-            ->with('my_data_provider')
-            ->willReturn($dataProvider)
-        ;
-
-        $session = $this->getMockWithoutConstructor(Session::class);
-        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
-
-        $subscriber = new AdminSubscriber(
-            $actionFactory,
-            $viewFactory,
-            $dataProviderFactory,
-            $eventDispatcher,
-            $session,
-            $translator
-        );
-
         $request = new Request();
         $event = new EntityEvent($admin, $request);
 
@@ -307,11 +244,9 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testLoadEntitiesWithMultipleStrategy()
     {
-        $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
-        $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+        list($subscriber, , , $dataProviderFactory, , , ,) = $this->createAdminSubscriberMock();
 
-        $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -320,14 +255,14 @@ class AdminSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
+        $action = $this->createMock(ActionInterface::class);
         $action
             ->expects($this->atLeastOnce())
             ->method('getConfiguration')
             ->willReturn($actionConfiguration)
         ;
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -337,7 +272,7 @@ class AdminSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->atLeastOnce())
             ->method('getAction')
@@ -351,32 +286,20 @@ class AdminSubscriberTest extends AdminTestBase
 
         $test = new stdClass();
 
-        $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
+        $dataProvider = $this->createMock(DataProviderInterface::class);
         $dataProvider
             ->expects($this->atLeastOnce())
             ->method('getCollection')
             ->with($admin, [])
             ->willReturn($test)
         ;
-
-        $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
         $dataProviderFactory
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('my_data_provider')
             ->willReturn($dataProvider)
         ;
-        $session = $this->getMockWithoutConstructor(Session::class);
-        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
 
-        $subscriber = new AdminSubscriber(
-            $actionFactory,
-            $viewFactory,
-            $dataProviderFactory,
-            $eventDispatcher,
-            $session,
-            $translator
-        );
 
         $request = new Request();
         $event = new EntityEvent($admin, $request);
@@ -391,11 +314,9 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testLoadEntitiesWithUniqueStrategy()
     {
-        $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
-        $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+        list($subscriber, , , $dataProviderFactory) = $this->createAdminSubscriberMock();
 
-        $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -407,14 +328,14 @@ class AdminSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
+        $action = $this->createMock(ActionInterface::class);
         $action
             ->expects($this->atLeastOnce())
             ->method('getConfiguration')
             ->willReturn($actionConfiguration)
         ;
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -424,7 +345,7 @@ class AdminSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->atLeastOnce())
             ->method('getAction')
@@ -438,33 +359,19 @@ class AdminSubscriberTest extends AdminTestBase
 
         $test = new stdClass();
 
-        $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
+        $dataProvider = $this->createMock(DataProviderInterface::class);
         $dataProvider
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with($admin, 42)
             ->willReturn($test)
         ;
-
-        $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
         $dataProviderFactory
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('my_data_provider')
             ->willReturn($dataProvider)
         ;
-        $session = $this->getMockWithoutConstructor(Session::class);
-        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
-
-        $subscriber = new AdminSubscriber(
-            $actionFactory,
-            $viewFactory,
-            $dataProviderFactory,
-            $eventDispatcher,
-            $session,
-            $translator
-        );
-
         $request = new Request([
             'id' => 42,
         ]);
@@ -480,11 +387,9 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testLoadEntitiesWithoutIdentifier()
     {
-        $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
-        $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+        list($subscriber, , , $dataProviderFactory) = $this->createAdminSubscriberMock();
 
-        $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -496,14 +401,14 @@ class AdminSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
+        $action = $this->createMock(ActionInterface::class);
         $action
             ->expects($this->atLeastOnce())
             ->method('getConfiguration')
             ->willReturn($actionConfiguration)
         ;
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -513,7 +418,7 @@ class AdminSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->atLeastOnce())
             ->method('getAction')
@@ -525,31 +430,17 @@ class AdminSubscriberTest extends AdminTestBase
             ->willReturn($adminConfiguration)
         ;
 
-        $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
+        $dataProvider = $this->createMock(DataProviderInterface::class);
         $dataProvider
             ->expects($this->never())
             ->method('get')
         ;
-
-        $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
         $dataProviderFactory
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('my_data_provider')
             ->willReturn($dataProvider)
         ;
-        $session = $this->getMockWithoutConstructor(Session::class);
-        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
-
-        $subscriber = new AdminSubscriber(
-            $actionFactory,
-            $viewFactory,
-            $dataProviderFactory,
-            $eventDispatcher,
-            $session,
-            $translator
-        );
-
         $request = new Request();
         $event = new EntityEvent($admin, $request);
 
@@ -563,10 +454,9 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testSaveEntity()
     {
-        $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
-        $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
+        list($subscriber, , , $dataProviderFactory, , $session, $translator) = $this->createAdminSubscriberMock();
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -577,7 +467,7 @@ class AdminSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->atLeastOnce())
             ->method('getConfiguration')
@@ -589,52 +479,39 @@ class AdminSubscriberTest extends AdminTestBase
             ->willReturn('stefany')
         ;
 
-        $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
+        $dataProvider = $this->createMock(DataProviderInterface::class);
         $dataProvider
             ->expects($this->atLeastOnce())
             ->method('save')
             ->with($admin)
         ;
 
-        $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
         $dataProviderFactory
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('my_data_provider')
             ->willReturn($dataProvider)
         ;
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
 
-        $bag = $this->getMockWithoutConstructor(FlashBag::class);
+        $bag = $this->createMock(FlashBag::class);
         $bag
             ->expects($this->atLeastOnce())
             ->method('add')
             ->with('success', 'Save')
         ;
 
-        $session = $this->getMockWithoutConstructor(Session::class);
         $session
             ->expects($this->atLeastOnce())
             ->method('getFlashBag')
             ->willReturn($bag)
         ;
 
-        $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
         $translator
             ->expects($this->atLeastOnce())
             ->method('trans')
             ->with('test.stefany.save_success')
             ->willReturn('Save')
         ;
-
-        $subscriber = new AdminSubscriber(
-            $actionFactory,
-            $viewFactory,
-            $dataProviderFactory,
-            $eventDispatcher,
-            $session,
-            $translator
-        );
 
         $request = new Request([], [], [
             '_action' => 'list',
@@ -643,5 +520,37 @@ class AdminSubscriberTest extends AdminTestBase
         $event = new EntityEvent($admin, $request);
 
         $subscriber->saveEntity($event);
+    }
+
+    private function createAdminSubscriberMock()
+    {
+        $actionFactory = $this->createMock(ActionFactory::class);
+        $viewFactory = $this->createMock(ViewFactory::class);
+        $dataProviderFactory = $this->createMock(DataProviderFactory::class);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $session = $this->createMock(Session::class);
+        $translator = $this->createMock(TranslatorInterface::class);
+        $router = $this->createMock(RouterInterface::class);
+
+        $subscriber = new AdminSubscriber(
+            $actionFactory,
+            $viewFactory,
+            $dataProviderFactory,
+            $eventDispatcher,
+            $session,
+            $translator,
+            $router
+        );
+
+        return [
+            $subscriber,
+            $actionFactory,
+            $viewFactory,
+            $dataProviderFactory,
+            $eventDispatcher,
+            $session,
+            $translator,
+            $router
+        ];
     }
 }
