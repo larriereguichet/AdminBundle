@@ -24,10 +24,10 @@ class LAGAdminExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($builder, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
+        $loader->load('services.yaml');
 
         if ('dev' === $builder->getParameter('kernel.environment')) {
-            $loader->load('services_dev.yml');
+            $loader->load('services_dev.yaml');
         }
         $applicationConfig = [];
         $adminsConfig = [];
