@@ -50,6 +50,7 @@ class ApplicationConfiguration extends Configuration
                 'block_template' => '@LAGAdmin/Form/fields.html.twig',
                 'menu_template' => '@LAGAdmin/Menu/menu.html.twig',
                 'homepage_template' => '@LAGAdmin/Pages/home.html.twig',
+                'homepage_route' => 'lag.admin.homepage',
                 'routing_url_pattern' => '/{admin}/{action}',
                 'routing_name_pattern' => 'lag.admin.{admin}.{action}',
                 'bootstrap' => true,
