@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MenuItemConfiguration extends Configuration
 {
     /**
-     * @var string
+     * @var ?string
      */
     private $position;
 
@@ -25,7 +25,7 @@ class MenuItemConfiguration extends Configuration
      * @param string $name
      * @param string $position
      */
-    public function __construct(string $name, string $position)
+    public function __construct(string $name, ?string $position)
     {
         $this->position = $position;
         $this->name = $name;
