@@ -50,7 +50,7 @@ class MenuFactory
      *
      * @return Menu
      */
-    public function create(string $name, array $configuration)
+    public function create(string $name, array $configuration): Menu
     {
         $resolver = new OptionsResolver();
         $menuConfiguration = new MenuConfiguration($name, $this->applicationConfiguration->getParameter('title'));
@@ -132,7 +132,7 @@ class MenuFactory
         return $this->menus;
     }
 
-    private function addExtraMenuItemConfiguration(&$resolvedConfiguration)
+    private function addExtraMenuItemConfiguration(&$resolvedConfiguration): void
     {
         // Determine the current route to add an active css class if the current item route is the current route
         $route = $this->requestStack->getCurrentRequest()->attributes->get('_route');
