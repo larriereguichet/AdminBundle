@@ -77,7 +77,7 @@ class ApplicationConfigurationStorage
             $applicationConfiguration->setParameters($resolver->resolve($configuration));
         } catch (Exception $exception) {
             throw new Exception(
-                'An error has been found in the admin application configuration',
+                'An error has been found when processing the configuration of the admin application',
                 0,
                 $exception
             );
