@@ -11,14 +11,14 @@
                 <div class="card-body">
                     <h4 class="card-title">
                         {{ 'lag.admin.deleting' | trans({
-                            '%entity%' : admin.uniqueEntityLabel,
-                            '%id%': admin.uniqueEntity.id
+                            '%id%': admin.entities.first.id
                         }) }}
                     </h4>
                     <p class="card-text">{{ 'lag.admin.delete_confirmation_warning' | trans }}</p>
 
                     <div class="text-right button-list">
-                        <a href="{{ path(admin.generateRouteName('list')) }}" class="btn">
+                        <a href="{{ admin_url(admin, 'list') }}"
+                           class="btn">
                             <i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;{{ 'lag.admin.cancel' | trans }}</a>
                         <button type="submit" class="btn btn-danger">
                             <i class="fa fa-remove"></i>&nbsp;{{ 'lag.admin.delete' | trans }}

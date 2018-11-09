@@ -1,7 +1,7 @@
 lag:
     admin:
         save: Sauvegarder
-        save_errors: Une erreur d'est porduite durant la sauvegarde
+        save_errors: Une erreur s'est produite durant la sauvegarde
         create: Ajouter
         save_and_return_to_list: Sauvegarder et retourner à la liste
         cancel: Annuler
@@ -19,7 +19,7 @@ lag:
 
         # Delete
         delete: Supprimer
-        deleting: 'Vous allez supprimer l''entité "%entity%" (#%id%). Etes-vous sûr(e) ?'
+        deleting: 'Vous allez supprimer cet entité (identifiant: %id%). Etes-vous sûr(e) ?'
         deleted: 'Entity "%entity%" has been succesfully removed'
         deleted_errors: Une erreur a été rencontrée durant la suppression
 
