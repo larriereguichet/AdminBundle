@@ -27,7 +27,7 @@ class ApplicationConfigurationStorage
      *
      * @throws Exception
      */
-    public function getConfiguration()
+    public function getConfiguration(): ApplicationConfiguration
     {
         if (null === $this->configuration) {
             throw new Exception('The application configuration has not been set');
@@ -41,7 +41,7 @@ class ApplicationConfigurationStorage
      *
      * @return bool
      */
-    public function isFrozen()
+    public function isFrozen(): bool
     {
         return $this->frozen;
     }
@@ -51,7 +51,7 @@ class ApplicationConfigurationStorage
      *
      * @throws Exception
      */
-    public function setConfiguration(array $configuration)
+    public function setConfiguration(array $configuration): void
     {
         if ($this->frozen) {
             throw new Exception('The application configuration is already defined');
@@ -67,14 +67,13 @@ class ApplicationConfigurationStorage
      *
      * @throws Exception
      */
-    private function createApplicationConfiguration(array $configuration)
+    private function createApplicationConfiguration(array $configuration): ApplicationConfiguration
     {
         $resolver = new OptionsResolver();
         $applicationConfiguration = new ApplicationConfiguration();
         $applicationConfiguration->configureOptions($resolver);
 
         try {
-            //dump($resolver->resolve($configuration));
             $applicationConfiguration->setParameters($resolver->resolve($configuration));
         } catch (Exception $exception) {
             throw new Exception(
