@@ -386,6 +386,18 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             if (!key_exists('list', $configuration['actions'])) {
                 return;
             }
+
+            if (!key_exists('menus', $configuration['actions']['edit'])) {
+                $configuration['actions']['edit']['menus'] = [];
+            }
+
+            if (!key_exists('top', $configuration['actions']['edit']['menus'])) {
+                $configuration['actions']['edit']['menus']['top'] = [];
+            }
+
+            if (!key_exists('items', $configuration['actions']['edit']['menus']['top'])) {
+                $configuration['actions']['edit']['menus']['top']['items'] = [];
+            }
             array_unshift($configuration['actions']['edit']['menus']['top']['items'], [
                 'admin' => $adminName,
                 'action' => 'list',
