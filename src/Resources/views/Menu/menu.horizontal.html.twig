@@ -3,7 +3,7 @@
         {% set homepageUrl = '' %}
 
         {% if admin_config('enable_homepage') %}
-            {% set homepageUrl = path('lag.admin.homepage') %}
+            {% set homepageUrl = path(admin_config('homepage_route')) %}
         {% endif %}
 
         {% if menu.get('brand') %}
