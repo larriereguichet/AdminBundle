@@ -26,9 +26,9 @@ class MenuConfiguration extends Configuration
      */
     public function __construct(string $menuName, string $applicationName)
     {
-        $this->menuName = $menuName;
-
         parent::__construct();
+
+        $this->menuName = $menuName;
         $this->applicationName = $applicationName;
     }
 
@@ -93,6 +93,11 @@ class MenuConfiguration extends Configuration
                     $value['class'] .= ' list-group';
                 }
                 $value['class'] = trim($value['class']);
+
+                // Do not return an array with an empty string as css class
+                if ('' === $value['class']) {
+                    unset($value['class']);
+                }
 
                 return $value;
             })
