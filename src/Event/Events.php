@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Event;
 
-class AdminEvents
+class Events
 {
     const HANDLE_REQUEST = 'lag.admin.handleRequest';
 

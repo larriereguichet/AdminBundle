@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\ConfigurationEvent;
 use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
@@ -46,8 +46,8 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            AdminEvents::ADMIN_CONFIGURATION => 'enrichAdminConfiguration',
-            AdminEvents::MENU_CONFIGURATION => 'enrichMenuConfiguration',
+            Events::ADMIN_CONFIGURATION => 'enrichAdminConfiguration',
+            Events::MENU_CONFIGURATION => 'enrichMenuConfiguration',
         ];
     }
 

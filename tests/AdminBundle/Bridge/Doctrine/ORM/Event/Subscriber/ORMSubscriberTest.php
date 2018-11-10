@@ -7,7 +7,7 @@ use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\ORMSubscriber;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\DoctrineOrmFilterEvent;
 use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
@@ -19,9 +19,9 @@ class ORMSubscriberTest extends AdminTestBase
     public function testGetSubscribedEvents()
     {
         $events = ORMSubscriber::getSubscribedEvents();
-        $this->assertArrayHasKey(AdminEvents::DOCTRINE_ORM_FILTER, $events);
-        $this->assertContains('addOrder', $events[AdminEvents::DOCTRINE_ORM_FILTER][0]);
-        $this->assertContains('addFilters', $events[AdminEvents::DOCTRINE_ORM_FILTER][1]);
+        $this->assertArrayHasKey(Events::DOCTRINE_ORM_FILTER, $events);
+        $this->assertContains('addOrder', $events[Events::DOCTRINE_ORM_FILTER][0]);
+        $this->assertContains('addFilters', $events[Events::DOCTRINE_ORM_FILTER][1]);
     }
 
     public function testAddOrder()

@@ -9,7 +9,7 @@ use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Event\Events\AdminEvent;
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\EntityEvent;
 use LAG\AdminBundle\Event\Subscriber\AdminSubscriber;
 use LAG\AdminBundle\Event\ViewEvent;
@@ -45,10 +45,10 @@ class AdminSubscriberTest extends AdminTestBase
     {
         $events = AdminSubscriber::getSubscribedEvents();
 
-        $this->assertArrayHasKey(AdminEvents::HANDLE_REQUEST, $events);
-        $this->assertArrayHasKey(AdminEvents::VIEW, $events);
-        $this->assertArrayHasKey(AdminEvents::ENTITY_LOAD, $events);
-        $this->assertArrayHasKey(AdminEvents::ENTITY_SAVE, $events);
+        $this->assertArrayHasKey(Events::HANDLE_REQUEST, $events);
+        $this->assertArrayHasKey(Events::VIEW, $events);
+        $this->assertArrayHasKey(Events::ENTITY_LOAD, $events);
+        $this->assertArrayHasKey(Events::ENTITY_SAVE, $events);
     }
 
     /**

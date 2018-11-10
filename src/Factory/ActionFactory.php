@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Factory;
 
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\ConfigurationEvent;
 use LAG\AdminBundle\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -53,7 +53,7 @@ class ActionFactory
             $adminName,
             $adminConfiguration->getParameter('entity')
         );
-        $this->eventDispatcher->dispatch(AdminEvents::ACTION_CONFIGURATION, $event);
+        $this->eventDispatcher->dispatch(Events::ACTION_CONFIGURATION, $event);
 
         if (!array_key_exists($actionName, $event->getConfiguration())) {
             throw new Exception(

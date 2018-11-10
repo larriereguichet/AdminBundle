@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Controller;
 
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\MenuEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,7 +50,7 @@ class HomeAction
     public function __invoke()
     {
         $event = new MenuEvent();
-        $this->eventDispatcher->dispatch(AdminEvents::MENU, $event);
+        $this->eventDispatcher->dispatch(Events::MENU, $event);
 
         $content = $this->twig->render($this->applicationConfiguration->getParameter('homepage_template'));
 

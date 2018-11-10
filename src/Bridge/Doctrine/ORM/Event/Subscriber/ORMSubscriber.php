@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber;
 
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\DoctrineOrmFilterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -30,7 +30,7 @@ class ORMSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            AdminEvents::DOCTRINE_ORM_FILTER => [
+            Events::DOCTRINE_ORM_FILTER => [
                 ['addOrder'],
                 ['addFilters'],
             ],

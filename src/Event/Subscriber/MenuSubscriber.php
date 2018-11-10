@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Event\Subscriber;
 
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Event\MenuEvent;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
@@ -51,7 +51,7 @@ class MenuSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            AdminEvents::MENU => 'buildMenus',
+            Events::MENU => 'buildMenus',
         ];
     }
 
@@ -100,7 +100,7 @@ class MenuSubscriber implements EventSubscriberInterface
         // Dispatch a pre-menu build event to allow dynamic configuration modifications
         $this
             ->eventDispatcher
-            ->dispatch(AdminEvents::MENU_CONFIGURATION, $configurationEvent)
+            ->dispatch(Events::MENU_CONFIGURATION, $configurationEvent)
         ;
         $menuConfigurations = $configurationEvent->getMenuConfigurations();
 

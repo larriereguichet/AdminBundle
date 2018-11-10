@@ -7,7 +7,7 @@ use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\Events\AdminEvent;
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\EntityEvent;
 use LAG\AdminBundle\Event\MenuEvent;
 use LAG\AdminBundle\Event\ViewEvent;
@@ -71,10 +71,10 @@ class AdminSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            AdminEvents::HANDLE_REQUEST => 'handleRequest',
-            AdminEvents::VIEW => 'createView',
-            AdminEvents::ENTITY_LOAD => 'loadEntities',
-            AdminEvents::ENTITY_SAVE => 'saveEntity',
+            Events::HANDLE_REQUEST => 'handleRequest',
+            Events::VIEW => 'createView',
+            Events::ENTITY_LOAD => 'loadEntities',
+            Events::ENTITY_SAVE => 'saveEntity',
         ];
     }
 
@@ -137,7 +137,7 @@ class AdminSubscriber implements EventSubscriberInterface
         $admin = $event->getAdmin();
         $action = $admin->getAction();
         $menuEvent = new MenuEvent($admin->getAction()->getConfiguration()->getParameter('menus'));
-        $this->eventDispatcher->dispatch(AdminEvents::MENU, $menuEvent);
+        $this->eventDispatcher->dispatch(Events::MENU, $menuEvent);
 
         if ($admin->hasForm('entity') &&
             $this->shouldRedirect($action, $admin->getForm('entity'), $event->getRequest(), $admin->getConfiguration())) {

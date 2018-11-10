@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Tests\Controller;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Controller\HomeAction;
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\MenuEvent;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -35,7 +35,7 @@ class HomeActionTest extends AdminTestBase
             ->expects($this->once())
             ->method('dispatch')
             ->willReturnCallback(function ($eventName, $event) {
-                $this->assertEquals(AdminEvents::MENU, $eventName);
+                $this->assertEquals(Events::MENU, $eventName);
                 $this->assertInstanceOf(MenuEvent::class, $event);
             })
         ;

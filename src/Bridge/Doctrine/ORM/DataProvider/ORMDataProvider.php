@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\DoctrineOrmFilterEvent;
 use LAG\AdminBundle\Exception\Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -70,7 +70,7 @@ class ORMDataProvider implements DataProviderInterface
 
         // Dispatch an event to allow filter modification on the query builder
         $event = new DoctrineOrmFilterEvent($queryBuilder, $admin, $filters);
-        $this->eventDispatcher->dispatch(AdminEvents::DOCTRINE_ORM_FILTER, $event);
+        $this->eventDispatcher->dispatch(Events::DOCTRINE_ORM_FILTER, $event);
 
         if ('pagerfanta' === $actionConfiguration->getParameter('pager')) {
             $pageParameter = $actionConfiguration->getParameter('page_parameter');

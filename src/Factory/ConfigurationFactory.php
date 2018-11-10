@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Factory;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\ConfigurationEvent;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -49,7 +49,7 @@ class ConfigurationFactory
     ): AdminConfiguration
     {
         $event = new ConfigurationEvent($adminName, $configuration, $adminName, $configuration['entity']);
-        $this->eventDispatcher->dispatch(AdminEvents::ADMIN_CONFIGURATION, $event);
+        $this->eventDispatcher->dispatch(Events::ADMIN_CONFIGURATION, $event);
 
         $resolver = new OptionsResolver();
         $adminConfiguration = new AdminConfiguration($applicationConfiguration);
@@ -80,7 +80,7 @@ class ConfigurationFactory
             $adminName,
             $adminConfiguration->getParameter('entity')
         );
-        $this->eventDispatcher->dispatch(AdminEvents::ACTION_CONFIGURATION, $event);
+        $this->eventDispatcher->dispatch(Events::ACTION_CONFIGURATION, $event);
 
         $resolver = new OptionsResolver();
         $actionConfiguration = new ActionConfiguration($actionName, $adminName, $adminConfiguration);

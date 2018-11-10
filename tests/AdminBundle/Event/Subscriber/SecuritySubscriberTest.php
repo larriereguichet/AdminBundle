@@ -6,7 +6,7 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\Subscriber\SecuritySubscriber;
 use LAG\AdminBundle\Tests\AdminTestBase;
@@ -22,7 +22,7 @@ class SecuritySubscriberTest extends AdminTestBase
 {
     public function testSubscribedEvents()
     {
-        $this->assertArrayHasKey(AdminEvents::HANDLE_REQUEST, SecuritySubscriber::getSubscribedEvents());
+        $this->assertArrayHasKey(Events::HANDLE_REQUEST, SecuritySubscriber::getSubscribedEvents());
     }
 
     public function testHandleRequest()

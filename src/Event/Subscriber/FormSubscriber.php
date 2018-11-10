@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
-use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\FilterEvent;
 use LAG\AdminBundle\Event\FormEvent;
 use LAG\AdminBundle\Factory\DataProviderFactory;
@@ -31,8 +31,8 @@ class FormSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            AdminEvents::HANDLE_FORM => 'createEntityForm',
-            AdminEvents::FILTER => 'createFilterForm',
+            Events::HANDLE_FORM => 'createEntityForm',
+            Events::FILTER => 'createFilterForm',
         ];
     }
 
