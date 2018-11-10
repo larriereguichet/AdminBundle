@@ -7,7 +7,6 @@ use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Factory\ActionFactory;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
-use LAG\AdminBundle\Resource\ResourceCollection;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Fixtures\ActionFixture;
 use LAG\AdminBundle\Tests\Fixtures\EntityFixture;
@@ -17,7 +16,6 @@ class ActionFactoryTest extends AdminTestBase
 {
     public function testCreate()
     {
-        $resourceCollection = $this->getMockWithoutConstructor(ResourceCollection::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
 
         $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
@@ -51,7 +49,6 @@ class ActionFactoryTest extends AdminTestBase
         ;
 
         $factory = new ActionFactory(
-            $resourceCollection,
             $eventDispatcher,
             $configurationFactory
         );
@@ -61,12 +58,10 @@ class ActionFactoryTest extends AdminTestBase
 
     public function testCreateWithMissingAction()
     {
-        $resourceCollection = $this->getMockWithoutConstructor(ResourceCollection::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
         $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
 
         $factory = new ActionFactory(
-            $resourceCollection,
             $eventDispatcher,
             $configurationFactory
         );
@@ -88,7 +83,6 @@ class ActionFactoryTest extends AdminTestBase
 
     public function testCreateWithWrongActionClass()
     {
-        $resourceCollection = $this->getMockWithoutConstructor(ResourceCollection::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
 
         $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
@@ -122,7 +116,6 @@ class ActionFactoryTest extends AdminTestBase
         ;
 
         $factory = new ActionFactory(
-            $resourceCollection,
             $eventDispatcher,
             $configurationFactory
         );

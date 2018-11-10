@@ -7,7 +7,6 @@ use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\ConfigurationEvent;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ActionFactory
@@ -25,12 +24,10 @@ class ActionFactory
     /**
      * ActionFactory constructor.
      *
-     * @param ResourceCollection       $resourceCollection
      * @param EventDispatcherInterface $eventDispatcher
      * @param ConfigurationFactory     $configurationFactory
      */
     public function __construct(
-        ResourceCollection $resourceCollection,
         EventDispatcherInterface $eventDispatcher,
         ConfigurationFactory $configurationFactory
     ) {

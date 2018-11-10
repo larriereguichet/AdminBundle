@@ -8,7 +8,7 @@ use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
-use LAG\AdminBundle\Event\AdminEvent;
+use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\EntityEvent;
 use LAG\AdminBundle\Event\Subscriber\AdminSubscriber;

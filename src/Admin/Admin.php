@@ -4,8 +4,8 @@ namespace LAG\AdminBundle\Admin;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\EntityEvent;
 use LAG\AdminBundle\Event\FilterEvent;
 use LAG\AdminBundle\Event\FormEvent;

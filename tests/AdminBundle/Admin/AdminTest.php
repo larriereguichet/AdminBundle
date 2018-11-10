@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Event\AdminEvent;
+use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\EntityEvent;
 use LAG\AdminBundle\Event\FormEvent;

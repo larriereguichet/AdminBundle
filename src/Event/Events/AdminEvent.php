@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Event;
+namespace LAG\AdminBundle\Event\Events;
 
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
