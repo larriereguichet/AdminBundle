@@ -19,7 +19,7 @@ lag:
 
         # Delete
         delete: Supprimer
-        deleting: 'Vous allez supprimer cet entité (identifiant: %id%). Etes-vous sûr(e) ?'
+        deleting: 'Vous allez supprimer cette entité (identifiant: %id%). Etes-vous sûr(e) ?'
         deleted: 'Entity "%entity%" has been succesfully removed'
         deleted_errors: Une erreur a été rencontrée durant la suppression
 
