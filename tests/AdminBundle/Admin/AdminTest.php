@@ -9,7 +9,7 @@ use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\EntityEvent;
-use LAG\AdminBundle\Event\FormEvent;
+use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Event\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\AdminResource;
@@ -45,7 +45,7 @@ class AdminTest extends AdminTestBase
 
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
         $eventDispatcher
-            ->expects($this->exactly(5))
+            ->expects($this->exactly(6))
             ->method('dispatch')
             ->willReturnCallback(function ($eventName, $event) use ($action, $form) {
                 if (Events::HANDLE_REQUEST === $eventName) {
@@ -176,7 +176,7 @@ class AdminTest extends AdminTestBase
 
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
         $eventDispatcher
-            ->expects($this->exactly(4))
+            ->expects($this->exactly(5))
             ->method('dispatch')
             ->willReturnCallback(function ($eventName, $event) use ($action, $form) {
                 if (Events::HANDLE_REQUEST === $eventName) {
@@ -206,7 +206,7 @@ class AdminTest extends AdminTestBase
 
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
         $eventDispatcher
-            ->expects($this->exactly(4))
+            ->expects($this->exactly(5))
             ->method('dispatch')
             ->willReturnCallback(function ($eventName, $event) use ($action, $form) {
                 if (Events::HANDLE_REQUEST === $eventName) {

@@ -8,7 +8,7 @@ use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\EntityEvent;
 use LAG\AdminBundle\Event\FilterEvent;
-use LAG\AdminBundle\Event\FormEvent;
+use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Event\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\AdminResource;
@@ -111,6 +111,7 @@ class Admin implements AdminInterface
         $this->forms = array_merge($event->getForms(), $filterEvent->getForms());
 
         $this->handleEntityForm($request);
+        $this->eventDispatcher->dispatch(Events::HANDLE_FORM, new FormEvent($this, $request));
     }
 
     /**
