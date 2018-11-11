@@ -10,6 +10,7 @@ use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class AdminTestBase extends TestCase
 {
@@ -18,7 +19,7 @@ class AdminTestBase extends TestCase
      *
      * @param string $serviceClass
      */
-    public function assertServiceExists(string $serviceClass)
+    protected function assertServiceExists(string $serviceClass)
     {
         $containerBuilder = new ContainerBuilder();
         $locator = new FileLocator([
@@ -34,6 +35,24 @@ class AdminTestBase extends TestCase
             }
         }
         $this->assertTrue($exists);
+    }
+
+    /**
+     * Assert that methods declared in the getSubscribedEvents() really exists.
+     *
+     * @param EventSubscriberInterface $subscriber
+     */
+    protected function assertSubscribedMethodsExists(EventSubscriberInterface $subscriber)
+    {
+        $methods = forward_static_call([
+            get_class($subscriber),
+            'getSubscribedEvents'
+        ]);
+        $this->assertInternalType('array', $methods);
+
+        foreach ($methods as $method) {
+            $this->assertTrue(method_exists($subscriber, $method));
+        }
     }
 
     /**
