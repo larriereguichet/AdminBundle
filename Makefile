@@ -12,6 +12,6 @@ assets@build:
 	php sam.php
 
 ### PHPUnit ###
-phpunit:
+test@phpunit:
 	bin/phpunit
 ###############

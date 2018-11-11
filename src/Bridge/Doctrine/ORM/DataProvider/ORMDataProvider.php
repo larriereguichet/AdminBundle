@@ -114,7 +114,7 @@ class ORMDataProvider implements DataProviderInterface
     /**
      * @inheritdoc
      */
-    public function save(AdminInterface $admin)
+    public function save(AdminInterface $admin): void
     {
         $this->entityManager->persist($admin->getEntities()->first());
         $this->entityManager->flush();
@@ -128,6 +128,18 @@ class ORMDataProvider implements DataProviderInterface
         $class = $admin->getConfiguration()->getParameter('entity');
 
         return new $class();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function delete(AdminInterface $admin): void
+    {
+        if ($admin->getEntities()->isEmpty()) {
+            throw new Exception('The admin "'.$admin->getName().'" has no loaded entity');
+        }
+        $this->entityManager->remove($admin->getEntities()->first());
+        $this->entityManager->flush();
     }
 
     /**

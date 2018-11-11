@@ -138,9 +138,24 @@ class AdminSubscriber implements EventSubscriberInterface
         $action = $admin->getAction();
         $menuEvent = new MenuEvent($admin->getAction()->getConfiguration()->getParameter('menus'));
         $this->eventDispatcher->dispatch(Events::MENU, $menuEvent);
+        $formName = '';
 
-        if ($admin->hasForm('entity') &&
-            $this->shouldRedirect($action, $admin->getForm('entity'), $event->getRequest(), $admin->getConfiguration())) {
+        // The form name is different according to the current action
+        if ('edit' === $action->getName()) {
+            $formName = 'entity';
+        } else if ('create' === $action->getName()) {
+            $formName = 'entity';
+        } else if ('delete' === $action->getName()) {
+            $formName = 'delete';
+        }
+
+        if ($admin->hasForm($formName) &&
+            $this->shouldRedirect(
+                $action,
+                $admin->getForm($formName),
+                $event->getRequest(),
+                $admin->getConfiguration())
+        ) {
             $url = $this->getRedirectionUrl(
                 $admin,
                 $action,
@@ -241,6 +256,13 @@ class AdminSubscriber implements EventSubscriberInterface
         ;
     }
 
+    /**
+     * @param string             $message
+     * @param string             $adminName
+     * @param AdminConfiguration $configuration
+     *
+     * @return string
+     */
     private function translateMessage(string $message, string $adminName, AdminConfiguration $configuration): string
     {
         $pattern = $configuration->getParameter('translation_pattern');
@@ -252,6 +274,7 @@ class AdminSubscriber implements EventSubscriberInterface
     /**
      * Return true if a redirection view should be created.
      *
+     * @param ActionInterface    $action
      * @param FormInterface      $form
      * @param Request            $request
      * @param AdminConfiguration $configuration
@@ -276,7 +299,14 @@ class AdminSubscriber implements EventSubscriberInterface
             return false;
         }
 
+        // When the create form is submitted, the user should be redirected to the edit action after saving the form
+        // data
         if ('create' === $action->getName()) {
+            return true;
+        }
+
+        // When the delete form is submitted, we should redirect to the list action
+        if ('delete' === $action->getName()) {
             return true;
         }
 
@@ -291,6 +321,18 @@ class AdminSubscriber implements EventSubscriberInterface
         return true;
     }
 
+    /**
+     * Return the url where the user should be redirected to. An exception will be thrown if no url can be generated.
+     *
+     * @param AdminInterface     $admin
+     * @param ActionInterface    $action
+     * @param AdminConfiguration $configuration
+     * @param Request            $request
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
     private function getRedirectionUrl(
         AdminInterface $admin,
         ActionInterface $action,
@@ -298,8 +340,6 @@ class AdminSubscriber implements EventSubscriberInterface
         Request $request
     ): string
     {
-        $url = '';
-
         if ('edit' === $action->getName()) {
             $routeName = RoutingLoader::generateRouteName(
                 $admin->getName(),
@@ -307,7 +347,13 @@ class AdminSubscriber implements EventSubscriberInterface
                 $configuration->get('routing_name_pattern')
             );
             $url = $this->router->generate($routeName);
-        } else if ('create' === $action->getName()) {
+
+            return $url;
+        }
+
+        // When the create form is submitted, the user should be redirected to the edit action after saving the form
+        // data
+        if ('create' === $action->getName()) {
             $targetAction = 'list';
             $routeParameters = [];
 
@@ -323,8 +369,21 @@ class AdminSubscriber implements EventSubscriberInterface
                 $configuration->get('routing_name_pattern')
             );
             $url = $this->router->generate($routeName, $routeParameters);
+
+            return $url;
         }
 
-        return $url;
+        if ('delete' === $action->getName()) {
+            $routeName = RoutingLoader::generateRouteName(
+                $admin->getName(),
+                'list',
+                $configuration->get('routing_name_pattern')
+            );
+            $url = $this->router->generate($routeName);
+
+            return $url;
+        }
+
+        throw new Exception('Unable to generate an redirection url for the current action');
     }
 }

@@ -37,7 +37,23 @@ interface DataProviderInterface
      *
      * @param AdminInterface $admin
      */
-    public function save(AdminInterface $admin);
+    public function save(AdminInterface $admin): void;
 
+    /**
+     * Create a new entity for the given admin. Return the created entity.
+     *
+     * @param AdminInterface $admin
+     *
+     * @return mixed
+     */
     public function create(AdminInterface $admin);
+
+    /**
+     * Delete an existing entity in the given admin. Throws an exception if there is no loaded entities in the admin.
+     *
+     * @param AdminInterface $admin
+     *
+     * @throws Exception
+     */
+    public function delete(AdminInterface $admin): void;
 }

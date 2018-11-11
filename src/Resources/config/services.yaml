@@ -20,6 +20,11 @@ services:
 
     LAG\AdminBundle\Event\Subscriber\FormSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\FormSubscriber
+        arguments:
+            - '@form.factory'
+            - '@LAG\AdminBundle\Factory\DataProviderFactory'
+            - '@session'
+            - '@translator'
 
     LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
@@ -29,6 +34,9 @@ services:
 
     LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\ORMSubscriber:
         class: LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\ORMSubscriber
+
+    LAG\AdminBundle\Event\Subscriber\FilterSubscriber:
+        class: LAG\AdminBundle\Event\Subscriber\FilterSubscriber
     ###################
 
     ### Configuration ###

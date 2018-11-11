@@ -2,16 +2,19 @@
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
+use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\FilterEvent;
-use LAG\AdminBundle\Event\FormEvent;
+use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Factory\DataProviderFactory;
-use LAG\AdminBundle\Filter\Filter;
 use LAG\AdminBundle\LAGAdminBundle;
-use LAG\AdminBundle\Utils\FormUtils;
+use LAG\AdminBundle\Utils\StringUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FormSubscriber implements EventSubscriberInterface
 {
@@ -26,13 +29,23 @@ class FormSubscriber implements EventSubscriberInterface
     private $dataProviderFactory;
 
     /**
+     * @var Session
+     */
+    private $session;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
     {
         return [
-            Events::HANDLE_FORM => 'createEntityForm',
-            Events::FILTER => 'createFilterForm',
+            Events::CREATE_FORM => 'onCreateForm',
+            Events::HANDLE_FORM => 'onHandleForm',
         ];
     }
 
@@ -41,11 +54,19 @@ class FormSubscriber implements EventSubscriberInterface
      *
      * @param FormFactoryInterface $formFactory
      * @param DataProviderFactory  $dataProviderFactory
+     * @param Session              $session
+     * @param TranslatorInterface  $translator
      */
-    public function __construct(FormFactoryInterface $formFactory, DataProviderFactory $dataProviderFactory)
-    {
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        DataProviderFactory $dataProviderFactory,
+        Session $session,
+        TranslatorInterface $translator
+    ) {
         $this->formFactory = $formFactory;
         $this->dataProviderFactory = $dataProviderFactory;
+        $this->session = $session;
+        $this->translator = $translator;
     }
 
     /**
@@ -53,7 +74,7 @@ class FormSubscriber implements EventSubscriberInterface
      *
      * @param FormEvent $event
      */
-    public function createEntityForm(FormEvent $event)
+    public function onCreateForm(FormEvent $event): void
     {
         $admin = $event->getAdmin();
         $action = $admin->getAction();
@@ -65,74 +86,90 @@ class FormSubscriber implements EventSubscriberInterface
         $entity = null;
 
         if (LAGAdminBundle::LOAD_STRATEGY_UNIQUE === $configuration->get('load_strategy')) {
-            $entity = $admin->getEntities()->first();
+            if (!$admin->getEntities()->isEmpty()) {
+                $entity = $admin->getEntities()->first();
+            }
         }
 
+        if ('create' === $action->getName()) {
+            $form = $this->createEntityForm($admin, $entity);
+            $event->addForm($form, 'entity');
+        }
+
+        if ('edit' === $action->getName()) {
+            $form = $this->createEntityForm($admin, $entity);
+            $event->addForm($form, 'entity');
+        }
+
+        if ('delete' === $action->getName()) {
+            $form = $this->createDeleteForm($action, $entity);
+            $event->addForm($form, 'delete');
+        }
+    }
+
+    /**
+     * When the HANDLE_FORM event is dispatched, we handle the form according to the current action.
+     *
+     * @param FormEvent $event
+     */
+    public function onHandleForm(FormEvent $event): void
+    {
+        $admin = $event->getAdmin();
+        $action = $admin->getAction();
+
+        if ('delete' === $action->getName()) {
+
+            if (!$admin->hasForm('delete')) {
+                return;
+            }
+            $form = $admin->getForm('delete');
+            $this->handleDeleteForm($event->getRequest(), $form, $admin);
+        }
+    }
+
+    private function createEntityForm(AdminInterface $admin, $entity = null): FormInterface
+    {
         if (!$entity) {
             $dataProvider = $this
                 ->dataProviderFactory
-                ->get($admin->getConfiguration()->get('data_provider'))
-            ;
+                ->get($admin->getConfiguration()->get('data_provider'));
             $entity = $dataProvider->create($admin);
         }
-
         $form = $this
             ->formFactory
             ->create($admin->getConfiguration()->getParameter('form'), $entity)
         ;
-        $event->addForm($form, 'entity');
+
+        return $form;
     }
 
-    /**
-     * Create a filter form from configuration and handle the form submission if required.
-     *
-     * @param FilterEvent $event
-     */
-    public function createFilterForm(FilterEvent $event)
+    private function createDeleteForm(ActionInterface $action, $entity): FormInterface
     {
-        $admin = $event->getAdmin();
-        $action = $admin->getAction();
-        $configuration = $action->getConfiguration();
-        $filters = $configuration->getParameter('filters');
-
-        if (0 === count($filters)) {
-            return;
-        }
         $form = $this
             ->formFactory
-            ->createNamed('filter', FormType::class)
+            ->create($action->getConfiguration()->getParameter('form'), $entity)
         ;
 
-        foreach ($filters as $name => $filter) {
-            $options = array_merge([
-                'required' => false,
-            ], $filter['options']);
-            $type = FormUtils::convertShortFormType($filter['type']);
+        return $form;
+    }
 
-            $form->add($name, $type, $options);
-        }
-        $form->handleRequest($event->getRequest());
+    private function handleDeleteForm(Request $request, FormInterface $form, AdminInterface $admin)
+    {
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $dataProvider = $this
+                ->dataProviderFactory
+                ->get($admin->getConfiguration()->get('data_provider'))
+            ;
+            $dataProvider->delete($admin);
 
-            foreach ($filters as $name => $options) {
-                // If the data is not submitted or if it is null, we should do nothing
-                if (!key_exists($name, $data) || null === $data[$name]) {
-                    continue;
-                }
-
-                // Do not submit false boolean values to improve user experience
-                if (is_bool($data[$name]) && false === $data[$name]) {
-                    continue;
-                }
-
-                // Create a new filter with submitted and configured values
-                $filter = new Filter($options['name'], $data[$name], $options['operator']);
-                $event->addFilter($filter);
-            }
+            $message = StringUtils::getTranslationKey(
+                $admin->getConfiguration()->get('translation_pattern'),
+                $admin->getName(),
+                'delete_success'
+            );
+            $this->session->getFlashBag()->add('success', $this->translator->trans($message));
         }
-
-        $event->addForm($form, 'filter');
     }
 }

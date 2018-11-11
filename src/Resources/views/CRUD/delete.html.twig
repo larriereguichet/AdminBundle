@@ -1,6 +1,8 @@
 {% extends admin_config('base_template') %}
 
 {% block content %}
+    {% set entity = admin.entities.first %}
+    {% set form = admin.forms.delete %}
 
     <div class="row">
         <div class="col-12">
@@ -11,19 +13,25 @@
                 <div class="card-body">
                     <h4 class="card-title">
                         {{ 'lag.admin.deleting' | trans({
-                            '%id%': admin.entities.first.id
+                            '%id%': entity.id
                         }) }}
                     </h4>
-                    <p class="card-text">{{ 'lag.admin.delete_confirmation_warning' | trans }}</p>
 
-                    <div class="text-right button-list">
-                        <a href="{{ admin_url(admin, 'list') }}"
-                           class="btn">
-                            <i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;{{ 'lag.admin.cancel' | trans }}</a>
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fa fa-remove"></i>&nbsp;{{ 'lag.admin.delete' | trans }}
-                        </button>
-                    </div>
+                    <form action="{{ admin_url(admin, 'delete', entity) }}"
+                          method="post">
+                        <p class="card-text">{{ 'lag.admin.delete_confirmation_warning' | trans }}</p>
+
+                        {{ form_row(form) }}
+
+                        <div class="text-right button-list">
+                            <a href="{{ admin_url(admin, 'list') }}"
+                               class="btn">
+                                <i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;{{ 'lag.admin.cancel' | trans }}</a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fa fa-remove"></i>&nbsp;{{ 'lag.admin.delete' | trans }}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

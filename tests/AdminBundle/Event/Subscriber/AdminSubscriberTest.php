@@ -126,7 +126,7 @@ class AdminSubscriberTest extends AdminTestBase
 
         $action = $this->createMock(ActionInterface::class);
         $action
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getName')
             ->willReturn('edit')
         ;

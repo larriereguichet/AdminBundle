@@ -7,6 +7,7 @@ use JK\Configuration\Configuration;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Form\Type\DeleteType;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Routing\RoutingLoader;
 use LAG\AdminBundle\Utils\StringUtils;
@@ -86,7 +87,8 @@ class ActionConfiguration extends Configuration
                 'string_length' => $this->adminConfiguration->getParameter('string_length'),
                 'string_length_truncate' => $this->adminConfiguration->getParameter('string_length_truncate'),
                 'date_format' => $this->adminConfiguration->getParameter('date_format'),
-                'use_form' => false,
+                'use_form' => true,
+                'form' => null,
             ])
             ->setAllowedTypes('title', 'string')
             ->setAllowedTypes('class', 'string')
@@ -108,6 +110,7 @@ class ActionConfiguration extends Configuration
             ->setNormalizer('menus', $this->getMenuNormalizer())
             ->setNormalizer('filters', $this->getFiltersNormalizer())
             ->setNormalizer('route_defaults', $this->getRouteDefaultNormalizer())
+            ->setNormalizer('form', $this->getFormNormalizer())
             ->setAllowedValues('load_strategy', [
                 LAGAdminBundle::LOAD_STRATEGY_NONE,
                 LAGAdminBundle::LOAD_STRATEGY_UNIQUE,
@@ -290,12 +293,13 @@ class ActionConfiguration extends Configuration
      *
      * @return Closure
      */
-    private function getFiltersNormalizer()
+    private function getFiltersNormalizer(): Closure
     {
         return function (Options $options, $data) {
             $normalizedData = [];
 
             foreach ($data as $name => $field) {
+
                 if (is_string($field)) {
                     $field = [
                         'type' => $field,
@@ -316,9 +320,10 @@ class ActionConfiguration extends Configuration
         };
     }
 
-    private function getRouteDefaultNormalizer()
+    private function getRouteDefaultNormalizer(): Closure
     {
         return function (Options $options, $value) {
+
             if (!is_array($value)) {
                 $value = [];
             }
@@ -329,12 +334,32 @@ class ActionConfiguration extends Configuration
         };
     }
 
+    private function getFormNormalizer(): Closure
+    {
+        return function (Options $options, $value) {
+
+            if (null === $value) {
+                $mapping = [
+                    'create' => $this->adminConfiguration->get('form'),
+                    'edit' => $this->adminConfiguration->get('form'),
+                    'delete' => DeleteType::class,
+                ];
+
+                if (key_exists($this->actionName, $mapping)) {
+                    $value = $mapping[$this->actionName];
+                }
+            }
+
+            return $value;
+        };
+    }
+
     /**
      * Return the default title using the configured translation pattern.
      *
      * @return string
      */
-    private function getDefaultTitle()
+    private function getDefaultTitle(): string
     {
         $translationPattern = $this
             ->adminConfiguration
@@ -360,7 +385,7 @@ class ActionConfiguration extends Configuration
      *
      * @return string
      */
-    private function getDefaultRoutePath()
+    private function getDefaultRoutePath(): string
     {
         $pattern = $this
             ->adminConfiguration
@@ -376,7 +401,7 @@ class ActionConfiguration extends Configuration
         return $path;
     }
 
-    private function getDefaultTemplate()
+    private function getDefaultTemplate(): ?string
     {
         $mapping = [
             'list' => '@LAGAdmin/CRUD/list.html.twig',
@@ -392,7 +417,7 @@ class ActionConfiguration extends Configuration
         return $mapping[$this->actionName];
     }
 
-    private function isActionInMapping(array $mapping)
+    private function isActionInMapping(array $mapping): bool
     {
         return array_key_exists($this->actionName, $mapping);
     }
