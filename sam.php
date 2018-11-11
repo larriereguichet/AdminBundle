@@ -34,8 +34,7 @@ $tasks = [
         ],
         'sources' => [
             'vendor/twbs/bootstrap/dist/css/bootstrap.min.css',
-            'vendor/components/font-awesome/css/font-awesome.min.css',
-            'src/Resources/assets/scss/*',
+            'src/Resources/assets/scss/main.scss',
         ],
         'destinations' => [
             'src/Resources/public/css/admin.css',
