@@ -8,7 +8,7 @@ update:
 	composer update
 	make assets
 
-assets-build:
+assets@build:
 	php sam.php
 
 ### PHPUnit ###
