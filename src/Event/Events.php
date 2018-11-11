@@ -6,7 +6,7 @@ class Events
 {
     const HANDLE_REQUEST = 'lag.admin.handleRequest';
 
-    const HANDLE_FORM = 'lag.admin.handleForm';
+    const CREATE_FORM = 'lag.admin.handleForm';
 
     const ADMIN_CONFIGURATION = 'lag.admin.admin_configuration';
 

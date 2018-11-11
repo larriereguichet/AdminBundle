@@ -105,7 +105,7 @@ class Admin implements AdminInterface
         }
 
         $event = new FormEvent($this, $request);
-        $this->eventDispatcher->dispatch(Events::HANDLE_FORM, $event);
+        $this->eventDispatcher->dispatch(Events::CREATE_FORM, $event);
 
         // Merge the regular forms and the filter forms
         $this->forms = array_merge($event->getForms(), $filterEvent->getForms());

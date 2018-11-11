@@ -62,7 +62,7 @@ class AdminTest extends AdminTestBase
                     ]));
                 }
 
-                if (Events::HANDLE_FORM === $eventName) {
+                if (Events::CREATE_FORM === $eventName) {
                     /** @var FormEvent $event */
                     $this->assertInstanceOf(FormEvent::class, $event);
                     $event->addForm($form, 'entity');
@@ -221,7 +221,7 @@ class AdminTest extends AdminTestBase
                     $event->setEntities(new ArrayCollection());
                 }
 
-                if (Events::HANDLE_FORM === $eventName) {
+                if (Events::CREATE_FORM === $eventName) {
                     /** @var FormEvent $event */
                     $this->assertInstanceOf(FormEvent::class, $event);
                     $event->addForm($form, 'entity');
