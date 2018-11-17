@@ -3,14 +3,14 @@
 namespace LAG\AdminBundle\Event\Subscriber;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Helper\MetadataTrait;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\ConfigurationEvent;
 use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
-use LAG\AdminBundle\LAGAdminBundle;
+use LAG\AdminBundle\Field\Helper\FieldConfigurationHelper;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use LAG\AdminBundle\Utils\StringUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -20,15 +20,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ExtraConfigurationSubscriber implements EventSubscriberInterface
 {
+    use MetadataTrait;
+
     /**
      * @var ApplicationConfiguration
      */
     private $applicationConfiguration;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
 
     /**
      * @var ResourceCollection
@@ -81,11 +78,13 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         // Actions
         $this->addDefaultActions($configuration);
 
-        // Fields
-        $this->addDefaultFields($configuration, $event->getEntityClass(), $event->getAdminName());
-        $this->addDefaultStrategy($configuration);
-        $this->addDefaultRouteParameters($configuration);
-        $this->addDefaultFormUse($configuration);
+        // Add default field configuration: it provides a type, a form type, and a view according to the found metadata
+        $helper = new FieldConfigurationHelper($this->entityManager, $this->applicationConfiguration);
+        $helper->addDefaultFields($configuration, $event->getEntityClass(), $event->getAdminName());
+        $helper->addDefaultStrategy($configuration);
+        $helper->addDefaultRouteParameters($configuration);
+        $helper->addDefaultFormUse($configuration);
+        $helper->provideActionsFieldConfiguration($configuration, $event->getAdminName());
 
         // Menus
         $this->addDefaultRightMenu($configuration);
@@ -138,159 +137,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             'edit' => [],
             'delete' => [],
         ];
-    }
-
-    private function addDefaultFields(array &$configuration, $entityClass, $adminName)
-    {
-        $fieldsMapping = [
-            'string' => [
-                'type' => 'string',
-                'options' => [
-                    'length' => 100,
-                ],
-            ],
-            'boolean' => [
-                'type' => 'boolean',
-                'options' => [],
-            ],
-            'datetime' => [
-                'type' => 'date',
-                'options' => [],
-            ],
-        ];
-
-        foreach ($configuration['actions'] as $actionName => $action) {
-            if (null === $action) {
-                $action = [];
-            }
-            $metadata = $this->findMetadata($entityClass);
-
-            if (null === $metadata) {
-                continue;
-            }
-
-            // If fields are already defined, nothing to do
-            if (key_exists('fields', $action) && is_array($action['fields']) && count($action['fields'])) {
-                $fields = $action['fields'];
-            } else {
-                $fields = [];
-
-                // Get fields names from the metadata if no configuration is defined
-                foreach ($metadata->getFieldNames() as $fieldName) {
-                    $fields[$fieldName] = null;
-                }
-            }
-            $actionField = $this->getActionField($metadata->getFieldNames());
-
-            foreach ($fields as $fieldName => $fieldConfiguration) {
-                $fieldType = $metadata->getTypeOfField($fieldName);
-
-                if (
-                    'list' === $actionName &&
-                    $fieldName === $actionField &&
-                    key_exists('edit', $configuration['actions'])
-                ) {
-                    $fieldConfiguration = [
-                        'type' => 'action',
-                        'options' => [
-                            'admin' => $adminName,
-                            'action' => 'edit',
-                            'parameters' => [
-                                'id' => null,
-                            ],
-                        ]
-                    ];
-
-                } else if (
-                    '_delete' === $fieldName &&
-                    !$metadata->hasField('_delete') &&
-                    null === $fieldConfiguration &&
-                    key_exists('delete', $configuration['actions'])
-                ) {
-                    // If a "delete" field is declared, and if it is not configured in the metadata, and if no
-                    // configuration is declared for this field, and if the "delete" action is allowed, we add a default
-                    // "button" configuration
-                    $fieldConfiguration = [
-                        'type' => 'link',
-                        'options' => [
-                            'admin' => $adminName,
-                            'action' => 'delete',
-                            'parameters' => [
-                                'id' => null,
-                            ],
-                            'text' => 'Delete',
-                            'class' => 'btn btn-sm btn-danger',
-                            'icon' => 'remove',
-                        ],
-                    ];
-
-                } else if (key_exists($fieldType, $fieldsMapping)) {
-                    $fieldConfiguration = $fieldsMapping[$metadata->getTypeOfField($fieldName)];
-                }
-                $configuration['actions'][$actionName]['fields'][$fieldName] = $fieldConfiguration;
-            }
-        }
-    }
-
-    private function addDefaultStrategy(array &$configuration)
-    {
-        $mapping = [
-            'list' => LAGAdminBundle::LOAD_STRATEGY_MULTIPLE,
-            'create' => LAGAdminBundle::LOAD_STRATEGY_NONE,
-            'delete' => LAGAdminBundle::LOAD_STRATEGY_UNIQUE,
-            'edit' => LAGAdminBundle::LOAD_STRATEGY_UNIQUE,
-        ];
-
-        foreach ($configuration['actions'] as $name => $action) {
-            if (null === $action) {
-                continue;
-            }
-
-            if (key_exists('load_strategy', $action)) {
-                continue;
-            }
-
-            if (!key_exists($name, $mapping)) {
-                continue;
-            }
-            $configuration['actions'][$name]['load_strategy'] = $mapping[$name];
-        }
-    }
-
-    private function addDefaultRouteParameters(array &$configuration)
-    {
-        $mapping = [
-            'edit' => [
-                'id' => '\d+',
-            ],
-            'delete' => [
-                'id' => '\d+',
-            ],
-        ];
-
-        foreach ($configuration['actions'] as $name => $actionConfiguration) {
-            if (key_exists($name, $mapping) && !key_exists('route_requirements', $actionConfiguration)) {
-                $configuration['actions'][$name]['route_requirements'] = [
-                    'id' => '\d+',
-                ];
-            }
-        }
-    }
-
-    private function addDefaultFormUse(array &$configuration)
-    {
-        $mapping = [
-            'edit',
-            'create',
-            'delete',
-        ];
-
-        foreach ($configuration['actions'] as $name => $action) {
-            if (!in_array($name, $mapping) && !isset($action['use_form'])) {
-                continue;
-            }
-            $configuration['actions'][$name]['use_form'] = true;
-        }
     }
 
     /**
@@ -411,29 +257,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * Return the default action field if found.
-     *
-     * @param array $fields
-     *
-     * @return string|null
-     */
-    private function getActionField(array $fields)
-    {
-        $mapping = [
-            'title',
-            'name',
-            'id',
-        ];
 
-        foreach ($mapping as $name) {
-            if (in_array($name, $fields)) {
-                return $name;
-            }
-        }
-
-        return null;
-    }
 
     /**
      * Add default filters for the list actions, guessed using the entity metadata.
@@ -465,31 +289,13 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             $filters[$fieldName] = [
                 'type' => $type,
                 'options' => [],
-                'operator' => $operator,
+                'comparator' => $operator,
             ];
         }
         $configuration['actions']['list']['filters'] = $filters;
     }
 
-    /**
-     * Return the Doctrine metadata of the given class.
-     *
-     * @param $class
-     *
-     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata|null
-     */
-    private function findMetadata($class)
-    {
-        $metadata = null;
 
-        try {
-            // We could not use the hasMetadataFor() method as it is not working if the entity is not loaded. But
-            // the getMetadataFor() method could throw an exception if the class is not found
-            $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($class);
-        } catch (Exception $exception) {}
-
-        return $metadata;
-    }
 
     private function getOperatorFromFieldType($type)
     {

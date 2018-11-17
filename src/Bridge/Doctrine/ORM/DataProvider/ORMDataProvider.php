@@ -68,7 +68,7 @@ class ORMDataProvider implements DataProviderInterface
             ->createQueryBuilder('entity')
         ;
 
-        // Dispatch an event to allow filter modification on the query builder
+        // Dispatch an event to allow filter alteration on the query builder
         $event = new DoctrineOrmFilterEvent($queryBuilder, $admin, $filters);
         $this->eventDispatcher->dispatch(Events::DOCTRINE_ORM_FILTER, $event);
 

@@ -19,13 +19,19 @@ class FilterConfiguration extends Configuration
             ->setDefaults([
                 'type' => TextType::class,
                 'options' => [],
-                'operator' => '='
+                'comparator' => 'like',
+                'operator' => 'or',
             ])
             ->setRequired('name')
             ->setAllowedTypes('name', 'string')
             ->setAllowedTypes('type', 'string')
             ->setAllowedTypes('options', 'array')
+            ->setAllowedTypes('comparator', 'string')
             ->setAllowedTypes('operator', 'string')
+            ->setAllowedValues('operator', [
+                'and',
+                'or',
+            ])
         ;
     }
 }

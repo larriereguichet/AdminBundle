@@ -4,14 +4,13 @@
     <h1>{{ admin.configuration.getParameter('title') | trans }}</h1>
 
     {% block filterLink %}
-        <a class=""
+        <a href="#filters-container"
            data-toggle="collapse"
-           href="#filters-container"
            role="button"
            aria-expanded="false"
-           aria-controls="collapseExample"
-           style="">
+           aria-controls="collapseExample">
             {{ 'lag.admin.show_filter' | trans }}
+            <i class="fa fa-angle-down"></i>
         </a>
     {% endblock %}
 

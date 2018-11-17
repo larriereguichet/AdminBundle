@@ -62,7 +62,7 @@ class FilterSubscriber implements EventSubscriberInterface
                 }
 
                 // Create a new filter with submitted and configured values
-                $filter = new Filter($options['name'], $data[$name], $options['operator']);
+                $filter = new Filter($options['name'], $data[$name], $options['comparator'], $options['operator']);
                 $event->addFilter($filter);
             }
         }

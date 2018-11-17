@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Filter;
 
-class Filter
+class Filter implements FilterInterface
 {
     /**
      * @var string
@@ -20,21 +20,28 @@ class Filter
     private $operator;
 
     /**
+     * @var string
+     */
+    private $comparator;
+
+    /**
      * Filter constructor.
      *
      * @param string $name
      * @param mixed  $value
+     * @param string $comparator
      * @param string $operator
      */
-    public function __construct(string $name, $value, string $operator = '=')
+    public function __construct(string $name, $value, string $comparator = 'like', string $operator = 'or')
     {
         $this->name = $name;
         $this->value = $value;
         $this->operator = $operator;
+        $this->comparator = $comparator;
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getName(): string
     {
@@ -42,7 +49,7 @@ class Filter
     }
 
     /**
-     * @return mixed
+     * @inheritdoc
      */
     public function getValue()
     {
@@ -50,7 +57,15 @@ class Filter
     }
 
     /**
-     * @return string
+     * @inheritdoc
+     */
+    public function getComparator(): string
+    {
+        return $this->comparator;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getOperator(): string
     {

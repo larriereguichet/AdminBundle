@@ -157,7 +157,7 @@ class ORMSubscriberTest extends AdminTestBase
         ;
         $queryBuilder
             ->expects($this->once())
-            ->method('andWhere')
+            ->method('orWhere')
             ->with('entity.name like :filter_name')
         ;
         $queryBuilder
@@ -179,6 +179,11 @@ class ORMSubscriberTest extends AdminTestBase
             ->expects($this->once())
             ->method('getValue')
             ->willReturn('test')
+        ;
+        $filter1
+            ->expects($this->atLeastOnce())
+            ->method('getComparator')
+            ->willReturn('like')
         ;
 
         $event = $this->getMockWithoutConstructor(DoctrineOrmFilterEvent::class);

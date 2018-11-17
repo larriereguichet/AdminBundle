@@ -10,9 +10,14 @@ interface FilterInterface
     public function getName(): string;
 
     /**
+     * @return mixed
+     */
+    public function getValue();
+
+    /**
      * @return string
      */
-    public function getValue(): string;
+    public function getComparator(): string;
 
     /**
      * @return string

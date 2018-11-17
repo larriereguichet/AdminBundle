@@ -79,15 +79,21 @@ class ORMSubscriber implements EventSubscriberInterface
             $parameterName = 'filter_'.$filter->getName();
             $value = $filter->getValue();
 
-            if ('like' === $filter->getOperator()) {
+            if ('like' === $filter->getComparator()) {
                 $value = '%'.$value.'%';
             }
 
-            $queryBuilder->andWhere(sprintf(
+            if ('and' === $filter->getOperator()) {
+                $method = 'andWhere';
+            } else {
+                $method = 'orWhere';
+            }
+
+            $queryBuilder->$method(sprintf(
                 '%s.%s %s %s',
                 $alias,
                 $filter->getName(),
-                $filter->getOperator(),
+                $filter->getComparator(),
                 ':'.$parameterName
             ));
             $queryBuilder->setParameter($parameterName, $value);
