@@ -10,7 +10,7 @@ use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\EntityEvent;
 use LAG\AdminBundle\Event\Events\FormEvent;
-use LAG\AdminBundle\Event\ViewEvent;
+use LAG\AdminBundle\Event\Events\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\Tests\AdminTestBase;

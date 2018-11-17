@@ -10,7 +10,7 @@ use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\EntityEvent;
 use LAG\AdminBundle\Event\Events\MenuEvent;
-use LAG\AdminBundle\Event\ViewEvent;
+use LAG\AdminBundle\Event\Events\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Factory\ActionFactory;
 use LAG\AdminBundle\Factory\DataProviderFactory;
