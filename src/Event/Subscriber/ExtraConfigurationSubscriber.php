@@ -7,7 +7,7 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\Helper\MetadataTrait;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\ConfigurationEvent;
+use LAG\AdminBundle\Event\Events\ConfigurationEvent;
 use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Field\Helper\FieldConfigurationHelper;

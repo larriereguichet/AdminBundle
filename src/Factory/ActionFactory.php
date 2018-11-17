@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Factory;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\ConfigurationEvent;
+use LAG\AdminBundle\Event\Events\ConfigurationEvent;
 use LAG\AdminBundle\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

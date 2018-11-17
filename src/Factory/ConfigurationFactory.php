@@ -6,7 +6,7 @@ use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\ConfigurationEvent;
+use LAG\AdminBundle\Event\Events\ConfigurationEvent;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
