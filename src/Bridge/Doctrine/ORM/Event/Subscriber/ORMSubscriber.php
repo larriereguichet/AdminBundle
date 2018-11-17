@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber;
 
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\DoctrineOrmFilterEvent;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -40,9 +40,9 @@ class ORMSubscriber implements EventSubscriberInterface
     /**
      * Add the order to query builder according to the configuration.
      *
-     * @param DoctrineOrmFilterEvent $event
+     * @param ORMFilterEvent $event
      */
-    public function addOrder(DoctrineOrmFilterEvent $event)
+    public function addOrder(ORMFilterEvent $event)
     {
         $queryBuilder = $event->getQueryBuilder();
         $admin = $event->getAdmin();
@@ -68,9 +68,9 @@ class ORMSubscriber implements EventSubscriberInterface
     /**
      * Add filter to the query builder.
      *
-     * @param DoctrineOrmFilterEvent $event
+     * @param ORMFilterEvent $event
      */
-    public function addFilters(DoctrineOrmFilterEvent $event)
+    public function addFilters(ORMFilterEvent $event)
     {
         $queryBuilder = $event->getQueryBuilder();
 

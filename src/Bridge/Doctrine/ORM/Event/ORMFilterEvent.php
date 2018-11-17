@@ -25,7 +25,7 @@ class ORMFilterEvent extends Event
     private $filters;
 
     /**
-     * DoctrineOrmFilterEvent constructor.
+     * ORMFilterEvent constructor.
      *
      * @param QueryBuilder   $queryBuilder
      * @param AdminInterface $admin

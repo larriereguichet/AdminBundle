@@ -5,10 +5,10 @@ namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\Event\Subscriber;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\ORMSubscriber;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\DoctrineOrmFilterEvent;
 use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,7 +61,7 @@ class ORMSubscriberTest extends AdminTestBase
             ->with('entity.id', 'desc')
         ;
 
-        $event = $this->getMockWithoutConstructor(DoctrineOrmFilterEvent::class);
+        $event = $this->getMockWithoutConstructor(ORMFilterEvent::class);
         $event
             ->expects($this->once())
             ->method('getQueryBuilder')
@@ -118,7 +118,7 @@ class ORMSubscriberTest extends AdminTestBase
             ->with('entity.name', 'asc')
         ;
 
-        $event = $this->getMockWithoutConstructor(DoctrineOrmFilterEvent::class);
+        $event = $this->getMockWithoutConstructor(ORMFilterEvent::class);
         $event
             ->expects($this->once())
             ->method('getQueryBuilder')
@@ -186,7 +186,7 @@ class ORMSubscriberTest extends AdminTestBase
             ->willReturn('like')
         ;
 
-        $event = $this->getMockWithoutConstructor(DoctrineOrmFilterEvent::class);
+        $event = $this->getMockWithoutConstructor(ORMFilterEvent::class);
         $event
             ->expects($this->once())
             ->method('getQueryBuilder')

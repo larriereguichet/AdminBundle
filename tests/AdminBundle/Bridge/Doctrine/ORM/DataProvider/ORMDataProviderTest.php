@@ -11,7 +11,7 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\DoctrineOrmFilterEvent;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Fixtures\EntityFixture;
@@ -91,8 +91,8 @@ class ORMDataProviderTest extends AdminTestBase
             ->method('dispatch')
             ->willReturnCallback(function ($eventName, $event) use ($queryBuilder, $admin) {
                 $this->assertEquals(Events::DOCTRINE_ORM_FILTER, $eventName);
-                /** @var DoctrineOrmFilterEvent $event */
-                $this->assertInstanceOf(DoctrineOrmFilterEvent::class, $event);
+                /** @var ORMFilterEvent $event */
+                $this->assertInstanceOf(ORMFilterEvent::class, $event);
                 $this->assertEquals($queryBuilder, $event->getQueryBuilder());
                 $this->assertEquals($admin, $event->getAdmin());
                 $this->assertEquals([], $event->getFilters());
