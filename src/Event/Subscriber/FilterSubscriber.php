@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Event\Subscriber;
 
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\FilterEvent;
+use LAG\AdminBundle\Event\Events\FilterEvent;
 use LAG\AdminBundle\Filter\Filter;
 use LAG\AdminBundle\Utils\FormUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

@@ -1,7 +1,8 @@
 <?php
 
-namespace LAG\AdminBundle\Event;
+namespace LAG\AdminBundle\Event\Events;
 
+use LAG\AdminBundle\Event\AbstractEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Filter\FilterInterface;
 use Symfony\Component\Form\FormInterface;
