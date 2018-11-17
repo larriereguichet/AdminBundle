@@ -6,7 +6,7 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
-use LAG\AdminBundle\Event\MenuEvent;
+use LAG\AdminBundle\Event\Events\MenuEvent;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Resource\ResourceCollection;

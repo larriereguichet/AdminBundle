@@ -6,7 +6,7 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Controller\HomeAction;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\MenuEvent;
+use LAG\AdminBundle\Event\Events\MenuEvent;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
