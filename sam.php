@@ -46,9 +46,9 @@ $tasks = [
             'merge',
         ],
         'sources' => [
-            'src/Resources/assets/js/*',
             'vendor/components/jquery/jquery.min.js',
             'vendor/twbs/bootstrap/dist/js/bootstrap.min.js',
+            'src/Resources/assets/js/*',
         ],
         'destinations' => [
             'src/Resources/public/js/admin.js',
