@@ -2,8 +2,12 @@
 
 namespace LAG\AdminBundle\Field;
 
-class BooleanField extends AbstractField
+use LAG\AdminBundle\Field\Traits\TwigAwareTrait;
+
+class BooleanField extends AbstractField implements TwigAwareFieldInterface
 {
+    use TwigAwareTrait;
+
     public function isSortable(): bool
     {
         return true;
@@ -11,12 +15,8 @@ class BooleanField extends AbstractField
 
     public function render($value = null): string
     {
-        if (true === $value) {
-            $content = '<i class="fa fa-check text-success"></i>';
-        } else {
-            $content = '<i class="fa fa-times text-danger"></i>';
-        }
-
-        return $content;
+        return $this->twig->render('@LAGAdmin/Field/boolean.html.twig', [
+            'value' => $value,
+        ]);
     }
 }

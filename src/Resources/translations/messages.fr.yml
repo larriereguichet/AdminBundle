@@ -37,3 +37,6 @@ lag:
         no_record: Aucun élément n'a été trouvé
         delete_confirmation_title: Attention
         delete_confirmation_warning: Vous allez supprimer un élément. Cette action n'est pas réversible
+
+        yes: Oui
+        no: Non
