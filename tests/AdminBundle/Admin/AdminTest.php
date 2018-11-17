@@ -8,7 +8,7 @@ use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\EntityEvent;
+use LAG\AdminBundle\Event\Events\EntityEvent;
 use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Event\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;

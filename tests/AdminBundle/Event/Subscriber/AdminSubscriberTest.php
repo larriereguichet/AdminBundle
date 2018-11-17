@@ -10,7 +10,7 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\EntityEvent;
+use LAG\AdminBundle\Event\Events\EntityEvent;
 use LAG\AdminBundle\Event\Subscriber\AdminSubscriber;
 use LAG\AdminBundle\Event\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;

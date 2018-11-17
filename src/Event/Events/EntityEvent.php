@@ -1,6 +1,8 @@
 <?php
 
-namespace LAG\AdminBundle\Event;
+namespace LAG\AdminBundle\Event\Events;
+
+use LAG\AdminBundle\Event\AbstractEvent;
 
 class EntityEvent extends AbstractEvent
 {
