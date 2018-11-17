@@ -1,13 +1,13 @@
 <?php
 
-namespace LAG\AdminBundle\Event;
+namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Event;
 
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Filter\Filter;
 use Symfony\Component\EventDispatcher\Event;
 
-class DoctrineOrmFilterEvent extends Event
+class ORMFilterEvent extends Event
 {
     /**
      * @var QueryBuilder
