@@ -6,6 +6,10 @@ form {
   .control-label {
     font-weight: bold;
   }
+  label,
+  legend {
+    font-weight: bold;
+  }
 }
 
 #filters-container {
