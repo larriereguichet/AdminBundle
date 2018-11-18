@@ -1,0 +1,102 @@
+{% extends admin_config('base_template') %}
+
+{% block content %}
+    <h1>{{ admin.configuration.getParameter('title') | trans }}</h1>
+
+    {% block filterLink %}
+        <a href="#filters-container"
+           data-toggle="collapse"
+           role="button"
+           aria-expanded="false"
+           aria-controls="collapseExample">
+            {{ 'lag.admin.show_filter' | trans }}
+            <i class="fa fa-angle-down"></i>
+        </a>
+    {% endblock %}
+
+    {% block filters %}
+        <div class="collapse"
+             id="filters-container">
+            <div class="card card-body">
+                <form action=""
+                      method="post">
+
+                    <h2>{{ 'lag.admin.filter' | trans }}</h2>
+
+                    {{ form_errors(admin.forms.filter) }}
+                    {{ form_widget(admin.forms.filter) }}
+
+                    <div class="text-right btn-group"
+                         role="group">
+                        <a href="{{ admin_url(admin, 'list') }}" class="btn btn-secondary">
+                            <i class="fa fa-refresh"></i>
+                            Reset
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            Filter
+                            <i class="fa fa-filter"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block table %}
+
+        {% if admin.entities | length %}
+            <table class="table">
+                {% block table_head %}
+                    <thead>
+                    <tr>
+                        {% for field in admin.fields %}
+                            <th class="text-dark">
+                                {% if field.sortable %}
+                                    {% set sort = field.name %}
+                                    {% set order = 'asc' %}
+
+                                    {% if app.request.get('order') == 'asc' %}
+                                        {% set order = 'desc' %}
+                                    {% endif %}
+
+                                    <a href="?sort={{ sort }}&order={{ order }}" class="text-dark">
+                                        {{ admin_field_header(admin, field) }}
+                                    </a>
+                                {% else %}
+                                    {{ admin_field_header(admin, field) }}
+                                {% endif %}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                {% endblock %}
+
+                {% block table_body %}
+                    <tbody>
+                    {% for entity in admin.entities %}
+                        <tr>
+                            {% for field in admin.fields %}
+                                <td>
+                                    {{ admin_field(field, entity) | raw }}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                {% endblock %}
+                <tfoot>
+                </tfoot>
+            </table>
+        {% else %}
+            <p>{{ 'lag.admin.no_record' | trans }}</p>
+        {% endif %}
+    {% endblock %}
+
+    {% block pagination %}
+        <div>
+            {% if admin.pager %}
+                {{ pagerfanta(admin.pager, 'twitter_bootstrap4', {page: admin.pager.currentPage}) }}
+            {% endif %}
+        </div>
+    {% endblock %}
+{% endblock %}

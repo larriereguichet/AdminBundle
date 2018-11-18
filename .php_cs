@@ -1,10 +1,18 @@
 <?php
 
-$finder = Symfony\CS\Finder\DefaultFinder::create()
-    ->in(__DIR__)
+$finder = \PhpCsFixer\Finder::create()
+    ->in('src/')
+    ->exclude([
+        'bin',
+        'build',
+        'vendor',
+    ])
 ;
 
-return Symfony\CS\Config\Config::create()
-    ->level(Symfony\CS\FixerInterface::SYMFONY_LEVEL)
-    ->finder($finder)
-    ;
+return \PhpCsFixer\Config::create()
+    ->setRules([
+        '@Symfony' => true,
+        'phpdoc_align' => false,
+    ])
+    ->setFinder($finder)
+;

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="{{ admin_config('locale') }}">
+<head>
+    <title>
+        {% block title %}{{ admin_config('title') }}{% endblock %}
+    </title>
+    {% block meta %}
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <meta name="description" content="{{ admin_config('description') }}"/>
+    {% endblock %}
+
+    {% block stylesheets %}
+        {% if admin_config('bootstrap') %}
+            <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/admin.css') }}">
+        {% endif %}
+    {% endblock %}
+
+    {% block head %}{% endblock %}
+</head>
+
+{% block body %}
+    {% set admin = admin|default(null) %}
+
+    <body>
+    {% block navbar %}
+        {% if admin_has_menu('top') %}
+            {{ admin_menu('top', admin) | raw }}
+        {% endif %}
+    {% endblock %}
+
+    {% block container %}
+        <div id="admin-main-container" class="container-fluid">
+            <div class="row">
+                {% block layout %}
+                    {% block left_menu %}
+                        <nav class="col-2 d-none d-md-block sidebar">
+                            {% if admin_has_menu('left') %}
+                                {{ admin_menu('left', admin) | raw }}
+                            {% endif %}
+                        </nav>
+                    {% endblock %}
+
+                    {% block content_container %}
+                        <main class="col-10 content-container"
+                              role="main">
+
+                            {% block flash_messages %}
+                                {% include "@LAGAdmin/Layout/flash_messages.html.twig" %}
+                            {% endblock %}
+
+                            {% block content %}{% endblock %}
+                        </main>
+                    {% endblock %}
+                {% endblock %}
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block footer %}
+        <footer>
+            {% block javascripts %}
+                <script src="{{ asset('bundles/lagadmin/js/admin.js') }}"></script>
+            {% endblock %}
+            {% block custom_javascripts %}{% endblock %}
+        </footer>
+    {% endblock %}
+    </body>
+{% endblock %}
+</html>
+

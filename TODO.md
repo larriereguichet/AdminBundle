@@ -1,3 +1,6 @@
+wip:
+    - fixed admin configuration and action configuration events
+
 v0.n+1:
 - add filters
 - file exporters : array type, association
