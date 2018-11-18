@@ -404,10 +404,10 @@ class ActionConfiguration extends Configuration
     private function getDefaultTemplate(): ?string
     {
         $mapping = [
-            'list' => '@LAGAdmin/CRUD/list.html.twig',
-            'edit' => '@LAGAdmin/CRUD/edit.html.twig',
-            'create' => '@LAGAdmin/CRUD/create.html.twig',
-            'delete' => '@LAGAdmin/CRUD/delete.html.twig',
+            'list' => $this->adminConfiguration->get('list_template'),
+            'edit' => $this->adminConfiguration->get('edit_template'),
+            'create' => $this->adminConfiguration->get('create_template'),
+            'delete' => $this->adminConfiguration->get('delete_template'),
         ];
 
         if (!$this->isActionInMapping($mapping)) {
