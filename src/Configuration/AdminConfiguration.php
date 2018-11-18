@@ -60,6 +60,10 @@ class AdminConfiguration extends Configuration
                 'date_format' => $this->applicationConfiguration->getParameter('date_format'),
                 'data_provider' => ORMDataProvider::class,
                 'page_parameter' => $this->applicationConfiguration->getParameter('page_parameter'),
+                'list_template' => $this->applicationConfiguration->get('list_template'),
+                'edit_template' => $this->applicationConfiguration->get('edit_template'),
+                'create_template' => $this->applicationConfiguration->get('create_template'),
+                'delete_template' => $this->applicationConfiguration->get('delete_template'),
             ])
             ->setRequired([
                 'entity',
