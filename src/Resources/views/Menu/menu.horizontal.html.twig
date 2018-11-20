@@ -30,8 +30,8 @@
         {% if menu.items | length %}
             <ul class="navbar-nav mr-auto">
                 {% for item in menu.items %}
-                    <li class="{{ item.get('attr').class | default }}">
-                        <a class="{{ item.get('link_css_class') }}"
+                    <li {% for attr, value in item.get('attr') %}{{ attr }}="{{ value | default }}"{% endfor %}>
+                        <a {% for attr, value in item.get('link_attr') %}{{ attr }}="{{ value | default }}"{% endfor %}
                            href="{{ admin_menu_action(item.configuration, admin) }}">
                             {% if item.get('icon') %}
                                 <i class="fa fa-{{ item.get('icon') }}"></i>

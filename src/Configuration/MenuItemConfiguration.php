@@ -49,6 +49,9 @@ class MenuItemConfiguration extends Configuration
             ->setDefault('parameters', [])
             ->setDefault('text', '')
             ->setDefault('attr', [])
+            ->setDefault('link_attr', [
+                'class' => 'nav-link',
+            ])
             ->setDefault('items', [])
             ->setDefault('icon', null)
             ->setDefault('link_css_class', 'nav-link')
@@ -101,6 +104,18 @@ class MenuItemConfiguration extends Configuration
                 }
 
                 return $attr;
+            })
+            ->setNormalizer('link_attr', function (Options $options, $value) {
+
+                if (!is_array($value)) {
+                    $value = [];
+                }
+
+                if (!key_exists('class', $value)) {
+                    $value['class'] = 'nav-link';
+                }
+
+                return $value;
             })
             ->setNormalizer('items', function(Options $options, $items) {
                 if (!is_array($items)) {
