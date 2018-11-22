@@ -25,7 +25,7 @@ class FieldConfigurationHelper
         $this->applicationConfiguration = $applicationConfiguration;
     }
 
-    public function addDefaultFields(array &$configuration, $entityClass, $adminName)
+    public function addDefaultFields(array &$configuration, $entityClass, $adminName): void
     {
         $mapping = [
             'string' => [
@@ -154,6 +154,11 @@ class FieldConfigurationHelper
         ];
 
         foreach ($configuration['actions'] as $name => $actionConfiguration) {
+
+            if (null === $actionConfiguration) {
+                $actionConfiguration = [];
+            }
+
             if (key_exists($name, $mapping) && !key_exists('route_requirements', $actionConfiguration)) {
                 $configuration['actions'][$name]['route_requirements'] = [
                     'id' => '\d+',
@@ -170,8 +175,12 @@ class FieldConfigurationHelper
             'delete',
         ];
 
-        foreach ($configuration['actions'] as $name => $action) {
-            if (!in_array($name, $mapping) && !isset($action['use_form'])) {
+        foreach ($configuration['actions'] as $name => $actionConfiguration) {
+            if (null === $actionConfiguration) {
+                $actionConfiguration = [];
+            }
+
+            if (!in_array($name, $mapping) && !isset($actionConfiguration['use_form'])) {
                 continue;
             }
             $configuration['actions'][$name]['use_form'] = true;
@@ -181,6 +190,10 @@ class FieldConfigurationHelper
     public function provideActionsFieldConfiguration(array &$configuration, string $adminName)
     {
         foreach ($configuration['actions'] as $actionName => $actionConfiguration) {
+
+            if (null === $actionConfiguration) {
+                $actionConfiguration = [];
+            }
 
             if (!key_exists('fields', $actionConfiguration)) {
                 continue;
