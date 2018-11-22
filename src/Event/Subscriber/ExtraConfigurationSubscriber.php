@@ -153,6 +153,11 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
         // Add the resources menu for each action of the admin
         foreach ($configuration['actions'] as $name => $action) {
+
+            if (null === $action) {
+                $action = [];
+            }
+
             if (key_exists('menus', $action) && key_exists('left', $action)) {
                 continue;
             }
