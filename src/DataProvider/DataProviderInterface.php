@@ -6,7 +6,7 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Exception\Exception;
 
 /**
- * Generic data provider interface
+ * Generic data provider interface.
  */
 interface DataProviderInterface
 {

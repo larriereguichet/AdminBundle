@@ -26,7 +26,7 @@ class CreateActionTest extends AdminTestBase
                 ]],
             ])
         ;
-    
+
         $entity = new TestSimpleEntity();
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $admin
@@ -36,7 +36,7 @@ class CreateActionTest extends AdminTestBase
         ;
         $request = new Request([], [], []);
         $form = $this->getMockWithoutConstructor(FormInterface::class);
-        
+
         $formFactory = $this->getMockWithoutConstructor(FormFactoryInterface::class);
         $formFactory
             ->expects($this->once())
@@ -46,14 +46,14 @@ class CreateActionTest extends AdminTestBase
             ])
             ->willReturn($form)
         ;
-    
+
         $responder = $this->getMockWithoutConstructor(CreateResponder::class);
         $responder
             ->expects($this->once())
             ->method('respond')
             ->with($actionConfiguration, $admin, $form, null)
         ;
-        
+
         $action = new CreateAction(
             'create',
             $formFactory,
@@ -61,7 +61,7 @@ class CreateActionTest extends AdminTestBase
         );
         $action->setConfiguration($actionConfiguration);
         $action->setAdmin($admin);
-        
+
         $action->__invoke($request);
     }
 }

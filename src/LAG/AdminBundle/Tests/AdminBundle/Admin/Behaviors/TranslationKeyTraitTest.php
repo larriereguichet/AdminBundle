@@ -8,7 +8,7 @@ use LAG\AdminBundle\Tests\AdminTestBase;
 class TranslationKeyTraitTest extends AdminTestBase
 {
     use TranslationKeyTrait;
-    
+
     public function testGetTranslationKey()
     {
         $this->assertEquals(

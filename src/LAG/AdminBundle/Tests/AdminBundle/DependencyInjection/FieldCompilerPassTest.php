@@ -22,7 +22,7 @@ class FieldCompilerPassTest extends AdminTestBase
         // create a tagged service definition
         $taggedServiceDefinition = new Definition();
         $taggedServiceDefinition->addTag('lag.field', [
-            'type' => 'string'
+            'type' => 'string',
         ]);
 
         // create the data providers factory definition
@@ -31,7 +31,7 @@ class FieldCompilerPassTest extends AdminTestBase
         // add them to the container builder
         $containerBuilder->addDefinitions([
             'one_field' => $taggedServiceDefinition,
-            'lag.admin.field_factory' => $factoryDefinition
+            'lag.admin.field_factory' => $factoryDefinition,
         ]);
 
         // process the compiler pass
@@ -49,8 +49,7 @@ class FieldCompilerPassTest extends AdminTestBase
         $this->assertEquals('setConfiguration', $fieldCalls[0][0]);
 
         $this->assertInstanceOf(Reference::class, $fieldCalls[0][1][0]);
-        $this->assertEquals('lag.admin.application', (string)$fieldCalls[0][1][0]);
-
+        $this->assertEquals('lag.admin.application', (string) $fieldCalls[0][1][0]);
     }
 
     public function testProcessWrongConfiguration()
@@ -68,7 +67,7 @@ class FieldCompilerPassTest extends AdminTestBase
         // add them to the container builder
         $containerBuilder->addDefinitions([
             'my_custom_provider' => $taggedServiceDefinition,
-            'lag.admin.field_factory' => $factoryDefinition
+            'lag.admin.field_factory' => $factoryDefinition,
         ]);
 
         $this->assertExceptionRaised(
@@ -88,7 +87,7 @@ class FieldCompilerPassTest extends AdminTestBase
         $containerBuilder = new ContainerBuilder();
         $compilerPass = new FieldCompilerPass();
         $compilerPass->process($containerBuilder);
-        
+
         $this->assertFalse($containerBuilder->has('lag.admin.data_providers_factory'));
     }
 
@@ -102,7 +101,7 @@ class FieldCompilerPassTest extends AdminTestBase
 
         $compilerPass = new FieldCompilerPass();
         $compilerPass->process($containerBuilder);
-        
+
         $this->assertTrue($containerBuilder->hasDefinition('lag.admin.field_factory'));
     }
 }

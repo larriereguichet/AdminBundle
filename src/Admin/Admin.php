@@ -79,7 +79,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function handleRequest(Request $request)
     {
@@ -115,7 +115,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getName(): string
     {
@@ -123,7 +123,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getResource(): AdminResource
     {
@@ -131,7 +131,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getEventDispatcher(): EventDispatcherInterface
     {
@@ -139,7 +139,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getConfiguration(): AdminConfiguration
     {
@@ -147,7 +147,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function createView(): ViewInterface
     {
@@ -158,7 +158,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAction(): ActionInterface
     {
@@ -166,7 +166,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hasAction(): bool
     {
@@ -174,7 +174,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getEntities()
     {
@@ -182,7 +182,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getForms(): array
     {
@@ -190,7 +190,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hasForm(string $name): bool
     {
@@ -198,7 +198,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getForm(string $name): FormInterface
     {
@@ -210,7 +210,7 @@ class Admin implements AdminInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     private function handleEntityForm(Request $request)
     {

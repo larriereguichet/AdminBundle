@@ -188,7 +188,6 @@ class AdminExtension extends Twig_Extension
      * @param FieldInterface $field
      *
      * @return string
-     *
      */
     public function getFieldHeader(ViewInterface $admin, FieldInterface $field)
     {
@@ -231,7 +230,7 @@ class AdminExtension extends Twig_Extension
         $accessor = PropertyAccess::createPropertyAccessor();
 
         // if name starts with a underscore, it is a custom field, not mapped to the entity
-        if (substr($field->getName(), 0, 1) !== '_') {
+        if ('_' !== substr($field->getName(), 0, 1)) {
             // get raw value from object
             $value = $accessor->getValue($entity, $field->getName());
         }

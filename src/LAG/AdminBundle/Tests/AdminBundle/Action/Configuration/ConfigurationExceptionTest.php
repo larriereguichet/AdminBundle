@@ -20,7 +20,7 @@ class ConfigurationExceptionTest extends AdminTestBase
             ->method('getName')
             ->willReturn('MyAdmin')
         ;
-        
+
         $exception = new ConfigurationException(
             'My little message',
             'an_action',
@@ -29,7 +29,7 @@ class ConfigurationExceptionTest extends AdminTestBase
 
         $this->assertInstanceOf(Exception::class, $exception);
         $this->assertEquals('My little message, for Admin MyAdmin and action an_action', $exception->getMessage());
-    
+
         $exception = new ConfigurationException(
             'My little message',
             'an_action'

@@ -31,20 +31,20 @@ class AdminTest extends AdminTestBase
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $messageHandler = $this->getMockWithoutConstructor(MessageHandlerInterface::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
-        
+
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->expects($this->atLeastOnce())
             ->method('isGranted')
-            ->willReturnCallback(function($roles) {
+            ->willReturnCallback(function ($roles) {
                 $this->assertEquals([
                     'ROLE_USER',
                 ], $roles);
-                
+
                 return true;
             })
         ;
-    
+
         $user = $this->getMockWithoutConstructor(UserInterface::class);
         $user
             ->method('getRoles')
@@ -52,7 +52,7 @@ class AdminTest extends AdminTestBase
                 'ROLE_USER',
             ])
         ;
-        
+
         $token = $this->getMockWithoutConstructor(TokenInterface::class);
         $token
             ->expects($this->once())
@@ -65,7 +65,7 @@ class AdminTest extends AdminTestBase
             ->method('getToken')
             ->willReturn($token)
         ;
-    
+
         $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
         $entityLoader
             ->expects($this->once())
@@ -80,7 +80,7 @@ class AdminTest extends AdminTestBase
             )
             ->willReturn(new ArrayCollection())
         ;
-    
+
         $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $actionConfiguration
             ->method('getParameter')
@@ -88,31 +88,31 @@ class AdminTest extends AdminTestBase
                 [
                     'actions', [
                         'list' => [],
-                    ]
+                    ],
                 ],
                 [
                     'criteria', [
                         'deleted',
-                    ]
+                    ],
                 ],
                 [
                     'order', [
                         'createdAt',
-                    ]
+                    ],
                 ],
                 [
                     'max_per_page',
-                    10
+                    10,
                 ],
                 [
                     'permissions', [
                         'ROLE_USER',
-                    ]
+                    ],
                 ],
                 [
                     'sortable',
-                    true
-                ]
+                    true,
+                ],
             ])
         ;
         $action = $this->getMockWithoutConstructor(ActionInterface::class);
@@ -133,9 +133,9 @@ class AdminTest extends AdminTestBase
             '_route_params' => [
                 '_admin' => 'my_little_pony',
                 '_action' => 'list',
-            ]
+            ],
         ]);
-    
+
         $requestHandler = $this->getMockWithoutConstructor(RequestHandlerInterface::class);
         $requestHandler
             ->expects($this->once())
@@ -143,14 +143,14 @@ class AdminTest extends AdminTestBase
             ->with($request)
             ->willReturn(true)
         ;
-        
+
         $view = $this->getMockWithoutConstructor(ViewInterface::class);
         $view
             ->expects($this->exactly(2))
             ->method('getConfiguration')
             ->willReturn($actionConfiguration)
         ;
-        
+
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $viewFactory
             ->expects($this->once())
@@ -158,7 +158,7 @@ class AdminTest extends AdminTestBase
             ->with('list', 'my_little_pony', $configuration, $actionConfiguration)
             ->willReturn($view)
         ;
-    
+
         $admin = new Admin(
             'my_little_pony',
             $entityLoader,
@@ -175,7 +175,7 @@ class AdminTest extends AdminTestBase
         );
         $admin->handleRequest($request);
     }
-    
+
     /**
      * An AccessDeniedException should be raised if a non UserInterface is returned by the security token.
      */
@@ -185,7 +185,7 @@ class AdminTest extends AdminTestBase
         $messageHandler = $this->getMockWithoutConstructor(MessageHandlerInterface::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
-    
+
         $token = $this->getMockWithoutConstructor(TokenInterface::class);
         $token
             ->expects($this->once())
@@ -198,7 +198,7 @@ class AdminTest extends AdminTestBase
             ->method('getToken')
             ->willReturn($token)
         ;
-    
+
         $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $action = $this->getMockWithoutConstructor(ActionInterface::class);
         $action
@@ -207,12 +207,12 @@ class AdminTest extends AdminTestBase
             ->willReturn($actionConfiguration)
         ;
         $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
-    
+
         $request = new Request([], [], [
             '_route_params' => [
                 '_admin' => 'my_little_pony',
                 '_action' => 'list',
-            ]
+            ],
         ]);
         $requestHandler = $this->getMockWithoutConstructor(RequestHandlerInterface::class);
         $requestHandler
@@ -221,7 +221,7 @@ class AdminTest extends AdminTestBase
             ->with($request)
             ->willReturn(true)
         ;
-        
+
         $view = $this->getMockWithoutConstructor(ViewInterface::class);
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $viewFactory
@@ -230,7 +230,7 @@ class AdminTest extends AdminTestBase
             ->with('list', 'my_little_pony', $configuration, $actionConfiguration)
             ->willReturn($view)
         ;
-    
+
         $admin = new Admin(
             'my_little_pony',
             $entityLoader,
@@ -245,12 +245,12 @@ class AdminTest extends AdminTestBase
                 'list' => $action,
             ]
         );
-    
-        $this->assertExceptionRaised(AccessDeniedException::class, function() use ($request, $admin) {
+
+        $this->assertExceptionRaised(AccessDeniedException::class, function () use ($request, $admin) {
             $admin->handleRequest($request);
         });
     }
-    
+
     /**
      * A LogicException should be raised if the current action is not set.
      */
@@ -259,9 +259,9 @@ class AdminTest extends AdminTestBase
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $messageHandler = $this->getMockWithoutConstructor(MessageHandlerInterface::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
-        
+
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
-        
+
         $user = $this->getMockWithoutConstructor(UserInterface::class);
         $user
             ->method('getRoles')
@@ -269,7 +269,7 @@ class AdminTest extends AdminTestBase
                 'ROLE_USER',
             ])
         ;
-        
+
         $token = $this->getMockWithoutConstructor(TokenInterface::class);
         $token
             ->expects($this->once())
@@ -286,7 +286,7 @@ class AdminTest extends AdminTestBase
         $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $requestHandler = $this->getMockWithoutConstructor(RequestHandlerInterface::class);
-        
+
         $admin = new Admin(
             'my_little_pony',
             $entityLoader,
@@ -301,12 +301,12 @@ class AdminTest extends AdminTestBase
                 'list' => $action,
             ]
         );
-        
-        $this->assertExceptionRaised(LogicException::class, function() use ($admin) {
+
+        $this->assertExceptionRaised(LogicException::class, function () use ($admin) {
             $admin->checkPermissions();
         });
     }
-    
+
     /**
      * A security exception should be raised if the user is not granted.
      */
@@ -315,14 +315,14 @@ class AdminTest extends AdminTestBase
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $messageHandler = $this->getMockWithoutConstructor(MessageHandlerInterface::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
-        
+
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->expects($this->once())
             ->method('isGranted')
             ->willReturn(false)
         ;
-        
+
         $user = $this->getMockWithoutConstructor(UserInterface::class);
         $user
             ->method('getRoles')
@@ -330,7 +330,7 @@ class AdminTest extends AdminTestBase
                 'ROLE_USER',
             ])
         ;
-        
+
         $token = $this->getMockWithoutConstructor(TokenInterface::class);
         $token
             ->expects($this->once())
@@ -350,11 +350,11 @@ class AdminTest extends AdminTestBase
             ->method('getConfiguration')
             ->willReturn($actionConfiguration)
         ;
-        
+
         $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
-    
+
         $view = $this->getMockWithoutConstructor(ViewInterface::class);
-        
+
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $viewFactory
             ->expects($this->once())
@@ -362,12 +362,12 @@ class AdminTest extends AdminTestBase
             ->with('list', 'my_little_pony', $configuration, $actionConfiguration)
             ->willReturn($view)
         ;
-    
+
         $request = new Request([], [], [
             '_route_params' => [
                 '_admin' => 'my_little_pony',
                 '_action' => 'list',
-            ]
+            ],
         ]);
         $requestHandler = $this->getMockWithoutConstructor(RequestHandlerInterface::class);
         $requestHandler
@@ -376,7 +376,7 @@ class AdminTest extends AdminTestBase
             ->with($request)
             ->willReturn(true)
         ;
-        
+
         $admin = new Admin(
             'my_little_pony',
             $entityLoader,
@@ -391,12 +391,12 @@ class AdminTest extends AdminTestBase
                 'list' => $action,
             ]
         );
-        
-        $this->assertExceptionRaised(AccessDeniedException::class, function() use ($admin, $request) {
+
+        $this->assertExceptionRaised(AccessDeniedException::class, function () use ($admin, $request) {
             $admin->handleRequest($request);
         });
     }
-    
+
     /**
      * A security exception should be raised if the user is not granted.
      */
@@ -414,14 +414,14 @@ class AdminTest extends AdminTestBase
         $messageHandler = $this->getMockWithoutConstructor(MessageHandlerInterface::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
         $i = 0;
-        
+
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->expects($this->exactly(2))
             ->method('isGranted')
             ->willReturnCallback(function () use (&$i) {
-                $i++;
-    
+                ++$i;
+
                 return $i <= 1;
             })
         ;
@@ -444,7 +444,7 @@ class AdminTest extends AdminTestBase
             ->method('getToken')
             ->willReturn($token)
         ;
-    
+
         $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $action = $this->getMockWithoutConstructor(ActionInterface::class);
         $action
@@ -452,16 +452,16 @@ class AdminTest extends AdminTestBase
             ->method('getConfiguration')
             ->willReturn($actionConfiguration)
         ;
-    
+
         $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
-    
+
         $view = $this->getMockWithoutConstructor(ViewInterface::class);
         $view
             ->expects($this->once())
             ->method('getConfiguration')
             ->willReturn($actionConfiguration)
         ;
-        
+
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $viewFactory
             ->expects($this->once())
@@ -469,12 +469,12 @@ class AdminTest extends AdminTestBase
             ->with('list', 'my_little_pony', $configuration, $actionConfiguration)
             ->willReturn($view)
         ;
-    
+
         $request = new Request([], [], [
             '_route_params' => [
                 '_admin' => 'my_little_pony',
                 '_action' => 'list',
-            ]
+            ],
         ]);
         $requestHandler = $this->getMockWithoutConstructor(RequestHandlerInterface::class);
         $requestHandler
@@ -483,7 +483,7 @@ class AdminTest extends AdminTestBase
             ->with($request)
             ->willReturn(true)
         ;
-        
+
         $admin = new Admin(
             'my_little_pony',
             $entityLoader,
@@ -498,13 +498,13 @@ class AdminTest extends AdminTestBase
                 'list' => $action,
             ]
         );
-    
-        $this->assertExceptionRaised(AccessDeniedException::class, function() use ($admin, $request) {
+
+        $this->assertExceptionRaised(AccessDeniedException::class, function () use ($admin, $request) {
             $admin->handleRequest($request);
             $admin->checkPermissions();
         });
     }
-    
+
     public function testCreate()
     {
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
@@ -512,26 +512,26 @@ class AdminTest extends AdminTestBase
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
         $tokenStorage = $this->getMockWithoutConstructor(TokenStorageInterface::class);
-    
+
         $entity = new TestSimpleEntity();
-        
+
         $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
         $dataProvider
             ->expects($this->once())
             ->method('create')
             ->willReturn($entity)
         ;
-    
+
         $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
         $entityLoader
             ->expects($this->atLeastOnce())
             ->method('getDataProvider')
             ->willReturn($dataProvider)
         ;
-        
+
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $requestHandler = $this->getMockWithoutConstructor(RequestHandlerInterface::class);
-    
+
         $admin = new Admin(
             'my_little_pony',
             $entityLoader,
@@ -544,40 +544,40 @@ class AdminTest extends AdminTestBase
             $viewFactory
         );
         $created = $admin->create();
-    
+
         $this->assertEquals($created, $entity);
         $this->assertEquals($entity, $admin->getEntities()->first());
         $this->assertCount(1, $admin->getEntities());
     }
-    
+
     public function testSave()
     {
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
         $tokenStorage = $this->getMockWithoutConstructor(TokenStorageInterface::class);
-        
+
         $messageHandler = $this->getMockWithoutConstructor(MessageHandlerInterface::class);
         $messageHandler
             ->expects($this->once())
             ->method('handleSuccess')
         ;
-    
+
         $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
         $dataProvider
             ->expects($this->exactly(2))
             ->method('save')
         ;
-    
+
         $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
         $entityLoader
             ->method('getDataProvider')
             ->willReturn($dataProvider)
         ;
-    
+
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $requestHandler = $this->getMockWithoutConstructor(RequestHandlerInterface::class);
-        
+
         $admin = new Admin(
             'my_little_pony',
             $entityLoader,
@@ -593,35 +593,35 @@ class AdminTest extends AdminTestBase
         $entities[] = $admin->create();
         $admin->save();
     }
-    
+
     public function testRemove()
     {
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
         $tokenStorage = $this->getMockWithoutConstructor(TokenStorageInterface::class);
-        
+
         $messageHandler = $this->getMockWithoutConstructor(MessageHandlerInterface::class);
         $messageHandler
             ->expects($this->once())
             ->method('handleSuccess')
         ;
-        
+
         $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
         $dataProvider
             ->expects($this->exactly(2))
             ->method('remove')
         ;
-    
+
         $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
         $entityLoader
             ->method('getDataProvider')
             ->willReturn($dataProvider)
         ;
-    
+
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $requestHandler = $this->getMockWithoutConstructor(RequestHandlerInterface::class);
-        
+
         $admin = new Admin(
             'my_little_pony',
             $entityLoader,
@@ -637,7 +637,7 @@ class AdminTest extends AdminTestBase
         $entities[] = $admin->create();
         $admin->remove();
     }
-    
+
     public function testLoad()
     {
         $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
@@ -645,7 +645,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
         $tokenStorage = $this->getMockWithoutConstructor(TokenStorageInterface::class);
-    
+
         $entityLoader = $this->getMockWithoutConstructor(EntityLoaderInterface::class);
         $entityLoader
             ->method('load')
@@ -656,7 +656,7 @@ class AdminTest extends AdminTestBase
             ], 52, 3)
             ->willReturn([])
         ;
-        
+
         $view = $this->getMockWithoutConstructor(ViewInterface::class);
         $view
             ->expects($this->once())
@@ -666,7 +666,7 @@ class AdminTest extends AdminTestBase
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $requestHandler = $this->getMockWithoutConstructor(RequestHandlerInterface::class);
         $action = $this->getMockWithoutConstructor(ActionInterface::class);
-        
+
         $admin = new Admin(
             'my_little_pony',
             $entityLoader,
@@ -681,12 +681,12 @@ class AdminTest extends AdminTestBase
                 'list' => $action,
             ]
         );
-        
+
         $reflection = new \ReflectionClass($admin);
         $property = $reflection->getProperty('view');
         $property->setAccessible(true);
         $property->setValue($admin, $view);
-    
+
         $admin->load([
             'deleted' => false,
         ], [

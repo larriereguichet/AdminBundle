@@ -26,7 +26,7 @@ class CreateResponderTest extends AdminTestBase
             ->with('my_little_admin.edit')
             ->willReturn('http://test.fr')
         ;
-        
+
         $configuration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $configuration
             ->expects($this->atLeastOnce())
@@ -35,7 +35,7 @@ class CreateResponderTest extends AdminTestBase
                 ['template', 'my_template.twig'],
             ])
         ;
-    
+
         $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->once())
@@ -50,7 +50,7 @@ class CreateResponderTest extends AdminTestBase
                 ['routing_name_pattern', '{admin}.{action}'],
             ])
         ;
-        
+
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $admin
             ->expects($this->atLeastOnce())
@@ -67,7 +67,7 @@ class CreateResponderTest extends AdminTestBase
             ->method('getName')
             ->willReturn('my_little_admin')
         ;
-        
+
         $form = $this->getMockWithoutConstructor(FormInterface::class);
         $form
             ->expects($this->atLeastOnce())
@@ -79,21 +79,21 @@ class CreateResponderTest extends AdminTestBase
             ->method('isSubmitted')
             ->willReturn(true)
         ;
-    
+
         $twig = $this->getMockWithoutConstructor(Twig_Environment::class);
-        
+
         $responder = new CreateResponder($routing, $twig);
-        
+
         $response = $responder->respond(
             $configuration,
             $admin,
             $form,
             'save'
         );
-    
+
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
-    
+
     public function testRespondWithSubmit()
     {
         $routing = $this->getMockWithoutConstructor(RouterInterface::class);
@@ -102,7 +102,7 @@ class CreateResponderTest extends AdminTestBase
             ->method('generate')
             ->willReturn('http://test.fr')
         ;
-        
+
         $configuration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $configuration
             ->expects($this->atLeastOnce())
@@ -111,7 +111,7 @@ class CreateResponderTest extends AdminTestBase
                 ['template', 'my_template.twig'],
             ])
         ;
-    
+
         $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->once())
@@ -126,7 +126,7 @@ class CreateResponderTest extends AdminTestBase
                 ['routing_name_pattern', '{admin}.{action}'],
             ])
         ;
-    
+
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $admin
             ->expects($this->once())
@@ -138,7 +138,7 @@ class CreateResponderTest extends AdminTestBase
             ->method('getName')
             ->willReturn('my_little_admin')
         ;
-        
+
         $form = $this->getMockWithoutConstructor(FormInterface::class);
         $form
             ->expects($this->atLeastOnce())
@@ -150,29 +150,29 @@ class CreateResponderTest extends AdminTestBase
             ->method('isSubmitted')
             ->willReturn(true)
         ;
-    
+
         $twig = $this->getMockWithoutConstructor(Twig_Environment::class);
-        
+
         $request = new Request([], [
             'submit' => 'submit_and_save',
         ]);
-        
+
         $responder = new CreateResponder($routing, $twig);
-        
+
         $response = $responder->respond(
             $configuration,
             $admin,
             $form,
             $request
         );
-        
+
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
-    
+
     public function testRespondWithNotSubmittedForm()
     {
         $routing = $this->getMockWithoutConstructor(RouterInterface::class);
-        
+
         $configuration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $configuration
             ->expects($this->atLeastOnce())
@@ -181,16 +181,16 @@ class CreateResponderTest extends AdminTestBase
                 ['template', 'my_template.twig'],
             ])
         ;
-        
+
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
-        
+
         $form = $this->getMockWithoutConstructor(FormInterface::class);
         $form
             ->expects($this->atLeastOnce())
             ->method('isSubmitted')
             ->willReturn(false)
         ;
-    
+
         $twig = $this->getMockWithoutConstructor(Twig_Environment::class);
         $twig
             ->expects($this->atLeastOnce())
@@ -198,20 +198,20 @@ class CreateResponderTest extends AdminTestBase
             ->with('my_template.twig')
             ->willReturn(new Response('content'))
         ;
-        
+
         $request = new Request([], [
             'submit' => 'save',
         ]);
-        
+
         $responder = new CreateResponder($routing, $twig);
-        
+
         $response = $responder->respond(
             $configuration,
             $admin,
             $form,
             $request
         );
-        
+
         $this->assertInstanceOf(Response::class, $response);
         $this->assertStringEndsWith('content', $response->getContent());
     }

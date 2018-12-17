@@ -14,4 +14,7 @@ assets@build:
 ### PHPUnit ###
 test@phpunit:
 	bin/phpunit
-###############
+
+### CsFixer ###
+php-cs-fixer@fix:
+	bin/php-cs-fixer fix

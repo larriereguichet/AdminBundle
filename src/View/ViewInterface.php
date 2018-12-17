@@ -20,33 +20,33 @@ interface ViewInterface
      * @return ActionConfiguration
      */
     public function getConfiguration();
-    
+
     public function getName();
-    
+
     public function getActionName();
-    
+
     /**
      * @return Collection|Pagerfanta|array
      */
     public function getEntities();
-    
+
     public function setEntities($entities);
-    
+
     /**
      * @return AdminConfiguration
      */
     public function getAdminConfiguration();
-    
+
     /**
      * @return bool
      */
     public function haveToPaginate();
-    
+
     /**
      * @return int
      */
     public function getTotalCount();
-    
+
     /**
      * @return Pagerfanta|null
      */

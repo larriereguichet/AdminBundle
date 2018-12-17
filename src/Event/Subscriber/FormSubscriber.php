@@ -118,7 +118,6 @@ class FormSubscriber implements EventSubscriberInterface
         $action = $admin->getAction();
 
         if ('delete' === $action->getName()) {
-
             if (!$admin->hasForm('delete')) {
                 return;
             }

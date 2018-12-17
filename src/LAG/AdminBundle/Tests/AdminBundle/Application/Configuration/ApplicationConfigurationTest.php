@@ -84,42 +84,42 @@ class ApplicationConfigurationTest extends AdminTestBase
         ], $applicationConfiguration->getParameter('fields_mapping'));
 
         // test exception raising
-        $this->assertExceptionRaised(InvalidOptionsException::class, function() use ($resolver) {
+        $this->assertExceptionRaised(InvalidOptionsException::class, function () use ($resolver) {
             $resolver->resolve([
                 'routing' => [
                     'url_pattern' => '/wrong/{action}',
                 ],
             ]);
         });
-        $this->assertExceptionRaised(InvalidOptionsException::class, function() use ($resolver) {
+        $this->assertExceptionRaised(InvalidOptionsException::class, function () use ($resolver) {
             $resolver->resolve([
                 'routing' => [
                     'url_pattern' => '/{admin}/wrong',
                 ],
             ]);
         });
-        $this->assertExceptionRaised(InvalidOptionsException::class, function() use ($resolver) {
+        $this->assertExceptionRaised(InvalidOptionsException::class, function () use ($resolver) {
             $resolver->resolve([
                 'routing' => [
                     'name_pattern' => 'wrong.{action}',
                 ],
             ]);
         });
-        $this->assertExceptionRaised(InvalidOptionsException::class, function() use ($resolver) {
+        $this->assertExceptionRaised(InvalidOptionsException::class, function () use ($resolver) {
             $resolver->resolve([
                 'routing' => [
                     'name_pattern' => '{admin}.wrong',
                 ],
             ]);
         });
-        $this->assertExceptionRaised(InvalidOptionsException::class, function() use ($resolver) {
+        $this->assertExceptionRaised(InvalidOptionsException::class, function () use ($resolver) {
             $resolver->resolve([
                 'translation' => [
                     'enabled' => 'true',
                 ],
             ]);
         });
-        $this->assertExceptionRaised(InvalidOptionsException::class, function() use ($resolver) {
+        $this->assertExceptionRaised(InvalidOptionsException::class, function () use ($resolver) {
             $resolver->resolve([
                 'translation' => [
                 ],
@@ -127,14 +127,14 @@ class ApplicationConfigurationTest extends AdminTestBase
         });
         $resolver->resolve([
             'translation' => [
-                'enabled' => true
+                'enabled' => true,
             ],
         ]);
-        $this->assertExceptionRaised(InvalidOptionsException::class, function() use ($resolver) {
+        $this->assertExceptionRaised(InvalidOptionsException::class, function () use ($resolver) {
             $resolver->resolve([
                 'translation' => [
                     'enabled' => true,
-                    'pattern' => 'wrong_pattern'
+                    'pattern' => 'wrong_pattern',
                 ],
             ]);
         });

@@ -51,7 +51,7 @@ class AdminResource
     /**
      * @return string
      */
-    public function getEntityClass() : string
+    public function getEntityClass(): string
     {
         return $this->entityClass;
     }

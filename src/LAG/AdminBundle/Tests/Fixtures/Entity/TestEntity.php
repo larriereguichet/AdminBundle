@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TestEntity
 {
     /**
-     * Entity id
+     * Entity id.
      *
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -39,7 +39,7 @@ class TestEntity
     protected $updatedAt;
 
     /**
-     * Return entity id
+     * Return entity id.
      *
      * @return mixed
      */
@@ -49,7 +49,7 @@ class TestEntity
     }
 
     /**
-     * Set entity id
+     * Set entity id.
      *
      * @param mixed $id
      */
@@ -86,7 +86,7 @@ class TestEntity
 
     /**
      * Created at cannot be set. But in some case (like imports...), it is required to set created at. Use this method
-     * in this case
+     * in this case.
      *
      * @param DateTime $createdAt
      */
@@ -106,7 +106,9 @@ class TestEntity
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
+     *
      * @param null $value
+     *
      * @return $this
      */
     public function setUpdatedAt($value = null)
@@ -116,6 +118,7 @@ class TestEntity
         } else {
             $this->updatedAt = new DateTime();
         }
+
         return $this;
     }
 

@@ -34,9 +34,8 @@ class MessageHandlerTest extends AdminTestBase
         $messageHandler = new MessageHandler($loggerMock, $sessionMock, $translatorMock);
         $messageHandler->handleError('test', 'test');
         $messageHandler->handleError('test');
-
     }
-    
+
     public function testHandleSuccess()
     {
         $logger = $this->getMockWithoutConstructor(LoggerInterface::class);
@@ -45,14 +44,14 @@ class MessageHandlerTest extends AdminTestBase
             ->method('info')
             ->with('Wookie rocks')
         ;
-        
+
         $flashBag = $this->getMockWithoutConstructor(FlashBag::class);
         $flashBag
             ->expects($this->once())
             ->method('add')
             ->with('info', 'Wookie rocks')
         ;
-        
+
         $session = $this->getMockWithoutConstructor(Session::class);
         $session
             ->expects($this->once())
@@ -66,7 +65,7 @@ class MessageHandlerTest extends AdminTestBase
             ->with('wookie.rocks')
             ->willReturn('Wookie rocks')
         ;
-        
+
         $messageHandler = new MessageHandler($logger, $session, $translator);
         $messageHandler->handleSuccess('wookie.rocks', 'Wookie rocks');
     }

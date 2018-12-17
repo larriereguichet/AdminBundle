@@ -19,7 +19,7 @@ class TestAction implements ActionInterface
     public function isLoadingRequired()
     {
     }
-    
+
     public function getName()
     {
     }

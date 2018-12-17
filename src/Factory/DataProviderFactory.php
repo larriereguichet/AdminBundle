@@ -9,7 +9,7 @@ use LAG\AdminBundle\DataProvider\DataProviderInterface;
 class DataProviderFactory
 {
     /**
-     * The loaded data providers
+     * The loaded data providers.
      *
      * @var DataProviderInterface[]
      */

@@ -17,11 +17,11 @@ class ViewFactoryTest extends AdminTestBase
         $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
-    
+
         $fields = [
             $this->getMockWithoutConstructor(FieldInterface::class),
         ];
-        
+
         $fieldFactory = $this->getMockWithoutConstructor(FieldFactory::class);
         $fieldFactory
             ->expects($this->once())
@@ -29,11 +29,11 @@ class ViewFactoryTest extends AdminTestBase
             ->with($actionConfiguration)
             ->willReturn($fields)
         ;
-    
+
         $factory = new ViewFactory($configurationFactory, $fieldFactory);
-        
+
         $view = $factory->create('list', 'myAdmin', $adminConfiguration, $actionConfiguration);
-    
+
         $this->assertEquals('list', $view->getActionName());
         $this->assertEquals('myAdmin', $view->getName());
         $this->assertEquals($actionConfiguration, $view->getConfiguration());

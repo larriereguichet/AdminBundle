@@ -4,7 +4,6 @@ namespace LAG\AdminBundle\Debug\DataCollector;
 
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Factory\MenuFactory;
-use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

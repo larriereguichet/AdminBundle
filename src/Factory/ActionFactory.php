@@ -38,7 +38,6 @@ class ActionFactory
     /**
      * @param string             $actionName
      * @param string             $adminName
-     *
      * @param AdminConfiguration $adminConfiguration
      *
      * @return ActionInterface

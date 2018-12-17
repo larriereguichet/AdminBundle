@@ -24,17 +24,17 @@ class LinkConfigurationTest extends AdminTestBase
                 ]],
             ])
         ;
-    
+
         $optionsResolver = new OptionsResolver();
         $configuration = new LinkConfiguration();
         $configuration->setApplicationConfiguration($applicationConfiguration);
-    
+
         $configuration->configureOptions($optionsResolver);
-    
+
         $options = $optionsResolver->resolve([
             'route' => 'my_route',
         ]);
-    
+
         $this->assertEquals('my_route', $options['route']);
         $this->assertArrayHasKey('translation', $options);
     }

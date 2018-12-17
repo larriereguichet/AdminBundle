@@ -33,7 +33,7 @@ class ActionConfigurationTest extends AdminTestBase
         $options = $optionsResolver->resolve([
             'url' => 'bamboo.org/leaves',
         ]);
-        
+
         $this->assertEquals($options['text'], '');
         $this->assertEquals($options['class'], 'btn btn-danger btn-sm');
     }

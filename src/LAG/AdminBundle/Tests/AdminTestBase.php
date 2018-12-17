@@ -60,17 +60,17 @@ class AdminTestBaseOLD extends TestCase
         // creating kernel client
         $this->client = Client::initClient();
         // test client initialization
-        $this->assertTrue($this->client != null, 'TestClient successfully initialized');
+        $this->assertTrue(null != $this->client, 'TestClient successfully initialized');
 
         // initialise database
         if (!self::$isDatabaseCreated) {
             // TODO remove database at the end of the tests
-            exec(__DIR__ . '/app/console doctrine:database:create --if-not-exists', $output);
-            exec(__DIR__ . '/app/console doctrine:schema:update --force', $output);
+            exec(__DIR__.'/app/console doctrine:database:create --if-not-exists', $output);
+            exec(__DIR__.'/app/console doctrine:schema:update --force', $output);
 
             foreach ($output as $line) {
                 // TODO only in verbose mode
-                fwrite(STDOUT, $line . "\n");
+                fwrite(STDOUT, $line."\n");
             }
             fwrite(STDOUT, "\n");
             self::$isDatabaseCreated = true;
@@ -113,6 +113,7 @@ class AdminTestBaseOLD extends TestCase
     /**
      * @param ApplicationConfiguration $applicationConfiguration
      * @param array $configuration
+     *
      * @return AdminConfiguration
      */
     protected function createAdminConfiguration(ApplicationConfiguration $applicationConfiguration, array $configuration = [])
@@ -132,9 +133,9 @@ class AdminTestBaseOLD extends TestCase
     {
         return new MenuFactory();
     }
-    
+
     /**
-     * Return Admin configurations samples
+     * Return Admin configurations samples.
      *
      * @return array
      */
@@ -143,7 +144,7 @@ class AdminTestBaseOLD extends TestCase
         return [
             'minimal_configuration' => [
                 'entity' => 'Test\TestBundle\Entity\TestEntity',
-                'form' => 'test'
+                'form' => 'test',
             ],
             'full_configuration' => [
                 'entity' => 'Test\TestBundle\Entity\TestEntity',
@@ -155,8 +156,8 @@ class AdminTestBaseOLD extends TestCase
                     'custom_edit' => [],
                 ],
                 'routing_url_pattern' => 'lag.admin.{admin}',
-                'routing_name_pattern' => 'lag.{admin}.{action}'
-            ]
+                'routing_name_pattern' => 'lag.{admin}.{action}',
+            ],
         ];
     }
 
@@ -173,6 +174,7 @@ class AdminTestBaseOLD extends TestCase
 
     /**
      * @param $name
+     *
      * @return ActionInterface | PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockAction($name)
@@ -222,6 +224,7 @@ class AdminTestBaseOLD extends TestCase
                 ->disableOriginalConstructor()
                 ->getMock();
         }
+
         return $session;
     }
 
@@ -240,11 +243,12 @@ class AdminTestBaseOLD extends TestCase
                 ->disableOriginalConstructor()
                 ->getMock();
         }
+
         return $logger;
     }
 
     /**
-     * Return a mock of an entity repository
+     * Return a mock of an entity repository.
      *
      * @return RepositoryInterface | PHPUnit_Framework_MockObject_MockObject
      */
@@ -362,6 +366,7 @@ class AdminTestBaseOLD extends TestCase
 
     /**
      * @param array $entities
+     *
      * @return DataProviderInterface|PHPUnit_Framework_MockObject_MockObject
      */
     protected function mockDataProvider($entities = [])
@@ -388,7 +393,7 @@ class AdminTestBaseOLD extends TestCase
 
         return $fieldFactory;
     }
-    
+
     /**
      * @param $class
      *
@@ -402,23 +407,23 @@ class AdminTestBaseOLD extends TestCase
             ->getMock()
         ;
     }
-    
+
     protected function setPrivateProperty($object, $property, $value)
     {
         $reflection = new ReflectionClass($object);
-        
+
         $property = $reflection->getProperty($property);
         $property->setAccessible(true);
         $property->setValue($object, $value);
     }
-    
+
     protected function getPrivateProperty($object, $property)
     {
         $reflection = new ReflectionClass($object);
-        
+
         $property = $reflection->getProperty($property);
         $property->setAccessible(true);
-        
+
         return $property->getValue($object);
     }
 }

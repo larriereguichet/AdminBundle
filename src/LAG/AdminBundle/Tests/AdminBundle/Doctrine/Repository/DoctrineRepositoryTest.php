@@ -13,7 +13,7 @@ class DoctrineRepositoryTest extends AdminTestBase
     public function testSave()
     {
         $entity = new TestEntity();
-        
+
         $entityManager = $this->getMockWithoutConstructor(EntityManager::class);
         $entityManager
             ->expects($this->once())
@@ -25,19 +25,18 @@ class DoctrineRepositoryTest extends AdminTestBase
             ->method('flush')
             ->with()
         ;
-    
+
         $metadata = $this->getMockWithoutConstructor(ClassMetadata::class);
-    
+
         $repository = new FakeRepository($entityManager, $metadata, TestEntity::class);
-    
-    
+
         $repository->save($entity);
     }
-    
+
     public function testSaveWrongEntity()
     {
         $entity = new stdClass();
-        
+
         $entityManager = $this->getMockWithoutConstructor(EntityManager::class);
         $entityManager
             ->expects($this->never())
@@ -49,20 +48,20 @@ class DoctrineRepositoryTest extends AdminTestBase
             ->method('flush')
             ->with()
         ;
-        
+
         $metadata = $this->getMockWithoutConstructor(ClassMetadata::class);
-        
+
         $repository = new FakeRepository($entityManager, $metadata, TestEntity::class);
-    
+
         $this->assertExceptionRaised(\LogicException::class, function () use ($repository, $entity) {
             $repository->save($entity);
         });
     }
-    
+
     public function testDelete()
     {
         $entity = new TestEntity();
-        
+
         $entityManager = $this->getMockWithoutConstructor(EntityManager::class);
         $entityManager
             ->expects($this->once())
@@ -74,19 +73,18 @@ class DoctrineRepositoryTest extends AdminTestBase
             ->method('flush')
             ->with()
         ;
-        
+
         $metadata = $this->getMockWithoutConstructor(ClassMetadata::class);
-        
+
         $repository = new FakeRepository($entityManager, $metadata, TestEntity::class);
-        
-        
+
         $repository->delete($entity);
     }
-    
+
     public function testDeleteWrongEntity()
     {
         $entity = new stdClass();
-        
+
         $entityManager = $this->getMockWithoutConstructor(EntityManager::class);
         $entityManager
             ->expects($this->never())
@@ -98,11 +96,11 @@ class DoctrineRepositoryTest extends AdminTestBase
             ->method('flush')
             ->with()
         ;
-        
+
         $metadata = $this->getMockWithoutConstructor(ClassMetadata::class);
-        
+
         $repository = new FakeRepository($entityManager, $metadata, TestEntity::class);
-        
+
         $this->assertExceptionRaised(\LogicException::class, function () use ($repository, $entity) {
             $repository->delete($entity);
         });

@@ -13,7 +13,7 @@ class ActionCreatedEventTest extends AdminTestBase
     {
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $action = $this->getMockWithoutConstructor(ListAction::class);
-        
+
         $event = new ActionCreatedEvent(
             $action,
             $admin

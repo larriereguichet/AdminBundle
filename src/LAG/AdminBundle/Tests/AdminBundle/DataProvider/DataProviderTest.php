@@ -8,7 +8,7 @@ use LAG\AdminBundle\Tests\AdminTestBase;
 use stdClass;
 
 /**
- * Test the built-in data provider
+ * Test the built-in data provider.
  */
 class DataProviderTest extends AdminTestBase
 {
@@ -18,7 +18,7 @@ class DataProviderTest extends AdminTestBase
     public function testSave()
     {
         $entityManager = $this->getMockWithoutConstructor(EntityManagerInterface::class);
-        
+
         // The repository save method SHOULD be called
         $repositoryMock = $this->mockEntityRepository();
         $repositoryMock
@@ -35,7 +35,7 @@ class DataProviderTest extends AdminTestBase
     public function testDelete()
     {
         $entityManager = $this->getMockWithoutConstructor(EntityManagerInterface::class);
-        
+
         // The entity manager delete method SHOULD be called
         $repositoryMock = $this->mockEntityRepository();
         $repositoryMock
@@ -52,7 +52,7 @@ class DataProviderTest extends AdminTestBase
     public function testFind()
     {
         $entityManager = $this->getMockWithoutConstructor(EntityManagerInterface::class);
-        
+
         // The repository find method SHOULD be called
         $repositoryMock = $this->mockEntityRepository();
         $repositoryMock
@@ -69,7 +69,7 @@ class DataProviderTest extends AdminTestBase
     public function testFindBy()
     {
         $entityManager = $this->getMockWithoutConstructor(EntityManagerInterface::class);
-        
+
         // repository findBy method SHOULD be called
         $repositoryMock = $this->mockEntityRepository();
         $repositoryMock
@@ -86,7 +86,7 @@ class DataProviderTest extends AdminTestBase
     public function testCreate()
     {
         $entityManager = $this->getMockWithoutConstructor(EntityManagerInterface::class);
-        
+
         // repository findBy method SHOULD be called
         $repositoryMock = $this->mockEntityRepository();
         $repositoryMock

@@ -26,13 +26,13 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
     public function testGetSubscribedEvents()
     {
         $subscribedEvents = ExtraConfigurationSubscriber::getSubscribedEvents();
-        
+
         $this->assertArrayHasKey(AdminEvents::ADMIN_CREATE, $subscribedEvents);
         $this->assertArrayHasKey(ActionEvents::BEFORE_CONFIGURATION, $subscribedEvents);
         $this->assertContains('beforeActionConfiguration', $subscribedEvents);
         $this->assertContains('adminCreate', $subscribedEvents);
     }
-    
+
     /**
      * With extra configuration disabled, adminCreate method SHOULD not modify the configuration.
      */
@@ -45,7 +45,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             ->method('setAdminConfiguration')
         ;
         $storage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
-        
+
         $subscriber = new ExtraConfigurationSubscriber(
             false,
             $doctrine,
@@ -53,7 +53,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
         );
         $subscriber->adminCreate($event);
     }
-    
+
     /**
      * with extra configuration enabled, adminCreate method SHOULD fill action configuration if it is empty.
      */
@@ -82,11 +82,11 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
                     'list' => [],
                     'edit' => [],
                     'delete' => [],
-                ]
+                ],
             ])
         ;
         $storage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
-        
+
         $subscriber = new ExtraConfigurationSubscriber(
             true,
             $doctrine,
@@ -120,15 +120,15 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             ->method('getName')
             ->willReturn('my_admin')
         ;
-        
+
         $event = $this->getMockWithoutConstructor(BeforeConfigurationEvent::class);
         $event
             ->expects($this->once())
             ->method('getActionConfiguration')
             ->willReturn([
                 'fields' => [
-                    'test' => []
-                ]
+                    'test' => [],
+                ],
             ])
         ;
         $event
@@ -142,13 +142,13 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
                                 'admin' => 'my_admin',
                                 'action' => 'create',
                                 'icon' => 'fa fa-plus',
-                            ]
-                        ]
-                    ]
+                            ],
+                        ],
+                    ],
                 ],
                 'fields' => [
                     'test' => [],
-                ]
+                ],
             ])
         ;
         $event
@@ -162,7 +162,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             ->willReturn('list')
         ;
         $storage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
-        
+
         $subscriber = new ExtraConfigurationSubscriber(
             true,
             $doctrine,
@@ -178,16 +178,16 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             ->method('getParameter')
             ->willReturnMap([
                 ['translation', [
-                    'pattern' => '{admin}.{key}'
+                    'pattern' => '{admin}.{key}',
                 ]],
             ])
         ;
-        
+
         $classMetadata = $this->getMockWithoutConstructor(ClassMetadata::class);
         $classMetadata
             ->method('getFieldNames')
             ->willReturn([
-                'id'
+                'id',
             ])
         ;
         $classMetadata
@@ -212,7 +212,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             ->method('getManager')
             ->willReturn($entityManager)
         ;
-    
+
         $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $adminConfiguration
             ->method('getParameter')
@@ -230,7 +230,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             ->method('isResolved')
             ->willReturn(true)
         ;
-        
+
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $admin
             ->expects($this->exactly(3))
@@ -241,7 +241,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             ->method('getName')
             ->willReturn('my_admin')
         ;
-        
+
         $event = $this->getMockWithoutConstructor(BeforeConfigurationEvent::class);
         $event
             ->expects($this->atLeast(1))
@@ -281,7 +281,7 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             ->method('getActionConfiguration')
         ;
         $storage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
-    
+
         $subscriber = new ExtraConfigurationSubscriber(
             false,
             $doctrine,
@@ -297,11 +297,11 @@ class ExtraConfigurationSubscriberTest extends AdminTestBase
             ->method('getParameter')
             ->willReturnMap([
                 ['translation', [
-                    'pattern' => '{admin}.{key}'
+                    'pattern' => '{admin}.{key}',
                 ]],
             ])
         ;
-        
+
         $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->exactly(2))

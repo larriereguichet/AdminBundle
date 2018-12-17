@@ -7,9 +7,7 @@ use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Event\Events\MenuEvent;
-use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Factory\MenuFactory;
-use LAG\AdminBundle\Resource\ResourceCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

@@ -23,7 +23,7 @@ class CountField extends AbstractField
     {
         $count = count($value);
 
-        if ($count > 0 || $this->options['empty_string'] === null) {
+        if ($count > 0 || null === $this->options['empty_string']) {
             $render = $count;
         } else {
             $render = $this->options['empty_string'];

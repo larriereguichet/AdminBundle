@@ -11,7 +11,7 @@ class ActionCreateEventTest extends AdminTestBase
     public function testEvent()
     {
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
-        
+
         $event = new ActionCreateEvent(
             'my_action',
             [],
@@ -23,10 +23,10 @@ class ActionCreateEventTest extends AdminTestBase
         $this->assertEquals($admin, $event->getAdmin());
 
         $event->setActionConfiguration([
-            'test'
+            'test',
         ]);
         $this->assertEquals([
-            'test'
+            'test',
         ], $event->getActionConfiguration());
     }
 }

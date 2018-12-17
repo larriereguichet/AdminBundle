@@ -15,38 +15,38 @@ class LAGAdminBundle extends Bundle
     const SERVICE_ID_CREATE_ACTION = 'lag.admin.actions.create';
     const SERVICE_ID_EDIT_ACTION = 'lag.admin.actions.edit';
     const SERVICE_ID_DELETE_ACTION = 'lag.admin.actions.delete';
-    
+
     const SERVICE_ID_ACTION_FACTORY = 'lag.admin.action_factory';
 
     // Responders
     const SERVICE_ID_LIST_RESPONDER = 'lag.admin.action.list_responder';
-    
+
     // Form Handlers
     const SERVICE_ID_EDIT_FORM_HANDLER = 'lag.admin.form.edit_form_handler';
     const SERVICE_ID_LIST_FORM_HANDLER = 'lag.admin.form.list_form_handler';
-    
+
     // Service Tags
     const SERVICE_TAG_FORM_HANDLER = 'lag.admin.form_handler';
-    
+
     // Request Admin parameters
     const REQUEST_PARAMETER_ADMIN = '_admin';
     const REQUEST_PARAMETER_ACTION = '_action';
 
     /**
-     * Do not load entities on handleRequest (for create method for example)
+     * Do not load entities on handleRequest (for create method for example).
      */
     const LOAD_STRATEGY_NONE = 'strategy_none';
 
     /**
-     * Load one entity on handleRequest (edit method for example)
+     * Load one entity on handleRequest (edit method for example).
      */
     const LOAD_STRATEGY_UNIQUE = 'strategy_unique';
 
     /**
-     * Load multiple entities on handleRequest (list method for example)
+     * Load multiple entities on handleRequest (list method for example).
      */
     const LOAD_STRATEGY_MULTIPLE = 'strategy_multiple';
-    
+
     /**
      * @param ContainerBuilder $container
      */

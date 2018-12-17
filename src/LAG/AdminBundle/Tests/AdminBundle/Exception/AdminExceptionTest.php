@@ -16,9 +16,9 @@ class AdminExceptionTest extends AdminTestBase
             ->method('getName')
             ->willReturn('My Admin')
         ;
-        
+
         $exception = new AdminException('my_message', 'my_action', $admin);
-    
+
         $this->assertEquals('my_message, for Admin My Admin and action my_action', $exception->getMessage());
     }
 }

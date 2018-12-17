@@ -46,7 +46,7 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
                 '_self',
                 '_blank',
             ])
-            ->setNormalizer('route', function(Options $options, $value) use ($actionConfiguration) {
+            ->setNormalizer('route', function (Options $options, $value) use ($actionConfiguration) {
                 // route or url should be defined
                 if (!$value && !$options->offsetGet('url') && !$options->offsetGet('admin')) {
                     throw new InvalidOptionsException(
@@ -64,7 +64,7 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
 
                 return $value;
             })
-            ->setNormalizer('admin', function(Options $options, $value) {
+            ->setNormalizer('admin', function (Options $options, $value) {
                 // if a Admin is defined, an Action should be defined too
                 if ($value && !$options->offsetGet('action')) {
                     throw new InvalidOptionsException(
@@ -74,7 +74,7 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
 
                 return $value;
             })
-            ->setNormalizer('parameters', function(Options $options, $values) {
+            ->setNormalizer('parameters', function (Options $options, $values) {
                 $cleanedValues = [];
 
                 foreach ($values as $name => $method) {
@@ -83,7 +83,6 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
                     }
                     $cleanedValues[$name] = $method;
                 }
-
 
                 return $cleanedValues;
             })

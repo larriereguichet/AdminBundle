@@ -20,15 +20,15 @@ class StringFieldConfigurationTest extends AdminTestBase
                 ['string_length_truncate', '...'],
             ])
         ;
-    
+
         $optionsResolver = new OptionsResolver();
         $configuration = new StringFieldConfiguration();
         $configuration->setApplicationConfiguration($applicationConfiguration);
-    
+
         $configuration->configureOptions($optionsResolver);
-    
+
         $options = $optionsResolver->resolve([]);
-        
+
         $this->assertEquals($options['translation'], true);
         $this->assertEquals($options['length'], 20);
         $this->assertEquals($options['replace'], '...');

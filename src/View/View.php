@@ -17,42 +17,42 @@ class View implements ViewInterface
      * @var string
      */
     private $actionName;
-    
+
     /**
      * @var ActionConfiguration
      */
     private $configuration;
-    
+
     /**
      * @var string
      */
     private $adminName;
-    
+
     /**
      * @var array|Collection
      */
     private $entities = [];
-    
+
     /**
      * @var FieldInterface[]
      */
     private $fields;
-    
+
     /**
      * @var AdminConfiguration
      */
     private $adminConfiguration;
-    
+
     /**
      * @var bool
      */
     private $haveToPaginate = false;
-    
+
     /**
      * @var int
      */
     private $totalCount = 0;
-    
+
     /**
      * @var Pagerfanta
      */
@@ -62,7 +62,6 @@ class View implements ViewInterface
      * @var FieldInterface[]
      */
     private $headers;
-
 
     /**
      * @var MenuItem[]
@@ -118,7 +117,7 @@ class View implements ViewInterface
     {
         return $this->configuration;
     }
-    
+
     /**
      * @return string
      */
@@ -126,7 +125,7 @@ class View implements ViewInterface
     {
         return $this->actionName;
     }
-    
+
     /**
      * @return array
      */
@@ -134,7 +133,7 @@ class View implements ViewInterface
     {
         return $this->entities;
     }
-    
+
     /**
      * @param $entities
      */
@@ -150,7 +149,7 @@ class View implements ViewInterface
             $this->totalCount = count($entities);
         }
     }
-    
+
     /**
      * @return string
      */
@@ -158,7 +157,7 @@ class View implements ViewInterface
     {
         return $this->adminName;
     }
-    
+
     /**
      * @return FieldInterface[]
      */
@@ -166,7 +165,7 @@ class View implements ViewInterface
     {
         return $this->fields;
     }
-    
+
     /**
      * @return AdminConfiguration
      */
@@ -174,7 +173,7 @@ class View implements ViewInterface
     {
         return $this->adminConfiguration;
     }
-    
+
     /**
      * @return bool
      */
@@ -182,7 +181,7 @@ class View implements ViewInterface
     {
         return $this->haveToPaginate;
     }
-    
+
     /**
      * @return int
      */
@@ -190,7 +189,7 @@ class View implements ViewInterface
     {
         return $this->totalCount;
     }
-    
+
     /**
      * @return Pagerfanta|null
      */
