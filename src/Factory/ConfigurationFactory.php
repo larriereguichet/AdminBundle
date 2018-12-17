@@ -46,8 +46,7 @@ class ConfigurationFactory
         string $adminName,
         array $configuration,
         ApplicationConfiguration $applicationConfiguration
-    ): AdminConfiguration
-    {
+    ): AdminConfiguration {
         $event = new ConfigurationEvent($adminName, $configuration, $adminName, $configuration['entity']);
         $this->eventDispatcher->dispatch(Events::ADMIN_CONFIGURATION, $event);
 
@@ -72,8 +71,7 @@ class ConfigurationFactory
         array $configuration,
         string $adminName,
         AdminConfiguration $adminConfiguration
-    ): ActionConfiguration
-    {
+    ): ActionConfiguration {
         $event = new ConfigurationEvent(
             $actionName,
             $adminConfiguration->getParameter('actions'),

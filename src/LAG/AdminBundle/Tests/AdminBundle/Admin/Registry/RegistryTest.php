@@ -25,14 +25,14 @@ class RegistryTest extends AdminTestBase
         $this->assertExceptionRaised(Exception::class, function () use ($registry, $admin) {
             $registry->add($admin);
         });
-    
+
         $this->assertEquals($admin, $registry->get('myAdmin'));
         $this->assertEquals([
-            'myAdmin' => $admin
+            'myAdmin' => $admin,
         ], $registry->all());
         $this->assertTrue($registry->has('myAdmin'));
-    
-        $this->assertExceptionRaised(Exception::class, function() use ($registry) {
+
+        $this->assertExceptionRaised(Exception::class, function () use ($registry) {
             $registry->get('wrong');
         });
     }

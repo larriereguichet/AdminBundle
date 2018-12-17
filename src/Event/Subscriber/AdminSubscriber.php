@@ -143,9 +143,9 @@ class AdminSubscriber implements EventSubscriberInterface
         // The form name is different according to the current action
         if ('edit' === $action->getName()) {
             $formName = 'entity';
-        } else if ('create' === $action->getName()) {
+        } elseif ('create' === $action->getName()) {
             $formName = 'entity';
-        } else if ('delete' === $action->getName()) {
+        } elseif ('delete' === $action->getName()) {
             $formName = 'delete';
         }
 
@@ -203,10 +203,10 @@ class AdminSubscriber implements EventSubscriberInterface
 
         if (LAGAdminBundle::LOAD_STRATEGY_NONE === $strategy) {
             return;
-        } else if (LAGAdminBundle::LOAD_STRATEGY_MULTIPLE === $strategy) {
+        } elseif (LAGAdminBundle::LOAD_STRATEGY_MULTIPLE === $strategy) {
             $entities = $dataProvider->getCollection($admin, $event->getFilters());
             $event->setEntities($entities);
-        } else if (LAGAdminBundle::LOAD_STRATEGY_UNIQUE === $strategy) {
+        } elseif (LAGAdminBundle::LOAD_STRATEGY_UNIQUE === $strategy) {
             $requirements = $actionConfiguration->getParameter('route_requirements');
             $identifier = null;
 
@@ -226,7 +226,6 @@ class AdminSubscriber implements EventSubscriberInterface
                 $entity,
             ]));
         }
-
     }
 
     /**
@@ -338,8 +337,7 @@ class AdminSubscriber implements EventSubscriberInterface
         ActionInterface $action,
         AdminConfiguration $configuration,
         Request $request
-    ): string
-    {
+    ): string {
         if ('edit' === $action->getName()) {
             $routeName = RoutingLoader::generateRouteName(
                 $admin->getName(),

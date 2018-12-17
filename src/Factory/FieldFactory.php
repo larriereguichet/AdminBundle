@@ -19,7 +19,7 @@ use Twig_Environment;
 class FieldFactory
 {
     /**
-     * Application configuration
+     * Application configuration.
      *
      * @var ApplicationConfiguration
      */
@@ -45,12 +45,12 @@ class FieldFactory
      * @var Twig_Environment
      */
     protected $twig;
-    
+
     /**
      * @var ConfigurationFactory
      */
     protected $configurationFactory;
-    
+
     /**
      * FieldFactory constructor.
      *
@@ -73,7 +73,7 @@ class FieldFactory
         $this->twig = $twig;
         $this->configurationFactory = $configurationFactory;
     }
-    
+
     /**
      * @param ActionConfiguration $configuration
      *
@@ -82,15 +82,14 @@ class FieldFactory
     public function getFields(ActionConfiguration $configuration): array
     {
         $fields = [];
-    
+
         foreach ($configuration->getParameter('fields') as $field => $fieldConfiguration) {
             $fields[] = $this->create($field, $fieldConfiguration, $configuration);
         }
-    
+
         return $fields;
     }
-    
-    
+
     /**
      * Create a new field instance according to the given configuration.
      *
@@ -141,7 +140,7 @@ class FieldFactory
 
         return $this->fieldsMapping[$type];
     }
-    
+
     /**
      * @param string $name
      * @param string $type
@@ -154,25 +153,27 @@ class FieldFactory
     {
         $fieldClass = $this->getFieldClass($type);
         $field = new $fieldClass($name);
-    
+
         if (!$field instanceof FieldInterface) {
             throw new Exception("Field class {$fieldClass} must implements ".FieldInterface::class);
         }
-    
+
         if ($field instanceof TranslatorAwareFieldInterface) {
             $field->setTranslator($this->translator);
         }
         if ($field instanceof TwigAwareFieldInterface) {
             $field->setTwig($this->twig);
         }
-    
+
         return $field;
     }
 
     /**
      * @param array               $configuration
      * @param ActionConfiguration $actionConfiguration
+     *
      * @return array
+     *
      * @throws Exception
      */
     private function resolveTopLevelConfiguration(array $configuration, ActionConfiguration $actionConfiguration)
@@ -189,27 +190,27 @@ class FieldFactory
             ->setAllowedTypes('options', 'array')
         ;
         $configuration = $resolver->resolve($configuration);
-    
+
         // For collection of fields, we resolve the configuration of each item
-        if ($configuration['type'] == 'collection') {
+        if ('collection' == $configuration['type']) {
             $items = [];
-        
+
             foreach ($configuration['options'] as $itemFieldName => $itemFieldConfiguration) {
                 // The configuration should be an array
                 if (!$itemFieldConfiguration) {
                     $itemFieldConfiguration = [];
                 }
-                
+
                 // The type should be defined
                 if (!array_key_exists('type', $itemFieldConfiguration)) {
                     throw new Exception("Missing type configuration for field {$itemFieldName}");
                 }
-    
+
                 // The field options are optional
                 if (!array_key_exists('options', $itemFieldConfiguration)) {
                     $itemFieldConfiguration['options'] = [];
                 }
-                
+
                 // create collection item
                 $items[] = $this->create($itemFieldName, $itemFieldConfiguration, $actionConfiguration);
             }
@@ -218,7 +219,7 @@ class FieldFactory
                 'fields' => $items,
             ];
         }
-    
+
         return $configuration;
     }
 }

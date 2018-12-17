@@ -37,8 +37,9 @@ class KernelSubscriberTest extends AdminTestBase
         $requestHandler
             ->expects($this->once())
             ->method('supports')
-            ->willReturn(function($givenRequest) use ($request) {
+            ->willReturn(function ($givenRequest) use ($request) {
                 $this->assertEquals($givenRequest, $request);
+
                 return true;
             })
         ;
@@ -48,14 +49,14 @@ class KernelSubscriberTest extends AdminTestBase
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturnCallback(function() use ($request) {
+            ->willReturnCallback(function () use ($request) {
                 return $request;
             })
         ;
         $event
             ->expects($this->once())
             ->method('getController')
-            ->willReturnCallback(function() use ($controller) {
+            ->willReturnCallback(function () use ($controller) {
                 return $controller;
             })
         ;
@@ -70,7 +71,7 @@ class KernelSubscriberTest extends AdminTestBase
             ->expects($this->once())
             ->method('injectConfiguration')
         ;
-    
+
         $storage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
 
         $subscriber = new KernelSubscriber(
@@ -81,11 +82,11 @@ class KernelSubscriberTest extends AdminTestBase
         );
         $subscriber->onKernelController($event);
     }
-    
+
     public function testOnKernelRequest()
     {
         $requestHandler = $this->getMockWithoutConstructor(RequestHandler::class);
-        
+
         $adminFactory = $this->getMockWithoutConstructor(AdminFactory::class);
         $adminFactory
             ->expects($this->once())

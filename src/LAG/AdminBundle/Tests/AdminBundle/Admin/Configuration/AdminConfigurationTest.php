@@ -39,27 +39,27 @@ class AdminConfigurationTest extends AdminTestBase
             'actions' => [
                 'list' => [],
                 'edit' => null,
-            ]
+            ],
         ]);
         // must return a array of parameters
         $this->assertInternalType('array', $parameters);
-        
+
         // class and form should be unchanged
         $this->assertEquals(TestEntity::class, $parameters['entity']);
         $this->assertEquals(TestForm::class, $parameters['form']);
-        
+
         // actions should be present
         $this->assertArrayHasKey('list', $parameters['actions']);
         $this->assertArrayHasKey('edit', $parameters['actions']);
         $this->assertArrayHasKey('batch', $parameters['actions']);
-        
+
         // application configuration pattern should be set
         $this->assertEquals('/test/{admin}/{action}', $parameters['routing_url_pattern']);
         $this->assertEquals('test.{admin}.{action}', $parameters['routing_name_pattern']);
-        
+
         // application translation pattern should be set
         $this->assertEquals('{key}', $parameters['translation_pattern']);
-        
+
         // application page should be set
         $this->assertEquals(666, $parameters['max_per_page']);
     }

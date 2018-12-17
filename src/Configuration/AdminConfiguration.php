@@ -76,20 +76,19 @@ class AdminConfiguration extends Configuration
                 null,
                 'pagerfanta',
             ])
-            ->setNormalizer('actions', function(Options $options, $actions) {
+            ->setNormalizer('actions', function (Options $options, $actions) {
                 $normalizedActions = [];
                 $addBatchAction = false;
 
                 foreach ($actions as $name => $action) {
-
                     // action configuration is an array by default
-                    if ($action === null) {
+                    if (null === $action) {
                         $action = [];
                     }
                     $normalizedActions[$name] = $action;
 
                     // in list action, if no batch was configured or disabled, we add a batch action
-                    if ($name == 'list' && (!array_key_exists('batch', $action) || $action['batch'] === null)) {
+                    if ('list' == $name && (!array_key_exists('batch', $action) || null === $action['batch'])) {
                         $addBatchAction = true;
                     }
                 }

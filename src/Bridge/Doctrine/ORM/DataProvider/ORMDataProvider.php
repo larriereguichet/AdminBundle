@@ -75,7 +75,7 @@ class ORMDataProvider implements DataProviderInterface
         if ('pagerfanta' === $actionConfiguration->getParameter('pager')) {
             $pageParameter = $actionConfiguration->getParameter('page_parameter');
             $request = $this->requestStack->getCurrentRequest();
-            $page = (int)$request->get($pageParameter, 1);
+            $page = (int) $request->get($pageParameter, 1);
 
             $adapter = new DoctrineORMAdapter($queryBuilder);
             $pager = new Pagerfanta($adapter);
@@ -90,7 +90,7 @@ class ORMDataProvider implements DataProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function get(AdminInterface $admin, string $identifier)
     {
@@ -112,7 +112,7 @@ class ORMDataProvider implements DataProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function save(AdminInterface $admin): void
     {
@@ -121,7 +121,7 @@ class ORMDataProvider implements DataProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function create(AdminInterface $admin)
     {
@@ -131,7 +131,7 @@ class ORMDataProvider implements DataProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function delete(AdminInterface $admin): void
     {

@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Tests\AdminBundle\Menu\Factory;
 
-use Knp\Menu\MenuItem;
 use LAG\AdminBundle\Tests\AdminTestBase;
 
 class MenuFactoryTest extends AdminTestBase

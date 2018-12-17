@@ -13,7 +13,7 @@ $loader->register();
 
 AnnotationRegistry::registerLoader([
     $loader,
-    'loadClass'
+    'loadClass',
 ]);
 
 require_once __DIR__.'/app/AppKernel.php';

@@ -22,12 +22,12 @@ abstract class AbstractField implements FieldInterface
     const TYPE_HEADER = 'header';
 
     /**
-     * Field's name
+     * Field's name.
      *
      * @var string
      */
     protected $name;
-    
+
     /**
      * @var array
      */
@@ -37,7 +37,7 @@ abstract class AbstractField implements FieldInterface
      * @var bool
      */
     protected $frozen = false;
-    
+
     /**
      * Field constructor.
      *
@@ -47,7 +47,7 @@ abstract class AbstractField implements FieldInterface
     {
         $this->name = $name;
     }
-    
+
     /**
      * @return string
      */

@@ -26,9 +26,8 @@ class DataProviderFactoryTest extends AdminTestBase
         $factory->add('a_data_provider', $dataProvider);
 
         $this->assertTrue($factory->has('a_data_provider'));
-    
+
         $this->assertEquals($dataProvider, $this->getPrivateProperty($factory, 'dataProviders')['a_data_provider']);
-        
     }
 
     /**

@@ -83,10 +83,9 @@ class FieldConfigurationHelper
                             'parameters' => [
                                 'id' => null,
                             ],
-                        ]
+                        ],
                     ];
-
-                } else if (
+                } elseif (
                     '_delete' === $fieldName &&
                     !$metadata->hasField('_delete') &&
                     null === $fieldConfiguration &&
@@ -108,8 +107,7 @@ class FieldConfigurationHelper
                             'icon' => 'remove',
                         ],
                     ];
-
-                } else if (key_exists($fieldType, $mapping)) {
+                } elseif (key_exists($fieldType, $mapping)) {
                     $fieldConfiguration = $mapping[$metadata->getTypeOfField($fieldName)];
                 }
                 $configuration['actions'][$actionName]['fields'][$fieldName] = $fieldConfiguration;
@@ -154,7 +152,6 @@ class FieldConfigurationHelper
         ];
 
         foreach ($configuration['actions'] as $name => $actionConfiguration) {
-
             if (null === $actionConfiguration) {
                 $actionConfiguration = [];
             }
@@ -190,7 +187,6 @@ class FieldConfigurationHelper
     public function provideActionsFieldConfiguration(array &$configuration, string $adminName)
     {
         foreach ($configuration['actions'] as $actionName => $actionConfiguration) {
-
             if (null === $actionConfiguration) {
                 $actionConfiguration = [];
             }

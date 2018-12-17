@@ -51,7 +51,7 @@ class MenuConfiguration extends Configuration
             ->setAllowedValues('position', [
                 'horizontal',
                 'vertical',
-                null
+                null,
             ])
             ->setNormalizer('position', function (Options $options, $value) {
                 if ('top' === $this->menuName && null === $value) {
@@ -68,12 +68,11 @@ class MenuConfiguration extends Configuration
                 // Define bootstrap navbar component template
                 if ('horizontal' === $options->offsetGet('position')) {
                     $value = '@LAGAdmin/Menu/menu.horizontal.html.twig';
-
                 }
 
                 // Define bootstrap nav component template
                 if ('vertical' === $options->offsetGet('position')) {
-                    $value ='@LAGAdmin/Menu/menu.vertical.html.twig';
+                    $value = '@LAGAdmin/Menu/menu.vertical.html.twig';
                 }
 
                 return $value;

@@ -9,12 +9,12 @@ use LAG\AdminBundle\Tests\AdminTestBase;
 class AdminAwareTraitTest extends AdminTestBase
 {
     use AdminAwareTrait;
-    
+
     public function testGettersAndSetters()
     {
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $this->setAdmin($admin);
-    
+
         $this->assertEquals($admin, $this->getAdmin());
     }
 }

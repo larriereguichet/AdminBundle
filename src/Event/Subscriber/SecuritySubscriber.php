@@ -74,7 +74,6 @@ class SecuritySubscriber implements EventSubscriberInterface
         $allowed = false;
 
         foreach ($user->getRoles() as $role) {
-
             if ($role instanceof Role) {
                 $role = $role->getRole();
             }

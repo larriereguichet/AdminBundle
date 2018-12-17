@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ActionConfiguration extends Configuration
 {
-     /**
+    /**
      * Related Action name.
      *
      * @var string
@@ -162,8 +162,7 @@ class ActionConfiguration extends Configuration
             $normalizedFields = [];
 
             foreach ($fields as $name => $field) {
-
-                if ($field === null) {
+                if (null === $field) {
                     $field = [];
                 }
 
@@ -183,7 +182,6 @@ class ActionConfiguration extends Configuration
     {
         return function (Options $options, $order) {
             foreach ($order as $field => $sort) {
-
                 if (!is_string($sort) || !is_string($field) || !in_array(strtolower($sort), ['asc', 'desc'])) {
                     throw new Exception(
                         'Order value should be an array of string (["field" => $key]), got '.gettype($sort),
@@ -207,9 +205,9 @@ class ActionConfiguration extends Configuration
     {
         return function (Options $options, $value) {
             if (!$value) {
-                if ($this->actionName == 'create') {
+                if ('create' == $this->actionName) {
                     $value = LAGAdminBundle::LOAD_STRATEGY_NONE;
-                } else if ($this->actionName == 'list') {
+                } elseif ('list' == $this->actionName) {
                     $value = LAGAdminBundle::LOAD_STRATEGY_MULTIPLE;
                 } else {
                     $value = LAGAdminBundle::LOAD_STRATEGY_UNIQUE;
@@ -230,7 +228,7 @@ class ActionConfiguration extends Configuration
     {
         return function (Options $options, $menus) {
             // set default to an array
-            if ($menus === false) {
+            if (false === $menus) {
                 $menus = [];
             }
 
@@ -299,7 +297,6 @@ class ActionConfiguration extends Configuration
             $normalizedData = [];
 
             foreach ($data as $name => $field) {
-
                 if (is_string($field)) {
                     $field = [
                         'type' => $field,
@@ -323,7 +320,6 @@ class ActionConfiguration extends Configuration
     private function getRouteDefaultNormalizer(): Closure
     {
         return function (Options $options, $value) {
-
             if (!is_array($value)) {
                 $value = [];
             }
@@ -337,7 +333,6 @@ class ActionConfiguration extends Configuration
     private function getFormNormalizer(): Closure
     {
         return function (Options $options, $value) {
-
             if (null === $value) {
                 $mapping = [
                     'create' => $this->adminConfiguration->get('form'),

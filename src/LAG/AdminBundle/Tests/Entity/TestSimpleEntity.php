@@ -11,7 +11,7 @@ class TestSimpleEntity
     /**
      * TestEntity constructor.
      *
-     * @param integer $id
+     * @param int $id
      * @param string $name
      */
     public function __construct($id = null, $name = '')
@@ -21,7 +21,7 @@ class TestSimpleEntity
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {

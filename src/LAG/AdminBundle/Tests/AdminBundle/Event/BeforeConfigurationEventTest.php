@@ -11,9 +11,9 @@ class BeforeConfigurationEventTest extends AdminTestBase
     {
         $configuration = [
             'admin1' => [
-                'test' => 'ours'
+                'test' => 'ours',
             ],
-            'admin2' => []
+            'admin2' => [],
         ];
         $event = new BeforeConfigurationEvent($configuration);
 

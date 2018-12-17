@@ -62,7 +62,7 @@ class ApplicationConfiguration extends Configuration
                 'pager' => 'pagerfanta',
                 // string length before truncation (0 means no truncation)
                 'string_length' => 200,
-                'string_length_truncate' =>  '...',
+                'string_length_truncate' => '...',
                 'max_per_page' => 20,
                 'admin_class' => Admin::class,
                 'action_class' => Action::class,
@@ -86,13 +86,13 @@ class ApplicationConfiguration extends Configuration
             ->setAllowedTypes('routing_name_pattern', 'string')
             ->setAllowedTypes('routing_url_pattern', 'string')
             ->setAllowedTypes('page_parameter', 'string')
-            ->setNormalizer('routing_name_pattern', function(Options $options, $value) {
-                if (strstr($value, '{admin}') === false) {
+            ->setNormalizer('routing_name_pattern', function (Options $options, $value) {
+                if (false === strstr($value, '{admin}')) {
                     throw new InvalidOptionsException(
                         'Admin routing configuration pattern name should contains the {admin} placeholder'
                     );
                 }
-                if (strstr($value, '{action}') === false) {
+                if (false === strstr($value, '{action}')) {
                     throw new InvalidOptionsException(
                         'Admin routing configuration pattern name should contains the {action} placeholder'
                     );
@@ -100,12 +100,12 @@ class ApplicationConfiguration extends Configuration
 
                 return $value;
             })
-            ->setNormalizer('routing_url_pattern', function(Options $options, $value) {
-                if (strstr($value, '{admin}') === false) {
+            ->setNormalizer('routing_url_pattern', function (Options $options, $value) {
+                if (false === strstr($value, '{admin}')) {
                     throw new InvalidOptionsException('Admin routing configuration url pattern should contains {admin} placeholder');
                 }
 
-                if (strstr($value, '{action}') === false) {
+                if (false === strstr($value, '{action}')) {
                     throw new InvalidOptionsException('Admin routing configuration url pattern should contains the {action} placeholder');
                 }
 
@@ -123,11 +123,10 @@ class ApplicationConfiguration extends Configuration
     {
         $resolver->setDefault('translation', [
             'enabled' => true,
-            'pattern' => 'lag.admin.{key}'
+            'pattern' => 'lag.admin.{key}',
         ]);
         $resolver->setAllowedTypes('translation', 'array');
-        $resolver->setNormalizer('translation', function(Options $options, $value) {
-
+        $resolver->setNormalizer('translation', function (Options $options, $value) {
             if (!array_key_exists('enabled', $value)) {
                 throw new InvalidOptionsException('Admin translation enabled parameter should be defined');
             }
@@ -140,7 +139,7 @@ class ApplicationConfiguration extends Configuration
                 $value['pattern'] = '{admin}.{key}';
             }
 
-            if ($value['enabled'] && strstr($value['pattern'], '{key}') === false) {
+            if ($value['enabled'] && false === strstr($value['pattern'], '{key}')) {
                 throw new InvalidOptionsException('Admin translation pattern should contains the {key} placeholder');
             }
 
@@ -169,7 +168,7 @@ class ApplicationConfiguration extends Configuration
 
         $resolver->setDefault('fields_mapping', $defaultMapping);
         $resolver->setAllowedTypes('fields_mapping', 'array');
-        $resolver->setNormalizer('fields_mapping', function(Options $options, $value) use ($defaultMapping) {
+        $resolver->setNormalizer('fields_mapping', function (Options $options, $value) use ($defaultMapping) {
             // Merge with default mapping to allow override
             $value = array_merge($defaultMapping, $value);
 
@@ -183,7 +182,7 @@ class ApplicationConfiguration extends Configuration
 
         $resolver->setDefault('fields_template_mapping', $defaultMapping);
         $resolver->setAllowedTypes('fields_template_mapping', 'array');
-        $resolver->setNormalizer('fields_template_mapping', function(Options $options, $value) use ($defaultMapping) {
+        $resolver->setNormalizer('fields_template_mapping', function (Options $options, $value) use ($defaultMapping) {
             // Merge with default mapping to allow override
             $value = array_merge($defaultMapping, $value);
 

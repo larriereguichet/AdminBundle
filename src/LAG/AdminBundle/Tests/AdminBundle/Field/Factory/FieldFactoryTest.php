@@ -27,22 +27,22 @@ class FieldFactoryTest extends AdminTestBase
             ])
         ;
         $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
-        
+
         $fieldConfiguration = $this->getMockWithoutConstructor(StringFieldConfiguration::class);
         $fieldConfiguration
             ->expects($this->once())
             ->method('isResolved')
             ->willReturn(true)
         ;
-    
+
         $storage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
-    
+
         $storage
             ->expects($this->once())
             ->method('getApplicationConfiguration')
             ->willReturn($applicationConfiguration)
         ;
-        
+
         $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
         $configurationFactory
             ->expects($this->once())
@@ -52,15 +52,14 @@ class FieldFactoryTest extends AdminTestBase
                 $this->assertEquals([
                     'length' => 200,
                 ], $configuration);
-                
+
                 return $fieldConfiguration;
             })
         ;
-        
+
         $translator = $this->getMockWithoutConstructor(TranslatorInterface::class);
         $twig = $this->getMockWithoutConstructor(\Twig_Environment::class);
-        
-        
+
         $fieldFactory = new FieldFactory($storage, $configurationFactory, $translator, $twig);
         $fieldFactory->create('test', [
             'options' => [

@@ -26,15 +26,15 @@ class RegistryTest extends AdminTestBase
         $this->assertExceptionRaised(Exception::class, function () use ($registry, $action) {
             $registry->add('my.action', $action);
         });
-    
+
         $this->assertExceptionRaised(Exception::class, function () use ($registry, $action) {
             $registry->get('badName');
         });
-    
+
         $this->assertTrue($registry->has('my.action'));
         $this->assertEquals($action, $registry->get('my.action'));
         $this->assertEquals([
-            'my.action' => $action
+            'my.action' => $action,
         ], $registry->all());
     }
 }

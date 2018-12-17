@@ -19,7 +19,7 @@ class ListActionTest extends AdminTestBase
     {
         $request = new Request();
         $entity = new TestSimpleEntity();
-        
+
         $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $actionConfiguration
             ->method('getParameter')
@@ -30,7 +30,7 @@ class ListActionTest extends AdminTestBase
                 ]],
             ])
         ;
-        
+
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $admin
             ->expects($this->once())
@@ -44,20 +44,20 @@ class ListActionTest extends AdminTestBase
                 $entity,
             ])
         ;
-    
+
         $form = $this->getMockWithoutConstructor(FormInterface::class);
         $form
             ->expects($this->once())
             ->method('handleRequest')
             ->with($request)
         ;
-        
+
         $filterForm = $this->getMockWithoutConstructor(FormInterface::class);
         $filterForm
             ->expects($this->once())
             ->method('handleRequest')
         ;
-        
+
         $formFactory = $this->getMockWithoutConstructor(FormFactoryInterface::class);
         $formFactory
             ->expects($this->once())
@@ -69,20 +69,20 @@ class ListActionTest extends AdminTestBase
             ])
             ->willReturn($form)
         ;
-    
+
         $responder = $this->getMockWithoutConstructor(ListResponder::class);
         $responder
             ->method('respond')
             ->with($actionConfiguration, $admin, $form, $filterForm)
         ;
-    
+
         $builder = $this->getMockWithoutConstructor(FilterFormBuilder::class);
         $builder
             ->method('build')
             ->with($actionConfiguration)
             ->willReturn($filterForm)
         ;
-        
+
         $action = new ListAction(
             'list',
             $formFactory,
@@ -91,7 +91,7 @@ class ListActionTest extends AdminTestBase
         );
         $action->setConfiguration($actionConfiguration);
         $action->setAdmin($admin);
-        
+
         $action->__invoke($request);
     }
 }

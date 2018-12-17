@@ -101,7 +101,7 @@ class ActionCollectionField extends CollectionField implements TwigAwareFieldInt
             $icon = 'remove';
             $cssClass = 'btn btn-danger btn-sm';
             $routeParameters = [
-                'id' => ''
+                'id' => '',
             ];
         }
         if ('edit' === $actionName) {
@@ -175,7 +175,6 @@ class ActionCollectionField extends CollectionField implements TwigAwareFieldInt
                     }
                     $cleanedValues[$name] = $method;
                 }
-
 
                 return $cleanedValues;
             })

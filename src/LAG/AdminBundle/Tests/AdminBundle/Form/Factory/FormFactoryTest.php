@@ -19,14 +19,13 @@ class FormFactoryTest extends AdminTestBase
     public function testCreate()
     {
         $this->assertTrue(true);
+
         return;
         $symfonyFormFactory = $this->getMockWithoutConstructor(SymfonyFormFactory::class);
         $formFactory = new FormFactory($symfonyFormFactory);
-    
-    
+
         $formFactory->create();
-        
-        
+
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
 
         // an exception SHOULD be raised if an invalid entity is provided
@@ -96,7 +95,7 @@ class FormFactoryTest extends AdminTestBase
         );
 
         $entity = new TestEntity();
-    
+
         $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $actionConfiguration
             ->expects($this->atLeastOnce())
@@ -105,7 +104,7 @@ class FormFactoryTest extends AdminTestBase
                 'name' => [],
             ])
         ;
-        
+
         $action = $this->getMockWithoutConstructor(ActionInterface::class);
         $action
             ->expects($this->atLeastOnce())

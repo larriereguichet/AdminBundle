@@ -59,7 +59,6 @@ class ORMSubscriber implements EventSubscriberInterface
             $queryBuilder->addOrderBy($alias.'.'.$sort, $order);
         } else {
             foreach ($actionConfiguration->getParameter('order') as $field => $order) {
-
                 $queryBuilder->addOrderBy($alias.'.'.$field, $order);
             }
         }

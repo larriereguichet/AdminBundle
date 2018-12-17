@@ -18,7 +18,7 @@ class ConfigurationFactoryTest extends AdminTestBase
             ->method('getParameter')
             ->with('fields_mapping')
             ->willReturn([
-                ''
+                '',
             ])
         ;
 
@@ -41,10 +41,10 @@ class ConfigurationFactoryTest extends AdminTestBase
                 ['form', 'FormType'],
             ])
         ;
-        
+
         $factory = new ConfigurationFactory($applicationConfiguration);
         $actionConfiguration = $factory->create($configuration);
-    
+
         $this->assertInstanceOf(ActionConfiguration::class, $actionConfiguration);
     }
 }

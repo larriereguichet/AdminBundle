@@ -18,7 +18,7 @@ class DeleteActionTest extends AdminTestBase
     {
         $entity = new TestSimpleEntity();
         $request = new Request([], [], []);
-        
+
         $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $actionConfiguration
             ->method('getParameter')
@@ -29,14 +29,14 @@ class DeleteActionTest extends AdminTestBase
                 ]],
             ])
         ;
-    
+
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $admin
             ->expects($this->once())
             ->method('remove')
             ->willReturn($entity)
         ;
-        
+
         $form = $this->getMockWithoutConstructor(FormInterface::class);
         $form
             ->method('isValid')
@@ -46,7 +46,7 @@ class DeleteActionTest extends AdminTestBase
             ->method('isSubmitted')
             ->willReturn(true)
         ;
-        
+
         $formFactory = $this->getMockWithoutConstructor(FormFactoryInterface::class);
         $formFactory
             ->expects($this->once())
@@ -69,7 +69,7 @@ class DeleteActionTest extends AdminTestBase
         );
         $action->setConfiguration($actionConfiguration);
         $action->setAdmin($admin);
-        
+
         $action->__invoke($request);
     }
 }

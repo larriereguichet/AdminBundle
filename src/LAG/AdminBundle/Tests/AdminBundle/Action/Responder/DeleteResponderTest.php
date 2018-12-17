@@ -24,7 +24,7 @@ class DeleteResponderTest extends AdminTestBase
             ->with('my_little_admin.list')
             ->willReturn('http://test.fr')
         ;
-    
+
         $configuration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $configuration
             ->expects($this->atLeastOnce())
@@ -33,7 +33,7 @@ class DeleteResponderTest extends AdminTestBase
                 ['template', 'my_template.twig'],
             ])
         ;
-        
+
         $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->once())
@@ -48,7 +48,7 @@ class DeleteResponderTest extends AdminTestBase
                 ['routing_name_pattern', '{admin}.{action}'],
             ])
         ;
-    
+
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $admin
             ->expects($this->once())
@@ -60,7 +60,7 @@ class DeleteResponderTest extends AdminTestBase
             ->method('getName')
             ->willReturn('my_little_admin')
         ;
-    
+
         $form = $this->getMockWithoutConstructor(FormInterface::class);
         $form
             ->expects($this->atLeastOnce())
@@ -72,24 +72,24 @@ class DeleteResponderTest extends AdminTestBase
             ->method('isSubmitted')
             ->willReturn(true)
         ;
-    
+
         $twig = $this->getMockWithoutConstructor(Twig_Environment::class);
-    
+
         $responder = new DeleteResponder($routing, $twig);
-    
+
         $response = $responder->respond(
             $configuration,
             $admin,
             $form
         );
-    
+
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
-    
+
     public function testRespondWithoutSubmittedForm()
     {
         $routing = $this->getMockWithoutConstructor(RouterInterface::class);
-        
+
         $configuration = $this->getMockWithoutConstructor(ActionConfiguration::class);
         $configuration
             ->expects($this->atLeastOnce())
@@ -98,16 +98,16 @@ class DeleteResponderTest extends AdminTestBase
                 ['template', 'my_template.twig'],
             ])
         ;
-        
+
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
-        
+
         $form = $this->getMockWithoutConstructor(FormInterface::class);
         $form
             ->expects($this->atLeastOnce())
             ->method('isSubmitted')
             ->willReturn(false)
         ;
-        
+
         $twig = $this->getMockWithoutConstructor(Twig_Environment::class);
         $twig
             ->expects($this->atLeastOnce())
@@ -115,15 +115,15 @@ class DeleteResponderTest extends AdminTestBase
             ->with('my_template.twig')
             ->willReturn('content')
         ;
-        
+
         $responder = new DeleteResponder($routing, $twig);
-        
+
         $response = $responder->respond(
             $configuration,
             $admin,
             $form
         );
-        
+
         $this->assertInstanceOf(Response::class, $response);
     }
 }

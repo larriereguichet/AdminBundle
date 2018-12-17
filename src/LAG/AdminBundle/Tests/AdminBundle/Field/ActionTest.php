@@ -28,10 +28,10 @@ class ActionTest extends AdminTestBase
             ])
             ->willReturn('html content')
         ;
-        
+
         $linkField = new Action('my-field');
         $linkField->setTwig($twig);
-        
+
         $this->setPrivateProperty($linkField, 'options', [
             'length' => null,
             'parameters' => [],
@@ -41,9 +41,9 @@ class ActionTest extends AdminTestBase
             'translation' => false,
             'title' => 'Some Title',
         ]);
-    
+
         $content = $linkField->render('a value');
-        
+
         $this->assertEquals('html content', $content);
     }
 }

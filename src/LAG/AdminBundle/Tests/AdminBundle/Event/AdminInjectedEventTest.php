@@ -13,9 +13,9 @@ class AdminInjectedEventTest extends AdminTestBase
     {
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
         $controller = $this->getMockWithoutConstructor(Controller::class);
-        
+
         $event = new AdminInjectedEvent($admin, $controller);
-    
+
         $this->assertEquals($admin, $event->getAdmin());
         $this->assertEquals($controller, $event->getController());
     }

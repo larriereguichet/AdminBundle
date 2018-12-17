@@ -40,7 +40,7 @@ class AdminFactoryTest extends AdminTestBase
                     'test' => [
                         'service' => 'test',
                     ],
-                ]
+                ],
             ],
         ];
         $entity = 'TestClass';
@@ -50,7 +50,7 @@ class AdminFactoryTest extends AdminTestBase
             ->expects($this->exactly(3))
             ->method('dispatch')
         ;
-    
+
         $adminConfigurationObject = $this->getMockWithoutConstructor(AdminConfiguration::class);
         $adminConfigurationObject
             ->expects($this->atLeastOnce())
@@ -60,7 +60,7 @@ class AdminFactoryTest extends AdminTestBase
                 ['data_provider', $dataProviderString],
             ])
         ;
-    
+
         $applicationConfigurationObject = $this->getMockWithoutConstructor(ApplicationConfiguration::class);
         $applicationConfigurationObject
             ->expects($this->atLeastOnce())
@@ -69,7 +69,7 @@ class AdminFactoryTest extends AdminTestBase
                 ['admin_class', Admin::class],
             ])
         ;
-        
+
         $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
         $configurationFactory
             ->expects($this->once())
@@ -77,14 +77,13 @@ class AdminFactoryTest extends AdminTestBase
             ->with($adminConfiguration['my_admin'])
             ->willReturn($adminConfigurationObject)
         ;
-        
+
         $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
         $messageHandler = $this->getMockWithoutConstructor(MessageHandlerInterface::class);
         $registry = $this->getMockWithoutConstructor(Registry::class);
-        
-    
+
         $dataProvider = $this->getMockWithoutConstructor(DataProviderInterface::class);
-        
+
         $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
         $dataProviderFactory
             ->expects($this->once())
@@ -92,21 +91,21 @@ class AdminFactoryTest extends AdminTestBase
             ->with('data_provider')
             ->willReturn($dataProvider)
         ;
-    
+
         $requestHandler = $this->getMockWithoutConstructor(RequestHandler::class);
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
         $tokenStorage = $this->getMockWithoutConstructor(TokenStorageInterface::class);
-    
+
         $actionRegistry = $this->getMockWithoutConstructor(\LAG\AdminBundle\Action\Registry\Registry::class);
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
-        
+
         $applicationConfigurationStorage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
         $applicationConfigurationStorage
             ->expects($this->once())
             ->method('getApplicationConfiguration')
             ->willReturn($applicationConfigurationObject)
         ;
-        
+
         $factory = new AdminFactory(
             $adminConfiguration,
             $eventDispatcher,
@@ -122,44 +121,44 @@ class AdminFactoryTest extends AdminTestBase
             $tokenStorage,
             $applicationConfigurationStorage
         );
-    
+
         $factory->init();
         $this->assertTrue($factory->isInit());
-        
+
         // second init should do nothing
         $factory->init();
         $this->assertTrue($factory->isInit());
     }
-    
+
     public function testInjectAdmin()
     {
         $request = new Request();
         $adminConfiguration = [
             'my_admin' => [
-                'entity' => 'TestClass'
+                'entity' => 'TestClass',
             ],
         ];
         $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->willReturnCallback(function($name, $event) {
+            ->willReturnCallback(function ($name, $event) {
                 $this->assertEquals(AdminEvents::ADMIN_INJECTED, $name);
                 $this->assertInstanceOf(AdminInjectedEvent::class, $event);
             })
         ;
         $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
-    
+
         $actionFactory = $this->getMockWithoutConstructor(ActionFactory::class);
-    
+
         $messageHandler = $this->getMockWithoutConstructor(MessageHandlerInterface::class);
-    
+
         $registry = $this->getMockWithoutConstructor(Registry::class);
-    
+
         $dataProviderFactory = $this->getMockWithoutConstructor(DataProviderFactory::class);
-    
+
         $admin = $this->getMockWithoutConstructor(AdminInterface::class);
-        
+
         $requestHandler = $this->getMockWithoutConstructor(RequestHandler::class);
         $requestHandler
             ->expects($this->once())
@@ -167,13 +166,13 @@ class AdminFactoryTest extends AdminTestBase
             ->with($request)
             ->willReturn($admin)
         ;
-   
+
         $authorizationChecker = $this->getMockWithoutConstructor(AuthorizationCheckerInterface::class);
         $tokenStorage = $this->getMockWithoutConstructor(TokenStorageInterface::class);
         $actionRegistry = $this->getMockWithoutConstructor(\LAG\AdminBundle\Action\Registry\Registry::class);
         $viewFactory = $this->getMockWithoutConstructor(ViewFactory::class);
         $applicationConfigurationStorage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
-        
+
         $factory = new AdminFactory(
             $adminConfiguration,
             $eventDispatcher,
@@ -189,12 +188,12 @@ class AdminFactoryTest extends AdminTestBase
             $tokenStorage,
             $applicationConfigurationStorage
         );
-    
+
         $controller = $this->getMockWithoutConstructor(ListAction::class);
-    
+
         // injectAdmin should inject an Admin in Twig global parameters and dispatch an event
         $factory->injectAdmin($controller, $request);
-    
+
         // with a non AdminAware controller, it should do nothing
         $controller = $this->getMockWithoutConstructor(Controller::class);
         $factory->injectAdmin($controller, $request);

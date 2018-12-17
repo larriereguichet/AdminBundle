@@ -41,7 +41,7 @@ class Filter implements FilterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getName(): string
     {
@@ -49,7 +49,7 @@ class Filter implements FilterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getValue()
     {
@@ -57,7 +57,7 @@ class Filter implements FilterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getComparator(): string
     {
@@ -65,7 +65,7 @@ class Filter implements FilterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getOperator(): string
     {

@@ -19,7 +19,7 @@ class RoutingLoaderTest extends AdminTestBase
             ->method('getParameter')
             ->willReturnMap([
                 ['actions', ['list' => []]],
-                ['routing_name_pattern', '{admin']
+                ['routing_name_pattern', '{admin'],
             ])
         ;
         $adminConfiguration

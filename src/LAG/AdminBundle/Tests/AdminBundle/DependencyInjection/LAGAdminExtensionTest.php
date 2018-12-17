@@ -25,7 +25,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Translation\IdentityTranslator;
 
-
 class LAGAdminExtensionTest extends AdminTestBase
 {
     /**
@@ -38,7 +37,7 @@ class LAGAdminExtensionTest extends AdminTestBase
         $extension->load([
             'lag_admin' => [
                 'application' => [],
-            ]
+            ],
         ], $container);
 
         $eventDispatcherExtension = new FrameworkExtension();
@@ -61,7 +60,7 @@ class LAGAdminExtensionTest extends AdminTestBase
     {
         $container = new ContainerBuilder();
         $extension = new LAGAdminExtension();
-    
+
         $extension->load([], $container);
         // no exception raised
         $this->assertTrue(true);
@@ -76,8 +75,8 @@ class LAGAdminExtensionTest extends AdminTestBase
         $extension = new LAGAdminExtension();
         $extension->load([
             'lag_admin' => [
-                'application' => []
-            ]
+                'application' => [],
+            ],
         ], $container);
 
         $this->assertEquals('lag_admin', $extension->getAlias());
@@ -100,30 +99,30 @@ class LAGAdminExtensionTest extends AdminTestBase
     protected function getWorkingContainer()
     {
         $generic = new Definition(stdClass::class);
-        
+
         $logger = new Definition(Logger::class, [
-            'default'
+            'default',
         ]);
-        $session= new Definition(Session::class);
+        $session = new Definition(Session::class);
 
         $entityManager = new Definition();
         $entityManager->setClass(FakeEntityManager::class);
-    
+
         $authorizationChecker = new Definition();
         $authorizationChecker->setClass(AuthorizationChecker::class);
-        
+
         $tokenStorage = new Definition();
         $tokenStorage->setClass(TokenStorage::class);
-    
+
         $formFactory = new Definition(FormFactoryInterface::class);
-    
+
         $translator = new Definition(IdentityTranslator::class);
-    
+
         $router = new Definition(RouterInterface::class);
-    
+
         $workflowTwigExtension = new Definition(stdClass::class);
         $workflowTwigExtension->setAutowired(true);
-    
+
         $registry = new Definition(Registry::class);
         $twig = new Definition(Twig_Environment::class);
         $menuProvider = new Definition(MenuProviderInterface::class);

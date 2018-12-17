@@ -14,12 +14,12 @@ class ApplicationConfigurationStorage
      * @var ApplicationConfiguration
      */
     private $configuration;
-    
+
     /**
      * @var bool
      */
     private $frozen = false;
-    
+
     /**
      * Return the application configuration. If the none is defined yet, an exception will be thrown.
      *
@@ -32,10 +32,10 @@ class ApplicationConfigurationStorage
         if (null === $this->configuration) {
             throw new Exception('The application configuration has not been set');
         }
-        
+
         return $this->configuration;
     }
-    
+
     /**
      * Return true is the configuration is defined and the storage frozen.
      *

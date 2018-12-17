@@ -90,7 +90,7 @@ class AdminFactory
      *
      * @param Request $request
      *
-     * @return boolean
+     * @return bool
      */
     public function supports(Request $request)
     {

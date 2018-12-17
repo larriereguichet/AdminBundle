@@ -18,7 +18,7 @@ class ActionConfigurationTest extends AdminTestBase
         // TODO remove
         $this->assertTrue(true);
     }
-    
+
 //    public function testActionConfiguration()
 //    {
 //        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
@@ -43,7 +43,7 @@ class ActionConfigurationTest extends AdminTestBase
 //
 //        $resolver->resolve([]);
 //    }
-    
+
 //    public function testFieldNormalizer()
 //    {
 //        $admin = $this->createAdmin('an_admin', [

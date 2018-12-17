@@ -36,6 +36,6 @@ class MappedField extends AbstractField implements TranslatorAwareFieldInterface
             $value = $this->translator->trans($value);
         }
 
-        return (string)$value;
+        return (string) $value;
     }
 }

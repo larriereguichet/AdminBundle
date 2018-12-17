@@ -13,12 +13,8 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\UnitOfWork;
 
-/**
- *
- */
 class FakeEntityManager implements EntityManagerInterface
 {
-
     /**
      * Returns the cache API for managing the second level cache regions or NULL if the cache is not enabled.
      *
@@ -60,8 +56,6 @@ class FakeEntityManager implements EntityManagerInterface
 
     /**
      * Starts a transaction on the underlying database connection.
-     *
-     * @return void
      */
     public function beginTransaction()
     {
@@ -78,9 +72,9 @@ class FakeEntityManager implements EntityManagerInterface
      * If an exception occurs during execution of the function or flushing or transaction commit,
      * the transaction is rolled back, the EntityManager closed and the exception re-thrown.
      *
-     * @param callable $func The function to execute transactionally.
+     * @param callable $func the function to execute transactionally
      *
-     * @return mixed The non-empty value returned from the closure or true instead.
+     * @return mixed the non-empty value returned from the closure or true instead
      */
     public function transactional($func)
     {
@@ -89,8 +83,6 @@ class FakeEntityManager implements EntityManagerInterface
 
     /**
      * Commits a transaction on the underlying database connection.
-     *
-     * @return void
      */
     public function commit()
     {
@@ -99,8 +91,6 @@ class FakeEntityManager implements EntityManagerInterface
 
     /**
      * Performs a rollback on the underlying database connection.
-     *
-     * @return void
      */
     public function rollback()
     {
@@ -110,7 +100,7 @@ class FakeEntityManager implements EntityManagerInterface
     /**
      * Creates a new Query object.
      *
-     * @param string $dql The DQL string.
+     * @param string $dql the DQL string
      *
      * @return Query
      */
@@ -135,7 +125,7 @@ class FakeEntityManager implements EntityManagerInterface
      * Creates a native SQL query.
      *
      * @param string $sql
-     * @param ResultSetMapping $rsm The ResultSetMapping to use.
+     * @param ResultSetMapping $rsm the ResultSetMapping to use
      *
      * @return NativeQuery
      */
@@ -157,7 +147,7 @@ class FakeEntityManager implements EntityManagerInterface
     }
 
     /**
-     * Create a QueryBuilder instance
+     * Create a QueryBuilder instance.
      *
      * @return QueryBuilder
      */
@@ -170,10 +160,10 @@ class FakeEntityManager implements EntityManagerInterface
      * Gets a reference to the entity identified by the given type and identifier
      * without actually loading it, if the entity is not yet loaded.
      *
-     * @param string $entityName The name of the entity type.
-     * @param mixed $id The entity identifier.
+     * @param string $entityName the name of the entity type
+     * @param mixed $id the entity identifier
      *
-     * @return object The entity reference.
+     * @return object the entity reference
      *
      * @throws ORMException
      */
@@ -197,10 +187,10 @@ class FakeEntityManager implements EntityManagerInterface
      * never be visible to the application (especially not event listeners) as it will
      * never be loaded in the first place.
      *
-     * @param string $entityName The name of the entity type.
-     * @param mixed $identifier The entity identifier.
+     * @param string $entityName the name of the entity type
+     * @param mixed $identifier the entity identifier
      *
-     * @return object The (partial) entity reference.
+     * @return object the (partial) entity reference
      */
     public function getPartialReference($entityName, $identifier)
     {
@@ -211,8 +201,6 @@ class FakeEntityManager implements EntityManagerInterface
      * Closes the EntityManager. All entities that are currently managed
      * by this EntityManager become detached. The EntityManager may no longer
      * be used after it is closed.
-     *
-     * @return void
      */
     public function close()
     {
@@ -222,10 +210,10 @@ class FakeEntityManager implements EntityManagerInterface
     /**
      * Creates a copy of the given entity. Can create a shallow or a deep copy.
      *
-     * @param object $entity The entity to copy.
-     * @param boolean $deep FALSE for a shallow copy, TRUE for a deep copy.
+     * @param object $entity the entity to copy
+     * @param bool $deep FALSE for a shallow copy, TRUE for a deep copy
      *
-     * @return object The new entity.
+     * @return object the new entity
      *
      * @throws \BadMethodCallException
      */
@@ -240,8 +228,6 @@ class FakeEntityManager implements EntityManagerInterface
      * @param object $entity
      * @param int $lockMode
      * @param int|null $lockVersion
-     *
-     * @return void
      *
      * @throws OptimisticLockException
      * @throws PessimisticLockException
@@ -335,7 +321,7 @@ class FakeEntityManager implements EntityManagerInterface
     /**
      * Gets the enabled filters.
      *
-     * @return \Doctrine\ORM\Query\FilterCollection The active filter collection.
+     * @return \Doctrine\ORM\Query\FilterCollection the active filter collection
      */
     public function getFilters()
     {
@@ -345,7 +331,7 @@ class FakeEntityManager implements EntityManagerInterface
     /**
      * Checks whether the state of the filter collection is clean.
      *
-     * @return boolean True, if the filter collection is clean.
+     * @return bool true, if the filter collection is clean
      */
     public function isFiltersStateClean()
     {
@@ -355,7 +341,7 @@ class FakeEntityManager implements EntityManagerInterface
     /**
      * Checks whether the Entity Manager has filters.
      *
-     * @return boolean True, if the EM has a filter collection.
+     * @return bool true, if the EM has a filter collection
      */
     public function hasFilters()
     {
@@ -367,10 +353,10 @@ class FakeEntityManager implements EntityManagerInterface
      *
      * This is just a convenient shortcut for getRepository($className)->find($id).
      *
-     * @param string $className The class name of the object to find.
-     * @param mixed $id The identity of the object to find.
+     * @param string $className the class name of the object to find
+     * @param mixed $id the identity of the object to find
      *
-     * @return object The found object.
+     * @return object the found object
      */
     public function find($className, $id)
     {
@@ -385,9 +371,7 @@ class FakeEntityManager implements EntityManagerInterface
      * NOTE: The persist operation always considers objects that are not yet known to
      * this ObjectManager as NEW. Do not pass detached objects to the persist operation.
      *
-     * @param object $object The instance to make managed and persistent.
-     *
-     * @return void
+     * @param object $object the instance to make managed and persistent
      */
     public function persist($object)
     {
@@ -399,9 +383,7 @@ class FakeEntityManager implements EntityManagerInterface
      *
      * A removed object will be removed from the database as a result of the flush operation.
      *
-     * @param object $object The object instance to remove.
-     *
-     * @return void
+     * @param object $object the object instance to remove
      */
     public function remove($object)
     {
@@ -426,9 +408,7 @@ class FakeEntityManager implements EntityManagerInterface
      * Clears the ObjectManager. All objects that are currently managed
      * by this ObjectManager become detached.
      *
-     * @param string|null $objectName if given, only objects of this type will get detached.
-     *
-     * @return void
+     * @param string|null $objectName if given, only objects of this type will get detached
      */
     public function clear($objectName = null)
     {
@@ -442,9 +422,7 @@ class FakeEntityManager implements EntityManagerInterface
      * Objects which previously referenced the detached object will continue to
      * reference it.
      *
-     * @param object $object The object to detach.
-     *
-     * @return void
+     * @param object $object the object to detach
      */
     public function detach($object)
     {
@@ -455,9 +433,7 @@ class FakeEntityManager implements EntityManagerInterface
      * Refreshes the persistent state of an object from the database,
      * overriding any local changes that have not yet been persisted.
      *
-     * @param object $object The object to refresh.
-     *
-     * @return void
+     * @param object $object the object to refresh
      */
     public function refresh($object)
     {
@@ -468,8 +444,6 @@ class FakeEntityManager implements EntityManagerInterface
      * Flushes all changes to objects that have been queued up to now to the database.
      * This effectively synchronizes the in-memory state of managed objects with the
      * database.
-     *
-     * @return void
      */
     public function flush()
     {
@@ -504,8 +478,6 @@ class FakeEntityManager implements EntityManagerInterface
      * This method is a no-op for other objects.
      *
      * @param object $obj
-     *
-     * @return void
      */
     public function initializeObject($obj)
     {
@@ -524,13 +496,12 @@ class FakeEntityManager implements EntityManagerInterface
         // TODO: Implement contains() method.
     }
 
-    function __call($name, $arguments)
+    public function __call($name, $arguments)
     {
         // TODO: Implement @method Mapping\ClassMetadata getClassMetadata($className)
     }
 
     public function getClassMetadata($className)
     {
-
     }
 }

@@ -31,13 +31,14 @@ class MenuFactory
 
     /**
      * MenuFactory constructor.
+     *
      * @param RequestStack                    $requestStack
      * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      */
     public function __construct(
         RequestStack $requestStack,
         ApplicationConfigurationStorage $applicationConfigurationStorage
-    ){
+    ) {
         $this->requestStack = $requestStack;
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
     }
@@ -141,7 +142,7 @@ class MenuFactory
         // A route string is not required, an admin and an action can also be provided
         if ($resolvedConfiguration['route']) {
             $itemRoute = $resolvedConfiguration['route'];
-        } else if (key_exists('admin', $resolvedConfiguration)) {
+        } elseif (key_exists('admin', $resolvedConfiguration)) {
             $itemRoute = RoutingLoader::generateRouteName(
                 $resolvedConfiguration['admin'],
                 $resolvedConfiguration['action'],

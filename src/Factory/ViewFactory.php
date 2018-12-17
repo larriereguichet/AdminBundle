@@ -116,7 +116,7 @@ class ViewFactory
             $formViews
         );
         $view->setEntities($entities);
-    
+
         return $view;
     }
 

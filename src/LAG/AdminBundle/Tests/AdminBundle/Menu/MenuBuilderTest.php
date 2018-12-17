@@ -6,7 +6,6 @@ use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\Action;
-use LAG\AdminBundle\Controller\ListAction;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Registry\Registry;
 use LAG\AdminBundle\Admin\Request\RequestHandler;
@@ -23,7 +22,7 @@ class MenuBuilderTest extends AdminTestBase
         // TODO remove
         $this->assertTrue(true);
     }
-    
+
 //    /**
 //     * Top and main menus creation SHOULD return an ItemInterface instance.
 //     */
