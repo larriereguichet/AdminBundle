@@ -26,16 +26,6 @@ class MenuSubscriber implements EventSubscriberInterface
     private $menuFactory;
 
     /**
-     * @var ResourceCollection
-     */
-    private $resourceCollection;
-
-    /**
-     * @var ConfigurationFactory
-     */
-    private $configurationFactory;
-
-    /**
      * @var array
      */
     private $adminMenuConfigurations;
@@ -60,23 +50,17 @@ class MenuSubscriber implements EventSubscriberInterface
      *
      * @param ApplicationConfigurationStorage $storage
      * @param MenuFactory                     $menuFactory
-     * @param ConfigurationFactory            $configurationFactory
-     * @param ResourceCollection              $resourceCollection
      * @param EventDispatcherInterface        $eventDispatcher
      * @param array                           $adminMenuConfigurations
      */
     public function __construct(
         ApplicationConfigurationStorage $storage,
         MenuFactory $menuFactory,
-        ConfigurationFactory $configurationFactory,
-        ResourceCollection $resourceCollection,
         EventDispatcherInterface $eventDispatcher,
         array $adminMenuConfigurations = []
     ) {
         $this->applicationConfiguration = $storage->getConfiguration();
         $this->menuFactory = $menuFactory;
-        $this->resourceCollection = $resourceCollection;
-        $this->configurationFactory = $configurationFactory;
         $this->adminMenuConfigurations = $adminMenuConfigurations;
         $this->eventDispatcher = $eventDispatcher;
     }
