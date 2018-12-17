@@ -16,7 +16,7 @@ class DataProviderCompilerPassTest extends AdminTestBase
      */
     public function testProcess()
     {
-        $definition = $this->getMockWithoutConstructor(Definition::class);
+        $definition = $this->createMock(Definition::class);
         $definition
             ->expects($this->once())
             ->method('addMethodCall')
@@ -25,7 +25,7 @@ class DataProviderCompilerPassTest extends AdminTestBase
                 new Reference('data_provider'),
             ])
         ;
-        $builder = $this->getMockWithoutConstructor(ContainerBuilder::class);
+        $builder = $this->createMock(ContainerBuilder::class);
         $builder
             ->expects($this->once())
             ->method('findDefinition')
@@ -53,7 +53,7 @@ class DataProviderCompilerPassTest extends AdminTestBase
 
     public function testProcessWithoutConfiguration()
     {
-        $builder = $this->getMockWithoutConstructor(ContainerBuilder::class);
+        $builder = $this->createMock(ContainerBuilder::class);
 
         $compilerPass = new DataProviderCompilerPass();
         $compilerPass->process($builder);

@@ -14,7 +14,7 @@ use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\AdminTestBase;
-use LAG\AdminBundle\Tests\Fixtures\EntityFixture;
+use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -45,8 +45,8 @@ class ORMDataProviderTest extends AdminTestBase
 
         // Create fake entities to return
         $entities = [
-            new EntityFixture(uniqid()),
-            new EntityFixture(uniqid()),
+            new FakeEntity(uniqid()),
+            new FakeEntity(uniqid()),
         ];
 
         // The query should return entities
@@ -125,7 +125,7 @@ class ORMDataProviderTest extends AdminTestBase
             ->expects($this->atLeastOnce())
             ->method('find')
             ->with(42)
-            ->willReturn(new EntityFixture(42))
+            ->willReturn(new FakeEntity(42))
         ;
 
         /** @var EntityManagerInterface|MockObject $entityManager */
@@ -230,7 +230,7 @@ class ORMDataProviderTest extends AdminTestBase
         /** @var RequestStack|MockObject $requestStack */
         $requestStack = $this->createMock(RequestStack::class);
 
-        $entity =new EntityFixture(42);
+        $entity =new FakeEntity(42);
 
         /** @var EntityManagerInterface|MockObject $entityManager */
         $entityManager = $this->createMock(EntityManagerInterface::class);

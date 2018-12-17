@@ -333,16 +333,17 @@ class ActionConfiguration extends Configuration
     private function getFormNormalizer(): Closure
     {
         return function (Options $options, $value) {
-            if (null === $value) {
-                $mapping = [
-                    'create' => $this->adminConfiguration->get('form'),
-                    'edit' => $this->adminConfiguration->get('form'),
-                    'delete' => DeleteType::class,
-                ];
+            if (null !== $value) {
+                return $value;
+            }
+            $mapping = [
+                'create' => $this->adminConfiguration->get('form'),
+                'edit' => $this->adminConfiguration->get('form'),
+                'delete' => DeleteType::class,
+            ];
 
-                if (key_exists($this->actionName, $mapping)) {
-                    $value = $mapping[$this->actionName];
-                }
+            if (key_exists($this->actionName, $mapping)) {
+                $value = $mapping[$this->actionName];
             }
 
             return $value;

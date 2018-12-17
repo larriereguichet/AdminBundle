@@ -28,16 +28,16 @@ class ORMSubscriberTest extends AdminTestBase
     {
         $request = new Request();
 
-        $requestStack = $this->getMockWithoutConstructor(RequestStack::class);
+        $requestStack = $this->createMock(RequestStack::class);
         $requestStack
             ->expects($this->atLeastOnce())
             ->method('getMasterRequest')
             ->willReturn($request)
         ;
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
+        $action = $this->createMock(ActionInterface::class);
 
-        $configuration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $configuration = $this->createMock(ActionConfiguration::class);
         $configuration
             ->expects($this->once())
             ->method('getParameter')
@@ -47,7 +47,7 @@ class ORMSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $queryBuilder = $this->getMockWithoutConstructor(QueryBuilder::class);
+        $queryBuilder = $this->createMock(QueryBuilder::class);
         $queryBuilder
             ->expects($this->once())
             ->method('getRootAliases')
@@ -61,7 +61,7 @@ class ORMSubscriberTest extends AdminTestBase
             ->with('entity.id', 'desc')
         ;
 
-        $event = $this->getMockWithoutConstructor(ORMFilterEvent::class);
+        $event = $this->createMock(ORMFilterEvent::class);
         $event
             ->expects($this->once())
             ->method('getQueryBuilder')
@@ -93,18 +93,18 @@ class ORMSubscriberTest extends AdminTestBase
             'sort' => 'name',
         ]);
 
-        $requestStack = $this->getMockWithoutConstructor(RequestStack::class);
+        $requestStack = $this->createMock(RequestStack::class);
         $requestStack
             ->expects($this->atLeastOnce())
             ->method('getMasterRequest')
             ->willReturn($request)
         ;
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
+        $action = $this->createMock(ActionInterface::class);
 
-        $configuration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $configuration = $this->createMock(ActionConfiguration::class);
 
-        $queryBuilder = $this->getMockWithoutConstructor(QueryBuilder::class);
+        $queryBuilder = $this->createMock(QueryBuilder::class);
         $queryBuilder
             ->expects($this->once())
             ->method('getRootAliases')
@@ -118,7 +118,7 @@ class ORMSubscriberTest extends AdminTestBase
             ->with('entity.name', 'asc')
         ;
 
-        $event = $this->getMockWithoutConstructor(ORMFilterEvent::class);
+        $event = $this->createMock(ORMFilterEvent::class);
         $event
             ->expects($this->once())
             ->method('getQueryBuilder')
@@ -146,8 +146,8 @@ class ORMSubscriberTest extends AdminTestBase
 
     public function testAddFilters()
     {
-        $requestStack = $this->getMockWithoutConstructor(RequestStack::class);
-        $queryBuilder = $this->getMockWithoutConstructor(QueryBuilder::class);
+        $requestStack = $this->createMock(RequestStack::class);
+        $queryBuilder = $this->createMock(QueryBuilder::class);
         $queryBuilder
             ->expects($this->once())
             ->method('getRootAliases')
@@ -166,7 +166,7 @@ class ORMSubscriberTest extends AdminTestBase
             ->with('filter_name', '%test%')
         ;
 
-        $filter1 = $this->getMockWithoutConstructor(FilterInterface::class);
+        $filter1 = $this->createMock(FilterInterface::class);
         $filter1
             ->method('getName')
             ->willReturn('name')
@@ -186,7 +186,7 @@ class ORMSubscriberTest extends AdminTestBase
             ->willReturn('like')
         ;
 
-        $event = $this->getMockWithoutConstructor(ORMFilterEvent::class);
+        $event = $this->createMock(ORMFilterEvent::class);
         $event
             ->expects($this->once())
             ->method('getQueryBuilder')

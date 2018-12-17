@@ -10,7 +10,7 @@ class ActionTest extends AdminTestBase
 {
     public function testGetters()
     {
-        $configuration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $configuration = $this->createMock(ActionConfiguration::class);
         $action = new Action('test', $configuration);
 
         $this->assertEquals('test', $action->getName());

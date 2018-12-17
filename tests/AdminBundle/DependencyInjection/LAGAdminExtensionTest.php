@@ -13,7 +13,7 @@ class LAGAdminExtensionTest extends AdminTestBase
      */
     public function testLoad()
     {
-        $builder = $this->getMockWithoutConstructor(ContainerBuilder::class);
+        $builder = $this->createMock(ContainerBuilder::class);
         $builder
             ->expects($this->atLeastOnce())
             ->method('setParameter')
@@ -44,7 +44,7 @@ class LAGAdminExtensionTest extends AdminTestBase
      */
     public function testLoadWithoutConfiguration()
     {
-        $builder = $this->getMockWithoutConstructor(ContainerBuilder::class);
+        $builder = $this->createMock(ContainerBuilder::class);
 
         $extension = new LAGAdminExtension();
         $extension->load([], $builder);

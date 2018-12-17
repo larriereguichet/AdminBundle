@@ -16,13 +16,13 @@ class AdminActionTest extends AdminTestBase
 {
     public function testInvoke()
     {
-        $view = $this->getMockWithoutConstructor(ViewInterface::class);
+        $view = $this->createMock(ViewInterface::class);
         $view
             ->expects($this->once())
             ->method('getTemplate')
             ->willReturn('my_template')
         ;
-        $twig = $this->getMockWithoutConstructor(\Twig_Environment::class);
+        $twig = $this->createMock(\Twig_Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -34,7 +34,7 @@ class AdminActionTest extends AdminTestBase
         $request = new Request();
 
 
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->once())
             ->method('handleRequest')
@@ -46,7 +46,7 @@ class AdminActionTest extends AdminTestBase
             ->willReturn($view)
         ;
 
-        $adminFactory = $this->getMockWithoutConstructor(AdminFactory::class);
+        $adminFactory = $this->createMock(AdminFactory::class);
         $adminFactory
             ->expects($this->once())
             ->method('createFromRequest')
@@ -66,16 +66,16 @@ class AdminActionTest extends AdminTestBase
 
     public function testInvokeWithRedirection()
     {
-        $view = $this->getMockWithoutConstructor(RedirectView::class);
+        $view = $this->createMock(RedirectView::class);
         $view
             ->expects($this->once())
             ->method('getUrl')
             ->willReturn('/admin/home')
         ;
-        $twig = $this->getMockWithoutConstructor(\Twig_Environment::class);
+        $twig = $this->createMock(\Twig_Environment::class);
         $request = new Request();
 
-        $admin = $this->getMockWithoutConstructor(AdminInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->once())
             ->method('handleRequest')
@@ -86,7 +86,7 @@ class AdminActionTest extends AdminTestBase
             ->method('createView')
             ->willReturn($view)
         ;
-        $adminFactory = $this->getMockWithoutConstructor(AdminFactory::class);
+        $adminFactory = $this->createMock(AdminFactory::class);
         $adminFactory
             ->expects($this->once())
             ->method('createFromRequest')

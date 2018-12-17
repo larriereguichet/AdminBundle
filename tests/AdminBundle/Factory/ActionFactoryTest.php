@@ -9,16 +9,16 @@ use LAG\AdminBundle\Factory\ActionFactory;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Fixtures\ActionFixture;
-use LAG\AdminBundle\Tests\Fixtures\EntityFixture;
+use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ActionFactoryTest extends AdminTestBase
 {
     public function testCreate()
     {
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -27,11 +27,11 @@ class ActionFactoryTest extends AdminTestBase
                     'list' => [],
                 ]],
                 ['entity', 'MyLittleTauntaun'],
-                ['class', EntityFixture::class],
+                ['class', FakeEntity::class],
             ])
         ;
 
-        $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
             ->expects($this->once())
             ->method('getParameter')
@@ -40,7 +40,7 @@ class ActionFactoryTest extends AdminTestBase
             ])
         ;
 
-        $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
+        $configurationFactory = $this->createMock(ConfigurationFactory::class);
         $configurationFactory
             ->expects($this->once())
             ->method('createActionConfiguration')
@@ -58,15 +58,15 @@ class ActionFactoryTest extends AdminTestBase
 
     public function testCreateWithMissingAction()
     {
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
-        $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $configurationFactory = $this->createMock(ConfigurationFactory::class);
 
         $factory = new ActionFactory(
             $eventDispatcher,
             $configurationFactory
         );
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -83,9 +83,9 @@ class ActionFactoryTest extends AdminTestBase
 
     public function testCreateWithWrongActionClass()
     {
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -94,20 +94,20 @@ class ActionFactoryTest extends AdminTestBase
                     'list' => [],
                 ]],
                 ['entity', 'MyLittleTauntaun'],
-                ['class', EntityFixture::class],
+                ['class', FakeEntity::class],
             ])
         ;
 
-        $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
             ->expects($this->once())
             ->method('getParameter')
             ->willReturnMap([
-                ['class', EntityFixture::class],
+                ['class', FakeEntity::class],
             ])
         ;
 
-        $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
+        $configurationFactory = $this->createMock(ConfigurationFactory::class);
         $configurationFactory
             ->expects($this->once())
             ->method('createActionConfiguration')

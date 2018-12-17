@@ -18,13 +18,13 @@ class ViewFactoryTest extends AdminTestBase
     public function testCreate()
     {
         $request = new Request();
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
-        $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $entities = [];
 
-        $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
+        $configurationFactory = $this->createMock(ConfigurationFactory::class);
 
-        $fieldFactory = $this->getMockWithoutConstructor(FieldFactory::class);
+        $fieldFactory = $this->createMock(FieldFactory::class);
         $fieldFactory
             ->expects($this->once())
             ->method('getFields')
@@ -32,8 +32,8 @@ class ViewFactoryTest extends AdminTestBase
             ->willReturn([])
         ;
 
-        $menuFactory = $this->getMockWithoutConstructor(MenuFactory::class);
-        $router = $this->getMockWithoutConstructor(RouterInterface::class);
+        $menuFactory = $this->createMock(MenuFactory::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $factory = new ViewFactory(
             $configurationFactory,
@@ -42,7 +42,7 @@ class ViewFactoryTest extends AdminTestBase
             $router
         );
 
-        $form = $this->getMockWithoutConstructor(FormInterface::class);
+        $form = $this->createMock(FormInterface::class);
         $form
             ->expects($this->once())
             ->method('createView')
@@ -69,7 +69,7 @@ class ViewFactoryTest extends AdminTestBase
         ]);
         $entities = [];
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->atLeastOnce())
             ->method('getParameter')
@@ -80,9 +80,9 @@ class ViewFactoryTest extends AdminTestBase
                 ['routing_name_pattern', '{admin}.{action}'],
             ])
         ;
-        $actionConfiguration = $this->getMockWithoutConstructor(ActionConfiguration::class);
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
 
-        $entityForm = $this->getMockWithoutConstructor(FormInterface::class);
+        $entityForm = $this->createMock(FormInterface::class);
         $entityForm
             ->expects($this->once())
             ->method('isSubmitted')
@@ -97,16 +97,16 @@ class ViewFactoryTest extends AdminTestBase
             'entity' => $entityForm,
         ];
 
-        $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
+        $configurationFactory = $this->createMock(ConfigurationFactory::class);
 
-        $fieldFactory = $this->getMockWithoutConstructor(FieldFactory::class);
+        $fieldFactory = $this->createMock(FieldFactory::class);
         $fieldFactory
             ->expects($this->never())
             ->method('getFields')
         ;
 
-        $menuFactory = $this->getMockWithoutConstructor(MenuFactory::class);
-        $router = $this->getMockWithoutConstructor(RouterInterface::class);
+        $menuFactory = $this->createMock(MenuFactory::class);
+        $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->once())
             ->method('generate')
