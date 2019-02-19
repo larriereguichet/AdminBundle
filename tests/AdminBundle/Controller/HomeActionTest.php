@@ -15,14 +15,14 @@ class HomeActionTest extends AdminTestBase
 {
     public function testInvoke()
     {
-        $twig = $this->getMockWithoutConstructor(\Twig_Environment::class);
+        $twig = $this->createMock(\Twig_Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
             ->with('my_template')
             ->willReturn('content')
         ;
-        $configuration = $this->getMockWithoutConstructor(ApplicationConfiguration::class);
+        $configuration = $this->createMock(ApplicationConfiguration::class);
         $configuration
             ->expects($this->once())
             ->method('getParameter')
@@ -30,7 +30,7 @@ class HomeActionTest extends AdminTestBase
             ->willReturn('my_template')
         ;
 
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
@@ -39,7 +39,7 @@ class HomeActionTest extends AdminTestBase
                 $this->assertInstanceOf(MenuEvent::class, $event);
             })
         ;
-        $storage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
+        $storage = $this->createMock(ApplicationConfigurationStorage::class);
         $storage
             ->expects($this->once())
             ->method('getConfiguration')

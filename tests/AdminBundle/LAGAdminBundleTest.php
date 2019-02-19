@@ -10,7 +10,7 @@ class LAGAdminBundleTest extends AdminTestBase
 {
     public function testBuild()
     {
-        $container = $this->getMockWithoutConstructor(ContainerBuilder::class);
+        $container = $this->createMock(ContainerBuilder::class);
         $container
             ->expects($this->exactly(3))
             ->method('addCompilerPass')

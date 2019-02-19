@@ -1,5 +1,7 @@
 .sass-cache
+.php_cs.cache
 bin
+!bin/php-cs-fixer-modified-files
 !bin/sam.php
 build
 composer.lock

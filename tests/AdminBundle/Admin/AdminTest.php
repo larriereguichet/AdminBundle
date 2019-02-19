@@ -23,15 +23,15 @@ class AdminTest extends AdminTestBase
 {
     public function testHandleRequest()
     {
-        $resource = $this->getMockWithoutConstructor(AdminResource::class);
+        $resource = $this->createMock(AdminResource::class);
         $resource
             ->expects($this->once())
             ->method('getName')
             ->willReturn('admin_test')
         ;
-        $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
-        $form = $this->getMockWithoutConstructor(FormInterface::class);
+        $configuration = $this->createMock(AdminConfiguration::class);
+        $action = $this->createMock(ActionInterface::class);
+        $form = $this->createMock(FormInterface::class);
         $form
             ->expects($this->once())
             ->method('isValid')
@@ -43,7 +43,7 @@ class AdminTest extends AdminTestBase
             ->willReturn(true)
         ;
 
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher
             ->expects($this->exactly(6))
             ->method('dispatch')
@@ -91,15 +91,15 @@ class AdminTest extends AdminTestBase
 
     public function testHandleRequestWithoutAction()
     {
-        $resource = $this->getMockWithoutConstructor(AdminResource::class);
+        $resource = $this->createMock(AdminResource::class);
         $resource
             ->expects($this->once())
             ->method('getName')
             ->willReturn('admin_test')
         ;
-        $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $configuration = $this->createMock(AdminConfiguration::class);
 
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher
             ->expects($this->exactly(1))
             ->method('dispatch')
@@ -119,11 +119,11 @@ class AdminTest extends AdminTestBase
 
     public function testCreateView()
     {
-        $resource = $this->getMockWithoutConstructor(AdminResource::class);
-        $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
-        $view = $this->getMockWithoutConstructor(ViewInterface::class);
+        $resource = $this->createMock(AdminResource::class);
+        $configuration = $this->createMock(AdminConfiguration::class);
+        $view = $this->createMock(ViewInterface::class);
 
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
@@ -151,16 +151,16 @@ class AdminTest extends AdminTestBase
 
     public function testGetAction()
     {
-        $resource = $this->getMockWithoutConstructor(AdminResource::class);
-        $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
+        $resource = $this->createMock(AdminResource::class);
+        $configuration = $this->createMock(AdminConfiguration::class);
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
 
         $admin = new Admin(
             $resource,
             $configuration,
             $eventDispatcher
         );
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
+        $action = $this->createMock(ActionInterface::class);
         $this->setPrivateProperty($admin, 'action', $action);
 
         $this->assertEquals($action, $admin->getAction());
@@ -169,12 +169,12 @@ class AdminTest extends AdminTestBase
 
     public function testHandleFormWithoutForm()
     {
-        $resource = $this->getMockWithoutConstructor(AdminResource::class);
-        $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
-        $form = $this->getMockWithoutConstructor(FormInterface::class);
+        $resource = $this->createMock(AdminResource::class);
+        $configuration = $this->createMock(AdminConfiguration::class);
+        $action = $this->createMock(ActionInterface::class);
+        $form = $this->createMock(FormInterface::class);
 
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher
             ->expects($this->exactly(5))
             ->method('dispatch')
@@ -199,12 +199,12 @@ class AdminTest extends AdminTestBase
 
     public function testHandleFormWithoutEntities()
     {
-        $resource = $this->getMockWithoutConstructor(AdminResource::class);
-        $configuration = $this->getMockWithoutConstructor(AdminConfiguration::class);
-        $action = $this->getMockWithoutConstructor(ActionInterface::class);
-        $form = $this->getMockWithoutConstructor(FormInterface::class);
+        $resource = $this->createMock(AdminResource::class);
+        $configuration = $this->createMock(AdminConfiguration::class);
+        $action = $this->createMock(ActionInterface::class);
+        $form = $this->createMock(FormInterface::class);
 
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcher::class);
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher
             ->expects($this->exactly(5))
             ->method('dispatch')

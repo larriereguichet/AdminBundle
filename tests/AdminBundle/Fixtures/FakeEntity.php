@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\Fixtures;
 
-class EntityFixture
+class FakeEntity
 {
     protected $id;
 

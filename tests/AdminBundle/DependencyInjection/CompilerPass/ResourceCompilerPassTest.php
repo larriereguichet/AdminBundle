@@ -13,7 +13,7 @@ class ResourceCompilerPassTest extends AdminTestBase
 {
     public function testProcess()
     {
-        $resourceCollection = $this->getMockWithoutConstructor(Definition::class);
+        $resourceCollection = $this->createMock(Definition::class);
         $resourceCollection
             ->expects($this->once())
             ->method('addMethodCall')
@@ -24,7 +24,7 @@ class ResourceCompilerPassTest extends AdminTestBase
             })
         ;
 
-        $builder = $this->getMockWithoutConstructor(ContainerBuilder::class);
+        $builder = $this->createMock(ContainerBuilder::class);
         $builder
             ->expects($this->once())
             ->method('getDefinition')

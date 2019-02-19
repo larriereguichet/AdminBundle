@@ -20,14 +20,14 @@ class AdminFactoryTest extends AdminTestBase
 {
     public function testCreateFromRequest()
     {
-        $resource = $this->getMockWithoutConstructor(AdminResource::class);
+        $resource = $this->createMock(AdminResource::class);
         $resource
             ->expects($this->atLeastOnce())
             ->method('getName')
             ->willReturn('MyLittleTaunTaun')
         ;
 
-        $resourceCollection = $this->getMockWithoutConstructor(ResourceCollection::class);
+        $resourceCollection = $this->createMock(ResourceCollection::class);
         $resourceCollection
             ->expects($this->once())
             ->method('has')
@@ -41,7 +41,7 @@ class AdminFactoryTest extends AdminTestBase
             ->willReturn($resource)
         ;
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->once())
             ->method('getParameter')
@@ -49,7 +49,7 @@ class AdminFactoryTest extends AdminTestBase
             ->willReturn(Admin::class)
         ;
 
-        $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
+        $configurationFactory = $this->createMock(ConfigurationFactory::class);
         $configurationFactory
             ->expects($this->once())
             ->method('createAdminConfiguration')
@@ -57,10 +57,10 @@ class AdminFactoryTest extends AdminTestBase
             ->willReturn($adminConfiguration)
         ;
 
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $applicationConfiguration = new ApplicationConfiguration();
-        $applicationConfigurationStorage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
+        $applicationConfigurationStorage = $this->createMock(ApplicationConfigurationStorage::class);
         $applicationConfigurationStorage
             ->expects($this->once())
             ->method('getConfiguration')
@@ -87,10 +87,10 @@ class AdminFactoryTest extends AdminTestBase
 
     public function testCreateFromRequestWithoutRouteParams()
     {
-        $resourceCollection = $this->getMockWithoutConstructor(ResourceCollection::class);
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
-        $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
-        $applicationConfigurationStorage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
+        $resourceCollection = $this->createMock(ResourceCollection::class);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $configurationFactory = $this->createMock(ConfigurationFactory::class);
+        $applicationConfigurationStorage = $this->createMock(ApplicationConfigurationStorage::class);
 
         $request = new Request();
 
@@ -107,10 +107,10 @@ class AdminFactoryTest extends AdminTestBase
 
     public function testCreateFromRequestWithoutAdminParams()
     {
-        $resourceCollection = $this->getMockWithoutConstructor(ResourceCollection::class);
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
-        $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
-        $applicationConfigurationStorage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
+        $resourceCollection = $this->createMock(ResourceCollection::class);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $configurationFactory = $this->createMock(ConfigurationFactory::class);
+        $applicationConfigurationStorage = $this->createMock(ApplicationConfigurationStorage::class);
 
         $request = new Request([
             '_route_params' => [],
@@ -129,10 +129,10 @@ class AdminFactoryTest extends AdminTestBase
 
     public function testCreateFromRequestWithoutExistingAdmin()
     {
-        $resourceCollection = $this->getMockWithoutConstructor(ResourceCollection::class);
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
-        $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
-        $applicationConfigurationStorage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
+        $resourceCollection = $this->createMock(ResourceCollection::class);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $configurationFactory = $this->createMock(ConfigurationFactory::class);
+        $applicationConfigurationStorage = $this->createMock(ApplicationConfigurationStorage::class);
 
         $request = new Request([
             '_route_params' => [
@@ -154,14 +154,14 @@ class AdminFactoryTest extends AdminTestBase
 
     public function testCreateFromRequestWithInvalidAdminClass()
     {
-        $resource = $this->getMockWithoutConstructor(AdminResource::class);
+        $resource = $this->createMock(AdminResource::class);
         $resource
             ->expects($this->atLeastOnce())
             ->method('getName')
             ->willReturn('MyLittleTaunTaun')
         ;
 
-        $resourceCollection = $this->getMockWithoutConstructor(ResourceCollection::class);
+        $resourceCollection = $this->createMock(ResourceCollection::class);
         $resourceCollection
             ->expects($this->once())
             ->method('has')
@@ -175,7 +175,7 @@ class AdminFactoryTest extends AdminTestBase
             ->willReturn($resource)
         ;
 
-        $adminConfiguration = $this->getMockWithoutConstructor(AdminConfiguration::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->once())
             ->method('getParameter')
@@ -183,7 +183,7 @@ class AdminFactoryTest extends AdminTestBase
             ->willReturn(FakeAdmin::class)
         ;
 
-        $configurationFactory = $this->getMockWithoutConstructor(ConfigurationFactory::class);
+        $configurationFactory = $this->createMock(ConfigurationFactory::class);
         $configurationFactory
             ->expects($this->once())
             ->method('createAdminConfiguration')
@@ -191,10 +191,10 @@ class AdminFactoryTest extends AdminTestBase
             ->willReturn($adminConfiguration)
         ;
 
-        $eventDispatcher = $this->getMockWithoutConstructor(EventDispatcherInterface::class);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $applicationConfiguration = new ApplicationConfiguration();
-        $applicationConfigurationStorage = $this->getMockWithoutConstructor(ApplicationConfigurationStorage::class);
+        $applicationConfigurationStorage = $this->createMock(ApplicationConfigurationStorage::class);
         $applicationConfigurationStorage
             ->expects($this->once())
             ->method('getConfiguration')

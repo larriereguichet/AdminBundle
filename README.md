@@ -40,8 +40,7 @@ $ composer require lag/adminbundle
     If you use Symfony 4, you can skip this step.
     
     AdminBundle rely on WhiteOctoberPagerfantaBundle to handle list pagination. If you
-    want to use those features, both bundles should be enabled in addition to AdminBundle.
-    
+    want to use those features, both bundles should be enabled in addition to AdminBundle.    
 ```
 
 Then, enable the bundle by adding it to the list of registered bundles
@@ -80,7 +79,7 @@ Import the routing configuration to have the admin generated routes :
         type: extra
 ```
 
-### Step 4 : Configure an entity
+### Step 4 : Configure an entity
 ```yml
     # config/packages/lag_admin.yml
 
@@ -97,11 +96,12 @@ And now you could go to `http://127.0.0.1:8000/admin/planet/list` to see a list 
 to `http://127.0.0.1:8000/app_dev.php/admin/` the see an homepage of your admin interface
 
 ## Documentation
-1. [Main Concepts](https://github.com/larriereguichet/AdminBundle/tree/master/Resources/docs)
-  a. Admins and Actions
-  b. Events
-  c. Data Providers
-  d. Filters
+1. [Introduction](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.1.introduction.md)
+    1. How To Use
+    1. Admins and Actions
+    2. Events
+    3. Data Providers
+    d. Filters
   e. Views
 2. Customization
   a. Custom actions

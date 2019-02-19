@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Tests;
 
 use Closure;
 use Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use ReflectionClass;
@@ -86,15 +87,11 @@ class AdminTestBase extends TestCase
     /**
      * @param $class
      *
-     * @return PHPUnit_Framework_MockObject_MockObject|mixed
+     * @return MockObject|mixed
      */
-    protected function getMockWithoutConstructor($class)
+    protected function createMock($class)
     {
-        return $this
-            ->getMockBuilder($class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        return parent::createMock($class);
     }
     
     protected function setPrivateProperty($object, $property, $value)

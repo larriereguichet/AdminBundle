@@ -80,7 +80,7 @@ class FormSubscriber implements EventSubscriberInterface
         $action = $admin->getAction();
         $configuration = $action->getConfiguration();
 
-        if (!$configuration->getParameter('use_form')) {
+        if (!$configuration->get('use_form')) {
             return;
         }
         $entity = null;
@@ -91,12 +91,7 @@ class FormSubscriber implements EventSubscriberInterface
             }
         }
 
-        if ('create' === $action->getName()) {
-            $form = $this->createEntityForm($admin, $entity);
-            $event->addForm($form, 'entity');
-        }
-
-        if ('edit' === $action->getName()) {
+        if ('create' === $action->getName() || 'edit' === $action->getName()) {
             $form = $this->createEntityForm($admin, $entity);
             $event->addForm($form, 'entity');
         }
@@ -136,7 +131,7 @@ class FormSubscriber implements EventSubscriberInterface
         }
         $form = $this
             ->formFactory
-            ->create($admin->getConfiguration()->getParameter('form'), $entity)
+            ->create($admin->getConfiguration()->get('form'), $entity)
         ;
 
         return $form;
@@ -146,13 +141,13 @@ class FormSubscriber implements EventSubscriberInterface
     {
         $form = $this
             ->formFactory
-            ->create($action->getConfiguration()->getParameter('form'), $entity)
+            ->create($action->getConfiguration()->get('form'), $entity)
         ;
 
         return $form;
     }
 
-    private function handleDeleteForm(Request $request, FormInterface $form, AdminInterface $admin)
+    private function handleDeleteForm(Request $request, FormInterface $form, AdminInterface $admin): void
     {
         $form->handleRequest($request);
 

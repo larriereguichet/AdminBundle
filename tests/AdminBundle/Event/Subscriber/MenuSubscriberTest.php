@@ -15,6 +15,18 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class MenuSubscriberTest extends AdminTestBase
 {
+    public function testServiceExists()
+    {
+        $this->assertServiceExists(MenuSubscriber::class);
+    }
+
+    public function testSubscribedEvents()
+    {
+        $this->assertEquals([
+            Events::MENU => 'buildMenus',
+        ], MenuSubscriber::getSubscribedEvents());
+    }
+
     public function testBuildMenu()
     {
         list(, $storage, $menuFactory, $eventDispatcher) = $this->createSubscriber();
@@ -44,6 +56,7 @@ class MenuSubscriberTest extends AdminTestBase
         $subscriber = new MenuSubscriber($storage, $menuFactory, $eventDispatcher, [
             'my_little_menu' => [],
         ]);
+        $this->assertSubscribedMethodsExists($subscriber);
 
         $menuFactory
             ->expects($this->once())
