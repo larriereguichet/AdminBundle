@@ -6,7 +6,6 @@ php:
 
 before_install:
     - mysql -e "create database IF NOT EXISTS admin_bundle_test;"
-    - cp src/LAG/AdminBundle/Tests/Fixtures/app/config/parameters.yml.dist src/LAG/AdminBundle/Tests/Fixtures/app/config/parameters.yml
     - if [[ $TRAVIS_PHP_VERSION = hhvm* ]]; then export INI=/etc/hhvm/php.ini; else export INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; fi
     - phpenv config-rm xdebug.ini || echo "xdebug not available"
     - echo memory_limit = -1 >> $INI

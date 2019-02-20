@@ -1,5 +1,0 @@
-# LAG AdminBundle
-lag_admin:
-    resource: .
-    type: extra
-    prefix: /admin
