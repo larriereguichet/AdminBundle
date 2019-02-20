@@ -28,6 +28,7 @@ trait MetadataTrait
             // the getMetadataFor() method could throw an exception if the class is not found
             $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($class);
         } catch (Exception $exception) {
+            // If an exception is raised, nothing to do. Extra data from metadata will be not used.
         }
 
         return $metadata;
