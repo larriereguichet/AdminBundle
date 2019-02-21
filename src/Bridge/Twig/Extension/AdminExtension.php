@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Bridge\Twig\Extension;
 
+use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Configuration\MenuItemConfiguration;
 use LAG\AdminBundle\Exception\Exception;
@@ -145,6 +146,7 @@ class AdminExtension extends Twig_Extension
         if ($configuration->getParameter('url')) {
             return $configuration->getParameter('url');
         }
+        $routeName = $configuration->getParameter('route');
 
         if ($configuration->getParameter('admin')) {
             $routeName = RoutingLoader::generateRouteName(
@@ -155,10 +157,8 @@ class AdminExtension extends Twig_Extension
                     ->getConfiguration()
                     ->getParameter('routing_name_pattern')
             );
-        } else {
-            $routeName = $configuration->getParameter('route');
         }
-        // Map the eventual parameters to the entity
+        // Map the potential parameters to the entity
         $routeParameters = [];
         $configuredParameters = $configuration->getParameter('parameters');
 
@@ -166,12 +166,18 @@ class AdminExtension extends Twig_Extension
             if (null === $view) {
                 throw new Exception('A view should be provided if the menu item route requires parameters');
             }
-            $entity = $view->getEntities()->first();
-            $accessor = PropertyAccess::createPropertyAccessor();
+
+            if (!$view->getEntities() instanceof Collection) {
+                throw new Exception(
+                    'Entities returned by the view should be a instance of "'.Collection::class.'" to be used in menu action'
+                );
+            }
 
             if (1 !== $view->getEntities()->count()) {
                 throw new Exception('You can not map route parameters if multiple entities are loaded');
             }
+            $entity = $view->getEntities()->first();
+            $accessor = PropertyAccess::createPropertyAccessor();
 
             foreach ($configuredParameters as $name => $requirements) {
                 $routeParameters[$name] = $accessor->getValue($entity, $name);
