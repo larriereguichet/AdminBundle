@@ -50,7 +50,7 @@ class DataProviderFactory
     /**
      * Return an configured data provider or try to create one for the given entity class.
      *
-     * @param string id The id of an existing data provider service
+     * @param string $id The id of an existing data provider service
      * registry
      *
      * @return DataProviderInterface

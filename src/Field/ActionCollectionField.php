@@ -20,26 +20,12 @@ class ActionCollectionField extends CollectionField implements TwigAwareFieldInt
     {
         parent::configureOptions($resolver, $actionConfiguration);
 
-        $actions = $actionConfiguration
-            ->getAdminConfiguration()
-            ->getParameter('actions')
-        ;
-        $defaultActions = [];
-
-        if (key_exists('edit', $actions)) {
-            $defaultActions['edit'] = $actions['edit'];
-        }
-
-        if (key_exists('delete', $actions)) {
-            $defaultActions['delete'] = $actions['delete'];
-        }
-
         $resolver
             ->setDefaults([
                 'template' => '@LAGAdmin/Field/actionCollection.html.twig',
                 'actions' => [],
             ])
-            ->setNormalizer('actions', function (Options $options, $value) use ($actionConfiguration, $defaultActions) {
+            ->setNormalizer('actions', function (Options $options, $value) use ($actionConfiguration) {
                 if (!is_array($value) || 0 === count($value)) {
                     $value = [
                         'edit' => [],

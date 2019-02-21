@@ -94,16 +94,16 @@ class RoutingLoader implements LoaderInterface
     /**
      * Load the Admin's route.
      *
-     * @param mixed  $resource
+     * @param mixed  $routingResource
      * @param string $type
      *
      * @return RouteCollection
      *
      * @throws Exception
      */
-    public function load($resource, $type = null)
+    public function load($routingResource, $type = null)
     {
-        if (true === $this->loaded) {
+        if ($this->loaded) {
             throw new RuntimeException('Do not add the Admin "extra" loader twice');
         }
         $routes = new RouteCollection();
