@@ -45,7 +45,7 @@ class Admin implements AdminInterface
     private $action;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $entities;
 

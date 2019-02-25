@@ -127,7 +127,7 @@ class View implements ViewInterface
     }
 
     /**
-     * @return array
+     * @return Collection|Pagerfanta|array
      */
     public function getEntities()
     {

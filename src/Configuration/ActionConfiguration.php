@@ -184,9 +184,7 @@ class ActionConfiguration extends Configuration
             foreach ($order as $field => $sort) {
                 if (!is_string($sort) || !is_string($field) || !in_array(strtolower($sort), ['asc', 'desc'])) {
                     throw new Exception(
-                        'Order value should be an array of string (["field" => $key]), got '.gettype($sort),
-                        $this->actionName,
-                        $this->adminName
+                        'Order value should be an array of string (["field" => $key]), got '.gettype($sort)
                     );
                 }
             }

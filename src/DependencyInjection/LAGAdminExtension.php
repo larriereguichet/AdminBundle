@@ -33,7 +33,6 @@ class LAGAdminExtension extends Extension
         $adminsConfig = [];
         $menusConfig = [];
         $enableExtraConfig = true;
-        $translationPattern = null;
 
         if (key_exists('application', $config)) {
             if (key_exists('enable_extra_configuration', $config['application'])) {
