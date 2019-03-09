@@ -50,7 +50,7 @@ class AdminSubscriber implements EventSubscriberInterface
     private $dataProviderFactory;
 
     /**
-     * @var Session
+     * @var Session|SessionInterface
      */
     private $session;
 
