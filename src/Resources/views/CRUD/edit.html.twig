@@ -12,7 +12,7 @@
               role="form"
               name="{{ form.vars.name }}"
               enctype="multipart/form-data"
-              class="admin-form">
+              class="admin-form{{ ' ' ~ form.vars.attr.class | default('') }}">
 
             {{ form_errors(form) }}
 
