@@ -27,7 +27,7 @@ class SecuritySubscriberTest extends AdminTestBase
 
     public function testHandleRequest()
     {
-        list($subscriber, , $tokenStorage, $authorizationChecker) = $this->createSubscriber([]);
+        list($subscriber,, $tokenStorage, $authorizationChecker) = $this->createSubscriber([]);
 
         $user = $this->createMock(UserInterface::class);
         $user
@@ -83,7 +83,7 @@ class SecuritySubscriberTest extends AdminTestBase
 
     public function testHandleRequestWithSecurityDisabled()
     {
-        list($subscriber, , $tokenStorage) = $this->createSubscriber([
+        list($subscriber,, $tokenStorage) = $this->createSubscriber([
             'enable_security' => false,
         ]);
 

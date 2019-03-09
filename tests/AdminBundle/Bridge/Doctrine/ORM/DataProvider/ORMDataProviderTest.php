@@ -89,7 +89,7 @@ class ORMDataProviderTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->willReturnCallback(function ($eventName, $event) use ($queryBuilder, $admin) {
+            ->willReturnCallback(function($eventName, $event) use ($queryBuilder, $admin) {
                 $this->assertEquals(Events::DOCTRINE_ORM_FILTER, $eventName);
                 /** @var ORMFilterEvent $event */
                 $this->assertInstanceOf(ORMFilterEvent::class, $event);
@@ -217,7 +217,7 @@ class ORMDataProviderTest extends AdminTestBase
             $requestStack
         );
 
-        $this->assertExceptionRaised(Exception::class, function () use ($provider, $admin) {
+        $this->assertExceptionRaised(Exception::class, function() use ($provider, $admin) {
             $provider->get($admin, 42);
         });
     }
@@ -230,7 +230,7 @@ class ORMDataProviderTest extends AdminTestBase
         /** @var RequestStack|MockObject $requestStack */
         $requestStack = $this->createMock(RequestStack::class);
 
-        $entity =new FakeEntity(42);
+        $entity = new FakeEntity(42);
 
         /** @var EntityManagerInterface|MockObject $entityManager */
         $entityManager = $this->createMock(EntityManagerInterface::class);

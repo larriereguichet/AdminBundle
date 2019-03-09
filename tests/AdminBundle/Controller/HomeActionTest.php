@@ -34,7 +34,7 @@ class HomeActionTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->willReturnCallback(function ($eventName, $event) {
+            ->willReturnCallback(function($eventName, $event) {
                 $this->assertEquals(Events::MENU, $eventName);
                 $this->assertInstanceOf(MenuEvent::class, $event);
             })
