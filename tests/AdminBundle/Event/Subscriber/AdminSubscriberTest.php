@@ -103,7 +103,7 @@ class AdminSubscriberTest extends AdminTestBase
         $admin = $this->createMock(AdminInterface::class);
         $event = new AdminEvent($admin, $request);
 
-        $this->assertExceptionRaised(Exception::class, function () use ($subscriber, $event) {
+        $this->assertExceptionRaised(Exception::class, function() use ($subscriber, $event) {
             $subscriber->handleRequest($event);
         });
     }
@@ -115,7 +115,7 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testCreateView(string $actionName)
     {
-        list($subscriber, , $viewFactory) = $this->createSubscriber();
+        list($subscriber,, $viewFactory) = $this->createSubscriber();
         $view = $this->createMock(ViewInterface::class);
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
@@ -208,7 +208,7 @@ class AdminSubscriberTest extends AdminTestBase
     public function testCreateViewWithRedirection()
     {
         $actionName = 'edit';
-        list($subscriber, , $viewFactory) = $this->createSubscriber();
+        list($subscriber,, $viewFactory) = $this->createSubscriber();
         $view = $this->createMock(ViewInterface::class);
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
@@ -358,7 +358,7 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testLoadEntitiesWithMultipleStrategy()
     {
-        list($subscriber, , , $dataProviderFactory, , , ,) = $this->createSubscriber();
+        list($subscriber,,, $dataProviderFactory,,,,) = $this->createSubscriber();
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
@@ -428,7 +428,7 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testLoadEntitiesWithUniqueStrategy()
     {
-        list($subscriber, , , $dataProviderFactory) = $this->createSubscriber();
+        list($subscriber,,, $dataProviderFactory) = $this->createSubscriber();
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
@@ -501,7 +501,7 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testLoadEntitiesWithoutIdentifier()
     {
-        list($subscriber, , , $dataProviderFactory) = $this->createSubscriber();
+        list($subscriber,,, $dataProviderFactory) = $this->createSubscriber();
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
@@ -558,7 +558,7 @@ class AdminSubscriberTest extends AdminTestBase
         $request = new Request();
         $event = new EntityEvent($admin, $request);
 
-        $this->assertExceptionRaised(Exception::class, function () use ($subscriber, $event) {
+        $this->assertExceptionRaised(Exception::class, function() use ($subscriber, $event) {
             $subscriber->loadEntities($event);
         });
     }
@@ -568,7 +568,7 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testSaveEntity()
     {
-        list($subscriber, , , $dataProviderFactory, , $session, $translator) = $this->createSubscriber();
+        list($subscriber,,, $dataProviderFactory,, $session, $translator) = $this->createSubscriber();
 
         $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
