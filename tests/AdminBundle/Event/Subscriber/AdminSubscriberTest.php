@@ -150,7 +150,7 @@ class AdminSubscriberTest extends AdminTestBase
             ->willReturn('pandas')
         ;
         $admin
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getConfiguration')
             ->willReturn($adminConfiguration)
         ;
