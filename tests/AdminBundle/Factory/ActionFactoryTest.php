@@ -44,7 +44,7 @@ class ActionFactoryTest extends AdminTestBase
         $configurationFactory
             ->expects($this->once())
             ->method('createActionConfiguration')
-            ->with('list',  [], 'tauntaun', $adminConfiguration)
+            ->with('list', [], 'tauntaun', $adminConfiguration)
             ->willReturn($actionConfiguration)
         ;
 
@@ -76,7 +76,7 @@ class ActionFactoryTest extends AdminTestBase
             ])
         ;
 
-        $this->assertExceptionRaised(Exception::class, function () use ($factory, $adminConfiguration) {
+        $this->assertExceptionRaised(Exception::class, function() use ($factory, $adminConfiguration) {
             $factory->create('list', 'tauntaun', $adminConfiguration);
         });
     }
@@ -111,7 +111,7 @@ class ActionFactoryTest extends AdminTestBase
         $configurationFactory
             ->expects($this->once())
             ->method('createActionConfiguration')
-            ->with('list',  [], 'tauntaun', $adminConfiguration)
+            ->with('list', [], 'tauntaun', $adminConfiguration)
             ->willReturn($actionConfiguration)
         ;
 
@@ -120,7 +120,7 @@ class ActionFactoryTest extends AdminTestBase
             $configurationFactory
         );
 
-        $this->assertExceptionRaised(Exception::class, function () use ($factory, $adminConfiguration) {
+        $this->assertExceptionRaised(Exception::class, function() use ($factory, $adminConfiguration) {
             $factory->create('list', 'tauntaun', $adminConfiguration);
         });
     }
