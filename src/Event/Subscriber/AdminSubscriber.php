@@ -21,7 +21,6 @@ use LAG\AdminBundle\Utils\StringUtils;
 use LAG\AdminBundle\View\RedirectView;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -149,13 +148,7 @@ class AdminSubscriber implements EventSubscriberInterface
             $formName = 'delete';
         }
 
-        if ($admin->hasForm($formName) &&
-            $this->shouldRedirect(
-                $action,
-                $admin->getForm($formName),
-                $event->getRequest(),
-                $admin->getConfiguration())
-        ) {
+        if ($this->shouldRedirect($admin, $action, $formName, $event->getRequest(), $admin->getConfiguration())) {
             $url = $this->getRedirectionUrl(
                 $admin,
                 $action,
@@ -273,19 +266,26 @@ class AdminSubscriber implements EventSubscriberInterface
     /**
      * Return true if a redirection view should be created.
      *
+     * @param AdminInterface     $admin
      * @param ActionInterface    $action
-     * @param FormInterface      $form
+     * @param string             $formName
      * @param Request            $request
      * @param AdminConfiguration $configuration
      *
      * @return bool
      */
     private function shouldRedirect(
+        AdminInterface $admin,
         ActionInterface $action,
-        FormInterface $form,
+        string $formName,
         Request $request,
         AdminConfiguration $configuration
     ) {
+        if (!$admin->hasForm($formName)) {
+            return false;
+        }
+        $form = $admin->getForm($formName);
+
         if (!$form->isSubmitted()) {
             return false;
         }
@@ -338,6 +338,7 @@ class AdminSubscriber implements EventSubscriberInterface
         AdminConfiguration $configuration,
         Request $request
     ): string {
+
         if ('edit' === $action->getName()) {
             $routeName = RoutingLoader::generateRouteName(
                 $admin->getName(),
