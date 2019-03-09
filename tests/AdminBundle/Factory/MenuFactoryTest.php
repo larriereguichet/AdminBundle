@@ -21,7 +21,7 @@ class MenuFactoryTest extends AdminTestBase
 
     public function testCreate()
     {
-        list($factory, , $requestStack,) = $this->createFactory();
+        list($factory,, $requestStack,) = $this->createFactory();
 
         $requestStack
             ->expects($this->atLeastOnce())

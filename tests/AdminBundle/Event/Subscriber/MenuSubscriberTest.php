@@ -69,7 +69,7 @@ class MenuSubscriberTest extends AdminTestBase
 
     public function testBuildMenuWithoutConfiguration()
     {
-        list($subscriber, , $menuFactory, $eventDispatcher) = $this->createSubscriber();
+        list($subscriber,, $menuFactory, $eventDispatcher) = $this->createSubscriber();
         $event = new MenuEvent();
 
         $menuFactory

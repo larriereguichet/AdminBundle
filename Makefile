@@ -1,5 +1,7 @@
 all: install
 
+current_dir = $(shell pwd)
+
 install:
 	composer install
 	make assets
@@ -14,6 +16,7 @@ assets@build:
 ### PHPUnit ###
 test@phpunit:
 	bin/phpunit
+	@echo "Results file generated file://$(current_dir)/var/phpunit/coverage/index.html"
 
 ### CsFixer ###
 php-cs-fixer@fix:

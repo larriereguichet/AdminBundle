@@ -47,7 +47,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->exactly(6))
             ->method('dispatch')
-            ->willReturnCallback(function ($eventName, $event) use ($action, $form) {
+            ->willReturnCallback(function($eventName, $event) use ($action, $form) {
                 if (Events::HANDLE_REQUEST === $eventName) {
                     /** @var AdminEvent $event */
                     $this->assertInstanceOf(AdminEvent::class, $event);
@@ -112,7 +112,7 @@ class AdminTest extends AdminTestBase
         );
         $request = new Request();
 
-        $this->assertExceptionRaised(Exception::class, function () use ($admin, $request) {
+        $this->assertExceptionRaised(Exception::class, function() use ($admin, $request) {
             $admin->handleRequest($request);
         });
     }
@@ -127,7 +127,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->willReturnCallback(function ($eventName, $event) use ($view) {
+            ->willReturnCallback(function($eventName, $event) use ($view) {
                 $this->assertEquals(Events::VIEW, $eventName);
                 /** @var ViewEvent $event */
                 $this->assertInstanceOf(ViewEvent::class, $event);
@@ -178,7 +178,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->exactly(5))
             ->method('dispatch')
-            ->willReturnCallback(function ($eventName, $event) use ($action, $form) {
+            ->willReturnCallback(function($eventName, $event) use ($action, $form) {
                 if (Events::HANDLE_REQUEST === $eventName) {
                     /** @var AdminEvent $event */
                     $this->assertInstanceOf(AdminEvent::class, $event);
@@ -208,7 +208,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->exactly(5))
             ->method('dispatch')
-            ->willReturnCallback(function ($eventName, $event) use ($action, $form) {
+            ->willReturnCallback(function($eventName, $event) use ($action, $form) {
                 if (Events::HANDLE_REQUEST === $eventName) {
                     /** @var AdminEvent $event */
                     $this->assertInstanceOf(AdminEvent::class, $event);

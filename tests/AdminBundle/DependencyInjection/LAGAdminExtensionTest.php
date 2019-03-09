@@ -17,7 +17,7 @@ class LAGAdminExtensionTest extends AdminTestBase
         $builder
             ->expects($this->atLeastOnce())
             ->method('setParameter')
-            ->willReturnCallback(function ($parameter, $value) {
+            ->willReturnCallback(function($parameter, $value) {
                 $this->assertContains($parameter, [
                     'lag.admin.enable_extra_configuration',
                     'lag.admin.application_configuration',

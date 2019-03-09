@@ -158,7 +158,7 @@ class ActionConfiguration extends Configuration
      */
     private function getFieldsNormalizer()
     {
-        return function (Options $options, $fields) {
+        return function(Options $options, $fields) {
             $normalizedFields = [];
 
             foreach ($fields as $name => $field) {
@@ -180,7 +180,7 @@ class ActionConfiguration extends Configuration
      */
     private function getOrderNormalizer()
     {
-        return function (Options $options, $order) {
+        return function(Options $options, $order) {
             foreach ($order as $field => $sort) {
                 if (!is_string($sort) || !is_string($field) || !in_array(strtolower($sort), ['asc', 'desc'])) {
                     throw new Exception(
@@ -201,7 +201,7 @@ class ActionConfiguration extends Configuration
      */
     private function getLoadStrategyNormalizer()
     {
-        return function (Options $options, $value) {
+        return function(Options $options, $value) {
             if (!$value) {
                 if ('create' == $this->actionName) {
                     $value = LAGAdminBundle::LOAD_STRATEGY_NONE;
@@ -224,7 +224,7 @@ class ActionConfiguration extends Configuration
      */
     private function getMenuNormalizer()
     {
-        return function (Options $options, $menus) {
+        return function(Options $options, $menus) {
             // set default to an array
             if (false === $menus) {
                 $menus = [];
@@ -242,7 +242,7 @@ class ActionConfiguration extends Configuration
      */
     private function getCriteriaNormalizer()
     {
-        return function (Options $options, $value) {
+        return function(Options $options, $value) {
             if (!$value) {
                 $idActions = [
                     'edit',
@@ -291,7 +291,7 @@ class ActionConfiguration extends Configuration
      */
     private function getFiltersNormalizer(): Closure
     {
-        return function (Options $options, $data) {
+        return function(Options $options, $data) {
             $normalizedData = [];
 
             foreach ($data as $name => $field) {
@@ -317,7 +317,7 @@ class ActionConfiguration extends Configuration
 
     private function getRouteDefaultNormalizer(): Closure
     {
-        return function (Options $options, $value) {
+        return function(Options $options, $value) {
             if (!is_array($value)) {
                 $value = [];
             }
@@ -330,7 +330,7 @@ class ActionConfiguration extends Configuration
 
     private function getFormNormalizer(): Closure
     {
-        return function (Options $options, $value) {
+        return function(Options $options, $value) {
             if (null !== $value) {
                 return $value;
             }

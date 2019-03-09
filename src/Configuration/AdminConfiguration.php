@@ -76,7 +76,7 @@ class AdminConfiguration extends Configuration
                 null,
                 'pagerfanta',
             ])
-            ->setNormalizer('actions', function (Options $options, $actions) {
+            ->setNormalizer('actions', function(Options $options, $actions) {
                 $normalizedActions = [];
                 $addBatchAction = false;
 

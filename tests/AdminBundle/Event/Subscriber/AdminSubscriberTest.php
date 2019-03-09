@@ -103,17 +103,19 @@ class AdminSubscriberTest extends AdminTestBase
         $admin = $this->createMock(AdminInterface::class);
         $event = new AdminEvent($admin, $request);
 
-        $this->assertExceptionRaised(Exception::class, function () use ($subscriber, $event) {
+        $this->assertExceptionRaised(Exception::class, function() use ($subscriber, $event) {
             $subscriber->handleRequest($event);
         });
     }
 
     /**
      * Test the view creation.
+     *
+     * @dataProvider createViewProvider
      */
-    public function testCreateView()
+    public function testCreateView(string $actionName)
     {
-        list($subscriber, , $viewFactory) = $this->createSubscriber();
+        list($subscriber,, $viewFactory) = $this->createSubscriber();
         $view = $this->createMock(ViewInterface::class);
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
@@ -128,7 +130,7 @@ class AdminSubscriberTest extends AdminTestBase
         $action
             ->expects($this->atLeastOnce())
             ->method('getName')
-            ->willReturn('edit')
+            ->willReturn($actionName)
         ;
         $action
             ->expects($this->atLeastOnce())
@@ -150,7 +152,7 @@ class AdminSubscriberTest extends AdminTestBase
             ->willReturn('pandas')
         ;
         $admin
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getConfiguration')
             ->willReturn($adminConfiguration)
         ;
@@ -175,7 +177,112 @@ class AdminSubscriberTest extends AdminTestBase
             ->method('create')
             ->with(
                 $request,
-                'edit',
+                $actionName,
+                'pandas',
+                $adminConfiguration,
+                $actionConfiguration,
+                [
+                    'entity',
+                ],
+                [
+                    'form',
+                ]
+            )
+            ->willReturn($view)
+        ;
+        $event = new ViewEvent($admin, $request);
+        $subscriber->createView($event);
+
+        $this->assertEquals($view, $event->getView());
+    }
+
+    public function createViewProvider(): array
+    {
+        return [
+            ['edit'],
+            ['create'],
+            ['delete'],
+        ];
+    }
+
+    public function testCreateViewWithRedirection()
+    {
+        $actionName = 'edit';
+        list($subscriber,, $viewFactory) = $this->createSubscriber();
+        $view = $this->createMock(ViewInterface::class);
+
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
+        $actionConfiguration
+            ->expects($this->atLeastOnce())
+            ->method('getParameter')
+            ->with('menus')
+            ->willReturn([])
+        ;
+
+        $action = $this->createMock(ActionInterface::class);
+        $action
+            ->expects($this->atLeastOnce())
+            ->method('getName')
+            ->willReturn($actionName)
+        ;
+        $action
+            ->expects($this->atLeastOnce())
+            ->method('getConfiguration')
+            ->willReturn($actionConfiguration)
+        ;
+
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
+
+        $admin = $this->createMock(AdminInterface::class);
+        $admin
+            ->expects($this->atLeastOnce())
+            ->method('getAction')
+            ->willReturn($action)
+        ;
+        $admin
+            ->expects($this->atLeastOnce())
+            ->method('getName')
+            ->willReturn('pandas')
+        ;
+        $admin
+            ->expects($this->atLeastOnce())
+            ->method('hasForm')
+            ->with('entity')
+            ->willReturn(true)
+        ;
+        $admin
+            ->expects($this->atLeastOnce())
+            ->method('hasForm')
+            ->with('entity')
+            ->willReturn(true)
+        ;
+        $admin
+            ->expects($this->exactly(2))
+            ->method('getConfiguration')
+            ->willReturn($adminConfiguration)
+        ;
+        $admin
+            ->expects($this->once())
+            ->method('getEntities')
+            ->willReturn([
+                'entity',
+            ])
+        ;
+        $admin
+            ->expects($this->once())
+            ->method('getForms')
+            ->willReturn([
+                'form',
+            ])
+        ;
+        $request = new Request();
+
+        $viewFactory
+            ->expects($this->once())
+            ->method('create')
+            ->with(
+                $request,
+                $actionName,
                 'pandas',
                 $adminConfiguration,
                 $actionConfiguration,
@@ -251,7 +358,7 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testLoadEntitiesWithMultipleStrategy()
     {
-        list($subscriber, , , $dataProviderFactory, , , ,) = $this->createSubscriber();
+        list($subscriber,,, $dataProviderFactory,,,,) = $this->createSubscriber();
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
@@ -321,7 +428,7 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testLoadEntitiesWithUniqueStrategy()
     {
-        list($subscriber, , , $dataProviderFactory) = $this->createSubscriber();
+        list($subscriber,,, $dataProviderFactory) = $this->createSubscriber();
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
@@ -394,7 +501,7 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testLoadEntitiesWithoutIdentifier()
     {
-        list($subscriber, , , $dataProviderFactory) = $this->createSubscriber();
+        list($subscriber,,, $dataProviderFactory) = $this->createSubscriber();
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
@@ -451,7 +558,7 @@ class AdminSubscriberTest extends AdminTestBase
         $request = new Request();
         $event = new EntityEvent($admin, $request);
 
-        $this->assertExceptionRaised(Exception::class, function () use ($subscriber, $event) {
+        $this->assertExceptionRaised(Exception::class, function() use ($subscriber, $event) {
             $subscriber->loadEntities($event);
         });
     }
@@ -461,7 +568,7 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testSaveEntity()
     {
-        list($subscriber, , , $dataProviderFactory, , $session, $translator) = $this->createSubscriber();
+        list($subscriber,,, $dataProviderFactory,, $session, $translator) = $this->createSubscriber();
 
         $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
