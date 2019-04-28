@@ -2,34 +2,29 @@
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
-use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Factory\DataProviderFactory;
+use LAG\AdminBundle\Factory\FormFactoryInterface;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Utils\StringUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FormSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
     /**
      * @var DataProviderFactory
      */
     private $dataProviderFactory;
 
     /**
-     * @var Session
+     * @var Session|SessionInterface
      */
     private $session;
 
@@ -39,34 +34,39 @@ class FormSubscriber implements EventSubscriberInterface
     private $translator;
 
     /**
+     * @var FormFactoryInterface
+     */
+    private $adminFormFactory;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
     {
         return [
-            Events::CREATE_FORM => 'onCreateForm',
-            Events::HANDLE_FORM => 'onHandleForm',
+            Events::ADMIN_CREATE_FORM => 'createForm',
+            Events::ADMIN_HANDLE_FORM => 'handleForm',
         ];
     }
 
     /**
      * FormSubscriber constructor.
      *
-     * @param FormFactoryInterface $formFactory
      * @param DataProviderFactory  $dataProviderFactory
-     * @param Session              $session
+     * @param FormFactoryInterface $adminFormFactory
+     * @param SessionInterface     $session
      * @param TranslatorInterface  $translator
      */
     public function __construct(
-        FormFactoryInterface $formFactory,
         DataProviderFactory $dataProviderFactory,
-        Session $session,
+        FormFactoryInterface $adminFormFactory,
+        SessionInterface $session,
         TranslatorInterface $translator
     ) {
-        $this->formFactory = $formFactory;
         $this->dataProviderFactory = $dataProviderFactory;
         $this->session = $session;
         $this->translator = $translator;
+        $this->adminFormFactory = $adminFormFactory;
     }
 
     /**
@@ -74,7 +74,7 @@ class FormSubscriber implements EventSubscriberInterface
      *
      * @param FormEvent $event
      */
-    public function onCreateForm(FormEvent $event): void
+    public function createForm(FormEvent $event): void
     {
         $admin = $event->getAdmin();
         $action = $admin->getAction();
@@ -92,12 +92,12 @@ class FormSubscriber implements EventSubscriberInterface
         }
 
         if ('create' === $action->getName() || 'edit' === $action->getName()) {
-            $form = $this->createEntityForm($admin, $entity);
+            $form = $this->adminFormFactory->createEntityForm($admin, $event->getRequest(), $entity);
             $event->addForm($form, 'entity');
         }
 
         if ('delete' === $action->getName()) {
-            $form = $this->createDeleteForm($action, $entity);
+            $form = $this->adminFormFactory->createDeleteForm($action, $event->getRequest(), $entity);
             $event->addForm($form, 'delete');
         }
     }
@@ -107,7 +107,7 @@ class FormSubscriber implements EventSubscriberInterface
      *
      * @param FormEvent $event
      */
-    public function onHandleForm(FormEvent $event): void
+    public function handleForm(FormEvent $event): void
     {
         $admin = $event->getAdmin();
         $action = $admin->getAction();
@@ -119,32 +119,6 @@ class FormSubscriber implements EventSubscriberInterface
             $form = $admin->getForm('delete');
             $this->handleDeleteForm($event->getRequest(), $form, $admin);
         }
-    }
-
-    private function createEntityForm(AdminInterface $admin, $entity = null): FormInterface
-    {
-        if (!$entity) {
-            $dataProvider = $this
-                ->dataProviderFactory
-                ->get($admin->getConfiguration()->get('data_provider'));
-            $entity = $dataProvider->create($admin);
-        }
-        $form = $this
-            ->formFactory
-            ->create($admin->getConfiguration()->get('form'), $entity)
-        ;
-
-        return $form;
-    }
-
-    private function createDeleteForm(ActionInterface $action, $entity): FormInterface
-    {
-        $form = $this
-            ->formFactory
-            ->create($action->getConfiguration()->get('form'), $entity)
-        ;
-
-        return $form;
     }
 
     private function handleDeleteForm(Request $request, FormInterface $form, AdminInterface $admin): void

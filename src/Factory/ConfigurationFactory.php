@@ -48,7 +48,7 @@ class ConfigurationFactory
         ApplicationConfiguration $applicationConfiguration
     ): AdminConfiguration {
         $event = new ConfigurationEvent($adminName, $configuration, $adminName, $configuration['entity']);
-        $this->eventDispatcher->dispatch(Events::ADMIN_CONFIGURATION, $event);
+        $this->eventDispatcher->dispatch(Events::CONFIGURATION_ADMIN, $event);
 
         $resolver = new OptionsResolver();
         $adminConfiguration = new AdminConfiguration($applicationConfiguration);
@@ -78,7 +78,7 @@ class ConfigurationFactory
             $adminName,
             $adminConfiguration->getParameter('entity')
         );
-        $this->eventDispatcher->dispatch(Events::ACTION_CONFIGURATION, $event);
+        $this->eventDispatcher->dispatch(Events::CONFIGURATION_ACTION, $event);
 
         $resolver = new OptionsResolver();
         $actionConfiguration = new ActionConfiguration($actionName, $adminName, $adminConfiguration);

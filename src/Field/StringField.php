@@ -3,15 +3,12 @@
 namespace LAG\AdminBundle\Field;
 
 use LAG\AdminBundle\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Field\Traits\TranslatorTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class StringField extends AbstractField implements TranslatorAwareFieldInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    use TranslatorTrait;
 
     public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)
     {
@@ -46,15 +43,5 @@ class StringField extends AbstractField implements TranslatorAwareFieldInterface
         $value = strip_tags($value);
 
         return $value;
-    }
-
-    /**
-     * Defines the translator.
-     *
-     * @param TranslatorInterface $translator
-     */
-    public function setTranslator(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
     }
 }

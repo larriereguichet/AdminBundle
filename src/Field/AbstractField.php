@@ -8,7 +8,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractField implements FieldInterface
 {
+    const TYPE_AUTO = 'auto';
     const TYPE_STRING = 'string';
+    const TYPE_TEXT = 'text';
+    const TYPE_FLOAT = 'float';
     const TYPE_INTEGER = 'integer';
     const TYPE_LINK = 'link';
     const TYPE_ARRAY = 'array';
@@ -96,5 +99,10 @@ abstract class AbstractField implements FieldInterface
         }
         $this->options = $options;
         $this->frozen = true;
+    }
+
+    public function isSortable(): bool
+    {
+        return false;
     }
 }

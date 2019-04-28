@@ -51,7 +51,7 @@ class SecuritySubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::HANDLE_REQUEST => 'handleRequest',
+            Events::ADMIN_HANDLE_REQUEST => 'handleRequest',
         ];
     }
 

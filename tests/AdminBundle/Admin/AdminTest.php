@@ -48,7 +48,7 @@ class AdminTest extends AdminTestBase
             ->expects($this->exactly(6))
             ->method('dispatch')
             ->willReturnCallback(function($eventName, $event) use ($action, $form) {
-                if (Events::HANDLE_REQUEST === $eventName) {
+                if (Events::ADMIN_HANDLE_REQUEST === $eventName) {
                     /** @var AdminEvent $event */
                     $this->assertInstanceOf(AdminEvent::class, $event);
                     $event->setAction($action);
@@ -62,7 +62,7 @@ class AdminTest extends AdminTestBase
                     ]));
                 }
 
-                if (Events::CREATE_FORM === $eventName) {
+                if (Events::ADMIN_CREATE_FORM === $eventName) {
                     /** @var FormEvent $event */
                     $this->assertInstanceOf(FormEvent::class, $event);
                     $event->addForm($form, 'entity');
@@ -128,7 +128,7 @@ class AdminTest extends AdminTestBase
             ->expects($this->once())
             ->method('dispatch')
             ->willReturnCallback(function($eventName, $event) use ($view) {
-                $this->assertEquals(Events::VIEW, $eventName);
+                $this->assertEquals(Events::ADMIN_VIEW, $eventName);
                 /** @var ViewEvent $event */
                 $this->assertInstanceOf(ViewEvent::class, $event);
 
@@ -172,14 +172,13 @@ class AdminTest extends AdminTestBase
         $resource = $this->createMock(AdminResource::class);
         $configuration = $this->createMock(AdminConfiguration::class);
         $action = $this->createMock(ActionInterface::class);
-        $form = $this->createMock(FormInterface::class);
 
         $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher
             ->expects($this->exactly(5))
             ->method('dispatch')
-            ->willReturnCallback(function($eventName, $event) use ($action, $form) {
-                if (Events::HANDLE_REQUEST === $eventName) {
+            ->willReturnCallback(function($eventName, $event) use ($action) {
+                if (Events::ADMIN_HANDLE_REQUEST === $eventName) {
                     /** @var AdminEvent $event */
                     $this->assertInstanceOf(AdminEvent::class, $event);
                     $event->setAction($action);
@@ -209,7 +208,7 @@ class AdminTest extends AdminTestBase
             ->expects($this->exactly(5))
             ->method('dispatch')
             ->willReturnCallback(function($eventName, $event) use ($action, $form) {
-                if (Events::HANDLE_REQUEST === $eventName) {
+                if (Events::ADMIN_HANDLE_REQUEST === $eventName) {
                     /** @var AdminEvent $event */
                     $this->assertInstanceOf(AdminEvent::class, $event);
                     $event->setAction($action);
@@ -221,7 +220,7 @@ class AdminTest extends AdminTestBase
                     $event->setEntities(new ArrayCollection());
                 }
 
-                if (Events::CREATE_FORM === $eventName) {
+                if (Events::ADMIN_CREATE_FORM === $eventName) {
                     /** @var FormEvent $event */
                     $this->assertInstanceOf(FormEvent::class, $event);
                     $event->addForm($form, 'entity');

@@ -2,8 +2,11 @@
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber;
 
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
+use LAG\AdminBundle\Event\Events\FieldEvent;
+use LAG\AdminBundle\Field\Definition\FieldDefinition;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -15,24 +18,33 @@ class ORMSubscriber implements EventSubscriberInterface
     private $requestStack;
 
     /**
-     * ORMSubscriber constructor.
-     *
-     * @param RequestStack $requestStack
+     * @var FieldDefinition[]
      */
-    public function __construct(RequestStack $requestStack)
+    private $fieldDefinitions;
+
+    /**
+     * @var MetadataHelperInterface
+     */
+    private $metadataHelper;
+
+    public function __construct(RequestStack $requestStack, MetadataHelperInterface $metadataHelper)
     {
         $this->requestStack = $requestStack;
+        $this->metadataHelper = $metadataHelper;
     }
 
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Events::DOCTRINE_ORM_FILTER => [
                 ['addOrder'],
                 ['addFilters'],
+            ],
+            Events::FIELD_PRE_CREATE => [
+                ['guessType'],
             ],
         ];
     }
@@ -97,5 +109,31 @@ class ORMSubscriber implements EventSubscriberInterface
             ));
             $queryBuilder->setParameter($parameterName, $value);
         }
+    }
+
+    public function guessType(FieldEvent $event): void
+    {
+        // No need to guess a type when one is already defined
+        if (null !== $event->getType()) {
+            return;
+        }
+
+        // Initialize the definitions array only the first time
+        if (null === $this->fieldDefinitions) {
+            $this->fieldDefinitions = $this->metadataHelper->getFields($event->getEntityClass());
+        }
+
+        if ('id' === $event->getFieldName()) {
+            $event->setType('string');
+
+            return;
+        }
+
+        if (!key_exists($event->getFieldName(), $this->fieldDefinitions)) {
+            return;
+        }
+        $definition = $this->fieldDefinitions[$event->getFieldName()];
+        $event->setType($definition->getType());
+        $event->setOptions($definition->getOptions());
     }
 }

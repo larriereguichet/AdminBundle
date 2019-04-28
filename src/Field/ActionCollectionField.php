@@ -25,7 +25,7 @@ class ActionCollectionField extends CollectionField implements TwigAwareFieldInt
                 'template' => '@LAGAdmin/Field/actionCollection.html.twig',
                 'actions' => [],
             ])
-            ->setNormalizer('actions', function(Options $options, $value) use ($actionConfiguration) {
+            ->setNormalizer('actions', function (Options $options, $value) use ($actionConfiguration) {
                 if (!is_array($value) || 0 === count($value)) {
                     $value = [
                         'edit' => [],
@@ -124,7 +124,7 @@ class ActionCollectionField extends CollectionField implements TwigAwareFieldInt
                 '_self',
                 '_blank',
             ])
-            ->setNormalizer('route', function(Options $options, $value) use ($actionConfiguration) {
+            ->setNormalizer('route', function (Options $options, $value) use ($actionConfiguration) {
                 // route or url should be defined
                 if (!$value && !$options->offsetGet('url') && !$options->offsetGet('admin')) {
                     throw new InvalidOptionsException(
@@ -142,7 +142,7 @@ class ActionCollectionField extends CollectionField implements TwigAwareFieldInt
 
                 return $value;
             })
-            ->setNormalizer('admin', function(Options $options, $value) {
+            ->setNormalizer('admin', function (Options $options, $value) {
                 // if a Admin is defined, an Action should be defined too
                 if ($value && !$options->offsetGet('action')) {
                     throw new InvalidOptionsException(
@@ -152,7 +152,7 @@ class ActionCollectionField extends CollectionField implements TwigAwareFieldInt
 
                 return $value;
             })
-            ->setNormalizer('parameters', function(Options $options, $values) {
+            ->setNormalizer('parameters', function (Options $options, $values) {
                 $cleanedValues = [];
 
                 foreach ($values as $name => $method) {

@@ -27,7 +27,7 @@ class ViewFactoryTest extends AdminTestBase
         $fieldFactory = $this->createMock(FieldFactory::class);
         $fieldFactory
             ->expects($this->once())
-            ->method('getFields')
+            ->method('createFields')
             ->with($actionConfiguration)
             ->willReturn([])
         ;
@@ -51,7 +51,7 @@ class ViewFactoryTest extends AdminTestBase
             'planet_form' => $form,
         ];
 
-        $view = $factory->create(
+        $factory->create(
             $request,
             'atomize',
             'planet',
@@ -102,7 +102,7 @@ class ViewFactoryTest extends AdminTestBase
         $fieldFactory = $this->createMock(FieldFactory::class);
         $fieldFactory
             ->expects($this->never())
-            ->method('getFields')
+            ->method('createFields')
         ;
 
         $menuFactory = $this->createMock(MenuFactory::class);

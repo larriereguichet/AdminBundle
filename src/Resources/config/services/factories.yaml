@@ -1,0 +1,30 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    LAG\AdminBundle\Factory\ActionFactory:
+        class: LAG\AdminBundle\Factory\ActionFactory
+
+    LAG\AdminBundle\Factory\AdminFactory:
+        class: LAG\AdminBundle\Factory\AdminFactory
+
+    LAG\AdminBundle\Factory\ConfigurationFactory:
+        class: LAG\AdminBundle\Factory\ConfigurationFactory
+
+    LAG\AdminBundle\Factory\MenuFactory:
+        class: LAG\AdminBundle\Factory\MenuFactory
+
+    LAG\AdminBundle\Factory\ViewFactory:
+        class: LAG\AdminBundle\Factory\ViewFactory
+
+    LAG\AdminBundle\Factory\DataProviderFactory:
+        class: LAG\AdminBundle\Factory\DataProviderFactory
+
+    LAG\AdminBundle\Factory\FieldFactory:
+        class: LAG\AdminBundle\Factory\FieldFactory
+
+    LAG\AdminBundle\Factory\FormFactory: ~
+
+    LAG\AdminBundle\Factory\FormFactoryInterface: '@LAG\AdminBundle\Factory\FormFactory'

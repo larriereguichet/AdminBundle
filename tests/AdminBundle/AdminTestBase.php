@@ -4,9 +4,12 @@ namespace LAG\AdminBundle\Tests;
 
 use Closure;
 use Exception;
+use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Configuration\AdminConfiguration;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,14 +31,27 @@ class AdminTestBase extends TestCase
         ]);
         $loader = new YamlFileLoader($containerBuilder, $locator);
         $loader->load('services.yaml');
+        $loader->load('services/factories.yaml');
+        $loader->load('services/fields.yaml');
+        $loader->load('services/resources.yaml');
+        $loader->load('services/subscribers.yaml');
+        $loader->load('services/twig.yaml');
         $exists = false;
 
-        foreach ($containerBuilder->getDefinitions() as $definition) {
+        foreach ($containerBuilder->getDefinitions() as $id => $definition) {
             if ($serviceClass === $definition->getClass()) {
                 $exists = true;
             }
+
+            if ($serviceClass === $id) {
+                $exists = true;
+            }
         }
-        $this->assertTrue($exists);
+        if ($containerBuilder->hasAlias($serviceClass)) {
+            $exists = true;
+        }
+
+        $this->assertTrue($exists, 'Failed asserting that the service "'.$serviceClass.'" exists');
     }
 
     /**
@@ -111,5 +127,77 @@ class AdminTestBase extends TestCase
         $property->setAccessible(true);
         
         return $property->getValue($object);
+    }
+
+    protected function createActionConfigurationMock(array $map, int $expectedCalls = 1)
+    {
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
+        $actionConfiguration
+            ->expects($this->exactly($expectedCalls))
+            ->method('get')
+            ->willReturnMap($map)
+        ;
+
+        return $actionConfiguration;
+    }
+
+    protected function createAdminConfigurationMock(array $map, int $expectedCalls = 1)
+    {
+        $actionConfiguration = $this->createMock(AdminConfiguration::class);
+        $actionConfiguration
+            ->expects($this->exactly($expectedCalls))
+            ->method('get')
+            ->willReturnMap($map)
+        ;
+
+        return $actionConfiguration;
+    }
+
+    /**
+     * @param array $map
+     * @param int   $expectedCalls
+     * @param int   $configurationExpectedCalls
+     *
+     * @return MockObject|ActionInterface
+     */
+    protected function createActionWithConfigurationMock(
+        array $map,
+        int $expectedCalls = 1,
+        int $configurationExpectedCalls = 1
+    ): MockObject {
+        $configuration = $this->createActionConfigurationMock($map, $configurationExpectedCalls);
+
+        $action = $this->createMock(ActionInterface::class);
+        $action
+            ->expects($this->exactly($expectedCalls))
+            ->method('getConfiguration')
+            ->willReturn($configuration)
+        ;
+
+        return $action;
+    }
+
+    /**
+     * @param array $map
+     * @param int   $expectedCalls
+     * @param int   $configurationExpectedCalls
+     *
+     * @return MockObject|AdminInterface
+     */
+    protected function createAdminWithConfigurationMock(
+        array $map,
+        int $expectedCalls = 1,
+        int $configurationExpectedCalls = 1
+    ): MockObject {
+        $configuration = $this->createAdminConfigurationMock($map, $configurationExpectedCalls);
+
+        $admin = $this->createMock(AdminInterface::class);
+        $admin
+            ->expects($this->exactly($expectedCalls))
+            ->method('getConfiguration')
+            ->willReturn($configuration)
+        ;
+
+        return $admin;
     }
 }

@@ -4,27 +4,24 @@ namespace LAG\AdminBundle\Event;
 
 class Events
 {
-    const HANDLE_REQUEST = 'lag.admin.handleRequest';
+    const ADMIN_HANDLE_REQUEST = 'lag.admin.handleRequest';
+    const ADMIN_CREATE_FORM = 'lag.admin.createForm';
+    const ADMIN_HANDLE_FORM = 'lag.admin.handleForm';
+    const ADMIN_FILTER = 'lag.admin.filter';
+    const ADMIN_VIEW = 'lag.admin.view';
 
-    const CREATE_FORM = 'lag.admin.createForm';
-
-    const HANDLE_FORM = 'lag.admin.handleForm';
-
-    const ADMIN_CONFIGURATION = 'lag.admin.admin_configuration';
-
-    const ACTION_CONFIGURATION = 'lag.admin.action_configuration';
+    const MENU = 'lag.admin.menu';
+    const CONFIGURATION_ADMIN = 'lag.configuration.admin';
+    const CONFIGURATION_ACTION = 'lag.configuration.action';
 
     const MENU_CONFIGURATION = 'lag.admin.menu_configuration';
 
-    const FILTER = 'lag.admin.filter';
-
-    const VIEW = 'lag.admin.view';
-
-    const MENU = 'lag.admin.menu';
-
     const ENTITY_LOAD = 'lag.admin.entity_load';
-
     const ENTITY_SAVE = 'lag.admin.entity_save';
-
     const DOCTRINE_ORM_FILTER = 'lag.admin.doctrine_orm_filter';
+
+    const FIELD_PRE_CREATE = 'lag.field.pre_create';
+    const FIELD_POST_CREATE = 'lag.field.post_create';
+
+    const FORM_PRE_CREATE_ENTITY_FORM = 'lag.form.pre_create_entity_form';
 }

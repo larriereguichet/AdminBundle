@@ -1,7 +1,7 @@
 {% extends admin_config('base_template') %}
 
 {% block content %}
-    <h1>{{ admin.configuration.getParameter('title') | trans }}</h1>
+    {% include '@LAGAdmin/CRUD/_title.html.twig' %}
 
     {% block filterLink %}
         <a href="#filters-container"
@@ -28,11 +28,13 @@
 
                     <div class="text-right btn-group"
                          role="group">
-                        <a href="{{ admin_url(admin, 'list') }}" class="btn btn-secondary">
+                        <a href="{{ admin_url(admin, 'list') }}"
+                           class="btn btn-secondary">
                             <i class="fa fa-refresh"></i>
                             Reset
                         </a>
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit"
+                                class="btn btn-success">
                             Filter
                             <i class="fa fa-filter"></i>
                         </button>
@@ -41,6 +43,8 @@
             </div>
         </div>
     {% endblock %}
+
+    {% block top_extra_content %}{% endblock %}
 
     {% block table %}
 
@@ -99,4 +103,6 @@
             {% endif %}
         </div>
     {% endblock %}
+
+    {% block bottom_extra_content %}{% endblock %}
 {% endblock %}

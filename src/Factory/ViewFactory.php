@@ -99,7 +99,7 @@ class ViewFactory
         }
         $fields = $this
             ->fieldFactory
-            ->getFields($actionConfiguration)
+            ->createFields($actionConfiguration)
         ;
         $formViews = [];
 

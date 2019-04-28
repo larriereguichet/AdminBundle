@@ -59,7 +59,7 @@ class ActionConfiguration extends Configuration
     {
         $resolver
             ->setDefaults([
-                'title' => $this->getDefaultTitle(),
+                'title' => null,
                 'class' => Action::class,
                 'fields' => [],
                 'permissions' => [
@@ -90,7 +90,10 @@ class ActionConfiguration extends Configuration
                 'use_form' => true,
                 'form' => null,
             ])
-            ->setAllowedTypes('title', 'string')
+            ->setAllowedTypes('title', [
+                'string',
+                'null',
+            ])
             ->setAllowedTypes('class', 'string')
             ->setAllowedTypes('fields', 'array')
             ->setAllowedTypes('permissions', 'array')
@@ -111,6 +114,7 @@ class ActionConfiguration extends Configuration
             ->setNormalizer('filters', $this->getFiltersNormalizer())
             ->setNormalizer('route_defaults', $this->getRouteDefaultNormalizer())
             ->setNormalizer('form', $this->getFormNormalizer())
+            ->setNormalizer('title', $this->getTitleNormalizer())
             ->setAllowedValues('load_strategy', [
                 LAGAdminBundle::LOAD_STRATEGY_NONE,
                 LAGAdminBundle::LOAD_STRATEGY_UNIQUE,
@@ -158,7 +162,7 @@ class ActionConfiguration extends Configuration
      */
     private function getFieldsNormalizer()
     {
-        return function(Options $options, $fields) {
+        return function (Options $options, $fields) {
             $normalizedFields = [];
 
             foreach ($fields as $name => $field) {
@@ -180,7 +184,7 @@ class ActionConfiguration extends Configuration
      */
     private function getOrderNormalizer()
     {
-        return function(Options $options, $order) {
+        return function (Options $options, $order) {
             foreach ($order as $field => $sort) {
                 if (!is_string($sort) || !is_string($field) || !in_array(strtolower($sort), ['asc', 'desc'])) {
                     throw new Exception(
@@ -201,7 +205,7 @@ class ActionConfiguration extends Configuration
      */
     private function getLoadStrategyNormalizer()
     {
-        return function(Options $options, $value) {
+        return function (Options $options, $value) {
             if (!$value) {
                 if ('create' == $this->actionName) {
                     $value = LAGAdminBundle::LOAD_STRATEGY_NONE;
@@ -224,7 +228,7 @@ class ActionConfiguration extends Configuration
      */
     private function getMenuNormalizer()
     {
-        return function(Options $options, $menus) {
+        return function (Options $options, $menus) {
             // set default to an array
             if (false === $menus) {
                 $menus = [];
@@ -242,7 +246,7 @@ class ActionConfiguration extends Configuration
      */
     private function getCriteriaNormalizer()
     {
-        return function(Options $options, $value) {
+        return function (Options $options, $value) {
             if (!$value) {
                 $idActions = [
                     'edit',
@@ -291,7 +295,7 @@ class ActionConfiguration extends Configuration
      */
     private function getFiltersNormalizer(): Closure
     {
-        return function(Options $options, $data) {
+        return function (Options $options, $data) {
             $normalizedData = [];
 
             foreach ($data as $name => $field) {
@@ -317,7 +321,7 @@ class ActionConfiguration extends Configuration
 
     private function getRouteDefaultNormalizer(): Closure
     {
-        return function(Options $options, $value) {
+        return function (Options $options, $value) {
             if (!is_array($value)) {
                 $value = [];
             }
@@ -330,7 +334,7 @@ class ActionConfiguration extends Configuration
 
     private function getFormNormalizer(): Closure
     {
-        return function(Options $options, $value) {
+        return function (Options $options, $value) {
             if (null !== $value) {
                 return $value;
             }
@@ -348,30 +352,30 @@ class ActionConfiguration extends Configuration
         };
     }
 
-    /**
-     * Return the default title using the configured translation pattern.
-     *
-     * @return string
-     */
-    private function getDefaultTitle(): string
+    private function getTitleNormalizer(): Closure
     {
         $translationPattern = $this
             ->adminConfiguration
-            ->getParameter('translation_pattern');
+            ->getParameter('translation_pattern')
+        ;
 
-        if (false !== $translationPattern) {
-            // by default, the action title is action name using the configured translation pattern
-            $actionTitle = StringUtils::getTranslationKey(
-                $translationPattern,
-                $this->adminName,
-                $this->actionName
-            );
-        } else {
-            // no admin was provided, we camelize the action name
-            $actionTitle = Container::camelize($this->actionName);
-        }
+        return function (Options $options, $value) use ($translationPattern) {
+            if (null === $value) {
+                $value = 'lag.admin.'.$this->actionName;
+                $actionName = Container::camelize($this->actionName);
 
-        return $actionTitle;
+                if (false !== $translationPattern) {
+                    // By default, the action title is action name using the configured translation pattern
+                    $value = StringUtils::getTranslationKey(
+                        $translationPattern,
+                        $this->adminName,
+                        $actionName
+                    );
+                }
+            }
+
+            return $value;
+        };
     }
 
     /**

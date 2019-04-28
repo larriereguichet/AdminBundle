@@ -25,6 +25,11 @@ class LAGAdminExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($builder, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
+        $loader->load('services/factories.yaml');
+        $loader->load('services/fields.yaml');
+        $loader->load('services/resources.yaml');
+        $loader->load('services/subscribers.yaml');
+        $loader->load('services/twig.yaml');
 
         if ('dev' === $builder->getParameter('kernel.environment')) {
             $loader->load('services_dev.yaml');
