@@ -50,7 +50,6 @@
 {% endblock %}
 
 {% block menu %}
-
     <span class="label">
         <span class="icon">
             {{ include('@LAGAdmin/Debug/icon.svg') }}
@@ -169,10 +168,7 @@
                 {% endfor %}
             {% endfor %}
         </div>
-        <div id="tab-application"
-             class="tab">
-            <h1>Application</h1>
-        </div>
+        {% include '@LAGAdmin/Debug/_applications.html.twig' %}
         <div id="tab-menus"
              class="tab">
             <h1>Menus</h1>

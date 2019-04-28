@@ -5,11 +5,13 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Field\Definition\FieldDefinition;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -143,6 +145,48 @@ class ORMDataProvider implements DataProviderInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getFields(AdminInterface $admin): array
+    {
+        $metadata = $this->entityManager->getClassMetadata($admin->getEntityClass());
+        $fieldNames = (array) $metadata->fieldNames;
+        $fields = [];
+
+        foreach ($fieldNames as $fieldName) {
+            // Remove the primary key field if it's not managed manually
+            if (!$metadata->isIdentifierNatural() && in_array($fieldName, $metadata->identifier)) {
+                continue;
+            }
+            $mapping = $metadata->getFieldMapping($fieldName);
+            $formOptions = [];
+
+            // When a field is defined as nullable in the Doctrine entity configuration, the associated form field
+            // should not be required neither
+            if (key_exists('nullable', $mapping) && true === $mapping['nullable']) {
+                $formOptions['required'] = false;
+            }
+            $fields[$fieldName] = new FieldDefinition($metadata->getTypeOfField($fieldName), $formOptions);
+        }
+
+        foreach ($metadata->associationMappings as $fieldName => $relation) {
+            $formOptions = [];
+            $formType = 'choice';
+
+            if (ClassMetadataInfo::MANY_TO_MANY === $relation['type']) {
+                $formOptions['expanded'] = true;
+                $formOptions['multiple'] = true;
+            }
+            if ($this->isJoinColumnNullable($relation)) {
+                $formOptions['required'] = false;
+            }
+            $fields[$fieldName] = new FieldDefinition($formType, $formOptions);
+        }
+
+        return $fields;
+    }
+
+    /**
      * @param string $entityClass
      *
      * @return ObjectRepository|EntityRepository
@@ -150,5 +194,18 @@ class ORMDataProvider implements DataProviderInterface
     private function getRepository(string $entityClass)
     {
         return $this->entityManager->getRepository($entityClass);
+    }
+
+    private function isJoinColumnNullable(array $relation)
+    {
+        if (!key_exists('joinColumns', $relation)) {
+            return false;
+        }
+
+        if (!key_exists('nullable', $relation['joinColumns'])) {
+            return false;
+        }
+
+        return false === $relation['joinColumns']['nullable'];
     }
 }

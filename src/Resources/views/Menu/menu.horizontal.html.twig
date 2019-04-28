@@ -65,7 +65,7 @@
                                     }) }}
                                 </a>
 
-                                {% if app.user.profilePicture %}
+                                {% if app.user.profilePicture | default(false) %}
                                     <img class="rounded-circle"
                                          height="40"
                                          style="margin-top: 5px"

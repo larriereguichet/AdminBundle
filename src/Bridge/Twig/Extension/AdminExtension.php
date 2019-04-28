@@ -8,14 +8,10 @@ use LAG\AdminBundle\Configuration\MenuItemConfiguration;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Factory\MenuFactory;
-use LAG\AdminBundle\Field\EntityAwareFieldInterface;
-use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Routing\RoutingLoader;
-use LAG\AdminBundle\Utils\StringUtils;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Environment;
 use Twig_Extension;
 use Twig_SimpleFunction;
@@ -38,11 +34,6 @@ class AdminExtension extends Twig_Extension
     private $router;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var ConfigurationFactory
      */
     private $configurationFactory;
@@ -59,7 +50,6 @@ class AdminExtension extends Twig_Extension
      * @param MenuFactory                     $menuFactory
      * @param Twig_Environment                $twig
      * @param RouterInterface                 $router
-     * @param TranslatorInterface             $translator
      * @param ConfigurationFactory            $configurationFactory
      */
     public function __construct(
@@ -67,13 +57,11 @@ class AdminExtension extends Twig_Extension
         MenuFactory $menuFactory,
         Twig_Environment $twig,
         RouterInterface $router,
-        TranslatorInterface $translator,
         ConfigurationFactory $configurationFactory
     ) {
         $this->menuFactory = $menuFactory;
         $this->twig = $twig;
         $this->router = $router;
-        $this->translator = $translator;
         $this->configurationFactory = $configurationFactory;
         $this->applicationConfigurationStorage = $applicationConfigurationStorage;
     }
@@ -85,8 +73,6 @@ class AdminExtension extends Twig_Extension
             new Twig_SimpleFunction('admin_menu', [$this, 'getMenu'], ['is_safe' => ['html']]),
             new Twig_SimpleFunction('admin_has_menu', [$this, 'hasMenu']),
             new Twig_SimpleFunction('admin_menu_action', [$this, 'getMenuAction']),
-            new Twig_SimpleFunction('admin_field_header', [$this, 'getFieldHeader']),
-            new Twig_SimpleFunction('admin_field', [$this, 'getField']),
             new Twig_SimpleFunction('admin_url', [$this, 'getAdminUrl']),
             new Twig_SimpleFunction('admin_action_allowed', [$this, 'isAdminActionAllowed']),
         ];
@@ -126,7 +112,7 @@ class AdminExtension extends Twig_Extension
      *
      * @return bool
      */
-    public function hasMenu(string $name)
+    public function hasMenu(string $name): bool
     {
         return $this->menuFactory->hasMenu($name);
     }
@@ -141,7 +127,7 @@ class AdminExtension extends Twig_Extension
      *
      * @throws Exception
      */
-    public function getMenuAction(MenuItemConfiguration $configuration, ViewInterface $view = null)
+    public function getMenuAction(MenuItemConfiguration $configuration, ViewInterface $view = null): string
     {
         if ($configuration->getParameter('url')) {
             return $configuration->getParameter('url');
@@ -185,68 +171,6 @@ class AdminExtension extends Twig_Extension
         }
 
         return $this->router->generate($routeName, $routeParameters);
-    }
-
-    /**
-     * Return the field header label.
-     *
-     * @param ViewInterface  $admin
-     * @param FieldInterface $field
-     *
-     * @return string
-     */
-    public function getFieldHeader(ViewInterface $admin, FieldInterface $field)
-    {
-        if (StringUtils::startWith($field->getName(), '_')) {
-            return '';
-        }
-        $configuration = $this->applicationConfigurationStorage->getConfiguration();
-
-        if ($configuration->getParameter('translation')) {
-            $key = StringUtils::getTranslationKey(
-                $configuration->getParameter('translation_pattern'),
-                $admin->getName(),
-                $field->getName()
-            );
-            $title = $this->translator->trans($key);
-        } else {
-            $title = StringUtils::camelize($field->getName());
-            $title = preg_replace('/(?<!\ )[A-Z]/', ' $0', $title);
-            $title = trim($title);
-
-            if ('Id' === $title) {
-                $title = '#';
-            }
-        }
-
-        return $title;
-    }
-
-    /**
-     * Render a field of an entity.
-     *
-     * @param FieldInterface $field
-     * @param                $entity
-     *
-     * @return string
-     */
-    public function getField(FieldInterface $field, $entity)
-    {
-        $value = null;
-        $accessor = PropertyAccess::createPropertyAccessor();
-
-        // if name starts with a underscore, it is a custom field, not mapped to the entity
-        if ('_' !== substr($field->getName(), 0, 1)) {
-            // get raw value from object
-            $value = $accessor->getValue($entity, $field->getName());
-        }
-
-        if ($field instanceof EntityAwareFieldInterface) {
-            $field->setEntity($entity);
-        }
-        $render = $field->render($value);
-
-        return $render;
     }
 
     /**

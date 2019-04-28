@@ -11,16 +11,16 @@ use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Event\Subscriber\FormSubscriber;
 use LAG\AdminBundle\Factory\DataProviderFactory;
+use LAG\AdminBundle\Factory\FormFactoryInterface;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FormSubscriberTest extends AdminTestBase
 {
@@ -38,29 +38,19 @@ class FormSubscriberTest extends AdminTestBase
 
     public function testOnCreateForm()
     {
-        list($subscriber, $formFactory, $dataProviderFactory) = $this->createSubscriber();
+        list($subscriber, $formFactory,) = $this->createSubscriber();
 
         $entity = new FakeEntity();
-
-        $dataProvider = $this->createMock(DataProviderInterface::class);
-        $dataProvider
-            ->expects($this->once())
-            ->method('create')
-            ->willReturn($entity)
-        ;
-
-        $dataProviderFactory
-            ->expects($this->once())
-            ->method('get')
-            ->with('my_little_provider')
-            ->willReturn($dataProvider)
-        ;
+        $entities = new ArrayCollection();
+        $entities->add($entity);
+        $admin = $this->createMock(AdminInterface::class);
+        $action = $this->createMock(ActionInterface::class);
 
         $form = $this->createMock(FormInterface::class);
         $formFactory
             ->expects($this->once())
-            ->method('create')
-            ->with('my_little_form', $entity)
+            ->method('createEntityForm')
+            ->with($admin, $entity)
             ->willReturn($form)
         ;
 
@@ -73,7 +63,6 @@ class FormSubscriberTest extends AdminTestBase
                 ['load_strategy', LAGAdminBundle::LOAD_STRATEGY_UNIQUE],
             ])
         ;
-        $action = $this->createMock(ActionInterface::class);
         $action
             ->expects($this->atLeastOnce())
             ->method('getName')
@@ -84,37 +73,73 @@ class FormSubscriberTest extends AdminTestBase
             ->method('getConfiguration')
             ->willReturn($actionConfiguration)
         ;
-
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
-        $adminConfiguration
-            ->expects($this->exactly(2))
-            ->method('get')
-            ->willReturnMap([
-                ['data_provider', 'my_little_provider'],
-                ['form', 'my_little_form'],
-            ])
-        ;
-        $entities = new ArrayCollection();
-        $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->once())
             ->method('getAction')
             ->willReturn($action)
         ;
         $admin
-            ->expects($this->atLeastOnce())
-            ->method('getConfiguration')
-            ->willReturn($adminConfiguration)
-        ;
-        $admin
-            ->expects($this->exactly(1))
+            ->expects($this->exactly(2))
             ->method('getEntities')
             ->willReturn($entities)
         ;
 
         $request = new Request();
         $event = new FormEvent($admin, $request);
-        $subscriber->onCreateForm($event);
+        $subscriber->createForm($event);
+    }
+
+    public function testOnCreateDeleteForm()
+    {
+        list($subscriber, $formFactory,) = $this->createSubscriber();
+
+        $entity = new FakeEntity();
+        $entities = new ArrayCollection();
+        $entities->add($entity);
+        $admin = $this->createMock(AdminInterface::class);
+        $action = $this->createMock(ActionInterface::class);
+
+        $form = $this->createMock(FormInterface::class);
+        $formFactory
+            ->expects($this->once())
+            ->method('createDeleteForm')
+            ->with($action, $entity)
+            ->willReturn($form)
+        ;
+
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
+        $actionConfiguration
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->willReturnMap([
+                ['use_form', true],
+                ['load_strategy', LAGAdminBundle::LOAD_STRATEGY_UNIQUE],
+            ])
+        ;
+        $action
+            ->expects($this->atLeastOnce())
+            ->method('getName')
+            ->willReturn('delete')
+        ;
+        $action
+            ->expects($this->once())
+            ->method('getConfiguration')
+            ->willReturn($actionConfiguration)
+        ;
+        $admin
+            ->expects($this->once())
+            ->method('getAction')
+            ->willReturn($action)
+        ;
+        $admin
+            ->expects($this->exactly(2))
+            ->method('getEntities')
+            ->willReturn($entities)
+        ;
+
+        $request = new Request();
+        $event = new FormEvent($admin, $request);
+        $subscriber->createForm($event);
     }
 
     public function testOnCreateFormWithoutForm()
@@ -148,7 +173,7 @@ class FormSubscriberTest extends AdminTestBase
 
         $event = new FormEvent($admin, $request);
 
-        $subscriber->onCreateForm($event);
+        $subscriber->createForm($event);
     }
 
     public function testOnCreateFormWithEntities()
@@ -156,18 +181,21 @@ class FormSubscriberTest extends AdminTestBase
         list($subscriber, $formFactory) = $this->createSubscriber();
 
         $entity = new FakeEntity();
+        $entities = new ArrayCollection();
+        $entities->add($entity);
+        $admin = $this->createMock(AdminInterface::class);
 
         $form = $this->createMock(FormInterface::class);
         $formFactory
             ->expects($this->once())
-            ->method('create')
-            ->with('my_little_form', $entity)
+            ->method('createEntityForm')
+            ->with($admin, $entity)
             ->willReturn($form)
         ;
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(2))
             ->method('get')
             ->willReturnMap([
                 ['use_form', true],
@@ -179,17 +207,14 @@ class FormSubscriberTest extends AdminTestBase
         $action
             ->expects($this->atLeastOnce())
             ->method('getName')
-            ->willReturn('delete')
+            ->willReturn('edit')
         ;
         $action
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('getConfiguration')
             ->willReturn($actionConfiguration)
         ;
-        $entities = new ArrayCollection();
-        $entities->add(new FakeEntity());
 
-        $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->once())
             ->method('getAction')
@@ -203,7 +228,7 @@ class FormSubscriberTest extends AdminTestBase
 
         $request = new Request();
         $event = new FormEvent($admin, $request);
-        $subscriber->onCreateForm($event);
+        $subscriber->createForm($event);
     }
 
     public function testOnHandleForm()
@@ -301,7 +326,7 @@ class FormSubscriberTest extends AdminTestBase
         ;
 
         $event = new FormEvent($admin, $request);
-        $subscriber->onHandleForm($event);
+        $subscriber->handleForm($event);
     }
 
     public function testOnHandleFormWithoutForm()
@@ -331,7 +356,7 @@ class FormSubscriberTest extends AdminTestBase
 
         $event = new FormEvent($admin, $request);
 
-        $subscriber->onHandleForm($event);
+        $subscriber->handleForm($event);
     }
 
     /**
@@ -344,7 +369,7 @@ class FormSubscriberTest extends AdminTestBase
         $session = $this->createMock(Session::class);
         $translator = $this->createMock(TranslatorInterface::class);
 
-        $subscriber = new FormSubscriber($formFactory, $dataProviderFactory, $session, $translator);
+        $subscriber = new FormSubscriber($dataProviderFactory, $formFactory, $session, $translator);
 
         return [
             $subscriber,

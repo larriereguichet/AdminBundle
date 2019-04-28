@@ -6,12 +6,13 @@ use Exception;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
+use LAG\AdminBundle\Configuration\FieldConfiguration;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\TwigAwareFieldInterface;
 use LAG\AdminBundle\Field\TranslatorAwareFieldInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
-use Twig_Environment;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 /**
  * Field factory. Instances fields.
@@ -42,7 +43,7 @@ class FieldFactory
     /**
      * Twig engine.
      *
-     * @var Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
@@ -57,18 +58,18 @@ class FieldFactory
      * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      * @param ConfigurationFactory            $configurationFactory
      * @param TranslatorInterface             $translator
-     * @param Twig_Environment                $twig
+     * @param Environment                $twig
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
         ConfigurationFactory $configurationFactory,
         TranslatorInterface $translator,
-        Twig_Environment $twig
+        Environment $twig
     ) {
         $this->configuration = $applicationConfigurationStorage->getConfiguration();
         $this->fieldsMapping = $this
             ->configuration
-            ->getParameter('fields_mapping'); // shortcut to field mapping array
+            ->getParameter('fields_mapping'); // shortcut to the fields mapping array
         $this->translator = $translator;
         $this->twig = $twig;
         $this->configurationFactory = $configurationFactory;
@@ -79,7 +80,7 @@ class FieldFactory
      *
      * @return array
      */
-    public function getFields(ActionConfiguration $configuration): array
+    public function createFields(ActionConfiguration $configuration): array
     {
         $fields = [];
 
@@ -104,7 +105,7 @@ class FieldFactory
     public function create(string $name, array $configuration, ActionConfiguration $actionConfiguration): FieldInterface
     {
         $resolver = new OptionsResolver();
-        $configuration = $this->resolveTopLevelConfiguration($configuration, $actionConfiguration);
+        $configuration = $this->resolveConfiguration($configuration, $actionConfiguration);
 
         $field = $this->instanciateField($name, $configuration['type']);
         $field->configureOptions($resolver, $actionConfiguration);
@@ -176,26 +177,19 @@ class FieldFactory
      *
      * @throws Exception
      */
-    private function resolveTopLevelConfiguration(array $configuration, ActionConfiguration $actionConfiguration)
+    private function resolveConfiguration(array $configuration, ActionConfiguration $actionConfiguration)
     {
         $resolver = new OptionsResolver();
-        $resolver
-            ->setDefaults([
-                'type' => 'string',
-                'options' => [],
-            ])
-            // Set allowed fields type from tagged services
-            ->setAllowedValues('type', array_keys($this->fieldsMapping))
-            ->setAllowedTypes('type', 'string')
-            ->setAllowedTypes('options', 'array')
-        ;
-        $configuration = $resolver->resolve($configuration);
+        $fieldConfiguration = new FieldConfiguration(array_keys($this->fieldsMapping));
+        $fieldConfiguration->configureOptions($resolver);
+        $fieldConfiguration->setParameters($resolver->resolve($configuration));
+        $configuration = $fieldConfiguration->all();
 
         // For collection of fields, we resolve the configuration of each item
-        if ('collection' == $configuration['type']) {
+        if ('collection' == $fieldConfiguration->getType()) {
             $items = [];
 
-            foreach ($configuration['options'] as $itemFieldName => $itemFieldConfiguration) {
+            foreach ($fieldConfiguration->getOptions() as $itemFieldName => $itemFieldConfiguration) {
                 // The configuration should be an array
                 if (!$itemFieldConfiguration) {
                     $itemFieldConfiguration = [];

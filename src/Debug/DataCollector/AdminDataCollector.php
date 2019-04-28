@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Debug\DataCollector;
 
+use Exception;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Resource\ResourceCollection;
@@ -46,13 +47,13 @@ class AdminDataCollector extends DataCollector
     /**
      * @param Request         $request
      * @param Response        $response
-     * @param \Exception|null $exception
+     * @param Exception|null $exception
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, Exception $exception = null)
     {
         $data = [
             'admins' => [],
-            'application' => $this->applicationConfigurationStorage->getConfiguration()->getParameters(),
+            'application' => [],
             'menus' => $this->menuFactory->getMenus(),
         ];
 
@@ -62,6 +63,18 @@ class AdminDataCollector extends DataCollector
                 'configuration' => $resource->getConfiguration(),
             ];
         }
+
+        foreach ($this->applicationConfigurationStorage->getConfiguration()->getParameters() as $name => $parameter) {
+            if (is_array($parameter)) {
+                $parameter = print_r($parameter, true);
+            }
+
+            if (is_bool($parameter)) {
+                $parameter = $parameter ? 'true' : 'false';
+            }
+            $data['application'][$name] = $parameter;
+        }
+
         $this->data = $data;
     }
 

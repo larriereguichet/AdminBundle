@@ -30,6 +30,13 @@ interface AdminInterface
     public function getName(): string;
 
     /**
+     * Return the class of the entity managed by the Admin.
+     *
+     * @return string
+     */
+    public function getEntityClass(): string;
+
+    /**
      * Return the Resource used to create the Admin.
      *
      * @return AdminResource

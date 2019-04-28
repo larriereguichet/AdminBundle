@@ -2,9 +2,9 @@
 
 namespace LAG\AdminBundle\Field;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-interface TranslatorAwareFieldInterface
+interface TranslatorAwareFieldInterface extends FieldInterface
 {
     /**
      * Defines the translator.

@@ -338,7 +338,6 @@ class AdminSubscriber implements EventSubscriberInterface
         AdminConfiguration $configuration,
         Request $request
     ): string {
-
         if ('edit' === $action->getName()) {
             $routeName = RoutingLoader::generateRouteName(
                 $admin->getName(),

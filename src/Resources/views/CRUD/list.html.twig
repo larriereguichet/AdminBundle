@@ -1,7 +1,7 @@
 {% extends admin_config('base_template') %}
 
 {% block content %}
-    <h1>{{ admin.configuration.getParameter('title') | trans }}</h1>
+    {% include '@LAGAdmin/CRUD/_title.html.twig' %}
 
     {% block filterLink %}
         <a href="#filters-container"
@@ -41,6 +41,8 @@
             </div>
         </div>
     {% endblock %}
+
+    {% block top_extra_content %}{% endblock %}
 
     {% block table %}
 
@@ -99,4 +101,6 @@
             {% endif %}
         </div>
     {% endblock %}
+
+    {% block bottom_extra_content %}{% endblock %}
 {% endblock %}

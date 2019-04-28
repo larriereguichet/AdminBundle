@@ -45,7 +45,7 @@ class FieldConfigurationHelper
         ];
 
         foreach ($configuration['actions'] as $actionName => $action) {
-            if (null === $action) {
+            if (null === $action || false === $action) {
                 $action = [];
             }
             $metadata = $this->findMetadata($entityClass);

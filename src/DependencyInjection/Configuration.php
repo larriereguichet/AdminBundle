@@ -97,6 +97,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('base_template')->end()
                 ->scalarNode('block_template')->end()
                 ->scalarNode('menu_template')->end()
+                ->scalarNode('list_template')->end()
                 ->scalarNode('homepage_template')->end()
                 ->scalarNode('homepage_route')->end()
                 ->scalarNode('routing_url_pattern')->end()

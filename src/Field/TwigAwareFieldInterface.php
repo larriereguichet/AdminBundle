@@ -2,9 +2,9 @@
 
 namespace LAG\AdminBundle\Field;
 
-use Twig_Environment;
+use Twig\Environment;
 
-interface TwigAwareFieldInterface
+interface TwigAwareFieldInterface extends FieldInterface
 {
-    public function setTwig(Twig_Environment $twig);
+    public function setTwig(Environment $twig);
 }

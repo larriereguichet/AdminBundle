@@ -125,6 +125,14 @@ class Admin implements AdminInterface
     /**
      * {@inheritdoc}
      */
+    public function getEntityClass(): string
+    {
+        return $this->configuration->get('entity');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getResource(): AdminResource
     {
         return $this->resource;

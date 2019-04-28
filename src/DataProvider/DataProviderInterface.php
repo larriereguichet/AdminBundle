@@ -56,4 +56,11 @@ interface DataProviderInterface
      * @throws Exception
      */
     public function delete(AdminInterface $admin): void;
+
+    /**
+     * @param AdminInterface $admin
+     *
+     * @return array
+     */
+    public function getFields(AdminInterface $admin): array;
 }
