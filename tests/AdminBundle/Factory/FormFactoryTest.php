@@ -26,7 +26,7 @@ class FormFactoryTest extends AdminTestBase
 
     public function testCreateDeleteForm()
     {
-        list($factory, , $formFactory) = $this->createFactory();
+        list($factory,, $formFactory) = $this->createFactory();
 
         $action = $this->createActionWithConfigurationMock([
             ['form', 'form_type'],
@@ -102,7 +102,7 @@ class FormFactoryTest extends AdminTestBase
         $formBuilder
             ->expects($this->exactly(2))
             ->method('addModelTransformer')
-            ->willReturnCallback(function (CallbackTransformer $transformer) {
+            ->willReturnCallback(function(CallbackTransformer $transformer) {
                 // TODO test transformers
 //                if ('array' === $field) {
 //                    $this->assertEquals('key: value'.PHP_EOL, $transformer->transform(['key' => 'value']));
@@ -113,7 +113,7 @@ class FormFactoryTest extends AdminTestBase
         $formBuilder
             ->expects($this->exactly(3))
             ->method('add')
-            ->willReturnCallback(function ($field) {
+            ->willReturnCallback(function($field) {
                 $this->assertContains($field, [
                     'pandas',
                     'array',

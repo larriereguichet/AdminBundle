@@ -31,7 +31,7 @@ class FieldConfiguration extends Configuration
             ->setAllowedValues('type', $this->allowedFields)
             ->setAllowedTypes('type', 'string')
             ->setAllowedTypes('options', 'array')
-            ->setNormalizer('type', function (Options $options, $value) {
+            ->setNormalizer('type', function(Options $options, $value) {
                 if (null === $value) {
                     $value = '';
                 }
