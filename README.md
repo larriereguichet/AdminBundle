@@ -82,7 +82,7 @@ Import the routing configuration to have the admin generated routes :
 
 ### Step 4 : Configure an entity
 ```yml
-    # config/packages/lag_admin.yml
+    # config/packages/lag_admin.yaml
 
     lag_admin:
         application:
@@ -93,17 +93,18 @@ Import the routing configuration to have the admin generated routes :
                 form: UniverseBundle\Form\Type\PlanetType            
 ```
 
-And now you could go to `http://127.0.0.1:8000/admin/planet/list` to see a list of your entities. Yan can go
-to `http://127.0.0.1:8000/app_dev.php/admin/` the see an homepage of your admin interface
+And now you could go to `http://127.0.0.1:8000/admin/planet/list` to see a list of your entities. 
+
+Yan can go to `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of your admin interface
 
 ## Documentation
 1. [Introduction](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.1.introduction.md)
-    1. How To Use
-    1. Admins and Actions
-    2. Events
-    3. Data Providers
-    d. Filters
-  e. Views
+    1. [How To Use](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.1.how_to_use.md#how-to-use)
+    2. Admins and Actions
+    3. Events
+    4. Data Providers
+    5. Filters
+    6. Views
 2. Customization
   a. Custom actions
   b. Custom rendering
