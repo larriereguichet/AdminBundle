@@ -6,7 +6,7 @@ use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\Render\FieldRendererInterface;
 use LAG\AdminBundle\View\ViewInterface;
 use Twig\Extension\AbstractExtension;
-use Twig_SimpleFunction;
+use Twig\TwigFunction;
 
 class FieldExtension extends AbstractExtension
 {
@@ -23,8 +23,8 @@ class FieldExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new Twig_SimpleFunction('admin_field', [$this, 'renderField']),
-            new Twig_SimpleFunction('admin_field_header', [$this, 'renderFieldHeader']),
+            new TwigFunction('admin_field', [$this, 'renderField']),
+            new TwigFunction('admin_field_header', [$this, 'renderFieldHeader']),
         ];
     }
 

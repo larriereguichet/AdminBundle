@@ -1,6 +1,6 @@
 tools:
     external_code_coverage:
-        timeout: 1000
+        timeout: 1200
 
 filter:
     excluded_paths:
