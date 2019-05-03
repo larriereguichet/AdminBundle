@@ -120,7 +120,7 @@ class FormFactory implements \LAG\AdminBundle\Factory\FormFactoryInterface
         if ('array' === $type) {
             $builder
                 ->get($field)
-                ->addModelTransformer(new CallbackTransformer(function (?array $value) {
+                ->addModelTransformer(new CallbackTransformer(function (?array $value = null) {
                     if (null === $value) {
                         $value = [];
                     }
@@ -139,7 +139,7 @@ class FormFactory implements \LAG\AdminBundle\Factory\FormFactoryInterface
         if ('simple_array' === $type) {
             $builder
                 ->get($field)
-                ->addModelTransformer(new CallbackTransformer(function (?array $value) {
+                ->addModelTransformer(new CallbackTransformer(function (?array $value = null) {
                     if (null === $value) {
                         $value = [];
                     }

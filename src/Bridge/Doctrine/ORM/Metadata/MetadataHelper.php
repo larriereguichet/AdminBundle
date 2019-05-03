@@ -21,6 +21,12 @@ class MetadataHelper implements MetadataHelperInterface
     public function getFields(string $entityClass): array
     {
         $metadata = $this->entityManager->getClassMetadata($entityClass);
+
+        // As the Doctrine ClassMetadata interface does not expose any properties, we should check the instance of the
+        // returned metadata class to respect the good practices
+        if (!$metadata instanceof ClassMetadataInfo) {
+            return [];
+        }
         $fieldNames = (array) $metadata->fieldNames;
         $fields = [];
 
