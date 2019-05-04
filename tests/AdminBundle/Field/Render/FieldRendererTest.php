@@ -112,7 +112,7 @@ class FieldRendererTest extends AdminTestBase
 
     public function testRenderHeaderWithNoMappedField()
     {
-        list($renderer, , ) = $this->createRender();
+        list($renderer,,) = $this->createRender();
 
         $admin = $this->createMock(ViewInterface::class);
         $field = $this->createMock(FieldInterface::class);

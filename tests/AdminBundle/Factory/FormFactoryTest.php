@@ -25,7 +25,7 @@ class FormFactoryTest extends AdminTestBase
 
     public function testCreateDeleteForm()
     {
-        list($factory, , $formFactory) = $this->createFactory();
+        list($factory,, $formFactory) = $this->createFactory();
 
         $action = $this->createActionWithConfigurationMock([
             ['form', 'form_type'],

@@ -55,7 +55,7 @@ class MenuItemConfiguration extends Configuration
             ->setDefault('items', [])
             ->setDefault('icon', null)
             ->setDefault('link_css_class', 'nav-link')
-            ->setNormalizer('admin', function (Options $options, $adminName) {
+            ->setNormalizer('admin', function(Options $options, $adminName) {
                 // user has to defined either an admin name and an action name, or a route name with optional
                 // parameters, or an url
                 if (null === $adminName
@@ -70,7 +70,7 @@ class MenuItemConfiguration extends Configuration
                 return $adminName;
             })
             // if an admin name is set, an action name can provided. This action will be the menu link
-            ->setNormalizer('action', function (Options $options, $action) {
+            ->setNormalizer('action', function(Options $options, $action) {
                 // if an action name is provided, an admin name should be defined too
                 if (null !== $action && null === $options->offsetGet('admin')) {
                     throw new InvalidOptionsException(
@@ -86,7 +86,7 @@ class MenuItemConfiguration extends Configuration
                 return $action;
             })
             ->setAllowedTypes('parameters', 'array')
-            ->setNormalizer('attr', function (Options $options, $attr) {
+            ->setNormalizer('attr', function(Options $options, $attr) {
                 if (!is_array($attr)) {
                     $attr = [];
                 }
@@ -101,7 +101,7 @@ class MenuItemConfiguration extends Configuration
 
                 return $attr;
             })
-            ->setNormalizer('link_attr', function (Options $options, $value) {
+            ->setNormalizer('link_attr', function(Options $options, $value) {
                 if (!is_array($value)) {
                     $value = [];
                 }
@@ -112,7 +112,7 @@ class MenuItemConfiguration extends Configuration
 
                 return $value;
             })
-            ->setNormalizer('items', function (Options $options, $items) {
+            ->setNormalizer('items', function(Options $options, $items) {
                 if (!is_array($items)) {
                     $items = [];
                 }
@@ -129,7 +129,7 @@ class MenuItemConfiguration extends Configuration
 
                 return $resolvedItems;
             })
-            ->setNormalizer('text', function (Options $options, $text) {
+            ->setNormalizer('text', function(Options $options, $text) {
                 if (!$text) {
                     // TODO use translation pattern key instead
                     $text = ucfirst($this->name);
