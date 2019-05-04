@@ -21,7 +21,7 @@ class FilterSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::FILTER => 'onFilter',
+            Events::ADMIN_FILTER => 'onFilter',
         ];
     }
 
@@ -83,6 +83,7 @@ class FilterSubscriber implements EventSubscriberInterface
                 // All filters are optional
                 'required' => false,
             ], $filter['options']);
+            $options = array_merge($options, FormUtils::getFormTypeOptions($filter['type']));
             $type = FormUtils::convertShortFormType($filter['type']);
 
             $form->add($name, $type, $options);

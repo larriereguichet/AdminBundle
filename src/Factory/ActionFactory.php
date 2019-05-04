@@ -52,7 +52,7 @@ class ActionFactory
             $adminName,
             $adminConfiguration->getParameter('entity')
         );
-        $this->eventDispatcher->dispatch(Events::ACTION_CONFIGURATION, $event);
+        $this->eventDispatcher->dispatch(Events::CONFIGURATION_ACTION, $event);
 
         if (!array_key_exists($actionName, $event->getConfiguration())) {
             throw new Exception(

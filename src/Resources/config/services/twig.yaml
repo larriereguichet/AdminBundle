@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    LAG\AdminBundle\Bridge\Twig\Extension\AdminExtension:
+        tags:
+            - {name: twig.extension}
+
+    LAG\AdminBundle\Bridge\Twig\Extension\FieldExtension:
+        tags:
+            - {name: twig.extension}

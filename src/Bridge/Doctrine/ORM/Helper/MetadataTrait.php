@@ -2,9 +2,13 @@
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Helper;
 
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
+/**
+ * @deprecated use the MetaDataHelper instead
+ */
 trait MetadataTrait
 {
     /**
@@ -17,7 +21,7 @@ trait MetadataTrait
      *
      * @param $class
      *
-     * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata|null
+     * @return ClassMetadata|null
      */
     protected function findMetadata($class)
     {

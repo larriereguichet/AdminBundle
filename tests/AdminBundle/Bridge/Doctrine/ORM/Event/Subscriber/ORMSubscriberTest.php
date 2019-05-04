@@ -7,10 +7,12 @@ use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\ORMSubscriber;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -26,9 +28,9 @@ class ORMSubscriberTest extends AdminTestBase
 
     public function testAddOrder()
     {
-        $request = new Request();
+        list($subscriber, $requestStack) = $this->createSubscriber();
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $request = new Request();
         $requestStack
             ->expects($this->atLeastOnce())
             ->method('getMasterRequest')
@@ -83,17 +85,16 @@ class ORMSubscriberTest extends AdminTestBase
             ->willReturn($configuration)
         ;
 
-        $subscriber = new ORMSubscriber($requestStack);
         $subscriber->addOrder($event);
     }
 
     public function testAddOrderWithSort()
     {
+        list($subscriber, $requestStack,) = $this->createSubscriber();
+
         $request = new Request([
             'sort' => 'name',
         ]);
-
-        $requestStack = $this->createMock(RequestStack::class);
         $requestStack
             ->expects($this->atLeastOnce())
             ->method('getMasterRequest')
@@ -140,13 +141,13 @@ class ORMSubscriberTest extends AdminTestBase
             ->willReturn($configuration)
         ;
 
-        $subscriber = new ORMSubscriber($requestStack);
         $subscriber->addOrder($event);
     }
 
     public function testAddFilters()
     {
-        $requestStack = $this->createMock(RequestStack::class);
+        list($subscriber) = $this->createSubscriber();
+
         $queryBuilder = $this->createMock(QueryBuilder::class);
         $queryBuilder
             ->expects($this->once())
@@ -200,7 +201,23 @@ class ORMSubscriberTest extends AdminTestBase
             ])
         ;
 
-        $subscriber = new ORMSubscriber($requestStack);
         $subscriber->addFilters($event);
+    }
+
+    /**
+     * @return ORMSubscriber[]|MockObject[]
+     */
+    private function createSubscriber(): array
+    {
+        $requestStack = $this->createMock(RequestStack::class);
+        $helper = $this->createMock(MetadataHelperInterface::class);
+
+        $subscriber = new ORMSubscriber($requestStack, $helper);
+
+        return [
+            $subscriber,
+            $requestStack,
+            $helper,
+        ];
     }
 }

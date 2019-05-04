@@ -43,7 +43,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::ADMIN_CONFIGURATION => 'enrichAdminConfiguration',
+            Events::CONFIGURATION_ADMIN => 'enrichAdminConfiguration',
             Events::MENU_CONFIGURATION => 'enrichMenuConfiguration',
         ];
     }
@@ -277,6 +277,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         if (key_exists('filter', $configuration['actions']['list'])) {
             return;
         }
+        // TODO add a default unified filter
         $metadata = $this->findMetadata($configuration['entity']);
 
         if (null === $metadata) {

@@ -22,7 +22,7 @@ class SecuritySubscriberTest extends AdminTestBase
 {
     public function testSubscribedEvents()
     {
-        $this->assertArrayHasKey(Events::HANDLE_REQUEST, SecuritySubscriber::getSubscribedEvents());
+        $this->assertArrayHasKey(Events::ADMIN_HANDLE_REQUEST, SecuritySubscriber::getSubscribedEvents());
     }
 
     public function testHandleRequest()

@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    LAG\AdminBundle\Resource\ResourceCollection:
+        class: LAG\AdminBundle\Resource\ResourceCollection

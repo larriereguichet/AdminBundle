@@ -67,7 +67,7 @@ class MenuFactoryTest extends AdminTestBase
 
     public function testCreateWithEmptyConfiguration()
     {
-        list($factory, $applicationConfiguration, $requestStack, $storage) = $this->createFactory();
+        list($factory) = $this->createFactory();
 
         $menu = $factory->create('main', []);
 

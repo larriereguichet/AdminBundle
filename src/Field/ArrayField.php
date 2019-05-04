@@ -2,8 +2,21 @@
 
 namespace LAG\AdminBundle\Field;
 
+use LAG\AdminBundle\Configuration\ActionConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 class ArrayField extends AbstractField
 {
+    public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)
+    {
+        $resolver
+            ->setDefaults([
+                'glue' => ',',
+            ])
+            ->setAllowedTypes('glue', 'string')
+        ;
+    }
+
     public function isSortable(): bool
     {
         return false;
@@ -11,6 +24,10 @@ class ArrayField extends AbstractField
 
     public function render($value = null): string
     {
-        return 'in progress';
+        if (null === $value) {
+            return '';
+        }
+
+        return implode($this->options['glue'], $value);
     }
 }

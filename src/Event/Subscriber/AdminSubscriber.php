@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AdminSubscriber implements EventSubscriberInterface
 {
@@ -70,8 +70,8 @@ class AdminSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::HANDLE_REQUEST => 'handleRequest',
-            Events::VIEW => 'createView',
+            Events::ADMIN_HANDLE_REQUEST => 'handleRequest',
+            Events::ADMIN_VIEW => 'createView',
             Events::ENTITY_LOAD => 'loadEntities',
             Events::ENTITY_SAVE => 'saveEntity',
         ];
@@ -338,7 +338,6 @@ class AdminSubscriber implements EventSubscriberInterface
         AdminConfiguration $configuration,
         Request $request
     ): string {
-
         if ('edit' === $action->getName()) {
             $routeName = RoutingLoader::generateRouteName(
                 $admin->getName(),

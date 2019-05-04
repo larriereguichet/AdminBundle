@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AdminSubscriberTest extends AdminTestBase
 {
@@ -52,8 +52,8 @@ class AdminSubscriberTest extends AdminTestBase
     {
         $events = AdminSubscriber::getSubscribedEvents();
 
-        $this->assertArrayHasKey(Events::HANDLE_REQUEST, $events);
-        $this->assertArrayHasKey(Events::VIEW, $events);
+        $this->assertArrayHasKey(Events::ADMIN_HANDLE_REQUEST, $events);
+        $this->assertArrayHasKey(Events::ADMIN_VIEW, $events);
         $this->assertArrayHasKey(Events::ENTITY_LOAD, $events);
         $this->assertArrayHasKey(Events::ENTITY_SAVE, $events);
     }

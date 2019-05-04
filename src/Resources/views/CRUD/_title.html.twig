@@ -1,0 +1,7 @@
+{% block form_title %}
+    <h1>{{ admin.title | trans({
+            '%entity%': admin.name | title | replace({
+                '_': ' '
+            })
+        }) }}</h1>
+{% endblock %}

@@ -25,11 +25,22 @@
                 {{ collector.data.application.pager ?: 'false' }}
             </span>
         </div>
-        <br>
         <div class="sf-toolbar-info-piece">
             <b>Translation</b>
             <span>
                 {{ collector.data.application.translation ?: 'false' }}<br>
+            </span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Admin</b>
+            <span>
+                {{ collector.data.application.admin }}<br>
+            </span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Action</b>
+            <span>
+                {{ collector.data.application.action }}<br>
             </span>
         </div>
         <hr>
@@ -50,7 +61,6 @@
 {% endblock %}
 
 {% block menu %}
-
     <span class="label">
         <span class="icon">
             {{ include('@LAGAdmin/Debug/icon.svg') }}
@@ -169,10 +179,7 @@
                 {% endfor %}
             {% endfor %}
         </div>
-        <div id="tab-application"
-             class="tab">
-            <h1>Application</h1>
-        </div>
+        {% include '@LAGAdmin/Debug/_applications.html.twig' %}
         <div id="tab-menus"
              class="tab">
             <h1>Menus</h1>

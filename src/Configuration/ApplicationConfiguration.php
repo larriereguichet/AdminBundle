@@ -154,6 +154,8 @@ class ApplicationConfiguration extends Configuration
     {
         $defaultMapping = [
             AbstractField::TYPE_STRING => StringField::class,
+            AbstractField::TYPE_TEXT => StringField::class,
+            AbstractField::TYPE_FLOAT => StringField::class,
             AbstractField::TYPE_INTEGER => StringField::class,
             AbstractField::TYPE_ARRAY => ArrayField::class,
             AbstractField::TYPE_ACTION => ActionField::class,
@@ -164,6 +166,7 @@ class ApplicationConfiguration extends Configuration
             AbstractField::TYPE_LINK => LinkField::class,
             AbstractField::TYPE_DATE => DateField::class,
             AbstractField::TYPE_COUNT => CountField::class,
+            AbstractField::TYPE_AUTO => CountField::class,
         ];
 
         $resolver->setDefault('fields_mapping', $defaultMapping);
