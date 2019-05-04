@@ -26,7 +26,7 @@ class FormEventTest extends AdminTestBase
         $this->assertCount(1, $event->getForms());
         $this->assertArrayHasKey('my_panda_form', $event->getForms());
         $this->assertEquals($form, $event->getForms()['my_panda_form']);
-        $this->assertExceptionRaised(Exception::class, function () use ($event, $form) {
+        $this->assertExceptionRaised(Exception::class, function() use ($event, $form) {
             $event->addForm($form, 'my_panda_form');
         });
 

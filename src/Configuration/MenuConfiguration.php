@@ -53,7 +53,7 @@ class MenuConfiguration extends Configuration
                 'vertical',
                 null,
             ])
-            ->setNormalizer('position', function (Options $options, $value) {
+            ->setNormalizer('position', function(Options $options, $value) {
                 if ('top' === $this->menuName && null === $value) {
                     $value = 'horizontal';
                 }
@@ -64,7 +64,7 @@ class MenuConfiguration extends Configuration
 
                 return $value;
             })
-            ->setNormalizer('template', function (Options $options, $value) {
+            ->setNormalizer('template', function(Options $options, $value) {
                 // Define bootstrap navbar component template
                 if ('horizontal' === $options->offsetGet('position')) {
                     $value = '@LAGAdmin/Menu/menu.horizontal.html.twig';
@@ -77,7 +77,7 @@ class MenuConfiguration extends Configuration
 
                 return $value;
             })
-            ->setNormalizer('attr', function (Options $options, $value) {
+            ->setNormalizer('attr', function(Options $options, $value) {
                 $position = $options->offsetGet('position');
 
                 if (!key_exists('class', $value)) {
@@ -100,7 +100,7 @@ class MenuConfiguration extends Configuration
 
                 return $value;
             })
-            ->setNormalizer('item_css_class', function (Options $options, $value) {
+            ->setNormalizer('item_css_class', function(Options $options, $value) {
                 $position = $options->offsetGet('position');
 
                 if (!$value) {
@@ -117,7 +117,7 @@ class MenuConfiguration extends Configuration
 
                 return trim($value);
             })
-            ->setNormalizer('brand', function (Options $options, $value) {
+            ->setNormalizer('brand', function(Options $options, $value) {
                 if (null === $value && 'horizontal' === $options->offsetGet('position')) {
                     $value = $this->applicationName;
                 }

@@ -90,7 +90,7 @@ class ORMSubscriberTest extends AdminTestBase
 
     public function testAddOrderWithSort()
     {
-        list($subscriber, $requestStack, ) = $this->createSubscriber();
+        list($subscriber, $requestStack,) = $this->createSubscriber();
 
         $request = new Request([
             'sort' => 'name',
