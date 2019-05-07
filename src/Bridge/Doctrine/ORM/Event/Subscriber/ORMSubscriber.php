@@ -6,6 +6,7 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use LAG\AdminBundle\Event\Events\FieldEvent;
+use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Field\Definition\FieldDefinition;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -45,6 +46,9 @@ class ORMSubscriber implements EventSubscriberInterface
             ],
             Events::FIELD_PRE_CREATE => [
                 ['guessType'],
+            ],
+            Events::FORM_PRE_CREATE_ENTITY_FORM => [
+                ['guessFormType'],
             ],
         ];
     }
@@ -135,5 +139,24 @@ class ORMSubscriber implements EventSubscriberInterface
         $definition = $this->fieldDefinitions[$event->getFieldName()];
         $event->setType($definition->getType());
         $event->setOptions($definition->getOptions());
+    }
+
+    public function guessFormType(FormEvent $event): void
+    {
+        $configuration = $event->getAdmin()->getConfiguration();
+
+        // No need to guess a type when one is already defined
+        if (null !== $configuration->get('form')) {
+            return;
+        }
+
+        // Initialize the definitions array only the first time
+        if (null === $this->fieldDefinitions) {
+            $this->fieldDefinitions = $this->metadataHelper->getFields($configuration->get('entity'));
+        }
+
+        foreach ($this->fieldDefinitions as $name => $definition) {
+            $event->addFieldDefinition($name, $definition);
+        }
     }
 }

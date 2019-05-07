@@ -10,6 +10,9 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\ORMSubscriber;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Event\Events;
+use LAG\AdminBundle\Event\Events\FieldEvent;
+use LAG\AdminBundle\Event\Events\FormEvent;
+use LAG\AdminBundle\Field\Definition\FieldDefinitionInterface;
 use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -202,6 +205,194 @@ class ORMSubscriberTest extends AdminTestBase
         ;
 
         $subscriber->addFilters($event);
+    }
+
+    public function testFormType()
+    {
+        list($subscriber,,$helper) = $this->createSubscriber();
+
+        $field = $this->createMock(FieldDefinitionInterface::class);
+        $helper
+            ->expects($this->once())
+            ->method('getFields')
+            ->with('MyEntity')
+            ->willReturn([
+                'id' => $field,
+            ])
+        ;
+
+        $event = $this->createMock(FormEvent::class);
+        $admin = $this->createAdminWithConfigurationMock([
+            ['entity', 'MyEntity'],
+        ], 1, 2);
+
+        $event
+            ->expects($this->once())
+            ->method('getAdmin')
+            ->willReturn($admin)
+        ;
+
+        $subscriber->guessFormType($event);
+    }
+
+    public function testFormTypeWithDefinedForm()
+    {
+        list($subscriber) = $this->createSubscriber();
+
+        $event = $this->createMock(FormEvent::class);
+        $admin = $this->createAdminWithConfigurationMock([
+            ['form', 'MyForm'],
+        ]);
+
+        $event
+            ->expects($this->once())
+            ->method('getAdmin')
+            ->willReturn($admin)
+        ;
+
+        $subscriber->guessFormType($event);
+    }
+
+    public function testGuessType()
+    {
+        list($subscriber,,$helper) = $this->createSubscriber();
+
+        $event = $this->createMock(FieldEvent::class);
+        $event
+            ->expects($this->atLeastOnce())
+            ->method('getType')
+            ->willReturn(null)
+        ;
+        $event
+            ->expects($this->atLeastOnce())
+            ->method('getEntityClass')
+            ->willReturn('MyEntity')
+        ;
+        $event
+            ->expects($this->atLeastOnce())
+            ->method('getFieldName')
+            ->willReturn('name')
+        ;
+        $event
+            ->expects($this->atLeastOnce())
+            ->method('setType')
+            ->with('MyType')
+        ;
+        $event
+            ->expects($this->once())
+            ->method('setOptions')
+            ->with([
+                'required' => false,
+            ])
+        ;
+
+        $field = $this->createMock(FieldDefinitionInterface::class);
+        $invalidField = $this->createMock(FieldDefinitionInterface::class);
+        $field
+            ->expects($this->once())
+            ->method('getType')
+            ->willReturn('MyType')
+        ;
+        $field
+            ->expects($this->once())
+            ->method('getOptions')
+            ->willReturn([
+                'required' => false,
+            ])
+        ;
+        $helper
+            ->expects($this->once())
+            ->method('getFields')
+            ->with('MyEntity')
+            ->willReturn([
+                'name' => $field,
+                'createdAt' => $invalidField,
+            ])
+        ;
+
+        $subscriber->guessType($event);
+    }
+
+    public function testGuessTypeWithNoDefinition()
+    {
+        list($subscriber,,$helper) = $this->createSubscriber();
+
+        $event = $this->createMock(FieldEvent::class);
+        $event
+            ->expects($this->atLeastOnce())
+            ->method('getType')
+            ->willReturn(null)
+        ;
+        $event
+            ->expects($this->atLeastOnce())
+            ->method('getEntityClass')
+            ->willReturn('MyEntity')
+        ;
+        $event
+            ->expects($this->atLeastOnce())
+            ->method('getFieldName')
+            ->willReturn('createdAt')
+        ;
+        $field = $this->createMock(FieldDefinitionInterface::class);
+
+        $helper
+            ->expects($this->once())
+            ->method('getFields')
+            ->with('MyEntity')
+            ->willReturn([
+                'name' => $field,
+            ])
+        ;
+
+        $subscriber->guessType($event);
+    }
+
+    public function testGuessTypeWithId()
+    {
+        list($subscriber,,$helper) = $this->createSubscriber();
+
+        $event = $this->createMock(FieldEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getType')
+            ->willReturn(null)
+        ;
+        $event
+            ->expects($this->once())
+            ->method('getEntityClass')
+            ->willReturn('MyEntity')
+        ;
+        $event
+            ->expects($this->once())
+            ->method('getFieldName')
+            ->willReturn('id')
+        ;
+
+        $field = $this->createMock(FieldDefinitionInterface::class);
+        $helper
+            ->expects($this->once())
+            ->method('getFields')
+            ->with('MyEntity')
+            ->willReturn([
+                'id' => $field,
+            ])
+        ;
+
+        $subscriber->guessType($event);
+    }
+
+    public function testGuessTypeDefinedType()
+    {
+        list($subscriber) = $this->createSubscriber();
+
+        $event = $this->createMock(FieldEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getType')
+            ->willReturn('MyType')
+        ;
+
+        $subscriber->guessType($event);
     }
 
     /**
