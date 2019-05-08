@@ -4,7 +4,6 @@ namespace LAG\AdminBundle\Event\Events;
 
 use LAG\AdminBundle\Event\AbstractEvent;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Field\Definition\FieldDefinition;
 use LAG\AdminBundle\Field\Definition\FieldDefinitionInterface;
 use Symfony\Component\Form\FormInterface;
 
@@ -47,8 +46,13 @@ class FormEvent extends AbstractEvent
         $this->definitions[$name] = $definition;
     }
 
+    public function removeFieldDefinition(string $name): void
+    {
+        unset($this->definitions[$name]);
+    }
+
     /**
-     * @return FieldDefinition[]
+     * @return FieldDefinitionInterface[]
      */
     public function getFieldDefinitions(): array
     {
