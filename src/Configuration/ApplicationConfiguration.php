@@ -9,6 +9,7 @@ use LAG\AdminBundle\Field\AbstractField;
 use LAG\AdminBundle\Field\ActionCollectionField;
 use LAG\AdminBundle\Field\ActionField;
 use LAG\AdminBundle\Field\ArrayField;
+use LAG\AdminBundle\Field\AutoField;
 use LAG\AdminBundle\Field\BooleanField;
 use LAG\AdminBundle\Field\CollectionField;
 use LAG\AdminBundle\Field\CountField;
@@ -166,7 +167,7 @@ class ApplicationConfiguration extends Configuration
             AbstractField::TYPE_LINK => LinkField::class,
             AbstractField::TYPE_DATE => DateField::class,
             AbstractField::TYPE_COUNT => CountField::class,
-            AbstractField::TYPE_AUTO => CountField::class,
+            AbstractField::TYPE_AUTO => AutoField::class,
         ];
 
         $resolver->setDefault('fields_mapping', $defaultMapping);
