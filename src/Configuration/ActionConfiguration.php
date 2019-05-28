@@ -76,17 +76,17 @@ class ActionConfiguration extends Configuration
                 ],
                 'icon' => null,
                 'load_strategy' => LAGAdminBundle::LOAD_STRATEGY_NONE,
-                'pager' => $this->adminConfiguration->getParameter('pager'),
-                'page_parameter' => $this->adminConfiguration->getParameter('page_parameter'),
+                'pager' => $this->adminConfiguration->get('pager'),
+                'page_parameter' => $this->adminConfiguration->get('page_parameter'),
                 'max_per_page' => 30,
                 'criteria' => [],
                 'filters' => [],
                 'menus' => [],
                 'template' => $this->getDefaultTemplate(),
                 'sortable' => false,
-                'string_length' => $this->adminConfiguration->getParameter('string_length'),
-                'string_length_truncate' => $this->adminConfiguration->getParameter('string_length_truncate'),
-                'date_format' => $this->adminConfiguration->getParameter('date_format'),
+                'string_length' => $this->adminConfiguration->get('string_length'),
+                'string_length_truncate' => $this->adminConfiguration->get('string_length_truncate'),
+                'date_format' => $this->adminConfiguration->get('date_format'),
                 'use_form' => true,
                 'form' => null,
             ])
@@ -137,18 +137,18 @@ class ActionConfiguration extends Configuration
      */
     private function generateRouteName(): string
     {
-        if (!array_key_exists($this->actionName, $this->adminConfiguration->getParameter('actions'))) {
+        if (!array_key_exists($this->actionName, $this->adminConfiguration->get('actions'))) {
             throw new Exception(
                 sprintf('Invalid action name %s for admin %s (available action are: %s)',
                     $this->actionName,
                     $this->adminName,
-                    implode(', ', array_keys($this->adminConfiguration->getParameter('actions'))))
+                    implode(', ', array_keys($this->adminConfiguration->get('actions'))))
             );
         }
         $routeName = RoutingLoader::generateRouteName(
             $this->adminName,
             $this->actionName,
-            $this->adminConfiguration->getParameter('routing_name_pattern')
+            $this->adminConfiguration->get('routing_name_pattern')
         );
 
         return $routeName;
@@ -356,7 +356,7 @@ class ActionConfiguration extends Configuration
     {
         $translationPattern = $this
             ->adminConfiguration
-            ->getParameter('translation_pattern')
+            ->get('translation_pattern')
         ;
 
         return function (Options $options, $value) use ($translationPattern) {
@@ -387,7 +387,7 @@ class ActionConfiguration extends Configuration
     {
         $pattern = $this
             ->adminConfiguration
-            ->getParameter('routing_url_pattern')
+            ->get('routing_url_pattern')
         ;
         $path = str_replace('{admin}', $this->adminName, $pattern);
         $path = str_replace('{action}', $this->actionName, $path);

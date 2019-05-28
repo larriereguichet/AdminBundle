@@ -16,8 +16,6 @@ $(document).ready(function () {
                 icon.removeClass('fa-angle-up');
                 icon.addClass('fa-angle-down');
             }
-
-
         });
     }
 });
