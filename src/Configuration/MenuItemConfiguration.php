@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Configuration;
 
 use JK\Configuration\Configuration;
+use LAG\Component\StringUtils\StringUtils;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -130,12 +131,25 @@ class MenuItemConfiguration extends Configuration
                 return $resolvedItems;
             })
             ->setNormalizer('text', function (Options $options, $text) {
-                if (!$text) {
-                    // TODO use translation pattern key instead
-                    $text = ucfirst($this->name);
+                if ($text) {
+                    return $text;
                 }
 
-                return $text;
+                if ($options->offsetGet('admin')) {
+                    $text = ucfirst($options->offsetGet('admin'));
+
+                    if (StringUtils::endsWith($text, 'y')) {
+                        $text = substr($text, 0, strlen($text) - 1).'ie';
+                    }
+
+                    if (!StringUtils::endsWith($text, 's')) {
+                        $text .= 's';
+                    }
+
+                    return $text;
+                }
+
+                return ucfirst($this->name);
             })
         ;
     }

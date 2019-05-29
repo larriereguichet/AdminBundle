@@ -46,11 +46,12 @@ class MenuFactoryTest extends AdminTestBase
         // Test an admin item
         $item = $menu->getItems()[0];
         $this->assertEquals('planets', $item->get('admin'));
+        $this->assertEquals($item->get('admin'), $item->getConfiguration()->get('admin'));
         $this->assertEquals('explode', $item->get('action'));
         $this->assertEquals(null, $item->get('route'));
         $this->assertEquals(null, $item->get('url'));
         $this->assertEquals([], $item->get('parameters'));
-        $this->assertEquals('Death_star_explode', $item->get('text'));
+        $this->assertEquals('Planets', $item->get('text'));
         $this->assertArrayHasKey('id', $item->get('attr'));
         $this->assertEquals([], $item->get('items'));
         $this->assertEquals(null, $item->get('icon'));

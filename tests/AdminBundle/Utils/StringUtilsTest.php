@@ -3,7 +3,8 @@
 namespace LAG\AdminBundle\Tests\Utils;
 
 use LAG\AdminBundle\Tests\AdminTestBase;
-use LAG\AdminBundle\Utils\StringUtils;
+use LAG\AdminBundle\Utils\TranslationUtils;
+use LAG\Component\StringUtils\StringUtils;
 
 class StringUtilsTest extends AdminTestBase
 {
@@ -11,7 +12,7 @@ class StringUtilsTest extends AdminTestBase
     {
         $this->assertEquals(
             'test.tauntaun.open',
-            StringUtils::getTranslationKey('test.{admin}.{key}', 'tauntaun', 'open')
+            TranslationUtils::getTranslationKey('test.{admin}.{key}', 'tauntaun', 'open')
         );
     }
 
@@ -19,7 +20,7 @@ class StringUtilsTest extends AdminTestBase
     {
         $this->assertEquals(
             'test.tauntaun.open',
-            StringUtils::getActionTranslationKey('test.{admin}.{key}', 'tauntaun', 'open')
+            TranslationUtils::getActionTranslationKey('test.{admin}.{key}', 'tauntaun', 'open')
         );
     }
 
@@ -45,7 +46,7 @@ class StringUtilsTest extends AdminTestBase
 
     public function testStartsWith()
     {
-        $this->assertTrue(StringUtils::startWith('MyLittleService', 'M'));
-        $this->assertTrue(StringUtils::startWith('MyLittleService', 'MyLittle'));
+        $this->assertTrue(StringUtils::startsWith('MyLittleService', 'M'));
+        $this->assertTrue(StringUtils::startsWith('MyLittleService', 'MyLittle'));
     }
 }

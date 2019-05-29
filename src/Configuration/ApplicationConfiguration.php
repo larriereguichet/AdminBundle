@@ -40,7 +40,7 @@ class ApplicationConfiguration extends Configuration
                 'enable_security' => true,
                 'enable_menus' => true,
                 'enable_homepage' => true,
-                'translation' => false,
+                'translation' => true,
                 'translation_pattern' => false,
                 'title' => 'AdminBundle application',
                 'description' => '',

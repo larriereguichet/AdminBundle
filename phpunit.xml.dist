@@ -38,7 +38,7 @@
         <log type="coverage-html"
              target="var/phpunit/coverage"
              title="AdminBundle"
-             charset="UTF-8"
+             charset="utf8"
              yui="true"
              highlight="true"
              lowUpperBound="35"

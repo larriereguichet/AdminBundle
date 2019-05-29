@@ -10,7 +10,7 @@ use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Form\Type\DeleteType;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Routing\RoutingLoader;
-use LAG\AdminBundle\Utils\StringUtils;
+use LAG\AdminBundle\Utils\TranslationUtils;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -354,23 +354,28 @@ class ActionConfiguration extends Configuration
 
     private function getTitleNormalizer(): Closure
     {
+        $translation = $this
+            ->adminConfiguration
+            ->get('translation')
+        ;
         $translationPattern = $this
             ->adminConfiguration
             ->get('translation_pattern')
         ;
 
-        return function (Options $options, $value) use ($translationPattern) {
+        return function (Options $options, $value) use ($translationPattern, $translation) {
             if (null === $value) {
                 $value = 'lag.admin.'.$this->actionName;
-                $actionName = Container::camelize($this->actionName);
 
-                if (false !== $translationPattern) {
+                if ($translation &&  false !== $translationPattern) {
                     // By default, the action title is action name using the configured translation pattern
-                    $value = StringUtils::getTranslationKey(
+                    $value = TranslationUtils::getTranslationKey(
                         $translationPattern,
                         $this->adminName,
-                        $actionName
+                        $this->actionName
                     );
+                } else {
+                    $value = Container::camelize($this->actionName);
                 }
             }
 

@@ -2,8 +2,10 @@
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata;
 
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Exception;
 use LAG\AdminBundle\Field\Definition\FieldDefinition;
 
 class MetadataHelper implements MetadataHelperInterface
@@ -61,6 +63,28 @@ class MetadataHelper implements MetadataHelperInterface
         }
 
         return $fields;
+    }
+
+    /**
+     * Return the Doctrine metadata of the given class.
+     *
+     * @param $class
+     *
+     * @return ClassMetadata|null
+     */
+    public function findMetadata($class): ?ClassMetadata
+    {
+        $metadata = null;
+
+        try {
+            // We could not use the hasMetadataFor() method as it is not working if the entity is not loaded. But
+            // the getMetadataFor() method could throw an exception if the class is not found
+            $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($class);
+        } catch (Exception $exception) {
+            // If an exception is raised, nothing to do. Extra data from metadata will be not used.
+        }
+
+        return $metadata;
     }
 
     private function isJoinColumnNullable(array $relation)

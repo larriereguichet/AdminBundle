@@ -127,12 +127,14 @@ class ORMSubscriber implements EventSubscriberInterface
             $this->fieldDefinitions = $this->metadataHelper->getFields($event->getEntityClass());
         }
 
+        // By default, ids should be displayed as a string
         if ('id' === $event->getFieldName()) {
             $event->setType('string');
 
             return;
         }
 
+        // No need to guess a type when the field is not defined
         if (!key_exists($event->getFieldName(), $this->fieldDefinitions)) {
             return;
         }

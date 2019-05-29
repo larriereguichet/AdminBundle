@@ -8,7 +8,7 @@ use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Factory\DataProviderFactory;
 use LAG\AdminBundle\Factory\FormFactoryInterface;
 use LAG\AdminBundle\LAGAdminBundle;
-use LAG\AdminBundle\Utils\StringUtils;
+use LAG\AdminBundle\Utils\TranslationUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -132,7 +132,7 @@ class FormSubscriber implements EventSubscriberInterface
             ;
             $dataProvider->delete($admin);
 
-            $message = StringUtils::getTranslationKey(
+            $message = TranslationUtils::getTranslationKey(
                 $admin->getConfiguration()->get('translation_pattern'),
                 $admin->getName(),
                 'delete_success'

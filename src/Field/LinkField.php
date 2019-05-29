@@ -6,6 +6,8 @@ use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Field\Traits\EntityAwareTrait;
 use LAG\AdminBundle\Field\Traits\TwigAwareTrait;
 use LAG\AdminBundle\Routing\RoutingLoader;
+use LAG\AdminBundle\Utils\TranslationUtils;
+use LAG\Component\StringUtils\StringUtils;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,7 +15,13 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class LinkField extends StringField implements TwigAwareFieldInterface, EntityAwareFieldInterface
 {
-    use TwigAwareTrait, EntityAwareTrait;
+    use TwigAwareTrait;
+    use EntityAwareTrait;
+
+    /**
+     * @var ActionConfiguration
+     */
+    protected $actionConfiguration;
 
     public function isSortable(): bool
     {
@@ -23,6 +31,8 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
     public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)
     {
         parent::configureOptions($resolver, $actionConfiguration);
+
+        $this->actionConfiguration = $actionConfiguration;
 
         $resolver
             ->setDefaults([
@@ -50,7 +60,7 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
                 // route or url should be defined
                 if (!$value && !$options->offsetGet('url') && !$options->offsetGet('admin')) {
                     throw new InvalidOptionsException(
-                        'You must set either an url or a route for the property'
+                        'Either an url or a route should be defined'
                     );
                 }
 
@@ -86,6 +96,23 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
 
                 return $cleanedValues;
             })
+            ->setNormalizer('text', function (Options $options, $value) use ($actionConfiguration) {
+                if ($value) {
+                    return $value;
+                }
+
+                if ($options->offsetGet('action')) {
+                    return $this
+                        ->translator
+                        ->trans(TranslationUtils::getActionTranslationKey(
+                            $actionConfiguration->getAdminConfiguration()->get('translation_pattern'),
+                            $actionConfiguration->getAdminName(),
+                            $options->offsetGet('action')
+                        ));
+                }
+
+                return $options->offsetGet('route');
+            })
         ;
     }
 
@@ -96,12 +123,29 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
         $options = $this->options;
 
         foreach ($options['parameters'] as $name => $method) {
-            $options['parameters'][$name] = $accessor->getValue($this->entity, $method);
+            // Allow static values by prefixing it with an underscore
+            if (StringUtils::startsWith($method, '_')) {
+                $options['parameters'][$name] = StringUtils::end($method, -1);
+            } else {
+                $options['parameters'][$name] = $accessor->getValue($this->entity, $method);
+            }
         }
+        dump($value);
 
-        if ('' === $options['text']) {
+        if ($value) {
             $options['text'] = $value;
         }
+        dump($options);
+
+        if ('' === $options['text'] && $options['action']) {
+            $translationKey = TranslationUtils::getActionTranslationKey(
+                $this->actionConfiguration->getAdminConfiguration()->get('translation_pattern'),
+                $this->actionConfiguration->getAdminName(),
+                $options['action']
+            );
+            $options['text'] = $this->translator->trans($translationKey);
+        }
+        dump($options);
 
         return $this->twig->render($this->options['template'], [
             'options' => $options,

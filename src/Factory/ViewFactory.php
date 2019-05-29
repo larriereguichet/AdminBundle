@@ -62,7 +62,7 @@ class ViewFactory
      * @param string              $adminName
      * @param AdminConfiguration  $adminConfiguration
      * @param ActionConfiguration $actionConfiguration
-     * @param                     $entities
+     * @param mixed               $entities
      * @param FormInterface[]     $forms
      *
      * @return ViewInterface
