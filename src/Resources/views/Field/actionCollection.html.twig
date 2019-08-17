@@ -1,7 +1,3 @@
 <div class="btn-group" role="group" aria-label="Actions">
-
-    {% for action, options in actions %}
-        {% include '@LAGAdmin/Field/link.html.twig' %}
-    {% endfor %}
-
+    {{ fields_content | raw }}
 </div>

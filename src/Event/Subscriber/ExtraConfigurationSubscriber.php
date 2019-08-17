@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Event\Subscriber;
 
 use Doctrine\ORM\EntityManagerInterface;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Helper\MetadataTrait;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\Events;
@@ -12,7 +12,7 @@ use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Field\Helper\FieldConfigurationHelper;
 use LAG\AdminBundle\Resource\ResourceCollection;
-use LAG\AdminBundle\Utils\StringUtils;
+use LAG\AdminBundle\Utils\TranslationUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -20,8 +20,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ExtraConfigurationSubscriber implements EventSubscriberInterface
 {
-    use MetadataTrait;
-
     /**
      * @var ApplicationConfiguration
      */
@@ -36,6 +34,16 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      * @var ConfigurationFactory
      */
     private $configurationFactory;
+
+    /**
+     * @var MetadataHelperInterface
+     */
+    private $metadataHelper;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
 
     /**
      * @return array
@@ -55,17 +63,20 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      * @param EntityManagerInterface          $entityManager
      * @param ResourceCollection              $resourceCollection
      * @param ConfigurationFactory            $configurationFactory
+     * @param MetadataHelperInterface         $metadataHelper
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
         EntityManagerInterface $entityManager,
         ResourceCollection $resourceCollection,
-        ConfigurationFactory $configurationFactory
+        ConfigurationFactory $configurationFactory,
+        MetadataHelperInterface $metadataHelper
     ) {
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
-        $this->entityManager = $entityManager;
         $this->resourceCollection = $resourceCollection;
         $this->configurationFactory = $configurationFactory;
+        $this->metadataHelper = $metadataHelper;
+        $this->entityManager = $entityManager;
     }
 
     public function enrichAdminConfiguration(ConfigurationEvent $event)
@@ -79,7 +90,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         $this->addDefaultActions($configuration);
 
         // Add default field configuration: it provides a type, a form type, and a view according to the found metadata
-        $helper = new FieldConfigurationHelper($this->entityManager, $this->applicationConfiguration);
+        $helper = new FieldConfigurationHelper($this->entityManager, $this->applicationConfiguration, $this->metadataHelper);
         $helper->addDefaultFields($configuration, $event->getEntityClass(), $event->getAdminName());
         $helper->addDefaultStrategy($configuration);
         $helper->addDefaultRouteParameters($configuration);
@@ -205,7 +216,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             $configuration['actions']['list']['menus']['top']['items'][] = [
                 'admin' => $adminName,
                 'action' => 'create',
-                'text' => StringUtils::getTranslationKey(
+                'text' => TranslationUtils::getTranslationKey(
                     $this->applicationConfiguration->getParameter('translation_pattern'),
                     $adminName,
                     'create'
@@ -222,7 +233,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             $configuration['actions']['create']['menus']['top']['items'][] = [
                 'admin' => $adminName,
                 'action' => 'list',
-                'text' => StringUtils::getTranslationKey(
+                'text' => TranslationUtils::getTranslationKey(
                     $this->applicationConfiguration->getParameter('translation_pattern'),
                     $adminName,
                     'return'
@@ -251,7 +262,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             array_unshift($configuration['actions']['edit']['menus']['top']['items'], [
                 'admin' => $adminName,
                 'action' => 'list',
-                'text' => StringUtils::getTranslationKey(
+                'text' => TranslationUtils::getTranslationKey(
                     $this->applicationConfiguration->getParameter('translation_pattern'),
                     $adminName,
                     'return'
@@ -278,7 +289,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             return;
         }
         // TODO add a default unified filter
-        $metadata = $this->findMetadata($configuration['entity']);
+        $metadata = $this->metadataHelper->findMetadata($configuration['entity']);
 
         if (null === $metadata) {
             return;

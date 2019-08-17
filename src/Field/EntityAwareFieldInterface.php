@@ -7,7 +7,7 @@ interface EntityAwareFieldInterface extends FieldInterface
     /**
      * Defines the entity for the field.
      *
-     * @param $entity
+     * @param mixed $entity
      */
     public function setEntity($entity);
 }

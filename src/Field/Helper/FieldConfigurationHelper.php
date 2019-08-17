@@ -3,26 +3,36 @@
 namespace LAG\AdminBundle\Field\Helper;
 
 use Doctrine\ORM\EntityManagerInterface;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Helper\MetadataTrait;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Routing\RoutingLoader;
 
 class FieldConfigurationHelper
 {
-    use MetadataTrait;
-
     /**
      * @var ApplicationConfiguration
      */
     private $applicationConfiguration;
 
+    /**
+     * @var MetadataHelperInterface
+     */
+    private $metadataHelper;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        ApplicationConfiguration $applicationConfiguration
+        ApplicationConfiguration $applicationConfiguration,
+        MetadataHelperInterface $metadataHelper
     ) {
-        $this->entityManager = $entityManager;
         $this->applicationConfiguration = $applicationConfiguration;
+        $this->metadataHelper = $metadataHelper;
+        $this->entityManager = $entityManager;
     }
 
     public function addDefaultFields(array &$configuration, $entityClass, $adminName): void
@@ -48,7 +58,7 @@ class FieldConfigurationHelper
             if (null === $action || false === $action) {
                 $action = [];
             }
-            $metadata = $this->findMetadata($entityClass);
+            $metadata = $this->metadataHelper->findMetadata($entityClass);
 
             if (null === $metadata) {
                 continue;
@@ -64,6 +74,7 @@ class FieldConfigurationHelper
                 foreach ($metadata->getFieldNames() as $fieldName) {
                     $fields[$fieldName] = null;
                 }
+                $fields['_delete'] = null;
             }
             $actionField = $this->getActionField($metadata->getFieldNames());
 
@@ -83,6 +94,7 @@ class FieldConfigurationHelper
                             'parameters' => [
                                 'id' => null,
                             ],
+                            'class' => 'link',
                         ],
                     ];
                 } elseif (

@@ -29,7 +29,7 @@ class DateField extends AbstractField
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return string
      *

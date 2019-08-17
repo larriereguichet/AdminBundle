@@ -623,7 +623,7 @@ class AdminSubscriberTest extends AdminTestBase
         $translator
             ->expects($this->atLeastOnce())
             ->method('trans')
-            ->with('test.stefany.save_success')
+            ->with('test.stefany.saved')
             ->willReturn('Save')
         ;
 

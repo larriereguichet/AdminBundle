@@ -6,7 +6,8 @@ use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Field\RendererAwareFieldInterface;
 use LAG\AdminBundle\Field\EntityAwareFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
-use LAG\AdminBundle\Utils\StringUtils;
+use LAG\AdminBundle\Utils\TranslationUtils;
+use LAG\Component\StringUtils\StringUtils;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -55,13 +56,13 @@ class FieldRenderer implements FieldRendererInterface
 
     public function renderHeader(ViewInterface $admin, FieldInterface $field): string
     {
-        if (StringUtils::startWith($field->getName(), '_')) {
+        if (StringUtils::startsWith($field->getName(), '_')) {
             return '';
         }
         $configuration = $this->storage->getConfiguration();
 
         if ($configuration->get('translation')) {
-            $key = StringUtils::getTranslationKey(
+            $key = TranslationUtils::getTranslationKey(
                 $configuration->get('translation_pattern'),
                 $admin->getName(),
                 $field->getName()

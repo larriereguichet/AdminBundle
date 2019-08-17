@@ -17,7 +17,7 @@ use LAG\AdminBundle\Factory\DataProviderFactory;
 use LAG\AdminBundle\Factory\ViewFactory;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Routing\RoutingLoader;
-use LAG\AdminBundle\Utils\StringUtils;
+use LAG\AdminBundle\Utils\TranslationUtils;
 use LAG\AdminBundle\View\RedirectView;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -239,7 +239,7 @@ class AdminSubscriber implements EventSubscriberInterface
         $dataProvider->save($admin);
 
         // Inform the user that the save is successful
-        $message = $this->translateMessage('save_success', $admin->getName(), $configuration);
+        $message = $this->translateMessage('saved', $admin->getName(), $configuration);
 
         $this
             ->session
@@ -258,7 +258,7 @@ class AdminSubscriber implements EventSubscriberInterface
     private function translateMessage(string $message, string $adminName, AdminConfiguration $configuration): string
     {
         $pattern = $configuration->getParameter('translation_pattern');
-        $message = StringUtils::getTranslationKey($pattern, $adminName, $message);
+        $message = TranslationUtils::getTranslationKey($pattern, $adminName, $message);
 
         return $this->translator->trans($message);
     }

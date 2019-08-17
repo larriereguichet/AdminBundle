@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -75,7 +76,7 @@ class AdminTestBase extends TestCase
     /**
      * Assert that an exception is raised in the given code.
      *
-     * @param $exceptionClass
+     * @param string $exceptionClass
      * @param Closure $closure
      */
     protected function assertExceptionRaised($exceptionClass, Closure $closure)
@@ -101,7 +102,7 @@ class AdminTestBase extends TestCase
     }
     
     /**
-     * @param $class
+     * @param string $class
      *
      * @return MockObject|mixed
      */
@@ -145,7 +146,7 @@ class AdminTestBase extends TestCase
     {
         $actionConfiguration = $this->createMock(AdminConfiguration::class);
         $actionConfiguration
-            ->expects($this->exactly($expectedCalls))
+            ->expects($this->atLeast($expectedCalls))
             ->method('get')
             ->willReturnMap($map)
         ;
@@ -199,5 +200,12 @@ class AdminTestBase extends TestCase
         ;
 
         return $admin;
+    }
+
+    protected function createContainerDefinition(string $class): Definition
+    {
+        $definition = new Definition($class);
+
+        return $definition;
     }
 }

@@ -8,10 +8,4 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FakeAdmin
 {
-    public function __construct(
-        AdminResource $resource,
-        AdminConfiguration $configuration,
-        EventDispatcherInterface $eventDispatcher
-    ) {
-    }
 }

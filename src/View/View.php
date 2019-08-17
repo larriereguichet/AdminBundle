@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\View;
 
+use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
@@ -135,13 +136,18 @@ class View implements ViewInterface
     }
 
     /**
-     * @param $entities
+     * @param mixed $entities
      */
     public function setEntities($entities)
     {
         if ($entities instanceof Pagerfanta) {
             $this->pager = $entities;
-            $this->entities = new ArrayCollection($entities->getCurrentPageResults()->getArrayCopy());
+            $results = $entities->getCurrentPageResults();
+
+            if ($results instanceof ArrayIterator) {
+                $results = $results->getArrayCopy();
+            }
+            $this->entities = new ArrayCollection($results);
             $this->haveToPaginate = true;
             $this->totalCount = $entities->count();
         } else {

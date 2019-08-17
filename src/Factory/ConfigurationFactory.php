@@ -109,7 +109,7 @@ class ConfigurationFactory
                 continue;
             }
             $menuConfiguration['items'][] = [
-                'text' => ucfirst($resource->getName()),
+                'text' => null,
                 'admin' => $resource->getName(),
                 'action' => 'list',
             ];

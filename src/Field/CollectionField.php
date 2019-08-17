@@ -9,7 +9,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CollectionField extends AbstractField implements EntityAwareFieldInterface, RendererAwareFieldInterface
 {
-    use EntityAwareTrait, RendererAwareTrait;
+    use EntityAwareTrait;
+    use RendererAwareTrait;
 
     public function isSortable(): bool
     {

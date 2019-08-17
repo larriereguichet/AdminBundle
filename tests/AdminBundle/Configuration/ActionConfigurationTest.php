@@ -30,7 +30,7 @@ class ActionConfigurationTest extends AdminTestBase
             [
                 'string_length_truncate', '...',
             ],
-        ], 15);
+        ]);
 
         $configuration = new ActionConfiguration('custom', 'my_admin', $adminConfiguration);
         $resolver = new OptionsResolver();

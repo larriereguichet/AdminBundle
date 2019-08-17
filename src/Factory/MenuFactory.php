@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Factory;
 
+use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Configuration\MenuConfiguration;
 use LAG\AdminBundle\Configuration\MenuItemConfiguration;
@@ -25,7 +26,7 @@ class MenuFactory
     private $requestStack;
 
     /**
-     * @var \LAG\AdminBundle\Configuration\ApplicationConfiguration
+     * @var ApplicationConfiguration
      */
     private $applicationConfiguration;
 
@@ -142,7 +143,7 @@ class MenuFactory
         // A route string is not required, an admin and an action can also be provided
         if ($resolvedConfiguration['route']) {
             $itemRoute = $resolvedConfiguration['route'];
-        } elseif (key_exists('admin', $resolvedConfiguration)) {
+        } elseif (null !== $resolvedConfiguration['admin']) {
             $itemRoute = RoutingLoader::generateRouteName(
                 $resolvedConfiguration['admin'],
                 $resolvedConfiguration['action'],

@@ -7,7 +7,7 @@
 
 
 # AdminBundle
-The AdminBundle let you creates a **flexible** and **robust backoffice** on any Symfony application, with simple `yml` configuration.
+The AdminBundle let you creates a **flexible** and **robust backoffice** on any Symfony application, with simple `yaml` configuration.
 
 It eases the handling of CRUD views by configuring `Admin` objects on top of your Doctrine entities. Each `Admin` has one or many `Action`.
 By default, the four actions of a classical CRUD are available (`create`, `edit`, `delete` and `list`) and the creation of custom actions is easy.
@@ -27,8 +27,7 @@ Current version **v1.0**
 * Bootstrap 4 integration (can be disabled or override)
 
 ## Installation
-### Download
-### Step 1: Download the Bundle
+### Step 1: Install the Bundle
 Open a command console, execute the
 following command in your project directory to install the latest stable version of the bundle:
 
@@ -36,9 +35,10 @@ following command in your project directory to install the latest stable version
 $ composer require lag/adminbundle
 ```
 
+
 ### Step 2: Enable the Bundle
 ```
-    If you use Symfony 4, you can skip this step.
+    If you use Symfony Flex, you can skip this step.
     
     AdminBundle rely on WhiteOctoberPagerfantaBundle to handle list pagination. If you
     want to use those features, both bundles should be enabled in addition to AdminBundle.    
