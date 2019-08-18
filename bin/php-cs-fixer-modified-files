@@ -14,7 +14,7 @@ foreach ($output as $data) {
 }
 
 foreach ($files as $file) {
-    $command = 'bin/php-cs-fixer fix '.$file;
+    $command = 'php-cs-fixer fix '.$file;
     $process = new \Symfony\Component\Process\Process($command);
     $process->run();
 

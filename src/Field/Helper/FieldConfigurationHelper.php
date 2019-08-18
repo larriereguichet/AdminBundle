@@ -7,6 +7,7 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Routing\RoutingLoader;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FieldConfigurationHelper
 {
@@ -25,14 +26,21 @@ class FieldConfigurationHelper
      */
     private $entityManager;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
         EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
         ApplicationConfiguration $applicationConfiguration,
         MetadataHelperInterface $metadataHelper
     ) {
-        $this->applicationConfiguration = $applicationConfiguration;
-        $this->metadataHelper = $metadataHelper;
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
+        $this->metadataHelper = $metadataHelper;
+        $this->applicationConfiguration = $applicationConfiguration;
     }
 
     public function addDefaultFields(array &$configuration, $entityClass, $adminName): void
@@ -103,6 +111,11 @@ class FieldConfigurationHelper
                     null === $fieldConfiguration &&
                     key_exists('delete', $configuration['actions'])
                 ) {
+                    $text = 'Delete';
+
+                    if ($this->applicationConfiguration->get('translation')) {
+                        $text = $this->translator->trans('lag.admin.delete');
+                    }
                     // If a "delete" field is declared, and if it is not configured in the metadata, and if no
                     // configuration is declared for this field, and if the "delete" action is allowed, we add a default
                     // "button" configuration
@@ -114,7 +127,7 @@ class FieldConfigurationHelper
                             'parameters' => [
                                 'id' => null,
                             ],
-                            'text' => 'Delete',
+                            'text' => $text,
                             'class' => 'btn btn-sm btn-danger',
                             'icon' => 'remove',
                         ],
@@ -225,9 +238,7 @@ class FieldConfigurationHelper
             $pattern = $this->applicationConfiguration->get('routing_name_pattern');
 
             if (key_exists('edit', $configuration['actions'])) {
-                $configuration['actions'][$actionName]['fields']['_actions']['options']['fields']['edit'] = [
-                    'type' => 'action',
-                    'options' => [
+                $configuration['actions'][$actionName]['fields']['_actions']['options']['actions']['edit'] = [
                         'title' => 'test',
                         'route' => RoutingLoader::generateRouteName(
                             $adminName,
@@ -238,14 +249,11 @@ class FieldConfigurationHelper
                             'id' => null,
                         ],
                         'icon' => 'pencil',
-                    ],
                 ];
             }
 
             if (key_exists('delete', $configuration['actions'])) {
-                $configuration['actions'][$actionName]['fields']['_actions']['options']['fields']['delete'] = [
-                    'type' => 'action',
-                    'options' => [
+                $configuration['actions'][$actionName]['fields']['_actions']['options']['actions']['delete'] = [
                         'title' => 'test',
                         'route' => RoutingLoader::generateRouteName(
                             $adminName,
@@ -256,7 +264,6 @@ class FieldConfigurationHelper
                             'id' => null,
                         ],
                         'icon' => 'remove',
-                    ],
                 ];
             }
         }

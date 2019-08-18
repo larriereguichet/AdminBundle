@@ -6,12 +6,8 @@ use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Field\Traits\EntityAwareTrait;
 use LAG\AdminBundle\Field\Traits\TranslatorTrait;
 use LAG\AdminBundle\Field\Traits\TwigAwareTrait;
-use LAG\AdminBundle\Routing\RoutingLoader;
-use LAG\AdminBundle\Utils\TranslationUtils;
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ActionCollectionField extends AbstractField implements TwigAwareFieldInterface, EntityAwareFieldInterface, TranslatorAwareFieldInterface
 {
@@ -71,7 +67,6 @@ class ActionCollectionField extends AbstractField implements TwigAwareFieldInter
             }
             $content .= $field->render($value);
         }
-        dump($content);
 
         return $this->twig->render($this->options['template'], [
             'fields_content' => $content,

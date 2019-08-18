@@ -365,17 +365,15 @@ class ActionConfiguration extends Configuration
 
         return function (Options $options, $value) use ($translationPattern, $translation) {
             if (null === $value) {
-                $value = 'lag.admin.'.$this->actionName;
+                $value = Container::camelize($this->actionName);
 
-                if ($translation &&  false !== $translationPattern) {
+                if ($translation && false !== $translationPattern) {
                     // By default, the action title is action name using the configured translation pattern
                     $value = TranslationUtils::getTranslationKey(
                         $translationPattern,
                         $this->adminName,
                         $this->actionName
                     );
-                } else {
-                    $value = Container::camelize($this->actionName);
                 }
             }
 

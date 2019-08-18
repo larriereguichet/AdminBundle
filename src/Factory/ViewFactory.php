@@ -4,7 +4,10 @@ namespace LAG\AdminBundle\Factory;
 
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Routing\RoutingLoader;
+use LAG\AdminBundle\Utils\RedirectionUtils;
 use LAG\AdminBundle\View\RedirectView;
 use LAG\AdminBundle\View\View;
 use LAG\AdminBundle\View\ViewInterface;
@@ -15,19 +18,9 @@ use Symfony\Component\Routing\RouterInterface;
 class ViewFactory
 {
     /**
-     * @var ConfigurationFactory
-     */
-    private $configurationFactory;
-
-    /**
      * @var FieldFactory
      */
     private $fieldFactory;
-
-    /**
-     * @var MenuFactory
-     */
-    private $menuFactory;
 
     /**
      * @var RouterInterface
@@ -35,23 +28,25 @@ class ViewFactory
     private $router;
 
     /**
+     * @var ApplicationConfigurationStorage
+     */
+    private $storage;
+
+    /**
      * ViewFactory constructor.
      *
-     * @param ConfigurationFactory $configurationFactory
-     * @param FieldFactory         $fieldFactory
-     * @param MenuFactory          $menuFactory
-     * @param RouterInterface      $router
+     * @param FieldFactory                    $fieldFactory
+     * @param RouterInterface                 $router
+     * @param ApplicationConfigurationStorage $storage
      */
     public function __construct(
-        ConfigurationFactory $configurationFactory,
         FieldFactory $fieldFactory,
-        MenuFactory $menuFactory,
-        RouterInterface $router
+        RouterInterface $router,
+        ApplicationConfigurationStorage $storage
     ) {
-        $this->configurationFactory = $configurationFactory;
         $this->fieldFactory = $fieldFactory;
-        $this->menuFactory = $menuFactory;
         $this->router = $router;
+        $this->storage = $storage;
     }
 
     /**
@@ -75,36 +70,34 @@ class ViewFactory
         ActionConfiguration $actionConfiguration,
         $entities,
         array $forms = []
-    ) {
+    ): ViewInterface {
         if (key_exists('entity', $forms)) {
             $form = $forms['entity'];
 
             if ($this->shouldRedirect($form, $request, $adminConfiguration)) {
-                $routeName = RoutingLoader::generateRouteName(
-                    $adminName,
-                    'list',
-                    $adminConfiguration->getParameter('routing_name_pattern')
-                );
-                $url = $this->router->generate($routeName);
-                $view = new RedirectView(
+                return $this->createRedirection(
                     $actionName,
                     $adminName,
+                    $request,
+                    $adminConfiguration,
                     $actionConfiguration,
-                    $adminConfiguration
+                    $form
                 );
-                $view->setUrl($url);
-
-                return $view;
             }
         }
         $fields = $this
             ->fieldFactory
-            ->createFields($actionConfiguration)
-        ;
+            ->createFields($actionConfiguration);
         $formViews = [];
 
         foreach ($forms as $identifier => $form) {
             $formViews[$identifier] = $form->createView();
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            $template = $this->storage->getConfiguration()->get('ajax_template');
+        } else {
+            $template = $this->storage->getConfiguration()->get('base_template');
         }
 
         $view = new View(
@@ -112,12 +105,54 @@ class ViewFactory
             $adminName,
             $actionConfiguration,
             $adminConfiguration,
+            $template,
             $fields,
             $formViews
         );
         $view->setEntities($entities);
 
         return $view;
+    }
+
+    public function createRedirection(
+        $actionName,
+        $adminName,
+        Request $request,
+        AdminConfiguration $adminConfiguration,
+        ActionConfiguration $actionConfiguration,
+        FormInterface $form
+    ): RedirectView {
+        if (RedirectionUtils::shouldRedirectToEdit($form, $request, $adminConfiguration)) {
+            $view = new RedirectView(
+                $actionName,
+                $adminName,
+                $actionConfiguration,
+                $adminConfiguration
+            );
+            $view->setUrl($request->getUri());
+
+            return $view;
+        }
+
+        if (RedirectionUtils::shouldRedirectToList($form, $request, $adminConfiguration)) {
+            $routeName = RoutingLoader::generateRouteName(
+                $adminName,
+                'list',
+                $adminConfiguration->getParameter('routing_name_pattern')
+            );
+            $url = $this->router->generate($routeName);
+            $view = new RedirectView(
+                $actionName,
+                $adminName,
+                $actionConfiguration,
+                $adminConfiguration
+            );
+            $view->setUrl($url);
+
+            return $view;
+        }
+
+        throw new Exception('Unable to find a url to redirect');
     }
 
     /**
@@ -129,28 +164,16 @@ class ViewFactory
      *
      * @return bool
      */
-    private function shouldRedirect(FormInterface $form, Request $request, AdminConfiguration $configuration)
+    private function shouldRedirect(FormInterface $form, Request $request, AdminConfiguration $configuration): bool
     {
-        if (!$form->isSubmitted()) {
-            return false;
+        if (RedirectionUtils::shouldRedirectToEdit($form, $request, $configuration)) {
+            return true;
         }
 
-        if (!$form->isValid()) {
-            return false;
+        if (RedirectionUtils::shouldRedirectToList($form, $request, $configuration)) {
+            return true;
         }
 
-        if (!key_exists('list', $configuration->getParameter('actions'))) {
-            return false;
-        }
-
-        if (!$request->get('submit_and_redirect')) {
-            return false;
-        }
-
-        if ('submit_and_redirect' !== $request->get('submit_and_redirect')) {
-            return false;
-        }
-
-        return true;
+        return false;
     }
 }

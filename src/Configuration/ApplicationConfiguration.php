@@ -48,6 +48,7 @@ class ApplicationConfiguration extends Configuration
                 // Main base template as bundles are not loaded when reading the configuration, the kernel
                 // locateResources will always failed. So we must not check resource existence here.
                 'base_template' => '@LAGAdmin/base.html.twig',
+                'ajax_template' => '@LAGAdmin/empty.html.twig',
                 'block_template' => '@LAGAdmin/Form/fields.html.twig',
                 'menu_template' => '@LAGAdmin/Menu/menu.html.twig',
                 'list_template' => '@LAGAdmin/CRUD/list.html.twig',

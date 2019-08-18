@@ -19,6 +19,7 @@ use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Routing\RoutingLoader;
 use LAG\AdminBundle\Utils\TranslationUtils;
 use LAG\AdminBundle\View\RedirectView;
+use LAG\AdminBundle\View\ViewHelper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -147,8 +148,9 @@ class AdminSubscriber implements EventSubscriberInterface
         } elseif ('delete' === $action->getName()) {
             $formName = 'delete';
         }
+        $viewHelper = new ViewHelper();
 
-        if ($this->shouldRedirect($admin, $action, $formName, $event->getRequest(), $admin->getConfiguration())) {
+        if ($viewHelper->shouldRedirect($event->getRequest(), $admin->getConfiguration(), $admin, $action, $formName)) {
             $url = $this->getRedirectionUrl(
                 $admin,
                 $action,
@@ -261,63 +263,6 @@ class AdminSubscriber implements EventSubscriberInterface
         $message = TranslationUtils::getTranslationKey($pattern, $adminName, $message);
 
         return $this->translator->trans($message);
-    }
-
-    /**
-     * Return true if a redirection view should be created.
-     *
-     * @param AdminInterface     $admin
-     * @param ActionInterface    $action
-     * @param string             $formName
-     * @param Request            $request
-     * @param AdminConfiguration $configuration
-     *
-     * @return bool
-     */
-    private function shouldRedirect(
-        AdminInterface $admin,
-        ActionInterface $action,
-        string $formName,
-        Request $request,
-        AdminConfiguration $configuration
-    ) {
-        if (!$admin->hasForm($formName)) {
-            return false;
-        }
-        $form = $admin->getForm($formName);
-
-        if (!$form->isSubmitted()) {
-            return false;
-        }
-
-        if (!$form->isValid()) {
-            return false;
-        }
-
-        if (!key_exists('list', $configuration->getParameter('actions'))) {
-            return false;
-        }
-
-        // When the create form is submitted, the user should be redirected to the edit action after saving the form
-        // data
-        if ('create' === $action->getName()) {
-            return true;
-        }
-
-        // When the delete form is submitted, we should redirect to the list action
-        if ('delete' === $action->getName()) {
-            return true;
-        }
-
-        if (!$request->get('submit_and_redirect')) {
-            return false;
-        }
-
-        if ('submit_and_redirect' !== $request->get('submit_and_redirect')) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
