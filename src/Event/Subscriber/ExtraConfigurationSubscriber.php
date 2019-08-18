@@ -14,6 +14,7 @@ use LAG\AdminBundle\Field\Helper\FieldConfigurationHelper;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use LAG\AdminBundle\Utils\TranslationUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Add extra default configuration for actions and fields.
@@ -46,6 +47,11 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     private $entityManager;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
@@ -64,19 +70,22 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      * @param ResourceCollection              $resourceCollection
      * @param ConfigurationFactory            $configurationFactory
      * @param MetadataHelperInterface         $metadataHelper
+     * @param TranslatorInterface             $translator
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
         EntityManagerInterface $entityManager,
         ResourceCollection $resourceCollection,
         ConfigurationFactory $configurationFactory,
-        MetadataHelperInterface $metadataHelper
+        MetadataHelperInterface $metadataHelper,
+        TranslatorInterface $translator
     ) {
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
         $this->resourceCollection = $resourceCollection;
         $this->configurationFactory = $configurationFactory;
         $this->metadataHelper = $metadataHelper;
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     public function enrichAdminConfiguration(ConfigurationEvent $event)
@@ -90,7 +99,12 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         $this->addDefaultActions($configuration);
 
         // Add default field configuration: it provides a type, a form type, and a view according to the found metadata
-        $helper = new FieldConfigurationHelper($this->entityManager, $this->applicationConfiguration, $this->metadataHelper);
+        $helper = new FieldConfigurationHelper(
+            $this->entityManager,
+            $this->translator,
+            $this->applicationConfiguration,
+            $this->metadataHelper
+        );
         $helper->addDefaultFields($configuration, $event->getEntityClass(), $event->getAdminName());
         $helper->addDefaultStrategy($configuration);
         $helper->addDefaultRouteParameters($configuration);

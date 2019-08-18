@@ -1,4 +1,4 @@
-{% extends admin_config('base_template') %}
+{% extends admin.base %}
 
 {% block content %}
     {% set entity = admin.entities.first %}
@@ -25,9 +25,11 @@
 
                         <div class="text-right button-list">
                             <a href="{{ admin_url(admin, 'list') }}"
-                               class="btn">
+                               class="btn cancel-link"
+                               data-dismiss="modal">
                                 <i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;{{ 'lag.admin.cancel' | trans }}</a>
-                            <button type="submit" class="btn btn-danger">
+                            <button type="submit"
+                                    class="btn btn-danger">
                                 <i class="fa fa-remove"></i>&nbsp;{{ 'lag.admin.delete' | trans }}
                             </button>
                         </div>

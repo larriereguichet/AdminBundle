@@ -51,4 +51,11 @@ interface ViewInterface
      * @return Pagerfanta|null
      */
     public function getPager();
+
+    public function getForms();
+
+    /**
+     * @return string
+     */
+    public function getBase();
 }

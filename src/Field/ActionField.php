@@ -20,7 +20,6 @@ class ActionField extends LinkField
     {
         parent::configureOptions($resolver, $actionConfiguration);
 
-
         $resolver
             ->setDefault('class', '')
             ->setNormalizer('class', function (Options $options, $value) {

@@ -8,6 +8,7 @@ use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -142,16 +143,28 @@ class AdminTestBase extends TestCase
         return $actionConfiguration;
     }
 
-    protected function createAdminConfigurationMock(array $map, int $expectedCalls = 1)
+    protected function createAdminConfigurationMock(array $map, int $expectedCalls = 1): MockObject
     {
-        $actionConfiguration = $this->createMock(AdminConfiguration::class);
-        $actionConfiguration
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
+        $adminConfiguration
             ->expects($this->atLeast($expectedCalls))
             ->method('get')
             ->willReturnMap($map)
         ;
 
-        return $actionConfiguration;
+        return $adminConfiguration;
+    }
+
+    protected function createApplicationConfigurationMock(array $map): MockObject
+    {
+        $applicationConfiguration = $this->createMock(ApplicationConfiguration::class);
+        $applicationConfiguration
+            ->expects($this->atLeastOnce())
+            ->method('get')
+            ->willReturnMap($map)
+        ;
+
+        return $applicationConfiguration;
     }
 
     /**
