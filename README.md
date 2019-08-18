@@ -36,7 +36,7 @@ $ composer require lag/adminbundle
 ```
 
 
-### Step 2: Enable the Bundle
+### Step 2: Enable the Bundle
 ```
     If you use Symfony Flex, you can skip this step.
     
