@@ -17,7 +17,7 @@ class ViewFactoryTest extends AdminTestBase
 {
     public function testCreate()
     {
-        list($factory, $fieldFactory, , $storage) = $this->createFactory();
+        list($factory, $fieldFactory,, $storage) = $this->createFactory();
 
         $request = new Request();
 
@@ -62,9 +62,9 @@ class ViewFactoryTest extends AdminTestBase
 
     public function testCreateAjax()
     {
-        list($factory, $fieldFactory, , $storage) = $this->createFactory();
+        list($factory, $fieldFactory,, $storage) = $this->createFactory();
 
-        $request = new Request([], [] ,[], [],[], [
+        $request = new Request([], [], [], [], [], [
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
         ]);
 
@@ -114,7 +114,7 @@ class ViewFactoryTest extends AdminTestBase
         ]);
         $entities = [];
 
-        list($factory, $fieldFactory, $router, ) = $this->createFactory();
+        list($factory, $fieldFactory, $router,) = $this->createFactory();
 
         $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
