@@ -130,12 +130,10 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
                 $options['parameters'][$name] = $accessor->getValue($this->entity, $method);
             }
         }
-        dump($value);
 
         if ($value) {
             $options['text'] = $value;
         }
-        dump($options);
 
         if ('' === $options['text'] && $options['action']) {
             $translationKey = TranslationUtils::getActionTranslationKey(
@@ -145,7 +143,6 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
             );
             $options['text'] = $this->translator->trans($translationKey);
         }
-        dump($options);
 
         return $this->twig->render($this->options['template'], [
             'options' => $options,
