@@ -135,7 +135,7 @@ class FormSubscriber implements EventSubscriberInterface
             $message = TranslationUtils::getTranslationKey(
                 $admin->getConfiguration()->get('translation_pattern'),
                 $admin->getName(),
-                'delete_success'
+                'deleted'
             );
             $this->session->getFlashBag()->add('success', $this->translator->trans($message));
         }

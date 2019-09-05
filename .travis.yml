@@ -19,7 +19,6 @@ install:
 script:
     - bin/phpunit --coverage-text --coverage-clover=coverage.clover
     - bin/security-checker
-    #- bin/php-cs-fixer fix
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar

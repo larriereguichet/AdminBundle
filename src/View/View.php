@@ -75,10 +75,16 @@ class View implements ViewInterface
     private $forms;
 
     /**
+     * @var string
+     */
+    private $base;
+
+    /**
      * View constructor.
      *
      * @param string              $actionName
      * @param string              $adminName
+     * @param string              $base
      * @param ActionConfiguration $configuration
      * @param AdminConfiguration  $adminConfiguration
      * @param FieldInterface[]    $fields
@@ -91,6 +97,7 @@ class View implements ViewInterface
         string $adminName,
         ActionConfiguration $configuration,
         AdminConfiguration $adminConfiguration,
+        string $base = '',
         array $fields = [],
         array $forms = [],
         array $menus = [],
@@ -104,6 +111,7 @@ class View implements ViewInterface
         $this->headers = $headers;
         $this->menus = $menus;
         $this->forms = $forms;
+        $this->base = $base;
     }
 
     public function __call($name, $arguments)
@@ -234,5 +242,13 @@ class View implements ViewInterface
     public function getForms(): array
     {
         return $this->forms;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBase(): string
+    {
+        return $this->base;
     }
 }

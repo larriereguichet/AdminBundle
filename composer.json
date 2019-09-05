@@ -48,7 +48,8 @@
     "scrutinizer/ocular": "~1.1",
     "johnkrovitch/sam": "^0.1",
     "twbs/bootstrap": "^4.0",
-    "sensiolabs/security-checker": "^5.0 || ^6.0"
+    "sensiolabs/security-checker": "^5.0 || ^6.0",
+    "symfony/var-dumper": "^3.0 || ^4.0"
   },
   "autoload": {
     "psr-4": {
