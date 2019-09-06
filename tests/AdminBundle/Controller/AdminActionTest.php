@@ -11,6 +11,7 @@ use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 class AdminActionTest extends AdminTestBase
 {
@@ -22,7 +23,7 @@ class AdminActionTest extends AdminTestBase
             ->method('getTemplate')
             ->willReturn('my_template')
         ;
-        $twig = $this->createMock(\Twig_Environment::class);
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -72,7 +73,7 @@ class AdminActionTest extends AdminTestBase
             ->method('getUrl')
             ->willReturn('/admin/home')
         ;
-        $twig = $this->createMock(\Twig_Environment::class);
+        $twig = $this->createMock(Environment::class);
         $request = new Request();
 
         $admin = $this->createMock(AdminInterface::class);
@@ -100,6 +101,9 @@ class AdminActionTest extends AdminTestBase
         $response = $controller->__invoke($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertEquals('/admin/home', $response->getTargetUrl());
+
+        if ($request instanceof RedirectResponse) {
+            $this->assertEquals('/admin/home', $response->getTargetUrl());
+        }
     }
 }

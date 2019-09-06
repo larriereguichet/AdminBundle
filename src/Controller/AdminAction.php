@@ -7,7 +7,7 @@ use LAG\AdminBundle\View\RedirectView;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Twig_Environment;
+use Twig\Environment;
 
 class AdminAction
 {
@@ -17,7 +17,7 @@ class AdminAction
     private $adminFactory;
 
     /**
-     * @var Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -25,9 +25,9 @@ class AdminAction
      * AdminAction constructor.
      *
      * @param AdminFactory      $adminFactory
-     * @param Twig_Environment $twig
+     * @param Environment $twig
      */
-    public function __construct(AdminFactory $adminFactory, Twig_Environment $twig)
+    public function __construct(AdminFactory $adminFactory, Environment $twig)
     {
         $this->adminFactory = $adminFactory;
         $this->twig = $twig;
@@ -38,7 +38,7 @@ class AdminAction
      *
      * @return Response|RedirectResponse
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): Response
     {
         $admin = $this->adminFactory->createFromRequest($request);
         $admin->handleRequest($request);

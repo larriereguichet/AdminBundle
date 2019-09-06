@@ -17,8 +17,7 @@ install:
     - composer require phpstan/phpstan-shim
 
 script:
-    - bin/phpunit --coverage-text --coverage-clover=coverage.clover
-    - bin/security-checker
+    - make tests
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar

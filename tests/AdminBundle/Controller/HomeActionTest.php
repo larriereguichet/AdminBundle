@@ -10,12 +10,13 @@ use LAG\AdminBundle\Event\Events\MenuEvent;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 class HomeActionTest extends AdminTestBase
 {
     public function testInvoke()
     {
-        $twig = $this->createMock(\Twig_Environment::class);
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')

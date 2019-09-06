@@ -8,12 +8,12 @@ use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\MenuEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Twig_Environment;
+use Twig\Environment;
 
 class HomeAction
 {
     /**
-     * @var Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -30,12 +30,12 @@ class HomeAction
     /**
      * HomeAction constructor.
      *
-     * @param Twig_Environment                $twig
+     * @param Environment                $twig
      * @param EventDispatcherInterface        $eventDispatcher
      * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      */
     public function __construct(
-        Twig_Environment $twig,
+        Environment $twig,
         EventDispatcherInterface $eventDispatcher,
         ApplicationConfigurationStorage $applicationConfigurationStorage
     ) {
