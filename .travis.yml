@@ -18,8 +18,7 @@ install:
     - wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer
 
 script:
-    - make phpstan@analyse security@check phpunit@run
-    - ls
+    - make phpstan@analyse phpunit@run
     - php php-cs-fixer fix
 
 after_script:
