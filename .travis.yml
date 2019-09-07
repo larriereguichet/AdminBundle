@@ -19,7 +19,8 @@ install:
 
 script:
     - make phpstan@analyse security@check phpunit@run
-    - ./php-cs-fixer
+    - ls
+    - php php-cs-fixer
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar
