@@ -15,10 +15,10 @@ install:
     - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
     - composer update --optimize-autoloader
     - composer require phpstan/phpstan-shim
-    - make php-cs-fixer@install
+    - wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer
 
 script:
-    - make tests
+    - make phpstan@analyse security@check phpunit@run
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar
