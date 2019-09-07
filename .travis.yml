@@ -20,7 +20,7 @@ install:
 script:
     - make phpstan@analyse security@check phpunit@run
     - ls
-    - php php-cs-fixer
+    - php php-cs-fixer fix
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar
@@ -28,7 +28,6 @@ after_script:
 
 env:
     - SYMFONY_VERSION=3.4.*
-    - SYMFONY_VERSION=4.0.*
     - SYMFONY_VERSION=4.1.*
     - SYMFONY_VERSION=4.2.*
     - SYMFONY_VERSION=4.3.*
