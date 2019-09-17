@@ -44,7 +44,7 @@
     "lag/string-utils": "^1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^6.0",
+    "phpunit/phpunit": "^7.5",
     "scrutinizer/ocular": "~1.1",
     "johnkrovitch/sam": "^0.1",
     "twbs/bootstrap": "^4.0",
