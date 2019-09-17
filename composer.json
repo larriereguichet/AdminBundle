@@ -26,7 +26,7 @@
   ],
   "require": {
     "php": "^7.1",
-    "components/font-awesome": "~4.5",
+    "components/font-awesome": "~5.9",
     "components/jquery": "~3.0",
     "components/jqueryui": "~1.0",
     "doctrine/doctrine-bundle": "~1.2",
