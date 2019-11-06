@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Factory;
 
 use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Admin\AdminAwareInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
@@ -80,8 +81,10 @@ class FormFactory implements \LAG\AdminBundle\Factory\FormFactoryInterface
                     continue;
                 }
                 $formType = FormUtils::convertShortFormType($definition->getType());
-                $formOptions = FormUtils::getFormTypeOptions($definition->getType());
-                $formOptions = array_merge($formOptions, $definition->getFormOptions());
+                $formOptions = array_merge(
+                    FormUtils::getFormTypeOptions($definition->getType()),
+                    $definition->getFormOptions()
+                );
 
                 $builder->add($field, $formType, $formOptions);
                 $this->addFormTransformers($builder, $field, $definition->getType());

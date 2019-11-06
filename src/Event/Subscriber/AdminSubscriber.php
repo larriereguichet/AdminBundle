@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Event\Subscriber;
 use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\Events;
@@ -66,6 +67,11 @@ class AdminSubscriber implements EventSubscriberInterface
     private $router;
 
     /**
+     * @var AdminHelperInterface
+     */
+    private $helper;
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
@@ -88,6 +94,7 @@ class AdminSubscriber implements EventSubscriberInterface
      * @param SessionInterface         $session
      * @param TranslatorInterface      $translator
      * @param RouterInterface          $router
+     * @param AdminHelperInterface     $helper
      */
     public function __construct(
         ActionFactory $actionFactory,
@@ -96,7 +103,8 @@ class AdminSubscriber implements EventSubscriberInterface
         EventDispatcherInterface $eventDispatcher,
         SessionInterface $session,
         TranslatorInterface $translator,
-        RouterInterface $router
+        RouterInterface $router,
+        AdminHelperInterface $helper
     ) {
         $this->actionFactory = $actionFactory;
         $this->viewFactory = $viewFactory;
@@ -105,6 +113,7 @@ class AdminSubscriber implements EventSubscriberInterface
         $this->session = $session;
         $this->translator = $translator;
         $this->router = $router;
+        $this->helper = $helper;
     }
 
     /**
@@ -122,6 +131,7 @@ class AdminSubscriber implements EventSubscriberInterface
             throw new Exception('The _action was not found in the request');
         }
         $admin = $event->getAdmin();
+        $this->helper->setCurrent($admin);
         $action = $this->actionFactory->create($actionName, $admin->getName(), $admin->getConfiguration());
 
         $event->setAction($action);

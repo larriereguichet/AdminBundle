@@ -2,6 +2,8 @@
 
 namespace LAG\AdminBundle\Utils;
 
+use LAG\Component\StringUtils\StringUtils;
+
 class TranslationUtils
 {
     /**
@@ -18,6 +20,7 @@ class TranslationUtils
         string $adminName,
         string $key
     ): string {
+        $key = StringUtils::underscore($key);
         $translationPattern = str_replace('{key}', $key, $translationPattern);
         $translationPattern = str_replace('{admin}', $adminName, $translationPattern);
 

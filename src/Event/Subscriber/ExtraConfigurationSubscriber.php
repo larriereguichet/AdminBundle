@@ -201,7 +201,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (!key_exists('list', $configuration['actions'])) {
+        if (!key_exists('list', $configuration['actions']) || null === $configuration['actions']['list']) {
             return;
         }
 

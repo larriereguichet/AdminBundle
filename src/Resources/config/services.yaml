@@ -1,8 +1,12 @@
+imports:
+    resource: 'services/*'
+
 services:
     _defaults:
         autowire: true
         autoconfigure: true
         public: false
+
 
     ### Configuration ###
     LAG\AdminBundle\Configuration\ApplicationConfigurationStorage:
