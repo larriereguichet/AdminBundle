@@ -49,7 +49,8 @@
     "johnkrovitch/sam": "^0.1",
     "twbs/bootstrap": "^4.0",
     "sensiolabs/security-checker": "^5.0 || ^6.0",
-    "symfony/var-dumper": "^3.0 || ^4.0"
+    "symfony/var-dumper": "^3.0 || ^4.0",
+    "phpstan/phpstan": "^0.11.15"
   },
   "autoload": {
     "psr-4": {
