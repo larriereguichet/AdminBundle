@@ -13,8 +13,8 @@ class StringField extends AbstractField implements TranslatorAwareFieldInterface
     public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)
     {
         $resolver->setDefaults([
-            'length' => $actionConfiguration->getParameter('string_length'),
-            'replace' => $actionConfiguration->getParameter('string_length_truncate'),
+            'length' => $actionConfiguration->get('string_length'),
+            'replace' => $actionConfiguration->get('string_length_truncate'),
             'translation' => true,
         ]);
     }
