@@ -65,7 +65,7 @@ class FieldRenderer implements FieldRendererInterface
             $key = TranslationUtils::getTranslationKey(
                 $configuration->get('translation_pattern'),
                 $admin->getName(),
-                $field->getName()
+                StringUtils::underscore($field->getName())
             );
             $title = $this->translator->trans($key);
         } else {
