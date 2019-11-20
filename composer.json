@@ -29,7 +29,7 @@
     "components/font-awesome": "~4.5",
     "components/jquery": "~3.0",
     "components/jqueryui": "~1.0",
-    "doctrine/doctrine-bundle": "~1.2",
+    "doctrine/doctrine-bundle": "~2.0",
     "doctrine/orm": "^2.5",
     "johnkrovitch/configuration": "^1.0",
     "twig/extensions": "~1.2",
