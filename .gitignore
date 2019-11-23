@@ -2,9 +2,15 @@
 .php_cs.cache
 bin
 !bin/php-cs-fixer-modified-files
-!bin/sam.php
 build
 composer.lock
 phpunit.xml
 vendor
 var/phpunit
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
