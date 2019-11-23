@@ -3,7 +3,6 @@
 namespace LAG\AdminBundle\Factory;
 
 use LAG\AdminBundle\Admin\ActionInterface;
-use LAG\AdminBundle\Admin\AdminAwareInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
