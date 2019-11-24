@@ -37,8 +37,8 @@ v0.n+1:
 - handle custom actions for edit form (enable user for example) (WIP)
 - configure application date format (filename export, displayed date...) (WIP)
 - localization (rest field label in edit mode)
-- remove depency with container in action configuration (=> move camelize method in a trait)
-
+- remove dependency with container in action configuration (=> move camelize method in a trait)
+- use translation in twig instead for flash messages
 -----------------------------------------------
 
 v0.4: 

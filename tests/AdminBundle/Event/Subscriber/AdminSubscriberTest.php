@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Tests\Event\Subscriber;
 
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
@@ -645,6 +646,7 @@ class AdminSubscriberTest extends AdminTestBase
         $session = $this->createMock(Session::class);
         $translator = $this->createMock(TranslatorInterface::class);
         $router = $this->createMock(RouterInterface::class);
+        $helper = $this->createMock(AdminHelperInterface::class);
 
         $subscriber = new AdminSubscriber(
             $actionFactory,
@@ -653,7 +655,8 @@ class AdminSubscriberTest extends AdminTestBase
             $eventDispatcher,
             $session,
             $translator,
-            $router
+            $router,
+            $helper
         );
 
         return [

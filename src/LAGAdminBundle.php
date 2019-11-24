@@ -29,6 +29,7 @@ class LAGAdminBundle extends Bundle
     const SERVICE_TAG_FORM_HANDLER = 'lag.admin.form_handler';
 
     // Request Admin parameters
+    // TODO from configuration
     const REQUEST_PARAMETER_ADMIN = '_admin';
     const REQUEST_PARAMETER_ACTION = '_action';
 

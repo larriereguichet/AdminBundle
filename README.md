@@ -73,8 +73,7 @@ class AppKernel extends Kernel
 Import the routing configuration to have the admin generated routes :
 
 ```yml
-    # config/routes.yaml
-        
+    # config/routes.yaml        
     lag_admin:
         resource: .
         type: extra
@@ -98,13 +97,15 @@ And now you could go to `http://127.0.0.1:8000/admin/planet/list` to see a list 
 Yan can go to `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of your admin interface
 
 ## Documentation
-1. [Introduction](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.1.introduction.md)
-    1. [How To Use](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.1.how_to_use.md#how-to-use)
-    2. Admins and Actions
-    3. Events
-    4. Data Providers
-    5. Filters
-    6. Views
+1. [How to use](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how-to-use.md)    
+    1. [How To Use](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how_to_use.md#how-to-use)
+    2. [Admins](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how_to_use.md#admin)
+    3. [Actions](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how_to_use.md#actions)
+    4. Fields
+    4. Events
+    5. Data Providers
+    6. Filters
+    7. Views
 2. Customization
   a. Custom actions
   b. Custom rendering
@@ -113,13 +114,15 @@ Yan can go to `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of 
   a. Application configuration
   b. Admin configuration
 4. FAQ
-5. Configuration reference
+5. [Configuration reference](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/5.configuration-reference.md)
 
 ## Road map
+
 ### v1.1
-- add dynamic id column (instead of required "id" column)
-### V1.0
-- add more testing
+- Add dynamic id column (instead of required "id" column) to improve generic and handle multiple ids columns 
+
+### v1.0
+- Add more testing
 
 ## History
 Version 0.4 :

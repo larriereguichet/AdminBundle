@@ -1,0 +1,12 @@
+{
+  "entrypoints": {
+    "admin": {
+      "css": [
+        "/bundles/lagadmin/assets/admin.css"
+      ],
+      "js": [
+        "/bundles/lagadmin/assets/admin.js"
+      ]
+    }
+  }
+}
