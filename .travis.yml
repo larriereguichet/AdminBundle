@@ -1,9 +1,8 @@
 language: php
 
 php:
-    - '7.1'
-    - '7.2'
-    - '7.3'
+    - 7.2
+    - 7.3
 
 before_install:
     - mysql -e "create database IF NOT EXISTS admin_bundle_test;"
@@ -18,8 +17,8 @@ install:
     - wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer
 
 script:
-    - make phpstan@analyse phpunit@run
-    - php php-cs-fixer fix --dry-run
+    - make phpunit@run phpstan@analyse
+    #- php php-cs-fixer fix --dry-run --using-cache=no --verbose
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar
