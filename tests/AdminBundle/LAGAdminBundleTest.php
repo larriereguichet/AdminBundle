@@ -2,24 +2,70 @@
 
 namespace LAG\AdminBundle\Tests;
 
-use LAG\AdminBundle\DependencyInjection\CompilerPass\ResourceCompilerPass;
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use LAG\AdminBundle\LAGAdminBundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Nyholm\BundleTest\BaseBundleTestCase;
+use Nyholm\BundleTest\CompilerPass\PublicServicePass;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Yaml\Yaml;
 
-class LAGAdminBundleTest extends AdminTestBase
+class LAGAdminBundleTest extends BaseBundleTestCase
 {
-    public function testBuild()
+    protected function getBundleClass()
     {
-        $container = $this->createMock(ContainerBuilder::class);
-        $container
-            ->expects($this->exactly(3))
-            ->method('addCompilerPass')
-            ->willReturnMap([
-                [new ResourceCompilerPass()],
-            ])
-        ;
+        return LAGAdminBundle::class;
+    }
+    protected function setUp()
+    {
+        parent::setUp();
 
-        $bundle = new LAGAdminBundle();
-        $bundle->build($container);
+        // Make all services public
+        $this->addCompilerPass(new PublicServicePass());
+    }
+
+    public function testInitBundle()
+    {
+        $kernel = $this->createKernel();
+        $kernel->addConfigFile(__DIR__.'/Fixtures/config/config.yaml');
+        $kernel->addBundle(FrameworkBundle::class);
+        $kernel->addBundle(MonologBundle::class);
+        $kernel->addBundle(SensioFrameworkExtraBundle::class);
+        $kernel->addBundle(SecurityBundle::class);
+        $kernel->addBundle(DoctrineBundle::class);
+        $kernel->addBundle(TwigBundle::class);
+
+        // Boot the kernel.
+        $this->bootKernel();
+
+        // Get the container
+        $container = $this->getContainer();
+
+        // Test if you services exists
+        $finder = new Finder();
+        $finder
+            ->in(__DIR__.'/../../src/Resources/config/services')
+            ->files()
+        ;
+        $services = [];
+
+        foreach ($finder as $file) {
+            $data = Yaml::parseFile($file->getRealPath());
+            //dump($data);
+            $services = array_merge($services, $data['services']);
+            dump($services);
+            //die;
+        }
+
+        foreach ($services as $service => $value) {
+            if ('_defaults' === $service) {
+                continue;
+            }
+            $this->assertTrue($container->has($service));
+        }
     }
 }

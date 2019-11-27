@@ -1,0 +1,94 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    default_locale: fr
+    csrf_protection: true
+    http_method_override: true
+    ide: 'phpstorm://open?url=file://%%f&line=%%l'
+
+    session:
+        storage_id: session.storage.filesystem
+
+    esi: false
+    fragments: true
+    php_errors:
+        log: true
+
+    cache:
+        prefix_seed: test/admin-bundle
+
+    assets:
+        json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
+
+    form: ~
+
+    translator:
+        paths:
+            - tests
+        fallbacks:
+            - en
+
+
+security:
+    encoders:
+        App\Entity\User: sha512
+
+    providers:
+        backend:
+            memory:
+                users:
+                    john_admin: { password: '$2y$13$jxGxc ... IuqDju', roles: ['ROLE_ADMIN'] }
+
+
+    role_hierarchy:
+        ROLE_OAUTH_USER:  ROLE_ADMIN
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    access_control:
+        - {path: ^/cms/login, role: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/cms/connect/google, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/cms/redirect/google, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/cms, role: ROLE_ADMIN}
+        - {path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY}
+
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            anonymous: ~
+            logout:
+                path: cms.logout
+
+twig: ~
+
+doctrine:
+    dbal:
+        # configure these for your database server
+        driver: 'pdo_mysql'
+        server_version: '5.7'
+        charset: utf8mb4
+        default_table_options:
+            charset: utf8mb4
+            collate: utf8mb4_unicode_ci
+
+        url: url
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        mappings: []
+
+monolog:
+    handlers:
+        main:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+            channels: ["!event"]
+
+
+services:
+    translator.logging.inner:
+        synthetic: true
