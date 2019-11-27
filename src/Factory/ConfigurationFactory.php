@@ -25,9 +25,6 @@ class ConfigurationFactory
 
     /**
      * ConfigurationFactory constructor.
-     *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param ResourceCollection       $resourceCollection
      */
     public function __construct(EventDispatcherInterface $eventDispatcher, ResourceCollection $resourceCollection)
     {
@@ -35,13 +32,6 @@ class ConfigurationFactory
         $this->resourceCollection = $resourceCollection;
     }
 
-    /**
-     * @param string                   $adminName
-     * @param array                    $configuration
-     * @param ApplicationConfiguration $applicationConfiguration
-     *
-     * @return AdminConfiguration
-     */
     public function createAdminConfiguration(
         string $adminName,
         array $configuration,
@@ -58,14 +48,6 @@ class ConfigurationFactory
         return $adminConfiguration;
     }
 
-    /**
-     * @param string             $actionName
-     * @param array              $configuration
-     * @param string             $adminName
-     * @param AdminConfiguration $adminConfiguration
-     *
-     * @return ActionConfiguration
-     */
     public function createActionConfiguration(
         string $actionName,
         array $configuration,

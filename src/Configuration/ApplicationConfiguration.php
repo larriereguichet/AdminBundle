@@ -28,8 +28,6 @@ class ApplicationConfiguration extends Configuration
 {
     /**
      * Configure configuration allowed parameters.
-     *
-     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -90,14 +88,10 @@ class ApplicationConfiguration extends Configuration
             ->setAllowedTypes('page_parameter', 'string')
             ->setNormalizer('routing_name_pattern', function (Options $options, $value) {
                 if (false === strstr($value, '{admin}')) {
-                    throw new InvalidOptionsException(
-                        'Admin routing configuration pattern name should contains the {admin} placeholder'
-                    );
+                    throw new InvalidOptionsException('Admin routing configuration pattern name should contains the {admin} placeholder');
                 }
                 if (false === strstr($value, '{action}')) {
-                    throw new InvalidOptionsException(
-                        'Admin routing configuration pattern name should contains the {action} placeholder'
-                    );
+                    throw new InvalidOptionsException('Admin routing configuration pattern name should contains the {action} placeholder');
                 }
 
                 return $value;
@@ -118,9 +112,6 @@ class ApplicationConfiguration extends Configuration
         $this->setFieldsOptions($resolver);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     protected function setTranslationOptions(OptionsResolver $resolver)
     {
         $resolver->setDefault('translation', [
@@ -149,9 +140,6 @@ class ApplicationConfiguration extends Configuration
         });
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     protected function setFieldsOptions(OptionsResolver $resolver)
     {
         $defaultMapping = [

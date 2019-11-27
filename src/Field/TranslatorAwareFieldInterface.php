@@ -8,8 +8,6 @@ interface TranslatorAwareFieldInterface extends FieldInterface
 {
     /**
      * Defines the translator.
-     *
-     * @param TranslatorInterface $translator
      */
     public function setTranslator(TranslatorInterface $translator);
 }

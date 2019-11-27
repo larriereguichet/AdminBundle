@@ -11,8 +11,6 @@ interface ViewInterface
 {
     /**
      * Return the Twig template associated to the view.
-     *
-     * @return string
      */
     public function getTemplate(): string;
 

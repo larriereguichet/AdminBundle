@@ -35,11 +35,6 @@ class AdminFactory
 
     /**
      * AdminFactory constructor.
-     *
-     * @param ResourceCollection              $resourceCollection
-     * @param EventDispatcherInterface        $eventDispatcher
-     * @param ConfigurationFactory            $configurationFactory
-     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      */
     public function __construct(
         ResourceCollection $resourceCollection,
@@ -54,8 +49,6 @@ class AdminFactory
     }
 
     /**
-     * @param Request $request
-     *
      * @return AdminInterface
      *
      * @throws Exception
@@ -87,8 +80,6 @@ class AdminFactory
     /**
      * Return true if the current Request is supported. Supported means that the Request has the required valid
      * parameters to get an admin from the registry.
-     *
-     * @param Request $request
      *
      * @return bool
      */

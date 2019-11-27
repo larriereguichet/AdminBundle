@@ -18,9 +18,6 @@ class MenuEvent extends Event
 
     /**
      * MenuEvent constructor.
-     *
-     * @param array $menuConfigurations
-     * @param bool  $buildResourceMenu
      */
     public function __construct(array $menuConfigurations = [], bool $buildResourceMenu = true)
     {
@@ -28,25 +25,16 @@ class MenuEvent extends Event
         $this->buildResourceMenu = $buildResourceMenu;
     }
 
-    /**
-     * @return array
-     */
     public function getMenuConfigurations(): array
     {
         return $this->menuConfigurations;
     }
 
-    /**
-     * @param array $menuConfigurations
-     */
     public function setMenuConfigurations(array $menuConfigurations)
     {
         $this->menuConfigurations = $menuConfigurations;
     }
 
-    /**
-     * @return bool
-     */
     public function isBuildResourceMenu(): bool
     {
         return $this->buildResourceMenu;

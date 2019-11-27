@@ -53,8 +53,6 @@ class DataProviderFactory
      * @param string $id The id of an existing data provider service
      * registry
      *
-     * @return DataProviderInterface
-     *
      * @throws Exception
      */
     public function get(string $id): DataProviderInterface

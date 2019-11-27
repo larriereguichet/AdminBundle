@@ -27,10 +27,7 @@ class Filter implements FilterInterface
     /**
      * Filter constructor.
      *
-     * @param string $name
      * @param mixed  $value
-     * @param string $comparator
-     * @param string $operator
      */
     public function __construct(string $name, $value, string $comparator = 'like', string $operator = 'or')
     {

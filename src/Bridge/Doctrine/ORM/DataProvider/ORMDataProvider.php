@@ -6,9 +6,9 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use LAG\AdminBundle\Exception\Exception;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -34,10 +34,6 @@ class ORMDataProvider implements DataProviderInterface
 
     /**
      * DoctrineORMDataProvider constructor.
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param RequestStack $requestStack
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -51,9 +47,6 @@ class ORMDataProvider implements DataProviderInterface
 
     /**
      * Load a collection of entities.
-     *
-     * @param AdminInterface $admin
-     * @param array          $filters
      *
      * @return mixed
      */
@@ -101,11 +94,7 @@ class ORMDataProvider implements DataProviderInterface
         ;
 
         if (null === $item) {
-            throw new Exception(sprintf(
-                'Item of class "%s" with identifier "%s" not found.',
-                $class,
-                $identifier
-            ));
+            throw new Exception(sprintf('Item of class "%s" with identifier "%s" not found.', $class, $identifier));
         }
 
         return $item;
@@ -143,8 +132,6 @@ class ORMDataProvider implements DataProviderInterface
     }
 
     /**
-     * @param string $entityClass
-     *
      * @return ObjectRepository|EntityRepository
      */
     private function getRepository(string $entityClass)

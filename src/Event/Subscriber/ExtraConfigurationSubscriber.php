@@ -64,13 +64,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
     /**
      * ExtraConfigurationSubscriber constructor.
-     *
-     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
-     * @param EntityManagerInterface          $entityManager
-     * @param ResourceCollection              $resourceCollection
-     * @param ConfigurationFactory            $configurationFactory
-     * @param MetadataHelperInterface         $metadataHelper
-     * @param TranslatorInterface             $translator
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
@@ -144,8 +137,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
     /**
      * Defines the default CRUD actions if no action was configured.
-     *
-     * @param array $configuration
      */
     private function addDefaultActions(array &$configuration)
     {
@@ -166,8 +157,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
     /**
      * Add the default left menu configuration. One item for each Admin.
-     *
-     * @param array $configuration
      */
     private function addDefaultLeftMenu(array &$configuration)
     {
@@ -192,8 +181,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
     /**
      * Add the default right menu.
-     *
-     * @param array  $configuration
      */
     private function addDefaultRightMenu(array &$configuration)
     {
@@ -288,8 +275,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
     /**
      * Add default filters for the list actions, guessed using the entity metadata.
-     *
-     * @param array $configuration
      */
     private function addDefaultFilters(array &$configuration)
     {
@@ -337,9 +322,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         return '=';
     }
 
-    /**
-     * @return bool
-     */
     private function isExtraConfigurationEnabled(): bool
     {
         return $this->applicationConfiguration->getParameter('enable_extra_configuration');

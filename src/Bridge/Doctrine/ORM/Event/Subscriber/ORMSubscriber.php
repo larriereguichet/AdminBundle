@@ -2,9 +2,9 @@
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber;
 
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use LAG\AdminBundle\Event\Events\FieldEvent;
 use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Field\Definition\FieldDefinition;
@@ -34,9 +34,6 @@ class ORMSubscriber implements EventSubscriberInterface
         $this->metadataHelper = $metadataHelper;
     }
 
-    /**
-     * @return array
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -55,8 +52,6 @@ class ORMSubscriber implements EventSubscriberInterface
 
     /**
      * Add the order to query builder according to the configuration.
-     *
-     * @param ORMFilterEvent $event
      */
     public function addOrder(ORMFilterEvent $event)
     {
@@ -82,8 +77,6 @@ class ORMSubscriber implements EventSubscriberInterface
 
     /**
      * Add filter to the query builder.
-     *
-     * @param ORMFilterEvent $event
      */
     public function addFilters(ORMFilterEvent $event)
     {

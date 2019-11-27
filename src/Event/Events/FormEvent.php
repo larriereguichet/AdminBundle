@@ -20,9 +20,6 @@ class FormEvent extends AbstractEvent
     private $definitions = [];
 
     /**
-     * @param FormInterface $form
-     * @param string        $identifier
-     *
      * @throws Exception
      */
     public function addForm(FormInterface $form, string $identifier)

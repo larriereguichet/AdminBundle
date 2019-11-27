@@ -61,10 +61,6 @@ class Admin implements AdminInterface
 
     /**
      * Admin constructor.
-     *
-     * @param AdminResource            $resource
-     * @param AdminConfiguration       $configuration
-     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         AdminResource $resource,

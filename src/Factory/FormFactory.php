@@ -68,9 +68,7 @@ class FormFactory implements \LAG\AdminBundle\Factory\FormFactoryInterface
 
             foreach ($event->getFieldDefinitions() as $field => $definition) {
                 if (!$definition instanceof FieldDefinitionInterface) {
-                    throw new Exception(
-                        'The field definition should implements "'.FieldDefinitionInterface::class.'", got "'.gettype($definition)
-                    );
+                    throw new Exception('The field definition should implements "'.FieldDefinitionInterface::class.'", got "'.gettype($definition));
                 }
                 // Usually we do not want to edit those values in a Form
                 if (in_array($field, [

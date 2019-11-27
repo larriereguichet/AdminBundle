@@ -23,9 +23,6 @@ class ActionFactory
 
     /**
      * ActionFactory constructor.
-     *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param ConfigurationFactory     $configurationFactory
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -38,9 +35,6 @@ class ActionFactory
     /**
      * @param string             $actionName
      * @param string             $adminName
-     * @param AdminConfiguration $adminConfiguration
-     *
-     * @return ActionInterface
      *
      * @throws Exception
      */
@@ -55,9 +49,7 @@ class ActionFactory
         $this->eventDispatcher->dispatch(Events::CONFIGURATION_ACTION, $event);
 
         if (!array_key_exists($actionName, $event->getConfiguration())) {
-            throw new Exception(
-                'The action "'.$actionName.'" was not found  in the configuration of the admin "'.$adminName.'"'
-            );
+            throw new Exception('The action "'.$actionName.'" was not found  in the configuration of the admin "'.$adminName.'"');
         }
         $actionConfiguration = $event->getConfiguration()[$actionName];
         $configuration = $this

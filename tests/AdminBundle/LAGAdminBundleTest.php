@@ -55,10 +55,7 @@ class LAGAdminBundleTest extends BaseBundleTestCase
 
         foreach ($finder as $file) {
             $data = Yaml::parseFile($file->getRealPath());
-            //dump($data);
             $services = array_merge($services, $data['services']);
-            dump($services);
-            //die;
         }
 
         foreach ($services as $service => $value) {

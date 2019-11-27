@@ -13,8 +13,6 @@ trait TwigAwareTrait
 
     /**
      * Defines the Twig engine.
-     *
-     * @param Environment $twig
      */
     public function setTwig(Environment $twig)
     {

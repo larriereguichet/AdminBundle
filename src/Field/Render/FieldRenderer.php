@@ -3,12 +3,12 @@
 namespace LAG\AdminBundle\Field\Render;
 
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Field\RendererAwareFieldInterface;
 use LAG\AdminBundle\Field\EntityAwareFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Field\RendererAwareFieldInterface;
 use LAG\AdminBundle\Utils\TranslationUtils;
-use LAG\Component\StringUtils\StringUtils;
 use LAG\AdminBundle\View\ViewInterface;
+use LAG\Component\StringUtils\StringUtils;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Contracts\Translation\TranslatorInterface;
 

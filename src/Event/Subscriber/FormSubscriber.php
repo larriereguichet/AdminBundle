@@ -51,11 +51,6 @@ class FormSubscriber implements EventSubscriberInterface
 
     /**
      * FormSubscriber constructor.
-     *
-     * @param DataProviderFactory  $dataProviderFactory
-     * @param FormFactoryInterface $adminFormFactory
-     * @param SessionInterface     $session
-     * @param TranslatorInterface  $translator
      */
     public function __construct(
         DataProviderFactory $dataProviderFactory,
@@ -71,8 +66,6 @@ class FormSubscriber implements EventSubscriberInterface
 
     /**
      * Create a form for the loaded entity.
-     *
-     * @param FormEvent $event
      */
     public function createForm(FormEvent $event): void
     {
@@ -104,8 +97,6 @@ class FormSubscriber implements EventSubscriberInterface
 
     /**
      * When the HANDLE_FORM event is dispatched, we handle the form according to the current action.
-     *
-     * @param FormEvent $event
      */
     public function handleForm(FormEvent $event): void
     {

@@ -23,7 +23,6 @@ class MenuItemConfiguration extends Configuration
     /**
      * MenuItemConfiguration constructor.
      *
-     * @param string $name
      * @param string $position
      */
     public function __construct(string $name, ?string $position)
@@ -36,8 +35,6 @@ class MenuItemConfiguration extends Configuration
 
     /**
      * Define allowed parameters and values for this configuration, using optionsResolver component.
-     *
-     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -63,9 +60,7 @@ class MenuItemConfiguration extends Configuration
                     && null === $options->offsetGet('route')
                     && null === $options->offsetGet('url')
                 ) {
-                    throw new InvalidOptionsException(
-                        'You should either defined an admin name, or route name or an uri'
-                    );
+                    throw new InvalidOptionsException('You should either defined an admin name, or route name or an uri');
                 }
 
                 return $adminName;
@@ -74,9 +69,7 @@ class MenuItemConfiguration extends Configuration
             ->setNormalizer('action', function (Options $options, $action) {
                 // if an action name is provided, an admin name should be defined too
                 if (null !== $action && null === $options->offsetGet('admin')) {
-                    throw new InvalidOptionsException(
-                        'You should provide an admin name for this action '.$action
-                    );
+                    throw new InvalidOptionsException('You should provide an admin name for this action '.$action);
                 }
 
                 // default to list action

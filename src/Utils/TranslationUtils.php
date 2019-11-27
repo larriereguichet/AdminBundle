@@ -8,12 +8,6 @@ class TranslationUtils
 {
     /**
      * Return the translation pattern with keys "{admin}" and "{key}" replaced by their values.
-     *
-     * @param string $translationPattern
-     * @param string $adminName
-     * @param string $key
-     *
-     * @return string
      */
     public static function getTranslationKey(
         string $translationPattern,
@@ -29,12 +23,6 @@ class TranslationUtils
 
     /**
      * Return the translation pattern with keys "{admin}" and "{key}" replaced by their values.
-     *
-     * @param string $translationPattern
-     * @param string $adminName
-     * @param string $actionName
-     *
-     * @return string
      */
     public static function getActionTranslationKey(
         string $translationPattern,

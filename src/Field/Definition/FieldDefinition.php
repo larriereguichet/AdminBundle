@@ -36,9 +36,6 @@ class FieldDefinition implements FieldDefinitionInterface
         return $this->options;
     }
 
-    /**
-     * @return array
-     */
     public function getFormOptions(): array
     {
         return $this->formOptions;

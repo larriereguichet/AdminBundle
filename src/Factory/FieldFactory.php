@@ -11,8 +11,8 @@ use LAG\AdminBundle\Event\Events\FieldEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\Field\FieldTypeNotFoundException;
 use LAG\AdminBundle\Field\FieldInterface;
-use LAG\AdminBundle\Field\TwigAwareFieldInterface;
 use LAG\AdminBundle\Field\TranslatorAwareFieldInterface;
+use LAG\AdminBundle\Field\TwigAwareFieldInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -63,12 +63,6 @@ class FieldFactory
 
     /**
      * FieldFactory constructor.
-     *
-     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
-     * @param ConfigurationFactory            $configurationFactory
-     * @param TranslatorInterface             $translator
-     * @param EventDispatcherInterface        $eventDispatcher
-     * @param Environment                     $twig
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
@@ -87,11 +81,6 @@ class FieldFactory
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param ActionConfiguration $configuration
-     *
-     * @return array
-     */
     public function createFields(ActionConfiguration $configuration): array
     {
         $fields = [];
@@ -105,12 +94,6 @@ class FieldFactory
 
     /**
      * Create a new field instance according to the given configuration.
-     *
-     * @param string              $name
-     * @param array               $configuration
-     * @param ActionConfiguration $actionConfiguration
-     *
-     * @return FieldInterface
      *
      * @throws Exception
      */
@@ -144,11 +127,7 @@ class FieldFactory
         try {
             $field->setOptions($resolver->resolve($options));
         } catch (\Exception $exception) {
-            throw new Exception(
-                'An error has occurred when resolving the options for the field "'.$name.'": '.$exception->getMessage(),
-                $exception->getCode(),
-                $exception
-            );
+            throw new Exception('An error has occurred when resolving the options for the field "'.$name.'": '.$exception->getMessage(), $exception->getCode(), $exception);
         }
         $event = new FieldEvent(
             $actionConfiguration->getAdminName(),
@@ -167,10 +146,6 @@ class FieldFactory
      * Return field class according to the field type. If the type is not present in the field mapping array, an
      * exception will be thrown.
      *
-     * @param string $type
-     *
-     * @return string
-     *
      * @throws Exception
      */
     private function getFieldClass(string $type): string
@@ -183,11 +158,6 @@ class FieldFactory
     }
 
     /**
-     * @param string $name
-     * @param string $type
-     *
-     * @return FieldInterface
-     *
      * @throws Exception
      */
     private function instanciateField(string $name, string $type): FieldInterface
@@ -210,9 +180,6 @@ class FieldFactory
     }
 
     /**
-     * @param array               $configuration
-     * @param ActionConfiguration $actionConfiguration
-     *
      * @return array
      *
      * @throws Exception

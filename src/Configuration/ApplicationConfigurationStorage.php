@@ -23,8 +23,6 @@ class ApplicationConfigurationStorage
     /**
      * Return the application configuration. If the none is defined yet, an exception will be thrown.
      *
-     * @return ApplicationConfiguration
-     *
      * @throws Exception
      */
     public function getConfiguration(): ApplicationConfiguration
@@ -38,8 +36,6 @@ class ApplicationConfigurationStorage
 
     /**
      * Return true is the configuration is defined and the storage frozen.
-     *
-     * @return bool
      */
     public function isFrozen(): bool
     {
@@ -47,8 +43,6 @@ class ApplicationConfigurationStorage
     }
 
     /**
-     * @param array $configuration
-     *
      * @throws Exception
      */
     public function setConfiguration(array $configuration): void
@@ -61,10 +55,6 @@ class ApplicationConfigurationStorage
     }
 
     /**
-     * @param array $configuration
-     *
-     * @return ApplicationConfiguration
-     *
      * @throws Exception
      */
     private function createApplicationConfiguration(array $configuration): ApplicationConfiguration
@@ -76,11 +66,7 @@ class ApplicationConfigurationStorage
         try {
             $applicationConfiguration->setParameters($resolver->resolve($configuration));
         } catch (Exception $exception) {
-            throw new Exception(
-                'An error has been found when processing the configuration of the admin application',
-                0,
-                $exception
-            );
+            throw new Exception('An error has been found when processing the configuration of the admin application', 0, $exception);
         }
 
         return $applicationConfiguration;

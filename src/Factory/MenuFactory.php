@@ -32,9 +32,6 @@ class MenuFactory
 
     /**
      * MenuFactory constructor.
-     *
-     * @param RequestStack                    $requestStack
-     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      */
     public function __construct(
         RequestStack $requestStack,
@@ -46,11 +43,6 @@ class MenuFactory
 
     /**
      * Create a menu item from a configuration array.
-     *
-     * @param string $name
-     * @param array  $configuration
-     *
-     * @return Menu
      */
     public function create(string $name, array $configuration): Menu
     {
@@ -71,12 +63,6 @@ class MenuFactory
 
     /**
      * Create a menu item according to the given configuration.
-     *
-     * @param string            $name
-     * @param array             $configuration
-     * @param MenuConfiguration $parentConfiguration
-     *
-     * @return MenuItem
      */
     public function createMenuItem(string $name, array $configuration, MenuConfiguration $parentConfiguration): MenuItem
     {
@@ -96,10 +82,6 @@ class MenuFactory
 
     /**
      * Return true if the menu exists.
-     *
-     * @param string $name
-     *
-     * @return bool
      */
     public function hasMenu(string $name): bool
     {
@@ -108,10 +90,6 @@ class MenuFactory
 
     /**
      * Return a menu with the given name.
-     *
-     * @param string $name
-     *
-     * @return Menu
      *
      * @throws Exception
      */

@@ -48,9 +48,6 @@ class LAGAdminBundle extends Bundle
      */
     const LOAD_STRATEGY_MULTIPLE = 'strategy_multiple';
 
-    /**
-     * @param ContainerBuilder $container
-     */
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new DataProviderCompilerPass());

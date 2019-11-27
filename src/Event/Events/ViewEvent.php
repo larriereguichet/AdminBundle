@@ -26,9 +26,6 @@ class ViewEvent extends Event
 
     /**
      * ViewEvent constructor.
-     *
-     * @param AdminInterface $admin
-     * @param Request        $request
      */
     public function __construct(AdminInterface $admin, Request $request)
     {
@@ -36,33 +33,21 @@ class ViewEvent extends Event
         $this->request = $request;
     }
 
-    /**
-     * @return ViewInterface
-     */
     public function getView(): ViewInterface
     {
         return $this->view;
     }
 
-    /**
-     * @param ViewInterface $view
-     */
     public function setView(ViewInterface $view)
     {
         $this->view = $view;
     }
 
-    /**
-     * @return AdminInterface
-     */
     public function getAdmin(): AdminInterface
     {
         return $this->admin;
     }
 
-    /**
-     * @return Request
-     */
     public function getRequest(): Request
     {
         return $this->request;

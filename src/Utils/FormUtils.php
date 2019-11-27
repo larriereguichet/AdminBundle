@@ -15,10 +15,6 @@ class FormUtils
 {
     /**
      * Convert a shortcut type into its class type.
-     *
-     * @param string|null $shortType
-     *
-     * @return string|null
      */
     public static function convertShortFormType(?string $shortType): ?string
     {

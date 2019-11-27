@@ -4,8 +4,8 @@ namespace LAG\AdminBundle\Event\Subscriber;
 
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\Events;
+use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Exception\Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -33,10 +33,6 @@ class SecuritySubscriber implements EventSubscriberInterface
 
     /**
      * SecuritySubscriber constructor.
-     *
-     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
-     * @param TokenStorageInterface           $tokenStorage
-     * @param AuthorizationCheckerInterface   $authorizationChecker
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
@@ -56,8 +52,6 @@ class SecuritySubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param AdminEvent $event
-     *
      * @throws AccessDeniedException
      */
     public function handleRequest(AdminEvent $event)

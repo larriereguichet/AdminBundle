@@ -271,10 +271,6 @@ class FieldConfigurationHelper
 
     /**
      * Return the default action field if found.
-     *
-     * @param array $fields
-     *
-     * @return string|null
      */
     private function getActionField(array $fields): ?string
     {

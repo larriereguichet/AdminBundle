@@ -10,8 +10,6 @@ class FilterConfiguration extends Configuration
 {
     /**
      * Define allowed parameters and values for this configuration, using optionsResolver component.
-     *
-     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
