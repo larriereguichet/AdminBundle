@@ -7,8 +7,8 @@ use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\Events;
+use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Event\Events\EntityEvent;
 use LAG\AdminBundle\Event\Events\MenuEvent;
 use LAG\AdminBundle\Event\Events\ViewEvent;
@@ -86,15 +86,6 @@ class AdminSubscriber implements EventSubscriberInterface
 
     /**
      * AdminSubscriber constructor.
-     *
-     * @param ActionFactory            $actionFactory
-     * @param ViewFactory              $viewFactory
-     * @param DataProviderFactory      $dataProviderFactory
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param SessionInterface         $session
-     * @param TranslatorInterface      $translator
-     * @param RouterInterface          $router
-     * @param AdminHelperInterface     $helper
      */
     public function __construct(
         ActionFactory $actionFactory,
@@ -119,8 +110,6 @@ class AdminSubscriber implements EventSubscriberInterface
     /**
      * Define the current action according to the routing configuration.
      *
-     * @param AdminEvent $event
-     *
      * @throws Exception
      */
     public function handleRequest(AdminEvent $event)
@@ -139,8 +128,6 @@ class AdminSubscriber implements EventSubscriberInterface
 
     /**
      * Create a view using the view factory.
-     *
-     * @param ViewEvent $event
      */
     public function createView(ViewEvent $event)
     {
@@ -192,8 +179,6 @@ class AdminSubscriber implements EventSubscriberInterface
     /**
      * Load entities into the event data to pass them to the Admin.
      *
-     * @param EntityEvent $event
-     *
      * @throws Exception
      */
     public function loadEntities(EntityEvent $event)
@@ -235,8 +220,6 @@ class AdminSubscriber implements EventSubscriberInterface
 
     /**
      * Save an entity.
-     *
-     * @param EntityEvent $event
      */
     public function saveEntity(EntityEvent $event)
     {
@@ -260,13 +243,6 @@ class AdminSubscriber implements EventSubscriberInterface
         ;
     }
 
-    /**
-     * @param string             $message
-     * @param string             $adminName
-     * @param AdminConfiguration $configuration
-     *
-     * @return string
-     */
     private function translateMessage(string $message, string $adminName, AdminConfiguration $configuration): string
     {
         $pattern = $configuration->getParameter('translation_pattern');
@@ -277,13 +253,6 @@ class AdminSubscriber implements EventSubscriberInterface
 
     /**
      * Return the url where the user should be redirected to. An exception will be thrown if no url can be generated.
-     *
-     * @param AdminInterface     $admin
-     * @param ActionInterface    $action
-     * @param AdminConfiguration $configuration
-     * @param Request            $request
-     *
-     * @return string
      *
      * @throws Exception
      */

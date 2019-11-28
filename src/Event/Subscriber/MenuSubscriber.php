@@ -5,8 +5,8 @@ namespace LAG\AdminBundle\Event\Subscriber;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Event\Events\MenuEvent;
+use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Factory\MenuFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -45,11 +45,6 @@ class MenuSubscriber implements EventSubscriberInterface
 
     /**
      * MenuSubscriber constructor.
-     *
-     * @param ApplicationConfigurationStorage $storage
-     * @param MenuFactory                     $menuFactory
-     * @param EventDispatcherInterface        $eventDispatcher
-     * @param array                           $adminMenuConfigurations
      */
     public function __construct(
         ApplicationConfigurationStorage $storage,
@@ -65,8 +60,6 @@ class MenuSubscriber implements EventSubscriberInterface
 
     /**
      * Build menus according to the given configuration.
-     *
-     * @param MenuEvent $event
      */
     public function buildMenus(MenuEvent $event)
     {

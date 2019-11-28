@@ -59,9 +59,7 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
             ->setNormalizer('route', function (Options $options, $value) use ($actionConfiguration) {
                 // route or url should be defined
                 if (!$value && !$options->offsetGet('url') && !$options->offsetGet('admin')) {
-                    throw new InvalidOptionsException(
-                        'Either an url or a route should be defined'
-                    );
+                    throw new InvalidOptionsException('Either an url or a route should be defined');
                 }
 
                 if ($options->offsetGet('admin')) {
@@ -77,9 +75,7 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
             ->setNormalizer('admin', function (Options $options, $value) {
                 // if a Admin is defined, an Action should be defined too
                 if ($value && !$options->offsetGet('action')) {
-                    throw new InvalidOptionsException(
-                        'An Action should be provided if an Admin is provided'
-                    );
+                    throw new InvalidOptionsException('An Action should be provided if an Admin is provided');
                 }
 
                 return $value;

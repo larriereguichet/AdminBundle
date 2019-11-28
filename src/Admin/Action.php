@@ -18,9 +18,6 @@ class Action implements ActionInterface
 
     /**
      * Action constructor.
-     *
-     * @param string              $name
-     * @param ActionConfiguration $configuration
      */
     public function __construct(string $name, ActionConfiguration $configuration)
     {
@@ -28,17 +25,11 @@ class Action implements ActionInterface
         $this->configuration = $configuration;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return ActionConfiguration
-     */
     public function getConfiguration(): ActionConfiguration
     {
         return $this->configuration;

@@ -20,9 +20,6 @@ class MenuConfiguration extends Configuration
 
     /**
      * MenuConfiguration constructor.
-     *
-     * @param string $menuName
-     * @param string $applicationName
      */
     public function __construct(string $menuName, string $applicationName)
     {
@@ -32,9 +29,6 @@ class MenuConfiguration extends Configuration
         $this->applicationName = $applicationName;
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver

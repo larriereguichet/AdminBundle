@@ -29,10 +29,6 @@ class AdminDataCollector extends DataCollector
 
     /**
      * AdminDataCollector constructor.
-     *
-     * @param ResourceCollection              $resourceCollection
-     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
-     * @param MenuFactory                     $menuFactory
      */
     public function __construct(
         ResourceCollection $resourceCollection,
@@ -44,11 +40,6 @@ class AdminDataCollector extends DataCollector
         $this->menuFactory = $menuFactory;
     }
 
-    /**
-     * @param Request         $request
-     * @param Response        $response
-     * @param Exception|null $exception
-     */
     public function collect(Request $request, Response $response, Exception $exception = null)
     {
         $data = [

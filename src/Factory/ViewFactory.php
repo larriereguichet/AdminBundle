@@ -34,10 +34,6 @@ class ViewFactory
 
     /**
      * ViewFactory constructor.
-     *
-     * @param FieldFactory                    $fieldFactory
-     * @param RouterInterface                 $router
-     * @param ApplicationConfigurationStorage $storage
      */
     public function __construct(
         FieldFactory $fieldFactory,
@@ -52,15 +48,10 @@ class ViewFactory
     /**
      * Create a view for a given Admin and Action.
      *
-     * @param Request             $request
      * @param string              $actionName
      * @param string              $adminName
-     * @param AdminConfiguration  $adminConfiguration
-     * @param ActionConfiguration $actionConfiguration
      * @param mixed               $entities
      * @param FormInterface[]     $forms
-     *
-     * @return ViewInterface
      */
     public function create(
         Request $request,
@@ -157,12 +148,6 @@ class ViewFactory
 
     /**
      * Return true if a redirection view should be created.
-     *
-     * @param FormInterface      $form
-     * @param Request            $request
-     * @param AdminConfiguration $configuration
-     *
-     * @return bool
      */
     private function shouldRedirect(FormInterface $form, Request $request, AdminConfiguration $configuration): bool
     {

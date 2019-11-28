@@ -33,10 +33,6 @@ class AdminExtension extends AbstractExtension
 
     /**
      * AdminExtension constructor.
-     *
-     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
-     * @param RouterInterface                 $router
-     * @param ConfigurationFactory            $configurationFactory
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
@@ -70,10 +66,7 @@ class AdminExtension extends AbstractExtension
     /**
      * Return the url of an menu item.
      *
-     * @param MenuItemConfiguration $configuration
      * @param ViewInterface         $view
-     *
-     * @return string
      *
      * @throws Exception
      */
@@ -104,9 +97,7 @@ class AdminExtension extends AbstractExtension
             }
 
             if (!$view->getEntities() instanceof Collection) {
-                throw new Exception(
-                    'Entities returned by the view should be a instance of "'.Collection::class.'" to be used in menu action'
-                );
+                throw new Exception('Entities returned by the view should be a instance of "'.Collection::class.'" to be used in menu action');
             }
 
             if (1 !== $view->getEntities()->count()) {
@@ -126,8 +117,6 @@ class AdminExtension extends AbstractExtension
     /**
      * Return the url of an Admin action.
      *
-     * @param ViewInterface $view
-     * @param string        $actionName
      * @param mixed|null    $entity
      *
      * @return string
@@ -166,9 +155,6 @@ class AdminExtension extends AbstractExtension
 
     /**
      * Return true if the given action is allowed for the given Admin.
-     *
-     * @param ViewInterface $view
-     * @param string        $actionName
      *
      * @return bool
      */

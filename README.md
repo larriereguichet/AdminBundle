@@ -98,9 +98,9 @@ Yan can go to `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of 
 
 ## Documentation
 1. [How to use](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how-to-use.md)    
-    1. [How To Use](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how_to_use.md#how-to-use)
-    2. [Admins](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how_to_use.md#admin)
-    3. [Actions](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how_to_use.md#actions)
+    1. [How To Use](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how-to-use.md#how-to-use)
+    2. [Admins](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how-to-use.md#admin)
+    3. [Actions](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how-to-use.md#actions)
     4. Fields
     4. Events
     5. Data Providers
@@ -115,6 +115,7 @@ Yan can go to `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of 
   b. Admin configuration
 4. FAQ
 5. [Configuration reference](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/5.configuration-reference.md)
+
 
 ## Road map
 

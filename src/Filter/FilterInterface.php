@@ -4,9 +4,6 @@ namespace LAG\AdminBundle\Filter;
 
 interface FilterInterface
 {
-    /**
-     * @return string
-     */
     public function getName(): string;
 
     /**
@@ -14,13 +11,7 @@ interface FilterInterface
      */
     public function getValue();
 
-    /**
-     * @return string
-     */
     public function getComparator(): string;
 
-    /**
-     * @return string
-     */
     public function getOperator(): string;
 }

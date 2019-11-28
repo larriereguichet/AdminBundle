@@ -20,9 +20,6 @@ abstract class AbstractEvent extends Event
 
     /**
      * AdminEvent constructor.
-     *
-     * @param AdminInterface   $admin
-     * @param Request $request
      */
     public function __construct(AdminInterface $admin, Request $request)
     {
@@ -30,17 +27,11 @@ abstract class AbstractEvent extends Event
         $this->request = $request;
     }
 
-    /**
-     * @return AdminInterface
-     */
     public function getAdmin(): AdminInterface
     {
         return $this->admin;
     }
 
-    /**
-     * @return Request
-     */
     public function getRequest(): Request
     {
         return $this->request;

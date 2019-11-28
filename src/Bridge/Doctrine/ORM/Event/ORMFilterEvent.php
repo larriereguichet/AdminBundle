@@ -26,10 +26,6 @@ class ORMFilterEvent extends Event
 
     /**
      * ORMFilterEvent constructor.
-     *
-     * @param QueryBuilder   $queryBuilder
-     * @param AdminInterface $admin
-     * @param array          $filters
      */
     public function __construct(QueryBuilder $queryBuilder, AdminInterface $admin, array $filters = [])
     {
@@ -38,17 +34,11 @@ class ORMFilterEvent extends Event
         $this->filters = $filters;
     }
 
-    /**
-     * @return QueryBuilder
-     */
     public function getQueryBuilder(): QueryBuilder
     {
         return $this->queryBuilder;
     }
 
-    /**
-     * @return AdminInterface
-     */
     public function getAdmin(): AdminInterface
     {
         return $this->admin;

@@ -20,9 +20,6 @@ class FilterEvent extends AbstractEvent
     private $forms = [];
 
     /**
-     * @param FormInterface $form
-     * @param string        $identifier
-     *
      * @throws Exception
      */
     public function addForm(FormInterface $form, string $identifier)
@@ -43,8 +40,6 @@ class FilterEvent extends AbstractEvent
 
     /**
      * Add a filter and its value.
-     *
-     * @param FilterInterface $filter
      */
     public function addFilter(FilterInterface $filter): void
     {

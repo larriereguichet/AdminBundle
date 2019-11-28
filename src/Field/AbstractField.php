@@ -43,33 +43,23 @@ abstract class AbstractField implements FieldInterface
 
     /**
      * Field constructor.
-     *
-     * @param string $name
      */
     public function __construct(string $name)
     {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return array
-     */
     public function getOptions(): array
     {
         return $this->options;
     }
 
     /**
-     * @param string $name
-     *
      * @return mixed
      *
      * @throws Exception
@@ -88,8 +78,6 @@ abstract class AbstractField implements FieldInterface
     }
 
     /**
-     * @param array $options
-     *
      * @throws Exception
      */
     public function setOptions(array $options)

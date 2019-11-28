@@ -36,10 +36,6 @@ class ActionConfiguration extends Configuration
 
     /**
      * ActionConfiguration constructor.
-     *
-     * @param string             $actionName
-     * @param string             $adminName
-     * @param AdminConfiguration $adminConfiguration
      */
     public function __construct(string $actionName, string $adminName, AdminConfiguration $adminConfiguration)
     {
@@ -52,8 +48,6 @@ class ActionConfiguration extends Configuration
 
     /**
      * Define allowed parameters and values for this configuration, using optionsResolver component.
-     *
-     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -131,19 +125,12 @@ class ActionConfiguration extends Configuration
     /**
      * Generate an admin route name using the pattern in the configuration.
      *
-     * @return string
-     *
      * @throws Exception
      */
     private function generateRouteName(): string
     {
         if (!array_key_exists($this->actionName, $this->adminConfiguration->get('actions'))) {
-            throw new Exception(
-                sprintf('Invalid action name %s for admin %s (available action are: %s)',
-                    $this->actionName,
-                    $this->adminName,
-                    implode(', ', array_keys($this->adminConfiguration->get('actions'))))
-            );
+            throw new Exception(sprintf('Invalid action name %s for admin %s (available action are: %s)', $this->actionName, $this->adminName, implode(', ', array_keys($this->adminConfiguration->get('actions')))));
         }
         $routeName = RoutingLoader::generateRouteName(
             $this->adminName,
@@ -187,9 +174,7 @@ class ActionConfiguration extends Configuration
         return function (Options $options, $order) {
             foreach ($order as $field => $sort) {
                 if (!is_string($sort) || !is_string($field) || !in_array(strtolower($sort), ['asc', 'desc'])) {
-                    throw new Exception(
-                        'Order value should be an array of string (["field" => $key]), got '.gettype($sort)
-                    );
+                    throw new Exception('Order value should be an array of string (["field" => $key]), got '.gettype($sort));
                 }
             }
 
@@ -264,25 +249,16 @@ class ActionConfiguration extends Configuration
         };
     }
 
-    /**
-     * @return string
-     */
     public function getAdminName(): string
     {
         return $this->adminName;
     }
 
-    /**
-     * @return string
-     */
     public function getActionName(): string
     {
         return $this->actionName;
     }
 
-    /**
-     * @return AdminConfiguration
-     */
     public function getAdminConfiguration(): AdminConfiguration
     {
         return $this->adminConfiguration;
@@ -290,8 +266,6 @@ class ActionConfiguration extends Configuration
 
     /**
      * Return the filters normalizer.
-     *
-     * @return Closure
      */
     private function getFiltersNormalizer(): Closure
     {
@@ -383,8 +357,6 @@ class ActionConfiguration extends Configuration
 
     /**
      * Return the default route path according to the action name.
-     *
-     * @return string
      */
     private function getDefaultRoutePath(): string
     {

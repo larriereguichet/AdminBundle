@@ -9,18 +9,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DateField extends AbstractField
 {
-    /**
-     * @return bool
-     */
     public function isSortable(): bool
     {
         return true;
     }
 
-    /**
-     * @param OptionsResolver     $resolver
-     * @param ActionConfiguration $actionConfiguration
-     */
     public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)
     {
         $resolver->setDefaults([
@@ -30,8 +23,6 @@ class DateField extends AbstractField
 
     /**
      * @param mixed $value
-     *
-     * @return string
      *
      * @throws Exception
      */

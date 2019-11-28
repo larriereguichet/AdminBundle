@@ -12,8 +12,6 @@ interface MetadataHelperInterface
      * Return the Doctrine metadata of the given class.
      *
      * @param $class
-     *
-     * @return ClassMetadata|null
      */
     public function findMetadata($class): ?ClassMetadata;
 }

@@ -21,9 +21,6 @@ class AdminResource
 
     /**
      * Resource constructor.
-     *
-     * @param string $name
-     * @param array  $configuration
      */
     public function __construct(string $name, array $configuration)
     {
@@ -32,25 +29,16 @@ class AdminResource
         $this->entityClass = $configuration['entity'];
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return array
-     */
     public function getConfiguration(): array
     {
         return $this->configuration;
     }
 
-    /**
-     * @return string
-     */
     public function getEntityClass(): string
     {
         return $this->entityClass;

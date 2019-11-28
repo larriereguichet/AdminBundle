@@ -20,8 +20,6 @@ class AdminConfiguration extends Configuration
 
     /**
      * AdminConfiguration constructor.
-     *
-     * @param ApplicationConfiguration $applicationConfiguration
      */
     public function __construct(ApplicationConfiguration $applicationConfiguration)
     {
@@ -30,9 +28,6 @@ class AdminConfiguration extends Configuration
         $this->applicationConfiguration = $applicationConfiguration;
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver

@@ -36,9 +36,6 @@ class FieldExtension extends AbstractExtension
     /**
      * Return the field header label.
      *
-     * @param ViewInterface  $admin
-     * @param FieldInterface $field
-     *
      * @return string
      */
     public function renderFieldHeader(ViewInterface $admin, FieldInterface $field)

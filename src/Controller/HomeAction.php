@@ -29,10 +29,6 @@ class HomeAction
 
     /**
      * HomeAction constructor.
-     *
-     * @param Environment                $twig
-     * @param EventDispatcherInterface        $eventDispatcher
-     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
      */
     public function __construct(
         Environment $twig,

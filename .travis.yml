@@ -11,14 +11,14 @@ before_install:
     - echo memory_limit = -1 >> $INI
 
 install:
-    - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
-    - composer update --optimize-autoloader
+    - composer install
     - composer require phpstan/phpstan-shim
     - wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer
 
 script:
-    - make phpunit@run phpstan@analyse
-    #- php php-cs-fixer fix --dry-run --using-cache=no --verbose
+    - make phpunit@run
+    - make phpstan@analyse
+    - php php-cs-fixer fix --dry-run --using-cache=no --verbose
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar

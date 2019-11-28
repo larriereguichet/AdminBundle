@@ -14,9 +14,6 @@ class LAGAdminExtension extends Extension
 {
     /**
      * Load the configuration into the container.
-     *
-     * @param array $configs
-     * @param ContainerBuilder $builder
      */
     public function load(array $configs, ContainerBuilder $builder)
     {

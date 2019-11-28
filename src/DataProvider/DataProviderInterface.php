@@ -13,18 +13,12 @@ interface DataProviderInterface
     /**
      * Return a collection of entities.
      *
-     * @param AdminInterface $admin
-     * @param array          $filters
-     *
      * @return mixed
      */
     public function getCollection(AdminInterface $admin, array $filters = []);
 
     /**
      * Return a single entity. Throw an exception if no entity was found.
-     *
-     * @param AdminInterface $admin
-     * @param string         $identifier
      *
      * @return mixed
      *
@@ -34,15 +28,11 @@ interface DataProviderInterface
 
     /**
      * Save an entity loaded into an admin..
-     *
-     * @param AdminInterface $admin
      */
     public function save(AdminInterface $admin): void;
 
     /**
      * Create a new entity for the given admin. Return the created entity.
-     *
-     * @param AdminInterface $admin
      *
      * @return mixed
      */
@@ -50,8 +40,6 @@ interface DataProviderInterface
 
     /**
      * Delete an existing entity in the given admin. Throws an exception if there is no loaded entities in the admin.
-     *
-     * @param AdminInterface $admin
      *
      * @throws Exception
      */

@@ -11,17 +11,12 @@ class ResourceCollection
      */
     protected $items = [];
 
-    /**
-     * @param AdminResource $resource
-     */
     public function add(AdminResource $resource)
     {
         $this->items[$resource->getName()] = $resource;
     }
 
     /**
-     * @param string $resourceName
-     *
      * @return bool
      */
     public function has(string $resourceName)

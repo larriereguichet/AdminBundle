@@ -82,14 +82,8 @@ class View implements ViewInterface
     /**
      * View constructor.
      *
-     * @param string              $actionName
-     * @param string              $adminName
-     * @param string              $base
-     * @param ActionConfiguration $configuration
-     * @param AdminConfiguration  $adminConfiguration
      * @param FieldInterface[]    $fields
      * @param FormInterface[]     $forms
-     * @param array               $menus
      * @param FieldInterface[]    $headers
      */
     public function __construct(
@@ -228,9 +222,6 @@ class View implements ViewInterface
         return $this->menus;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplate(): string
     {
         return $this->configuration->getParameter('template');
@@ -244,9 +235,6 @@ class View implements ViewInterface
         return $this->forms;
     }
 
-    /**
-     * @return string
-     */
     public function getBase(): string
     {
         return $this->base;

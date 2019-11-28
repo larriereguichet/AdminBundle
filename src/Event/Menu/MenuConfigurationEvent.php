@@ -13,25 +13,17 @@ class MenuConfigurationEvent extends Event
 
     /**
      * MenuConfiguration constructor.
-     *
-     * @param array $menuConfigurations
      */
     public function __construct(array $menuConfigurations = [])
     {
         $this->menuConfigurations = $menuConfigurations;
     }
 
-    /**
-     * @return array
-     */
     public function getMenuConfigurations(): array
     {
         return $this->menuConfigurations;
     }
 
-    /**
-     * @param array $menuConfigurations
-     */
     public function setMenuConfigurations(array $menuConfigurations)
     {
         $this->menuConfigurations = $menuConfigurations;

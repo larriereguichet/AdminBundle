@@ -16,58 +16,42 @@ interface AdminInterface
     /**
      * Handle the request: load the forms and the entities.
      *
-     * @param Request $request
-     *
      * @throws Exception
      */
     public function handleRequest(Request $request);
 
     /**
      * Return the Admin name.
-     *
-     * @return string
      */
     public function getName(): string;
 
     /**
      * Return the class of the entity managed by the Admin.
-     *
-     * @return string
      */
     public function getEntityClass(): string;
 
     /**
      * Return the Resource used to create the Admin.
-     *
-     * @return AdminResource
      */
     public function getResource(): AdminResource;
 
     /**
      * Return the event dispatcher associated to the Admin.
-     *
-     * @return EventDispatcherInterface
      */
     public function getEventDispatcher(): EventDispatcherInterface;
 
     /**
      * Return the Admin configuration.
-     *
-     * @return AdminConfiguration
      */
     public function getConfiguration(): AdminConfiguration;
 
     /**
      * Return the current Action if defined. If it is not defined, an exception will be thrown.
-     *
-     * @return ActionInterface
      */
     public function getAction(): ActionInterface;
 
     /**
      * Return true if the current action is defined.
-     *
-     * @return bool
      */
     public function hasAction(): bool;
 
@@ -88,27 +72,17 @@ interface AdminInterface
     /**
      * Return the form associated to the given name. An exception will be thrown if the form does not exists.
      *
-     * @param string $name
-     *
-     * @return FormInterface
-     *
      * @throws Exception
      */
     public function getForm(string $name): FormInterface;
 
     /**
      * Return true if a form with the given name exists.
-     *
-     * @param string $name
-     *
-     * @return bool
      */
     public function hasForm(string $name): bool;
 
     /**
      * Create a new view for the template.
-     *
-     * @return ViewInterface
      */
     public function createView(): ViewInterface;
 }

@@ -32,17 +32,11 @@ class EntityEvent extends AbstractEvent
         $this->entities = $entities;
     }
 
-    /**
-     * @return array
-     */
     public function getFilters(): array
     {
         return $this->filters;
     }
 
-    /**
-     * @param array $filters
-     */
     public function setFilters(array $filters)
     {
         $this->filters = $filters;

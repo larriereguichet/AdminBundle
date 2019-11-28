@@ -3,10 +3,10 @@
 namespace LAG\AdminBundle\Routing;
 
 use Exception;
-use LAG\AdminBundle\Controller\HomeAction;
-use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
+use LAG\AdminBundle\Controller\HomeAction;
+use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -49,11 +49,6 @@ class RoutingLoader implements LoaderInterface
 
     /**
      * RoutingLoader constructor.
-     *
-     * @param ResourceCollection              $resourceCollection
-     * @param EventDispatcherInterface        $eventDispatcher
-     * @param ApplicationConfigurationStorage $applicationConfigurationStorage
-     * @param ConfigurationFactory            $configurationFactory
      */
     public function __construct(
         ResourceCollection $resourceCollection,
@@ -68,10 +63,6 @@ class RoutingLoader implements LoaderInterface
     }
 
     /**
-     * @param string $adminName
-     * @param string $actionName
-     * @param string $routingPattern
-     *
      * @return string
      */
     public static function generateRouteName(string $adminName, string $actionName, string $routingPattern)
@@ -157,9 +148,6 @@ class RoutingLoader implements LoaderInterface
     {
     }
 
-    /**
-     * @param LoaderResolverInterface $resolver
-     */
     public function setResolver(LoaderResolverInterface $resolver)
     {
     }

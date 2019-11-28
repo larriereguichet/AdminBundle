@@ -11,8 +11,6 @@ class DataProviderCompilerPass implements CompilerPassInterface
 {
     /**
      * Add the tagged data provider to the DataProviderFactory.
-     *
-     * @param ContainerBuilder $container
      */
     public function process(ContainerBuilder $container)
     {

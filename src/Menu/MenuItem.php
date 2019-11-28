@@ -13,25 +13,18 @@ class MenuItem
 
     /**
      * MenuItem constructor.
-     *
-     * @param MenuItemConfiguration $configuration
      */
     public function __construct(MenuItemConfiguration $configuration)
     {
         $this->configuration = $configuration;
     }
 
-    /**
-     * @return MenuItemConfiguration
-     */
     public function getConfiguration(): MenuItemConfiguration
     {
         return $this->configuration;
     }
 
     /**
-     * @param string $parameter
-     *
      * @return mixed
      */
     public function get(string $parameter)

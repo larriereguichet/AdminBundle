@@ -37,9 +37,6 @@ class MenuExtension extends AbstractExtension
     /**
      * Render a menu according to given name.
      *
-     * @param string             $name
-     * @param ViewInterface|null $view
-     *
      * @return string
      */
     public function getMenu(string $name, ViewInterface $view = null)
@@ -54,10 +51,6 @@ class MenuExtension extends AbstractExtension
 
     /**
      * Return true if a menu with the given name exists.
-     *
-     * @param string $name
-     *
-     * @return bool
      */
     public function hasMenu(string $name): bool
     {
