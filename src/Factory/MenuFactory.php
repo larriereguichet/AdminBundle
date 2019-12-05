@@ -6,10 +6,13 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Configuration\MenuConfiguration;
 use LAG\AdminBundle\Configuration\MenuItemConfiguration;
+use LAG\AdminBundle\Event\Events;
+use LAG\AdminBundle\Event\Menu\MenuEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Menu\Menu;
 use LAG\AdminBundle\Menu\MenuItem;
 use LAG\AdminBundle\Routing\RoutingLoader;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,14 +34,21 @@ class MenuFactory
     private $applicationConfiguration;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * MenuFactory constructor.
      */
     public function __construct(
         RequestStack $requestStack,
-        ApplicationConfigurationStorage $applicationConfigurationStorage
+        ApplicationConfigurationStorage $applicationConfigurationStorage,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->requestStack = $requestStack;
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -53,9 +63,12 @@ class MenuFactory
         $menuConfiguration->setParameters($resolver->resolve($configuration));
         $menu = new Menu($name, $menuConfiguration);
 
+        $this->eventDispatcher->dispatch(Events::MENU_CREATE, new MenuEvent($name, $menu));
+
         foreach ($menuConfiguration->getParameter('items') as $itemName => $item) {
             $menu->addItem($this->createMenuItem($itemName, $item, $menuConfiguration));
         }
+        $this->eventDispatcher->dispatch(Events::MENU_CREATED, new MenuEvent($name, $menu));
         $this->menus[$name] = $menu;
 
         return $menu;

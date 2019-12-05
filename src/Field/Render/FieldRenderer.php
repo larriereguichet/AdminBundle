@@ -49,9 +49,8 @@ class FieldRenderer implements FieldRendererInterface
             // Some fields types (collections...) can require children render
             $field->setRenderer($this);
         }
-        $render = $field->render($value);
 
-        return $render;
+        return $field->render($value);
     }
 
     public function renderHeader(ViewInterface $admin, FieldInterface $field): string
@@ -61,13 +60,13 @@ class FieldRenderer implements FieldRendererInterface
         }
         $configuration = $this->storage->getConfiguration();
 
-        if ($configuration->get('translation')) {
+        if ($configuration->isTranslationEnabled()) {
             $key = TranslationUtils::getTranslationKey(
-                $configuration->get('translation_pattern'),
+                $configuration->getTranslationPattern(),
                 $admin->getName(),
                 StringUtils::underscore($field->getName())
             );
-            $title = $this->translator->trans($key);
+            $title = $this->translator->trans($key, [], $configuration->getTranslationCatalog());
         } else {
             $title = StringUtils::camelize($field->getName());
             $title = preg_replace('/(?<!\ )[A-Z]/', ' $0', $title);

@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Tests\Event\Subscriber;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\MenuEvent;
+use LAG\AdminBundle\Event\Events\BuildMenuEvent;
 use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Event\Subscriber\MenuSubscriber;
 use LAG\AdminBundle\Factory\MenuFactory;
@@ -30,7 +30,7 @@ class MenuSubscriberTest extends AdminTestBase
     public function testBuildMenu()
     {
         list(, $storage, $menuFactory, $eventDispatcher) = $this->createSubscriber();
-        $event = new MenuEvent();
+        $event = new BuildMenuEvent();
 
         $applicationConfiguration = $this->createMock(ApplicationConfiguration::class);
         $applicationConfiguration
@@ -70,7 +70,7 @@ class MenuSubscriberTest extends AdminTestBase
     public function testBuildMenuWithoutConfiguration()
     {
         list($subscriber,, $menuFactory, $eventDispatcher) = $this->createSubscriber();
-        $event = new MenuEvent();
+        $event = new BuildMenuEvent();
 
         $menuFactory
             ->expects($this->never())

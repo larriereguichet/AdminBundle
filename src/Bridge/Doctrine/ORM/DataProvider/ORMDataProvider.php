@@ -70,7 +70,7 @@ class ORMDataProvider implements DataProviderInterface
             $request = $this->requestStack->getCurrentRequest();
             $page = (int) $request->get($pageParameter, 1);
 
-            $adapter = new DoctrineORMAdapter($queryBuilder);
+            $adapter = new DoctrineORMAdapter($queryBuilder, true, false);
             $pager = new Pagerfanta($adapter);
             $pager->setCurrentPage($page);
             $pager->setMaxPerPage($actionConfiguration->getParameter('max_per_page'));

@@ -25,7 +25,7 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
 
     public function isSortable(): bool
     {
-        return false;
+        return true;
     }
 
     public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)
@@ -97,14 +97,15 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
                     return $value;
                 }
 
-                if ($options->offsetGet('action')) {
+                if ($actionConfiguration->getAdminConfiguration()->isTranslationEnabled() && $options->offsetGet('action')) {
                     return $this
                         ->translator
                         ->trans(TranslationUtils::getActionTranslationKey(
-                            $actionConfiguration->getAdminConfiguration()->get('translation_pattern'),
+                            $actionConfiguration->getAdminConfiguration()->getTranslationPattern(),
                             $actionConfiguration->getAdminName(),
                             $options->offsetGet('action')
-                        ));
+                        ))
+                    ;
                 }
 
                 return $options->offsetGet('route');
@@ -132,12 +133,20 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
         }
 
         if ('' === $options['text'] && $options['action']) {
-            $translationKey = TranslationUtils::getActionTranslationKey(
-                $this->actionConfiguration->getAdminConfiguration()->get('translation_pattern'),
-                $this->actionConfiguration->getAdminName(),
-                $options['action']
-            );
-            $options['text'] = $this->translator->trans($translationKey);
+            $text = ucfirst($options['action']);
+
+            if (!$this->actionConfiguration->getAdminConfiguration()->isTranslationEnabled()) {
+                $translationKey = TranslationUtils::getActionTranslationKey(
+                    $this->actionConfiguration->getAdminConfiguration()->getTranslationPattern(),
+                    $this->actionConfiguration->getAdminName(),
+                    $options['action']
+                );
+                $text = $this
+                    ->translator
+                    ->trans($translationKey, [], $this->actionConfiguration->getAdminConfiguration()->getTranslationCatalog())
+                ;
+            }
+            $options['text'] = $text;
         }
 
         return $this->twig->render($this->options['template'], [

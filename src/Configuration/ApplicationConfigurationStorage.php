@@ -28,7 +28,7 @@ class ApplicationConfigurationStorage
     public function getConfiguration(): ApplicationConfiguration
     {
         if (null === $this->configuration) {
-            throw new Exception('The application configuration has not been set');
+            throw new Exception('The application configuration has not been set. Try to clear the cache (bin/console ca:cl)');
         }
 
         return $this->configuration;

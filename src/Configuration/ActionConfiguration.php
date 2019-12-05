@@ -132,13 +132,12 @@ class ActionConfiguration extends Configuration
         if (!array_key_exists($this->actionName, $this->adminConfiguration->get('actions'))) {
             throw new Exception(sprintf('Invalid action name %s for admin %s (available action are: %s)', $this->actionName, $this->adminName, implode(', ', array_keys($this->adminConfiguration->get('actions')))));
         }
-        $routeName = RoutingLoader::generateRouteName(
+
+        return RoutingLoader::generateRouteName(
             $this->adminName,
             $this->actionName,
             $this->adminConfiguration->get('routing_name_pattern')
         );
-
-        return $routeName;
     }
 
     /**
@@ -328,28 +327,23 @@ class ActionConfiguration extends Configuration
 
     private function getTitleNormalizer(): Closure
     {
-        $translation = $this
-            ->adminConfiguration
-            ->get('translation')
-        ;
-        $translationPattern = $this
-            ->adminConfiguration
-            ->get('translation_pattern')
-        ;
-
-        return function (Options $options, $value) use ($translationPattern, $translation) {
-            if (null === $value) {
-                $value = Container::camelize($this->actionName);
-
-                if ($translation && false !== $translationPattern) {
-                    // By default, the action title is action name using the configured translation pattern
-                    $value = TranslationUtils::getTranslationKey(
-                        $translationPattern,
-                        $this->adminName,
-                        $this->actionName
-                    );
-                }
+        return function (Options $options, $value) {
+            // If the translation system is not used, return the provided value as is
+            if (!$this->adminConfiguration->isTranslationEnabled()) {
+                return $value;
             }
+            dump($value);
+
+            // If a value is defined, we should return the value
+            if (null !== $value) {
+                return Container::camelize($this->actionName);
+            }
+            // By default, the action title is action name using the configured translation pattern
+            $value = TranslationUtils::getTranslationKey(
+                $this->adminConfiguration->getTranslationPattern(),
+                $this->adminName,
+                $this->actionName
+            );
 
             return $value;
         };

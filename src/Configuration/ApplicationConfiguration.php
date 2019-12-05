@@ -5,6 +5,7 @@ namespace LAG\AdminBundle\Configuration;
 use JK\Configuration\Configuration;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\Admin;
+use LAG\AdminBundle\Configuration\Behavior\TranslationConfigurationTrait;
 use LAG\AdminBundle\Field\AbstractField;
 use LAG\AdminBundle\Field\ActionCollectionField;
 use LAG\AdminBundle\Field\ActionField;
@@ -26,6 +27,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ApplicationConfiguration extends Configuration
 {
+    use TranslationConfigurationTrait;
+
     /**
      * Configure configuration allowed parameters.
      */
@@ -38,8 +41,6 @@ class ApplicationConfiguration extends Configuration
                 'enable_security' => true,
                 'enable_menus' => true,
                 'enable_homepage' => true,
-                'translation' => true,
-                'translation_pattern' => false,
                 'title' => 'AdminBundle application',
                 'description' => '',
                 'locale' => 'en',
@@ -108,36 +109,9 @@ class ApplicationConfiguration extends Configuration
                 return $value;
             })
         ;
-        // admin field type mapping
+
         $this->setFieldsOptions($resolver);
-    }
-
-    protected function setTranslationOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefault('translation', [
-            'enabled' => true,
-            'pattern' => 'lag.admin.{key}',
-        ]);
-        $resolver->setAllowedTypes('translation', 'array');
-        $resolver->setNormalizer('translation', function (Options $options, $value) {
-            if (!array_key_exists('enabled', $value)) {
-                throw new InvalidOptionsException('Admin translation enabled parameter should be defined');
-            }
-
-            if (!is_bool($value['enabled'])) {
-                throw new InvalidOptionsException('Admin translation enabled parameter should be a boolean');
-            }
-
-            if (!array_key_exists('pattern', $value)) {
-                $value['pattern'] = '{admin}.{key}';
-            }
-
-            if ($value['enabled'] && false === strstr($value['pattern'], '{key}')) {
-                throw new InvalidOptionsException('Admin translation pattern should contains the {key} placeholder');
-            }
-
-            return $value;
-        });
+        $this->setTranslationOptions($resolver);
     }
 
     protected function setFieldsOptions(OptionsResolver $resolver)
@@ -182,4 +156,5 @@ class ApplicationConfiguration extends Configuration
             return $value;
         });
     }
+
 }

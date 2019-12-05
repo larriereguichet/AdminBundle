@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Factory;
 
+use Exception;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
@@ -40,10 +41,16 @@ class ConfigurationFactory
         $event = new ConfigurationEvent($adminName, $configuration, $adminName, $configuration['entity']);
         $this->eventDispatcher->dispatch(Events::CONFIGURATION_ADMIN, $event);
 
-        $resolver = new OptionsResolver();
-        $adminConfiguration = new AdminConfiguration($applicationConfiguration);
-        $adminConfiguration->configureOptions($resolver);
-        $adminConfiguration->setParameters($resolver->resolve($event->getConfiguration()));
+        try {
+            $resolver = new OptionsResolver();
+            $adminConfiguration = new AdminConfiguration($applicationConfiguration);
+            $adminConfiguration->configureOptions($resolver);
+            $adminConfiguration->setParameters($resolver->resolve($event->getConfiguration()));
+        } catch (Exception $exception) {
+            $message = 'The configuration of the admin "'.$adminName.'" is invalid: '.$exception->getMessage();
+
+            throw new Exception($message, 500, $exception);
+        }
 
         return $adminConfiguration;
     }

@@ -12,7 +12,6 @@
         {# font awesome icons #}
         {% if options.icon %}
             <i class="fa fa-{{ options.icon }}"></i>&nbsp;
-        {% endif %}
-        {{ options.text | trans }}
+        {% endif %}{{ options.text | trans }}
     </a>
 {% endspaceless %}

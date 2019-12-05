@@ -217,11 +217,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             $configuration['actions']['list']['menus']['top']['items'][] = [
                 'admin' => $adminName,
                 'action' => 'create',
-                'text' => TranslationUtils::getTranslationKey(
-                    $this->applicationConfiguration->getParameter('translation_pattern'),
-                    $adminName,
-                    'create'
-                ),
+                'text' => $this->getText('create', $adminName),
                 'icon' => 'plus',
             ];
         }
@@ -234,11 +230,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             $configuration['actions']['create']['menus']['top']['items'][] = [
                 'admin' => $adminName,
                 'action' => 'list',
-                'text' => TranslationUtils::getTranslationKey(
-                    $this->applicationConfiguration->getParameter('translation_pattern'),
-                    $adminName,
-                    'return'
-                ),
+                'text' => $this->getText('return', $adminName),
                 'icon' => 'arrow-left',
             ];
         }
@@ -263,11 +255,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             array_unshift($configuration['actions']['edit']['menus']['top']['items'], [
                 'admin' => $adminName,
                 'action' => 'list',
-                'text' => TranslationUtils::getTranslationKey(
-                    $this->applicationConfiguration->getParameter('translation_pattern'),
-                    $adminName,
-                    'return'
-                ),
+                'text' => $this->getText('Return', $adminName),
                 'icon' => 'arrow-left',
             ]);
         }
@@ -276,7 +264,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     /**
      * Add default filters for the list actions, guessed using the entity metadata.
      */
-    private function addDefaultFilters(array &$configuration)
+    private function addDefaultFilters(array &$configuration): void
     {
         // Add the filters only for the "list" action
         if (!key_exists('list', $configuration['actions'])) {
@@ -325,5 +313,20 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     private function isExtraConfigurationEnabled(): bool
     {
         return $this->applicationConfiguration->getParameter('enable_extra_configuration');
+    }
+
+    private function getText(string $text, $adminName = null): string
+    {
+        $text = ucfirst($text);
+
+        if (!$this->applicationConfiguration->isTranslationEnabled()) {
+            $text = TranslationUtils::getTranslationKey(
+                $this->applicationConfiguration->getTranslationPattern(),
+                $adminName,
+                'create'
+            );
+        }
+
+        return $text;
     }
 }

@@ -14,8 +14,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('lag_admin');
+        $treeBuilder = new TreeBuilder('lag_admin');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()
@@ -36,8 +36,8 @@ class Configuration implements ConfigurationInterface
      */
     protected function getAdminsConfigurationNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('admins');
+        $builder = new TreeBuilder('admins');
+        $node = $builder->getRootNode();
 
         $node
             // useAttributeAsKey() method will preserve keys when multiple configurations files are used and then avoid
@@ -70,17 +70,27 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('title')->end()
                 ->scalarNode('description')->end()
+
                 ->scalarNode('base_template')->end()
+                ->scalarNode('menu_template')->end()
+                ->scalarNode('list_template')->end()
+                ->scalarNode('block_template')
+                    ->defaultValue('LAGAdminBundle:Form:fields.html.twig')
+                ->end()
+
                 ->scalarNode('date_format')->defaultValue('Y-m-d')->end()
                 ->scalarNode('bootstrap')->end()
                 ->scalarNode('max_per_page')->end()
                 ->scalarNode('routing_name_pattern')->end()
                 ->scalarNode('routing_url_pattern')->end()
-                ->booleanNode('translation')->end()
-                ->scalarNode('translation_pattern')->end()
-                ->scalarNode('block_template')
-                    ->defaultValue('LAGAdminBundle:Form:fields.html.twig')
+                ->arrayNode('translation')
+                    ->children()
+                        ->booleanNode('enabled')->defaultTrue()->end()
+                        ->scalarNode('pattern')->defaultValue('admin.{admin}.{key}')->end()
+                        ->scalarNode('catalog')->defaultValue('messages')->end()
+                    ->end()
                 ->end()
+
                 ->arrayNode('fields_mapping')
                     ->prototype('scalar')
                     ->end()
@@ -89,21 +99,14 @@ class Configuration implements ConfigurationInterface
                 ->booleanNode('enable_security')->end()
                 ->booleanNode('enable_menus')->end()
                 ->booleanNode('enable_homepage')->end()
-                ->booleanNode('translation')->end()
-                ->variableNode('translation_pattern')->end()
-                ->scalarNode('title')->end()
-                ->scalarNode('description')->end()
+
                 ->scalarNode('locale')->end()
-                ->scalarNode('base_template')->end()
-                ->scalarNode('block_template')->end()
-                ->scalarNode('menu_template')->end()
-                ->scalarNode('list_template')->end()
+
                 ->scalarNode('homepage_template')->end()
                 ->scalarNode('homepage_route')->end()
                 ->scalarNode('routing_url_pattern')->end()
                 ->scalarNode('routing_name_pattern')->end()
                 ->scalarNode('bootstrap')->end()
-                ->scalarNode('date_format')->end()
                 ->scalarNode('pager')->end()
                 ->scalarNode('string_length')->end()
                 ->scalarNode('string_length_truncate')->end()

@@ -129,7 +129,7 @@ class FieldConfigurationHelper
                             ],
                             'text' => $text,
                             'class' => 'btn btn-sm btn-danger',
-                            'icon' => 'remove',
+                            'icon' => 'times',
                         ],
                     ];
                 } elseif (key_exists($fieldType, $mapping)) {
