@@ -23,17 +23,11 @@ class MenuEvent extends Event
         $this->menu = $menu;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return Menu
-     */
     public function getMenu(): Menu
     {
         return $this->menu;

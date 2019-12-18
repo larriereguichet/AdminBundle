@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Field\Render;
 
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Field\EntityAwareFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\RendererAwareFieldInterface;
@@ -15,18 +14,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class FieldRenderer implements FieldRendererInterface
 {
     /**
-     * @var ApplicationConfigurationStorage
-     */
-    private $storage;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
 
-    public function __construct(ApplicationConfigurationStorage $storage, TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator)
     {
-        $this->storage = $storage;
         $this->translator = $translator;
     }
 
@@ -58,7 +51,7 @@ class FieldRenderer implements FieldRendererInterface
         if (StringUtils::startsWith($field->getName(), '_')) {
             return '';
         }
-        $configuration = $this->storage->getConfiguration();
+        $configuration = $admin->getAdminConfiguration();
 
         if ($configuration->isTranslationEnabled()) {
             $key = TranslationUtils::getTranslationKey(

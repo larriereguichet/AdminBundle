@@ -147,17 +147,11 @@ class MenuItemConfiguration extends Configuration
         ;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPosition(): ?string
     {
         return $this->position;

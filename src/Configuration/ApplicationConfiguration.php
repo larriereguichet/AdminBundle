@@ -156,5 +156,4 @@ class ApplicationConfiguration extends Configuration
             return $value;
         });
     }
-
 }

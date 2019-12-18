@@ -8,6 +8,7 @@ use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Menu\Menu;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -94,6 +95,8 @@ class MenuFactoryTest extends AdminTestBase
         $applicationConfiguration->configureOptions($resolver);
         $applicationConfiguration->setParameters($resolver->resolve([]));
 
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+
         $storage = $this->createMock(ApplicationConfigurationStorage::class);
         $storage
             ->expects($this->atLeastOnce())
@@ -102,7 +105,7 @@ class MenuFactoryTest extends AdminTestBase
 
         $requestStack = $this->createMock(RequestStack::class);
 
-        $factory = new MenuFactory($requestStack, $storage);
+        $factory = new MenuFactory($requestStack, $storage, $eventDispatcher);
 
         return [
             $factory,

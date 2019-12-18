@@ -569,7 +569,7 @@ class AdminSubscriberTest extends AdminTestBase
      */
     public function testSaveEntity()
     {
-        list($subscriber,,, $dataProviderFactory,, $session, $translator) = $this->createSubscriber();
+        list($subscriber,,, $dataProviderFactory,, $session,) = $this->createSubscriber();
 
         $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
@@ -612,20 +612,13 @@ class AdminSubscriberTest extends AdminTestBase
         $bag
             ->expects($this->atLeastOnce())
             ->method('add')
-            ->with('success', 'Save')
+            ->with('success', 'saved')
         ;
 
         $session
             ->expects($this->atLeastOnce())
             ->method('getFlashBag')
             ->willReturn($bag)
-        ;
-
-        $translator
-            ->expects($this->atLeastOnce())
-            ->method('trans')
-            ->with('test.stefany.saved')
-            ->willReturn('Save')
         ;
 
         $request = new Request([], [], [

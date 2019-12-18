@@ -252,12 +252,12 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             if (!key_exists('items', $configuration['actions']['edit']['menus']['top'])) {
                 $configuration['actions']['edit']['menus']['top']['items'] = [];
             }
-            array_unshift($configuration['actions']['edit']['menus']['top']['items'], [
-                'admin' => $adminName,
-                'action' => 'list',
-                'text' => $this->getText('Return', $adminName),
-                'icon' => 'arrow-left',
-            ]);
+//            array_unshift($configuration['actions']['edit']['menus']['top']['items'], [
+//                'admin' => $adminName,
+//                'action' => 'list',
+//                'text' => $this->getText('return', $adminName),
+//                'icon' => 'arrow-left',
+//            ]);
         }
     }
 

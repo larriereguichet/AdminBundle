@@ -258,7 +258,7 @@ class FormSubscriberTest extends AdminTestBase
         ;
         $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
-            ->expects($this->exactly(2))
+            ->expects($this->atLeastOnce())
             ->method('get')
             ->willReturnMap([
                 ['data_provider', 'my_little_provider'],
@@ -292,7 +292,7 @@ class FormSubscriberTest extends AdminTestBase
             ->willReturn($form)
         ;
         $admin
-            ->expects($this->exactly(2))
+            ->expects($this->atLeastOnce())
             ->method('getConfiguration')
             ->willReturn($adminConfiguration)
         ;

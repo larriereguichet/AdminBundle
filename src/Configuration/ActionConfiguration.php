@@ -315,6 +315,7 @@ class ActionConfiguration extends Configuration
                 if (null === $value) {
                     return StringUtils::camelize($this->actionName);
                 }
+
                 return $value;
             }
 
