@@ -97,7 +97,7 @@ class AdminConfiguration extends Configuration
             })
         ;
 
-        $this->setTranslationOptions(
+        $this->configureTranslation(
             $resolver,
             $this->applicationConfiguration->getTranslationPattern(),
             $this->applicationConfiguration->getTranslationCatalog()

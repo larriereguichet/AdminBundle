@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Configuration\Behavior;
 
+use LAG\AdminBundle\Utils\TranslationUtils;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -10,7 +11,7 @@ trait TranslationConfigurationTrait
 {
     public abstract function get($name);
 
-    protected function setTranslationOptions(OptionsResolver $resolver, string $pattern = 'lag.{admin}.{key}', string $catalog = 'messages')
+    protected function configureTranslation(OptionsResolver $resolver, string $pattern = 'lag.{admin}.{key}', string $catalog = 'messages')
     {
         $resolver
             ->setDefaults([
@@ -62,4 +63,18 @@ trait TranslationConfigurationTrait
         return $this->get('translation')['catalog'];
     }
 
+    public function getTranslationKey(string $text, $adminName = null): string
+    {
+        $text = ucfirst($text);
+
+        if (!$this->isTranslationEnabled()) {
+            $text = TranslationUtils::getTranslationKey(
+                $this->getTranslationPattern(),
+                $adminName,
+                'create'
+            );
+        }
+
+        return $text;
+    }
 }

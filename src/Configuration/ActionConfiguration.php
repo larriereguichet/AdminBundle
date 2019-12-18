@@ -11,7 +11,7 @@ use LAG\AdminBundle\Form\Type\DeleteType;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Routing\RoutingLoader;
 use LAG\AdminBundle\Utils\TranslationUtils;
-use Symfony\Component\DependencyInjection\Container;
+use LAG\Component\StringUtils\StringUtils;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -75,7 +75,6 @@ class ActionConfiguration extends Configuration
                 'max_per_page' => 30,
                 'criteria' => [],
                 'filters' => [],
-                'menus' => [],
                 'template' => $this->getDefaultTemplate(),
                 'sortable' => false,
                 'string_length' => $this->adminConfiguration->get('string_length'),
@@ -104,7 +103,6 @@ class ActionConfiguration extends Configuration
             ->setNormalizer('order', $this->getOrderNormalizer())
             ->setNormalizer('load_strategy', $this->getLoadStrategyNormalizer())
             ->setNormalizer('criteria', $this->getCriteriaNormalizer())
-            ->setNormalizer('menus', $this->getMenuNormalizer())
             ->setNormalizer('filters', $this->getFiltersNormalizer())
             ->setNormalizer('route_defaults', $this->getRouteDefaultNormalizer())
             ->setNormalizer('form', $this->getFormNormalizer())
@@ -120,6 +118,8 @@ class ActionConfiguration extends Configuration
                 null,
             ])
         ;
+
+        $this->configureMenu($resolver);
     }
 
     /**
@@ -201,24 +201,6 @@ class ActionConfiguration extends Configuration
             }
 
             return $value;
-        };
-    }
-
-    /**
-     * Return the menu normalizer. It will transform false values into an empty array to allow default menu
-     * configuration working.
-     *
-     * @return Closure
-     */
-    private function getMenuNormalizer()
-    {
-        return function (Options $options, $menus) {
-            // set default to an array
-            if (false === $menus) {
-                $menus = [];
-            }
-
-            return $menus;
         };
     }
 
@@ -330,13 +312,15 @@ class ActionConfiguration extends Configuration
         return function (Options $options, $value) {
             // If the translation system is not used, return the provided value as is
             if (!$this->adminConfiguration->isTranslationEnabled()) {
+                if (null === $value) {
+                    return StringUtils::camelize($this->actionName);
+                }
                 return $value;
             }
-            dump($value);
 
             // If a value is defined, we should return the value
             if (null !== $value) {
-                return Container::camelize($this->actionName);
+                return $value;
             }
             // By default, the action title is action name using the configured translation pattern
             $value = TranslationUtils::getTranslationKey(
@@ -387,5 +371,58 @@ class ActionConfiguration extends Configuration
     private function isActionInMapping(array $mapping): bool
     {
         return array_key_exists($this->actionName, $mapping);
+    }
+
+    private function configureMenu(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefaults([
+                'add_return' => true,
+                'menus' => [],
+            ])
+            ->setAllowedTypes('add_return', 'boolean')
+            ->setNormalizer('menus', function (Options $options, $value) {
+                if (false === $value) {
+                    return $value;
+                }
+
+                if (!is_array($value)) {
+                    $value = [];
+                }
+
+                if (!key_exists('top', $value)) {
+                    $value['top'] = [];
+                }
+
+                if (!key_exists('items', $value['top'])) {
+                    $value['top']['items'] = [];
+                }
+
+                // Auto return button should be optional
+                if ($options->offsetGet('add_return')) {
+                    $text = ucfirst('Return');
+
+                    if ($this->adminConfiguration->isTranslationEnabled()) {
+                        $text = TranslationUtils::getTranslationKey(
+                            $this->adminConfiguration->getTranslationPattern(),
+                            $this->adminName,
+                            'return'
+                        );
+                    }
+
+                    // Use array_unshift() to put the items in first in menu
+                    array_unshift($value['top']['items'], [
+                        'admin' => $this->adminName,
+                        'action' => 'list',
+                        // Do not use the translation trait as the action configuration is not configured yet, so
+                        // translation parameters are not available
+                        'text' => $text,
+                        'icon' => 'arrow-left',
+                    ]);
+                }
+
+                return $value;
+            })
+        ;
     }
 }

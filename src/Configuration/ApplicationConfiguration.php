@@ -111,7 +111,7 @@ class ApplicationConfiguration extends Configuration
         ;
 
         $this->setFieldsOptions($resolver);
-        $this->setTranslationOptions($resolver);
+        $this->configureTranslation($resolver);
     }
 
     protected function setFieldsOptions(OptionsResolver $resolver)
