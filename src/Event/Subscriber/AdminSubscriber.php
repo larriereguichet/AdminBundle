@@ -9,8 +9,8 @@ use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\AdminEvent;
+use LAG\AdminBundle\Event\Events\BuildMenuEvent;
 use LAG\AdminBundle\Event\Events\EntityEvent;
-use LAG\AdminBundle\Event\Events\MenuEvent;
 use LAG\AdminBundle\Event\Events\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Factory\ActionFactory;
@@ -133,7 +133,7 @@ class AdminSubscriber implements EventSubscriberInterface
     {
         $admin = $event->getAdmin();
         $action = $admin->getAction();
-        $menuEvent = new MenuEvent($admin->getAction()->getConfiguration()->getParameter('menus'));
+        $menuEvent = new BuildMenuEvent($admin->getAction()->getConfiguration()->getParameter('menus'));
         $this->eventDispatcher->dispatch(Events::MENU, $menuEvent);
         $formName = '';
 
@@ -245,10 +245,12 @@ class AdminSubscriber implements EventSubscriberInterface
 
     private function translateMessage(string $message, string $adminName, AdminConfiguration $configuration): string
     {
-        $pattern = $configuration->getParameter('translation_pattern');
-        $message = TranslationUtils::getTranslationKey($pattern, $adminName, $message);
+        if (!$configuration->isTranslationEnabled()) {
+            return $message;
+        }
+        $message = TranslationUtils::getTranslationKey($configuration->getTranslationPattern(), $adminName, $message);
 
-        return $this->translator->trans($message);
+        return $this->translator->trans($message, [], $configuration->getTranslationCatalog());
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Field\Render;
 
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Field\EntityAwareFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\RendererAwareFieldInterface;
@@ -15,18 +14,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class FieldRenderer implements FieldRendererInterface
 {
     /**
-     * @var ApplicationConfigurationStorage
-     */
-    private $storage;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
 
-    public function __construct(ApplicationConfigurationStorage $storage, TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator)
     {
-        $this->storage = $storage;
         $this->translator = $translator;
     }
 
@@ -49,9 +42,8 @@ class FieldRenderer implements FieldRendererInterface
             // Some fields types (collections...) can require children render
             $field->setRenderer($this);
         }
-        $render = $field->render($value);
 
-        return $render;
+        return $field->render($value);
     }
 
     public function renderHeader(ViewInterface $admin, FieldInterface $field): string
@@ -59,15 +51,15 @@ class FieldRenderer implements FieldRendererInterface
         if (StringUtils::startsWith($field->getName(), '_')) {
             return '';
         }
-        $configuration = $this->storage->getConfiguration();
+        $configuration = $admin->getAdminConfiguration();
 
-        if ($configuration->get('translation')) {
+        if ($configuration->isTranslationEnabled()) {
             $key = TranslationUtils::getTranslationKey(
-                $configuration->get('translation_pattern'),
+                $configuration->getTranslationPattern(),
                 $admin->getName(),
                 StringUtils::underscore($field->getName())
             );
-            $title = $this->translator->trans($key);
+            $title = $this->translator->trans($key, [], $configuration->getTranslationCatalog());
         } else {
             $title = StringUtils::camelize($field->getName());
             $title = preg_replace('/(?<!\ )[A-Z]/', ' $0', $title);

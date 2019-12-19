@@ -2,8 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\Field\Render;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
+use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Field\EntityAwareFieldInterface;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\Render\FieldRenderer;
@@ -70,7 +69,9 @@ class FieldRendererTest extends AdminTestBase
 
     public function testRenderHeader()
     {
-        list($renderer, $storage, $translator) = $this->createRender();
+        list($renderer, $translator) = $this->createRender();
+
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
 
         $admin = $this->createMock(ViewInterface::class);
         $admin
@@ -78,31 +79,33 @@ class FieldRendererTest extends AdminTestBase
             ->method('getName')
             ->willReturn('Admin')
         ;
+        $admin
+            ->expects($this->exactly(1))
+            ->method('getAdminConfiguration')
+            ->willReturn($adminConfiguration)
+        ;
+        $adminConfiguration
+            ->expects($this->atLeastOnce())
+            ->method('isTranslationEnabled')
+            ->willReturn(true)
+        ;
+        $adminConfiguration
+            ->expects($this->atLeastOnce())
+            ->method('getTranslationPattern')
+            ->willReturn('{admin}.{key}')
+        ;
+
         $field = $this->createMock(FieldInterface::class);
         $field
             ->expects($this->exactly(2))
             ->method('getName')
             ->willReturn('name')
         ;
-        $configuration = $this->createMock(ApplicationConfiguration::class);
-        $configuration
-            ->expects($this->exactly(2))
-            ->method('get')
-            ->willReturnMap([
-                ['translation', true],
-                ['translation_pattern', '{admin}.{key}'],
-            ])
-        ;
         $translator
             ->expects($this->exactly(1))
             ->method('trans')
             ->with('Admin.name')
             ->willReturn('My Translated String')
-        ;
-        $storage
-            ->expects($this->once())
-            ->method('getConfiguration')
-            ->willReturn($configuration)
         ;
 
         $render = $renderer->renderHeader($admin, $field);
@@ -112,7 +115,7 @@ class FieldRendererTest extends AdminTestBase
 
     public function testRenderHeaderWithNoMappedField()
     {
-        list($renderer,,) = $this->createRender();
+        list($renderer) = $this->createRender();
 
         $admin = $this->createMock(ViewInterface::class);
         $field = $this->createMock(FieldInterface::class);
@@ -132,13 +135,11 @@ class FieldRendererTest extends AdminTestBase
      */
     private function createRender(): array
     {
-        $storage = $this->createMock(ApplicationConfigurationStorage::class);
         $translator = $this->createMock(TranslatorInterface::class);
-        $render = new FieldRenderer($storage, $translator);
+        $render = new FieldRenderer($translator);
 
         return [
             $render,
-            $storage,
             $translator
         ];
     }

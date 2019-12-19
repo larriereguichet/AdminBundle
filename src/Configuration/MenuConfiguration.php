@@ -120,4 +120,14 @@ class MenuConfiguration extends Configuration
             })
         ;
     }
+
+    public function getMenuName(): string
+    {
+        return $this->menuName;
+    }
+
+    public function getRoute(): string
+    {
+        return $this->parameters->get('route');
+    }
 }

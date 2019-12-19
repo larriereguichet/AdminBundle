@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Event\Subscriber;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\MenuEvent;
+use LAG\AdminBundle\Event\Events\BuildMenuEvent;
 use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Factory\MenuFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -61,7 +61,7 @@ class MenuSubscriber implements EventSubscriberInterface
     /**
      * Build menus according to the given configuration.
      */
-    public function buildMenus(MenuEvent $event)
+    public function buildMenus(BuildMenuEvent $event)
     {
         if (!$this->applicationConfiguration->getParameter('enable_menus')) {
             return;

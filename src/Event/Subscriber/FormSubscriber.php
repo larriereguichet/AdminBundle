@@ -122,13 +122,17 @@ class FormSubscriber implements EventSubscriberInterface
                 ->get($admin->getConfiguration()->get('data_provider'))
             ;
             $dataProvider->delete($admin);
+            $message = 'Deleted';
 
-            $message = TranslationUtils::getTranslationKey(
-                $admin->getConfiguration()->get('translation_pattern'),
-                $admin->getName(),
-                'deleted'
-            );
-            $this->session->getFlashBag()->add('success', $this->translator->trans($message));
+            if (!$admin->getConfiguration()->isTranslationEnabled()) {
+                $message = TranslationUtils::getTranslationKey(
+                    $admin->getConfiguration()->getTranslationPattern(),
+                    $admin->getName(),
+                    'deleted'
+                );
+                $message = $this->translator->trans($message);
+            }
+            $this->session->getFlashBag()->add('success', $message);
         }
     }
 }

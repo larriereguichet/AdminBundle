@@ -54,22 +54,7 @@
                     <thead>
                     <tr>
                         {% for field in admin.fields %}
-                            <th class="text-dark">
-                                {% if field.sortable %}
-                                    {% set sort = field.name %}
-                                    {% set order = 'asc' %}
-
-                                    {% if app.request.get('order') == 'asc' %}
-                                        {% set order = 'desc' %}
-                                    {% endif %}
-
-                                    <a href="?sort={{ sort }}&order={{ order }}" class="text-dark">
-                                        {{ admin_field_header(admin, field) }}
-                                    </a>
-                                {% else %}
-                                    {{ admin_field_header(admin, field) }}
-                                {% endif %}
-                            </th>
+                            {% include '@LAGAdmin/CRUD/list/_header.html.twig' %}
                         {% endfor %}
                     </tr>
                     </thead>

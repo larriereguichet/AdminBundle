@@ -6,7 +6,7 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Controller\HomeAction;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\MenuEvent;
+use LAG\AdminBundle\Event\Events\BuildMenuEvent;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +37,7 @@ class HomeActionTest extends AdminTestBase
             ->method('dispatch')
             ->willReturnCallback(function($eventName, $event) {
                 $this->assertEquals(Events::MENU, $eventName);
-                $this->assertInstanceOf(MenuEvent::class, $event);
+                $this->assertInstanceOf(BuildMenuEvent::class, $event);
             })
         ;
         $storage = $this->createMock(ApplicationConfigurationStorage::class);

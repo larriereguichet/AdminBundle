@@ -11,6 +11,9 @@ class Events
     const ADMIN_VIEW = 'lag.admin.view';
 
     const MENU = 'lag.admin.menu';
+    const MENU_CREATE = 'lag.admin.menu_create';
+    const MENU_CREATED = 'lag.admin.menu_created';
+
     const CONFIGURATION_ADMIN = 'lag.configuration.admin';
     const CONFIGURATION_ACTION = 'lag.configuration.action';
 

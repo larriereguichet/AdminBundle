@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Configuration;
 
 use JK\Configuration\Configuration;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider;
+use LAG\AdminBundle\Configuration\Behavior\TranslationConfigurationTrait;
 use LAG\AdminBundle\Controller\AdminAction;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,6 +14,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class AdminConfiguration extends Configuration
 {
+    use TranslationConfigurationTrait;
+
     /**
      * @var ApplicationConfiguration
      */
@@ -44,8 +47,6 @@ class AdminConfiguration extends Configuration
                 'routing_name_pattern' => $this->applicationConfiguration->getParameter('routing_name_pattern'),
                 'controller' => AdminAction::class,
                 'max_per_page' => $this->applicationConfiguration->getParameter('max_per_page'),
-                'translation' => $this->applicationConfiguration->getParameter('translation'),
-                'translation_pattern' => $this->applicationConfiguration->getParameter('translation_pattern'),
                 'form' => null,
                 'form_options' => [],
                 'pager' => $this->applicationConfiguration->getParameter('pager'),
@@ -66,7 +67,6 @@ class AdminConfiguration extends Configuration
             ->setAllowedTypes('string_length', 'integer')
             ->setAllowedTypes('string_length_truncate', 'string')
             ->setAllowedTypes('page_parameter', 'string')
-            ->setAllowedTypes('translation', 'boolean')
             ->setAllowedValues('pager', [
                 null,
                 'pagerfanta',
@@ -96,5 +96,11 @@ class AdminConfiguration extends Configuration
                 return $normalizedActions;
             })
         ;
+
+        $this->configureTranslation(
+            $resolver,
+            $this->applicationConfiguration->getTranslationPattern(),
+            $this->applicationConfiguration->getTranslationCatalog()
+        );
     }
 }

@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MenuItemConfiguration extends Configuration
 {
     /**
-     * @var ?string
+     * @var string|null
      */
     private $position;
 
@@ -145,5 +145,15 @@ class MenuItemConfiguration extends Configuration
                 return ucfirst($this->name);
             })
         ;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getPosition(): ?string
+    {
+        return $this->position;
     }
 }

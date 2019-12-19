@@ -35,6 +35,16 @@ class Menu
         $this->items[] = $item;
     }
 
+    public function removeItem(int $position)
+    {
+        unset($this->items[$position]);
+    }
+
+    public function clear(): void
+    {
+        $this->items = [];
+    }
+
     /**
      * @return MenuItem[]
      */
@@ -48,11 +58,13 @@ class Menu
         return $this->name;
     }
 
-    /**
-     * @return mixed
-     */
     public function get(string $parameter)
     {
         return $this->configuration->getParameter($parameter);
+    }
+
+    public function getConfiguration(): MenuConfiguration
+    {
+        return $this->configuration;
     }
 }

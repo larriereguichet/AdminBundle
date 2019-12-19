@@ -29,6 +29,16 @@ class MenuItem
      */
     public function get(string $parameter)
     {
-        return $this->configuration->getParameter($parameter);
+        return $this->configuration->get($parameter);
+    }
+
+    public function getName(): string
+    {
+        return $this->configuration->getName();
+    }
+
+    public function getPosition(): ?string
+    {
+        return $this->configuration->getPosition();
     }
 }
