@@ -47,11 +47,13 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
                 'admin' => null,
                 'action' => null,
                 'class' => '',
+                'default' => '~',
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('parameters', 'array')
             ->setAllowedTypes('length', 'integer')
             ->setAllowedTypes('url', 'string')
+            ->setAllowedTypes('default', 'string')
             ->setAllowedValues('target', [
                 '_self',
                 '_blank',
@@ -115,8 +117,16 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
 
     public function render($value = null): string
     {
+        if (null === $value) {
+            return $this->options['default'];
+        }
         $value = parent::render($value);
-        $accessor = PropertyAccess::createPropertyAccessor();
+
+        $accessor = PropertyAccess::createPropertyAccessorBuilder()
+            ->disableExceptionOnInvalidIndex()
+            ->disableExceptionOnInvalidPropertyPath()
+            ->getPropertyAccessor()
+        ;
         $options = $this->options;
 
         foreach ($options['parameters'] as $name => $method) {
@@ -124,7 +134,9 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
             if (StringUtils::startsWith($method, '_')) {
                 $options['parameters'][$name] = StringUtils::end($method, -1);
             } else {
-                $options['parameters'][$name] = $accessor->getValue($this->entity, $method);
+                if ($accessor->isReadable($this->entity, $method)) {
+                    $options['parameters'][$name] = $accessor->getValue($this->entity, $method);
+                }
             }
         }
 
