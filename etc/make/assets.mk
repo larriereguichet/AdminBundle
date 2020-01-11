@@ -1,6 +1,8 @@
-.PHONY: assets assets.production
+.PHONY: assets assets.production assets.build assets.watch
 
-assets:
+assets: assets.build
+
+assets.build:
 	yarn run encore dev
 
 assets.watch:
