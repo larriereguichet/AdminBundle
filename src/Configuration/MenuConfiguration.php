@@ -59,6 +59,11 @@ class MenuConfiguration extends Configuration
                 return $value;
             })
             ->setNormalizer('template', function (Options $options, $value) {
+                // If a template is defined, use it
+                if ($value) {
+                    return $value;
+                }
+
                 // Define bootstrap navbar component template
                 if ('horizontal' === $options->offsetGet('position')) {
                     $value = '@LAGAdmin/Menu/menu.horizontal.html.twig';

@@ -1,0 +1,13 @@
+services:
+    LAG\AdminBundle\Form\Extension\CollectionExtensionType:
+        arguments:
+            $registry: '@LAG\AdminBundle\Assets\Registry\ScriptRegistryInterface'
+            $translator: '@translator'
+        tags:
+            - {name: form.type_extension}
+
+    LAG\AdminBundle\Form\Extension\AssetsExtension:
+        arguments:
+            $scriptRegistry: '@LAG\AdminBundle\Assets\Registry\ScriptRegistryInterface'
+        tags:
+            - {name: form.type_extension}

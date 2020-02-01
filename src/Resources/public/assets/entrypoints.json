@@ -7,6 +7,11 @@
       "js": [
         "/bundles/lagadmin/assets/admin.js"
       ]
+    },
+    "admin.collection": {
+      "js": [
+        "/bundles/lagadmin/assets/admin.collection.js"
+      ]
     }
   }
 }

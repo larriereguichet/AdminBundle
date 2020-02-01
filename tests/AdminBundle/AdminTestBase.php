@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class AdminTestBase extends TestCase
 {
@@ -70,6 +71,13 @@ class AdminTestBase extends TestCase
         $this->assertInternalType('array', $methods);
 
         foreach ($methods as $method) {
+
+            if (is_array($method)) {
+                $this->assertArrayHasKey(0, $method);
+                $method = $method[0];
+            } else {
+                $this->assertInternalType('string', $method);
+            }
             $this->assertTrue(method_exists($subscriber, $method));
         }
     }
@@ -107,7 +115,7 @@ class AdminTestBase extends TestCase
      *
      * @return MockObject|mixed
      */
-    protected function createMock($class)
+    protected function createMock($class): MockObject
     {
         return parent::createMock($class);
     }
@@ -131,11 +139,11 @@ class AdminTestBase extends TestCase
         return $property->getValue($object);
     }
 
-    protected function createActionConfigurationMock(array $map, int $expectedCalls = 1)
+    protected function createActionConfigurationMock(array $map)
     {
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $actionConfiguration
-            ->expects($this->exactly($expectedCalls))
+            ->expects($this->atLeastOnce())
             ->method('get')
             ->willReturnMap($map)
         ;
@@ -143,11 +151,16 @@ class AdminTestBase extends TestCase
         return $actionConfiguration;
     }
 
-    protected function createAdminConfigurationMock(array $map, int $expectedCalls = 1): MockObject
+    /**
+     * @param array $map
+     *
+     * @return MockObject|AdminConfiguration
+     */
+    protected function createAdminConfigurationMock(array $map): MockObject
     {
         $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
-            ->expects($this->atLeast($expectedCalls))
+            ->expects($this->atLeastOnce())
             ->method('get')
             ->willReturnMap($map)
         ;
@@ -175,15 +188,13 @@ class AdminTestBase extends TestCase
      * @return MockObject|ActionInterface
      */
     protected function createActionWithConfigurationMock(
-        array $map,
-        int $expectedCalls = 1,
-        int $configurationExpectedCalls = 1
+        array $map
     ): MockObject {
-        $configuration = $this->createActionConfigurationMock($map, $configurationExpectedCalls);
+        $configuration = $this->createActionConfigurationMock($map);
 
         $action = $this->createMock(ActionInterface::class);
         $action
-            ->expects($this->exactly($expectedCalls))
+            ->expects($this->atLeastOnce())
             ->method('getConfiguration')
             ->willReturn($configuration)
         ;
@@ -199,18 +210,25 @@ class AdminTestBase extends TestCase
      * @return MockObject|AdminInterface
      */
     protected function createAdminWithConfigurationMock(
-        array $map,
-        int $expectedCalls = 1,
-        int $configurationExpectedCalls = 1
+        array $map = [],
+        Request $request = null
     ): MockObject {
-        $configuration = $this->createAdminConfigurationMock($map, $configurationExpectedCalls);
+        $configuration = $this->createAdminConfigurationMock($map);
 
         $admin = $this->createMock(AdminInterface::class);
         $admin
-            ->expects($this->exactly($expectedCalls))
+            ->expects($this->atLeastOnce())
             ->method('getConfiguration')
             ->willReturn($configuration)
         ;
+
+        if (null !== $request) {
+            $admin
+                ->expects($this->atLeastOnce())
+                ->method('getRequest')
+                ->willReturn($request)
+            ;
+        }
 
         return $admin;
     }

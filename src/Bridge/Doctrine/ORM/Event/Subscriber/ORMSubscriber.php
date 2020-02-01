@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber;
 
+use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Event\Events;
@@ -55,22 +56,26 @@ class ORMSubscriber implements EventSubscriberInterface
      */
     public function addOrder(ORMFilterEvent $event)
     {
-        $queryBuilder = $event->getQueryBuilder();
+        $data = $event->getData();
+
+        if (!$data instanceof QueryBuilder) {
+            return;
+        }
         $admin = $event->getAdmin();
         $actionConfiguration = $admin->getAction()->getConfiguration();
 
         $request = $this->requestStack->getMasterRequest();
         $sort = $request->get('sort');
-        $alias = $queryBuilder->getRootAliases()[0];
+        $alias = $data->getRootAliases()[0];
 
         // The sort from the request override the configured one
         if ($sort) {
             $order = $request->get('order', 'asc');
 
-            $queryBuilder->addOrderBy($alias.'.'.$sort, $order);
+            $data->addOrderBy($alias.'.'.$sort, $order);
         } else {
             foreach ($actionConfiguration->getParameter('order') as $field => $order) {
-                $queryBuilder->addOrderBy($alias.'.'.$field, $order);
+                $data->addOrderBy($alias.'.'.$field, $order);
             }
         }
     }
@@ -80,7 +85,7 @@ class ORMSubscriber implements EventSubscriberInterface
      */
     public function addFilters(ORMFilterEvent $event)
     {
-        $queryBuilder = $event->getQueryBuilder();
+        $queryBuilder = $event->getData();
 
         foreach ($event->getFilters() as $filter) {
             $alias = $queryBuilder->getRootAliases()[0];

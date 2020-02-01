@@ -3,122 +3,104 @@
 namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\DataProvider;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandlerInterface;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
-use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ORMDataProviderTest extends AdminTestBase
 {
-    public function testGetCollection()
+    /**
+     * @dataProvider getCollectionProvider
+     */
+    public function testGetCollection($method)
     {
+        list($provider, $entityManager, $eventDispatcher, $handler,) = $this->createProvider();
+
         // Create an admin configuration to test the collection method
-        $configuration = $this->createMock(AdminConfiguration::class);
-        $configuration
-            ->expects($this->atLeastOnce())
-            ->method('getParameter')
-            ->willReturnMap([
-                ['entity', 'MyClass'],
-                ['pager', null],
-                ['page_parameter', 'page'],
-            ])
-        ;
+        $action = $this->createActionWithConfigurationMock([
+            ['repository_method', $method],
+            ['pager', null],
+            ['page_parameter', 'page'],
+            ['max_per_page', 666],
+        ]);
 
-        /** @var AdminInterface|MockObject $admin */
-        $admin = $this->createMock(AdminInterface::class);
+        $admin = $this->createAdminWithConfigurationMock([
+            ['entity', 'MyClass'],
+            ['pager', null],
+            ['page_parameter', 'page'],
+            ['max_per_page', 666],
+        ], new Request([
+            'page' => 5,
+        ]));
         $admin
-            ->expects($this->atLeastOnce())
-            ->method('getConfiguration')
-            ->willReturn($configuration)
-        ;
-
-        // Create fake entities to return
-        $entities = [
-            new FakeEntity(uniqid()),
-            new FakeEntity(uniqid()),
-        ];
-
-        // The query should return entities
-        $query = $this->createMock(AbstractQuery::class);
-        $query
             ->expects($this->once())
-            ->method('getResult')
-            ->willReturn($entities)
-        ;
-
-        // The query builder should call the getQuery() method
-        $queryBuilder = $this->createMock(QueryBuilder::class);
-        $queryBuilder
-            ->expects($this->once())
-            ->method('getQuery')
-            ->willReturn($query)
+            ->method('getAction')
+            ->willReturn($action)
         ;
 
         // The repository should return a query builder
+        $queryBuilder = $this->createMock(QueryBuilder::class);
         $repository = $this->createMock(EntityRepository::class);
         $repository
             ->expects($this->once())
             ->method('createQueryBuilder')
-            ->with('entity')
             ->willReturn($queryBuilder)
         ;
 
         // The entity manager should return a repository
-        /** @var EntityManagerInterface|MockObject $entityManager */
-        $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager
             ->expects($this->once())
             ->method('getRepository')
+            ->with('MyClass')
             ->willReturn($repository)
         ;
 
         // The event dispatcher should dispatched once a ORM_FILTER event
-        /** @var EventDispatcherInterface|MockObject $eventDispatcher */
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->willReturnCallback(function($eventName, $event) use ($queryBuilder, $admin) {
+            ->willReturnCallback(function($event, $eventName) use ($queryBuilder, $admin) {
                 $this->assertEquals(Events::DOCTRINE_ORM_FILTER, $eventName);
                 /** @var ORMFilterEvent $event */
                 $this->assertInstanceOf(ORMFilterEvent::class, $event);
-                $this->assertEquals($queryBuilder, $event->getQueryBuilder());
+                $this->assertEquals($queryBuilder, $event->getData());
                 $this->assertEquals($admin, $event->getAdmin());
                 $this->assertEquals([], $event->getFilters());
             })
         ;
-        /** @var RequestStack|MockObject $requestStack */
-        $requestStack = $this->createMock(RequestStack::class);
 
-        $provider = new ORMDataProvider(
-            $entityManager,
-            $eventDispatcher,
-            $requestStack
-        );
-        $returnedEntities = $provider->getCollection($admin);
+        // The result handler should called to return results according to the data and parameters
+        $handler
+            ->expects($this->once())
+            ->method('handle')
+            ->with($queryBuilder, false, 5, 666)
+        ;
+        
 
-        // The returned entities should be the same as those provided by the repository
-        $this->assertEquals($entities, $returnedEntities);
+        $provider->getCollection($admin);
     }
 
-    public function testGetItem()
+    public function getCollectionProvider(): array
     {
-        /** @var EventDispatcherInterface|MockObject $eventDispatcher */
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        return [
+            ['createQueryBuilder'],
+            [null],
+        ];
+    }
 
-        /** @var RequestStack|MockObject $requestStack */
-        $requestStack = $this->createMock(RequestStack::class);
+    public function testGet()
+    {
+        list($provider, $entityManager,) = $this->createProvider();
 
         $repository = $this->createMock(EntityRepository::class);
         $repository
@@ -127,9 +109,6 @@ class ORMDataProviderTest extends AdminTestBase
             ->with(42)
             ->willReturn(new FakeEntity(42))
         ;
-
-        /** @var EntityManagerInterface|MockObject $entityManager */
-        $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager
             ->expects($this->atLeastOnce())
             ->method('getRepository')
@@ -137,43 +116,23 @@ class ORMDataProviderTest extends AdminTestBase
             ->willReturn($repository)
         ;
 
-        $configuration = $this->createMock(AdminConfiguration::class);
-        $configuration
-            ->expects($this->atLeastOnce())
-            ->method('getParameter')
-            ->willReturnMap([
-                ['entity', 'MyClass'],
-                ['pager', null],
-                ['page_parameter', 'page'],
-            ])
-        ;
-
-        /** @var AdminInterface|MockObject $admin */
-        $admin = $this->createMock(AdminInterface::class);
-        $admin
-            ->expects($this->atLeastOnce())
-            ->method('getConfiguration')
-            ->willReturn($configuration)
-        ;
-
-        $provider = new ORMDataProvider(
-            $entityManager,
-            $eventDispatcher,
-            $requestStack
-        );
+        $admin = $this->createAdminWithConfigurationMock([
+            ['entity', 'MyClass'],
+            ['pager', null],
+            ['page_parameter', 'page'],
+        ]);
 
         $item = $provider->get($admin, 42);
 
         $this->assertEquals(42, $item->getId());
     }
 
+    /**
+     * @expectedException \LAG\AdminBundle\Exception\Exception
+     */
     public function testGetItemWithException()
     {
-        /** @var EventDispatcherInterface|MockObject $eventDispatcher */
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-
-        /** @var RequestStack|MockObject $requestStack */
-        $requestStack = $this->createMock(RequestStack::class);
+        list($provider, $entityManager,) = $this->createProvider();
 
         $repository = $this->createMock(EntityRepository::class);
         $repository
@@ -182,9 +141,6 @@ class ORMDataProviderTest extends AdminTestBase
             ->with(42)
             ->willReturn(null)
         ;
-
-        /** @var EntityManagerInterface|MockObject $entityManager */
-        $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager
             ->expects($this->atLeastOnce())
             ->method('getRepository')
@@ -192,48 +148,20 @@ class ORMDataProviderTest extends AdminTestBase
             ->willReturn($repository)
         ;
 
-        $configuration = $this->createMock(AdminConfiguration::class);
-        $configuration
-            ->expects($this->atLeastOnce())
-            ->method('getParameter')
-            ->willReturnMap([
-                ['entity', 'MyClass'],
-                ['pager', null],
-                ['page_parameter', 'page'],
-            ])
-        ;
+        $admin = $this->createAdminWithConfigurationMock([
+            ['entity', 'MyClass'],
+            ['pager', null],
+            ['page_parameter', 'page'],
+        ]);
 
-        /** @var AdminInterface|MockObject $admin */
-        $admin = $this->createMock(AdminInterface::class);
-        $admin
-            ->expects($this->atLeastOnce())
-            ->method('getConfiguration')
-            ->willReturn($configuration)
-        ;
-
-        $provider = new ORMDataProvider(
-            $entityManager,
-            $eventDispatcher,
-            $requestStack
-        );
-
-        $this->assertExceptionRaised(Exception::class, function() use ($provider, $admin) {
-            $provider->get($admin, 42);
-        });
+         $provider->get($admin, 42);
     }
 
     public function testSaveItem()
     {
-        /** @var EventDispatcherInterface|MockObject $eventDispatcher */
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-
-        /** @var RequestStack|MockObject $requestStack */
-        $requestStack = $this->createMock(RequestStack::class);
+        list($provider, $entityManager,) = $this->createProvider();
 
         $entity = new FakeEntity(42);
-
-        /** @var EntityManagerInterface|MockObject $entityManager */
-        $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager
             ->expects($this->atLeastOnce())
             ->method('persist')
@@ -243,8 +171,6 @@ class ORMDataProviderTest extends AdminTestBase
             ->expects($this->atLeastOnce())
             ->method('flush')
         ;
-
-        /** @var AdminInterface|MockObject $admin */
         $admin = $this->createMock(AdminInterface::class);
         $admin
             ->expects($this->atLeastOnce())
@@ -254,12 +180,89 @@ class ORMDataProviderTest extends AdminTestBase
             ]))
         ;
 
+        $provider->save($admin);
+    }
+
+    public function testCreate()
+    {
+        list($provider,) = $this->createProvider();
+
+        $admin = $this->createAdminWithConfigurationMock([
+            ['entity', FakeEntity::class],
+        ]);
+
+        $entity = $provider->create($admin);
+
+        $this->assertInstanceOf(FakeEntity::class, $entity);
+    }
+
+    public function testDelete()
+    {
+        list($provider, $entityManager) = $this->createProvider();
+
+        $entity = new FakeEntity();
+        $entities = new ArrayCollection([
+            $entity,
+        ]);
+
+        $admin = $this->createMock(AdminInterface::class);
+        $admin
+            ->expects($this->atLeastOnce())
+            ->method('getEntities')
+            ->willReturn($entities)
+        ;
+
+        $entityManager
+            ->expects($this->once())
+            ->method('remove')
+            ->with($entity)
+        ;
+        $entityManager
+            ->expects($this->once())
+            ->method('flush')
+        ;
+
+        $provider->delete($admin);
+    }
+
+    /**
+     * @expectedException \LAG\AdminBundle\Exception\Exception
+     */
+    public function testDeleteWithoutEntities()
+    {
+        list($provider,) = $this->createProvider();
+
+        $entities = new ArrayCollection();
+
+        $admin = $this->createMock(AdminInterface::class);
+        $admin
+            ->expects($this->atLeastOnce())
+            ->method('getEntities')
+            ->willReturn($entities)
+        ;
+        $provider->delete($admin);
+    }
+
+    /**
+     * @return MockObject[]|ORMDataProvider[]
+     */
+    protected function createProvider(): array
+    {
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $handler = $this->createMock(ResultsHandlerInterface::class);
+
         $provider = new ORMDataProvider(
             $entityManager,
             $eventDispatcher,
-            $requestStack
+            $handler
         );
 
-        $provider->save($admin);
+        return [
+            $provider,
+            $entityManager,
+            $eventDispatcher,
+            $handler,
+        ];
     }
 }

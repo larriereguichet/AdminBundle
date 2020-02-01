@@ -10,7 +10,7 @@ use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Fixtures\ActionFixture;
 use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ActionFactoryTest extends AdminTestBase
 {

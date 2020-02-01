@@ -12,9 +12,9 @@ use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Menu\Menu;
 use LAG\AdminBundle\Menu\MenuItem;
 use LAG\AdminBundle\Routing\RoutingLoader;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MenuFactory
 {

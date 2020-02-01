@@ -9,7 +9,7 @@ use LAG\AdminBundle\Factory\FormFactoryInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -53,7 +53,7 @@ class FormFactoryTest extends AdminTestBase
         $admin = $this->createAdminWithConfigurationMock([
             ['data_provider', 'my_provider'],
             ['form', null],
-        ], 2, 2);
+        ]);
         $dataProvider = $this->createMock(DataProviderInterface::class);
         $formBuilder = $this->createMock(FormBuilderInterface::class);
         $form = $this->createMock(FormInterface::class);
@@ -84,29 +84,6 @@ class FormFactoryTest extends AdminTestBase
             ->method('getForm')
             ->willReturn($form)
         ;
-//        $formBuilder
-//            ->expects($this->exactly(2))
-//            ->method('addModelTransformer')
-//            ->willReturnCallback(function (CallbackTransformer $transformer) {
-                // TODO test transformers
-//                if ('array' === $field) {
-//                    $this->assertEquals('key: value'.PHP_EOL, $transformer->transform(['key' => 'value']));
-//                    $this->assertEquals('tt', $transformer->reverseTransform('key: value'));
-//                }
-//            })
-//        ;
-//        $formBuilder
-//            ->expects($this->exactly(3))
-//            ->method('add')
-//            ->willReturnCallback(function ($field) {
-//                $this->assertContains($field, [
-//                    'pandas',
-//                    'array',
-//                    'simple_array',
-//                ]);
-//            })
-//        ;
-
         $factory->createEntityForm($admin, $request);
     }
 
@@ -117,7 +94,7 @@ class FormFactoryTest extends AdminTestBase
         $admin = $this->createAdminWithConfigurationMock([
             ['data_provider', 'my_provider'],
             ['form', 'my_form'],
-        ], 2, 2);
+        ]);
         $dataProvider = $this->createMock(DataProviderInterface::class);
         $form = $this->createMock(FormInterface::class);
         $entity = new FakeEntity();

@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\DependencyInjection;
 
+use LAG\AdminBundle\Controller\AdminAction;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -49,7 +50,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('data_provider')->end()
                     ->scalarNode('form')->end()
                     ->scalarNode('max_per_page')->end()
-                    ->scalarNode('controller')->defaultValue('LAGAdminBundle:CRUD')->end()
+                    ->scalarNode('controller')->defaultValue(AdminAction::class)->end()
                     // actions configurations
                     ->variableNode('actions')->end()
                 ->end()
@@ -63,8 +64,8 @@ class Configuration implements ConfigurationInterface
      */
     protected function getApplicationNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('application');
+        $builder = new TreeBuilder('application');
+        $node = $builder->getRootNode();
 
         $node
             ->children()
@@ -126,8 +127,8 @@ class Configuration implements ConfigurationInterface
      */
     protected function getMenuConfiguration()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('menus');
+        $builder = new TreeBuilder('menus');
+        $node = $builder->getRootNode();
 
         $node
             ->prototype('variable')
