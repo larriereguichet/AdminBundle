@@ -28,7 +28,6 @@ class LAGAdminExtension extends Extension
         }
         $applicationConfig = [];
         $adminsConfig = [];
-        $menusConfig = [];
         $enableExtraConfig = true;
 
         if (key_exists('application', $config)) {
@@ -42,19 +41,13 @@ class LAGAdminExtension extends Extension
             $adminsConfig = $config['admins'];
         }
 
-        if (key_exists('menus', $config)) {
-            $menusConfig = $config['menus'];
-
-            foreach ($menusConfig as $name => $menu) {
-                if (null === $menu) {
-                    $menusConfig[$name] = [];
-                }
-            }
+        if (!key_exists('menus', $config)) {
+            $config['menus'] = [];
         }
         $builder->setParameter('lag.admin.enable_extra_configuration', $enableExtraConfig);
         $builder->setParameter('lag.admin.application_configuration', $applicationConfig);
         $builder->setParameter('lag.admins', $adminsConfig);
-        $builder->setParameter('lag.menus', $menusConfig);
+        $builder->setParameter('lag.menus', $config['menus']);
     }
 
     /**

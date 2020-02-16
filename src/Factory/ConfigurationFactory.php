@@ -9,8 +9,8 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\ConfigurationEvent;
 use LAG\AdminBundle\Resource\ResourceCollection;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ConfigurationFactory
 {

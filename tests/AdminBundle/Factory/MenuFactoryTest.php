@@ -8,7 +8,7 @@ use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Menu\Menu;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;

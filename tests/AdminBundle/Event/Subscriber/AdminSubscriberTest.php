@@ -22,11 +22,11 @@ use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\View\ViewInterface;
 use stdClass;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AdminSubscriberTest extends AdminTestBase

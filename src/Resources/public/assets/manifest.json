@@ -1,6 +1,7 @@
 {
   "assets/admin.css": "/bundles/lagadmin/assets/admin.css",
   "assets/admin.js": "/bundles/lagadmin/assets/admin.js",
+  "assets/admin.collection.js": "/bundles/lagadmin/assets/admin.collection.js",
   "assets/fonts/fa-brands-400.ttf": "/bundles/lagadmin/assets/fonts/fa-brands-400.06147b6c.ttf",
   "assets/fonts/fa-brands-400.eot": "/bundles/lagadmin/assets/fonts/fa-brands-400.5063b105.eot",
   "assets/fonts/fa-brands-400.woff": "/bundles/lagadmin/assets/fonts/fa-brands-400.c5e0f14f.woff",

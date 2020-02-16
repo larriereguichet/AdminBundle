@@ -37,7 +37,7 @@ class ActionConfigurationTest extends AdminTestBase
 
         $configuration->configureOptions($resolver);
 
-        $options = $resolver->resolve();
+        $resolver->resolve();
     }
 
     /**
@@ -47,13 +47,13 @@ class ActionConfigurationTest extends AdminTestBase
     {
         $adminConfiguration = $this->createAdminConfigurationMock([
             ['actions', [],],
-        ], 2);
+        ]);
 
         $configuration = new ActionConfiguration('my_action', 'my_admin', $adminConfiguration);
         $resolver = new OptionsResolver();
 
         $configuration->configureOptions($resolver);
 
-        $options = $resolver->resolve();
+        $resolver->resolve();
     }
 }

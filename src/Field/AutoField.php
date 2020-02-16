@@ -2,6 +2,8 @@
 
 namespace LAG\AdminBundle\Field;
 
+use Doctrine\Common\Collections\Collection;
+
 class AutoField extends AbstractField
 {
     public function render($value = null): string
@@ -22,7 +24,13 @@ class AutoField extends AbstractField
             if (method_exists($value, '__toString')) {
                 return (string) $value;
             } else {
-                return serialize($value);
+                if ($value instanceof Collection) {
+                    $value = $value->toArray();
+                }
+
+                if (is_array($value)) {
+                    return implode(',', $value);
+                }
             }
         }
 

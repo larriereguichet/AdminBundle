@@ -8,8 +8,8 @@ use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Resource\ResourceCollection;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AdminFactory
 {

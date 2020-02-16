@@ -21,12 +21,12 @@ use LAG\AdminBundle\Routing\RoutingLoader;
 use LAG\AdminBundle\Utils\TranslationUtils;
 use LAG\AdminBundle\View\RedirectView;
 use LAG\AdminBundle\View\ViewHelper;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AdminSubscriber implements EventSubscriberInterface
@@ -79,7 +79,9 @@ class AdminSubscriber implements EventSubscriberInterface
         return [
             Events::ADMIN_HANDLE_REQUEST => 'handleRequest',
             Events::ADMIN_VIEW => 'createView',
-            Events::ENTITY_LOAD => 'loadEntities',
+            Events::ENTITY_LOAD => [
+                'loadEntities', 255,
+            ],
             Events::ENTITY_SAVE => 'saveEntity',
         ];
     }

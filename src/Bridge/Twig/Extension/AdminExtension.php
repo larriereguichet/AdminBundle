@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Bridge\Twig\Extension;
 
 use Doctrine\Common\Collections\Collection;
+use LAG\AdminBundle\Assets\Registry\ScriptRegistryInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Configuration\MenuItemConfiguration;
 use LAG\AdminBundle\Exception\Exception;
@@ -32,16 +33,23 @@ class AdminExtension extends AbstractExtension
     private $applicationConfigurationStorage;
 
     /**
+     * @var ScriptRegistryInterface
+     */
+    private $scriptRegistry;
+
+    /**
      * AdminExtension constructor.
      */
     public function __construct(
         ApplicationConfigurationStorage $applicationConfigurationStorage,
         RouterInterface $router,
-        ConfigurationFactory $configurationFactory
+        ConfigurationFactory $configurationFactory,
+        ScriptRegistryInterface $scriptRegistry
     ) {
         $this->router = $router;
         $this->configurationFactory = $configurationFactory;
         $this->applicationConfigurationStorage = $applicationConfigurationStorage;
+        $this->scriptRegistry = $scriptRegistry;
     }
 
     public function getFunctions(): array
@@ -51,6 +59,7 @@ class AdminExtension extends AbstractExtension
             new TwigFunction('admin_menu_action', [$this, 'getMenuAction']),
             new TwigFunction('admin_url', [$this, 'getAdminUrl']),
             new TwigFunction('admin_action_allowed', [$this, 'isAdminActionAllowed']),
+            new TwigFunction('admin_dump_scripts', [$this, 'dumpScripts']),
         ];
     }
 
@@ -163,5 +172,20 @@ class AdminExtension extends AbstractExtension
         $configuration = $view->getAdminConfiguration();
 
         return key_exists($actionName, $configuration->getParameter('actions'));
+    }
+
+    /**
+     * Dump the scripts according to the location (usually head or footer).
+     *
+     * @param string $location
+     *
+     * @return string
+     */
+    public function dumpScripts($location)
+    {
+        return $this
+            ->scriptRegistry
+            ->dump($location)
+        ;
     }
 }

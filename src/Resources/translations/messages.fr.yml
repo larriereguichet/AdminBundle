@@ -18,6 +18,7 @@ lag:
         element_count: '%page_count% éléments sur %total_count%'
 
         # Delete
+        add: Ajouter
         delete: Supprimer
         deleting: 'Vous allez supprimer cette entité (identifiant: %id%). Etes-vous sûr(e) ?'
         deleted: 'Entity "%entity%" has been succesfully removed'

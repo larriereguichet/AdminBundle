@@ -13,8 +13,8 @@ use LAG\AdminBundle\Exception\Field\FieldTypeNotFoundException;
 use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\TranslatorAwareFieldInterface;
 use LAG\AdminBundle\Field\TwigAwareFieldInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 

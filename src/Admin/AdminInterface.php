@@ -7,9 +7,9 @@ use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\View\ViewInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 interface AdminInterface
 {
@@ -19,6 +19,14 @@ interface AdminInterface
      * @throws Exception
      */
     public function handleRequest(Request $request);
+
+    /**
+     * Return the handled request. The handleRequest() method should have been called before. If not an exception will
+     * be thrown.
+     *
+     * @throws Exception
+     */
+    public function getRequest(): Request;
 
     /**
      * Return the Admin name.

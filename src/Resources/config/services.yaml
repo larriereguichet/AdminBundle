@@ -7,7 +7,6 @@ services:
         autoconfigure: true
         public: false
 
-
     ### Configuration ###
     LAG\AdminBundle\Configuration\ApplicationConfigurationStorage:
         class: LAG\AdminBundle\Configuration\ApplicationConfigurationStorage
@@ -32,12 +31,4 @@ services:
             - {name: controller.service_arguments}
     ###################
 
-    ### DataProviders ###
-    LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider:
-        class: LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider
-        tags:
-            - {name: lag.admin.data_provider}
-    #####################
 
-    LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper: ~
-    LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper'

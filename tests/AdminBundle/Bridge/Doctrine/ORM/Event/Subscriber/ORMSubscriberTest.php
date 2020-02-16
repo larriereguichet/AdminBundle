@@ -69,7 +69,7 @@ class ORMSubscriberTest extends AdminTestBase
         $event = $this->createMock(ORMFilterEvent::class);
         $event
             ->expects($this->once())
-            ->method('getQueryBuilder')
+            ->method('getData')
             ->willReturn($queryBuilder)
         ;
         $event
@@ -125,7 +125,7 @@ class ORMSubscriberTest extends AdminTestBase
         $event = $this->createMock(ORMFilterEvent::class);
         $event
             ->expects($this->once())
-            ->method('getQueryBuilder')
+            ->method('getData')
             ->willReturn($queryBuilder)
         ;
         $event
@@ -193,7 +193,7 @@ class ORMSubscriberTest extends AdminTestBase
         $event = $this->createMock(ORMFilterEvent::class);
         $event
             ->expects($this->once())
-            ->method('getQueryBuilder')
+            ->method('getData')
             ->willReturn($queryBuilder)
         ;
         $event
@@ -224,7 +224,7 @@ class ORMSubscriberTest extends AdminTestBase
         $event = $this->createMock(FormEvent::class);
         $admin = $this->createAdminWithConfigurationMock([
             ['entity', 'MyEntity'],
-        ], 1, 2);
+        ]);
 
         $event
             ->expects($this->once())

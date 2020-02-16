@@ -2,18 +2,16 @@
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\Persistence\ObjectRepository;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandlerInterface;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Exception\Exception;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ORMDataProvider implements DataProviderInterface
 {
@@ -28,9 +26,9 @@ class ORMDataProvider implements DataProviderInterface
     private $eventDispatcher;
 
     /**
-     * @var RequestStack
+     * @var ResultsHandlerInterface
      */
-    private $requestStack;
+    private $resultsHandler;
 
     /**
      * DoctrineORMDataProvider constructor.
@@ -38,48 +36,45 @@ class ORMDataProvider implements DataProviderInterface
     public function __construct(
         EntityManagerInterface $entityManager,
         EventDispatcherInterface $eventDispatcher,
-        RequestStack $requestStack
+        ResultsHandlerInterface $handler
     ) {
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->requestStack = $requestStack;
+        $this->resultsHandler = $handler;
     }
 
     /**
-     * Load a collection of entities.
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getCollection(AdminInterface $admin, array $filters = [])
     {
         $adminConfiguration = $admin->getConfiguration();
         $actionConfiguration = $admin->getAction()->getConfiguration();
+        $repository = $this->getRepository($adminConfiguration->get('entity'));
 
-        // Create a query builder for the configured entity class
-        $queryBuilder = $this
-            ->getRepository($adminConfiguration->getParameter('entity'))
-            ->createQueryBuilder('entity')
-        ;
+        // Allow to change the default method in configuration
+        $alias = strtolower($admin->getName());
+        $method = $actionConfiguration->get('repository_method');
+        $pagination = ('pagerfanta' === $actionConfiguration->get('pager'));
 
-        // Dispatch an event to allow filter alteration on the query builder
-        $event = new ORMFilterEvent($queryBuilder, $admin, $filters);
-        $this->eventDispatcher->dispatch(Events::DOCTRINE_ORM_FILTER, $event);
-
-        if ('pagerfanta' === $actionConfiguration->getParameter('pager')) {
-            $pageParameter = $actionConfiguration->getParameter('page_parameter');
-            $request = $this->requestStack->getCurrentRequest();
-            $page = (int) $request->get($pageParameter, 1);
-
-            $adapter = new DoctrineORMAdapter($queryBuilder, true, false);
-            $pager = new Pagerfanta($adapter);
-            $pager->setCurrentPage($page);
-            $pager->setMaxPerPage($actionConfiguration->getParameter('max_per_page'));
-            $entities = $pager;
+        // The repository could return an object, an array, a collection, a pager or a query builder. The results
+        // handler will act according to result type
+        if ($method) {
+            $data = $repository->$method($alias);
         } else {
-            $entities = $queryBuilder->getQuery()->getResult();
+            $data = $repository->createQueryBuilder($alias);
         }
 
-        return $entities;
+        // Dispatch an event to allow filter alteration on the query builder
+        $event = new ORMFilterEvent($data, $admin, $filters);
+        $this->eventDispatcher->dispatch($event, Events::DOCTRINE_ORM_FILTER);
+
+        // Fetch pagination parameters
+        $pageParameter = $actionConfiguration->get('page_parameter');
+        $page = (int) $admin->getRequest()->get($pageParameter, 1);
+        $maxPerPage = $actionConfiguration->get('max_per_page');
+
+        return $this->resultsHandler->handle($data, $pagination, $page, $maxPerPage);
     }
 
     /**
@@ -87,7 +82,7 @@ class ORMDataProvider implements DataProviderInterface
      */
     public function get(AdminInterface $admin, string $identifier)
     {
-        $class = $admin->getConfiguration()->getParameter('entity');
+        $class = $admin->getConfiguration()->get('entity');
         $item = $this
             ->getRepository($class)
             ->find($identifier)
@@ -114,7 +109,7 @@ class ORMDataProvider implements DataProviderInterface
      */
     public function create(AdminInterface $admin)
     {
-        $class = $admin->getConfiguration()->getParameter('entity');
+        $class = $admin->getConfiguration()->get('entity');
 
         return new $class();
     }
@@ -134,8 +129,8 @@ class ORMDataProvider implements DataProviderInterface
     /**
      * @return ObjectRepository|EntityRepository
      */
-    private function getRepository(string $entityClass)
+    private function getRepository(string $class)
     {
-        return $this->entityManager->getRepository($entityClass);
+        return $this->entityManager->getRepository($class);
     }
 }

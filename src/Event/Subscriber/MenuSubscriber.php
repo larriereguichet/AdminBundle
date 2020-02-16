@@ -8,8 +8,8 @@ use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\BuildMenuEvent;
 use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
 use LAG\AdminBundle\Factory\MenuFactory;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MenuSubscriber implements EventSubscriberInterface
 {
@@ -75,7 +75,7 @@ class MenuSubscriber implements EventSubscriberInterface
         // Dispatch a pre-menu build event to allow dynamic configuration modifications
         $this
             ->eventDispatcher
-            ->dispatch(Events::MENU_CONFIGURATION, $configurationEvent)
+            ->dispatch($configurationEvent, Events::MENU_CONFIGURATION)
         ;
         $menuConfigurations = $configurationEvent->getMenuConfigurations();
 

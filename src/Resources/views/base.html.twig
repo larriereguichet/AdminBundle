@@ -19,6 +19,10 @@
 
     {% block custom_stylesheets %}{% endblock %}
 
+    {% block head_javascripts %}
+        {{ admin_dump_scripts('head') | raw }}
+    {% endblock %}
+
     {% block head %}{% endblock %}
 </head>
 
@@ -62,10 +66,13 @@
 
     {% block footer %}
         <footer>
-            {% block javascripts %}
+            {% block admin_javascripts %}
                 <script src="{{ asset('bundles/lagadmin/assets/admin.js') }}"></script>
+
+                {# Inject scripts in footer section #}
+                {{ admin_dump_scripts('footer') | raw }}
             {% endblock %}
-            {% block custom_javascripts %}{% endblock %}
+            {% block javascripts %}{% endblock %}
         </footer>
     {% endblock %}
     </body>

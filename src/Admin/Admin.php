@@ -13,9 +13,9 @@ use LAG\AdminBundle\Event\Events\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\View\ViewInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class Admin implements AdminInterface
 {
@@ -74,9 +74,6 @@ class Admin implements AdminInterface
         $this->entities = new ArrayCollection();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function handleRequest(Request $request)
     {
         $this->request = $request;
@@ -109,100 +106,76 @@ class Admin implements AdminInterface
         $this->eventDispatcher->dispatch(Events::ADMIN_HANDLE_FORM, new FormEvent($this, $request));
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function getRequest(): Request
+    {
+        if (null === $this->request) {
+            throw new Exception('The handleRequest() method should be called before calling getRequest()');
+        }
+
+        return $this->request;
+    }
+
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEntityClass(): string
     {
         return $this->configuration->get('entity');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResource(): AdminResource
     {
         return $this->resource;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEventDispatcher(): EventDispatcherInterface
     {
         return $this->eventDispatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfiguration(): AdminConfiguration
     {
         return $this->configuration;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createView(): ViewInterface
     {
+        if (null === $this->request) {
+            throw new Exception('The handleRequest() method should be called before creating a view');
+        }
         $event = new ViewEvent($this, $this->request);
         $this->eventDispatcher->dispatch(Events::ADMIN_VIEW, $event);
 
         return $event->getView();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAction(): ActionInterface
     {
         return $this->action;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasAction(): bool
     {
         return null !== $this->action;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEntities()
     {
         return $this->entities;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getForms(): array
     {
         return $this->forms;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasForm(string $name): bool
     {
         return key_exists($name, $this->forms);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getForm(string $name): FormInterface
     {
         if (!$this->hasForm($name)) {
@@ -212,9 +185,6 @@ class Admin implements AdminInterface
         return $this->forms[$name];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     private function handleEntityForm(Request $request)
     {
         if (!key_exists('entity', $this->forms)) {

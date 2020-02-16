@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\Bridge\Twig\Extension;
 
+use LAG\AdminBundle\Assets\Registry\ScriptRegistryInterface;
 use LAG\AdminBundle\Bridge\Twig\Extension\AdminExtension;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
@@ -25,6 +26,7 @@ class AdminExtensionTest extends AdminTestBase
                 'admin_menu_action',
                 'admin_url',
                 'admin_action_allowed',
+                'admin_dump_scripts',
             ]);
             $this->assertTrue(method_exists($extension, $function->getCallable()[1]));
         }
@@ -38,14 +40,16 @@ class AdminExtensionTest extends AdminTestBase
         $storage = $this->createMock(ApplicationConfigurationStorage::class);
         $router = $this->createMock(RouterInterface::class);
         $factory = $this->createMock(ConfigurationFactory::class);
+        $scriptRegistry = $this->createMock(ScriptRegistryInterface::class);
 
-        $extension = new AdminExtension($storage, $router, $factory);
+        $extension = new AdminExtension($storage, $router, $factory, $scriptRegistry);
 
         return [
             $extension,
             $storage,
             $router,
             $factory,
+            $scriptRegistry,
         ];
     }
 }

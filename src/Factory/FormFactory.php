@@ -11,7 +11,6 @@ use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Field\Definition\FieldDefinitionInterface;
 use LAG\AdminBundle\Utils\FormUtils;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,6 +18,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class FormFactory implements \LAG\AdminBundle\Factory\FormFactoryInterface
 {

@@ -11,9 +11,9 @@ use LAG\AdminBundle\Resource\ResourceCollection;
 use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * RoutingLoader.

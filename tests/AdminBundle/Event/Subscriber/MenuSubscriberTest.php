@@ -11,7 +11,8 @@ use LAG\AdminBundle\Event\Subscriber\MenuSubscriber;
 use LAG\AdminBundle\Factory\MenuFactory;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MenuSubscriberTest extends AdminTestBase
 {
@@ -29,41 +30,27 @@ class MenuSubscriberTest extends AdminTestBase
 
     public function testBuildMenu()
     {
-        list(, $storage, $menuFactory, $eventDispatcher) = $this->createSubscriber();
-        $event = new BuildMenuEvent();
+        list($subscriber, , $menuFactory, $eventDispatcher) = $this->createSubscriber([
+            'my_little_menu' => [],
+        ], [
+            ['enable_menus', true],
+        ]);
 
-        $applicationConfiguration = $this->createMock(ApplicationConfiguration::class);
-        $applicationConfiguration
-            ->expects($this->once())
-            ->method('getParameter')
-            ->willReturnMap([
-                ['enable_menus', true],
-            ])
-        ;
-        $storage
-            ->expects($this->once())
-            ->method('getConfiguration')
-            ->willReturn($applicationConfiguration)
-        ;
+        $this->assertSubscribedMethodsExists($subscriber);
+        $event = new BuildMenuEvent();
 
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->with(Events::MENU_CONFIGURATION, new MenuConfigurationEvent([
+            ->with(new MenuConfigurationEvent([
                 'my_little_menu' => [],
-            ]))
+            ]), Events::MENU_CONFIGURATION)
         ;
-        $subscriber = new MenuSubscriber($storage, $menuFactory, $eventDispatcher, [
-            'my_little_menu' => [],
-        ]);
-        $this->assertSubscribedMethodsExists($subscriber);
-
         $menuFactory
             ->expects($this->once())
             ->method('create')
             ->with('my_little_menu', [])
         ;
-
         $subscriber->buildMenus($event);
     }
 
@@ -87,13 +74,24 @@ class MenuSubscriberTest extends AdminTestBase
     /**
      * @param array $adminMenuConfigurations
      *
-     * @return MockObject[]|MenuSubscriber[]
+     * @return MockObject[]|MenuSubscriber[]|EventSubscriberInterface
      */
-    private function createSubscriber(array $adminMenuConfigurations = [])
+    private function createSubscriber(array $adminMenuConfigurations = [], array $applicationConfigurationMap = [])
     {
         $storage = $this->createMock(ApplicationConfigurationStorage::class);
         $menuFactory = $this->createMock(MenuFactory::class);
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $applicationConfiguration = $this->createMock(ApplicationConfiguration::class);
+        $applicationConfiguration
+            ->expects($this->once())
+            ->method('getParameter')
+            ->willReturnMap($applicationConfigurationMap)
+        ;
+        $storage
+            ->expects($this->once())
+            ->method('getConfiguration')
+            ->willReturn($applicationConfiguration)
+        ;
 
         $subscriber = new MenuSubscriber(
             $storage,

@@ -7,7 +7,7 @@ use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\ConfigurationEvent;
 use LAG\AdminBundle\Exception\Exception;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ActionFactory
 {

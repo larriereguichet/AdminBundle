@@ -8,7 +8,7 @@ use LAG\AdminBundle\Controller\HomeAction;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\BuildMenuEvent;
 use LAG\AdminBundle\Tests\AdminTestBase;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 

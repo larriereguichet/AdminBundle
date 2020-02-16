@@ -11,8 +11,8 @@ class FieldTypeNotFoundException extends Exception
         $message = sprintf(
             'No type found for the Field "%s" in Action "%s" in Admin "%s"',
             $fieldName,
-            $adminName,
-            $actionName
+            $actionName,
+            $adminName
         );
 
         parent::__construct($message, 500);

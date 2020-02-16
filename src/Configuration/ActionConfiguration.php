@@ -5,7 +5,6 @@ namespace LAG\AdminBundle\Configuration;
 use Closure;
 use JK\Configuration\Configuration;
 use LAG\AdminBundle\Admin\Action;
-use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Form\Type\DeleteType;
 use LAG\AdminBundle\LAGAdminBundle;
@@ -22,17 +21,17 @@ class ActionConfiguration extends Configuration
      *
      * @var string
      */
-    private $actionName;
+    protected $actionName;
 
     /**
      * @var AdminConfiguration
      */
-    private $adminConfiguration;
+    protected $adminConfiguration;
 
     /**
      * @var string
      */
-    private $adminName;
+    protected $adminName;
 
     /**
      * ActionConfiguration constructor.
@@ -61,13 +60,6 @@ class ActionConfiguration extends Configuration
                 ],
                 'export' => [],
                 'order' => [],
-                'route' => $this->generateRouteName(),
-                'route_parameters' => [],
-                'route_path' => $this->getDefaultRoutePath(),
-                'route_requirements' => [],
-                'route_defaults' => [
-                    '_controller' => AdminAction::class,
-                ],
                 'icon' => null,
                 'load_strategy' => LAGAdminBundle::LOAD_STRATEGY_NONE,
                 'pager' => $this->adminConfiguration->get('pager'),
@@ -92,11 +84,6 @@ class ActionConfiguration extends Configuration
             ->setAllowedTypes('permissions', 'array')
             ->setAllowedTypes('export', 'array')
             ->setAllowedTypes('order', 'array')
-            ->setAllowedTypes('route', 'string')
-            ->setAllowedTypes('route_parameters', 'array')
-            ->setAllowedTypes('route_path', 'string')
-            ->setAllowedTypes('route_defaults', 'array')
-            ->setAllowedTypes('route_requirements', 'array')
             ->setAllowedTypes('string_length', 'integer')
             ->setAllowedTypes('string_length_truncate', 'string')
             ->setNormalizer('fields', $this->getFieldsNormalizer())
@@ -104,7 +91,6 @@ class ActionConfiguration extends Configuration
             ->setNormalizer('load_strategy', $this->getLoadStrategyNormalizer())
             ->setNormalizer('criteria', $this->getCriteriaNormalizer())
             ->setNormalizer('filters', $this->getFiltersNormalizer())
-            ->setNormalizer('route_defaults', $this->getRouteDefaultNormalizer())
             ->setNormalizer('form', $this->getFormNormalizer())
             ->setNormalizer('title', $this->getTitleNormalizer())
             ->setAllowedValues('load_strategy', [
@@ -120,6 +106,8 @@ class ActionConfiguration extends Configuration
         ;
 
         $this->configureMenu($resolver);
+        $this->configureRepository($resolver);
+        $this->configureRouting($resolver);
     }
 
     /**
@@ -127,7 +115,7 @@ class ActionConfiguration extends Configuration
      *
      * @throws Exception
      */
-    private function generateRouteName(): string
+    protected function generateRouteName(): string
     {
         if (!array_key_exists($this->actionName, $this->adminConfiguration->get('actions'))) {
             throw new Exception(sprintf('Invalid action name %s for admin %s (available action are: %s)', $this->actionName, $this->adminName, implode(', ', array_keys($this->adminConfiguration->get('actions')))));
@@ -146,7 +134,7 @@ class ActionConfiguration extends Configuration
      *
      * @return Closure
      */
-    private function getFieldsNormalizer()
+    protected function getFieldsNormalizer()
     {
         return function (Options $options, $fields) {
             $normalizedFields = [];
@@ -168,7 +156,7 @@ class ActionConfiguration extends Configuration
      *
      * @return Closure
      */
-    private function getOrderNormalizer()
+    protected function getOrderNormalizer()
     {
         return function (Options $options, $order) {
             foreach ($order as $field => $sort) {
@@ -187,7 +175,7 @@ class ActionConfiguration extends Configuration
      *
      * @return Closure
      */
-    private function getLoadStrategyNormalizer()
+    protected function getLoadStrategyNormalizer()
     {
         return function (Options $options, $value) {
             if (!$value) {
@@ -210,7 +198,7 @@ class ActionConfiguration extends Configuration
      *
      * @return Closure
      */
-    private function getCriteriaNormalizer()
+    protected function getCriteriaNormalizer()
     {
         return function (Options $options, $value) {
             if (!$value) {
@@ -248,7 +236,7 @@ class ActionConfiguration extends Configuration
     /**
      * Return the filters normalizer.
      */
-    private function getFiltersNormalizer(): Closure
+    protected function getFiltersNormalizer(): Closure
     {
         return function (Options $options, $data) {
             $normalizedData = [];
@@ -274,20 +262,7 @@ class ActionConfiguration extends Configuration
         };
     }
 
-    private function getRouteDefaultNormalizer(): Closure
-    {
-        return function (Options $options, $value) {
-            if (!is_array($value)) {
-                $value = [];
-            }
-            $value['_admin'] = $this->adminName;
-            $value['_action'] = $this->actionName;
-
-            return $value;
-        };
-    }
-
-    private function getFormNormalizer(): Closure
+    protected function getFormNormalizer(): Closure
     {
         return function (Options $options, $value) {
             if (null !== $value) {
@@ -307,7 +282,7 @@ class ActionConfiguration extends Configuration
         };
     }
 
-    private function getTitleNormalizer(): Closure
+    protected function getTitleNormalizer(): Closure
     {
         return function (Options $options, $value) {
             // If the translation system is not used, return the provided value as is
@@ -337,7 +312,7 @@ class ActionConfiguration extends Configuration
     /**
      * Return the default route path according to the action name.
      */
-    private function getDefaultRoutePath(): string
+    protected function getDefaultRoutePath(): string
     {
         $pattern = $this
             ->adminConfiguration
@@ -353,7 +328,7 @@ class ActionConfiguration extends Configuration
         return $path;
     }
 
-    private function getDefaultTemplate(): ?string
+    protected function getDefaultTemplate(): ?string
     {
         $mapping = [
             'list' => $this->adminConfiguration->get('list_template'),
@@ -369,12 +344,12 @@ class ActionConfiguration extends Configuration
         return $mapping[$this->actionName];
     }
 
-    private function isActionInMapping(array $mapping): bool
+    protected function isActionInMapping(array $mapping): bool
     {
         return array_key_exists($this->actionName, $mapping);
     }
 
-    private function configureMenu(OptionsResolver $resolver): void
+    protected function configureMenu(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -421,6 +396,47 @@ class ActionConfiguration extends Configuration
                         'icon' => 'arrow-left',
                     ]);
                 }
+
+                return $value;
+            })
+        ;
+    }
+
+    protected function configureRepository(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefaults([
+                'repository_method' => null,
+            ])
+        ;
+    }
+
+    protected function configureRouting(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefaults([
+                'controller' => $this->adminConfiguration->get('controller'),
+                'route' => $this->generateRouteName(),
+                'route_parameters' => [],
+                'route_path' => $this->getDefaultRoutePath(),
+                'route_requirements' => [],
+                'route_defaults' => [],
+            ])
+            ->setAllowedTypes('route', 'string')
+            ->setAllowedTypes('route_parameters', 'array')
+            ->setAllowedTypes('route_path', 'string')
+            ->setAllowedTypes('route_defaults', 'array')
+            ->setAllowedTypes('route_requirements', 'array')
+            ->setNormalizer('route_defaults', function (Options $options, $value) {
+                if (!$value || is_array($value)) {
+                    $value = [];
+                }
+
+                if (!key_exists('_controller', $value) || !$value['_controller']) {
+                    $value['_controller'] = $options->offsetGet('controller');
+                }
+                $value['_admin'] = $this->adminName;
+                $value['_action'] = $this->actionName;
 
                 return $value;
             })

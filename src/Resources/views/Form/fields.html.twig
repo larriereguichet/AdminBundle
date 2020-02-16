@@ -1,26 +1,26 @@
-{% extends 'bootstrap_3_horizontal_layout.html.twig' %}
+{% extends 'bootstrap_4_layout.html.twig' %}
 
 {# Extend bootstrap layout to match with bootstrap admin theme #}
-{% block form_row -%}
-    {% spaceless %}
-        <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
-            {{ form_label(form) }}
-            {{ form_widget(form) }}
-            {{ form_errors(form) }}
-        </div>
-    {% endspaceless %}
-{%- endblock form_row %}
+{#{% block form_row -%}#}
+{#    {% spaceless %}#}
+{#        <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">#}
+{#            {{ form_label(form) }}#}
+{#            {{ form_widget(form) }}#}
+{#            {{ form_errors(form) }}#}
+{#        </div>#}
+{#    {% endspaceless %}#}
+{#{%- endblock form_row %}#}
 
 {# overriding default label class #}
-{% block form_label_class -%}{%- endblock form_label_class %}
+{#{% block form_label_class -%}{%- endblock form_label_class %}#}
 
-{% block form_help -%}
-    {% for attrname, attrvalue in attr %}
-        {% if attrname == 'data-help' %}
-            <small class="form-text text-muted">{{ attrvalue | trans }}</small>
-        {% endif %}
-    {% endfor %}
-{%- endblock form_help %}
+{#{% block form_help -%}#}
+{#    {% for attrname, attrvalue in attr %}#}
+{#        {% if attrname == 'data-help' %}#}
+{#            <small class="form-text text-muted">{{ attrvalue | trans }}</small>#}
+{#        {% endif %}#}
+{#    {% endfor %}#}
+{#{%- endblock form_help %}#}
 
 {% block form_errors -%}
     {% if errors|length > 0 -%}
@@ -34,10 +34,28 @@
 
         {% if form.parent %}</span>{% else %}</div>{% endif %}
     {%- endif %}
-
-    {{- block('form_help') -}}
 {%- endblock form_errors %}
 
-{% block form_group_class -%}
-    col-sm-12
-{%- endblock form_group_class %}
+{#{% block form_group_class -%}#}
+{#    col-sm-12#}
+{#{%- endblock form_group_class %}#}
+
+{% block collection_widget %}
+    <div class="collection-widget">
+        {% if prototype is defined and not prototype.rendered %}
+            {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
+        {% endif %}
+        {{- block('form_widget') -}}
+
+        {% if form.vars.allow_add %}
+            <div class="button-container">
+                <button type="button"
+                        class="btn btn-primary add-button">{{ 'lag.admin.add' | trans }}</button>
+            </div>
+        {% endif %}
+    </div>
+{% endblock collection_widget %}
+
+{% block collection_item_widget %}
+    lo ?
+{% endblock collection_item_widget %}

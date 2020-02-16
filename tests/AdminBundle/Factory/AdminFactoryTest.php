@@ -13,7 +13,7 @@ use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\Resource\ResourceCollection;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Fixtures\FakeAdmin;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdminFactoryTest extends AdminTestBase
