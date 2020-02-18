@@ -90,6 +90,26 @@ class ORMSubscriberTest extends AdminTestBase
 
         $subscriber->addOrder($event);
     }
+    
+    public function testAddOrderWithoutQueryBuilder()
+    {
+        list($subscriber,) = $this->createSubscriber();
+        
+        $event = $this->createMock(ORMFilterEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getData')
+            ->willReturn([
+                'test',
+            ])
+        ;
+        $event
+            ->expects($this->never())
+            ->method('getAdmin')
+        ;
+    
+        $subscriber->addOrder($event);
+    }
 
     public function testAddOrderWithSort()
     {

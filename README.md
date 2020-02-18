@@ -4,7 +4,8 @@
 [![Build Status](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/build.png?b=master)](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/build-status/master)
 [![Code Intelligence Status](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0/mini.png)](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0)
-
+[![Latest Stable Version](https://poser.pugx.org/lag/adminbundle/v/stable)](https://packagist.org/packages/lag/adminbundle)
+[![Total Downloads](https://poser.pugx.org/lag/adminbundle/downloads)](https://packagist.org/packages/lag/adminbundle)
 
 # AdminBundle
 The AdminBundle let you creates a **flexible** and **robust backoffice** on any Symfony application, with simple `yaml` configuration.
@@ -15,8 +16,6 @@ By default, the four actions of a classical CRUD are available (`create`, `edit`
 If you require more flexibility, you can easily override any part of the process (data providers, controllers, views...).
 The purpose of the bundle is to provide an Admin interface with default configuration, and allows the user to add his
 specific need where he wants, and allow to implements any specific needs without any hassles.
-
-Current version **v1.0**
 
 ## Features
 * Dynamic CRUD for your entities (no code generation)
@@ -35,41 +34,10 @@ following command in your project directory to install the latest stable version
 $ composer require lag/adminbundle
 ```
 
+> If you does not use flex, read the extra steps to install the bundle [here](https://github.com/larriereguichet/AdminBundle/tree/master/docs/install/install-without-flex.md) 
 
-### Step 2: Enable the Bundle
-```
-    If you use Symfony Flex, you can skip this step.
-    
-    AdminBundle rely on WhiteOctoberPagerfantaBundle to handle list pagination. If you
-    want to use those features, both bundles should be enabled in addition to AdminBundle.    
-```
 
-Then, enable the bundle by adding it to the list of registered bundles
-in the `app/AppKernel.php` file of your project:
-
-```php
-<?php
-// app/AppKernel.php
-
-// ...
-class AppKernel extends Kernel
-{
-    public function registerBundles()
-    {
-        $bundles = array(
-            // ...
-
-            new LAG\AdminBundle\LAGAdminBundle(),
-            new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
-        );
-
-        // ...
-    }
-    // ...
-}
-```
-
-### Step 3: Configure the routing
+### Step 2: Configure the routing
 Import the routing configuration to have the admin generated routes :
 
 ```yml
