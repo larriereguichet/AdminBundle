@@ -40,6 +40,7 @@
     "white-october/pagerfanta-bundle": "^1.0"
   },
   "require-dev": {
+    "dg/bypass-finals": "^1.1",
     "nyholm/symfony-bundle-test": "^1.6",
     "phpstan/phpstan": "^0.12",
     "phpunit/phpunit": "^6.0",

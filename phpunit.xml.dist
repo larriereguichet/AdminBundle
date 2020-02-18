@@ -16,9 +16,14 @@
         </testsuite>
     </testsuites>
 
+    <listeners>
+        <listener class="LAG\AdminBundle\Tests\Utils\FinalClassListener"/>
+    </listeners>
+
     <php>
         <server name="KERNEL_DIR"
                 value="src/LAG/AdminBundle/Tests/Fixtures/app" />
+
     </php>
 
     <filter>
