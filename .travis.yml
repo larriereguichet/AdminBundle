@@ -15,8 +15,8 @@ install:
     - wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer
 
 script:
-    - make phpunit@run
-    - make phpstan@analyse
+    - make phpunit.run
+    - make phpstan.analyse
     - php php-cs-fixer fix --dry-run --using-cache=no --verbose
 
 after_script:

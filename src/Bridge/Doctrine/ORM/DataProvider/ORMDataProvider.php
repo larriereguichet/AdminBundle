@@ -62,6 +62,9 @@ class ORMDataProvider implements DataProviderInterface
         if ($method) {
             $data = $repository->$method($alias);
         } else {
+            if (!$repository instanceof EntityRepository) {
+                throw new Exception(sprintf('The repository of admin "%s" should be an instance of "%s" to use the default method createQueryBuilder()', $admin->getName(), EntityRepository::class));
+            }
             $data = $repository->createQueryBuilder($alias);
         }
 

@@ -71,14 +71,13 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('title')->end()
                 ->scalarNode('description')->end()
-
+                ->scalarNode('resources_path')->defaultValue('%kernel.project_dir%/config/admin/resources')->end()
                 ->scalarNode('base_template')->end()
                 ->scalarNode('menu_template')->end()
                 ->scalarNode('list_template')->end()
                 ->scalarNode('block_template')
                     ->defaultValue('LAGAdminBundle:Form:fields.html.twig')
                 ->end()
-
                 ->scalarNode('date_format')->defaultValue('Y-m-d')->end()
                 ->scalarNode('bootstrap')->end()
                 ->scalarNode('max_per_page')->end()
@@ -91,18 +90,15 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('catalog')->defaultValue('messages')->end()
                     ->end()
                 ->end()
-
                 ->arrayNode('fields_mapping')
                     ->prototype('scalar')
                     ->end()
                 ->end()
-                ->booleanNode('enable_extra_configuration')->end()
+                ->booleanNode('enable_extra_configuration')->defaultTrue()->end()
                 ->booleanNode('enable_security')->end()
-                ->booleanNode('enable_menus')->end()
+                ->booleanNode('enable_menus')->defaultTrue()->end()
                 ->booleanNode('enable_homepage')->end()
-
                 ->scalarNode('locale')->end()
-
                 ->scalarNode('homepage_template')->end()
                 ->scalarNode('homepage_route')->end()
                 ->scalarNode('routing_url_pattern')->end()

@@ -16,11 +16,6 @@ services:
     LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
 
-    LAG\AdminBundle\Event\Subscriber\MenuSubscriber:
-        class: LAG\AdminBundle\Event\Subscriber\MenuSubscriber
-        arguments:
-            $adminMenuConfigurations: '%lag.menus%'
-
     LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\ORMSubscriber:
         class: LAG\AdminBundle\Bridge\Doctrine\ORM\Event\Subscriber\ORMSubscriber
 

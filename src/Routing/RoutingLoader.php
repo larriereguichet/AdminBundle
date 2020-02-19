@@ -7,7 +7,7 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Controller\HomeAction;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
-use LAG\AdminBundle\Resource\ResourceCollection;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use RuntimeException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -28,11 +28,6 @@ class RoutingLoader implements LoaderInterface
     private $loaded = false;
 
     /**
-     * @var ResourceCollection
-     */
-    private $resourceCollection;
-
-    /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
@@ -48,18 +43,23 @@ class RoutingLoader implements LoaderInterface
     private $configurationFactory;
 
     /**
+     * @var ResourceRegistryInterface
+     */
+    private $registry;
+
+    /**
      * RoutingLoader constructor.
      */
     public function __construct(
-        ResourceCollection $resourceCollection,
+        ResourceRegistryInterface $registry,
         EventDispatcherInterface $eventDispatcher,
         ApplicationConfigurationStorage $applicationConfigurationStorage,
         ConfigurationFactory $configurationFactory
     ) {
-        $this->resourceCollection = $resourceCollection;
         $this->eventDispatcher = $eventDispatcher;
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
         $this->configurationFactory = $configurationFactory;
+        $this->registry = $registry;
     }
 
     /**
@@ -99,7 +99,7 @@ class RoutingLoader implements LoaderInterface
         }
         $routes = new RouteCollection();
 
-        foreach ($this->resourceCollection->all() as $name => $resource) {
+        foreach ($this->registry->all() as $name => $resource) {
             $configuration = $this
                 ->configurationFactory
                 ->createAdminConfiguration(

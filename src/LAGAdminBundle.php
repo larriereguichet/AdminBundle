@@ -4,7 +4,6 @@ namespace LAG\AdminBundle;
 
 use LAG\AdminBundle\DependencyInjection\CompilerPass\ApplicationConfigurationCompilerPass;
 use LAG\AdminBundle\DependencyInjection\CompilerPass\DataProviderCompilerPass;
-use LAG\AdminBundle\DependencyInjection\CompilerPass\ResourceCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -51,7 +50,6 @@ class LAGAdminBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new DataProviderCompilerPass());
-        $container->addCompilerPass(new ResourceCompilerPass());
         $container->addCompilerPass(new ApplicationConfigurationCompilerPass());
     }
 }

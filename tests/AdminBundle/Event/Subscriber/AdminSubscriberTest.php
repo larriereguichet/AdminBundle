@@ -21,6 +21,7 @@ use LAG\AdminBundle\Factory\ViewFactory;
 use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\View\ViewInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
@@ -120,12 +121,12 @@ class AdminSubscriberTest extends AdminTestBase
         $view = $this->createMock(ViewInterface::class);
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
-        $actionConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('getParameter')
-            ->with('menus')
-            ->willReturn([])
-        ;
+//        $actionConfiguration
+//            ->expects($this->atLeastOnce())
+//            ->method('getParameter')
+//            ->with('menus')
+//            ->willReturn([])
+//        ;
 
         $action = $this->createMock(ActionInterface::class);
         $action
@@ -213,12 +214,12 @@ class AdminSubscriberTest extends AdminTestBase
         $view = $this->createMock(ViewInterface::class);
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
-        $actionConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('getParameter')
-            ->with('menus')
-            ->willReturn([])
-        ;
+//        $actionConfiguration
+//            ->expects($this->atLeastOnce())
+//            ->method('getParameter')
+//            ->with('menus')
+//            ->willReturn([])
+//        ;
 
         $action = $this->createMock(ActionInterface::class);
         $action
@@ -630,6 +631,9 @@ class AdminSubscriberTest extends AdminTestBase
         $subscriber->saveEntity($event);
     }
 
+    /**
+     * @return AdminSubscriber[]|MockObject[]
+     */
     private function createSubscriber()
     {
         $actionFactory = $this->createMock(ActionFactory::class);
