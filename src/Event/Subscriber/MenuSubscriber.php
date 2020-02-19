@@ -2,36 +2,27 @@
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\BuildMenuEvent;
 use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
-use LAG\AdminBundle\Factory\MenuFactory;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MenuSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var ApplicationConfiguration
+     * @var bool
      */
-    private $applicationConfiguration;
+    private $menuEnabled;
 
     /**
-     * @var MenuFactory
+     * @var ResourceRegistryInterface
      */
-    private $menuFactory;
+    private $registry;
 
     /**
      * @var array
      */
-    private $adminMenuConfigurations;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private $menuConfigurations;
 
     /**
      * @return array
@@ -39,48 +30,66 @@ class MenuSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::MENU => 'buildMenus',
+            Events::MENU_CONFIGURATION => 'defineMenuConfiguration',
         ];
     }
 
-    /**
-     * MenuSubscriber constructor.
-     */
-    public function __construct(
-        ApplicationConfigurationStorage $storage,
-        MenuFactory $menuFactory,
-        EventDispatcherInterface $eventDispatcher,
-        array $adminMenuConfigurations = []
-    ) {
-        $this->applicationConfiguration = $storage->getConfiguration();
-        $this->menuFactory = $menuFactory;
-        $this->adminMenuConfigurations = $adminMenuConfigurations;
-        $this->eventDispatcher = $eventDispatcher;
+    public function __construct(bool $menuEnabled, ResourceRegistryInterface $registry, array $menuConfigurations = [])
+    {
+        $this->menuEnabled = $menuEnabled;
+        $this->registry = $registry;
+        $this->menuConfigurations = $menuConfigurations;
     }
 
-    /**
-     * Build menus according to the given configuration.
-     */
-    public function buildMenus(BuildMenuEvent $event)
+    public function defineMenuConfiguration(MenuConfigurationEvent $event)
     {
-        if (!$this->applicationConfiguration->getParameter('enable_menus')) {
+        if (!$this->menuEnabled || !key_exists($event->getMenuName(), $this->menuConfigurations)) {
             return;
         }
-        $menuConfigurations = array_merge_recursive(
-            $this->adminMenuConfigurations,
-            $event->getMenuConfigurations()
-        );
-        $configurationEvent = new MenuConfigurationEvent($menuConfigurations);
+        $menuConfiguration = $this->menuConfigurations[$event->getMenuName()];
 
-        // Dispatch a pre-menu build event to allow dynamic configuration modifications
-        $this
-            ->eventDispatcher
-            ->dispatch($configurationEvent, Events::MENU_CONFIGURATION)
-        ;
-        $menuConfigurations = $configurationEvent->getMenuConfigurations();
-
-        foreach ($menuConfigurations as $name => $menuConfiguration) {
-            $this->menuFactory->create($name, $menuConfiguration);
+        if (!is_array($menuConfiguration)) {
+            $menuConfiguration = [];
         }
+        $menuConfiguration = array_merge_recursive($menuConfiguration, $event->getMenuConfiguration());
+        $resourceNames = $this->registry->keys();
+
+        if (!key_exists('children', $menuConfiguration) || !is_array($menuConfiguration['children'])) {
+            $menuConfiguration['children'] = [];
+
+            if ('left' === $event->getMenuName()) {
+                foreach ($resourceNames as $resourceName) {
+                    $menuConfiguration['children'][$resourceName] = [];
+                }
+            }
+        }
+
+        foreach ($menuConfiguration['children'] as $itemName => $itemConfiguration) {
+            if (null === $itemConfiguration) {
+                $itemConfiguration = [];
+            }
+
+            // When an url is set, nothing to add, the item menu can be build
+            if (key_exists('url', $itemConfiguration)) {
+                $menuConfiguration[$itemName] = $itemConfiguration;
+
+                continue;
+            }
+
+            // If the key "admin' is missing, we try to find an admin resource with the same name
+            if (!key_exists('admin', $itemConfiguration) && in_array($itemName, $resourceNames)) {
+                $itemConfiguration['admin'] = $itemName;
+            }
+
+            // The default admins action is list
+            if (key_exists('admin', $itemConfiguration) && !key_exists('action', $itemConfiguration)) {
+                $itemConfiguration['action'] = 'list';
+            }
+
+            $menuConfiguration['children'][$itemName] = $itemConfiguration;
+        }
+
+        // Set defaults menu configuration to be build
+        $event->setMenuConfiguration($menuConfiguration);
     }
 }

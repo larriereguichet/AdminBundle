@@ -4,8 +4,8 @@ namespace LAG\AdminBundle\Debug\DataCollector;
 
 use Exception;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Factory\MenuFactory;
-use LAG\AdminBundle\Resource\ResourceCollection;
+use LAG\AdminBundle\Menu\Provider\MenuProvider;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -13,31 +13,31 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class AdminDataCollector extends DataCollector
 {
     /**
-     * @var ResourceCollection
+     * @var ResourceRegistryInterface
      */
-    private $resourceCollection;
+    private $registry;
 
     /**
      * @var ApplicationConfigurationStorage
      */
-    private $applicationConfigurationStorage;
+    private $storage;
 
     /**
-     * @var MenuFactory
+     * @var MenuProvider
      */
-    private $menuFactory;
+    private $menuProvider;
 
     /**
      * AdminDataCollector constructor.
      */
     public function __construct(
-        ResourceCollection $resourceCollection,
-        ApplicationConfigurationStorage $applicationConfigurationStorage,
-        MenuFactory $menuFactory
+        ResourceRegistryInterface $registry,
+        ApplicationConfigurationStorage $storage,
+        MenuProvider $menuProvider
     ) {
-        $this->resourceCollection = $resourceCollection;
-        $this->applicationConfigurationStorage = $applicationConfigurationStorage;
-        $this->menuFactory = $menuFactory;
+        $this->registry = $registry;
+        $this->storage = $storage;
+        $this->menuProvider = $menuProvider;
     }
 
     public function collect(Request $request, Response $response, Exception $exception = null)
@@ -45,26 +45,35 @@ class AdminDataCollector extends DataCollector
         $data = [
             'admins' => [],
             'application' => [],
-            'menus' => $this->menuFactory->getMenus(),
+            'menus' => [],
         ];
 
-        foreach ($this->resourceCollection->all() as $resource) {
+        foreach ($this->registry->all() as $resource) {
             $data['admins'][$resource->getName()] = [
                 'entity_class' => $resource->getEntityClass(),
                 'configuration' => $resource->getConfiguration(),
             ];
         }
 
-        foreach ($this->applicationConfigurationStorage->getConfiguration()->getParameters() as $name => $parameter) {
-            if (is_array($parameter)) {
-                $parameter = print_r($parameter, true);
-            }
-
-            if (is_bool($parameter)) {
-                $parameter = $parameter ? 'true' : 'false';
-            }
+        foreach ($this->storage->getConfiguration()->all() as $name => $parameter) {
             $data['application'][$name] = $parameter;
         }
+
+        foreach ($this->menuProvider->all() as $menuName => $menu) {
+            $data['menus'][$menuName] = [
+                'attributes' => $menu->getAttributes(),
+                'displayed' => $menu->isDisplayed(),
+            ];
+
+            foreach ($menu->getChildren() as $childName => $child) {
+                $data['menus'][$menuName]['children'][$childName] = [
+                    'attributes' => $child->getAttributes(),
+                    'displayed' => $child->isDisplayed(),
+                    'uri' => $child->getUri(),
+                ];
+            }
+        }
+
         $data['application']['admin'] = $request->attributes->get('_admin');
         $data['application']['action'] = $request->attributes->get('_action');
 

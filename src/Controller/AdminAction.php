@@ -30,9 +30,6 @@ class AdminAction
         $this->twig = $twig;
     }
 
-    /**
-     * @return Response|RedirectResponse
-     */
     public function __invoke(Request $request): Response
     {
         $admin = $this->adminFactory->createFromRequest($request);
@@ -43,10 +40,8 @@ class AdminAction
             return new RedirectResponse($view->getUrl());
         }
 
-        $content = $this->twig->render($view->getTemplate(), [
+        return new Response($this->twig->render($view->getTemplate(), [
             'admin' => $view,
-        ]);
-
-        return new Response($content);
+        ]));
     }
 }

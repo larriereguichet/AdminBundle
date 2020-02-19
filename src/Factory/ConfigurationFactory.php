@@ -6,9 +6,12 @@ use Exception;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Configuration\MenuConfiguration;
+use LAG\AdminBundle\Configuration\MenuItemConfiguration;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\ConfigurationEvent;
-use LAG\AdminBundle\Resource\ResourceCollection;
+use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -20,17 +23,17 @@ class ConfigurationFactory
     private $eventDispatcher;
 
     /**
-     * @var ResourceCollection
+     * @var ResourceRegistryInterface
      */
-    private $resourceCollection;
+    private $registry;
 
     /**
      * ConfigurationFactory constructor.
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, ResourceCollection $resourceCollection)
+    public function __construct(EventDispatcherInterface $eventDispatcher, ResourceRegistryInterface $registry)
     {
         $this->eventDispatcher = $eventDispatcher;
-        $this->resourceCollection = $resourceCollection;
+        $this->registry = $registry;
     }
 
     public function createAdminConfiguration(
@@ -77,33 +80,33 @@ class ConfigurationFactory
         return $actionConfiguration;
     }
 
-    /**
-     * Build the resources menu items.
-     *
-     * @return array
-     */
-    public function createResourceMenuConfiguration()
+    public function createMenuConfiguration(string $menuName, array $configuration): MenuConfiguration
     {
-        $menuConfiguration = [];
+        $event = new MenuConfigurationEvent($menuName, $configuration);
+        $this->eventDispatcher->dispatch($event, Events::MENU_CONFIGURATION);
+        $configuration = $event->getMenuConfiguration();
 
-        foreach ($this->resourceCollection->all() as $resource) {
-            $resourceConfiguration = $resource->getConfiguration();
-
-            // Add only entry for the "list" action
-            if (
-                !key_exists('actions', $resourceConfiguration) ||
-                null === $resourceConfiguration['actions'] ||
-                !array_key_exists('list', $resourceConfiguration['actions'])
-            ) {
-                continue;
+        foreach ($configuration['children'] as $itemName => $itemConfiguration) {
+            if (null === $itemConfiguration) {
+                $itemConfiguration = [];
             }
-            $menuConfiguration['items'][] = [
-                'text' => null,
-                'admin' => $resource->getName(),
-                'action' => 'list',
-            ];
+            $configuration['children'][$itemName] = $this->createMenuItemConfiguration($itemName, $itemConfiguration);
         }
+        $resolver = new OptionsResolver();
+        $menuConfiguration = new MenuConfiguration($menuName);
+        $menuConfiguration->configureOptions($resolver);
+        $menuConfiguration->setParameters($resolver->resolve($configuration));
 
         return $menuConfiguration;
+    }
+
+    public function createMenuItemConfiguration(string $itemName, array $configuration): MenuItemConfiguration
+    {
+        $resolver = new OptionsResolver();
+        $itemConfiguration = new MenuItemConfiguration($itemName);
+        $itemConfiguration->configureOptions($resolver);
+        $itemConfiguration->setParameters($resolver->resolve($configuration));
+
+        return $itemConfiguration;
     }
 }

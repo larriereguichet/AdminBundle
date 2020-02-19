@@ -9,13 +9,19 @@ class MenuConfigurationTest extends AdminTestBase
 {
     public function testGettersAndSetters()
     {
-        $event = new MenuConfigurationEvent();
-        $event->setMenuConfigurations([
-            'panda' => 'bamboo',
+        $event = new MenuConfigurationEvent('my_little_menu', [
+            'thing' => 'maybe',
         ]);
-
+        $this->assertEquals('my_little_menu', $event->getMenuName());
         $this->assertEquals([
-            'panda' => 'bamboo',
-        ], $event->getMenuConfigurations());
+            'thing' => 'maybe',
+        ], $event->getMenuConfiguration());
+
+        $event->setMenuConfiguration([
+            'thing' => 'sure',
+        ]);
+        $this->assertEquals([
+            'thing' => 'sure',
+        ], $event->getMenuConfiguration());
     }
 }

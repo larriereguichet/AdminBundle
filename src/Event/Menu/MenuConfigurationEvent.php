@@ -2,30 +2,38 @@
 
 namespace LAG\AdminBundle\Event\Menu;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class MenuConfigurationEvent extends Event
 {
     /**
-     * @var array
+     * @var string
      */
-    private $menuConfigurations;
+    private $menuName;
 
     /**
-     * MenuConfiguration constructor.
+     * @var array
      */
-    public function __construct(array $menuConfigurations = [])
+    private $menuConfiguration;
+
+    public function __construct(string $menuName, array $menuConfiguration = [])
     {
-        $this->menuConfigurations = $menuConfigurations;
+        $this->menuName = $menuName;
+        $this->menuConfiguration = $menuConfiguration;
     }
 
-    public function getMenuConfigurations(): array
+    public function getMenuName(): string
     {
-        return $this->menuConfigurations;
+        return $this->menuName;
     }
 
-    public function setMenuConfigurations(array $menuConfigurations)
+    public function setMenuConfiguration(array $menuConfiguration): void
     {
-        $this->menuConfigurations = $menuConfigurations;
+        $this->menuConfiguration = $menuConfiguration;
+    }
+
+    public function getMenuConfiguration(): array
+    {
+        return $this->menuConfiguration;
     }
 }

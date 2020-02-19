@@ -11,23 +11,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MenuItemConfiguration extends Configuration
 {
     /**
-     * @var string|null
-     */
-    private $position;
-
-    /**
      * @var string
      */
     private $name;
 
-    /**
-     * MenuItemConfiguration constructor.
-     *
-     * @param string $position
-     */
-    public function __construct(string $name, ?string $position)
+    public function __construct(string $name)
     {
-        $this->position = $position;
         $this->name = $name;
 
         parent::__construct();
@@ -40,25 +29,25 @@ class MenuItemConfiguration extends Configuration
     {
         // user can defined an admin name
         $resolver
-            ->setDefault('admin', null)
-            ->setDefault('action', null)
-            ->setDefault('route', null)
-            ->setDefault('url', null)
-            ->setDefault('parameters', [])
-            ->setDefault('text', '')
-            ->setDefault('attr', [])
-            ->setDefault('link_attr', [
-                'class' => 'nav-link',
+            ->setDefaults([
+                'admin' => null,
+                'action' => null,
+                'route' => null,
+                'route_parameters' => [],
+                'uri' => null,
+                'attributes' => [],
+                'linkAttributes' => [
+                    'class' => 'list-group-item list-group-item-action',
+                ],
+                'text' => null,
+                'children' => [],
             ])
-            ->setDefault('items', [])
-            ->setDefault('icon', null)
-            ->setDefault('link_css_class', 'nav-link')
             ->setNormalizer('admin', function (Options $options, $adminName) {
                 // user has to defined either an admin name and an action name, or a route name with optional
                 // parameters, or an url
                 if (null === $adminName
                     && null === $options->offsetGet('route')
-                    && null === $options->offsetGet('url')
+                    && null === $options->offsetGet('uri')
                 ) {
                     throw new InvalidOptionsException('You should either defined an admin name, or route name or an uri');
                 }
@@ -79,34 +68,7 @@ class MenuItemConfiguration extends Configuration
 
                 return $action;
             })
-            ->setAllowedTypes('parameters', 'array')
-            ->setNormalizer('attr', function (Options $options, $attr) {
-                if (!is_array($attr)) {
-                    $attr = [];
-                }
-
-                if (empty($attr['id'])) {
-                    $attr['id'] = uniqid('admin-menu-');
-                }
-
-                if ('horizontal' === $this->position && !key_exists('class', $attr)) {
-                    $attr['class'] = 'nav-item';
-                }
-
-                return $attr;
-            })
-            ->setNormalizer('link_attr', function (Options $options, $value) {
-                if (!is_array($value)) {
-                    $value = [];
-                }
-
-                if (!key_exists('class', $value)) {
-                    $value['class'] = 'nav-link';
-                }
-
-                return $value;
-            })
-            ->setNormalizer('items', function (Options $options, $items) {
+            ->setNormalizer('children', function (Options $options, $items) {
                 if (!is_array($items)) {
                     $items = [];
                 }
@@ -114,7 +76,7 @@ class MenuItemConfiguration extends Configuration
                 $resolvedItems = [];
 
                 foreach ($items as $name => $item) {
-                    $itemConfiguration = new MenuItemConfiguration($name, $this->position);
+                    $itemConfiguration = new MenuItemConfiguration($name);
                     $itemConfiguration->configureOptions($resolver);
                     $itemConfiguration->setParameters($resolver->resolve($item));
 
@@ -147,13 +109,20 @@ class MenuItemConfiguration extends Configuration
         ;
     }
 
+    public function all()
+    {
+        $values = parent::all();
+
+        /** @var MenuItemConfiguration $value */
+        foreach ($values['children'] as $name => $value) {
+            $values['children'][$name] = $value->all();
+        }
+
+        return $values;
+    }
+
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function getPosition(): ?string
-    {
-        return $this->position;
     }
 }

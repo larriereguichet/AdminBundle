@@ -1,0 +1,8 @@
+services:
+
+    LAG\AdminBundle\Routing\Resolver\RoutingResolverInterface: '@LAG\AdminBundle\Routing\Resolver\RoutingResolver'
+
+    LAG\AdminBundle\Routing\Resolver\RoutingResolver:
+        arguments:
+            $storage: '@LAG\AdminBundle\Configuration\ApplicationConfigurationStorage'
+
