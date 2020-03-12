@@ -20,9 +20,25 @@
         width: 100%;
       }
     }
+
     li:hover {
       background-color: lightgrey;
       opacity: 0.9;
+    }
+  }
+}
+
+nav.sidebar {
+  ul li {
+    list-style-type: none;
+    margin-top: -1px;
+
+    &.current a {
+      z-index: 2;
+      color: #fff;
+      background-color: #007bff;
+      border-color: #007bff;
+
     }
   }
 }

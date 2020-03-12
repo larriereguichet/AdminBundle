@@ -13,9 +13,6 @@ services:
     LAG\AdminBundle\Factory\ConfigurationFactory:
         class: LAG\AdminBundle\Factory\ConfigurationFactory
 
-    LAG\AdminBundle\Factory\MenuFactory:
-        class: LAG\AdminBundle\Factory\MenuFactory
-
     LAG\AdminBundle\Factory\ViewFactory:
         class: LAG\AdminBundle\Factory\ViewFactory
 

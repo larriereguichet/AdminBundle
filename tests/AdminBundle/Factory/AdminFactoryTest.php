@@ -10,7 +10,7 @@ use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Factory\AdminFactory;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
 use LAG\AdminBundle\Resource\AdminResource;
-use LAG\AdminBundle\Resource\ResourceCollection;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Fixtures\FakeAdmin;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -27,7 +27,7 @@ class AdminFactoryTest extends AdminTestBase
             ->willReturn('MyLittleTaunTaun')
         ;
 
-        $resourceCollection = $this->createMock(ResourceCollection::class);
+        $resourceCollection = $this->createMock(ResourceRegistryInterface::class);
         $resourceCollection
             ->expects($this->once())
             ->method('has')
@@ -87,7 +87,7 @@ class AdminFactoryTest extends AdminTestBase
 
     public function testCreateFromRequestWithoutRouteParams()
     {
-        $resourceCollection = $this->createMock(ResourceCollection::class);
+        $resourceCollection = $this->createMock(ResourceRegistryInterface::class);
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $configurationFactory = $this->createMock(ConfigurationFactory::class);
         $applicationConfigurationStorage = $this->createMock(ApplicationConfigurationStorage::class);
@@ -107,7 +107,7 @@ class AdminFactoryTest extends AdminTestBase
 
     public function testCreateFromRequestWithoutAdminParams()
     {
-        $resourceCollection = $this->createMock(ResourceCollection::class);
+        $resourceCollection = $this->createMock(ResourceRegistryInterface::class);
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $configurationFactory = $this->createMock(ConfigurationFactory::class);
         $applicationConfigurationStorage = $this->createMock(ApplicationConfigurationStorage::class);
@@ -129,7 +129,7 @@ class AdminFactoryTest extends AdminTestBase
 
     public function testCreateFromRequestWithoutExistingAdmin()
     {
-        $resourceCollection = $this->createMock(ResourceCollection::class);
+        $resourceCollection = $this->createMock(ResourceRegistryInterface::class);
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $configurationFactory = $this->createMock(ConfigurationFactory::class);
         $applicationConfigurationStorage = $this->createMock(ApplicationConfigurationStorage::class);
@@ -161,7 +161,7 @@ class AdminFactoryTest extends AdminTestBase
             ->willReturn('MyLittleTaunTaun')
         ;
 
-        $resourceCollection = $this->createMock(ResourceCollection::class);
+        $resourceCollection = $this->createMock(ResourceRegistryInterface::class);
         $resourceCollection
             ->expects($this->once())
             ->method('has')

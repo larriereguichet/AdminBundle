@@ -27,9 +27,12 @@
         </div>
         <div class="sf-toolbar-info-piece">
             <b>Translation</b>
-            <span>
-                {{ collector.data.application.translation ?: 'false' }}<br>
-            </span>
+            {% for key, value in collector.data.application.translation %}
+                <span class="sf-toolbar-status">
+                    {{ key }}: {{ value }}
+                </span>
+                <br/>
+            {% endfor %}
         </div>
         <div class="sf-toolbar-info-piece">
             <b>Admin</b>
@@ -101,9 +104,11 @@
         .tab.active {
             display: block;
         }
+
         table tbody tr td:first-child {
             font-weight: bold;
         }
+
         .toggle-icon {
             background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgBAMAAADpp+X/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QweDgwx4LcKwAAAABVQTFRFAAAA////////////////ZmZm////bvjBwAAAAAV0Uk5TABZwsuCVEUjgAAAAAWJLR0QF+G/pxwAAAE1JREFUGNNjSHMSYGBgUEljSGYAAzMGBwiDhUEBwmBiEIAwGBmwgTQgQGWgA7h2uIFwK+CWwp1BpHvYEqDuATEYkBlY3IOmBq6dCPcAAIT5Eg2IksjQAAAAAElFTkSuQmCC") no-repeat top left #5eb5e0;
             cursor: pointer;
@@ -111,6 +116,7 @@
             height: 16px;
             width: 16px;
         }
+
         .closed .toggle-icon, .closed.toggle-icon {
             background-position: bottom left;
         }
@@ -179,17 +185,17 @@
                 {% endfor %}
             {% endfor %}
         </div>
+
         {% include '@LAGAdmin/Debug/_applications.html.twig' %}
+
         <div id="tab-menus"
              class="tab">
             <h1>Menus</h1>
 
-            {% for name, menu in collector.data.menus %}
-                <h2>
-                    Menu "{{ name }}"
-                    <span class="toggle-icon"></span>
-                </h2>
-
+            {% for menuName, menu in collector.data.menus %}
+                <h3>
+                    {{ menuName }}
+                </h3>
                 <table>
                     <thead>
                     <tr>
@@ -199,38 +205,42 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>Items :</td>
+                        <td>Attributes</td>
+                        <td>{{ dump(menu.attributes | default([])) }}</td>
                     </tr>
-                    {% for name, item in menu.items %}
-                        {% set configuration = item.configuration.getParameters() %}
-                        <tr>
-                            <td>Name</td>
-                            <td>{{ name }}</td>
-                        </tr>
-                        <tr>
-                            <td>Route/Url</td>
-                            <td>{{ configuration.route | default(configuration.url | default('null')) }}</td>
-                        </tr>
-                        <tr>
-                            <td>Admin/Action</td>
-                            <td>
-                                {{ configuration.admin | default('null')
-                                    ~ '/' ~
-                                    configuration.action | default('null') }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Text</td>
-                            <td>{{ configuration.text }}</td>
-                        </tr>
-                        <tr>
-                            <td>--------------</td>
-                        </tr>
-                    {% endfor %}
+                    <tr>
+                        <td>Children :</td>
+                        <td>
+                            <table>
+                                {% for childName, child in menu.children | default([]) %}
+
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>{{ childName }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Uri</td>
+                                        <td>{{ child.uri }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Attributes</td>
+                                        <td>{{ dump(child.attributes | default([])) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">---</td>
+                                    </tr>
+
+                                {% endfor %}
+                            </table>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
-
             {% endfor %}
+
+
+            <h4>Raw configuration : </h4>
+            {{ dump(collector.data.menus) }}
         </div>
     </div>
 

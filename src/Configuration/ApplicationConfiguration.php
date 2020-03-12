@@ -69,6 +69,7 @@ class ApplicationConfiguration extends Configuration
                 'action_class' => Action::class,
                 'permissions' => 'ROLE_ADMIN',
                 'page_parameter' => 'page',
+                'resources_path' => __DIR__.'/../../../../config/admin/resources',
             ])
             ->setAllowedTypes('enable_extra_configuration', 'boolean')
             ->setAllowedTypes('enable_security', 'boolean')

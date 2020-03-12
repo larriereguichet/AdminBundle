@@ -59,8 +59,8 @@ class AssetsExtension extends AbstractTypeExtension
     /**
      * Register a script for a location.
      *
-     * @param string $location
-     * @param string $script
+     * @param string|array $location
+     * @param string       $script
      */
     private function registerScript($location, $script)
     {

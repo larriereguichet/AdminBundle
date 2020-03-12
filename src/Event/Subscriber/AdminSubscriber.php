@@ -9,7 +9,6 @@ use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\AdminEvent;
-use LAG\AdminBundle\Event\Events\BuildMenuEvent;
 use LAG\AdminBundle\Event\Events\EntityEvent;
 use LAG\AdminBundle\Event\Events\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
@@ -135,8 +134,6 @@ class AdminSubscriber implements EventSubscriberInterface
     {
         $admin = $event->getAdmin();
         $action = $admin->getAction();
-        $menuEvent = new BuildMenuEvent($admin->getAction()->getConfiguration()->getParameter('menus'));
-        $this->eventDispatcher->dispatch(Events::MENU, $menuEvent);
         $formName = '';
 
         // The form name is different according to the current action

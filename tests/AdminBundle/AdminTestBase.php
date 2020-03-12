@@ -235,8 +235,6 @@ class AdminTestBase extends TestCase
 
     protected function createContainerDefinition(string $class): Definition
     {
-        $definition = new Definition($class);
-
-        return $definition;
+        return new Definition($class);
     }
 }

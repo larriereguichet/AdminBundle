@@ -1,8 +1,5 @@
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: false
-
-    LAG\AdminBundle\Resource\ResourceCollection:
-        class: LAG\AdminBundle\Resource\ResourceCollection
+    LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface: '@LAG\AdminBundle\Resource\Registry\ResourceRegistry'
+    LAG\AdminBundle\Resource\Registry\ResourceRegistry:
+        arguments:
+            $resourcesPath: '%lag.admin.resources_path%'

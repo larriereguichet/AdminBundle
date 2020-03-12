@@ -7,16 +7,16 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\LAGAdminBundle;
-use LAG\AdminBundle\Resource\ResourceCollection;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AdminFactory
 {
     /**
-     * @var ResourceCollection
+     * @var ResourceRegistryInterface
      */
-    private $resourceCollection;
+    private $registry;
 
     /**
      * @var EventDispatcherInterface
@@ -37,12 +37,12 @@ class AdminFactory
      * AdminFactory constructor.
      */
     public function __construct(
-        ResourceCollection $resourceCollection,
+        ResourceRegistryInterface $registry,
         EventDispatcherInterface $eventDispatcher,
         ConfigurationFactory $configurationFactory,
         ApplicationConfigurationStorage $applicationConfigurationStorage
     ) {
-        $this->resourceCollection = $resourceCollection;
+        $this->registry = $registry;
         $this->eventDispatcher = $eventDispatcher;
         $this->configurationFactory = $configurationFactory;
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
@@ -58,7 +58,7 @@ class AdminFactory
         if (!$this->supports($request)) {
             throw new Exception('No admin resource was found in the request');
         }
-        $resource = $this->resourceCollection->get($request->get(LAGAdminBundle::REQUEST_PARAMETER_ADMIN));
+        $resource = $this->registry->get($request->get(LAGAdminBundle::REQUEST_PARAMETER_ADMIN));
         $configuration = $this
             ->configurationFactory
             ->createAdminConfiguration(
@@ -97,7 +97,7 @@ class AdminFactory
             return false;
         }
 
-        if (!$this->resourceCollection->has($routeParameters[LAGAdminBundle::REQUEST_PARAMETER_ADMIN])) {
+        if (!$this->registry->has($routeParameters[LAGAdminBundle::REQUEST_PARAMETER_ADMIN])) {
             return false;
         }
 

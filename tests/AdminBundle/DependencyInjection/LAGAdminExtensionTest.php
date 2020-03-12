@@ -23,6 +23,8 @@ class LAGAdminExtensionTest extends AdminTestBase
                     'lag.admin.application_configuration',
                     'lag.admins',
                     'lag.menus',
+                    'lag.enable_menus',
+                    'lag.admin.resources_path',
                 ]);
 
                 if ('lag.admin.enable_extra_configuration' === $parameter) {
@@ -35,7 +37,12 @@ class LAGAdminExtensionTest extends AdminTestBase
 
         $extension = new LAGAdminExtension();
         $extension->load([
-            'enable_extra_configuration' => true,
+            'application' => [
+                //'enable_extra_configuration' => true,
+                'application' => [
+                    'enable_menus' => true,
+                ],
+            ],
         ], $builder);
     }
 
@@ -48,7 +55,7 @@ class LAGAdminExtensionTest extends AdminTestBase
 
         $extension = new LAGAdminExtension();
         $extension->load([], $builder);
-        // Every thing went fine
+        // Everything went fine
         $this->assertTrue(true);
     }
 }

@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Configuration;
 
 use JK\Configuration\Configuration;
+use LAG\AdminBundle\Exception\Exception;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,116 +15,50 @@ class MenuConfiguration extends Configuration
     private $menuName;
 
     /**
-     * @var string
-     */
-    private $applicationName;
-
-    /**
      * MenuConfiguration constructor.
      */
-    public function __construct(string $menuName, string $applicationName)
+    public function __construct(string $menuName)
     {
         parent::__construct();
 
         $this->menuName = $menuName;
-        $this->applicationName = $applicationName;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setDefaults([
-                'items' => [],
-                'attr' => [],
-                'position' => null,
-                'css_class' => 'list-group nav flex-column navbar-nav menu-'.$this->menuName,
-                'item_css_class' => '',
-                'link_css_class' => 'nav-link',
-                'template' => '',
-                'brand' => null,
+                'children' => [],
+                'attributes' => [
+                    'class' => 'list-group cms-menu-'.$this->menuName,
+                ],
             ])
-            ->setAllowedValues('position', [
-                'horizontal',
-                'vertical',
-                null,
-            ])
-            ->setNormalizer('position', function (Options $options, $value) {
-                if ('top' === $this->menuName && null === $value) {
-                    $value = 'horizontal';
+            ->setNormalizer('children', function (Options $options, $value) {
+                if (!is_array($value)) {
+                    throw new Exception('The menu items should an array for menu "'.$this->menuName.'"');
                 }
 
-                if ('left' === $this->menuName && null === $value) {
-                    $value = 'vertical';
-                }
-
-                return $value;
-            })
-            ->setNormalizer('template', function (Options $options, $value) {
-                // If a template is defined, use it
-                if ($value) {
-                    return $value;
-                }
-
-                // Define bootstrap navbar component template
-                if ('horizontal' === $options->offsetGet('position')) {
-                    $value = '@LAGAdmin/Menu/menu.horizontal.html.twig';
-                }
-
-                // Define bootstrap nav component template
-                if ('vertical' === $options->offsetGet('position')) {
-                    $value = '@LAGAdmin/Menu/menu.vertical.html.twig';
-                }
-
-                return $value;
-            })
-            ->setNormalizer('attr', function (Options $options, $value) {
-                $position = $options->offsetGet('position');
-
-                if (!key_exists('class', $value)) {
-                    $value['class'] = '';
-                }
-
-                if ('horizontal' === $position) {
-                    $value['class'] .= ' navbar navbar-expand-lg navbar-dark bg-dark fixed-top';
-                }
-
-                if ('vertical' === $position) {
-                    $value['class'] .= ' list-group';
-                }
-                $value['class'] = trim($value['class']);
-
-                // Do not return an array with an empty string as css class
-                if ('' === $value['class']) {
-                    unset($value['class']);
-                }
-
-                return $value;
-            })
-            ->setNormalizer('item_css_class', function (Options $options, $value) {
-                $position = $options->offsetGet('position');
-
-                if (!$value) {
-                    $value = '';
-                }
-
-                if ('horizontal' === $position) {
-                    $value .= ' navbar-nav mr-auto';
-                }
-
-                if ('vertical' === $position) {
-                    $value .= ' list-group-item list-group-item-action';
-                }
-
-                return trim($value);
-            })
-            ->setNormalizer('brand', function (Options $options, $value) {
-                if (null === $value && 'horizontal' === $options->offsetGet('position')) {
-                    $value = $this->applicationName;
+                foreach ($value as $item) {
+                    if (!$item instanceof MenuItemConfiguration) {
+                        throw new Exception(sprintf('The menu items should an array of "%s" for menu "%s"', MenuItemConfiguration::class, $this->menuName));
+                    }
                 }
 
                 return $value;
             })
         ;
+    }
+
+    public function all()
+    {
+        $values = parent::all();
+
+        /** @var MenuItemConfiguration $value */
+        foreach ($values['children'] as $name => $value) {
+            $values['children'][$name] = $value->all();
+        }
+
+        return $values;
     }
 
     public function getMenuName(): string

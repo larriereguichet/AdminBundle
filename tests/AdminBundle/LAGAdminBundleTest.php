@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Tests;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use LAG\AdminBundle\LAGAdminBundle;
 use Nyholm\BundleTest\BaseBundleTestCase;
 use Nyholm\BundleTest\CompilerPass\PublicServicePass;
@@ -38,6 +39,7 @@ class LAGAdminBundleTest extends BaseBundleTestCase
         $kernel->addBundle(SecurityBundle::class);
         $kernel->addBundle(DoctrineBundle::class);
         $kernel->addBundle(TwigBundle::class);
+        $kernel->addBundle(KnpMenuBundle::class);
 
         // Boot the kernel.
         $this->bootKernel();

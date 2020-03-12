@@ -11,7 +11,3 @@ services:
     LAG\AdminBundle\Bridge\Twig\Extension\FieldExtension:
         tags:
             - {name: twig.extension}
-
-    LAG\AdminBundle\Bridge\Twig\Extension\MenuExtension:
-        tags:
-            - {name: twig.extension}
