@@ -5,10 +5,9 @@
 
     {% block filterLink %}
         <a href="#filters-container"
-           data-toggle="collapse"
-           role="button"
-           aria-expanded="false"
-           aria-controls="collapseExample">
+           class="link-toggle"
+           data-alternate-text="{{ 'lag.admin.hide_filter' | trans }}"
+           data-alternate-icon="fa fa-angle-up">
             {{ 'lag.admin.show_filter' | trans }}
             <i class="fa fa-angle-down"></i>
         </a>

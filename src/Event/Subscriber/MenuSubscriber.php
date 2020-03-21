@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Event\Subscriber;
 
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Menu\MenuConfigurationEvent;
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -86,6 +87,15 @@ class MenuSubscriber implements EventSubscriberInterface
                 $itemConfiguration['action'] = 'list';
             }
 
+            // At this point, an pair admin/action or an url or an admin should be defined
+            if (!key_exists('admin', $itemConfiguration)) {
+                throw new Exception(sprintf(
+                    'The configuration of the children "%s" in the menu "%s" is invalid: no admin/action nor url configured, and no admin with the name "%s" exists',
+                    $itemName,
+                    $event->getMenuName(),
+                    $itemName
+                ));
+            }
             $menuConfiguration['children'][$itemName] = $itemConfiguration;
         }
 
