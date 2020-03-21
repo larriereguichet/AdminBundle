@@ -14,14 +14,14 @@
               content="{{ admin_config('description') }}"/>
     {% endblock %}
 
-    {% block stylesheets %}
+    {% block admin_stylesheets %}
         {% if admin_config('bootstrap') %}
             <link rel="stylesheet"
                   href="{{ asset('/bundles/lagadmin/assets/admin.css') }}">
         {% endif %}
     {% endblock %}
 
-    {% block custom_stylesheets %}{% endblock %}
+    {% block stylesheets %}{% endblock %}
 
     {% block head_javascripts %}
         {{ admin_dump_scripts('head') | raw }}

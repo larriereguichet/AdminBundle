@@ -59,10 +59,12 @@ class ScriptRegistry implements ScriptRegistryInterface
     {
         $content = '';
 
-        foreach ($this->scripts as $location => $scripts) {
-            foreach ($scripts as $script) {
-                $content .= $this->environment->render($script['template'], $script['context']);
-            }
+        if (!$this->hasLocation($location)) {
+            return '';
+        }
+
+        foreach ($this->scripts[$location] as $script) {
+            $content .= $this->environment->render($script['template'], $script['context']);
         }
 
         return $content;

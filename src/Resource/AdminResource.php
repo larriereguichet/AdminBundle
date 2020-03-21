@@ -2,6 +2,8 @@
 
 namespace LAG\AdminBundle\Resource;
 
+use LAG\AdminBundle\Exception\Exception;
+
 class AdminResource
 {
     /**
@@ -26,6 +28,10 @@ class AdminResource
     {
         $this->name = $name;
         $this->configuration = $configuration;
+
+        if (!key_exists('entity', $configuration)) {
+            throw new Exception(sprintf('The configuration of the resource %s is not well formed', $name));
+        }
         $this->entityClass = $configuration['entity'];
     }
 
