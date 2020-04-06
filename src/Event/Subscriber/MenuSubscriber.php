@@ -89,12 +89,7 @@ class MenuSubscriber implements EventSubscriberInterface
 
             // At this point, an pair admin/action or an url or an admin should be defined
             if (!key_exists('admin', $itemConfiguration)) {
-                throw new Exception(sprintf(
-                    'The configuration of the children "%s" in the menu "%s" is invalid: no admin/action nor url configured, and no admin with the name "%s" exists',
-                    $itemName,
-                    $event->getMenuName(),
-                    $itemName
-                ));
+                throw new Exception(sprintf('The configuration of the children "%s" in the menu "%s" is invalid: no admin/action nor url configured, and no admin with the name "%s" exists', $itemName, $event->getMenuName(), $itemName));
             }
             $menuConfiguration['children'][$itemName] = $itemConfiguration;
         }
