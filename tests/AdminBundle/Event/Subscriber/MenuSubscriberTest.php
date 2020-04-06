@@ -53,8 +53,7 @@ class MenuSubscriberTest extends AdminTestBase
         list($subscriber, $registry) = $this->createSubscriber(true, [
             'panda' => [
                 'children' => [
-                    'first' => null,
-                    'second' => [
+                    'first' => [
                         'url' => 'google.fr',
                     ],
                 ],
