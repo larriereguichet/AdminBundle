@@ -36,7 +36,7 @@ class ResourceLoader
         $data = [];
 
         foreach ($finder as $fileInfo) {
-            $yaml = Yaml::parse(file_get_contents($fileInfo->getRealPath()));
+            $yaml = Yaml::parse(file_get_contents($fileInfo->getRealPath()), Yaml::PARSE_CUSTOM_TAGS);
 
             if (!is_array($yaml)) {
                 continue;
