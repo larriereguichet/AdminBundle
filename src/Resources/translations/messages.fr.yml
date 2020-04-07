@@ -33,6 +33,7 @@ lag:
         filter: Filtrer
         filter_reset: Réinitialiser
         show_filter: Montrer les filtres
+        hide_filter: Cacher les filtres
 
         search_by: 'Recherche par %field%'
         no_record: Aucun élément n'a été trouvé

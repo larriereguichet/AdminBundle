@@ -33,6 +33,7 @@ lag:
         filter: Filters
         filter_reset:
         show_filter: Show filters
+        hide_filter: Hide filters
 
         search_by:
         no_record: No record yet
