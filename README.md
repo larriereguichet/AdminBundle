@@ -79,7 +79,7 @@ Yan can visit `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of 
     * b. [Admins](docs/how-to-use/admin.md)
     * c. [Actions](docs/how-to-use/action.md)
     * d. [Fields](docs/how-to-use/field.md)
-    * e. Events
+    * e. [Events](docs/how-to-use/events.md)
     * f. Data Providers
     * g. Filters
     * h. Views

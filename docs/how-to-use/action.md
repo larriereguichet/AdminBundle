@@ -1,10 +1,10 @@
 # Actions 
 
 Each `Admin` comes with CRUD `Actions` built-in:
-    - Create: The `create` action display a form to create a new entity.
-    - Read: The `list` action appears as a menu entry by default. This action is responsible for displaying the list of entities of your Admin.
-    - Update: The `edit` action display the same form as create action, but for an existing entity.
-    - Delete: The `delete` action display a form to remove an existing entity.
+* Create: The `create` action display a form to create a new entity.
+* Read: The `list` action appears as a menu entry by default. This action is responsible for displaying the list of entities of your Admin.
+* Update: The `edit` action display the same form as create action, but for an existing entity.
+* Delete: The `delete` action display a form to remove an existing entity.
 
 Each action can be disabled. You can also new custom `Actions`.
 
@@ -68,7 +68,7 @@ article:
                 load_strategy: none
 ```
 
-> All parameters are optional; here is the default configuration 
+> All parameters are optional; this is the default configuration 
 
 ### Use a custom form
 By default, the form uses all the fields of the entity, and the primary key is mandatory. But you may use a custom 
@@ -264,13 +264,13 @@ Actions are created when the `AdminEvents::HANDLE_REQUEST` event is dispatched, 
 found admin. Each action defines fields and parameters to build a view. The action and admin name are defined in the
 routing parameters (`_route` and `_admin` parameters).
 
-The actions are created using `\LAG\AdminBundle\Factory\ActionFactory` factory class.
+The actions are created using `LAG\AdminBundle\Factory\ActionFactory` factory class.
 
 When creating a form, the `Events::ADMIN_CREATE_FORM` event is dispatched, allowing you to override the form. The form
-is created using the `\LAG\AdminBundle\Factory\FormFactory` factory class.
+is created using the `LAG\AdminBundle\Factory\FormFactory` factory class.
 
 When creating a view, the `Events::ADMIN_VIEW` event is dispatched, allowing you to override the view. The form
-is created using the `\LAG\AdminBundle\Factory\ViewFactory` factory class.
+is created using the `LAG\AdminBundle\Factory\ViewFactory` factory class.
 
 You can learn more about events in the 
 [Events](events.md) documentation.

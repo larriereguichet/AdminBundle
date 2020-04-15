@@ -1,7 +1,6 @@
 
 ```yaml
-// config/packages/lag_admin.yaml
-
+# config/packages/lag_admin.yaml
 lag_admin:
     admins:
         # The admin name can be anything, but it should be unique. All the following configuration values are only 
@@ -51,5 +50,4 @@ lag_admin:
                 edit_template: ~
                 create_template: ~
                 delete_template:  ~
-
 ```
