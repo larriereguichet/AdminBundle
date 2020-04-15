@@ -97,3 +97,4 @@ article:
 | target | '_self' | The target of the link |
 | route | '' | If the value is filled, the link url will be generated using this route |
 | parameters | [] | If a route is used, some parameters can be passed. You can pass dynamic parameters matching the entity value (see example) |
+
