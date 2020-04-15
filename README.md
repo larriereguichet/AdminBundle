@@ -30,11 +30,11 @@ specific need where he wants, and allow to implements any specific needs without
 Open a command console, execute the
 following command in your project directory to install the latest stable version of the bundle:
 
-```console
-$ composer require lag/adminbundle
+```bash
+composer require lag/adminbundle
 ```
 
-> If you does not use flex, read the extra steps to install the bundle [here](https://github.com/larriereguichet/AdminBundle/tree/master/docs/install/install-without-flex.md) 
+> If you do not use flex, read the extra steps to install the bundle [here](https://github.com/larriereguichet/AdminBundle/tree/master/docs/install/install-without-flex.md) 
 
 
 ### Step 2: Configure the routing
@@ -48,41 +48,51 @@ Import the routing configuration to have the admin generated routes :
 ```
 
 ### Step 4 : Configure an entity
-```yml
-    # config/packages/lag_admin.yaml
 
-    lag_admin:
-        application:
-            title: My Little TaunTaun application
-        admins:
-            planet:
-                entity: UniverseBundle\Entity\Planet
-                form: UniverseBundle\Form\Type\PlanetType            
+```yaml
+# config/packages/lag_admin.yaml
+lag_admin:
+    application:
+        title: My Little TaunTaun application       
 ```
 
-And now you could go to `http://127.0.0.1:8000/admin/planet/list` to see a list of your entities. 
+```yaml
+# config/admin/resources/article.yaml
+article:
+    entity: App\Entity\Article 
+    actions:
+        create: ~
+        edit: ~
+        list: ~
+        delete: ~
+```
+
+> As new routes are dynamically created, the cache clearing is required (`symfony cache:clear`)
+
+Now you could go to `http://127.0.0.1:8000/admin/article/list` to see a list of your entities. 
 
 Yan can go to `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of your admin interface
 
 ## Documentation
-1. [How to use](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how-to-use.md)    
-    1. [How To Use](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how-to-use.md#how-to-use)
-    2. [Admins](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how-to-use.md#admin)
-    3. [Actions](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/1.how-to-use.md#actions)
-    4. Fields
-    4. Events
-    5. Data Providers
-    6. Filters
-    7. Views
+1. [How to use](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/how-to-use/basics.md)    
+    a. [Basics](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/how-to-use/basics.md)
+    b. [Admins](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/how-to-use/admin.md)
+    c. [Actions](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/how-to-use/action.md)
+    d. Fields
+    e. Events
+    f. Data Providers
+    g. Filters
+    h. Views
+    i. Security
 2. Customization
-  a. Custom actions
-  b. Custom rendering
-  c. Custom data
+    a. Custom actions
+    b. Custom rendering
+    c. Custom data
 3. Reference
   a. Application configuration
   b. Admin configuration
 4. FAQ
-5. [Configuration reference](https://github.com/larriereguichet/AdminBundle/tree/master/src/Resources/docs/5.configuration-reference.md)
+5. [Configuration reference](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/5.configuration-reference.md)
 
 
 ## Road map

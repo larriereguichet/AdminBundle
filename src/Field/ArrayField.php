@@ -2,6 +2,8 @@
 
 namespace LAG\AdminBundle\Field;
 
+use Doctrine\Common\Collections\Collection;
+use Iterator;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,6 +28,14 @@ class ArrayField extends AbstractField
     {
         if (null === $value) {
             return '';
+        }
+
+        if ($value instanceof Collection) {
+            $value = $value->toArray();
+        }
+
+        if ($value instanceof Iterator) {
+            $value = iterator_to_array($value);
         }
 
         return implode($this->options['glue'], $value);
