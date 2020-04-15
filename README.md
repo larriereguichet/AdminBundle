@@ -74,23 +74,23 @@ Now you could visit `http://127.0.0.1:8000/admin/article/list` to see a list of 
 Yan can visit `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of your admin interface
 
 ## Documentation
-1. [How to use](docs/how-to-use/basics.md)    
-    a. [Basics](docs/how-to-use/basics.md)
-    b. [Admins](docs/how-to-use/admin.md)
-    c. [Actions](docs/how-to-use/action.md)
-    d. [Fields](docs/how-to-use/field.md)
-    e. Events
-    f. Data Providers
-    g. Filters
-    h. Views
-    i. Security
+1. [How to use](docs/how-to-use/basics.md)   
+    * a. [Basics](docs/how-to-use/basics.md)
+    * b. [Admins](docs/how-to-use/admin.md)
+    * c. [Actions](docs/how-to-use/action.md)
+    * d. [Fields](docs/how-to-use/field.md)
+    * e. Events
+    * f. Data Providers
+    * g. Filters
+    * h. Views
+    * i. Security
 2. Customization
-    a. Custom actions
-    b. Custom rendering
-    c. Custom data
+    * a. Custom actions
+    * b. Custom rendering
+    * c. Custom data
 3. Reference
-  a. Application configuration
-  b. Admin configuration
+    * a. Application configuration
+    * b. Admin configuration
 4. FAQ
 5. [Configuration reference](docs/reference/index.md)
 
