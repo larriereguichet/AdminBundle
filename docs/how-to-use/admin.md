@@ -35,7 +35,7 @@ article:
 
 This will create CRUD views for the entity `App\Entity\Article` with the default configuration. This default 
 configuration is useful for most needs. However, sometimes more customization is required. See the 
-[Customization](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/customization/index.md) 
+[Customization](../customization/index.md) 
 documentation to learn more about it. 
 
 While you can add several Admin in one file, it is recommended to use one file per Admin, for readability reasons.
@@ -58,10 +58,10 @@ Admins are created by the `LAG\AdminBundle\Factory\AdminFactory` when the contro
 
 ## Full configuration
 The full configuration reference for an Admin is available 
-[here](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/reference/admin-reference.md).
+[here](../reference/admin-reference.md).
 
 Now it's time to configure each actions.
 
-Previous: [Basics](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/how-to-use/basics.md)
+Previous: [Basics](basics.md)
 
-Next: [Actions](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/how-to-use/action.md)
+Next: [Actions](action.md)

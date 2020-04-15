@@ -8,14 +8,14 @@
 [![Total Downloads](https://poser.pugx.org/lag/adminbundle/downloads)](https://packagist.org/packages/lag/adminbundle)
 
 # AdminBundle
-The AdminBundle let you creates a **flexible** and **robust backoffice** on any Symfony application, with simple `yaml` configuration.
+The AdminBundle let you create a **flexible** and **robust backoffice** on any Symfony application, with simple `yaml` configuration.
 
 It eases the handling of CRUD views by configuring `Admin` objects on top of your Doctrine entities. Each `Admin` has one or many `Action`.
 By default, the four actions of a classical CRUD are available (`create`, `edit`, `delete` and `list`) and the creation of custom actions is easy.
 
 If you require more flexibility, you can easily override any part of the process (data providers, controllers, views...).
 The purpose of the bundle is to provide an Admin interface with default configuration, and allows the user to add his
-specific need where he wants, and allow to implements any specific needs without any hassles.
+specific need where he wants, and allow to implement any specific needs without any hassles.
 
 ## Features
 * Dynamic CRUD for your entities (no code generation)
@@ -34,7 +34,7 @@ following command in your project directory to install the latest stable version
 composer require lag/adminbundle
 ```
 
-> If you do not use flex, read the extra steps to install the bundle [here](https://github.com/larriereguichet/AdminBundle/tree/master/docs/install/install-without-flex.md) 
+> If you do not use flex, read the [extra steps to install the bundle](docs/install/install-without-flex.md) 
 
 
 ### Step 2: Configure the routing
@@ -69,16 +69,16 @@ article:
 
 > As new routes are dynamically created, the cache clearing is required (`symfony cache:clear`)
 
-Now you could go to `http://127.0.0.1:8000/admin/article/list` to see a list of your entities. 
+Now you could visit `http://127.0.0.1:8000/admin/article/list` to see a list of your entities. 
 
-Yan can go to `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of your admin interface
+Yan can visit `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of your admin interface
 
 ## Documentation
-1. [How to use](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/how-to-use/basics.md)    
-    a. [Basics](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/how-to-use/basics.md)
-    b. [Admins](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/how-to-use/admin.md)
-    c. [Actions](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/how-to-use/action.md)
-    d. Fields
+1. [How to use](docs/how-to-use/basics.md)    
+    a. [Basics](docs/how-to-use/basics.md)
+    b. [Admins](docs/how-to-use/admin.md)
+    c. [Actions](docs/how-to-use/action.md)
+    d. [Fields](docs/how-to-use/field.md)
     e. Events
     f. Data Providers
     g. Filters
@@ -92,7 +92,7 @@ Yan can go to `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of 
   a. Application configuration
   b. Admin configuration
 4. FAQ
-5. [Configuration reference](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/5.configuration-reference.md)
+5. [Configuration reference](docs/reference/index.md)
 
 
 ## Road map

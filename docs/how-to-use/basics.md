@@ -25,4 +25,4 @@ class Article {
 
 To have a CRUD to manage our articles, we have to configure an admin.
 
-Next: [Admin](https://github.com/larriereguichet/AdminBundle/tree/master/etc/docs/how-to-use/admin.md)
+Next: [Admin](admin.md)
