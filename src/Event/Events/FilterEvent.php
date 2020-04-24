@@ -22,12 +22,25 @@ class FilterEvent extends AbstractEvent
     /**
      * @throws Exception
      */
-    public function addForm(FormInterface $form, string $identifier)
+    public function addForm(FormInterface $form, string $identifier): void
     {
-        if (array_key_exists($identifier, $this->forms)) {
-            throw new Exception('A form with the identifier "'.$identifier.'" was already added');
+        if ($this->hasForm($identifier)) {
+            throw new Exception('A form with the identifier "'.$identifier.'" was already added. Use removeForm() before adding the new form');
         }
         $this->forms[$identifier] = $form;
+    }
+
+    public function removeForm(string $identifier): void
+    {
+        if (!$this->hasForm($identifier)) {
+            throw new  Exception('The form "'.$identifier.'" does not exists');
+        }
+        unset($this->forms[$identifier]);
+    }
+
+    public function hasForm(string $identifier): bool
+    {
+        return array_key_exists($identifier, $this->forms);
     }
 
     /**
@@ -44,6 +57,14 @@ class FilterEvent extends AbstractEvent
     public function addFilter(FilterInterface $filter): void
     {
         $this->filters[] = $filter;
+    }
+
+    /**
+     * Remove all added filters.
+     */
+    public function clearFilters(): void
+    {
+        $this->filters = [];
     }
 
     /**
