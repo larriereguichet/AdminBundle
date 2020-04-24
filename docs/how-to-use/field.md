@@ -98,3 +98,8 @@ article:
 | route | '' | If the value is filled, the link url will be generated using this route |
 | parameters | [] | If a route is used, some parameters can be passed. You can pass dynamic parameters matching the entity value (see example) |
 
+Now it is time to see how we can use events to customize the `Admin` data
+
+Previous: [Admin](action.md)
+
+Next: [Field](events.md)
