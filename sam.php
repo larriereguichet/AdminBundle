@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+require 'vendor/autoload.php';
+
 use JK\Sam\Event\NotificationEvent;
 use JK\Sam\File\Locator;
 use JK\Sam\File\Normalizer;
@@ -9,7 +11,6 @@ use JK\Sam\Task\TaskBuilder;
 use JK\Sam\Task\TaskRunner;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-require 'vendor/autoload.php';
 
 $configuration = [
     'compass' => [],
