@@ -6,8 +6,6 @@ interface FilterInterface
 {
     /**
      * Return the filter name. Each filter should have an unique name, or it will be override.
-     *
-     * @return string
      */
     public function getName(): string;
 
@@ -22,15 +20,11 @@ interface FilterInterface
     /**
      * Return the filter comparator operator, for instance "like". When using Doctrine ORM, it can be any comparison
      * operator that can passed to the query builder.
-     *
-     * @return string
      */
     public function getComparator(): string;
 
     /**
      * Return the logic operator for the filter. It can be "and" or "or".
-     *
-     * @return string
      */
     public function getOperator(): string;
 }
