@@ -64,7 +64,7 @@ class FormFactory implements \LAG\AdminBundle\Factory\FormFactoryInterface
                 ])
             ;
             $event = new FormEvent($admin, $request);
-            $this->eventDispatcher->dispatch(Events::FORM_PRE_CREATE_ENTITY_FORM, $event);
+            $this->eventDispatcher->dispatch($event, Events::FORM_PRE_CREATE_ENTITY_FORM);
 
             foreach ($event->getFieldDefinitions() as $field => $definition) {
                 if (!$definition instanceof FieldDefinitionInterface) {
