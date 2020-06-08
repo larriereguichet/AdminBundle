@@ -21,7 +21,7 @@ class LAGAdminBundleTest extends BaseBundleTestCase
     {
         return LAGAdminBundle::class;
     }
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
