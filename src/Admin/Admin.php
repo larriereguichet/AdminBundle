@@ -78,7 +78,7 @@ class Admin implements AdminInterface
     {
         $this->request = $request;
         $event = new AdminEvent($this, $request);
-        $this->eventDispatcher->dispatch(Events::ADMIN_HANDLE_REQUEST, $event);
+        $this->eventDispatcher->dispatch($event, Events::ADMIN_HANDLE_REQUEST);
 
         if (!$event->hasAction()) {
             throw new Exception('The current action was not set during the dispatch of the event');
@@ -87,23 +87,23 @@ class Admin implements AdminInterface
 
         // Dispatch an event to allow entities to be filtered
         $filterEvent = new FilterEvent($this, $request);
-        $this->eventDispatcher->dispatch(Events::ADMIN_FILTER, $filterEvent);
+        $this->eventDispatcher->dispatch($filterEvent, Events::ADMIN_FILTER);
 
         $event = new EntityEvent($this, $request);
         $event->setFilters($filterEvent->getFilters());
-        $this->eventDispatcher->dispatch(Events::ENTITY_LOAD, $event);
+        $this->eventDispatcher->dispatch($event, Events::ENTITY_LOAD);
 
         if (null !== $event->getEntities()) {
             $this->entities = $event->getEntities();
         }
         $event = new FormEvent($this, $request);
-        $this->eventDispatcher->dispatch(Events::ADMIN_CREATE_FORM, $event);
+        $this->eventDispatcher->dispatch($event, Events::ADMIN_CREATE_FORM);
 
         // Merge the regular forms and the filter forms
         $this->forms = array_merge($filterEvent->getForms(), $event->getForms());
 
         $this->handleEntityForm($request);
-        $this->eventDispatcher->dispatch(Events::ADMIN_HANDLE_FORM, new FormEvent($this, $request));
+        $this->eventDispatcher->dispatch(new FormEvent($this, $request), Events::ADMIN_HANDLE_FORM);
     }
 
     public function getRequest(): Request
@@ -146,7 +146,7 @@ class Admin implements AdminInterface
             throw new Exception('The handleRequest() method should be called before creating a view');
         }
         $event = new ViewEvent($this, $this->request);
-        $this->eventDispatcher->dispatch(Events::ADMIN_VIEW, $event);
+        $this->eventDispatcher->dispatch($event, Events::ADMIN_VIEW);
 
         return $event->getView();
     }
@@ -194,11 +194,13 @@ class Admin implements AdminInterface
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            dump($form->getData());
+            //die;
             if ($this->entities->isEmpty()) {
                 $this->entities->add($form->getData());
             }
             $event = new EntityEvent($this, $request);
-            $this->eventDispatcher->dispatch(Events::ENTITY_SAVE, $event);
+            $this->eventDispatcher->dispatch($event, Events::ENTITY_SAVE);
         }
     }
 }

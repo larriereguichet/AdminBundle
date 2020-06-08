@@ -2,10 +2,6 @@
   "assets/admin.css": "/bundles/lagadmin/assets/admin.css",
   "assets/admin.js": "/bundles/lagadmin/assets/admin.js",
   "assets/admin.collection.js": "/bundles/lagadmin/assets/admin.collection.js",
-  "assets/fonts/fa-brands-400.ttf": "/bundles/lagadmin/assets/fonts/fa-brands-400.13685372.ttf",
-  "assets/fonts/fa-brands-400.woff2": "/bundles/lagadmin/assets/fonts/fa-brands-400.a06da7f0.woff2",
-  "assets/fonts/fa-brands-400.eot": "/bundles/lagadmin/assets/fonts/fa-brands-400.c1868c95.eot",
-  "assets/fonts/fa-brands-400.woff": "/bundles/lagadmin/assets/fonts/fa-brands-400.ec3cfdde.woff",
   "assets/fonts/fa-regular-400.eot": "/bundles/lagadmin/assets/fonts/fa-regular-400.261d666b.eot",
   "assets/fonts/fa-regular-400.woff2": "/bundles/lagadmin/assets/fonts/fa-regular-400.c20b5b73.woff2",
   "assets/fonts/fa-regular-400.ttf": "/bundles/lagadmin/assets/fonts/fa-regular-400.db78b935.ttf",
@@ -14,7 +10,6 @@
   "assets/fonts/fa-solid-900.eot": "/bundles/lagadmin/assets/fonts/fa-solid-900.a0369ea5.eot",
   "assets/fonts/fa-solid-900.woff2": "/bundles/lagadmin/assets/fonts/fa-solid-900.b15db15f.woff2",
   "assets/fonts/fa-solid-900.woff": "/bundles/lagadmin/assets/fonts/fa-solid-900.bea989e8.woff",
-  "assets/images/fa-brands-400.svg": "/bundles/lagadmin/assets/images/fa-brands-400.0cb5a5c0.svg",
   "assets/images/fa-regular-400.svg": "/bundles/lagadmin/assets/images/fa-regular-400.89ffa3ab.svg",
   "assets/images/fa-solid-900.svg": "/bundles/lagadmin/assets/images/fa-solid-900.ec763292.svg"
 }
