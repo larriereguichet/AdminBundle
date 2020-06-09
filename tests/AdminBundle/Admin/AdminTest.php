@@ -52,7 +52,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->exactly(6))
             ->method('dispatch')
-            ->willReturnCallback(function($eventName, $event) use ($action, $form, $entities) {
+            ->willReturnCallback(function ($event, $eventName) use ($action, $form, $entities) {
                 if (Events::ADMIN_HANDLE_REQUEST === $eventName) {
                     /** @var AdminEvent $event */
                     $this->assertInstanceOf(AdminEvent::class, $event);
@@ -93,7 +93,7 @@ class AdminTest extends AdminTestBase
         $this->assertCount(1, $admin->getEntities());
 
         if (count($entities) > 0) {
-            $this->assertEquals($admin->getEntities()[0], 'test');
+            $this->assertEquals('test', $admin->getEntities()[0]);
         }
         $this->assertEquals($request, $admin->getRequest());
         $this->assertTrue($admin->hasForm('entity'));
@@ -136,7 +136,7 @@ class AdminTest extends AdminTestBase
         );
         $request = new Request();
 
-        $this->assertExceptionRaised(Exception::class, function() use ($admin, $request) {
+        $this->assertExceptionRaised(Exception::class, function () use ($admin, $request) {
             $admin->handleRequest($request);
         });
     }
@@ -151,7 +151,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->willReturnCallback(function($eventName, $event) use ($view) {
+            ->willReturnCallback(function ($event, $eventName) use ($view) {
                 $this->assertEquals(Events::ADMIN_VIEW, $eventName);
                 /** @var ViewEvent $event */
                 $this->assertInstanceOf(ViewEvent::class, $event);
@@ -173,12 +173,10 @@ class AdminTest extends AdminTestBase
         $this->assertEquals($view, $createdView);
     }
 
-    /**
-     * @expectedException \LAG\AdminBundle\Exception\Exception
-     */
     public function testCreateViewWithoutRequest()
     {
         list($admin) = $this->createAdmin();
+        $this->expectException(Exception::class);
 
         $admin->createView();
     }
@@ -211,9 +209,15 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->exactly(5))
             ->method('dispatch')
-            ->willReturnCallback(function($eventName, $event) use ($action) {
-                if (Events::ADMIN_HANDLE_REQUEST === $eventName) {
-                    /** @var AdminEvent $event */
+            ->willReturnCallback(function ($event, $eventName) use ($action) {
+                $this->assertContains($eventName, [
+                    Events::ADMIN_HANDLE_REQUEST,
+                    Events::ADMIN_FILTER,
+                    Events::ENTITY_LOAD,
+                    Events::ADMIN_CREATE_FORM,
+                    Events::ADMIN_HANDLE_FORM,
+                ]);
+                if ($eventName === Events::ADMIN_HANDLE_REQUEST) {
                     $this->assertInstanceOf(AdminEvent::class, $event);
                     $event->setAction($action);
                 }
@@ -241,7 +245,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->exactly(5))
             ->method('dispatch')
-            ->willReturnCallback(function($eventName, $event) use ($action, $form) {
+            ->willReturnCallback(function ($event, $eventName) use ($action, $form) {
                 if (Events::ADMIN_HANDLE_REQUEST === $eventName) {
                     /** @var AdminEvent $event */
                     $this->assertInstanceOf(AdminEvent::class, $event);

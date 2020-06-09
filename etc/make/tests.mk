@@ -1,7 +1,10 @@
-.PHONY: tests php-cs-fixer.fix phpstan.analyse phpunit.run security.check
+.PHONY: tests php-cs-fixer.fix phpstan.analyse phpunit.run security.check tests.stop-on-failure
 
 ### PHPUnit ###
 tests: phpunit.run php-cs-fixer.fix phpstan.analyse security.check
+
+tests.stop-on-failure:
+	bin/phpunit --stop-on-failure -v
 
 phpunit.run:
 	bin/phpunit
