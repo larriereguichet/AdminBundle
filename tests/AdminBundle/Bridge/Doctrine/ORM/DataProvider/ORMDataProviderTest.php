@@ -11,6 +11,7 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandlerInterface;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Event\ORMFilterEvent;
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -127,9 +128,6 @@ class ORMDataProviderTest extends AdminTestBase
         $this->assertEquals(42, $item->getId());
     }
 
-    /**
-     * @expectedException \LAG\AdminBundle\Exception\Exception
-     */
     public function testGetItemWithException()
     {
         list($provider, $entityManager,) = $this->createProvider();
@@ -153,8 +151,9 @@ class ORMDataProviderTest extends AdminTestBase
             ['pager', null],
             ['page_parameter', 'page'],
         ]);
+        $this->expectException(Exception::class);
 
-         $provider->get($admin, 42);
+            $provider->get($admin, 42);
     }
 
     public function testSaveItem()
@@ -225,9 +224,6 @@ class ORMDataProviderTest extends AdminTestBase
         $provider->delete($admin);
     }
 
-    /**
-     * @expectedException \LAG\AdminBundle\Exception\Exception
-     */
     public function testDeleteWithoutEntities()
     {
         list($provider,) = $this->createProvider();
@@ -240,6 +236,7 @@ class ORMDataProviderTest extends AdminTestBase
             ->method('getEntities')
             ->willReturn($entities)
         ;
+        $this->expectException(Exception::class);
         $provider->delete($admin);
     }
 

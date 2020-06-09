@@ -40,9 +40,6 @@ class ActionConfigurationTest extends AdminTestBase
         $resolver->resolve();
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testResolveOptionsWithMissingAction()
     {
         $adminConfiguration = $this->createAdminConfigurationMock([
@@ -52,8 +49,8 @@ class ActionConfigurationTest extends AdminTestBase
         $configuration = new ActionConfiguration('my_action', 'my_admin', $adminConfiguration);
         $resolver = new OptionsResolver();
 
+        $this->expectException(Exception::class);
         $configuration->configureOptions($resolver);
-
         $resolver->resolve();
     }
 }
