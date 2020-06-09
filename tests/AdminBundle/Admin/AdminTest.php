@@ -52,7 +52,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->exactly(6))
             ->method('dispatch')
-            ->willReturnCallback(function ($event, $eventName) use ($action, $form, $entities) {
+            ->willReturnCallback(function($event, $eventName) use ($action, $form, $entities) {
                 if (Events::ADMIN_HANDLE_REQUEST === $eventName) {
                     /** @var AdminEvent $event */
                     $this->assertInstanceOf(AdminEvent::class, $event);
@@ -80,7 +80,7 @@ class AdminTest extends AdminTestBase
         );
         $request = new Request();
 
-        $this->assertExceptionRaised(Exception::class, function () use ($admin) {
+        $this->assertExceptionRaised(Exception::class, function() use ($admin) {
             $admin->getRequest();
         });
 
@@ -100,7 +100,7 @@ class AdminTest extends AdminTestBase
         $this->assertCount(1, $admin->getForms());
         $this->assertEquals($form, $admin->getForms()['entity']);
         $this->assertEquals($form, $admin->getForm('entity'));
-        $this->assertExceptionRaised(Exception::class, function () use ($admin) {
+        $this->assertExceptionRaised(Exception::class, function() use ($admin) {
             $admin->getForm('invalid');
         });
     }
@@ -108,7 +108,7 @@ class AdminTest extends AdminTestBase
     public function getHandleRequestProvider(): array
     {
         return [
-            [['test',],],
+            [['test', ], ],
             [[]]
         ];
     }
@@ -136,7 +136,7 @@ class AdminTest extends AdminTestBase
         );
         $request = new Request();
 
-        $this->assertExceptionRaised(Exception::class, function () use ($admin, $request) {
+        $this->assertExceptionRaised(Exception::class, function() use ($admin, $request) {
             $admin->handleRequest($request);
         });
     }
@@ -151,7 +151,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->willReturnCallback(function ($event, $eventName) use ($view) {
+            ->willReturnCallback(function($event, $eventName) use ($view) {
                 $this->assertEquals(Events::ADMIN_VIEW, $eventName);
                 /** @var ViewEvent $event */
                 $this->assertInstanceOf(ViewEvent::class, $event);
@@ -209,7 +209,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->exactly(5))
             ->method('dispatch')
-            ->willReturnCallback(function ($event, $eventName) use ($action) {
+            ->willReturnCallback(function($event, $eventName) use ($action) {
                 $this->assertContains($eventName, [
                     Events::ADMIN_HANDLE_REQUEST,
                     Events::ADMIN_FILTER,
@@ -245,7 +245,7 @@ class AdminTest extends AdminTestBase
         $eventDispatcher
             ->expects($this->exactly(5))
             ->method('dispatch')
-            ->willReturnCallback(function ($event, $eventName) use ($action, $form) {
+            ->willReturnCallback(function($event, $eventName) use ($action, $form) {
                 if (Events::ADMIN_HANDLE_REQUEST === $eventName) {
                     /** @var AdminEvent $event */
                     $this->assertInstanceOf(AdminEvent::class, $event);

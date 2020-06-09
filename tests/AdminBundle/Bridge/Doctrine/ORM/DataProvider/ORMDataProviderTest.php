@@ -153,7 +153,7 @@ class ORMDataProviderTest extends AdminTestBase
         ]);
         $this->expectException(Exception::class);
 
-         $provider->get($admin, 42);
+            $provider->get($admin, 42);
     }
 
     public function testSaveItem()
