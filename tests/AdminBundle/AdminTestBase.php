@@ -68,7 +68,7 @@ class AdminTestBase extends TestCase
             get_class($subscriber),
             'getSubscribedEvents'
         ]);
-        $this->assertInternalType('array', $methods);
+        $this->assertIsArray($methods);
 
         foreach ($methods as $method) {
 
@@ -76,7 +76,7 @@ class AdminTestBase extends TestCase
                 $this->assertArrayHasKey(0, $method);
                 $method = $method[0];
             } else {
-                $this->assertInternalType('string', $method);
+                $this->assertIsString($method);
             }
             $this->assertTrue(method_exists($subscriber, $method));
         }
