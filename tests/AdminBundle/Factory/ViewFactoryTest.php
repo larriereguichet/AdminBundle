@@ -221,17 +221,15 @@ class ViewFactoryTest extends AdminTestBase
         $this->assertEquals('/planet/666/edit', $view->getUrl());
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testCreateRedirectionWithException()
     {
-        list($factory, , ,) = $this->createFactory();
+        list($factory,,,) = $this->createFactory();
 
         $request = $this->createMock(Request::class);
         $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
         $entityForm = $this->createMock(FormInterface::class);
+        $this->expectException(Exception::class);
 
         $factory->createRedirection(
             'rewind',

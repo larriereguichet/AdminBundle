@@ -194,8 +194,6 @@ class Admin implements AdminInterface
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($form->getData());
-            //die;
             if ($this->entities->isEmpty()) {
                 $this->entities->add($form->getData());
             }
