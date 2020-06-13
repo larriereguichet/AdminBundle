@@ -1,5 +1,5 @@
 language: php
-
+dist: xenial
 php:
     - 7.2
     - 7.3
@@ -13,21 +13,26 @@ before_install:
 install:
     - composer install
     - wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer
+    - composer create-project "symfony/skeleton:${SYMFONY_VERSION}" demo
+    - cd demo
+    - composer install
 
 script:
     - make phpunit.run
     - make phpstan.analyse
     - php php-cs-fixer fix --dry-run --using-cache=no --verbose
+    - cd demo
+    - bin/console ca:cl
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar
     - php ocular.phar code-coverage:upload --format=php-clover var/phpunit/logs/clover.xml
 
-#env:
-#    - SYMFONY_VERSION=3.4.*
-#    - SYMFONY_VERSION=4.1.*
-#    - SYMFONY_VERSION=4.2.*
-#    - SYMFONY_VERSION=4.3.*
+env:
+    - SYMFONY_VERSION=3.4.*
+    - SYMFONY_VERSION=4.4.*
+    - SYMFONY_VERSION=5.0.*
+    - SYMFONY_VERSION=5.1.*
 
 services:
     - mysql
