@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Configuration;
 
 use JK\Configuration\Configuration;
-use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Routing\Resolver\RoutingResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,13 +15,24 @@ class MenuConfiguration extends Configuration
     private $menuName;
 
     /**
+     * @var RoutingResolverInterface
+     */
+    private $routingResolver;
+
+    /**
+     * @var string
+     */
+    private $adminName;
+
+    /**
      * MenuConfiguration constructor.
      */
-    public function __construct(string $menuName)
+    public function __construct(string $menuItemName, RoutingResolverInterface $routingRoutingResolver, ?string $adminName = null)
     {
+        $this->menuName = $menuItemName;
+        $this->routingResolver = $routingRoutingResolver;
+        $this->adminName = $adminName;
         parent::__construct();
-
-        $this->menuName = $menuName;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -30,18 +41,25 @@ class MenuConfiguration extends Configuration
             ->setDefaults([
                 'children' => [],
                 'attributes' => [
-                    'class' => 'list-group cms-menu-'.$this->menuName,
+                    'class' => 'list-group admin admin-menu-'.$this->menuName,
                 ],
+                'inherits' => true,
             ])
+            ->setAllowedTypes('inherits', 'boolean')
             ->setNormalizer('children', function (Options $options, $value) {
                 if (!is_array($value)) {
-                    throw new Exception('The menu items should an array for menu "'.$this->menuName.'"');
+                    $value = [];
                 }
+                $innerResolver = new OptionsResolver();
 
-                foreach ($value as $item) {
-                    if (!$item instanceof MenuItemConfiguration) {
-                        throw new Exception(sprintf('The menu items should an array of "%s" for menu "%s"', MenuItemConfiguration::class, $this->menuName));
+                foreach ($value as $name => $item) {
+                    if (!$item) {
+                        $item = [];
                     }
+                    $configuration = new MenuItemConfiguration($name, $this->menuName, $this->routingResolver, $this->adminName);
+                    $configuration->configureOptions($innerResolver);
+                    $value[$name] = $innerResolver->resolve($item);
+                    $innerResolver->clear();
                 }
 
                 return $value;
@@ -53,9 +71,8 @@ class MenuConfiguration extends Configuration
     {
         $values = parent::all();
 
-        /** @var MenuItemConfiguration $value */
         foreach ($values['children'] as $name => $value) {
-            $values['children'][$name] = $value->all();
+            $values['children'][$name] = $value;
         }
 
         return $values;

@@ -83,11 +83,12 @@ Yan can visit `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of 
     * f. Data Providers
     * g. Filters
     * h. Views
-    * i. Security
+    * i. Security    
 2. Customization
     * a. Custom actions
-    * b. Custom rendering
+    * b. Custom render
     * c. Custom data
+    * d. Custom routes and urls
 3. Reference
     * a. Application configuration
     * b. Admin configuration

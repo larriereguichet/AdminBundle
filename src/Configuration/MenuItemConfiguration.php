@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Configuration;
 
 use JK\Configuration\Configuration;
+use LAG\AdminBundle\Routing\Resolver\RoutingResolverInterface;
 use LAG\Component\StringUtils\StringUtils;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
@@ -13,12 +14,33 @@ class MenuItemConfiguration extends Configuration
     /**
      * @var string
      */
-    private $name;
+    private $itemName;
 
-    public function __construct(string $name)
-    {
-        $this->name = $name;
+    /**
+     * @var RoutingResolverInterface
+     */
+    private $routingResolver;
 
+    /**
+     * @var string
+     */
+    private $menuName;
+
+    /**
+     * @var string
+     */
+    private $adminName;
+
+    public function __construct(
+        string $itemName,
+        string $menuName,
+        RoutingResolverInterface $routingResolver,
+        ?string $adminName = null
+    ) {
+        $this->itemName = $itemName;
+        $this->routingResolver = $routingResolver;
+        $this->menuName = $menuName;
+        $this->adminName = $adminName;
         parent::__construct();
     }
 
@@ -30,18 +52,31 @@ class MenuItemConfiguration extends Configuration
         // user can defined an admin name
         $resolver
             ->setDefaults([
-                'admin' => null,
+                'admin' => $this->adminName,
                 'action' => null,
                 'route' => null,
-                'route_parameters' => [],
+                'routeParameters' => [],
                 'uri' => null,
                 'attributes' => [],
-                'linkAttributes' => [
-                    'class' => 'list-group-item list-group-item-action',
-                ],
+                'linkAttributes' => [],
+                'label' => null,
+                'icon' => null,
                 'text' => null,
                 'children' => [],
+                //'allow_safe_labels' => true,
+                'extras' => ['safe_label' => true],
             ])
+            ->setNormalizer('route', function (Options $options, $route) {
+                if ($options->offsetGet('uri')) {
+                    return $route;
+                }
+
+                if (!$route) {
+                    $route = $this->routingResolver->resolve($options->offsetGet('admin'), $options->offsetGet('action'));
+                }
+
+                return $route;
+            })
             ->setNormalizer('admin', function (Options $options, $adminName) {
                 // user has to defined either an admin name and an action name, or a route name with optional
                 // parameters, or an url
@@ -76,9 +111,10 @@ class MenuItemConfiguration extends Configuration
                 $resolvedItems = [];
 
                 foreach ($items as $name => $item) {
-                    $itemConfiguration = new MenuItemConfiguration($name);
+                    $itemConfiguration = new MenuItemConfiguration($name, $this->menuName, $this->routingResolver, $this->adminName);
                     $itemConfiguration->configureOptions($resolver);
                     $itemConfiguration->setParameters($resolver->resolve($item));
+                    $resolver->clear();
 
                     $resolvedItems[$name] = $itemConfiguration;
                 }
@@ -104,25 +140,19 @@ class MenuItemConfiguration extends Configuration
                     return $text;
                 }
 
-                return ucfirst($this->name);
+                return $text;
+            })
+            ->setNormalizer('linkAttributes', function (Options $options, $linkAttributes) {
+                if (!$linkAttributes) {
+                    $linkAttributes = [];
+                }
+
+                if ($this->menuName === 'left' && empty($linkAttributes)) {
+                    $linkAttributes = ['class' => 'list-group-item list-group-item-action'];
+                }
+
+                return $linkAttributes;
             })
         ;
-    }
-
-    public function all()
-    {
-        $values = parent::all();
-
-        /** @var MenuItemConfiguration $value */
-        foreach ($values['children'] as $name => $value) {
-            $values['children'][$name] = $value->all();
-        }
-
-        return $values;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
     }
 }

@@ -19,16 +19,22 @@ class AdminConfiguration extends Configuration
     /**
      * @var ApplicationConfiguration
      */
-    protected $applicationConfiguration;
+    protected $application;
+
+    /**
+     * @var string
+     */
+    private $name;
 
     /**
      * AdminConfiguration constructor.
      */
-    public function __construct(ApplicationConfiguration $applicationConfiguration)
+    public function __construct(string $name, ApplicationConfiguration $application)
     {
         parent::__construct();
 
-        $this->applicationConfiguration = $applicationConfiguration;
+        $this->application = $application;
+        $this->name = $name;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -42,24 +48,25 @@ class AdminConfiguration extends Configuration
                     'delete' => [],
                 ],
                 'batch' => true,
-                'class' => $this->applicationConfiguration->getParameter('admin_class'),
-                'routing_url_pattern' => $this->applicationConfiguration->getParameter('routing_url_pattern'),
-                'routing_name_pattern' => $this->applicationConfiguration->getParameter('routing_name_pattern'),
+                'class' => $this->application->getParameter('admin_class'),
+                'routing_url_pattern' => $this->application->getParameter('routing_url_pattern'),
+                'routing_name_pattern' => $this->application->getParameter('routing_name_pattern'),
                 'controller' => AdminAction::class,
-                'max_per_page' => $this->applicationConfiguration->getParameter('max_per_page'),
+                'max_per_page' => $this->application->getParameter('max_per_page'),
                 'form' => null,
                 'form_options' => [],
-                'pager' => $this->applicationConfiguration->getParameter('pager'),
-                'permissions' => $this->applicationConfiguration->getParameter('permissions'),
-                'string_length' => $this->applicationConfiguration->getParameter('string_length'),
-                'string_length_truncate' => $this->applicationConfiguration->getParameter('string_length_truncate'),
-                'date_format' => $this->applicationConfiguration->getParameter('date_format'),
+                'pager' => $this->application->getParameter('pager'),
+                'permissions' => $this->application->getParameter('permissions'),
+                'string_length' => $this->application->getParameter('string_length'),
+                'string_length_truncate' => $this->application->getParameter('string_length_truncate'),
+                'date_format' => $this->application->getParameter('date_format'),
                 'data_provider' => ORMDataProvider::class,
-                'page_parameter' => $this->applicationConfiguration->getParameter('page_parameter'),
-                'list_template' => $this->applicationConfiguration->get('list_template'),
-                'edit_template' => $this->applicationConfiguration->get('edit_template'),
-                'create_template' => $this->applicationConfiguration->get('create_template'),
-                'delete_template' => $this->applicationConfiguration->get('delete_template'),
+                'page_parameter' => $this->application->getParameter('page_parameter'),
+                'list_template' => $this->application->get('list_template'),
+                'edit_template' => $this->application->get('edit_template'),
+                'create_template' => $this->application->get('create_template'),
+                'delete_template' => $this->application->get('delete_template'),
+                'menus' => $this->application->get('menus'),
             ])
             ->setRequired([
                 'entity',
@@ -71,6 +78,7 @@ class AdminConfiguration extends Configuration
                 null,
                 'pagerfanta',
             ])
+            ->setAllowedTypes('menus', ['array', 'null'])
             ->setNormalizer('actions', function (Options $options, $actions) {
                 $normalizedActions = [];
                 $addBatchAction = false;
@@ -99,8 +107,13 @@ class AdminConfiguration extends Configuration
 
         $this->configureTranslation(
             $resolver,
-            $this->applicationConfiguration->getTranslationPattern(),
-            $this->applicationConfiguration->getTranslationCatalog()
+            $this->application->getTranslationPattern(),
+            $this->application->getTranslationCatalog()
         );
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 }

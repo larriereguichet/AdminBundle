@@ -36,11 +36,11 @@ class ActionConfiguration extends Configuration
     /**
      * ActionConfiguration constructor.
      */
-    public function __construct(string $actionName, string $adminName, AdminConfiguration $adminConfiguration)
+    public function __construct(string $actionItemName, string $adminName, AdminConfiguration $adminConfiguration)
     {
         parent::__construct();
 
-        $this->actionName = $actionName;
+        $this->actionName = $actionItemName;
         $this->adminConfiguration = $adminConfiguration;
         $this->adminName = $adminName;
     }
@@ -74,6 +74,7 @@ class ActionConfiguration extends Configuration
                 'date_format' => $this->adminConfiguration->get('date_format'),
                 'use_form' => true,
                 'form' => null,
+                'menus' => $this->adminConfiguration->get('menus'),
             ])
             ->setAllowedTypes('title', [
                 'string',
@@ -353,49 +354,30 @@ class ActionConfiguration extends Configuration
     {
         $resolver
             ->setDefaults([
-                'add_return' => true,
+                'add_return' => in_array($this->actionName, ['create', 'edit', 'delete']),
                 'menus' => [],
             ])
             ->setAllowedTypes('add_return', 'boolean')
             ->setNormalizer('menus', function (Options $options, $value) {
                 if (false === $value) {
-                    return $value;
-                }
-
-                if (!is_array($value)) {
                     $value = [];
                 }
 
-                if (!key_exists('top', $value)) {
-                    $value['top'] = [];
-                }
-
-                if (!key_exists('items', $value['top'])) {
-                    $value['top']['items'] = [];
-                }
-
-                // Auto return button should be optional
-                if ($options->offsetGet('add_return')) {
-                    $text = ucfirst('Return');
-
-                    if ($this->adminConfiguration->isTranslationEnabled()) {
-                        $text = TranslationUtils::getTranslationKey(
-                            $this->adminConfiguration->getTranslationPattern(),
-                            $this->adminName,
-                            'return'
-                        );
-                    }
-
-                    // Use array_unshift() to put the items in first in menu
-                    array_unshift($value['top']['items'], [
-                        'admin' => $this->adminName,
-                        'action' => 'list',
-                        // Do not use the translation trait as the action configuration is not configured yet, so
-                        // translation parameters are not available
-                        'text' => $text,
-                        'icon' => 'arrow-left',
-                    ]);
-                }
+//                foreach ($value as $menuName => $menuConfiguration) {
+//                    if (count($value) !== 0) {
+//                        return $value;
+//                    }
+//
+//                    if ($menuName === 'top') {
+//                        if ($this->actionName === 'create') {
+//                            if (empty($menuConfiguration['children']) || count($menuConfiguration['children']) === 0) {
+//                                $value[$menuName]['children'] = [
+//                                    'create' => null,
+//                                ];
+//                            }
+//                        }
+//                    }
+//                }
 
                 return $value;
             })

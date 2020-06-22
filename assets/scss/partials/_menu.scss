@@ -28,17 +28,42 @@
   }
 }
 
-nav.sidebar {
-  ul li {
+.admin-menu-left {
+  .current a {
+    z-index: 2;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+
+  }
+}
+
+.navbar {
+  .navbar-brand {
+    margin-right: 150px;
+  }
+
+  &.navbar-dark .navbar-nav .nav-link {
+    color: $topBarLinkColor;
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.75)
+    }
+  }
+}
+
+.admin-menu-top {
+  li {
     list-style-type: none;
     margin-top: -1px;
 
-    &.current a {
-      z-index: 2;
-      color: #fff;
-      background-color: #007bff;
-      border-color: #007bff;
+    a {
+      //z-index: 2;
+      color: $topBarLinkColor;
 
+      &.current {
+        color: $topBarCurrentLinkColor;
+      }
     }
   }
 }
