@@ -1,10 +1,12 @@
 services:
-    LAG\AdminBundle\Menu\Provider\MenuProvider:
+    LAG\AdminBundle\Bridge\KnpMenu\Provider\MenuProvider:
         arguments:
             $menuConfigurations: '%lag.menus%'
             $factory: '@knp_menu.factory'
             $configurationFactory: '@LAG\AdminBundle\Factory\ConfigurationFactory'
             $resolver: '@LAG\AdminBundle\Routing\Resolver\RoutingResolverInterface'
+            $adminHelper: '@LAG\AdminBundle\Admin\Helper\AdminHelperInterface'
+            $requestStack: '@request_stack'
         tags:
             - {name: knp_menu.provider}
 
@@ -13,6 +15,7 @@ services:
         arguments:
             $menuEnabled: '%lag.enable_menus%'
             $registry: '@LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface'
+            $adminHelper: '@LAG\AdminBundle\Admin\Helper\AdminHelperInterface'
             $menuConfigurations: '%lag.menus%'
         tags:
             - {name: kernel.event_subscriber}

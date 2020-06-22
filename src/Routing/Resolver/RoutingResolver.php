@@ -2,20 +2,19 @@
 
 namespace LAG\AdminBundle\Routing\Resolver;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Exception\Exception;
 
 class RoutingResolver implements RoutingResolverInterface
 {
     /**
-     * @var ApplicationConfiguration
+     * @var ApplicationConfigurationStorage
      */
-    private $configuration;
+    private $storage;
 
     public function __construct(ApplicationConfigurationStorage $storage)
     {
-        $this->configuration = $storage->getConfiguration();
+        $this->storage = $storage;
     }
 
     public function resolve(string $adminName, string $actionName): string
@@ -23,7 +22,7 @@ class RoutingResolver implements RoutingResolverInterface
         $routeName = str_replace(
             '{admin}',
             strtolower($adminName),
-            $this->configuration->get('routing_name_pattern')
+            $this->storage->getConfiguration()->get('routing_name_pattern')
         );
 
         $routeName = str_replace(

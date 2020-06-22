@@ -99,32 +99,33 @@ class FieldFactory
      */
     public function create(string $name, array $configuration, ActionConfiguration $actionConfiguration): FieldInterface
     {
-        $resolver = new OptionsResolver();
-        $configuration = $this->resolveConfiguration($configuration, $actionConfiguration);
-
-        // Dispatch an event to allow dynamic changes on the form type
-        $event = new FieldEvent(
-            $actionConfiguration->getAdminName(),
-            $actionConfiguration->getActionName(),
-            $name,
-            $actionConfiguration->getAdminConfiguration()->get('entity'),
-            $configuration['type']
-        );
-        $this->eventDispatcher->dispatch(Events::FIELD_PRE_CREATE, $event);
-
-        if (null === $event->getType()) {
-            throw new FieldTypeNotFoundException($event->getAdminName(), $event->getActionName(), $name);
-        }
-        $type = $event->getType();
-        $options = array_merge($configuration['options'], $event->getOptions());
-
-        if (!key_exists($type, $this->fieldsMapping)) {
-            $type = 'auto';
-        }
-        $field = $this->instanciateField($name, $type);
-        $field->configureOptions($resolver, $actionConfiguration);
-
         try {
+            $resolver = new OptionsResolver();
+            $configuration = $this->resolveConfiguration($configuration, $actionConfiguration);
+
+            // Dispatch an event to allow dynamic changes on the form type
+            $event = new FieldEvent(
+                $actionConfiguration->getAdminName(),
+                $actionConfiguration->getActionName(),
+                $name,
+                $actionConfiguration->getAdminConfiguration()->get('entity'),
+                $configuration['type']
+            );
+            $this->eventDispatcher->dispatch($event, Events::FIELD_PRE_CREATE);
+
+            if (null === $event->getType()) {
+                throw new FieldTypeNotFoundException($event->getAdminName(), $event->getActionName(), $name);
+            }
+            $type = $event->getType();
+            $options = array_merge($configuration['options'], $event->getOptions());
+
+            if (!key_exists($type, $this->fieldsMapping)) {
+                $type = 'auto';
+            }
+            $field = $this->instanciateField($name, $type);
+            $field->configureOptions($resolver, $actionConfiguration);
+
+
             $field->setOptions($resolver->resolve($options));
         } catch (\Exception $exception) {
             throw new Exception('An error has occurred when resolving the options for the field "'.$name.'": '.$exception->getMessage(), $exception->getCode(), $exception);
@@ -137,7 +138,7 @@ class FieldFactory
             $type,
             $field
         );
-        $this->eventDispatcher->dispatch(Events::FIELD_POST_CREATE, $event);
+        $this->eventDispatcher->dispatch($event, Events::FIELD_POST_CREATE);
 
         return $field;
     }

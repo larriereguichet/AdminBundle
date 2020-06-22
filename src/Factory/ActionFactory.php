@@ -46,7 +46,7 @@ class ActionFactory
             $adminName,
             $adminConfiguration->getParameter('entity')
         );
-        $this->eventDispatcher->dispatch(Events::CONFIGURATION_ACTION, $event);
+        $this->eventDispatcher->dispatch($event, Events::CONFIGURATION_ACTION);
 
         if (!array_key_exists($actionName, $event->getConfiguration())) {
             throw new Exception('The action "'.$actionName.'" was not found  in the configuration of the admin "'.$adminName.'"');

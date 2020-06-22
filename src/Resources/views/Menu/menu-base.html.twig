@@ -9,3 +9,10 @@
         </ul>
     {% endif %}
 {% endblock %}
+
+{% block label %}
+    {% if item.getExtra('icon', false) %}
+        <i class="{{ item.getExtra('icon', false) }}"></i>
+    {% endif %}
+    {{ item.label | trans }}
+{% endblock %}

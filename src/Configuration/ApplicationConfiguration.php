@@ -61,8 +61,7 @@ class ApplicationConfiguration extends Configuration
                 'bootstrap' => true,
                 'date_format' => 'Y/m/d',
                 'pager' => 'pagerfanta',
-                // string length before truncation (0 means no truncation)
-                'string_length' => 200,
+                'string_length' => 200, // string length before truncation (0 means no truncation)
                 'string_length_truncate' => '...',
                 'max_per_page' => 20,
                 'admin_class' => Admin::class,
@@ -70,6 +69,7 @@ class ApplicationConfiguration extends Configuration
                 'permissions' => 'ROLE_ADMIN',
                 'page_parameter' => 'page',
                 'resources_path' => __DIR__.'/../../../../config/admin/resources',
+                'menus' => null,
             ])
             ->setAllowedTypes('enable_extra_configuration', 'boolean')
             ->setAllowedTypes('enable_security', 'boolean')
@@ -88,6 +88,7 @@ class ApplicationConfiguration extends Configuration
             ->setAllowedTypes('routing_name_pattern', 'string')
             ->setAllowedTypes('routing_url_pattern', 'string')
             ->setAllowedTypes('page_parameter', 'string')
+            ->setAllowedTypes('menus', ['array', 'null'])
             ->setNormalizer('routing_name_pattern', function (Options $options, $value) {
                 if (false === strstr($value, '{admin}')) {
                     throw new InvalidOptionsException('Admin routing configuration pattern name should contains the {admin} placeholder');
@@ -156,5 +157,10 @@ class ApplicationConfiguration extends Configuration
 
             return $value;
         });
+    }
+
+    public function getName(): string
+    {
+        return 'app';
     }
 }

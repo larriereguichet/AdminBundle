@@ -12,6 +12,7 @@ class Events
 
     const CONFIGURATION_ADMIN = 'lag.configuration.admin';
     const CONFIGURATION_ACTION = 'lag.configuration.action';
+    const PRE_MENU_CONFIGURATION = 'lag.admin.default.menu_configuration';
     const MENU_CONFIGURATION = 'lag.admin.menu_configuration';
 
     const ENTITY_LOAD = 'lag.admin.entity_load';
