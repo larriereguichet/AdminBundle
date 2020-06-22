@@ -13,6 +13,11 @@
     {% set text %}
         <b>Application</b>
 
+        {% if collector.data.error is defined %}
+            <b>{{ collector.data.error }}</b>
+            The invalid configuration is : {{ dump(collector.data.configuration) }}
+        {% endif %}
+
         <div class="sf-toolbar-info-piece">
             <b>Locale</b>
             <span class="sf-toolbar-status">
