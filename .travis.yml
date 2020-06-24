@@ -30,6 +30,7 @@ after_script:
     - php ocular.phar code-coverage:upload --format=php-clover var/phpunit/logs/clover.xml
 
 env:
+    - SYMFONY_VERSION=3.4.*
     - SYMFONY_VERSION=4.4.*
     - SYMFONY_VERSION=5.0.*
     - SYMFONY_VERSION=5.1.*
