@@ -24,15 +24,15 @@ class ConfigurationException extends Exception
     ) {
         $typeMessage = 'An error has occurred when resolving a configuration';
 
-        if ($type === 'menu') {
+        if ('menu' === $type) {
             $typeMessage = 'An error has occurred when resolving the configuration for the menu "%s"';
         }
 
-        if ($type === 'action') {
+        if ('action' === $type) {
             $typeMessage = 'An error has occurred when resolving the configuration of the action "%s"';
         }
 
-        if ($type === 'admin') {
+        if ('admin' === $type) {
             $typeMessage = 'An error has occurred when resolving the configuration of the admin "%s"';
         }
         $message = sprintf($typeMessage, $typeName);

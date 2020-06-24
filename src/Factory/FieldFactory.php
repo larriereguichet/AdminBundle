@@ -125,7 +125,6 @@ class FieldFactory
             $field = $this->instanciateField($name, $type);
             $field->configureOptions($resolver, $actionConfiguration);
 
-
             $field->setOptions($resolver->resolve($options));
         } catch (\Exception $exception) {
             throw new Exception('An error has occurred when resolving the options for the field "'.$name.'": '.$exception->getMessage(), $exception->getCode(), $exception);

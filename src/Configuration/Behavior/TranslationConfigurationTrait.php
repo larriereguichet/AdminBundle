@@ -10,6 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 trait TranslationConfigurationTrait
 {
     abstract public function get($name);
+
     abstract public function getName(): string;
 
     protected function configureTranslation(OptionsResolver $resolver, string $pattern = 'lag.{admin}.{key}', string $catalog = 'messages')

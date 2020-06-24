@@ -105,10 +105,10 @@ class ConfigurationFactory
         $configuration = $event->getMenuConfiguration();
         $adminName = null;
 
-        if ($this->adminHelper->getCurrent() !== null) {
+        if (null !== $this->adminHelper->getCurrent()) {
             $adminName = $this->adminHelper->getCurrent()->getName();
             $actionMenus = $this->adminHelper->getCurrent()->getAction()->getConfiguration()->get('menus');
-            $inherits = empty($configuration['inherits']) || $configuration['inherits'] === false;
+            $inherits = empty($configuration['inherits']) || false === $configuration['inherits'];
 
             if (!empty($actionMenus[$menuName])) {
                 if ($inherits) {

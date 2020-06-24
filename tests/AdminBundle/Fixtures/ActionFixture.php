@@ -16,6 +16,6 @@ class ActionFixture implements ActionInterface
 
     public function getConfiguration(): ActionConfiguration
     {
-        return new ActionConfiguration('test', 'test', new AdminConfiguration(new ApplicationConfiguration()));
+        return new ActionConfiguration('test', 'test', new AdminConfiguration('test', new ApplicationConfiguration()));
     }
 }
