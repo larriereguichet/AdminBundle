@@ -16,7 +16,12 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('lag_admin');
-        $rootNode = $treeBuilder->getRootNode();
+
+        if (method_exists(TreeBuilder::class, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            $rootNode = $treeBuilder->root('lag_admin');
+        }
 
         $rootNode
             ->children()
@@ -33,12 +38,27 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
+     * This method preserves the compatibility with Symfony 3.4.
+     */
+    protected function createRootNode(string $name): NodeDefinition
+    {
+        if (method_exists(TreeBuilder::class, 'getRootNode')) {
+            $treeBuilder = new TreeBuilder($name);
+
+            return $treeBuilder->getRootNode();
+        } else {
+            $treeBuilder = new TreeBuilder();
+
+            return $treeBuilder->root($name);
+        }
+    }
+
+    /**
      * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function getAdminsConfigurationNode()
     {
-        $builder = new TreeBuilder('admins');
-        $node = $builder->getRootNode();
+        $node = $this->createRootNode('admins');
 
         $node
             // useAttributeAsKey() method will preserve keys when multiple configurations files are used and then avoid
@@ -64,8 +84,7 @@ class Configuration implements ConfigurationInterface
      */
     protected function getApplicationNode()
     {
-        $builder = new TreeBuilder('application');
-        $node = $builder->getRootNode();
+        $node = $this->createRootNode('application');
 
         $node
             ->children()
@@ -123,8 +142,7 @@ class Configuration implements ConfigurationInterface
      */
     protected function getMenuConfiguration()
     {
-        $builder = new TreeBuilder('menus');
-        $node = $builder->getRootNode();
+        $node = $this->createRootNode('menus');
 
         $node
             ->prototype('variable')

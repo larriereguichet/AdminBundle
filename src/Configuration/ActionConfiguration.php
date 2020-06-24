@@ -363,22 +363,6 @@ class ActionConfiguration extends Configuration
                     $value = [];
                 }
 
-//                foreach ($value as $menuName => $menuConfiguration) {
-//                    if (count($value) !== 0) {
-//                        return $value;
-//                    }
-//
-//                    if ($menuName === 'top') {
-//                        if ($this->actionName === 'create') {
-//                            if (empty($menuConfiguration['children']) || count($menuConfiguration['children']) === 0) {
-//                                $value[$menuName]['children'] = [
-//                                    'create' => null,
-//                                ];
-//                            }
-//                        }
-//                    }
-//                }
-
                 return $value;
             })
         ;
