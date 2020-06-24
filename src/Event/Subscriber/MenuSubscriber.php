@@ -61,15 +61,15 @@ class MenuSubscriber implements EventSubscriberInterface
         $menuName = $event->getMenuName();
         $menu = $this->menuConfigurations[$menuName];
 
-        if ($menu === null) {
+        if (null === $menu) {
             $menu = [];
         }
 
-        if ($menuName === 'left') {
+        if ('left' === $menuName) {
             $menu = $this->addDefaultLeftMenu($menu);
         }
 
-        if ($menuName === 'top') {
+        if ('top' === $menuName) {
             $menu = $this->addDefaultTopMenu($menu);
         }
         $menu = $this->configureDefaultChildren($event->getMenuName(), $menu);
@@ -89,7 +89,7 @@ class MenuSubscriber implements EventSubscriberInterface
         }
         $menuConfiguration = $this->menuConfigurations[$event->getMenuName()];
 
-        if ($menuConfiguration === false) {
+        if (false === $menuConfiguration) {
             return false;
         }
 
@@ -98,16 +98,16 @@ class MenuSubscriber implements EventSubscriberInterface
 
     private function addDefaultLeftMenu(array $menu): array
     {
-        $resourceNames = $this->registry->keys();
-
         if (!empty($menu['children'])) {
             return $menu;
         }
         $menu['children'] = [];
 
-
         // The default main menu is composed by links to the list action of each admin resource
-        foreach ($resourceNames as $resourceName) {
+        foreach ($this->registry->all() as $resourceName => $resource) {
+            if (empty($resource->getConfiguration()['actions']) || !key_exists('list', $resource->getConfiguration()['actions'])) {
+                continue;
+            }
             $menu['children'][$resourceName] = [
                 'admin' => $resourceName,
                 'action' => 'list',
@@ -145,14 +145,7 @@ class MenuSubscriber implements EventSubscriberInterface
 
             // At this point, an pair admin/action or an url or an admin should be defined
             if (!key_exists('admin', $itemConfiguration)) {
-                throw new Exception(
-                    sprintf(
-                        'The configuration of the children "%s" in the menu "%s" is invalid : no admin/action nor url configured, and no admin with the name "%s" exists',
-                        $itemName,
-                        $menuName,
-                        $itemName
-                    )
-                );
+                throw new Exception(sprintf('The configuration of the children "%s" in the menu "%s" is invalid : no admin/action nor url configured, and no admin with the name "%s" exists', $itemName, $menuName, $itemName));
             }
             $menu['children'][$itemName] = $itemConfiguration;
         }
@@ -168,7 +161,7 @@ class MenuSubscriber implements EventSubscriberInterface
         ];
 
         // Auto return link is be optional. It is configured by default for the edit, create and delete actions
-        if ($admin !== null && $admin->getAction()->getConfiguration()->get('add_return')) {
+        if (null !== $admin && $admin->getAction()->getConfiguration()->get('add_return')) {
             $menu['children']['return'] = [
                 'admin' => $admin->getName(),
                 'action' => 'list',

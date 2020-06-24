@@ -4,18 +4,19 @@ namespace LAG\AdminBundle\Tests\Menu\Provider;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use LAG\AdminBundle\Bridge\KnpMenu\Provider\MenuProvider;
 use LAG\AdminBundle\Configuration\MenuConfiguration;
 use LAG\AdminBundle\Factory\ConfigurationFactory;
-use LAG\AdminBundle\Menu\Provider\MenuProvider;
-use LAG\AdminBundle\Routing\Resolver\RoutingResolverInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class MenuProviderTest extends AdminTestBase
 {
     public function testGet()
     {
-        list($provider, $menuFactory, $configurationFactory, $resolver) = $this->createProvider();
+        list($provider, $menuFactory, $configurationFactory, $requestStack) = $this->createProvider();
 
         $menuConfiguration = $this->createMock(MenuConfiguration::class);
         $menuConfiguration
@@ -34,6 +35,8 @@ class MenuProviderTest extends AdminTestBase
                         'linkAttributes' => [
                             'class' => 'link-class',
                         ],
+                        'route' => 'road 66',
+                        'icon' => 'fa-yes',
                     ],
                 ]
             ])
@@ -50,8 +53,16 @@ class MenuProviderTest extends AdminTestBase
                 'linkAttributes' => [
                     'class' => 'link-class',
                 ],
-                'route' => 'my_route',
+                'route' => 'road 66',
+                'text' => 'Yes !',
+                'icon' => 'fa-yes',
             ])
+        ;
+
+        $requestStack
+            ->expects($this->once())
+            ->method('getMasterRequest')
+            ->willReturn(new Request([], [], ['_route' =>'road 66']))
         ;
 
         $menuFactory
@@ -72,23 +83,17 @@ class MenuProviderTest extends AdminTestBase
             ->willReturn($menuConfiguration)
         ;
 
-        $resolver
-            ->expects($this->once())
-            ->method('resolveOptions')
-            ->with([
-                'text' => 'Yes !',
-                'attributes' => [
-                    'class' => 'child-class',
-                ],
-                'linkAttributes' => [
-                    'class' => 'link-class',
-                ],
-            ])
-            ->willReturn('my_route')
-        ;
-
         $menu = $provider->get('my_menu', []);
         $this->assertEquals($menuRoot, $menu);
+    }
+
+    public function testHas(): void
+    {
+        [$provider] = $this->createProvider([
+            'left' => []
+        ]);
+
+        $this->assertTrue($provider->has('left'));
     }
 
     /**
@@ -100,15 +105,20 @@ class MenuProviderTest extends AdminTestBase
     {
         $menuFactory = $this->createMock(FactoryInterface::class);
         $configurationFactory = $this->createMock(ConfigurationFactory::class);
-        $resolver = $this->createMock(RoutingResolverInterface::class);
+        $requestStack = $this->createMock(RequestStack::class);
 
-        $provider = new MenuProvider($menuConfigurations, $menuFactory, $configurationFactory, $resolver);
+        $provider = new MenuProvider(
+            $menuConfigurations,
+            $menuFactory,
+            $configurationFactory,
+            $requestStack
+        );
 
         return [
             $provider,
             $menuFactory,
             $configurationFactory,
-            $resolver
+            $requestStack
         ];
     }
 }

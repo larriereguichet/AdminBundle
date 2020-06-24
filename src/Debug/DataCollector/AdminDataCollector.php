@@ -63,9 +63,7 @@ class AdminDataCollector extends DataCollector
             // When the application configuration is not defined or resolved, we can not access to the admin/menus
             // configuration
             if ($this->storage->isFrozen()) {
-                foreach ($this->storage->getConfiguration()->all() as $name => $parameter) {
-                    $data['application'][$name] = $parameter;
-                }
+                $data['application'] = $this->storage->getConfiguration()->all();
 
                 foreach ($this->menuProvider->all() as $menuName => $menu) {
                     $data['menus'][$menuName] = [

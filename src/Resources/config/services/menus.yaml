@@ -4,8 +4,6 @@ services:
             $menuConfigurations: '%lag.menus%'
             $factory: '@knp_menu.factory'
             $configurationFactory: '@LAG\AdminBundle\Factory\ConfigurationFactory'
-            $resolver: '@LAG\AdminBundle\Routing\Resolver\RoutingResolverInterface'
-            $adminHelper: '@LAG\AdminBundle\Admin\Helper\AdminHelperInterface'
             $requestStack: '@request_stack'
         tags:
             - {name: knp_menu.provider}

@@ -3,10 +3,10 @@
 namespace LAG\AdminBundle\Tests\Debug\Collector;
 
 use Knp\Menu\ItemInterface;
+use LAG\AdminBundle\Bridge\KnpMenu\Provider\MenuProvider;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
-use LAG\AdminBundle\Menu\Provider\MenuProvider;
 use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\AdminTestBase;
@@ -60,7 +60,7 @@ class DebugCollectorTest extends AdminTestBase
             ->expects($this->once())
             ->method('all')
             ->willReturn([
-                'pandas' => $resource,
+                $resource,
             ])
         ;
 
@@ -79,6 +79,11 @@ class DebugCollectorTest extends AdminTestBase
             ->expects($this->once())
             ->method('getConfiguration')
             ->willReturn($configuration)
+        ;
+        $storage
+            ->expects($this->once())
+            ->method('isFrozen')
+            ->willReturn(true)
         ;
 
         $child = $this->createMock(ItemInterface::class);

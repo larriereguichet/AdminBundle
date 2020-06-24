@@ -85,7 +85,7 @@ class AdminSubscriberTest extends AdminTestBase
         $admin
             ->expects($this->once())
             ->method('getConfiguration')
-            ->willReturn(new AdminConfiguration(new ApplicationConfiguration()))
+            ->willReturn(new AdminConfiguration('panda', new ApplicationConfiguration()))
         ;
         $event = new AdminEvent($admin, $request);
 

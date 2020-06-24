@@ -147,7 +147,7 @@ class MenuItemConfiguration extends Configuration
                     $linkAttributes = [];
                 }
 
-                if ($this->menuName === 'left' && empty($linkAttributes)) {
+                if ('left' === $this->menuName && empty($linkAttributes)) {
                     $linkAttributes = ['class' => 'list-group-item list-group-item-action'];
                 }
 
