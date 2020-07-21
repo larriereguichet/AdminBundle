@@ -36,7 +36,18 @@ phpstan.analyse:
 bc.check:
 	bin/roave-backward-compatibility-check
 
-tests.var-dump-checker:
-
 tests.var-dump-checker.ci:
 	bin/var-dump-check --symfony --exclude vendor --exclude demo .
+
+# Infection
+infection.install:
+	wget https://github.com/infection/infection/releases/download/0.21.0/infection.phar
+	wget https://github.com/infection/infection/releases/download/0.21.0/infection.phar.asc
+	gpg --recv-keys C6D76C329EBADE2FB9C458CFC5095986493B4AA0
+	gpg --with-fingerprint --verify infection.phar.asc infection.phar
+	rm infection.phar.asc
+	sudo mv infection.phar /usr/local/bin/infection
+	sudo chmod +x /usr/local/bin/infection
+
+infection.run:
+	infection --threads=4

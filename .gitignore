@@ -10,7 +10,7 @@ symfony.lock
 phpunit.xml
 tests/app/var
 vendor
-var/phpunit
+var
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/

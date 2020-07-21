@@ -8,7 +8,9 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         bootstrap="tests/bootstrap.php">
+         bootstrap="tests/bootstrap.php"
+         executionOrder="random"
+         resolveDependencies="true">
     <testsuites>
         <testsuite name="AdminBundle Test Suite">
             <directory>tests/AdminBundle</directory>
