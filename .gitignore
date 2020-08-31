@@ -1,5 +1,6 @@
 .sass-cache
 .php_cs.cache
+.docker/mysql/data*
 bin
 !bin/php-cs-fixer-modified-files
 build

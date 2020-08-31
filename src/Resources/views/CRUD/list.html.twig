@@ -14,33 +14,7 @@
     {% endblock %}
 
     {% block filters %}
-        <div class="collapse"
-             id="filters-container">
-            <div class="card card-body">
-                <form action=""
-                      method="post">
-
-                    <h2>{{ 'lag.admin.filter' | trans }}</h2>
-
-                    {{ form_errors(admin.forms.filter) }}
-                    {{ form_widget(admin.forms.filter) }}
-
-                    <div class="text-right btn-group"
-                         role="group">
-                        <a href="{{ admin_url(admin, 'list') }}"
-                           class="btn btn-secondary">
-                            <i class="fa fa-refresh"></i>
-                            Reset
-                        </a>
-                        <button type="submit"
-                                class="btn btn-success">
-                            Filter
-                            <i class="fa fa-filter"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        {% include '@LAGAdmin/CRUD/list/_filters.html.twig' with {form: admin.forms.filter} %}
     {% endblock %}
 
     {% block top_extra_content %}{% endblock %}

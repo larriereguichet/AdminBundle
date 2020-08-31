@@ -1,0 +1,37 @@
+<div class="collapse"
+     id="filters-container">
+    <div class="card card-body">
+        {{ form_start(form) }}
+            <h2>{{ 'lag.admin.filter' | trans }}</h2>
+
+            {{ form_errors(form) }}
+
+            <div class="row">
+                {% for child in form %}
+                        <div class="col">
+                            {{ form_label(child) }}
+                            {{ form_widget(child) }}
+                        </div>
+                        {% if loop.index is divisible by (2) %}
+                            </div>
+                            <div class="row">
+                        {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="text-right btn-group"
+                 role="group">
+                <a href="{{ admin_url(admin, 'list') }}"
+                   class="btn btn-secondary">
+                    <i class="fa fa-refresh"></i>
+                    Reset
+                </a>
+                <button type="submit"
+                        class="btn btn-success">
+                    Filter
+                    <i class="fa fa-filter"></i>
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
