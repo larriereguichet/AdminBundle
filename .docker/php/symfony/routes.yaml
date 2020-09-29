@@ -1,0 +1,4 @@
+#jk_admin:
+#    resource: .
+#    prefix: /admin
+#    type: extra

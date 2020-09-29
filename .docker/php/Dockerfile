@@ -89,3 +89,14 @@ RUN symfony new admin_test --full --version=${SYMFONY_VERSION}
 COPY ./entrypoint.sh /home/docker/
 RUN sudo chown docker:docker /home/docker/entrypoint.sh
 RUN chmod a+x /home/docker/entrypoint.sh
+
+COPY ./add-composer-class.php /home/docker/www/admin_test
+RUN sudo chown docker:docker /home/docker/www/admin_test/add-composer-class.php
+RUN chmod a+x /home/docker/www/admin_test/add-composer-class.php
+
+COPY symfony/routes.yaml /home/docker/www/admin_test/config
+COPY symfony/bundles.php /home/docker/www/admin_test/config
+COPY symfony/composer.json /home/docker/www/admin_test/
+RUN sudo chown -R docker:docker /home/docker/www/admin_test
+
+WORKDIR /home/docker/www/admin_test
