@@ -55,7 +55,7 @@ class ApplicationConfiguration extends Configuration
                 'create_template' => '@LAGAdmin/CRUD/create.html.twig',
                 'delete_template' => '@LAGAdmin/CRUD/delete.html.twig',
                 'homepage_template' => '@LAGAdmin/Pages/home.html.twig',
-                'homepage_route' => 'lag.admin.homepage',
+                'homepage_route' => 'lag_admin.homepage',
                 'routing_url_pattern' => '/{admin}/{action}',
                 'routing_name_pattern' => 'lag.admin.{admin}.{action}',
                 'bootstrap' => true,
