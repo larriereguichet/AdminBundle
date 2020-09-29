@@ -43,11 +43,11 @@ Import the routing configuration to have the admin generated routes :
 ```yml
     # config/routes.yaml        
     lag_admin:
-        resource: .
-        type: extra
+        resource: '@LAGAdminBundle/Resources/config/routing/routing.yaml'
+        prefix: /admin
 ```
 
-### Step 4 : Configure an entity
+### Step 3 : Configure an entity
 
 ```yaml
 # config/packages/lag_admin.yaml

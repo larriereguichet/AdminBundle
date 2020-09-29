@@ -33,7 +33,7 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         if (!key_exists('application', $config)) {
             $config['application'] = [
                 'enable_menus' => true,
-                'resources_path' => null,
+                'resources_path' => '%kernel.project_dir%/config/admin/resources',
             ];
         }
 

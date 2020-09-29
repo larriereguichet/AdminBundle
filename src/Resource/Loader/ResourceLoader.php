@@ -19,10 +19,9 @@ class ResourceLoader
     public function load(string $resourcesPath): array
     {
         $fileSystem = new Filesystem();
-        $resourcesPath = realpath($resourcesPath);
 
         if (!$fileSystem->exists($resourcesPath)) {
-            throw new FileNotFoundException(null, 0, null, $resourcesPath);
+            return [];
         }
 
         if (!is_dir($resourcesPath)) {

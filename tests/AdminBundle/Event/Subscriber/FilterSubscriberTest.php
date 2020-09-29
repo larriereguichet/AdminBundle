@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Tests\Event\Subscriber;
 
 use LAG\AdminBundle\Event\Subscriber\FilterSubscriber;
 use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class FilterSubscriberTest extends AdminTestBase
@@ -23,8 +24,9 @@ class FilterSubscriberTest extends AdminTestBase
     private function createSubscriber()
     {
         $formFactory = $this->createMock(FormFactoryInterface::class);
+        $translationHelper = $this->createMock(TranslationHelperInterface::class);
 
-        $subscriber = new FilterSubscriber($formFactory);
+        $subscriber = new FilterSubscriber($formFactory, $translationHelper);
 
         return [
             $subscriber,

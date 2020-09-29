@@ -92,7 +92,7 @@ class RoutingLoader implements LoaderInterface
      *
      * @throws Exception
      */
-    public function load($routingResource, $type = null)
+    public function load($routingResource, string $type = null)
     {
         if ($this->loaded) {
             throw new RuntimeException('Do not add the Admin "extra" loader twice');
@@ -124,7 +124,7 @@ class RoutingLoader implements LoaderInterface
 
             if ($this->applicationConfiguration->getParameter('enable_homepage')) {
                 $route = new Route('/', ['_controller' => HomeAction::class], []);
-                $routes->add('lag.admin.homepage', $route);
+                $routes->add('lag_admin.homepage', $route);
             }
         }
 
@@ -139,7 +139,7 @@ class RoutingLoader implements LoaderInterface
      *
      * @return bool
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, string $type = null)
     {
         return 'extra' === $type;
     }

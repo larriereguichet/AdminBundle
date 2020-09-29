@@ -99,12 +99,10 @@ class FormFactory implements \LAG\AdminBundle\Factory\FormFactoryInterface
 
     public function createDeleteForm(ActionInterface $action, Request $request, $entity): FormInterface
     {
-        $form = $this
+        return $this
             ->formFactory
             ->create($action->getConfiguration()->get('form'), $entity)
         ;
-
-        return $form;
     }
 
     private function getDataProvider(AdminConfiguration $configuration): DataProviderInterface

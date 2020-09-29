@@ -26,35 +26,41 @@
   ],
   "require": {
     "php": "^7.2",
-    "johnkrovitch/configuration": "^1.3",
-    "johnkrovitch/orm-pack": "^1.0",
+    "johnkrovitch/configuration": "^1.4",
+    "johnkrovitch/orm-pack": "^2.0",
     "knplabs/knp-menu-bundle": "^3.0",
     "lag/string-utils": "^1.2",
     "sensio/framework-extra-bundle": "^4.4|^5.4",
-    "symfony/dependency-injection": "^4.4|^5.0",
-    "symfony/form": "^4.4|^5.0",
-    "symfony/framework-bundle": "^4.4|^5.0",
-    "symfony/security-bundle": "^4.4|^5.0",
-    "symfony/serializer": "^4.4|^5.0",
-    "symfony/translation": "^4.4|^5.0",
+    "symfony/dependency-injection": "^4.4|^5.1",
+    "symfony/form": "^4.4|^5.1",
+    "symfony/framework-bundle": "^4.4|^5.1",
+    "symfony/security-bundle": "^4.4|^5.1",
+    "symfony/serializer": "^4.4|^5.1",
+    "symfony/translation": "^4.4|^5.1",
     "twig/twig": "^3.0",
     "babdev/pagerfanta": "^2.4"
   },
   "require-dev": {
     "dg/bypass-finals": "^1.1",
     "nyholm/symfony-bundle-test": "^1.6",
+    "php-parallel-lint/php-var-dump-check": "^0.5.0",
     "phpstan/phpstan": "^0.12",
     "phpunit/phpunit": "^8.0",
-    "roave/backward-compatibility-check": "^3.0",
+    "roave/backward-compatibility-check": "^5.0",
     "sensiolabs/security-checker": "^4.0|^5.0|^6.0",
+    "symfony/console": "^5.1",
+    "symfony/debug-bundle": "^5.1",
     "symfony/monolog-bundle": "^3.5",
-    "symfony/var-dumper": "^4.4|^5.0",
+    "symfony/var-dumper": "^4.4|^5.1",
     "symfony/webpack-encore-bundle": "^1.7"
   },
   "autoload": {
     "psr-4": {
       "LAG\\AdminBundle\\": "src/"
-    }
+    },
+    "exclude-from-classmap": [
+      "tests"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

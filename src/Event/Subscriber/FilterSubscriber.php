@@ -2,11 +2,14 @@
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
+use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Event\Events\FilterEvent;
 use LAG\AdminBundle\Filter\Filter;
+use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use LAG\AdminBundle\Utils\FormUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -18,6 +21,11 @@ class FilterSubscriber implements EventSubscriberInterface
      */
     private $formFactory;
 
+    /**
+     * @var TranslationHelperInterface
+     */
+    private $translationHelper;
+
     public static function getSubscribedEvents()
     {
         return [
@@ -25,9 +33,10 @@ class FilterSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct(FormFactoryInterface $formFactory, TranslationHelperInterface $translationHelper)
     {
         $this->formFactory = $formFactory;
+        $this->translationHelper = $translationHelper;
     }
 
     public function onFilter(FilterEvent $event): void
@@ -38,13 +47,13 @@ class FilterSubscriber implements EventSubscriberInterface
         $configuration = $action->getConfiguration();
         $filters = $configuration->getParameter('filters');
 
-        // Nothing to do if not filters are configured
+        // Nothing to do if no filters are configured
         if (0 === count($filters)) {
             return;
         }
         // As filters should be applied before entity loading, the filter form is created and submitted at the same
         // time, unlike the classic forms
-        $form = $this->createForm($filters);
+        $form = $this->createForm($filters, $admin->getConfiguration());
         $form->handleRequest($event->getRequest());
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -71,22 +80,29 @@ class FilterSubscriber implements EventSubscriberInterface
         $event->addForm($form, 'filter');
     }
 
-    private function createForm(array $filters): FormInterface
+    private function createForm(array $filters, AdminConfiguration $configuration): FormInterface
     {
         $form = $this
             ->formFactory
-            ->createNamed('filter', FormType::class)
+            ->createNamed('filter', FormType::class, null, [
+                'label' => false,
+            ])
         ;
 
         foreach ($filters as $name => $filter) {
-            $options = array_merge([
+            $formType = FormUtils::convertShortFormType($filter['type']);
+            $formOptions = [
                 // All filters are optional
                 'required' => false,
-            ], $filter['options']);
-            $options = array_merge($options, FormUtils::getFormTypeOptions($filter['type']));
-            $type = FormUtils::convertShortFormType($filter['type']);
+                'label' => $this->translationHelper->transWithPattern($configuration, $name),
+            ];
 
-            $form->add($name, $type, $options);
+            if (DateType::class === $formType) {
+                $formOptions['html5'] = true;
+                $formOptions['widget'] = 'single_text';
+            }
+            $formOptions = array_merge($formOptions, $filter['options']);
+            $form->add($name, $formType, $formOptions);
         }
 
         return $form;

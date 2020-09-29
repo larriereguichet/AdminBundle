@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Debug\DataCollector;
 
-use Exception;
 use LAG\AdminBundle\Bridge\KnpMenu\Provider\MenuProvider;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Exception\ConfigurationException;
@@ -10,6 +9,7 @@ use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Throwable;
 
 class AdminDataCollector extends DataCollector
 {
@@ -41,7 +41,7 @@ class AdminDataCollector extends DataCollector
         $this->menuProvider = $menuProvider;
     }
 
-    public function collect(Request $request, Response $response, Exception $exception = null)
+    public function collect(Request $request, Response $response, Throwable $exception = null)
     {
         $data = [
             'admins' => [],
