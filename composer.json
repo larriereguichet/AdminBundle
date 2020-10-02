@@ -45,7 +45,7 @@
     "nyholm/symfony-bundle-test": "^1.6",
     "php-parallel-lint/php-var-dump-check": "^0.5.0",
     "phpstan/phpstan": "^0.12",
-    "phpunit/phpunit": "^8.0",
+    "phpunit/phpunit": "^9.4",
     "roave/backward-compatibility-check": "^5.0",
     "sensiolabs/security-checker": "^4.0|^5.0|^6.0",
     "symfony/console": "^5.1",
