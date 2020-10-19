@@ -70,6 +70,8 @@ class AdminTest extends AdminTestBase
                     $this->assertInstanceOf(FormEvent::class, $event);
                     $event->addForm($form, 'entity');
                 }
+
+                return $event;
             })
         ;
 
@@ -157,6 +159,8 @@ class AdminTest extends AdminTestBase
                 $this->assertInstanceOf(ViewEvent::class, $event);
 
                 $event->setView($view);
+
+                return $event;
             })
         ;
 
@@ -221,6 +225,8 @@ class AdminTest extends AdminTestBase
                     $this->assertInstanceOf(AdminEvent::class, $event);
                     $event->setAction($action);
                 }
+
+                return $event;
             })
         ;
 
@@ -263,6 +269,8 @@ class AdminTest extends AdminTestBase
                     $this->assertInstanceOf(FormEvent::class, $event);
                     $event->addForm($form, 'entity');
                 }
+
+                return $event;
             })
         ;
 

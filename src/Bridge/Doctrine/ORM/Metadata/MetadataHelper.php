@@ -2,9 +2,9 @@
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use Exception;
 use LAG\AdminBundle\Field\Definition\FieldDefinition;
 

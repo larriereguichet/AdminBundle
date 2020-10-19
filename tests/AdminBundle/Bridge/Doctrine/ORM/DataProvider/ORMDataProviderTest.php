@@ -77,6 +77,8 @@ class ORMDataProviderTest extends AdminTestBase
                 $this->assertEquals($queryBuilder, $event->getData());
                 $this->assertEquals($admin, $event->getAdmin());
                 $this->assertEquals([], $event->getFilters());
+
+                return $event;
             })
         ;
 
