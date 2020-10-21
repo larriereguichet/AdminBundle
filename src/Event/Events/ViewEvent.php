@@ -4,8 +4,8 @@ namespace LAG\AdminBundle\Event\Events;
 
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\View\ViewInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ViewEvent extends Event
 {

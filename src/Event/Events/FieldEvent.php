@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Event\Events;
 
 use LAG\AdminBundle\Field\FieldInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class FieldEvent extends Event
 {

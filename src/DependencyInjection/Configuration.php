@@ -16,12 +16,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('lag_admin');
-
-        if (method_exists(TreeBuilder::class, 'getRootNode')) {
-            $rootNode = $treeBuilder->getRootNode();
-        } else {
-            $rootNode = $treeBuilder->root('lag_admin');
-        }
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()
@@ -47,9 +42,9 @@ class Configuration implements ConfigurationInterface
 
             return $treeBuilder->getRootNode();
         } else {
-            $treeBuilder = new TreeBuilder();
+            $treeBuilder = new TreeBuilder($name);
 
-            return $treeBuilder->root($name);
+            return $treeBuilder->getRootNode();
         }
     }
 
@@ -59,7 +54,6 @@ class Configuration implements ConfigurationInterface
     protected function getAdminsConfigurationNode()
     {
         $node = $this->createRootNode('admins');
-
         $node
             // useAttributeAsKey() method will preserve keys when multiple configurations files are used and then avoid
             // admin not found by configuration override

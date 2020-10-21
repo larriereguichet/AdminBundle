@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 
 interface MetadataHelperInterface
 {

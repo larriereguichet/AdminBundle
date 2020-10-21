@@ -3,8 +3,8 @@
 namespace LAG\AdminBundle\Event;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractEvent extends Event
 {

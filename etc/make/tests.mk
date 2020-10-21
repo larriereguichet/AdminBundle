@@ -1,7 +1,9 @@
-.PHONY: tests php-cs-fixer.fix phpstan.analyse phpunit.run security.check tests.stop-on-failure
+.PHONY: tests tests.ci tests.stop-on-failure php-cs-fixer.fix php-cs-fixer.ci phpstan.analyse phpunit.run security.check tests.stop-on-failure bc.check
 
-### PHPUnit ###
+# PHPUnit
 tests: phpunit.run php-cs-fixer.fix phpstan.analyse security.check
+
+tests.ci: phpunit.run php-cs-fixer.ci phpstan.analyse security.check
 
 tests.stop-on-failure:
 	bin/phpunit --stop-on-failure -v
@@ -14,9 +16,12 @@ phpunit.run.stop-on-failure:
 	bin/phpunit --stop-on-failure
 	@echo "Results file generated file://$(current_dir)/var/phpunit/coverage/index.html"
 
-### CodeStyle ###
+# CodeStyle
 php-cs-fixer.fix:
 	php-cs-fixer fix
+
+php-cs-fixer.ci:
+	php php-cs-fixer fix --dry-run --using-cache=no --verbose
 
 php-cs-fixer.install:
 	@echo "Install binary using composer (globally)"
@@ -27,7 +32,10 @@ php-cs-fixer.install:
 phpstan.analyse:
 	bin/phpstan analyse --level=1 src
 	bin/phpstan analyse --level=1 tests
-##################
 
+# Misc
 security.check:
 	bin/security-checker security:check
+
+bc.check:
+	bin/roave-backward-compatibility-check

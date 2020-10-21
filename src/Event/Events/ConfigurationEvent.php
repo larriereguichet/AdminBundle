@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Event\Events;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ConfigurationEvent extends Event
 {

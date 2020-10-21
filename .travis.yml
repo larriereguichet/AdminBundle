@@ -16,9 +16,7 @@ install:
     - composer create-project "symfony/skeleton:${SYMFONY_VERSION}" demo
 
 script:
-    - make phpunit.run
-    - make phpstan.analyse
-    - php php-cs-fixer fix --dry-run --using-cache=no --verbose
+    - make tests.ci
     - cd demo
     - rm -rf var/cache
     - bin/console ca:cl
