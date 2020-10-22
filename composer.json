@@ -40,6 +40,8 @@
     "symfony/serializer": "^4.4|^5.1",
     "symfony/translation": "^4.4|^5.1",
     "symfony/twig-bundle": "^4.4|^5.1",
+    "twig/intl-extra": "^3.1",
+    "twig/string-extra": "^3.1",
     "twig/twig": "^3.0"
   },
   "require-dev": {
