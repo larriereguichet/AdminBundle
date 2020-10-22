@@ -28,7 +28,7 @@
     "php": "^7.2",
     "babdev/pagerfanta": "^2.4",
     "johnkrovitch/configuration": "^1.4",
-    "johnkrovitch/orm-pack": "^2.1",
+    "johnkrovitch/orm-pack": "^2.0",
     "knplabs/knp-menu-bundle": "^3.0",
     "lag/string-utils": "^1.2",
     "sensio/framework-extra-bundle": "^4.4|^5.4",
