@@ -113,6 +113,11 @@ class View implements ViewInterface
         return $this->configuration->getParameter($name);
     }
 
+    public function getData()
+    {
+        return $this->entities;
+    }
+
     /**
      * @return ActionConfiguration
      */

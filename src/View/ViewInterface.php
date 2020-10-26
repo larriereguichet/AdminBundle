@@ -50,6 +50,8 @@ interface ViewInterface
      */
     public function getPager();
 
+    public function getData();
+
     public function getForms();
 
     /**

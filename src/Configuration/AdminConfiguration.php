@@ -116,4 +116,15 @@ class AdminConfiguration extends Configuration
     {
         return $this->name;
     }
+
+    public function getPermissions(): array
+    {
+        $roles = explode(',', $this->get('permissions'));
+
+        foreach ($roles as $index => $role) {
+            $roles[$index] = trim($role);
+        }
+
+        return $roles;
+    }
 }
