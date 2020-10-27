@@ -15,12 +15,8 @@ use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
-class LAGAdminBundleTest extends BaseBundleTestCase
+class LAGAdminBundleTest extends KernelTestBase
 {
-    protected function getBundleClass()
-    {
-        return LAGAdminBundle::class;
-    }
     protected function setUp(): void
     {
         parent::setUp();
