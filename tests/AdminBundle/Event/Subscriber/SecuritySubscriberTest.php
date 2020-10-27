@@ -27,17 +27,11 @@ class SecuritySubscriberTest extends AdminTestBase
 
     public function testHandleRequest()
     {
-        list($subscriber,, $tokenStorage, $authorizationChecker) = $this->createSubscriber([]);
+        list($subscriber,, $tokenStorage, $authorizationChecker) = $this->createSubscriber([
+            'enable_security' => true,
+        ]);
 
         $user = $this->createMock(UserInterface::class);
-        $user
-            ->expects($this->atLeastOnce())
-            ->method('getRoles')
-            ->willReturn([
-                'ROLE_GRANTED',
-            ])
-        ;
-
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->atLeastOnce())
@@ -54,18 +48,15 @@ class SecuritySubscriberTest extends AdminTestBase
         $authorizationChecker
             ->expects($this->atLeastOnce())
             ->method('isGranted')
-            ->with([
-                'ROLE_GRANTED',
-            ], $user)
+            ->with('ROLE_GRANTED', $user)
             ->willReturn(true)
         ;
 
         $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $adminConfiguration
             ->expects($this->atLeastOnce())
-            ->method('getParameter')
-            ->with('permissions')
-            ->willReturn('ROLE_GRANTED')
+            ->method('getPermissions')
+            ->willReturn(['ROLE_GRANTED'])
         ;
 
         $admin = $this->createMock(AdminInterface::class);
