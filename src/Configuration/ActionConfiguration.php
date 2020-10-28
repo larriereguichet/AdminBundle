@@ -234,6 +234,11 @@ class ActionConfiguration extends Configuration
         return $this->adminConfiguration;
     }
 
+    public function getLoadStrategy(): string
+    {
+        return $this->parameters->get('load_strategy');
+    }
+
     /**
      * Return the filters normalizer.
      */

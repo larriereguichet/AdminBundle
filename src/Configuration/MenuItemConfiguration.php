@@ -3,7 +3,6 @@
 namespace LAG\AdminBundle\Configuration;
 
 use JK\Configuration\Configuration;
-use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Routing\Resolver\RoutingResolverInterface;
 use LAG\Component\StringUtils\StringUtils;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -32,11 +31,6 @@ class MenuItemConfiguration extends Configuration
      * @var string
      */
     private $adminName;
-
-    /**
-     * @var AdminInterface|null
-     */
-    private $admin;
 
     /**
      * @var mixed
@@ -92,7 +86,7 @@ class MenuItemConfiguration extends Configuration
                 return $route;
             })
             ->setNormalizer('routeParameters', function (Options $options, $routeParameters) {
-                if (null === $routeParameters) {
+                if ($routeParameters === null) {
                     return [];
                 }
 
@@ -134,12 +128,12 @@ class MenuItemConfiguration extends Configuration
             // if an admin name is set, an action name can provided. This action will be the menu link
             ->setNormalizer('action', function (Options $options, $action) {
                 // if an action name is provided, an admin name should be defined too
-                if (null !== $action && null === $options->offsetGet('admin')) {
+                if ($action !== null && $options->offsetGet('admin') === null) {
                     throw new InvalidOptionsException('You should provide an admin name for this action '.$action);
                 }
 
                 // default to list action
-                if (null !== $options->offsetGet('admin') && null === $action) {
+                if ($options->offsetGet('admin') !== null && $action === null) {
                     $action = 'list';
                 }
 
@@ -153,7 +147,7 @@ class MenuItemConfiguration extends Configuration
                 $resolvedItems = [];
 
                 foreach ($items as $name => $item) {
-                    $itemConfiguration = new MenuItemConfiguration($name, $this->menuName, $this->admin, $this->routingResolver, $this->data);
+                    $itemConfiguration = new MenuItemConfiguration($name, $this->menuName, $this->adminName, $this->routingResolver, $this->data);
                     $itemConfiguration->configureOptions($resolver);
                     $itemConfiguration->setParameters($resolver->resolve($item));
                     $resolver->clear();

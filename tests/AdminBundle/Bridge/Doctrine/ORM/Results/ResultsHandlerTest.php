@@ -6,6 +6,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandler;
 use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
 use Pagerfanta\Pagerfanta;
 
 class ResultsHandlerTest extends AdminTestBase
@@ -22,13 +23,13 @@ class ResultsHandlerTest extends AdminTestBase
         $this->assertEquals($data, $results);
 
         $results = $handler->handle($data, true, 1, 25);
-        $this->assertInstanceOf(Pagerfanta::class, $results);
+        $this->assertIsArray($results);
     }
-
-    public function testHandleWithQueryBuilder()
+    
+    public function testHandleQuery(): void
     {
         $handler = new ResultsHandler();
-
+    
         $query = $this->createMock(Query::class);
         $query
             ->expects($this->atLeastOnce())
@@ -37,17 +38,5 @@ class ResultsHandlerTest extends AdminTestBase
         ;
         $results = $handler->handle($query, false, 1, 25);
         $this->assertEquals('data !', $results);
-
-        $queryBuilder = $this->createMock(QueryBuilder::class);
-        $queryBuilder
-            ->expects($this->atLeastOnce())
-            ->method('getQuery')
-            ->willReturn($query)
-        ;
-        $results = $handler->handle($queryBuilder, false, 1, 25);
-        $this->assertEquals('data !', $results);
-
-        $results = $handler->handle($queryBuilder, true, 1, 25);
-        $this->assertInstanceOf(Pagerfanta::class, $results);
     }
 }

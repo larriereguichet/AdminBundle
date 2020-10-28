@@ -23,7 +23,7 @@ class ResultsHandler implements ResultsHandlerInterface
             $pager->setCurrentPage($page);
             $pager->setMaxPerPage($maxPerPage);
 
-            return $pager;
+            return $pager->getCurrentPageResults();
         }
 
         if ($data instanceof Query) {
