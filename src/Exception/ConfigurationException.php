@@ -10,38 +10,34 @@ use Throwable;
  */
 class ConfigurationException extends Exception
 {
-    /**
-     * @var array
-     */
-    private $configuration;
+    private array $configuration;
 
     public function __construct(
-        string $type = null,
-        string $typeName = '',
-        $code = 0,
+        string $resourceType = null,
+        string $resourceName = '',
         Throwable $previous = null,
         array $configuration = []
     ) {
         $typeMessage = 'An error has occurred when resolving a configuration';
 
-        if ('menu' === $type) {
+        if ($resourceType === 'menu') {
             $typeMessage = 'An error has occurred when resolving the configuration for the menu "%s"';
         }
 
-        if ('action' === $type) {
+        if ($resourceType === 'action') {
             $typeMessage = 'An error has occurred when resolving the configuration of the action "%s"';
         }
 
-        if ('admin' === $type) {
+        if ($resourceType === 'admin') {
             $typeMessage = 'An error has occurred when resolving the configuration of the admin "%s"';
         }
-        $message = sprintf($typeMessage, $typeName);
+        $message = sprintf($typeMessage, $resourceName);
 
         if ($previous) {
             $message .= ' : '.$previous->getMessage();
         }
 
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $previous->getCode(), $previous);
         $this->configuration = $configuration;
     }
 

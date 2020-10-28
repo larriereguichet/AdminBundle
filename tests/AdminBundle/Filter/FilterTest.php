@@ -3,9 +3,9 @@
 namespace LAG\AdminBundle\Tests\Filter;
 
 use LAG\AdminBundle\Filter\Filter;
-use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\Tests\TestCase;
 
-class FilterTest extends AdminTestBase
+class FilterTest extends TestCase
 {
     public function testGettersAndSetters()
     {

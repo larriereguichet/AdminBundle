@@ -6,7 +6,9 @@ use LAG\AdminBundle\Admin\AdminInterface;
 
 interface AdminHelperInterface
 {
-    public function setCurrent(AdminInterface $admin): void;
+    public function setAdmin(AdminInterface $admin): void;
 
-    public function getCurrent(): ?AdminInterface;
+    public function getAdmin(): AdminInterface;
+
+    public function hasAdmin(): bool;
 }

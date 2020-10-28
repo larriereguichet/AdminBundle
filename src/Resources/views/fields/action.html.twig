@@ -1,0 +1,6 @@
+{% set class = options.action in classMap|keys ? classMap[options.action] : 'btn btn-secondary btn-sm' %}
+{% set attr = options.attr|merge({
+    class: class
+}) %}
+{% set text = options.text %}
+{% include '@LAGAdmin/fields/link.html.twig' %}

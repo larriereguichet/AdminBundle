@@ -3,51 +3,26 @@
 namespace LAG\AdminBundle\Configuration;
 
 use JK\Configuration\Configuration;
-use LAG\AdminBundle\Routing\Resolver\RoutingResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MenuConfiguration extends Configuration
 {
-    /**
-     * @var string
-     */
-    private $menuName;
+    private string $menuName;
 
-    /**
-     * @var RoutingResolverInterface
-     */
-    private $routingResolver;
-
-    /**
-     * @var string
-     */
-    private $adminName;
-
-    /**
-     * @var mixed
-     */
-    private $data;
-
-    /**
-     * MenuConfiguration constructor.
-     */
-    public function __construct(string $menuItemName, string $adminName, RoutingResolverInterface $routingRoutingResolver, $data = null)
+    public function __construct(string $menuName)
     {
-        $this->menuName = $menuItemName;
-        $this->routingResolver = $routingRoutingResolver;
-        $this->data = $data;
-        $this->adminName = $adminName;
-        parent::__construct();
+        $this->menuName = $menuName;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
                 'children' => [],
-                'attributes' => [
-                    'class' => 'list-group admin admin-menu-'.$this->menuName,
+                'attributes' => [],
+                'extras' => [
+                    'permissions' => ['ROLE_USER'],
                 ],
                 'inherits' => true,
             ])
@@ -62,7 +37,7 @@ class MenuConfiguration extends Configuration
                     if (!$item) {
                         $item = [];
                     }
-                    $configuration = new MenuItemConfiguration($name, $this->menuName, $this->adminName, $this->routingResolver, $this->data);
+                    $configuration = new MenuItemConfiguration($name, $this->menuName);
                     $configuration->configureOptions($innerResolver);
                     $value[$name] = $innerResolver->resolve($item);
                     $innerResolver->clear();
@@ -70,18 +45,18 @@ class MenuConfiguration extends Configuration
 
                 return $value;
             })
+            ->setNormalizer('extras', function (Options $options, $extras) {
+                if (!is_array($extras)) {
+                    $extras = [];
+                }
+
+                if (!key_exists('permissions', $extras)) {
+                    $extras['permissions'] = ['ROLE_USER'];
+                }
+
+                return $extras;
+            })
         ;
-    }
-
-    public function all()
-    {
-        $values = parent::all();
-
-        foreach ($values['children'] as $name => $value) {
-            $values['children'][$name] = $value;
-        }
-
-        return $values;
     }
 
     public function getMenuName(): string
@@ -89,8 +64,28 @@ class MenuConfiguration extends Configuration
         return $this->menuName;
     }
 
-    public function getRoute(): string
+    public function getExtras()
     {
-        return $this->parameters->get('route');
+        return $this->get('extras');
+    }
+
+    public function hasExtra(string $extra): bool
+    {
+        return key_exists($extra, $this->getExtras());
+    }
+
+    public function getExtra(string $extra)
+    {
+        return $this->hasExtra($extra) ? $this->getExtras()[$extra] : null;
+    }
+
+    public function hasPermissions(): bool
+    {
+        return $this->hasExtra('permissions');
+    }
+
+    public function getPermissions(): array
+    {
+        return $this->hasPermissions() ? $this->getExtra('permissions') : [];
     }
 }

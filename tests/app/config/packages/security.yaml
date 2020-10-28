@@ -1,0 +1,34 @@
+security:
+    encoders:
+        App\Entity\User: sha512
+        
+    providers:
+        Symfony\Bridge\Doctrine\Security\User\EntityUserProvider:
+            id: Symfony\Bridge\Doctrine\Security\User\EntityUserProvider
+    
+    role_hierarchy:
+        ROLE_OAUTH_USER:  ROLE_ADMIN
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+    
+    access_control:
+        - {path: ^/admin/login, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https}
+        - {path: ^/admin/connect/google, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https}
+        - {path: ^/admin/redirect/google, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https}
+        - {path: ^/admin, role: ROLE_ADMIN, requires_channel: https}
+        - {path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY}
+    
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        
+        main:
+            anonymous: ~
+            logout:
+                path: admin.logout
+            form_login: ~
+
+
+services:
+    Symfony\Bridge\Doctrine\Security\User\EntityUserProvider: ~

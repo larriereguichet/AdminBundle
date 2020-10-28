@@ -12,5 +12,5 @@ interface ResultsHandlerInterface
      *
      * @return mixed
      */
-    public function handle($data, bool $pagination, int $page = 1, int $maxPerPage = 25);
+    public function handle($data, bool $pagination, int $page = 1, int $maxPerPage = 25): object;
 }

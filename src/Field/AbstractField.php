@@ -2,51 +2,56 @@
 
 namespace LAG\AdminBundle\Field;
 
-use LAG\AdminBundle\Configuration\ActionConfiguration;
+use Closure;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Field\View\FieldView;
+use LAG\AdminBundle\Field\View\View;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractField implements FieldInterface
 {
-    const TYPE_AUTO = 'auto';
-    const TYPE_STRING = 'string';
-    const TYPE_TEXT = 'text';
-    const TYPE_FLOAT = 'float';
-    const TYPE_INTEGER = 'integer';
-    const TYPE_LINK = 'link';
-    const TYPE_ARRAY = 'array';
-    const TYPE_DATE = 'date';
-    const TYPE_COUNT = 'count';
-    const TYPE_ACTION = 'action';
-    const TYPE_COLLECTION = 'collection';
-    const TYPE_BOOLEAN = 'boolean';
-    const TYPE_MAPPED = 'mapped';
-    const TYPE_ACTION_COLLECTION = 'action_collection';
-    const TYPE_HEADER = 'header';
+    private string $name;
+    private string $type;
+    private array $options = [];
+    private bool $frozen = false;
 
-    /**
-     * Field's name.
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var array
-     */
-    protected $options = [];
-
-    /**
-     * @var bool
-     */
-    protected $frozen = false;
-
-    /**
-     * Field constructor.
-     */
-    public function __construct(string $name)
+    public function __construct(string $name, string $type)
     {
         $this->name = $name;
+        $this->type = $type;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+    }
+
+    public function setOptions(array $options): void
+    {
+        if ($this->frozen) {
+            throw new Exception('The options for the field "'.$this->name.'" have already been configured');
+        }
+        $this->options = $options;
+        $this->frozen = true;
+    }
+
+    public function createView(): View
+    {
+        return new FieldView(
+            $this->name,
+            $this->getOption('template'),
+            $this->getOptions(),
+            $this->getDataTransformer()
+        );
+    }
+
+    public function getParent(): ?string
+    {
+        return null;
+    }
+
+    public function getDataTransformer(): ?Closure
+    {
+        return null;
     }
 
     public function getName(): string
@@ -59,11 +64,6 @@ abstract class AbstractField implements FieldInterface
         return $this->options;
     }
 
-    /**
-     * @return mixed
-     *
-     * @throws Exception
-     */
     public function getOption(string $name)
     {
         if (!array_key_exists($name, $this->options)) {
@@ -71,26 +71,5 @@ abstract class AbstractField implements FieldInterface
         }
 
         return $this->options[$name];
-    }
-
-    public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)
-    {
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function setOptions(array $options)
-    {
-        if ($this->frozen) {
-            throw new Exception('The options for the field "'.$this->name.'"');
-        }
-        $this->options = $options;
-        $this->frozen = true;
-    }
-
-    public function isSortable(): bool
-    {
-        return false;
     }
 }

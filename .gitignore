@@ -6,6 +6,7 @@ bin
 build
 composer.lock
 phpunit.xml
+tests/app/var
 vendor
 var/phpunit
 
@@ -20,3 +21,13 @@ yarn-error.log
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###

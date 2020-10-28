@@ -2,265 +2,181 @@
 
 namespace LAG\AdminBundle\Tests\Factory;
 
+use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Factory\FieldFactory;
+use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Factory\FieldFactoryInterface;
 use LAG\AdminBundle\Factory\ViewFactory;
-use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\Field\StringField;
+use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Utils\RedirectionUtils;
+use LAG\AdminBundle\View\AdminView;
+use LAG\AdminBundle\View\RedirectView;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ViewFactoryTest extends AdminTestBase
+class ViewFactoryTest extends TestCase
 {
-    public function testCreate()
-    {
-        list($factory, $fieldFactory,, $storage) = $this->createFactory();
+    private ViewFactory $viewFactory;
+    private MockObject $fieldFactory;
+    private MockObject $redirectionUtils;
+    private ApplicationConfiguration $appConfig;
 
+    public function testCreateWithRedirection(): void
+    {
         $request = new Request();
+        $admin = $this->createMock(AdminInterface::class);
 
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
-        $entities = [];
-
-        $storage
-            ->expects($this->atLeastOnce())
-            ->method('getConfiguration')
-            ->willReturn($this->createApplicationConfigurationMock([
-                ['base_template', 'my_template.html.twig']
-            ]))
-        ;
-
-        $fieldFactory
+        $this
+            ->redirectionUtils
             ->expects($this->once())
-            ->method('createFields')
-            ->with($actionConfiguration)
-            ->willReturn([])
+            ->method('isRedirectionRequired')
+            ->with($admin)
+            ->willReturn(true)
         ;
-
-        $form = $this->createMock(FormInterface::class);
-        $form
+        $this
+            ->redirectionUtils
             ->expects($this->once())
-            ->method('createView')
+            ->method('getRedirectionUrl')
+            ->with($admin)
+            ->willReturn('my_url')
         ;
-        $forms = [
-            'entity' => $form,
-        ];
 
-        $factory->create(
-            $request,
-            'atomize',
-            'planet',
-            $adminConfiguration,
-            $actionConfiguration,
-            $entities,
-            $forms
-        );
+        $view = $this->viewFactory->create($request, $admin);
+        $this->assertInstanceOf(RedirectView::class, $view);
+        $this->assertEquals('my_url', $view->getUrl());
     }
 
-    public function testCreateAjax()
+    public function testCreate(): void
     {
-        list($factory, $fieldFactory,, $storage) = $this->createFactory();
+        $request = new Request();
+        $admin = $this->createMock(AdminInterface::class);
 
-        $request = new Request([], [], [], [], [], [
-            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+        $this
+            ->redirectionUtils
+            ->expects($this->once())
+            ->method('isRedirectionRequired')
+            ->with($admin)
+            ->willReturn(false)
+        ;
+        $this
+            ->redirectionUtils
+            ->expects($this->never())
+            ->method('getRedirectionUrl')
+        ;
+
+        $actionConfiguration = new ActionConfiguration();
+        $actionConfiguration->configure([
+            'name' => 'my_action',
+            'admin_name' => 'my_admin',
+            'fields' => [
+                'name' => [],
+            ],
+            'path' => '/my-action',
+            'route' => 'my-action',
+            'template' => '@LAGAdmin/crud/list.html.twig',
         ]);
 
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
-        $entities = [];
-
-        $storage
-            ->expects($this->atLeastOnce())
+        $action = $this->createMock(ActionInterface::class);
+        $admin
+            ->expects($this->once())
+            ->method('getAction')
+            ->willReturn($action)
+        ;
+        $action
+            ->expects($this->once())
             ->method('getConfiguration')
-            ->willReturn($this->createApplicationConfigurationMock([
-                ['ajax_template', 'my_template.html.twig']
-            ]))
+            ->willReturn($actionConfiguration)
         ;
 
-        $fieldFactory
+        $resolver = new OptionsResolver();
+        $field = new StringField('title', 'string');
+        $field->configureOptions($resolver);
+        $field->setOptions($resolver->resolve());
+
+        $this
+            ->fieldFactory
             ->expects($this->once())
-            ->method('createFields')
-            ->with($actionConfiguration)
-            ->willReturn([])
+            ->method('create')
+            ->willReturn($field)
         ;
-
-        $form = $this->createMock(FormInterface::class);
-        $form
-            ->expects($this->once())
-            ->method('createView')
-        ;
-        $forms = [
-            'planet_form' => $form,
-        ];
-
-        $factory->create(
-            $request,
-            'atomize',
-            'planet',
-            $adminConfiguration,
-            $actionConfiguration,
-            $entities,
-            $forms
-        );
+        $view = $this->viewFactory->create($request, $admin);
+        $this->assertInstanceOf(AdminView::class, $view);
+        $this->assertEquals('@LAGAdmin/crud/list.html.twig', $view->getTemplate());
     }
 
-    public function testCreateWithRedirectionToList()
+    public function testCreateWithAjax(): void
     {
-        $request = new Request([
-            'submit_and_redirect' => 'submit_and_redirect',
+        $request = new Request([], [], [], [], [], ['HTTP_X-Requested-With' => 'XMLHttpRequest']);
+        $admin = $this->createMock(AdminInterface::class);
+
+        $this
+            ->redirectionUtils
+            ->expects($this->once())
+            ->method('isRedirectionRequired')
+            ->with($admin)
+            ->willReturn(false)
+        ;
+        $this
+            ->redirectionUtils
+            ->expects($this->never())
+            ->method('getRedirectionUrl')
+        ;
+
+        $actionConfiguration = new ActionConfiguration();
+        $actionConfiguration->configure([
+            'name' => 'my_action',
+            'admin_name' => 'my_admin',
+            'fields' => [
+                'name' => [],
+            ],
+            'path' => '/my-action',
+            'route' => 'my-action',
+            'template' => '@LAGAdmin/crud/list.html.twig',
         ]);
-        $entities = [];
 
-        list($factory, $fieldFactory, $router,) = $this->createFactory();
-
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
-        $adminConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('getParameter')
-            ->willReturnMap([
-                ['actions', [
-                    'list' => [],
-                ]],
-                ['routing_name_pattern', '{admin}.{action}'],
-            ])
-        ;
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
-
-        $entityForm = $this->createMock(FormInterface::class);
-        $entityForm
-            ->expects($this->atLeastOnce())
-            ->method('isSubmitted')
-            ->willReturn(true)
-        ;
-        $entityForm
-            ->expects($this->atLeastOnce())
-            ->method('isValid')
-            ->willReturn(true)
-        ;
-        $forms = [
-            'entity' => $entityForm,
-        ];
-
-        $fieldFactory
-            ->expects($this->never())
-            ->method('createFields')
-        ;
-
-        $router
+        $action = $this->createMock(ActionInterface::class);
+        $admin
             ->expects($this->once())
-            ->method('generate')
-            ->with('planet.list')
-            ->willReturn('/planet/atomize')
+            ->method('getAction')
+            ->willReturn($action)
         ;
-
-        $factory->create(
-            $request,
-            'atomize',
-            'planet',
-            $adminConfiguration,
-            $actionConfiguration,
-            $entities,
-            $forms
-        );
-    }
-
-    public function testCreateRedirectionToEdit()
-    {
-        list($factory, $fieldFactory,,) = $this->createFactory();
-
-        $request = $this->createMock(Request::class);
-        $request
+        $action
             ->expects($this->once())
-            ->method('getUri')
-            ->willReturn('/planet/666/edit')
+            ->method('getConfiguration')
+            ->willReturn($actionConfiguration)
         ;
 
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
-        $adminConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('getParameter')
-            ->willReturnMap([
-                ['actions', [
-                    'edit' => [],
-                ]],
-                ['routing_name_pattern', '{admin}.{action}'],
-            ])
-        ;
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
+        $resolver = new OptionsResolver();
+        $field = new StringField('title', 'string');
+        $field->configureOptions($resolver);
+        $field->setOptions($resolver->resolve());
 
-        $entityForm = $this->createMock(FormInterface::class);
-        $entityForm
-            ->expects($this->atLeastOnce())
-            ->method('isSubmitted')
-            ->willReturn(true)
+        $this
+            ->fieldFactory
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn($field)
         ;
-        $entityForm
-            ->expects($this->atLeastOnce())
-            ->method('isValid')
-            ->willReturn(true)
-        ;
-
-        $fieldFactory
-            ->expects($this->never())
-            ->method('createFields')
-        ;
-
-        $view = $factory->createRedirection(
-            'edit',
-            'planet',
-            $request,
-            $adminConfiguration,
-            $actionConfiguration,
-            $entityForm
-        );
-
-        $this->assertEquals('/planet/666/edit', $view->getUrl());
+        $view = $this->viewFactory->create($request, $admin);
+        $this->assertInstanceOf(AdminView::class, $view);
+        $this->assertEquals('@LAGAdmin/empty.html.twig', $view->getBase());
     }
 
-    public function testCreateRedirectionWithException()
+    protected function setUp(): void
     {
-        list($factory,,,) = $this->createFactory();
+        $this->fieldFactory = $this->createMock(FieldFactoryInterface::class);
+        $this->appConfig = $this->createApplicationConfiguration([
+            'resources_path' => 'my-directory/',
+        ]);
+        $this->redirectionUtils = $this->createMock(RedirectionUtils::class);
 
-        $request = $this->createMock(Request::class);
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
-        $entityForm = $this->createMock(FormInterface::class);
-        $this->expectException(Exception::class);
-
-        $factory->createRedirection(
-            'rewind',
-            'planet',
-            $request,
-            $adminConfiguration,
-            $actionConfiguration,
-            $entityForm
+        $this->viewFactory = new ViewFactory(
+            $this->fieldFactory,
+            $this->appConfig,
+            $this->redirectionUtils
         );
-    }
-
-    /**
-     * @return MockObject[]|ViewFactory[]
-     */
-    private function createFactory(): array
-    {
-        $fieldFactory = $this->createMock(FieldFactory::class);
-        $router = $this->createMock(RouterInterface::class);
-        $storage = $this->createMock(ApplicationConfigurationStorage::class);
-
-        $factory = new ViewFactory(
-            $fieldFactory,
-            $router,
-            $storage
-        );
-
-        return [
-            $factory,
-            $fieldFactory,
-            $router,
-            $storage
-        ];
     }
 }

@@ -21,7 +21,7 @@ lag_admin:
                     order: []
                     route: ~
                     route_parameters: []
-                    route_path: ~
+                    path: ~
                     route_requirements: []
                     route_defaults':
                         _controller: LAG\AdminBundle\Admin\Admin
@@ -36,7 +36,7 @@ lag_admin:
                     template: ~
                     sortable: ~
                     string_length: ~
-                    string_length_truncate: ~
+                    string_truncate: ~
                     date_format: ~
                     use_form: ~
                     class: LAG\AdminBundle\Admin\Action

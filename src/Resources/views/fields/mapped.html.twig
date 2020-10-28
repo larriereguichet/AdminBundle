@@ -1,0 +1,3 @@
+{% include '@LAGAdmin/fields/_translated.string.html.twig'  with {
+    data: options.translation ? options.map[data]|default('~')|trans([], options.translation_domain) : options.map[data]|default('~')
+} %}

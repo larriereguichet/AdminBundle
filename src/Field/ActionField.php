@@ -2,28 +2,28 @@
 
 namespace LAG\AdminBundle\Field;
 
-use LAG\AdminBundle\Configuration\ActionConfiguration;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Display a link with button render and options.
  */
-class ActionField extends LinkField
+class ActionField extends AbstractField
 {
-    public function isSortable(): bool
+    public function getParent(): ?string
     {
-        return true;
+        return LinkField::class;
     }
 
-    public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        parent::configureOptions($resolver, $actionConfiguration);
-
         $resolver
-            ->setDefault('class', '')
-            ->setNormalizer('class', function (Options $options, $value) {
-                if ($value) {
+            ->setDefaults([
+                'template' => '@LAGAdmin/fields/action.html.twig',
+                'translation' => true,
+            ])
+            ->setNormalizer('attr', function (Options $options, $value) {
+                if (!empty($value['class'])) {
                     return $value;
                 }
                 $action = null;
@@ -33,14 +33,14 @@ class ActionField extends LinkField
                 }
 
                 if ('edit' === $action) {
-                    return 'btn btn-primary';
+                    $value['class'] = 'btn btn-primary btn-sm';
+                } elseif ('delete' === $action) {
+                    $value['class'] = 'btn btn-danger btn-sm';
+                } else {
+                    $value['class'] = 'btn btn-secondary btn-sm';
                 }
 
-                if ('delete' === $action) {
-                    return 'btn btn-danger';
-                }
-
-                return 'btn btn-secondary';
+                return $value;
             })
         ;
     }

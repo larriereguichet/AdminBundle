@@ -3,12 +3,12 @@
 namespace LAG\AdminBundle\Tests\Form\Type;
 
 use LAG\AdminBundle\Form\Type\DeleteType;
-use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\Tests\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DeleteTypeTest extends AdminTestBase
+class DeleteTypeTest extends TestCase
 {
     public function testConfigureOptions()
     {

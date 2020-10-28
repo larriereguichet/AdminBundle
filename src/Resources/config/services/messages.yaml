@@ -1,0 +1,3 @@
+services:
+    LAG\AdminBundle\Message\Registry\NotificationRegistryInterface: '@LAG\AdminBundle\Message\Registry\NotificationRegistry'
+    LAG\AdminBundle\Message\Registry\NotificationRegistry: ~

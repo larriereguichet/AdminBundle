@@ -13,70 +13,136 @@
         <meta name="description"
               content="{{ admin_config('description') }}"/>
     {% endblock %}
-
+    
+    {% block favicon %}
+        <link rel="shortcut icon" href="{{ asset('/bundles/lagadmin/favicon.ico') }}" type="image/x-icon">
+        <link rel="icon" href="{{ asset('/bundles/lagadmin/favicon.ico') }}" type="image/x-icon">
+    {% endblock %}
+    
     {% block admin_stylesheets %}
-        {% if admin_config('bootstrap') %}
-            <link rel="stylesheet"
-                  href="{{ asset('/bundles/lagadmin/assets/admin.css') }}">
+        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/sb-admin.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/fa.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/assets/admin.css') }}"/>
+    
+        {% if admin_media_enabled() %}
+            <link rel="stylesheet" href="{{ asset('/bundles/jkmedia/assets/media.css') }}"/>
         {% endif %}
+        
+{#        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />#}
     {% endblock %}
-
+    
     {% block stylesheets %}{% endblock %}
-
-    {% block head_javascripts %}
-        {{ admin_dump_scripts('head') | raw }}
-    {% endblock %}
-
+    {% block head_javascripts %}{% endblock %}
+    
     {% block head %}{% endblock %}
 </head>
 
 {% block body %}
-    {% set admin = admin|default(null) %}
-
-    <body>
-    {% block navbar %}
-        {% include '@LAGAdmin/Layout/header.html.twig' %}
-    {% endblock %}
-
-    {% block container %}
-        <div id="admin-main-container"
-             class="container-fluid">
-            <div class="row">
-                {% block layout %}
-                    {% block left_menu %}
-                        <nav class="col-2 d-none d-md-block sidebar">
-                            {{ knp_menu_render('left') }}
-                        </nav>
-                    {% endblock %}
-
-                    {% block content_container %}
-                        <main class="col-10 content-container"
-                              role="main">
-
-                            {% block flash_messages %}
-                                {% include "@LAGAdmin/Layout/flash_messages.html.twig" %}
-                            {% endblock %}
-
-                            {% block content %}{% endblock %}
-                        </main>
-                    {% endblock %}
-                {% endblock %}
+    <body id="page-top">
+    {% block wrapper %}
+    <div id="wrapper">
+        {% block sidebar %}
+            <div id="accordionSidebar" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
+                {% include '@LAGAdmin/layout/sidebar.html.twig' %}
             </div>
-        </div>
+        {% endblock %}
+        
+        {% block content_wrapper %}
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    {% block header %}
+                        {% include '@LAGAdmin/layout/header.html.twig' %}
+                    {% endblock %}
+                    
+                    {% block container %}
+                        <div class="container-fluid">
+                            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                {% block page_title %}{% endblock %}
+                            </div>
+                            {% block flash_messages %}{% include '@LAGAdmin/layout/flash_messages.html.twig' %}{% endblock %}
+                            {% block content %}{% endblock %}
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+        {% endblock %}
+    </div>
     {% endblock %}
-
+    
     {% block footer %}
         <footer>
             {% block admin_javascripts %}
+                {% if admin_media_enabled() %}
+                {# Media js should always be called before the admin js to preserve tinymce media working #}
+                <script src="{{ asset('/bundles/jkmedia/assets/media.js') }}"></script>
+                {% endif %}
+                <script src="{{ asset('/bundles/lagadmin/js/jquery.js') }}"></script>
+                <script src="{{ asset('/bundles/lagadmin/js/jquery-easing.js') }}"></script>
+                <script src="{{ asset('/bundles/lagadmin/js/bootstrap.js') }}"></script>
+                <script src="{{ asset('/bundles/lagadmin/js/sb-admin.js') }}"></script>
                 <script src="{{ asset('/bundles/lagadmin/assets/admin.js') }}"></script>
-
-                {# Inject scripts in footer section #}
-                {{ admin_dump_scripts('footer') | raw }}
             {% endblock %}
             {% block javascripts %}{% endblock %}
         </footer>
     {% endblock %}
+    
+    {% block modal %}
+        {% include '@LAGAdmin/modal/modal.html.twig' %}
+    {% endblock %}
+
+    {% if admin_media_enabled() %}
+        {% include '@JKMedia/modal/modal.html.twig' %}
+    {% endif %}
     </body>
 {% endblock %}
 </html>
 
+{# {% block body %} #}
+{# {% set admin = admin|default(null) %} #}
+
+{# <body> #}
+{# {% block navbar %} #}
+{# {% include '@LAGAdmin/Layout/header.html.twig' %} #}
+{# {% endblock %} #}
+
+{# {% block container %} #}
+{# <div id="admin-main-container" #}
+{# class="container-fluid"> #}
+{# <div class="row"> #}
+{# {% block layout %} #}
+{# {% block left_menu %} #}
+{# <nav class="col-2 d-none d-md-block sidebar"> #}
+{# {{ knp_menu_render('left') }} #}
+{# </nav> #}
+{# {% endblock %} #}
+
+{# {% block content_container %} #}
+{# <main class="col-10 content-container" #}
+{# role="main"> #}
+
+{# {% block flash_messages %} #}
+{# {% include "@LAGAdmin/Layout/flash_messages.html.twig" %} #}
+{# {% endblock %} #}
+
+{# {% block content %}{% endblock %} #}
+{# </main> #}
+{# {% endblock %} #}
+{# {% endblock %} #}
+{# </div> #}
+{# </div> #}
+{# {% endblock %} #}
+
+{# {% block footer %} #}
+{# <footer> #}
+{# {% block admin_javascripts %} #}
+{# <script src="{{ asset('/bundles/lagadmin/assets/admin.js') }}"></script> #}
+
+{# Inject scripts in footer section #}
+{# {{ admin_dump_scripts('footer') | raw }} #}
+{# {% endblock %} #}
+{# {% block javascripts %}{% endblock %} #}
+{# </footer> #}
+{# {% endblock %} #}
+{# </body> #}
+{# {% endblock %} #}
+{# </html> #}

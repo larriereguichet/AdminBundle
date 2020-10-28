@@ -10,10 +10,6 @@ services:
         tags:
             -
                 name: data_collector
-                template: '@LAGAdmin/Debug/template.html.twig'
+                template: '@LAGAdmin/debug/template.html.twig'
                 id: 'admin.data_collector'
         public: false
-
-    LAG\AdminBundle\Bridge\Twig\Extension\FieldDebugExtension:
-        tags:
-            - {name: twig.extension}

@@ -1,19 +1,21 @@
 services:
-    LAG\AdminBundle\Bridge\KnpMenu\Provider\MenuProvider:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+    
+    LAG\AdminBundle\Menu\Provider\MenuProvider:
         arguments:
-            $menuConfigurations: '%lag.menus%'
-            $factory: '@knp_menu.factory'
-            $configurationFactory: '@LAG\AdminBundle\Factory\ConfigurationFactory'
-            $requestStack: '@request_stack'
+            $menuConfigurations: '%lag_admin.menu.menus%'
         tags:
             - {name: knp_menu.provider}
 
-    LAG\AdminBundle\Event\Subscriber\MenuSubscriber:
-        class: LAG\AdminBundle\Event\Subscriber\MenuSubscriber
+    LAG\AdminBundle\Event\Listener\Menu\DefaultMenuListener:
         arguments:
-            $menuEnabled: '%lag.enable_menus%'
-            $registry: '@LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface'
-            $adminHelper: '@LAG\AdminBundle\Admin\Helper\AdminHelperInterface'
-            $menuConfigurations: '%lag.menus%'
+            $menuEnabled: '%lag_admin.menu.enable%'
+            $menuConfigurations: '%lag_admin.menu.menus%'
         tags:
-            - {name: kernel.event_subscriber}
+            - {name: kernel.event_listener, event: lag.admin.menu_configuration, priority: 255}
+    
+    LAG\AdminBundle\Event\Listener\Menu\MenuConfigurationListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.menu_configuration, priority: 0}

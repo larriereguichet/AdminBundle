@@ -17,8 +17,8 @@ You can change the current `Action` class using the `ADMIN_HANDLE_REQUEST` event
 
 ```php
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\AdminEvent;
+use LAG\AdminBundle\Event\EventsOLD;
+use LAG\AdminBundle\Event\EventsOLD\AdminEvent;
 
 
 class MySubscriber implements EventSubscriberInterface
@@ -67,8 +67,8 @@ my_admin:
 You can also deny access using your custom code to check permissions. Here is an example :
 
 ```php
-use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\AdminEvent;
+use LAG\AdminBundle\Event\EventsOLD;
+use LAG\AdminBundle\Event\EventsOLD\AdminEvent;
 use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -123,8 +123,8 @@ information. Sometimes, you may want to override the whole filter form to use yo
 using the `ADMIN_FILTER` event.
 
 ```php
-use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\FilterEvent;
+use LAG\AdminBundle\Event\EventsOLD;
+use LAG\AdminBundle\Event\EventsOLD\FilterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FilterSubscriber implements EventSubscriberInterface
@@ -154,8 +154,8 @@ your custom filter object or remove existing filters.
 > Filters object should implement `LAG\AdminBundle\Filter\FilterInterface`.
 
 ```php
-use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\FilterEvent;
+use LAG\AdminBundle\Event\EventsOLD;
+use LAG\AdminBundle\Event\EventsOLD\FilterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FilterSubscriber implements EventSubscriberInterface
@@ -193,8 +193,8 @@ information about data providers. But you can load entities using your custom co
 
 ```php
 use Doctrine\Common\Collections\ArrayCollection;
-use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\EntityEvent;
+use LAG\AdminBundle\Event\EventsOLD;
+use LAG\AdminBundle\Event\EventsOLD\EntityEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class AdminSubscriber implements EventSubscriberInterface

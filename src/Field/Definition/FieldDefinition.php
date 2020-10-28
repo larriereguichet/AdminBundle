@@ -4,20 +4,9 @@ namespace LAG\AdminBundle\Field\Definition;
 
 class FieldDefinition implements FieldDefinitionInterface
 {
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var array
-     */
-    private $options;
-
-    /**
-     * @var array
-     */
-    private $formOptions;
+    private string $type;
+    private array $options;
+    private array $formOptions;
 
     public function __construct(string $type, array $options = [], array $formOptions = [])
     {

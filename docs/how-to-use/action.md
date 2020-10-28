@@ -60,7 +60,7 @@ article:
                 permissions: ROLE_ADMIN
                 route: ~
                 route_parameters: []
-                route_path: ~
+                path: ~
                 route_requirements: []
                 route_defaults':
                     _controller: LAG\AdminBundle\Admin\Admin
@@ -95,7 +95,7 @@ article:
 | permissions | `ROLE_ADMIN` | The required role to granted for this action |
 | route | `null` | The route used for this action |
 | route_parameters | `[]` | The route parameters used for this action |
-| route_path | `[]` | The route path used for this action |
+| path | `[]` | The route path used for this action |
 | route_defaults | `[]` | The route defaults used for this action |
 | icon | `null` | The icon display in the h1 title |
 | load_strategy | `none` | This option should be to none in the create action, as no entity should be loaded from the database |
@@ -122,7 +122,7 @@ lag_admin:
                     permissions: ROLE_ADMIN
                     route: ~
                     route_parameters: []
-                    route_path: ~
+                    path: ~
                     route_requirements: []
                     route_defaults':
                         _controller: LAG\AdminBundle\Admin\Admin
@@ -157,7 +157,7 @@ article:
 | permissions | `ROLE_ADMIN` | The required role to granted for this action |
 | route | `null` | The route used for this action |
 | route_parameters | `[]` | The route parameters used for this action |
-| route_path | `[]` | The route path used for this action |
+| path | `[]` | The route path used for this action |
 | route_defaults | `[]` | The route defaults used for this action |
 | icon | `null` | The icon display in the h1 title |
 | load_strategy | `none` | This option should be to none in the create action, as no entity should be loaded from the database |
@@ -179,7 +179,7 @@ The `list` action is used to display a list of entity. This list can be paginate
 | permissions | `ROLE_ADMIN` | The required role to granted for this action |
 | route | `null` | The route used for this action |
 | route_parameters | `[]` | The route parameters used for this action |
-| route_path | `[]` | The route path used for this action |
+| path | `[]` | The route path used for this action |
 | route_defaults | `[]` | The route defaults used for this action |
 | icon | `null` | The icon display in the h1 title |
 | load_strategy | `none` | This option should be to none in the create action, as no entity should be loaded from the database |

@@ -4,31 +4,11 @@ namespace LAG\AdminBundle\Filter;
 
 class Filter implements FilterInterface
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var mixed
-     */
+    private string $name;
     private $value;
+    private string $operator;
+    private string $comparator;
 
-    /**
-     * @var string
-     */
-    private $operator;
-
-    /**
-     * @var string
-     */
-    private $comparator;
-
-    /**
-     * Filter constructor.
-     *
-     * @param mixed  $value
-     */
     public function __construct(string $name, $value, string $comparator = 'like', string $operator = 'or')
     {
         $this->name = $name;

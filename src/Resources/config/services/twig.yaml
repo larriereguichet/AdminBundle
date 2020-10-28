@@ -4,10 +4,24 @@ services:
         autoconfigure: true
         public: false
 
-    LAG\AdminBundle\Bridge\Twig\Extension\AdminExtension:
+    LAG\AdminBundle\Twig\Extension\AdminExtension:
+        arguments:
+            $mediaEnabled: '%lag_admin.media.bundle_enabled%'
         tags:
             - {name: twig.extension}
 
-    LAG\AdminBundle\Bridge\Twig\Extension\FieldExtension:
+    LAG\AdminBundle\Twig\Extension\FieldExtension:
+        tags:
+            - {name: twig.extension}
+
+    LAG\AdminBundle\Twig\Extension\MessageExtension:
+        tags:
+            - {name: twig.extension}
+
+    LAG\AdminBundle\Twig\Extension\MenuExtension:
+        tags:
+            - {name: twig.extension}
+
+    LAG\AdminBundle\Twig\Extension\RoutingExtension:
         tags:
             - {name: twig.extension}

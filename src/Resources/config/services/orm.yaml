@@ -1,19 +1,27 @@
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    
     LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandlerInterface: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandler'
     LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandler: ~
 
     ### DataProviders ###
-    LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider:
-        arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
-            $eventDispatcher: '@event_dispatcher'
-            $handler: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandlerInterface'
-        class: LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider
-        tags:
-            - {name: lag.admin.data_provider}
+#    LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider:
+#        arguments:
+#            $entityManager: '@doctrine.orm.entity_manager'
+#            $eventDispatcher: '@event_dispatcher'
+#            $handler: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandlerInterface'
+#        class: LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider
+#        tags:
+#            - {name: lag.admin.data_provider}
     #####################
 
     LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper'
     LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
+
+    LAG\AdminBundle\Bridge\Doctrine\Event\Listener\CreateFieldDefinitionListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.field_definition_create, priority: 0}

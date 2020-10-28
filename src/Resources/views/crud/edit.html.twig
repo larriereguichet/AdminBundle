@@ -1,0 +1,27 @@
+{% extends admin.base %}
+
+{% block page_title %}
+    <h1 class="h3 mb-1 text-gray-800">{{ admin.title | trans }}</h1>
+{% endblock %}
+
+{% block content %}
+    {% set form = admin.forms.entity %}
+    
+    {% block form %}
+        <div class="card">
+        {{ form_start(form, {attr: {class: 'card-body'}}) }}
+            {% include '@LAGAdmin/crud/edit/_form_buttons.html.twig' %}
+            {{ form_errors(form) }}
+            
+            {% block form_widgets %}
+                {{ form_row(form) }}
+            {% endblock %}
+    
+            {% block form_rest %}
+                {{ form_rest(form) }}
+            {% endblock %}
+            {% include '@LAGAdmin/crud/edit/_form_buttons.html.twig' %}
+        {{ form_end(form) }}
+        </div>
+    {% endblock %}
+{% endblock %}

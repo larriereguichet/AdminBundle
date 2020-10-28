@@ -3,76 +3,50 @@
 namespace LAG\AdminBundle\Factory;
 
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
+use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events\AdminEvent;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Factory\Configuration\AdminConfigurationFactoryInterface;
 use LAG\AdminBundle\LAGAdminBundle;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class AdminFactory
+class AdminFactory implements AdminFactoryInterface
 {
-    /**
-     * @var ResourceRegistryInterface
-     */
-    private $registry;
+    private ResourceRegistryInterface $registry;
+    private EventDispatcherInterface $eventDispatcher;
+    private AdminConfigurationFactoryInterface $configurationFactory;
+    private ApplicationConfiguration $applicationConfiguration;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var ConfigurationFactory
-     */
-    private $configurationFactory;
-
-    /**
-     * @var ApplicationConfiguration
-     */
-    private $applicationConfiguration;
-
-    /**
-     * AdminFactory constructor.
-     */
     public function __construct(
         ResourceRegistryInterface $registry,
         EventDispatcherInterface $eventDispatcher,
-        ConfigurationFactory $configurationFactory,
-        ApplicationConfigurationStorage $applicationConfigurationStorage
+        AdminConfigurationFactoryInterface $configurationFactory,
+        ApplicationConfiguration $applicationConfiguration
     ) {
         $this->registry = $registry;
         $this->eventDispatcher = $eventDispatcher;
         $this->configurationFactory = $configurationFactory;
-        $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
+        $this->applicationConfiguration = $applicationConfiguration;
     }
 
-    /**
-     * @return AdminInterface
-     *
-     * @throws Exception
-     */
-    public function createFromRequest(Request $request)
+    public function createFromRequest(Request $request): AdminInterface
     {
         if (!$this->supports($request)) {
             throw new Exception('No admin resource was found in the request');
         }
-        $resource = $this->registry->get($request->get(LAGAdminBundle::REQUEST_PARAMETER_ADMIN));
-        $configuration = $this
-            ->configurationFactory
-            ->createAdminConfiguration(
-                $resource->getName(),
-                $resource->getConfiguration(),
-                $this->applicationConfiguration
-            )
-        ;
-        $adminClass = $configuration->getParameter('class');
+        $resource = $this->registry->get($request->get('_route_params')[LAGAdminBundle::REQUEST_PARAMETER_ADMIN]);
+        $configuration = $this->configurationFactory->create(
+            $resource->getName(),
+            $resource->getConfiguration()
+        );
+
+        $adminClass = $configuration->getAdminClass();
         $admin = new $adminClass($resource, $configuration, $this->eventDispatcher);
 
-        if (!$admin instanceof AdminInterface) {
-            throw new Exception('The admin class "'.$adminClass.'" should implements '.AdminInterface::class);
-        }
+        $this->eventDispatcher->dispatch(new AdminEvent($admin), AdminEvents::ADMIN_CREATE);
 
         return $admin;
     }
@@ -80,10 +54,8 @@ class AdminFactory
     /**
      * Return true if the current Request is supported. Supported means that the Request has the required valid
      * parameters to get an admin from the registry.
-     *
-     * @return bool
      */
-    public function supports(Request $request)
+    public function supports(Request $request): bool
     {
         $routeParameters = $request->get('_route_params');
 

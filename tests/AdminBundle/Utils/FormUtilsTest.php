@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\Utils;
 
-use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\Utils\FormUtils;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class FormUtilsTest extends AdminTestBase
+class FormUtilsTest extends TestCase
 {
     public function testConvertShortFormType()
     {

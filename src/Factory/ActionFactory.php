@@ -2,66 +2,33 @@
 
 namespace LAG\AdminBundle\Factory;
 
+use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\ActionInterface;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\ConfigurationEvent;
-use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events\ActionEvent;
+use LAG\AdminBundle\Factory\Configuration\ActionConfigurationFactoryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class ActionFactory
+class ActionFactory implements ActionFactoryInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private EventDispatcherInterface $eventDispatcher;
+    private ActionConfigurationFactoryInterface $configurationFactory;
 
-    /**
-     * @var ConfigurationFactory
-     */
-    private $configurationFactory;
-
-    /**
-     * ActionFactory constructor.
-     */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        ConfigurationFactory $configurationFactory
+        ActionConfigurationFactoryInterface $configurationFactory
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->configurationFactory = $configurationFactory;
     }
 
-    /**
-     * @param string             $actionName
-     * @param string             $adminName
-     *
-     * @throws Exception
-     */
-    public function create($actionName, $adminName, AdminConfiguration $adminConfiguration): ActionInterface
+    public function create(string $actionName, array $options = []): ActionInterface
     {
-        $event = new ConfigurationEvent(
-            $actionName,
-            $adminConfiguration->getParameter('actions'),
-            $adminName,
-            $adminConfiguration->getParameter('entity')
-        );
-        $this->eventDispatcher->dispatch($event, Events::CONFIGURATION_ACTION);
+        $configuration = $this->configurationFactory->create($actionName, $options);
+        $action = new Action($actionName, $configuration);
 
-        if (!array_key_exists($actionName, $event->getConfiguration())) {
-            throw new Exception('The action "'.$actionName.'" was not found  in the configuration of the admin "'.$adminName.'"');
-        }
-        $actionConfiguration = $event->getConfiguration()[$actionName];
-        $configuration = $this
-            ->configurationFactory
-            ->createActionConfiguration($actionName, $actionConfiguration, $adminName, $adminConfiguration)
-        ;
-        $class = $configuration->getParameter('class');
-        $action = new $class($actionName, $configuration);
-
-        if (!$action instanceof ActionInterface) {
-            throw new Exception('The action class "'.$class.'" should implements '.ActionInterface::class);
-        }
+        $event = new ActionEvent($action);
+        $this->eventDispatcher->dispatch($event, AdminEvents::ACTION_CREATE);
 
         return $action;
     }

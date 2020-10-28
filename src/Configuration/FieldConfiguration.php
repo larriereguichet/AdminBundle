@@ -3,22 +3,11 @@
 namespace LAG\AdminBundle\Configuration;
 
 use JK\Configuration\Configuration;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FieldConfiguration extends Configuration
 {
-    /**
-     * @var array
-     */
-    private $allowedFields;
-
-    public function __construct(array $allowedFields = [])
-    {
-        $this->allowedFields = $allowedFields;
-
-        parent::__construct();
-    }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -26,13 +15,23 @@ class FieldConfiguration extends Configuration
                 'type' => null,
                 'options' => [],
             ])
-            // Set allowed fields type from tagged services
-            ->setAllowedValues('type', array_merge([null], $this->allowedFields))
-            ->setAllowedTypes('type', [
-                'string',
-                'null',
-            ])
-            ->setAllowedTypes('options', 'array')
+            ->setAllowedTypes('type', ['string', 'null'])
+            ->setNormalizer('type', function (Options $options, $value) {
+                if ($value === null) {
+                    $value = 'auto';
+                }
+
+                return $value;
+            })
+
+            ->setAllowedTypes('options', ['array', 'null'])
+            ->setNormalizer('options', function (Options $options, $values) {
+                if ($values === null) {
+                    return [];
+                }
+
+                return $values;
+            })
         ;
     }
 

@@ -2,54 +2,26 @@
 
 namespace LAG\AdminBundle\Event\Events;
 
-use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Exception\View\MissingViewException;
 use LAG\AdminBundle\View\ViewInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\EventDispatcher\Event;
 
-class ViewEvent extends Event
+class ViewEvent extends AbstractEvent
 {
-    /**
-     * @var ViewInterface
-     */
-    private $view;
+    private ViewInterface $view;
 
-    /**
-     * @var AdminInterface
-     */
-    private $admin;
-
-    /**
-     * @var Request
-     */
-    private $request;
-
-    /**
-     * ViewEvent constructor.
-     */
-    public function __construct(AdminInterface $admin, Request $request)
+    public function setView(ViewInterface $view): ViewEvent
     {
-        $this->admin = $admin;
-        $this->request = $request;
+        $this->view = $view;
+
+        return $this;
     }
 
     public function getView(): ViewInterface
     {
+        if (!isset($this->view)) {
+            throw new MissingViewException('The view is not set');
+        }
+
         return $this->view;
-    }
-
-    public function setView(ViewInterface $view)
-    {
-        $this->view = $view;
-    }
-
-    public function getAdmin(): AdminInterface
-    {
-        return $this->admin;
-    }
-
-    public function getRequest(): Request
-    {
-        return $this->request;
     }
 }

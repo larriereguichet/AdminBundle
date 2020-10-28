@@ -2,163 +2,70 @@
 
 namespace LAG\AdminBundle\Factory;
 
-use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Routing\RoutingLoader;
+use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Utils\RedirectionUtils;
+use LAG\AdminBundle\View\AdminView;
 use LAG\AdminBundle\View\RedirectView;
-use LAG\AdminBundle\View\View;
+use LAG\AdminBundle\View\Template;
 use LAG\AdminBundle\View\ViewInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
 
-class ViewFactory
+class ViewFactory implements ViewFactoryInterface
 {
-    /**
-     * @var FieldFactory
-     */
-    private $fieldFactory;
+    private FieldFactoryInterface $fieldFactory;
+    private ApplicationConfiguration $appConfig;
+    private RedirectionUtils $redirectionUtils;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var ApplicationConfigurationStorage
-     */
-    private $storage;
-
-    /**
-     * ViewFactory constructor.
-     */
     public function __construct(
-        FieldFactory $fieldFactory,
-        RouterInterface $router,
-        ApplicationConfigurationStorage $storage
+        FieldFactoryInterface $fieldFactory,
+        ApplicationConfiguration $appConfig,
+        RedirectionUtils $redirectionUtils
     ) {
         $this->fieldFactory = $fieldFactory;
-        $this->router = $router;
-        $this->storage = $storage;
+        $this->appConfig = $appConfig;
+        $this->redirectionUtils = $redirectionUtils;
     }
 
-    /**
-     * Create a view for a given Admin and Action.
-     *
-     * @param string              $actionName
-     * @param string              $adminName
-     * @param mixed               $entities
-     * @param FormInterface[]     $forms
-     */
-    public function create(
-        Request $request,
-        $actionName,
-        $adminName,
-        AdminConfiguration $adminConfiguration,
-        ActionConfiguration $actionConfiguration,
-        $entities,
-        array $forms = []
-    ): ViewInterface {
-        if (key_exists('entity', $forms)) {
-            $form = $forms['entity'];
-
-            if ($this->shouldRedirect($form, $request, $adminConfiguration)) {
-                return $this->createRedirection(
-                    $actionName,
-                    $adminName,
-                    $request,
-                    $adminConfiguration,
-                    $actionConfiguration,
-                    $form
-                );
-            }
+    public function create(Request $request, AdminInterface $admin): ViewInterface
+    {
+        if ($this->redirectionUtils->isRedirectionRequired($admin)) {
+            return new RedirectView($this->redirectionUtils->getRedirectionUrl($admin));
         }
-        $fields = $this
-            ->fieldFactory
-            ->createFields($actionConfiguration);
-        $formViews = [];
+        $actionConfiguration = $admin->getAction()->getConfiguration();
+        $fields = [];
+        $context = [
+            'admin_name' => $actionConfiguration->getAdminName(),
+            'action_name' => $actionConfiguration->getName(),
+            'entity_class' => $admin->getConfiguration()->getEntityClass(),
+        ];
 
-        foreach ($forms as $identifier => $form) {
-            $formViews[$identifier] = $form->createView();
+        foreach ($actionConfiguration->getFields() as $name => $configuration) {
+            $fields[$name] = $this->fieldFactory->create($name, $configuration, $context);
         }
 
         if ($request->isXmlHttpRequest()) {
-            $template = $this->storage->getConfiguration()->get('ajax_template');
+            $template = $this->appConfig->get('ajax_template');
         } else {
-            $template = $this->storage->getConfiguration()->get('base_template');
+            $template = $this->appConfig->get('base_template');
+        }
+        $template = new Template($actionConfiguration->getTemplate(), $template);
+        $fieldViews = [];
+
+        foreach ($fields as $name => $field) {
+            $fieldViews[$name] = $field->createView();
+        }
+        $formViews = [];
+
+        foreach ($admin->getForms() as $identifier => $form) {
+            $formViews[$identifier] = $form->createView();
         }
 
-        $view = new View(
-            $actionName,
-            $adminName,
-            $actionConfiguration,
-            $adminConfiguration,
+        return new AdminView(
+            $admin,
             $template,
-            $fields,
+            $fieldViews,
             $formViews
         );
-        $view->setEntities($entities);
-
-        return $view;
-    }
-
-    public function createRedirection(
-        $actionName,
-        $adminName,
-        Request $request,
-        AdminConfiguration $adminConfiguration,
-        ActionConfiguration $actionConfiguration,
-        FormInterface $form
-    ): RedirectView {
-        if (RedirectionUtils::shouldRedirectToEdit($form, $request, $adminConfiguration)) {
-            $view = new RedirectView(
-                $actionName,
-                $adminName,
-                $actionConfiguration,
-                $adminConfiguration
-            );
-            $view->setUrl($request->getUri());
-
-            return $view;
-        }
-
-        if (RedirectionUtils::shouldRedirectToList($form, $request, $adminConfiguration)) {
-            $routeName = RoutingLoader::generateRouteName(
-                $adminName,
-                'list',
-                $adminConfiguration->getParameter('routing_name_pattern')
-            );
-            $url = $this->router->generate($routeName);
-            $view = new RedirectView(
-                $actionName,
-                $adminName,
-                $actionConfiguration,
-                $adminConfiguration
-            );
-            $view->setUrl($url);
-
-            return $view;
-        }
-
-        throw new Exception('Unable to find a url to redirect');
-    }
-
-    /**
-     * Return true if a redirection view should be created.
-     */
-    private function shouldRedirect(FormInterface $form, Request $request, AdminConfiguration $configuration): bool
-    {
-        if (RedirectionUtils::shouldRedirectToEdit($form, $request, $configuration)) {
-            return true;
-        }
-
-        if (RedirectionUtils::shouldRedirectToList($form, $request, $configuration)) {
-            return true;
-        }
-
-        return false;
     }
 }

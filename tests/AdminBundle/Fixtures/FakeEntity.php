@@ -4,18 +4,22 @@ namespace LAG\AdminBundle\Tests\Fixtures;
 
 class FakeEntity
 {
-    protected $id;
+    private ?string $id;
+    private ?string $name;
 
-    public function __construct(string $id = null)
+    public function __construct(string $id = null, string $name = null)
     {
         $this->id = $id;
+        $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 }

@@ -4,24 +4,37 @@ services:
         autoconfigure: true
         public: false
 
-    LAG\AdminBundle\Factory\ActionFactory:
-        class: LAG\AdminBundle\Factory\ActionFactory
+    # Admin objects factories
+    LAG\AdminBundle\Factory\ActionFactoryInterface: '@LAG\AdminBundle\Factory\ActionFactory'
+    LAG\AdminBundle\Factory\ActionFactory: ~
+    
+    LAG\AdminBundle\Factory\AdminFactoryInterface: '@LAG\AdminBundle\Factory\AdminFactory'
+    LAG\AdminBundle\Factory\AdminFactory: ~
+    
+    LAG\AdminBundle\Factory\ViewFactoryInterface: '@LAG\AdminBundle\Factory\ViewFactory'
+    LAG\AdminBundle\Factory\ViewFactory: ~
 
-    LAG\AdminBundle\Factory\AdminFactory:
-        class: LAG\AdminBundle\Factory\AdminFactory
-
-    LAG\AdminBundle\Factory\ConfigurationFactory:
-        class: LAG\AdminBundle\Factory\ConfigurationFactory
-
-    LAG\AdminBundle\Factory\ViewFactory:
-        class: LAG\AdminBundle\Factory\ViewFactory
-
-    LAG\AdminBundle\Factory\DataProviderFactory:
-        class: LAG\AdminBundle\Factory\DataProviderFactory
-
+    LAG\AdminBundle\Factory\FieldFactoryInterface: '@LAG\AdminBundle\Factory\FieldFactory'
     LAG\AdminBundle\Factory\FieldFactory:
-        class: LAG\AdminBundle\Factory\FieldFactory
+        arguments:
+            $fieldsMapping: ''
 
-    LAG\AdminBundle\Factory\FormFactory: ~
+    LAG\AdminBundle\Factory\AdminFormFactoryInterface: '@LAG\AdminBundle\Factory\AdminFormFactory'
+    LAG\AdminBundle\Factory\AdminFormFactory: ~
+    
+    LAG\AdminBundle\Factory\Form\FilterFormFactoryInterface: '@LAG\AdminBundle\Factory\Form\FilterFormFactory'
+    LAG\AdminBundle\Factory\Form\FilterFormFactory: ~
 
-    LAG\AdminBundle\Factory\FormFactoryInterface: '@LAG\AdminBundle\Factory\FormFactory'
+    # Configuration factories
+    LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface: '@LAG\AdminBundle\Factory\Configuration\CachedConfigurationFactory'
+    LAG\AdminBundle\Factory\Configuration\ConfigurationFactory: ~
+    LAG\AdminBundle\Factory\Configuration\CachedConfigurationFactory: ~
+
+    LAG\AdminBundle\Factory\Configuration\AdminConfigurationFactoryInterface: '@LAG\AdminBundle\Factory\Configuration\AdminConfigurationFactory'
+    LAG\AdminBundle\Factory\Configuration\AdminConfigurationFactory: ~
+
+    LAG\AdminBundle\Factory\Configuration\ActionConfigurationFactoryInterface: '@LAG\AdminBundle\Factory\Configuration\ActionConfigurationFactory'
+    LAG\AdminBundle\Factory\Configuration\ActionConfigurationFactory: ~
+
+    LAG\AdminBundle\Factory\Configuration\MenuConfigurationFactoryInterface: '@LAG\AdminBundle\Factory\Configuration\MenuConfigurationFactory'
+    LAG\AdminBundle\Factory\Configuration\MenuConfigurationFactory: ~

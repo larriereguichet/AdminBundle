@@ -2,17 +2,15 @@
 
 namespace LAG\AdminBundle\Exception\Field;
 
-use Exception;
-
-class FieldTypeNotFoundException extends Exception
+class FieldTypeNotFoundException extends FieldException
 {
-    public function __construct(string $adminName, string $actionName, string $fieldName)
+    public function __construct(string $type, string $fieldName, array $context = [])
     {
         $message = sprintf(
-            'No type found for the Field "%s" in Action "%s" in Admin "%s"',
+            'The type "%s" is not configured for the Field "%s" with context "%s"',
+            $type,
             $fieldName,
-            $actionName,
-            $adminName
+            print_r($context, true)
         );
 
         parent::__construct($message, 500);

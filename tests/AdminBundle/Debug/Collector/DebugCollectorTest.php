@@ -2,26 +2,23 @@
 
 namespace LAG\AdminBundle\Tests\Debug\Collector;
 
-use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Bridge\KnpMenu\Provider\MenuProvider;
+use LAG\AdminBundle\Admin\Resource\AdminResource;
+use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
-use LAG\AdminBundle\Resource\AdminResource;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class DebugCollectorTest extends AdminTestBase
+class DebugCollectorTest extends TestCase
 {
     public function testCollector(): void
     {
         // Several methods are tested in this test as testing some methods as getData() or reset() without data is
         // useless
-        list($collector, $registry, $storage, $menuProvider) = $this->createCollector();
+        [$collector, $registry, $storage,] = $this->createCollector();
 
         $this->assertEquals('admin.data_collector', $collector->getName());
         $this->assertEquals([], $collector->getData());
@@ -64,43 +61,10 @@ class DebugCollectorTest extends AdminTestBase
             ])
         ;
 
-        $configuration = $this->createMock(ApplicationConfiguration::class);
-
-        $configuration
-            ->expects($this->once())
-            ->method('all')
-            ->willReturn([
-                'leaves' => ['shoot'],
-                'eat' => true,
-            ])
-        ;
-
-        $storage
-            ->expects($this->once())
-            ->method('getConfiguration')
-            ->willReturn($configuration)
-        ;
         $storage
             ->expects($this->once())
             ->method('isFrozen')
             ->willReturn(true)
-        ;
-
-        $child = $this->createMock(ItemInterface::class);
-
-        $menu = $this->createMock(ItemInterface::class);
-        $menu
-            ->expects($this->once())
-            ->method('getChildren')
-            ->willReturn([
-                'grizzly' => $child,
-            ])
-        ;
-
-        $menuProvider
-            ->expects($this->once())
-            ->method('all')
-            ->willReturn(['bears' => $menu])
         ;
 
         $collector->collect($request, $response);
@@ -111,30 +75,15 @@ class DebugCollectorTest extends AdminTestBase
                 'pandas' => [
                     'entity_class' => 'AdminPanda',
                     'configuration' => [
-                        'admin ' => 'bamboo'
+                        'admin ' => 'bamboo',
                     ],
                 ],
             ],
             'application' => [
-                'leaves' => ['shoot'],
-                'eat' => true,
                 'admin' => 'panda',
                 'action' => 'bamboo',
             ],
-            'menus' => [
-                'bears' => [
-                    'attributes' => [],
-                    'displayed' => false,
-                    'children' => [
-                        'grizzly' => [
-                            'uri' => null,
-                            'attributes' => [],
-                            'displayed' => false,
-                        ]
-                    ]
-                ]
-            ],
-
+            'menus' => [],
         ], $data);
     }
 
@@ -144,16 +93,14 @@ class DebugCollectorTest extends AdminTestBase
     private function createCollector(): array
     {
         $registry = $this->createMock(ResourceRegistryInterface::class);
-        $storage = $this->createMock(ApplicationConfigurationStorage::class);
-        $menuProvider = $this->createMock(MenuProvider::class);
+        $appConfig = $this->createMock(ApplicationConfiguration::class);
 
-        $collector = new AdminDataCollector($registry, $storage, $menuProvider);
+        $collector = new AdminDataCollector($registry, $appConfig, []);
 
         return [
             $collector,
             $registry,
-            $storage,
-            $menuProvider
+            $appConfig,
         ];
     }
 }

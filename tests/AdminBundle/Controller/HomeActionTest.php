@@ -2,17 +2,12 @@
 
 namespace LAG\AdminBundle\Tests\Controller;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Controller\HomeAction;
-use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\OldBuildMenuEvent;
-use LAG\AdminBundle\Tests\AdminTestBase;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use LAG\AdminBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
-class HomeActionTest extends AdminTestBase
+class HomeActionTest extends TestCase
 {
     public function testInvoke()
     {
@@ -20,28 +15,10 @@ class HomeActionTest extends AdminTestBase
         $twig
             ->expects($this->once())
             ->method('render')
-            ->with('my_template')
+            ->with('@LAGAdmin/pages/home.html.twig')
             ->willReturn('content')
         ;
-        $configuration = $this->createMock(ApplicationConfiguration::class);
-        $configuration
-            ->expects($this->once())
-            ->method('getParameter')
-            ->with('homepage_template')
-            ->willReturn('my_template')
-        ;
-
-        $storage = $this->createMock(ApplicationConfigurationStorage::class);
-        $storage
-            ->expects($this->once())
-            ->method('getConfiguration')
-            ->willReturn($configuration)
-        ;
-
-        $controller = new HomeAction(
-            $twig,
-            $storage
-        );
+        $controller = new HomeAction($twig);
         $response = $controller->__invoke();
 
         $this->assertInstanceOf(Response::class, $response);

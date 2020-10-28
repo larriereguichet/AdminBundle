@@ -1,0 +1,3 @@
+{% if options.translation %}{% set data = data|trans([], options.translation_domain) %}{% endif %}
+{# #69 : strip tags to avoid to break the layout when content contains html #}
+{{ data|u.truncate(options.length, options.replace)|striptags }}

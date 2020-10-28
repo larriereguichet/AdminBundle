@@ -2,12 +2,21 @@
 
 namespace LAG\AdminBundle\Field\Render;
 
-use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Field\View\View;
 use LAG\AdminBundle\View\ViewInterface;
 
 interface FieldRendererInterface
 {
-    public function render(FieldInterface $field, $entity): string;
+    /**
+     * Render a field view using Twig or a the view data for a text View. The data transformer will be called before
+     * rendering data.
+     *
+     * @param      $data
+     */
+    public function render(View $field, $data): string;
 
-    public function renderHeader(ViewInterface $admin, FieldInterface $field): string;
+    /**
+     * Render a field header using Twig.
+     */
+    public function renderHeader(ViewInterface $admin, View $field): string;
 }

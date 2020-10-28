@@ -1,5 +1,0 @@
-services:
-    LAG\AdminBundle\Assets\Registry\ScriptRegistryInterface: '@LAG\AdminBundle\Assets\Registry\ScriptRegistry'
-    LAG\AdminBundle\Assets\Registry\ScriptRegistry:
-        arguments:
-            $environment: '@twig'

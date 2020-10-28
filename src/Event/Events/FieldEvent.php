@@ -7,58 +7,27 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class FieldEvent extends Event
 {
-    /**
-     * @var string
-     */
-    private $adminName;
-
-    /**
-     * @var string
-     */
-    private $actionName;
-
-    /**
-     * @var string
-     */
-    private $fieldName;
-
-    /**
-     * @var string|null
-     */
-    private $type;
-
-    /**
-     * @var FieldInterface|null
-     */
-    private $field;
-
-    /**
-     * @var string
-     */
-    private $entityClass;
-
-    /**
-     * @var array
-     */
-    private $options = [];
+    private string $fieldName;
+    private ?string $type;
+    private ?FieldInterface $field;
+    private array $options;
+    private array $context;
 
     public function __construct(
-        string $adminName,
-        string $actionName,
         string $fieldName,
-        string $entityClass,
         string $type = null,
+        array $options = [],
+        array $context = [],
         FieldInterface $field = null
     ) {
-        $this->adminName = $adminName;
-        $this->actionName = $actionName;
         $this->fieldName = $fieldName;
         $this->type = $type;
         $this->field = $field;
-        $this->entityClass = $entityClass;
+        $this->options = $options;
+        $this->context = $context;
     }
 
-    public function setType(?string $type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -66,16 +35,6 @@ class FieldEvent extends Event
     public function setOptions(array $options): void
     {
         $this->options = $options;
-    }
-
-    public function getAdminName(): string
-    {
-        return $this->adminName;
-    }
-
-    public function getActionName(): string
-    {
-        return $this->actionName;
     }
 
     public function getFieldName(): string
@@ -93,13 +52,13 @@ class FieldEvent extends Event
         return $this->field;
     }
 
-    public function getEntityClass(): string
-    {
-        return $this->entityClass;
-    }
-
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    public function getContext(): array
+    {
+        return $this->context;
     }
 }

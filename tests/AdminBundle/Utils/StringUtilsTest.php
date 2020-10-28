@@ -2,28 +2,11 @@
 
 namespace LAG\AdminBundle\Tests\Utils;
 
-use LAG\AdminBundle\Tests\AdminTestBase;
-use LAG\AdminBundle\Utils\TranslationUtils;
+use LAG\AdminBundle\Tests\TestCase;
 use LAG\Component\StringUtils\StringUtils;
 
-class StringUtilsTest extends AdminTestBase
+class StringUtilsTest extends TestCase
 {
-    public function testGetTranslationKey()
-    {
-        $this->assertEquals(
-            'test.tauntaun.open',
-            TranslationUtils::getTranslationKey('test.{admin}.{key}', 'tauntaun', 'open')
-        );
-    }
-
-    public function testGetActionTranslationKey()
-    {
-        $this->assertEquals(
-            'test.tauntaun.open',
-            TranslationUtils::getActionTranslationKey('test.{admin}.{key}', 'tauntaun', 'open')
-        );
-    }
-
     public function testCamelize()
     {
         $this->assertEquals(

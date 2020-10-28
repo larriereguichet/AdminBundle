@@ -11,19 +11,9 @@ use Twig\Environment;
 
 class AdminAction
 {
-    /**
-     * @var AdminFactory
-     */
-    private $adminFactory;
+    private AdminFactory $adminFactory;
+    private Environment $twig;
 
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * AdminAction constructor.
-     */
     public function __construct(AdminFactory $adminFactory, Environment $twig)
     {
         $this->adminFactory = $adminFactory;

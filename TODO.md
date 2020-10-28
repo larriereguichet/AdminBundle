@@ -1,5 +1,6 @@
-wip:
-    - fixed admin configuration and action configuration events
+## Chore:
+- Allow dynamic header template in the field configuration
+- Remove dependencies between application, admin, admin view and action configuration
 
 v0.n+1:
 - add filters
@@ -54,8 +55,8 @@ v0.4:
 v0.3:
 Features:
 - [DONE] basic unit testing
-- [DONE] handling new Symfony bootstrap layout
-- [DONE] adding mass edit
+- [DONE] handling new Symfony bootstrap layout
+- [DONE] adding mass edit
 - [DONE] improve admin and action name from request (use default parameters in routing instead)
 - [DONE] update to Symfony 3.x 
 - [DONE] add config for order entities in list view

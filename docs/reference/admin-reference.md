@@ -20,8 +20,7 @@ lag_admin:
             class: LAG\AdminBundle\Admin\Admin 
             
             # You can customize the route names and urls generated. It should contains "{admin}" and "{action}"
-            routing_name_pattern: lag.admin.{admin}.{action}
-            routing_url_pattern: /{admin}/{action}
+            routes_pattern: lag.admin.{admin}.{action}
             
             # You can override the default controller. Be careful, the bundle should not work as expected if your
             # custom controller does trigger required events 
@@ -42,7 +41,7 @@ lag_admin:
             pager: ~
             permissions: ~
             string_length: ~
-            string_length_truncate: ~
+            string_truncate: ~
             date_format: ~
             data_provider: ~
                 page_parameter: ~

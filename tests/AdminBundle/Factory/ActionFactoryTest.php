@@ -3,125 +3,54 @@
 namespace LAG\AdminBundle\Tests\Factory;
 
 use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events\ActionEvent;
 use LAG\AdminBundle\Factory\ActionFactory;
-use LAG\AdminBundle\Factory\ConfigurationFactory;
-use LAG\AdminBundle\Tests\AdminTestBase;
-use LAG\AdminBundle\Tests\Fixtures\ActionFixture;
-use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
+use LAG\AdminBundle\Factory\ActionFactoryInterface;
+use LAG\AdminBundle\Factory\Configuration\ActionConfigurationFactoryInterface;
+use LAG\AdminBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class ActionFactoryTest extends AdminTestBase
+class ActionFactoryTest extends TestCase
 {
-    public function testCreate()
+    private MockObject $eventDispatcher;
+    private MockObject $configurationFactory;
+    private ActionFactory $actionFactory;
+
+    public function testServiceExists(): void
     {
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->assertServiceExists(ActionFactory::class);
+        $this->assertServiceExists(ActionFactoryInterface::class);
+    }
 
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
-        $adminConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('getParameter')
-            ->willReturnMap([
-                ['actions', [
-                    'list' => [],
-                ]],
-                ['entity', 'MyLittleTauntaun'],
-                ['class', FakeEntity::class],
-            ])
-        ;
-
+    public function testCreate(): void
+    {
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
-        $actionConfiguration
-            ->expects($this->once())
-            ->method('getParameter')
-            ->willReturnMap([
-                ['class', ActionFixture::class],
-            ])
-        ;
 
-        $configurationFactory = $this->createMock(ConfigurationFactory::class);
-        $configurationFactory
+        $this->configurationFactory
             ->expects($this->once())
-            ->method('createActionConfiguration')
-            ->with('list', [], 'tauntaun', $adminConfiguration)
+            ->method('create')
+            ->with('list', [])
             ->willReturn($actionConfiguration)
         ;
 
-        $factory = new ActionFactory(
-            $eventDispatcher,
-            $configurationFactory
-        );
+        $this->eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->willReturn(function ($actionEvent, $eventName) {
+                $this->assertInstanceOf(ActionEvent::class, $actionEvent);
+                $this->assertEquals(AdminEvents::ACTION_CREATE, $eventName);
+            })
+        ;
 
-        $factory->create('list', 'tauntaun', $adminConfiguration);
+        $this->actionFactory->create('list', []);
     }
 
-    public function testCreateWithMissingAction()
+    protected function setUp(): void
     {
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $configurationFactory = $this->createMock(ConfigurationFactory::class);
-
-        $factory = new ActionFactory(
-            $eventDispatcher,
-            $configurationFactory
-        );
-
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
-        $adminConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('getParameter')
-            ->willReturnMap([
-                ['actions', []],
-                ['entity', 'MyLittleTauntaun'],
-            ])
-        ;
-
-        $this->assertExceptionRaised(Exception::class, function() use ($factory, $adminConfiguration) {
-            $factory->create('list', 'tauntaun', $adminConfiguration);
-        });
-    }
-
-    public function testCreateWithWrongActionClass()
-    {
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
-        $adminConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('getParameter')
-            ->willReturnMap([
-                ['actions', [
-                    'list' => [],
-                ]],
-                ['entity', 'MyLittleTauntaun'],
-                ['class', FakeEntity::class],
-            ])
-        ;
-
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
-        $actionConfiguration
-            ->expects($this->once())
-            ->method('getParameter')
-            ->willReturnMap([
-                ['class', FakeEntity::class],
-            ])
-        ;
-
-        $configurationFactory = $this->createMock(ConfigurationFactory::class);
-        $configurationFactory
-            ->expects($this->once())
-            ->method('createActionConfiguration')
-            ->with('list', [], 'tauntaun', $adminConfiguration)
-            ->willReturn($actionConfiguration)
-        ;
-
-        $factory = new ActionFactory(
-            $eventDispatcher,
-            $configurationFactory
-        );
-
-        $this->assertExceptionRaised(Exception::class, function() use ($factory, $adminConfiguration) {
-            $factory->create('list', 'tauntaun', $adminConfiguration);
-        });
+        $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->configurationFactory = $this->createMock(ActionConfigurationFactoryInterface::class);
+        $this->actionFactory = new ActionFactory($this->eventDispatcher, $this->configurationFactory);
     }
 }
