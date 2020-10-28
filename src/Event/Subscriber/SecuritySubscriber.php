@@ -43,7 +43,7 @@ class SecuritySubscriber implements EventSubscriberInterface
         $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Events::ADMIN_HANDLE_REQUEST => 'handleRequest',
@@ -53,35 +53,25 @@ class SecuritySubscriber implements EventSubscriberInterface
     /**
      * @throws AccessDeniedException
      */
-    public function handleRequest(AdminEvent $event)
+    public function handleRequest(AdminEvent $event): void
     {
         if (!$this->applicationConfiguration->getParameter('enable_security')) {
             return;
         }
         $user = $this->getUser();
+        $expectedRoles = $event->getAdmin()->getConfiguration()->getPermissions();
 
-        if (!$this->authorizationChecker->isGranted($user->getRoles(), $user)) {
-            throw new AccessDeniedException();
-        }
-        $configuration = $event->getAdmin()->getConfiguration();
-        $allowed = false;
-
-        foreach ($user->getRoles() as $role) {
-            if ($configuration->getParameter('permissions') === $role) {
-                $allowed = true;
+        foreach ($expectedRoles as $role) {
+            if (!$this->authorizationChecker->isGranted($role, $user)) {
+                throw new AccessDeniedException(sprintf('The user with roles "%s" is not granted. Allowed roles are "%s"', implode('", "', $user->getRoles()), implode('", "', $expectedRoles)));
             }
-        }
-        if (!$allowed) {
-            throw new AccessDeniedException();
         }
     }
 
     /**
-     * @return UserInterface
-     *
      * @throws Exception
      */
-    private function getUser()
+    private function getUser(): UserInterface
     {
         $token = $this->tokenStorage->getToken();
 

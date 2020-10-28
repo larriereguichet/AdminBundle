@@ -3,11 +3,13 @@
 namespace LAG\AdminBundle\Configuration;
 
 use JK\Configuration\Configuration;
+use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Routing\Resolver\RoutingResolverInterface;
 use LAG\Component\StringUtils\StringUtils;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class MenuItemConfiguration extends Configuration
 {
@@ -31,16 +33,28 @@ class MenuItemConfiguration extends Configuration
      */
     private $adminName;
 
+    /**
+     * @var AdminInterface|null
+     */
+    private $admin;
+
+    /**
+     * @var mixed
+     */
+    private $data;
+
     public function __construct(
         string $itemName,
         string $menuName,
+        string $adminName,
         RoutingResolverInterface $routingResolver,
-        ?string $adminName = null
+        $data = null
     ) {
         $this->itemName = $itemName;
-        $this->routingResolver = $routingResolver;
         $this->menuName = $menuName;
         $this->adminName = $adminName;
+        $this->routingResolver = $routingResolver;
+        $this->data = $data;
         parent::__construct();
     }
 
@@ -77,6 +91,34 @@ class MenuItemConfiguration extends Configuration
 
                 return $route;
             })
+            ->setNormalizer('routeParameters', function (Options $options, $routeParameters) {
+                if (null === $routeParameters) {
+                    return [];
+                }
+
+                if (!$this->data) {
+                    return $routeParameters;
+                }
+                $accessor = new PropertyAccessor(true);
+
+                foreach ($routeParameters as $name => $value) {
+                    $hasDoubleDash = '__' === substr($value, 0, 2);
+
+                    if (null === $value) {
+                        $value = $name;
+                    }
+
+                    if ($this->data && $accessor->isReadable($this->data, $value) && !$hasDoubleDash) {
+                        $routeParameters[$name] = $accessor->getValue($this->data, $value);
+                    } elseif ($hasDoubleDash) {
+                        $routeParameters[$name] = substr($value, 2);
+                    } else {
+                        $routeParameters[$name] = $value;
+                    }
+                }
+
+                return $routeParameters;
+            })
             ->setNormalizer('admin', function (Options $options, $adminName) {
                 // user has to defined either an admin name and an action name, or a route name with optional
                 // parameters, or an url
@@ -111,7 +153,7 @@ class MenuItemConfiguration extends Configuration
                 $resolvedItems = [];
 
                 foreach ($items as $name => $item) {
-                    $itemConfiguration = new MenuItemConfiguration($name, $this->menuName, $this->routingResolver, $this->adminName);
+                    $itemConfiguration = new MenuItemConfiguration($name, $this->menuName, $this->admin, $this->routingResolver, $this->data);
                     $itemConfiguration->configureOptions($resolver);
                     $itemConfiguration->setParameters($resolver->resolve($item));
                     $resolver->clear();

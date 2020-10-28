@@ -17,6 +17,7 @@ use LAG\AdminBundle\Routing\Resolver\RoutingResolverInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+// TODO split in several class in several namespaces
 class ConfigurationFactory
 {
     /**
@@ -122,7 +123,12 @@ class ConfigurationFactory
         $configuration = $event->getMenuConfiguration();
 
         $resolver = new OptionsResolver();
-        $menuConfiguration = new MenuConfiguration($menuName, $this->routingResolver, $adminName);
+        $menuConfiguration = new MenuConfiguration(
+            $menuName,
+            $adminName,
+            $this->routingResolver,
+            $this->adminHelper->getCurrent()->getEntities()->first()
+        );
         $menuConfiguration->configureOptions($resolver);
 
         try {

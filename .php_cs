@@ -13,6 +13,8 @@ return \PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
         'phpdoc_align' => false,
+        'yoda_style' => false,
+        'elseif' => true,
     ])
     ->setFinder($finder)
 ;

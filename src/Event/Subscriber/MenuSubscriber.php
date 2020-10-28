@@ -161,7 +161,7 @@ class MenuSubscriber implements EventSubscriberInterface
         ];
 
         // Auto return link is be optional. It is configured by default for the edit, create and delete actions
-        if (null !== $admin && $admin->getAction()->getConfiguration()->get('add_return')) {
+        if ($admin !== null && $admin->getAction()->getConfiguration()->get('add_return')) {
             $menu['children']['return'] = [
                 'admin' => $admin->getName(),
                 'action' => 'list',

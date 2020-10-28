@@ -25,14 +25,20 @@ class MenuConfiguration extends Configuration
     private $adminName;
 
     /**
+     * @var mixed
+     */
+    private $data;
+
+    /**
      * MenuConfiguration constructor.
      */
-    public function __construct(string $menuItemName, RoutingResolverInterface $routingRoutingResolver, ?string $adminName = null)
+    public function __construct(string $menuItemName, string $adminName, RoutingResolverInterface $routingRoutingResolver, $data = null)
     {
         $this->menuName = $menuItemName;
         $this->routingResolver = $routingRoutingResolver;
-        $this->adminName = $adminName;
+        $this->data = $data;
         parent::__construct();
+        $this->adminName = $adminName;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -56,7 +62,7 @@ class MenuConfiguration extends Configuration
                     if (!$item) {
                         $item = [];
                     }
-                    $configuration = new MenuItemConfiguration($name, $this->menuName, $this->routingResolver, $this->adminName);
+                    $configuration = new MenuItemConfiguration($name, $this->menuName, $this->adminName, $this->routingResolver, $this->data);
                     $configuration->configureOptions($innerResolver);
                     $value[$name] = $innerResolver->resolve($item);
                     $innerResolver->clear();
