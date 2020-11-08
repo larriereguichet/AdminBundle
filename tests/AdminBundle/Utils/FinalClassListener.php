@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
 
 class FinalClassListener implements TestListener
-{    
+{
     /**
      * @inheritDoc
      */

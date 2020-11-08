@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Factory;
 
+use Doctrine\Common\Collections\Collection;
 use Exception;
 use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
@@ -104,11 +105,12 @@ class ConfigurationFactory
         $event = new MenuConfigurationEvent($menuName, $configuration);
         $this->eventDispatcher->dispatch($event, Events::PRE_MENU_CONFIGURATION);
         $configuration = $event->getMenuConfiguration();
-        $adminName = null;
+        $adminName = 'unknown';
+        $admin = $this->adminHelper->getCurrent();
 
-        if (null !== $this->adminHelper->getCurrent()) {
-            $adminName = $this->adminHelper->getCurrent()->getName();
-            $actionMenus = $this->adminHelper->getCurrent()->getAction()->getConfiguration()->get('menus');
+        if ($admin !== null) {
+            $adminName = $admin->getName();
+            $actionMenus = $admin->getAction()->getConfiguration()->get('menus');
             $inherits = empty($configuration['inherits']) || false === $configuration['inherits'];
 
             if (!empty($actionMenus[$menuName])) {
@@ -123,11 +125,20 @@ class ConfigurationFactory
         $configuration = $event->getMenuConfiguration();
 
         $resolver = new OptionsResolver();
+        $data = $admin->getEntities();
+
+        if ($data instanceof Collection) {
+            $data = $data->first();
+        }
+
+        if (is_array($data) && count($data) > 0) {
+            $data = $data[0];
+        }
         $menuConfiguration = new MenuConfiguration(
             $menuName,
             $adminName,
             $this->routingResolver,
-            $this->adminHelper->getCurrent()->getEntities()->first()
+            $admin ? $data : null
         );
         $menuConfiguration->configureOptions($resolver);
 

@@ -3,6 +3,9 @@
 namespace LAG\AdminBundle\Tests;
 
 use Closure;
+use Doctrine\ORM\Configuration;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use Exception;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
@@ -236,5 +239,29 @@ class AdminTestBase extends TestCase
     protected function createContainerDefinition(string $class): Definition
     {
         return new Definition($class);
+    }
+    
+    protected function mockDoctrineQuery(): Query
+    {
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $configuration = $this->createMock(Configuration::class);
+    
+        $entityManager
+            ->expects($this->atLeastOnce())
+            ->method('getConfiguration')
+            ->willReturn($configuration)
+        ;
+        $configuration
+            ->expects($this->exactly(1))
+            ->method('getDefaultQueryHints')
+            ->willReturn([])
+        ;
+        $configuration
+            ->expects($this->exactly(1))
+            ->method('isSecondLevelCacheEnabled')
+            ->willReturn(false)
+        ;
+    
+        return new Query($entityManager);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider;
 
+use ArrayIterator;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
@@ -77,7 +79,13 @@ class ORMDataProvider implements DataProviderInterface
         $page = (int) $admin->getRequest()->get($pageParameter, 1);
         $maxPerPage = $actionConfiguration->get('max_per_page');
 
-        return $this->resultsHandler->handle($data, $pagination, $page, $maxPerPage);
+        $results = $this->resultsHandler->handle($data, $pagination, $page, $maxPerPage);
+
+        if ($results instanceof ArrayIterator) {
+            return new ArrayCollection(iterator_to_array($results));
+        }
+
+        return $results;
     }
 
     /**

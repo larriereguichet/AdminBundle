@@ -37,8 +37,8 @@ class MenuConfiguration extends Configuration
         $this->menuName = $menuItemName;
         $this->routingResolver = $routingRoutingResolver;
         $this->data = $data;
-        parent::__construct();
         $this->adminName = $adminName;
+        parent::__construct();
     }
 
     public function configureOptions(OptionsResolver $resolver)
