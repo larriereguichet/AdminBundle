@@ -3,7 +3,7 @@
         "@symfony/webpack-encore": "^0.31.0",
         "core-js": "^3.6.5",
         "regenerator-runtime": "^0.13.7",
-        "webpack-notifier": "^1.6.0"
+        "webpack-notifier": "^1.12.0"
     },
     "license": "UNLICENSED",
     "private": true,
