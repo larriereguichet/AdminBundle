@@ -432,6 +432,49 @@ class ORMDataProviderTest extends TestCase
         ];
     }
 
+    public function testGet(): void
+    {
+        $repository = $this->createMock(EntityRepository::class);
+        $data = new stdClass();
+
+        $this
+            ->entityManager
+            ->expects($this->once())
+            ->method('getRepository')
+            ->with('MyClass')
+            ->willReturn($repository)
+        ;
+        $repository
+            ->expects($this->once())
+            ->method('find')
+            ->with(666)
+            ->willReturn($data)
+        ;
+        $foundData = $this->dataProvider->get('MyClass', 666);
+        $this->assertEquals($data, $foundData);
+    }
+
+    public function testGetReturnNull(): void
+    {
+        $repository = $this->createMock(EntityRepository::class);
+
+        $this
+            ->entityManager
+            ->expects($this->once())
+            ->method('getRepository')
+            ->with('MyClass')
+            ->willReturn($repository)
+        ;
+        $repository
+            ->expects($this->once())
+            ->method('find')
+            ->with(666)
+            ->willReturn(null)
+        ;
+        $this->expectException(Exception::class);
+        $this->dataProvider->get('MyClass', 666);
+    }
+
     protected function setUp(): void
     {
         $this->entityManager = $this->createMock(EntityManagerInterface::class);

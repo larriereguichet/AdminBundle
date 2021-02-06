@@ -19,11 +19,7 @@ class ResourceLoader
     {
         $fileSystem = new Filesystem();
 
-        if (!$fileSystem->exists($resourcesPath)) {
-            return [];
-        }
-
-        if (!is_dir($resourcesPath)) {
+        if (!$fileSystem->exists($resourcesPath) || !is_dir($resourcesPath)) {
             throw new Exception(sprintf('The resources path %s should be a directory', $resourcesPath));
         }
         $finder = new Finder();
@@ -36,10 +32,6 @@ class ResourceLoader
 
         foreach ($finder as $fileInfo) {
             $yaml = Yaml::parse(file_get_contents($fileInfo->getRealPath()), Yaml::PARSE_CUSTOM_TAGS);
-
-            if (!is_array($yaml)) {
-                continue;
-            }
 
             foreach ($yaml as $name => $admin) {
                 $data[$name] = $admin;

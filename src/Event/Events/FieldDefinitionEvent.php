@@ -39,6 +39,9 @@ class FieldDefinitionEvent extends Event
         return key_exists($name, $this->definitions);
     }
 
+    /**
+     * @return FieldDefinitionInterface[]
+     */
     public function getDefinitions(): array
     {
         return $this->definitions;

@@ -16,7 +16,7 @@ phpunit.run.stop-on-failure:
 
 # CodeStyle
 php-cs-fixer.fix:
-	php-cs-fixer fix --dry-run --using-cache=no --verbose --diff
+	php-cs-fixer fix --using-cache=no --diff
 
 php-cs-fixer.install:
 	@echo "Install binary using composer (globally)"

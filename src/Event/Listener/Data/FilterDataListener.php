@@ -8,11 +8,11 @@ use LAG\AdminBundle\Filter\Filter;
 
 class FilterDataListener
 {
-    private FilterFormFactoryInterface $formFactory;
+    private FilterFormFactoryInterface $filterFormFactory;
 
-    public function __construct(FilterFormFactoryInterface $formFactory)
+    public function __construct(FilterFormFactoryInterface $filterFormFactory)
     {
-        $this->formFactory = $formFactory;
+        $this->filterFormFactory = $filterFormFactory;
     }
 
     public function __invoke(DataEvent $event): void
@@ -21,7 +21,11 @@ class FilterDataListener
         $admin = $event->getAdmin();
         $filters = $admin->getAction()->getConfiguration()->getFilters();
 
-        $form = $this->formFactory->create($admin);
+        if (count($filters) === 0) {
+            return;
+        }
+
+        $form = $this->filterFormFactory->create($admin);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

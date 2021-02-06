@@ -2,23 +2,31 @@
 
 namespace LAG\AdminBundle\Tests\Admin\Resource\Loader;
 
+use Exception;
 use LAG\AdminBundle\Admin\Resource\Loader\ResourceLoader;
 use LAG\AdminBundle\Tests\TestCase;
 
 class ResourceLoaderTest extends TestCase
 {
+    private ResourceLoader $resourceLoader;
+
     public function testLoad(): void
     {
-        $loader = $this->createLoader();
-        $resources = $loader->load($this->getFixturesPath());
+        $resources = $this->resourceLoader->load($this->getFixturesPath());
 
         $this->assertCount(1, $resources);
         $this->assertArrayHasKey('panda', $resources);
     }
 
-    private function createLoader(): ResourceLoader
+    public function testLoadWithoutExistingDirectory(): void
     {
-        return new ResourceLoader();
+        $this->expectException(Exception::class);
+        $this->resourceLoader->load('wrong_directory');
+    }
+
+    protected function setUp(): void
+    {
+        $this->resourceLoader = new ResourceLoader();
     }
 
     private function getFixturesPath(): string

@@ -3,102 +3,53 @@
 namespace LAG\AdminBundle\Tests\Bridge\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandlerInterface;
-use LAG\AdminBundle\Bridge\Doctrine\ORMDataProvider;
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Filter\FilterInterface;
+use LAG\AdminBundle\Bridge\Doctrine\ORMDataPersister;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 
 class ORMDataPersisterTest extends TestCase
 {
-    public function testCreate(): void
-    {
-        [$dataPersister] = $this->createDataPersister();
+    private ORMDataPersister $persister;
+    private MockObject $entityManager;
 
-        $entity = $dataPersister->create(stdClass::class);
-        $this->assertInstanceOf(stdClass::class, $entity);
+    public function testSave(): void
+    {
+        $data = new stdClass();
+        $this
+            ->entityManager
+            ->expects($this->once())
+            ->method('persist')
+            ->with($data)
+        ;
+        $this
+            ->entityManager
+            ->expects($this->once())
+            ->method('flush')
+        ;
+        $this->persister->save($data);
     }
 
-    public function testGet(): void
+    public function testDelete(): void
     {
-        [$dataPersister, $entityManager,] = $this->createDataPersister();
-
-        $object = new stdClass();
-        $object->test = true;
-
-        $repository = $this->createMock(EntityRepository::class);
-        $repository
+        $data = new stdClass();
+        $this
+            ->entityManager
             ->expects($this->once())
-            ->method('find')
-            ->with(666)
-            ->willReturn($object)
+            ->method('remove')
+            ->with($data)
         ;
-
-        $entityManager
+        $this
+            ->entityManager
             ->expects($this->once())
-            ->method('getRepository')
-            ->with(stdClass::class)
-            ->willReturn($repository)
+            ->method('flush')
         ;
-
-        $entity = $dataPersister->get(stdClass::class, 666);
-        $this->assertInstanceOf(stdClass::class, $entity);
-        $this->assertEquals($object, $entity);
+        $this->persister->delete($data);
     }
 
-    public function testGetWithNotFoundEntity(): void
+    protected function setUp(): void
     {
-        [$dataPersister, $entityManager,] = $this->createDataPersister();
-
-        $repository = $this->createMock(EntityRepository::class);
-        $repository
-            ->expects($this->once())
-            ->method('find')
-            ->with(666)
-            ->willReturn(null)
-        ;
-
-        $entityManager
-            ->expects($this->once())
-            ->method('getRepository')
-            ->with(stdClass::class)
-            ->willReturn($repository)
-        ;
-
-        $this->expectException(Exception::class);
-        $dataPersister->get(stdClass::class, 666);
-    }
-
-    public function collectionDataProvider(): array
-    {
-        $filter = $this->createMock(FilterInterface::class);
-
-        return [
-            ['MyLittleClass', 1, 25, [], []],
-            ['MyLittleClass', 5, 999, ['title' => 'desc'], ['wrong']],
-            ['MyLittleClass', 5, 999, ['title' => 'desc'], [$filter]],
-        ];
-    }
-
-    /**
-     * @return ORMDataProvider[]|MockObject[]
-     */
-    private function createDataPersister(): array
-    {
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $helper = $this->createMock(AdminHelperInterface::class);
-        $resultsHandler = $this->createMock(ResultsHandlerInterface::class);
-        $dataPersister = new ORMDataProvider($entityManager, $helper, $resultsHandler);
-
-        return [
-            $dataPersister,
-            $entityManager,
-            $helper,
-            $resultsHandler,
-        ];
+        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->persister = new ORMDataPersister($this->entityManager);
     }
 }

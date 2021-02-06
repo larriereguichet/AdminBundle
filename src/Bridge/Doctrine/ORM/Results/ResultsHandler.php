@@ -48,16 +48,16 @@ class ResultsHandler implements ResultsHandlerInterface
             return new QueryAdapter($data, true, true);
         }
 
+        if ($data instanceof Collection) {
+            return new CollectionAdapter($data);
+        }
+
         if (is_array($data)) {
             return new ArrayAdapter($data);
         }
 
         if (is_iterable($data)) {
             return new ArrayAdapter(iterator_to_array($data));
-        }
-
-        if ($data instanceof Collection) {
-            return new CollectionAdapter($data);
         }
 
         throw new Exception('Unable to find an adapter for type "'.gettype($data).'"');

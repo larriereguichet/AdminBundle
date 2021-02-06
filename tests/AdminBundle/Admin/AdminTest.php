@@ -47,6 +47,7 @@ class AdminTest extends TestCase
                 if (AdminEvents::ADMIN_DATA === $eventName) {
                     $this->assertInstanceOf(DataEvent::class, $event);
                     $event->setData(new ArrayCollection($entities));
+                    $event->setFilterForm($form);
                 }
 
                 if (AdminEvents::ADMIN_FORM === $eventName) {
@@ -77,7 +78,7 @@ class AdminTest extends TestCase
         }
         $this->assertEquals($request, $this->admin->getRequest());
         $this->assertTrue($this->admin->hasForm('entity'));
-        $this->assertCount(1, $this->admin->getForms());
+        $this->assertCount(2, $this->admin->getForms());
         $this->assertEquals($form, $this->admin->getForms()['entity']);
         $this->assertEquals($form, $this->admin->getForm('entity'));
         $this->assertExceptionRaised(Exception::class, function () {

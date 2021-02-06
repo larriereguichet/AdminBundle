@@ -89,9 +89,9 @@ class ORMDataProvider implements DataProviderInterface
     private function getRepository(string $class): ObjectRepository
     {
         $repository = $this->entityManager->getRepository($class);
-        $admin = $this->adminHelper->getAdmin();
 
         if (!$repository instanceof EntityRepository) {
+            $admin = $this->adminHelper->getAdmin();
             throw new Exception(sprintf('The repository of admin "%s" should be an instance of "%s" to use the default method createQueryBuilder()', $admin->getName(), EntityRepository::class));
         }
 
