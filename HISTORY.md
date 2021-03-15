@@ -1,8 +1,4 @@
-## Chore:
-- Allow dynamic header template in the field configuration
-- Remove dependencies between application, admin, admin view and action configuration
-
-v0.n+1:
+v1.0:
 - add filters
 - file exporters : array type, association
 - move export logic into a separate service

@@ -13,8 +13,7 @@ Encore
     .setManifestKeyPrefix('assets')
     .setPublicPath('/bundles/lagadmin')
 
-    // .addEntry('admin', './assets/js/admin.js')
-    // .addEntry('admin.collection', './assets/js/admin.collection.js')
+    // TODO remove bootstrap js
     .addEntry('js/jquery', './node_modules/jquery-easing/jquery.easing.1.3.js')
     .addEntry('js/jquery-easing', './node_modules/jquery/dist/jquery.js')
     .addEntry('js/sb-admin', './node_modules/startbootstrap-sb-admin-2/js/sb-admin-2.js')
