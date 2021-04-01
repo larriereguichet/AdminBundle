@@ -27,11 +27,11 @@
     "require": {
         "php": "^7.4",
         "ext-json": "*",
+        "babdev/pagerfanta-bundle": "^3.0",
         "johnkrovitch/configuration": "^2.1",
         "johnkrovitch/orm-pack": "^2.0",
         "knplabs/knp-menu-bundle": "^3.0",
         "lag/string-utils": "^1.2",
-        "pagerfanta/pagerfanta": "^2.4",
         "sensio/framework-extra-bundle": "^4.4|^5.4",
         "symfony/dependency-injection": "^4.4|^5.1",
         "symfony/event-dispatcher": "^4.4|^5.1",

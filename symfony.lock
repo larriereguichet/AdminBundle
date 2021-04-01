@@ -126,8 +126,8 @@
     "nyholm/symfony-bundle-test": {
         "version": "1.7.0"
     },
-    "pagerfanta/pagerfanta": {
-        "version": "v2.5.1"
+    "pagerfanta/core": {
+        "version": "v3.0.0"
     },
     "phar-io/manifest": {
         "version": "2.0.1"
