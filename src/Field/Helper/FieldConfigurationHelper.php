@@ -153,8 +153,8 @@ class FieldConfigurationHelper
                 $actionConfiguration = [];
             }
 
-            if (key_exists($name, $mapping) && !key_exists('route_requirements', $actionConfiguration)) {
-                $configuration['actions'][$name]['route_requirements'] = [
+            if (key_exists($name, $mapping) && !key_exists('route_parameters', $actionConfiguration)) {
+                $configuration['actions'][$name]['route_parameters'] = [
                     'id' => '\d+',
                 ];
             }
