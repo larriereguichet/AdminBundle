@@ -2,17 +2,19 @@
 
 namespace LAG\AdminBundle\Routing;
 
+use LAG\AdminBundle\Admin\Configuration\ActionConfigurationMapper;
+use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Controller\HomeAction;
+use LAG\AdminBundle\Exception\ConfigurationException;
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface;
 use RuntimeException;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class RoutingLoader implements LoaderInterface
+class RoutingLoader extends Loader
 {
     private bool $loaded = false;
     private ApplicationConfiguration $applicationConfiguration;
@@ -38,24 +40,7 @@ class RoutingLoader implements LoaderInterface
         $resources = $this->resourceRegistry->all();
 
         foreach ($resources as $name => $resource) {
-            $configuration = $this
-                ->configurationFactory
-                ->createAdminConfiguration($resource->getName(), $resource->getConfiguration())
-            ;
-
-            foreach ($configuration->get('actions') as $actionName => $actionOptions) {
-                $actionConfiguration = $this
-                    ->configurationFactory
-                    ->createActionConfiguration($actionName, $actionOptions)
-                ;
-                $route = new Route($actionConfiguration->getPath(), [], array_keys($actionConfiguration->getRouteParameters()));
-                $routes->add($actionConfiguration->get('route'), $route);
-            }
-
-            if ($this->applicationConfiguration->get('enable_homepage')) {
-                $route = new Route('/', ['_controller' => HomeAction::class], []);
-                $routes->add('lag_admin.homepage', $route);
-            }
+            $this->configureAdminRoutes($resource, $routes);
         }
 
         return $routes;
@@ -66,11 +51,26 @@ class RoutingLoader implements LoaderInterface
         return 'extra' === $type;
     }
 
-    public function getResolver()
+    private function configureAdminRoutes(AdminResource $resource, RouteCollection $routes): void
     {
-    }
+        $configuration = $this
+            ->configurationFactory
+            ->createAdminConfiguration($resource->getName(), $resource->getConfiguration())
+        ;
 
-    public function setResolver(LoaderResolverInterface $resolver)
-    {
+        foreach ($configuration->get('actions') as $actionName => $actionOptions) {
+            $mapper = new ActionConfigurationMapper();
+            $actionConfigurationArray = array_merge($mapper->map($actionName, $configuration), $actionOptions);
+
+            try {
+                $actionConfiguration = $this
+                    ->configurationFactory
+                    ->createActionConfiguration($actionName, $actionConfigurationArray);
+            } catch (Exception $exception) {
+                throw new ConfigurationException('admin', $resource->getName(), $exception);
+            }
+            $route = new Route($actionConfiguration->getPath(), [], array_keys($actionConfiguration->getRouteParameters()));
+            $routes->add($actionConfiguration->get('route'), $route);
+        }
     }
 }

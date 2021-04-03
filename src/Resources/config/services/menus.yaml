@@ -11,7 +11,6 @@ services:
 
     LAG\AdminBundle\Event\Listener\Menu\DefaultMenuListener:
         arguments:
-            $menuEnabled: '%lag_admin.menu.enable%'
             $menuConfigurations: '%lag_admin.menu.menus%'
         tags:
             - {name: kernel.event_listener, event: lag.admin.menu_configuration, priority: 255}

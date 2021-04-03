@@ -70,9 +70,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
 
                 // Menus
-                ->arrayNode('menus')
-                    ->prototype('array')
-                ->end()
+                ->variableNode('menus')->end()
             ->end()
         ->end();
 
