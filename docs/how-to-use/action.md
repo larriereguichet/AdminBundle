@@ -61,7 +61,7 @@ article:
                 route: ~
                 route_parameters: []
                 path: ~
-                route_requirements: []
+                route_parameters: []
                 route_defaults':
                     _controller: LAG\AdminBundle\Admin\Admin
                 class: LAG\AdminBundle\Admin\Action
@@ -123,7 +123,7 @@ lag_admin:
                     route: ~
                     route_parameters: []
                     path: ~
-                    route_requirements: []
+                    route_parameters: []
                     route_defaults':
                         _controller: LAG\AdminBundle\Admin\Admin
                     class: LAG\AdminBundle\Admin\Action

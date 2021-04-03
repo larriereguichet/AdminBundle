@@ -33,6 +33,8 @@ interface ResourceRegistryInterface
 
     /**
      * Return an array of the registry resources.
+     *
+     * @return AdminResource[]
      */
     public function all(): array;
 
