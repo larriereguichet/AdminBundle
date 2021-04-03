@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ admin_config('locale') }}">
+<html lang="{{ app.request.locale }}">
 <head>
     <title>
         {% block title %}{{ admin_config('title') }}{% endblock %}
@@ -22,7 +22,7 @@
     {% block admin_stylesheets %}
         <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/sb-admin.css') }}"/>
         <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/fa.css') }}"/>
-        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/assets/admin.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/build/admin.css') }}"/>
     
         {% if admin_media_enabled() %}
             <link rel="stylesheet" href="{{ asset('/bundles/jkmedia/assets/media.css') }}"/>
@@ -80,7 +80,7 @@
                 <script src="{{ asset('/bundles/lagadmin/js/jquery-easing.js') }}"></script>
                 <script src="{{ asset('/bundles/lagadmin/js/bootstrap.js') }}"></script>
                 <script src="{{ asset('/bundles/lagadmin/js/sb-admin.js') }}"></script>
-                <script src="{{ asset('/bundles/lagadmin/assets/admin.js') }}"></script>
+                <script src="{{ asset('/bundles/lagadmin/build/admin.js') }}"></script>
             {% endblock %}
             {% block javascripts %}{% endblock %}
         </footer>
@@ -91,7 +91,7 @@
     {% endblock %}
 
     {% if admin_media_enabled() %}
-        {% include '@JKMedia/modal/modal.html.twig' %}
+        {% include '@JKMedia/Modal/modal.html.twig' %}
     {% endif %}
     </body>
 {% endblock %}
