@@ -7,6 +7,11 @@ lag:
         cancel: Annuler
         saved: Les modifications ont été sauvegardées
         welcome_message: 'Bienvenue %username%'
+
+        login: Se connecter
+        login_form:
+            login: Email
+            password: Mot de passe
         logout: Se déconnecter
 
         # List

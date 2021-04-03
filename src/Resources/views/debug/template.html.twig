@@ -21,7 +21,7 @@
         <div class="sf-toolbar-info-piece">
             <b>Locale</b>
             <span class="sf-toolbar-status">
-                {{ collector.data.application.locale }}
+                {{ collector.data.application.locale|default('~') }}
             </span>
         </div>
         <div class="sf-toolbar-info-piece">
