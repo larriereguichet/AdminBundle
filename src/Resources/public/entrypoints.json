@@ -20,12 +20,12 @@
         "/bundles/lagadmin/js/bootstrap.js"
       ]
     },
-    "assets/admin": {
+    "build/admin": {
       "css": [
-        "/bundles/lagadmin/assets/admin.css"
+        "/bundles/lagadmin/build/admin.css"
       ],
       "js": [
-        "/bundles/lagadmin/assets/admin.js"
+        "/bundles/lagadmin/build/admin.js"
       ]
     },
     "css/sb-admin": {

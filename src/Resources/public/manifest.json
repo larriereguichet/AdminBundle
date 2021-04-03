@@ -1,6 +1,6 @@
 {
-  "assets/assets/admin.css": "/bundles/lagadmin/assets/admin.css",
-  "assets/assets/admin.js": "/bundles/lagadmin/assets/admin.js",
+  "assets/build/admin.css": "/bundles/lagadmin/build/admin.css",
+  "assets/build/admin.js": "/bundles/lagadmin/build/admin.js",
   "assets/css/fa.css": "/bundles/lagadmin/css/fa.css",
   "assets/css/sb-admin.css": "/bundles/lagadmin/css/sb-admin.css",
   "assets/js/bootstrap.js": "/bundles/lagadmin/js/bootstrap.js",
@@ -116,6 +116,7 @@
   "assets/assets/themes/silver/index.js": "/bundles/lagadmin/assets/themes/silver/index.js",
   "assets/assets/themes/silver/theme.js": "/bundles/lagadmin/assets/themes/silver/theme.js",
   "assets/assets/themes/silver/theme.min.js": "/bundles/lagadmin/assets/themes/silver/theme.min.js",
+  "assets/favicon.ico": "/bundles/lagadmin/favicon.ico",
   "assets/fonts/fa-brands-400.eot": "/bundles/lagadmin/fonts/fa-brands-400.0fea2496.eot",
   "assets/fonts/fa-brands-400.woff2": "/bundles/lagadmin/fonts/fa-brands-400.c967a94c.woff2",
   "assets/fonts/fa-brands-400.woff": "/bundles/lagadmin/fonts/fa-brands-400.dc2cbadd.woff",

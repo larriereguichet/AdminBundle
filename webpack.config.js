@@ -18,7 +18,7 @@ Encore
     .addEntry('js/jquery-easing', './node_modules/jquery/dist/jquery.js')
     .addEntry('js/sb-admin', './node_modules/startbootstrap-sb-admin-2/js/sb-admin-2.js')
     .addEntry('js/bootstrap', './node_modules/bootstrap/dist/js/bootstrap.bundle.js')
-    .addEntry('assets/admin', './assets/js/admin.js')
+    .addEntry('build/admin', './assets/js/admin.js')
     .addStyleEntry('css/sb-admin', './node_modules/startbootstrap-sb-admin-2/css/sb-admin-2.css')
     .addStyleEntry('css/fa', './node_modules/@fortawesome/fontawesome-free/css/all.css')
     .disableSingleRuntimeChunk()
@@ -54,6 +54,10 @@ Encore
     .copyFiles({
         from: 'node_modules/tinymce-i18n/langs',
         to: 'assets/langs/[path][name].[ext]'
+    })
+    .copyFiles({
+        from: './assets/favicon',
+        to: '[path][name].[ext]'
     })
 ;
 
