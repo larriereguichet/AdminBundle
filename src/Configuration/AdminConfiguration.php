@@ -60,11 +60,6 @@ class AdminConfiguration extends Configuration
             ->setDefault('permissions', 'ROLE_ADMIN')
             ->setAllowedTypes('permissions', 'string')
 
-            ->setDefault('string_length', 200)
-            ->setAllowedTypes('string_length', 'integer')
-            ->setDefault('string_truncate', '...')
-            ->setAllowedTypes('string_truncate', 'string')
-
             ->setDefault('date_format', 'Y-m-d')
             ->setAllowedTypes('date_format', 'string')
 
@@ -185,16 +180,6 @@ class AdminConfiguration extends Configuration
         return $roles;
     }
 
-    public function getStringLength(): int
-    {
-        return $this->getInt('string_length');
-    }
-
-    public function getStringTruncate(): string
-    {
-        return $this->getString('string_truncate');
-    }
-
     public function getDateFormat(): string
     {
         return $this->getString('date_format');
@@ -296,7 +281,8 @@ class AdminConfiguration extends Configuration
 
             // add empty default batch action
             if ($addBatchAction) {
-                $normalizedActions['batch'] = [];
+                // TODO enable mass action
+                //$normalizedActions['batch'] = [];
             }
 
             return $normalizedActions;

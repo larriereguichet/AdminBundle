@@ -24,4 +24,9 @@ class ActionConfigurationEvent extends Event
     {
         return $this->configuration;
     }
+
+    public function setConfiguration(array $configuration): void
+    {
+        $this->configuration = $configuration;
+    }
 }

@@ -51,3 +51,8 @@ services:
     LAG\AdminBundle\Event\Listener\Theme\FieldThemeListener:
         tags:
             - {name: kernel.event_listener, event: lag.admin.field_configuration, priority: 255}
+
+    # Configuration event
+    LAG\AdminBundle\Event\Listener\Action\ActionConfigurationListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.action_configuration, priority: 255}

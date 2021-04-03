@@ -43,7 +43,7 @@ class ActionConfiguration extends Configuration
             ->setDefault('route_parameters', [])
             ->setAllowedTypes('route_parameters', 'array')
             ->setNormalizer('route_parameters', $this->getRouteParametersNormalizer())
-            ->setRequired('path')
+            ->setDefault('path', null)
             ->setAllowedTypes('path', ['string', 'null'])
             ->setNormalizer('path', $this->getPathNormalizer())
 

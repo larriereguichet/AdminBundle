@@ -16,6 +16,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Add extra default configuration for actions and fields.
  */
+// TODO remove this class
 class ExtraConfigurationSubscriber implements EventSubscriberInterface
 {
     private ApplicationConfiguration $applicationConfiguration;
@@ -147,6 +148,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
     private function isExtraConfigurationEnabled(): bool
     {
-        return $this->applicationConfiguration->get('enable_extra_configuration');
+        // TODO
+        return true;
     }
 }

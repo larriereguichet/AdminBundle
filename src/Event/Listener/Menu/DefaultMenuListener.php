@@ -9,18 +9,15 @@ use LAG\AdminBundle\Exception\Exception;
 
 class DefaultMenuListener
 {
-    private bool $menuEnabled;
     private ResourceRegistryInterface $registry;
     private AdminHelperInterface $adminHelper;
     private array $menuConfigurations;
 
     public function __construct(
-        bool $menuEnabled,
         ResourceRegistryInterface $registry,
         AdminHelperInterface $adminHelper,
         array $menuConfigurations = []
     ) {
-        $this->menuEnabled = $menuEnabled;
         $this->registry = $registry;
         $this->adminHelper = $adminHelper;
         $this->menuConfigurations = $menuConfigurations;
@@ -53,10 +50,6 @@ class DefaultMenuListener
 
     private function supports(MenuConfigurationEvent $event): bool
     {
-        if (!$this->menuEnabled) {
-            return false;
-        }
-
         if (!key_exists($event->getMenuName(), $this->menuConfigurations)) {
             return false;
         }
@@ -165,7 +158,8 @@ class DefaultMenuListener
             $menu['children']['return'] = [
                 'admin' => $admin->getName(),
                 'action' => 'list',
-                'text' => $admin->getConfiguration()->getTranslationKey('return'),
+                //'text' => $admin->getConfiguration()->getT('return'),
+                'text' => 'Return',
                 'icon' => 'fas fa-arrow-left',
                 'linkAttributes' => ['class' => 'btn btn-info btn-icon-split'],
             ];

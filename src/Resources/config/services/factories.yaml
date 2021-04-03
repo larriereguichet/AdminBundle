@@ -17,7 +17,7 @@ services:
     LAG\AdminBundle\Factory\FieldFactoryInterface: '@LAG\AdminBundle\Factory\FieldFactory'
     LAG\AdminBundle\Factory\FieldFactory:
         arguments:
-            $fieldsMapping: ''
+            $fieldsMapping: '%lag_admin.fields.mapping%'
 
     LAG\AdminBundle\Factory\AdminFormFactoryInterface: '@LAG\AdminBundle\Factory\AdminFormFactory'
     LAG\AdminBundle\Factory\AdminFormFactory: ~

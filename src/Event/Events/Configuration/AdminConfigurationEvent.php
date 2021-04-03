@@ -25,10 +25,8 @@ class AdminConfigurationEvent extends Event
         return $this->configuration;
     }
 
-    public function setConfiguration(array $configuration): AdminConfigurationEvent
+    public function setConfiguration(array $configuration): void
     {
         $this->configuration = $configuration;
-
-        return $this;
     }
 }

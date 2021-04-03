@@ -26,7 +26,7 @@ class AdminConfigurationFactory implements AdminConfigurationFactoryInterface
         $event = new AdminConfigurationEvent($adminName, $options);
         $this->eventDispatcher->dispatch($event, AdminEvents::ADMIN_CONFIGURATION);
         $configuration = new AdminConfiguration();
-        $values = array_merge($this->getDefaultConfiguration(), $event->getConfiguration());
+        $values = array_merge($this->getDefaultConfiguration(), $event->getConfiguration(), ['name' => $adminName]);
 
         try {
             $configuration->configure($values);
@@ -40,15 +40,13 @@ class AdminConfigurationFactory implements AdminConfigurationFactoryInterface
     private function getDefaultConfiguration(): array
     {
         return [
-            'class' => $this->applicationConfiguration->getAdminClass(),
+            'admin_class' => $this->applicationConfiguration->getAdminClass(),
             'routes_pattern' => $this->applicationConfiguration->getRoutesPattern(),
             'max_per_page' => $this->applicationConfiguration->getMaxPerPage(),
             'pager' => $this->applicationConfiguration->isTranslationEnabled()
                 ? $this->applicationConfiguration->getPager()
                 : false,
             'permissions' => $this->applicationConfiguration->getPermissions(),
-            'string_length' => $this->applicationConfiguration->getStringLength(),
-            'string_truncate' => $this->applicationConfiguration->getStringTruncate(),
             'date_format' => $this->applicationConfiguration->getDateFormat(),
             'page_parameter' => $this->applicationConfiguration->getPageParameter(),
             'list_template' => $this->applicationConfiguration->getListTemplate(),

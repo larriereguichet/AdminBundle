@@ -9,7 +9,11 @@ class ActionConfigurationException extends Exception
 {
     public function __construct(string $actionName, Throwable $previous = null)
     {
-        $message = sprintf('An error occurred when configuring the action "%s".', $actionName);
+        $message = sprintf(
+            'The configuration of the action "%s" is not valid: %s',
+            $actionName,
+            $previous ? $previous->getMessage() : ''
+        );
 
         parent::__construct($message, $previous->getCode(), $previous);
     }

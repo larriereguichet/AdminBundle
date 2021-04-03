@@ -9,19 +9,18 @@ class ActionConfigurationMapper
     public function map(string $actionName, AdminConfiguration $configuration): array
     {
         return [
-            'class' => $configuration->getActionClass(),
-            'routes_pattern' => $configuration->getRoutesPattern(),
+            'admin_name' => $configuration->getName(),
+            'action_class' => $configuration->getActionClass(),
             'max_per_page' => $configuration->getMaxPerPage(),
             'pager' => $configuration->isTranslationEnabled()
                 ? $configuration->getPager()
                 : false,
             'permissions' => $configuration->getPermissions(),
-            'string_length' => $configuration->getStringLength(),
-            'string_truncate' => $configuration->getStringTruncate(),
             'date_format' => $configuration->getDateFormat(),
             'page_parameter' => $configuration->getPageParameter(),
             'template' => $this->getDefaultTemplate($actionName, $configuration),
             'menus' => $configuration->getMenus(),
+            'fields' => [],
         ];
     }
 
