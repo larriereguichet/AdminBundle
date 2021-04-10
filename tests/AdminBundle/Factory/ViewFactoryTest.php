@@ -44,6 +44,7 @@ class ViewFactoryTest extends TestCase
             ->willReturn('my_url')
         ;
 
+        /** @var RedirectView $view */
         $view = $this->viewFactory->create($request, $admin);
         $this->assertInstanceOf(RedirectView::class, $view);
         $this->assertEquals('my_url', $view->getUrl());
@@ -93,6 +94,7 @@ class ViewFactoryTest extends TestCase
 
         $resolver = new OptionsResolver();
         $field = new StringField('title', 'string');
+        $field->setApplicationConfiguration($this->appConfig);
         $field->configureOptions($resolver);
         $field->setOptions($resolver->resolve());
 
@@ -151,6 +153,7 @@ class ViewFactoryTest extends TestCase
 
         $resolver = new OptionsResolver();
         $field = new StringField('title', 'string');
+        $field->setApplicationConfiguration($this->appConfig);
         $field->configureOptions($resolver);
         $field->setOptions($resolver->resolve());
 

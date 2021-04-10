@@ -5,7 +5,6 @@ namespace LAG\AdminBundle\Tests\Admin;
 use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
-use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\DataEvent;
@@ -23,7 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
 class AdminTest extends TestCase
 {
     private Admin $admin;
-    private MockObject $resource;
     private MockObject $configuration;
     private MockObject $eventDispatcher;
 
@@ -67,8 +65,7 @@ class AdminTest extends TestCase
 
         $this->admin->handleRequest($request);
 
-        $this->assertEquals('admin_test', $this->admin->getName());
-        $this->assertEquals($this->resource, $this->admin->getResource());
+        $this->assertEquals('my_admin', $this->admin->getName());
         $this->assertEquals($this->eventDispatcher, $this->admin->getEventDispatcher());
         $this->assertEquals($this->configuration, $this->admin->getConfiguration());
         $this->assertCount(count($entities), $this->admin->getData());
@@ -149,7 +146,6 @@ class AdminTest extends TestCase
 
     public function testHandleFormWithoutForm()
     {
-        $resource = $this->createMock(AdminResource::class);
         $configuration = $this->createMock(AdminConfiguration::class);
         $action = $this->createMock(ActionInterface::class);
 
@@ -175,7 +171,7 @@ class AdminTest extends TestCase
         ;
 
         $admin = new Admin(
-            $resource,
+            'my_admin',
             $configuration,
             $eventDispatcher
         );
@@ -228,14 +224,8 @@ class AdminTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->resource = $this->createMock(AdminResource::class);
-        $this->resource
-            ->expects($this->once())
-            ->method('getName')
-            ->willReturn('admin_test')
-        ;
         $this->configuration = $this->createMock(AdminConfiguration::class);
         $this->eventDispatcher = $this->createMock(EventDispatcher::class);
-        $this->admin = new Admin($this->resource, $this->configuration, $this->eventDispatcher);
+        $this->admin = new Admin('my_admin', $this->configuration, $this->eventDispatcher);
     }
 }

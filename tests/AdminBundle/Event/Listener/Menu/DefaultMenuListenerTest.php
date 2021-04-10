@@ -13,20 +13,23 @@ class DefaultMenuListenerTest extends TestCase
 {
     public function testInvokeWithMenuDisabled(): void
     {
-        [$listener] = $this->createListener(false, []);
+        [$listener] = $this->createListener([]);
 
         $event = $this->createMock(MenuConfigurationEvent::class);
         $event
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('getMenuName')
+            ->willReturn('my_menu')
         ;
 
         $listener->__invoke($event);
+
+        $this->assertEquals([], $event->getMenuConfiguration());
     }
 
     public function testInvokeWithMissingMenu(): void
     {
-        [$listener] = $this->createListener(true, []);
+        [$listener] = $this->createListener([]);
 
         $event = $this->createMock(MenuConfigurationEvent::class);
         $event
@@ -40,7 +43,7 @@ class DefaultMenuListenerTest extends TestCase
 
     public function testInvokeWithFalseMenu(): void
     {
-        [$listener] = $this->createListener(true, [
+        [$listener] = $this->createListener([
             'left' => false,
         ]);
 
@@ -56,7 +59,7 @@ class DefaultMenuListenerTest extends TestCase
 
     public function testInvokeWithNullMenu(): void
     {
-        [$listener] = $this->createListener(true, [
+        [$listener] = $this->createListener([
             'left' => null,
         ]);
 
@@ -72,7 +75,7 @@ class DefaultMenuListenerTest extends TestCase
 
     public function testInvokeLeftMenuConfigured(): void
     {
-        [$listener] = $this->createListener(true, [
+        [$listener] = $this->createListener([
             'left' => [
                 'children' => [
                     'my_item' => [
@@ -122,12 +125,12 @@ class DefaultMenuListenerTest extends TestCase
     /**
      * @return DefaultMenuListener[]|MockObject[]
      */
-    private function createListener(bool $menuEnabled, array $menuConfigurations): array
+    private function createListener(array $menuConfigurations): array
     {
         $registry = $this->createMock(ResourceRegistryInterface::class);
         $adminHelper = $this->createMock(AdminHelperInterface::class);
 
-        $listener = new DefaultMenuListener($menuEnabled, $registry, $adminHelper, $menuConfigurations);
+        $listener = new DefaultMenuListener($registry, $adminHelper, $menuConfigurations);
 
         return [$listener, $registry, $adminHelper];
     }

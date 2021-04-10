@@ -11,7 +11,7 @@ class AdminEvents
     const ADMIN_VIEW = 'lag.admin.view';
 
     const ADMIN_CREATE = 'lag.admin.create';
-    const ADMIN_CONFIGURATION = 'lag.admin.configuration';
+    const ADMIN_CONFIGURATION = 'lag.admin.admin_configuration';
 
     const ACTION_CREATE = 'lag.admin.action_create';
     const ACTION_CONFIGURATION = 'lag.admin.action_configuration';

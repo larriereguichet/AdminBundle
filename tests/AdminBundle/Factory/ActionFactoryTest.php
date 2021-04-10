@@ -2,6 +2,8 @@
 
 namespace LAG\AdminBundle\Tests\Factory;
 
+use LAG\AdminBundle\Admin\Resource\AdminResource;
+use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\ActionEvent;
@@ -14,9 +16,10 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ActionFactoryTest extends TestCase
 {
+    private ActionFactory $actionFactory;
     private MockObject $eventDispatcher;
     private MockObject $configurationFactory;
-    private ActionFactory $actionFactory;
+    private MockObject $resourceRegistry;
 
     public function testServiceExists(): void
     {
@@ -26,16 +29,40 @@ class ActionFactoryTest extends TestCase
 
     public function testCreate(): void
     {
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
+        $adminResource = $this->createMock(AdminResource::class);
+        $this
+            ->resourceRegistry
+            ->expects($this->once())
+            ->method('get')
+            ->with('my_admin')
+            ->willReturn($adminResource)
+        ;
+        $adminResource
+            ->expects($this->once())
+            ->method('getConfiguration')
+            ->willReturn([
+                'actions' => [
+                    'list' => [
+                        'title' => 'My title',
+                    ],
+                ],
+            ])
+        ;
 
-        $this->configurationFactory
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
+        $this
+            ->configurationFactory
             ->expects($this->once())
             ->method('create')
-            ->with('list', [])
+            ->with('list', [
+                'title' => 'My title',
+                'admin_name' => 'my_admin',
+            ])
             ->willReturn($actionConfiguration)
         ;
 
-        $this->eventDispatcher
+        $this
+            ->eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
             ->willReturn(function ($actionEvent, $eventName) {
@@ -44,13 +71,18 @@ class ActionFactoryTest extends TestCase
             })
         ;
 
-        $this->actionFactory->create('list', []);
+        $action = $this->actionFactory->create('list', [
+            'admin_name' => 'my_admin',
+        ]);
+        $this->assertEquals($actionConfiguration, $action->getConfiguration());
+        $this->assertEquals('list', $action->getName());
     }
 
     protected function setUp(): void
     {
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->configurationFactory = $this->createMock(ActionConfigurationFactoryInterface::class);
-        $this->actionFactory = new ActionFactory($this->eventDispatcher, $this->configurationFactory);
+        $this->resourceRegistry = $this->createMock(ResourceRegistryInterface::class);
+        $this->actionFactory = new ActionFactory($this->eventDispatcher, $this->configurationFactory, $this->resourceRegistry);
     }
 }

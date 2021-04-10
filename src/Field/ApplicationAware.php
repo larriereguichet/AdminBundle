@@ -6,7 +6,7 @@ use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 
 trait ApplicationAware
 {
-    private ApplicationConfiguration $applicationConfiguration;
+    protected ApplicationConfiguration $applicationConfiguration;
 
     public function getApplicationConfiguration(): ApplicationConfiguration
     {

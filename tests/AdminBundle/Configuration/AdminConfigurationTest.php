@@ -30,7 +30,6 @@ class AdminConfigurationTest extends TestCase
                 'delete' => [
                     'route_parameters' => ['id' => null],
                 ],
-                'batch' => [],
             ],
             'controller' => 'LAG\AdminBundle\Controller\AdminAction',
             'batch' => [],
@@ -41,8 +40,6 @@ class AdminConfigurationTest extends TestCase
             'max_per_page' => 25,
             'page_parameter' => 'page',
             'permissions' => 'ROLE_ADMIN',
-            'string_length' => 200,
-            'string_truncate' => '...',
             'date_format' => 'Y-m-d',
             'data_provider' => 'doctrine',
             'data_persister' => 'doctrine',
@@ -81,7 +78,6 @@ class AdminConfigurationTest extends TestCase
             'delete' => [
                 'route_parameters' => ['id' => null],
             ],
-            'batch' => [],
         ], $configuration->getActions());
         $this->assertEquals(true, $configuration->hasAction('create'));
         $this->assertEquals(false, $configuration->hasAction('wrong'));
@@ -101,9 +97,6 @@ class AdminConfigurationTest extends TestCase
         $this->assertEquals('page', $configuration->getPageParameter());
 
         $this->assertEquals(['ROLE_ADMIN'], $configuration->getPermissions());
-
-        $this->assertEquals(200, $configuration->getStringLength());
-        $this->assertEquals('...', $configuration->getStringTruncate());
 
         $this->assertEquals('Y-m-d', $configuration->getDateFormat());
         $this->assertEquals('doctrine', $configuration->getDataProvider());

@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Event\Listener\Action;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\Events\Configuration\ActionConfigurationEvent;
 
-class ActionConfigurationListener
+class ConfigurationListener
 {
     private ApplicationConfiguration $appConfig;
 
@@ -16,14 +16,20 @@ class ActionConfigurationListener
 
     public function __invoke(ActionConfigurationEvent $event): void
     {
+        $actionName = $event->getActionName();
         $configuration = $event->getConfiguration();
 
+        $this->configureDefaultRoute($actionName, $configuration);
+        $event->setConfiguration($configuration);
+    }
+
+    private function configureDefaultRoute(string $actionName, array &$configuration): void
+    {
         if (empty($configuration['route'])) {
             $configuration['route'] = $this->appConfig->getRouteName(
                 $configuration['admin_name'],
-                $event->getActionName()
+                $actionName
             );
         }
-        $event->setConfiguration($configuration);
     }
 }

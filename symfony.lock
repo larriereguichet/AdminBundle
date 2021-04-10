@@ -129,6 +129,12 @@
     "pagerfanta/core": {
         "version": "v3.0.0"
     },
+    "pagerfanta/doctrine-collections-adapter": {
+        "version": "v3.0.0"
+    },
+    "pagerfanta/doctrine-orm-adapter": {
+        "version": "v3.0.0"
+    },
     "phar-io/manifest": {
         "version": "2.0.1"
     },

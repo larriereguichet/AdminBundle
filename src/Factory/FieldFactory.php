@@ -145,10 +145,14 @@ class FieldFactory implements FieldFactoryInterface
             $processedParents = [];
 
             while ($currentField->getParent() !== null) {
-                if (in_array($field->getParent(), $processedParents)) {
-                    throw new FieldConfigurationException($field->getName(), $context);
+                if (in_array($currentField->getParent(), $processedParents)) {
+                    throw new FieldConfigurationException($field->getName(), $context, 'An inheritance loop is found in '.implode(', ', $processedParents));
                 }
                 $parent = $this->instanciateField($currentField->getName(), $currentField->getParent());
+
+                if ($parent instanceof ApplicationAwareInterface) {
+                    $parent->setApplicationConfiguration($this->appConfig);
+                }
                 $parents[] = $parent;
                 $processedParents[] = $field->getParent();
                 $currentField = $parent;

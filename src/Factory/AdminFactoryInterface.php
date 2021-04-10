@@ -4,7 +4,6 @@ namespace LAG\AdminBundle\Factory;
 
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Exception\Exception;
-use Symfony\Component\HttpFoundation\Request;
 
 interface AdminFactoryInterface
 {
@@ -13,11 +12,5 @@ interface AdminFactoryInterface
      *
      * @throws Exception
      */
-    public function createFromRequest(Request $request): AdminInterface;
-
-    /**
-     * Return true if the current Request is supported. Supported means that the Request has the required valid
-     * parameters to get an admin from the registry.
-     */
-    public function supports(Request $request): bool;
+    public function create(string $name, array $options = []): AdminInterface;
 }

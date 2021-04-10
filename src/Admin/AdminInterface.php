@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Admin;
 
-use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\View\ViewInterface;
@@ -51,11 +50,6 @@ interface AdminInterface
      * Return the class of the entity managed by the Admin.
      */
     public function getEntityClass(): string;
-
-    /**
-     * Return the Resource used to create the Admin.
-     */
-    public function getResource(): AdminResource;
 
     /**
      * Return the event dispatcher associated to the Admin.

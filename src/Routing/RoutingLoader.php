@@ -2,10 +2,8 @@
 
 namespace LAG\AdminBundle\Routing;
 
-use LAG\AdminBundle\Admin\Configuration\ActionConfigurationMapper;
 use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Exception\ConfigurationException;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface;
@@ -17,16 +15,13 @@ use Symfony\Component\Routing\RouteCollection;
 class RoutingLoader extends Loader
 {
     private bool $loaded = false;
-    private ApplicationConfiguration $applicationConfiguration;
     private ConfigurationFactoryInterface $configurationFactory;
     private ResourceRegistryInterface $resourceRegistry;
 
     public function __construct(
         ResourceRegistryInterface $resourceRegistry,
-        ApplicationConfiguration $applicationConfiguration,
         ConfigurationFactoryInterface $configurationFactory
     ) {
-        $this->applicationConfiguration = $applicationConfiguration;
         $this->configurationFactory = $configurationFactory;
         $this->resourceRegistry = $resourceRegistry;
     }
@@ -39,7 +34,7 @@ class RoutingLoader extends Loader
         $routes = new RouteCollection();
         $resources = $this->resourceRegistry->all();
 
-        foreach ($resources as $name => $resource) {
+        foreach ($resources as $resource) {
             $this->configureAdminRoutes($resource, $routes);
         }
 
@@ -59,17 +54,18 @@ class RoutingLoader extends Loader
         ;
 
         foreach ($configuration->get('actions') as $actionName => $actionOptions) {
-            $mapper = new ActionConfigurationMapper();
-            $actionConfigurationArray = array_merge($mapper->map($actionName, $configuration), $actionOptions);
-
             try {
                 $actionConfiguration = $this
                     ->configurationFactory
-                    ->createActionConfiguration($actionName, $actionConfigurationArray);
+                    ->createActionConfiguration($actionName, $actionOptions);
             } catch (Exception $exception) {
                 throw new ConfigurationException('admin', $resource->getName(), $exception);
             }
-            $route = new Route($actionConfiguration->getPath(), [], array_keys($actionConfiguration->getRouteParameters()));
+            $route = new Route($actionConfiguration->getPath(), [
+                '_controller' => $actionConfiguration->getController(),
+                '_admin' => $actionConfiguration->getAdminName(),
+                '_action' => $actionConfiguration->getName(),
+            ], array_keys($actionConfiguration->getRouteParameters()));
             $routes->add($actionConfiguration->get('route'), $route);
         }
     }

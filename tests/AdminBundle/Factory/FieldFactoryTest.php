@@ -42,7 +42,7 @@ class FieldFactoryTest extends TestCase
 
         $this->assertEquals([
             'template' => 'string.html.twig',
-            'length' => 100,
+            'length' => 200,
             'replace' => '...',
             'translate_title' => true,
             'attr' => [

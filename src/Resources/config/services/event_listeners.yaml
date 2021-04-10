@@ -3,6 +3,7 @@ services:
         autowire: true
         autoconfigure: true
 
+    # TODO to remove
     LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber:
         class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
     
@@ -53,6 +54,10 @@ services:
             - {name: kernel.event_listener, event: lag.admin.field_configuration, priority: 255}
 
     # Configuration event
-    LAG\AdminBundle\Event\Listener\Action\ActionConfigurationListener:
+    LAG\AdminBundle\Event\Listener\Action\ConfigurationListener:
         tags:
             - {name: kernel.event_listener, event: lag.admin.action_configuration, priority: 255}
+
+    LAG\AdminBundle\Event\Listener\Admin\ConfigurationListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.admin_configuration, priority: 255}

@@ -11,7 +11,7 @@ class StringFieldTest extends FieldTestCase
         $field = $this->factory->create('name', ['type' => 'string']);
 
         $this->assertEquals([
-            'length' => 100,
+            'length' => 200,
             'replace' => '...',
             'translate_title' => true,
             'attr' => ['class' => 'admin-field admin-field-string'],

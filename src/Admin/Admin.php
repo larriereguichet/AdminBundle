@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Admin;
 
-use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\DataEvent;
@@ -19,7 +18,6 @@ class Admin implements AdminInterface
 {
     private string $name;
     private AdminConfiguration $configuration;
-    private AdminResource $resource;
     private EventDispatcherInterface $eventDispatcher;
     private ActionInterface $action;
     private Request $request;
@@ -32,13 +30,12 @@ class Admin implements AdminInterface
     private $data;
 
     public function __construct(
-        AdminResource $resource,
+        string $name,
         AdminConfiguration $configuration,
         EventDispatcherInterface $eventDispatcher
     ) {
-        $this->name = $resource->getName();
+        $this->name = $name;
         $this->configuration = $configuration;
-        $this->resource = $resource;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -91,11 +88,6 @@ class Admin implements AdminInterface
     public function getEntityClass(): string
     {
         return $this->configuration->get('entity');
-    }
-
-    public function getResource(): AdminResource
-    {
-        return $this->resource;
     }
 
     public function getEventDispatcher(): EventDispatcherInterface

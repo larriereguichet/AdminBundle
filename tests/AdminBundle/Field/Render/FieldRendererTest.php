@@ -38,7 +38,7 @@ class FieldRendererTest extends FieldTestCase
                 'name' => 'title',
                 'object' => $data,
                 'options' => [
-                    'length' => 100,
+                    'length' => 200,
                     'replace' => '...',
                     'translate_title' => true,
                     'attr' => [

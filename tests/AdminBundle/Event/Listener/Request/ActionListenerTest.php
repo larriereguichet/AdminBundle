@@ -8,8 +8,8 @@ use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\Events\RequestEvent;
 use LAG\AdminBundle\Event\Listener\Request\ActionListener;
-use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Factory\ActionFactoryInterface;
+use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ActionListenerTest extends TestCase
 {
     private ActionListener $listener;
+    private MockObject $extractor;
     private MockObject $actionFactory;
     private MockObject $adminHelper;
 
@@ -38,7 +39,15 @@ class ActionListenerTest extends TestCase
             ->willReturn($admin)
         ;
 
-        $this->adminHelper
+        $this
+            ->extractor
+            ->expects($this->once())
+            ->method('getActionName')
+            ->willReturn('my_action')
+        ;
+
+        $this
+            ->adminHelper
             ->expects($this->once())
             ->method('setAdmin')
             ->with($admin)
@@ -53,19 +62,7 @@ class ActionListenerTest extends TestCase
         $this->actionFactory
             ->expects($this->once())
             ->method('create')
-            ->with('my_action', [
-                'class' => '',
-                'routes_pattern' => '',
-                'max_per_page' => 0,
-                'pager' => false,
-                'permissions' => [],
-                'string_length' => 0,
-                'string_truncate' => '',
-                'date_format' => '',
-                'page_parameter' => '',
-                'template' => '',
-                'menus' => [],
-            ])
+            ->with('my_action')
             ->willReturn($action)
         ;
 
@@ -78,24 +75,11 @@ class ActionListenerTest extends TestCase
         $this->listener->__invoke($event);
     }
 
-    public function testInvokeWithoutAction(): void
-    {
-        $request = new Request([], [], ['_action' => null]);
-        $event = $this->createMock(RequestEvent::class);
-        $event
-            ->expects($this->once())
-            ->method('getRequest')
-            ->willReturn($request)
-        ;
-
-        $this->expectException(Exception::class);
-        $this->listener->__invoke($event);
-    }
-
     protected function setUp(): void
     {
         $this->actionFactory = $this->createMock(ActionFactoryInterface::class);
         $this->adminHelper = $this->createMock(AdminHelperInterface::class);
-        $this->listener = new ActionListener($this->actionFactory, $this->adminHelper);
+        $this->extractor = $this->createMock(ParametersExtractorInterface::class);
+        $this->listener = new ActionListener($this->actionFactory, $this->adminHelper, $this->extractor);
     }
 }

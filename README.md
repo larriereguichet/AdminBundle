@@ -96,6 +96,12 @@ Yan can visit `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of 
 5. [Configuration reference](docs/reference/index.md)
 
 
+## Testing
+To run the admin test suite, run the following :
+```shell
+make tests
+```
+
 ## Road map
 
 ### v1.1

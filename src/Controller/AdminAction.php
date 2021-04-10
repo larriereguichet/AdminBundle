@@ -2,7 +2,8 @@
 
 namespace LAG\AdminBundle\Controller;
 
-use LAG\AdminBundle\Factory\AdminFactory;
+use LAG\AdminBundle\Factory\AdminFactoryInterface;
+use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\View\RedirectView;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,18 +12,21 @@ use Twig\Environment;
 
 class AdminAction
 {
-    private AdminFactory $adminFactory;
+    private ParametersExtractorInterface $extractor;
+    private AdminFactoryInterface $adminFactory;
     private Environment $twig;
 
-    public function __construct(AdminFactory $adminFactory, Environment $twig)
+    public function __construct(ParametersExtractorInterface $extractor, AdminFactoryInterface $adminFactory, Environment $twig)
     {
+        $this->extractor = $extractor;
         $this->adminFactory = $adminFactory;
         $this->twig = $twig;
     }
 
     public function __invoke(Request $request): Response
     {
-        $admin = $this->adminFactory->createFromRequest($request);
+        $adminName = $this->extractor->getAdminName($request);
+        $admin = $this->adminFactory->create($adminName);
         $admin->handleRequest($request);
         $view = $admin->createView();
 
