@@ -15,7 +15,7 @@ class AdminResource
         $this->name = $name;
         $this->configuration = $configuration;
 
-        if (!key_exists('entity', $configuration)) {
+        if (!\array_key_exists('entity', $configuration)) {
             throw new Exception(sprintf('The configuration of the resource %s is not well formed', $name));
         }
         $this->entityClass = $configuration['entity'];

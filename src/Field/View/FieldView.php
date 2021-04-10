@@ -36,7 +36,7 @@ class FieldView implements View
 
     public function getOption(string $name)
     {
-        if (!array_key_exists($name, $this->options)) {
+        if (!\array_key_exists($name, $this->options)) {
             throw new Exception('Invalid option "'.$name.'" for field "'.$this->getName().'"');
         }
 

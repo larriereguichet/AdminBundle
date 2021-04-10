@@ -30,7 +30,7 @@ class ParametersExtractor implements ParametersExtractorInterface
     {
         $routeParameters = $request->get('_route_params');
 
-        if (!is_array($routeParameters)) {
+        if (!\is_array($routeParameters)) {
             return false;
         }
 

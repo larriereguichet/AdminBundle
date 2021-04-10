@@ -115,7 +115,7 @@ class AdminConfiguration extends Configuration
 
     public function hasAction(string $actionName): bool
     {
-        return key_exists($actionName, $this->getActions());
+        return \array_key_exists($actionName, $this->getActions());
     }
 
     public function getAction(string $actionName): array
@@ -258,7 +258,7 @@ class AdminConfiguration extends Configuration
     {
         return function (Options $options, $actions) {
             $normalizedActions = [];
-            $addBatchAction = false;
+//            $addBatchAction = false;
 
             foreach ($actions as $name => $action) {
                 // action configuration is an array by default
@@ -266,7 +266,7 @@ class AdminConfiguration extends Configuration
                     $action = [];
                 }
 
-                if (!key_exists('route_parameters', $action)) {
+                if (!\array_key_exists('route_parameters', $action)) {
                     if ($name === 'edit' || $name === 'delete') {
                         $action['route_parameters'] = ['id' => null];
                     }
@@ -274,16 +274,16 @@ class AdminConfiguration extends Configuration
                 $normalizedActions[$name] = $action;
 
                 // in list action, if no batch was configured or disabled, we add a batch action
-                if ('list' == $name && (!array_key_exists('batch', $action) || null === $action['batch'])) {
-                    $addBatchAction = true;
-                }
+//                if ('list' == $name && (!\array_key_exists('batch', $action) || null === $action['batch'])) {
+//                    $addBatchAction = true;
+//                }
             }
 
             // add empty default batch action
-            if ($addBatchAction) {
-                // TODO enable mass action
-                //$normalizedActions['batch'] = [];
-            }
+//            if ($addBatchAction) {
+//             TODO enable mass action
+//            $normalizedActions['batch'] = [];
+//            }
 
             return $normalizedActions;
         };

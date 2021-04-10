@@ -28,7 +28,7 @@ class MenuConfiguration extends Configuration
             ])
             ->setAllowedTypes('inherits', 'boolean')
             ->setNormalizer('children', function (Options $options, $value) {
-                if (!is_array($value)) {
+                if (!\is_array($value)) {
                     $value = [];
                 }
                 $innerResolver = new OptionsResolver();
@@ -46,11 +46,11 @@ class MenuConfiguration extends Configuration
                 return $value;
             })
             ->setNormalizer('extras', function (Options $options, $extras) {
-                if (!is_array($extras)) {
+                if (!\is_array($extras)) {
                     $extras = [];
                 }
 
-                if (!key_exists('permissions', $extras)) {
+                if (!\array_key_exists('permissions', $extras)) {
                     $extras['permissions'] = ['ROLE_USER'];
                 }
 
@@ -71,7 +71,7 @@ class MenuConfiguration extends Configuration
 
     public function hasExtra(string $extra): bool
     {
-        return key_exists($extra, $this->getExtras());
+        return \array_key_exists($extra, $this->getExtras());
     }
 
     public function getExtra(string $extra)

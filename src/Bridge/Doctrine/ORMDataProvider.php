@@ -55,7 +55,7 @@ class ORMDataProvider implements DataProviderInterface
         // handler will act according to result type
         if ($method) {
             if (!method_exists($repository, $method)) {
-                throw new Exception(sprintf('The method "%s" does not exists for the class "%s"', $method, get_class($repository)));
+                throw new Exception(sprintf('The method "%s" does not exists for the class "%s"', $method, \get_class($repository)));
             }
             $data = $repository->$method($criteria, $orderBy, $limit, $offset);
         } else {

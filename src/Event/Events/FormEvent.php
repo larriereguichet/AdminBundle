@@ -18,7 +18,7 @@ class FormEvent extends AbstractEvent
 
     public function hasForm(string $name): bool
     {
-        return key_exists($name, $this->forms);
+        return \array_key_exists($name, $this->forms);
     }
 
     public function removeForm(string $name): self

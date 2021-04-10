@@ -9,7 +9,7 @@ class ViewEvent extends AbstractEvent
 {
     private ViewInterface $view;
 
-    public function setView(ViewInterface $view): ViewEvent
+    public function setView(ViewInterface $view): self
     {
         $this->view = $view;
 

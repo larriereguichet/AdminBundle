@@ -66,10 +66,15 @@ abstract class AbstractField implements FieldInterface
 
     public function getOption(string $name)
     {
-        if (!array_key_exists($name, $this->options)) {
+        if (!\array_key_exists($name, $this->options)) {
             throw new Exception('Invalid option "'.$name.'" for field "'.$this->name.'"');
         }
 
         return $this->options[$name];
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 }

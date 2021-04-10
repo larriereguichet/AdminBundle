@@ -27,7 +27,7 @@ class ResourceRegistry implements ResourceRegistryInterface
 
     public function has(string $resourceName): bool
     {
-        return array_key_exists($resourceName, $this->items);
+        return \array_key_exists($resourceName, $this->items);
     }
 
     public function get($resourceName): AdminResource

@@ -35,7 +35,7 @@ class ResultsHandler implements ResultsHandlerInterface
             $data = $data->getQuery()->getResult();
         }
 
-        if (is_array($data)) {
+        if (\is_array($data)) {
             $data = new ArrayCollection($data);
         }
 
@@ -52,7 +52,7 @@ class ResultsHandler implements ResultsHandlerInterface
             return new CollectionAdapter($data);
         }
 
-        if (is_array($data)) {
+        if (\is_array($data)) {
             return new ArrayAdapter($data);
         }
 
@@ -60,6 +60,6 @@ class ResultsHandler implements ResultsHandlerInterface
             return new ArrayAdapter(iterator_to_array($data));
         }
 
-        throw new Exception('Unable to find an adapter for type "'.gettype($data).'"');
+        throw new Exception('Unable to find an adapter for type "'.\gettype($data).'"');
     }
 }

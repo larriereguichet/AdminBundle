@@ -69,7 +69,7 @@ class RedirectionUtils
             return false;
         }
 
-        if (!key_exists('edit', $configuration->get('actions'))) {
+        if (!\array_key_exists('edit', $configuration->get('actions'))) {
             return false;
         }
 
@@ -89,7 +89,7 @@ class RedirectionUtils
             return false;
         }
 
-        if (!key_exists('list', $configuration->get('actions'))) {
+        if (!\array_key_exists('list', $configuration->get('actions'))) {
             return false;
         }
 

@@ -31,6 +31,11 @@ interface FieldInterface
     public function getName(): string;
 
     /**
+     * Return the field type.
+     */
+    public function getType(): string;
+
+    /**
      * Return the field options use to render it.
      */
     public function getOptions(): array;

@@ -36,7 +36,7 @@ class FieldDefinitionEvent extends Event
 
     public function hasDefinition(string $name): bool
     {
-        return key_exists($name, $this->definitions);
+        return \array_key_exists($name, $this->definitions);
     }
 
     /**

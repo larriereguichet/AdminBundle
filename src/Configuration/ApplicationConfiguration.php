@@ -320,7 +320,7 @@ class ApplicationConfiguration extends ServiceConfiguration
     private function getFieldsMappingNormalizer(): Closure
     {
         return function (Options $options, $value) {
-            if (!is_array($value)) {
+            if (!\is_array($value)) {
                 $value = [];
             }
 

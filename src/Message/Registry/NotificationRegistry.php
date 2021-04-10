@@ -24,6 +24,6 @@ class NotificationRegistry implements NotificationRegistryInterface
 
     public function count(): int
     {
-        return count($this->notifications);
+        return \count($this->notifications);
     }
 }

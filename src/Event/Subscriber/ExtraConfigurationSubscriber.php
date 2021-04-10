@@ -2,13 +2,10 @@
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
-use Doctrine\ORM\EntityManagerInterface;
-use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\Configuration\AdminConfigurationEvent;
-use LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface;
 use LAG\AdminBundle\Field\Helper\FieldConfigurationHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -20,10 +17,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ExtraConfigurationSubscriber implements EventSubscriberInterface
 {
     private ApplicationConfiguration $applicationConfiguration;
-    private ResourceRegistryInterface $registry;
-    private ConfigurationFactoryInterface $configurationFactory;
     private MetadataHelperInterface $metadataHelper;
-    private EntityManagerInterface $entityManager;
     private TranslatorInterface $translator;
 
     public static function getSubscribedEvents(): array
@@ -35,17 +29,11 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
     public function __construct(
         ApplicationConfiguration $applicationConfiguration,
-        EntityManagerInterface $entityManager,
-        ResourceRegistryInterface $registry,
-        ConfigurationFactoryInterface $configurationFactory,
         MetadataHelperInterface $metadataHelper,
         TranslatorInterface $translator
     ) {
         $this->applicationConfiguration = $applicationConfiguration;
-        $this->registry = $registry;
-        $this->configurationFactory = $configurationFactory;
         $this->metadataHelper = $metadataHelper;
-        $this->entityManager = $entityManager;
         $this->translator = $translator;
     }
 
@@ -61,7 +49,6 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
         // Add default field configuration: it provides a type, a form type, and a view according to the found metadata
         $helper = new FieldConfigurationHelper(
-            $this->entityManager,
             $this->translator,
             $this->applicationConfiguration,
             $this->metadataHelper
@@ -83,11 +70,11 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      */
     private function addDefaultActions(array &$configuration)
     {
-        if (!key_exists('actions', $configuration) || !is_array($configuration['actions'])) {
+        if (!\array_key_exists('actions', $configuration) || !\is_array($configuration['actions'])) {
             $configuration['actions'] = [];
         }
 
-        if (0 !== count($configuration['actions'])) {
+        if (0 !== \count($configuration['actions'])) {
             return;
         }
         $configuration['actions'] = [
@@ -104,12 +91,12 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     private function addDefaultFilters(array &$configuration): void
     {
         // Add the filters only for the "list" action
-        if (!key_exists('list', $configuration['actions'])) {
+        if (!\array_key_exists('list', $configuration['actions'])) {
             return;
         }
 
         // If some filters are already configured, we do not add the default filters
-        if (key_exists('filter', $configuration['actions']['list'])) {
+        if (\array_key_exists('filter', $configuration['actions']['list'])) {
             return;
         }
         $metadata = $this->metadataHelper->findMetadata($configuration['entity']);
@@ -139,7 +126,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
             'text' => 'like',
         ];
 
-        if (key_exists($type, $mapping)) {
+        if (\array_key_exists($type, $mapping)) {
             return $mapping[$type];
         }
 

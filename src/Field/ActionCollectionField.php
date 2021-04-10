@@ -20,7 +20,7 @@ class ActionCollectionField extends AbstractField
                 'actions' => [],
             ])
             ->setNormalizer('actions', function (Options $options, $value) {
-                if (!is_array($value) || 0 === count($value)) {
+                if (!\is_array($value) || 0 === \count($value)) {
                     $value = [
                         'edit' => [],
                         'delete' => [],

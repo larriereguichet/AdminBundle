@@ -41,7 +41,7 @@ jobs:
                 run: bin/phpunit
             
             -   name: Run php-cs-fixer
-                run: php-cs-fixer fix --dry-run --using-cache=no --verbose --diff
+                run: php-cs-fixer fix --dry-run --using-cache=no --verbose --diff --allow-risky=yes
             
             -   name: Run phpstan
                 run: bin/phpstan analyse src/

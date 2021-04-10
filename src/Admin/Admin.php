@@ -128,7 +128,7 @@ class Admin implements AdminInterface
 
     public function hasForm(string $name): bool
     {
-        return key_exists($name, $this->forms);
+        return \array_key_exists($name, $this->forms);
     }
 
     public function getForm(string $name): FormInterface

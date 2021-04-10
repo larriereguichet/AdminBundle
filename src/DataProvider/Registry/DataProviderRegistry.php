@@ -31,6 +31,6 @@ class DataProviderRegistry implements DataProviderRegistryInterface
 
     public function has(string $name): bool
     {
-        return key_exists($name, $this->dataProviders);
+        return \array_key_exists($name, $this->dataProviders);
     }
 }

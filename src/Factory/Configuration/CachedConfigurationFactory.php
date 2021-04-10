@@ -13,7 +13,7 @@ class CachedConfigurationFactory extends ConfigurationFactory
 
     public function createAdminConfiguration(string $adminName, array $options = []): AdminConfiguration
     {
-        if (key_exists($adminName, $this->adminCache)) {
+        if (\array_key_exists($adminName, $this->adminCache)) {
             return $this->adminCache[$adminName];
         }
         $configuration = parent::createAdminConfiguration($adminName, $options);
@@ -29,7 +29,7 @@ class CachedConfigurationFactory extends ConfigurationFactory
 
     public function createMenuConfiguration(string $menuName, array $options = []): MenuConfiguration
     {
-        if (key_exists($menuName, $this->menuCache)) {
+        if (\array_key_exists($menuName, $this->menuCache)) {
             return $this->menuCache[$menuName];
         }
         $configuration = parent::createMenuConfiguration($menuName, $options);

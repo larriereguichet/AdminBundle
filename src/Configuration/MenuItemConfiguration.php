@@ -64,13 +64,13 @@ class MenuItemConfiguration extends Configuration
                 return $action;
             })
             ->setNormalizer('children', function (Options $options, $items) {
-                if (!is_array($items)) {
+                if (!\is_array($items)) {
                     $items = [];
                 }
                 $resolvedItems = [];
 
                 foreach ($items as $name => $item) {
-                    $itemConfiguration = new MenuItemConfiguration($name, $this->menuName);
+                    $itemConfiguration = new self($name, $this->menuName);
                     $itemConfiguration->configure($item);
                     $resolvedItems[$name] = $itemConfiguration->toArray();
                 }

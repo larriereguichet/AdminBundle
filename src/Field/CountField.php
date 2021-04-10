@@ -19,7 +19,7 @@ class CountField extends AbstractField
     public function getDataTransformer(): ?Closure
     {
         return function ($data) {
-            return is_countable($data) ? count($data) : 0;
+            return is_countable($data) ? \count($data) : 0;
         };
     }
 }

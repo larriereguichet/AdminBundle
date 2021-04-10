@@ -57,7 +57,7 @@ class ViewHelper
             return false;
         }
 
-        if (!key_exists('list', $configuration->getParameter('actions'))) {
+        if (!\array_key_exists('list', $configuration->getActions())) {
             return false;
         }
 

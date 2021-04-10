@@ -68,7 +68,7 @@ class MenuProvider implements MenuProviderInterface
 
     public function has(string $name, array $options = []): bool
     {
-        if (!key_exists($name, $this->menuConfigurations)) {
+        if (!\array_key_exists($name, $this->menuConfigurations)) {
             return false;
         }
         $configuration = $this->configurationFactory->createMenuConfiguration($name, $options);

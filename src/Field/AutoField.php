@@ -27,7 +27,7 @@ class AutoField extends AbstractField
                 return '';
             }
 
-            if (is_string($data)) {
+            if (\is_string($data)) {
                 return $data;
             }
 
@@ -35,7 +35,7 @@ class AutoField extends AbstractField
                 return (string) $data;
             }
 
-            if (is_array($data)) {
+            if (\is_array($data)) {
                 return implode(',', $data);
             }
 
@@ -47,7 +47,7 @@ class AutoField extends AbstractField
                 return implode(',', $data->toArray());
             }
 
-            if (is_object($data) && method_exists($data, '__toString')) {
+            if (\is_object($data) && method_exists($data, '__toString')) {
                 return (string) $data;
             }
 

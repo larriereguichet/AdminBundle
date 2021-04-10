@@ -54,7 +54,7 @@ class FieldFactory implements FieldFactoryInterface
             $options = array_merge($configuration['options'], $event->getOptions());
 
             // Allow the type to be a class name
-            if (!key_exists($type, $this->fieldsMapping) && !class_exists($type)) {
+            if (!\array_key_exists($type, $this->fieldsMapping) && !class_exists($type)) {
                 throw new FieldTypeNotFoundException($type, $name, $context);
             }
             $field = $this->instanciateField($name, $type);
@@ -145,7 +145,7 @@ class FieldFactory implements FieldFactoryInterface
             $processedParents = [];
 
             while ($currentField->getParent() !== null) {
-                if (in_array($currentField->getParent(), $processedParents)) {
+                if (\in_array($currentField->getParent(), $processedParents)) {
                     throw new FieldConfigurationException($field->getName(), $context, 'An inheritance loop is found in '.implode(', ', $processedParents));
                 }
                 $parent = $this->instanciateField($currentField->getName(), $currentField->getParent());
@@ -175,7 +175,7 @@ class FieldFactory implements FieldFactoryInterface
      */
     private function getFieldClass(string $type): string
     {
-        if (array_key_exists($type, $this->fieldsMapping)) {
+        if (\array_key_exists($type, $this->fieldsMapping)) {
             return $this->fieldsMapping[$type];
         }
 
@@ -220,12 +220,12 @@ class FieldFactory implements FieldFactoryInterface
                 }
 
                 // The type should be defined
-                if (!array_key_exists('type', $itemFieldConfiguration)) {
+                if (!\array_key_exists('type', $itemFieldConfiguration)) {
                     throw new Exception("Missing type configuration for field {$itemFieldName}");
                 }
 
                 // The field options are optional
-                if (!array_key_exists('options', $itemFieldConfiguration)) {
+                if (!\array_key_exists('options', $itemFieldConfiguration)) {
                     $itemFieldConfiguration['options'] = [];
                 }
 

@@ -21,7 +21,7 @@ class FilterDataListener
         $admin = $event->getAdmin();
         $filters = $admin->getAction()->getConfiguration()->getFilters();
 
-        if (count($filters) === 0) {
+        if (\count($filters) === 0) {
             return;
         }
 
@@ -33,13 +33,13 @@ class FilterDataListener
 
             foreach ($filters as $name => $options) {
                 // Nothing to do if the data is not submitted or if it is null
-                if (!key_exists($name, $data) || null === $data[$name]) {
+                if (!\array_key_exists($name, $data) || null === $data[$name]) {
                     continue;
                 }
 
                 // Do not submit false boolean values. If we want to have three values (true false and null) we should
                 // use a select
-                if (is_bool($data[$name]) && false === $data[$name]) {
+                if (\is_bool($data[$name]) && false === $data[$name]) {
                     continue;
                 }
 

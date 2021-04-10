@@ -41,11 +41,11 @@ class AdminFormFactory implements AdminFormFactoryInterface
         $formBuilder = $this->formFactory->createBuilder(FormType::class, $data, [
             'label' => false,
         ]);
-        $fieldDefinitions = $this->fieldFactory->createDefinitions(get_class($data));
+        $fieldDefinitions = $this->fieldFactory->createDefinitions(\get_class($data));
 
         foreach ($fieldDefinitions as $name => $definition) {
             // We do not want to edit those values in a Form
-            if (in_array($name, ['createdAt', 'updatedAt']) && 'datetime' === $definition->getType()) {
+            if (\in_array($name, ['createdAt', 'updatedAt']) && 'datetime' === $definition->getType()) {
                 continue;
             }
 

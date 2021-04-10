@@ -6,26 +6,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\RouterInterface;
 use function Symfony\Component\String\u;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TinyMceType extends AbstractType
 {
-    private RequestStack $requestStack;
-    private RouterInterface $router;
-    private TranslatorInterface $translator;
-
-    public function __construct(RequestStack $requestStack, RouterInterface $router, TranslatorInterface $translator)
-    {
-        $this->requestStack = $requestStack;
-        $this->router = $router;
-        $this->translator = $translator;
-    }
-
     public function getParent(): string
     {
         return TextareaType::class;
@@ -42,16 +28,14 @@ class TinyMceType extends AbstractType
             ->setNormalizer('tinymce_options', function (Options $options, $value) {
                 $attr = $options->offsetGet('attr');
 
-                if (key_exists('id', $attr)) {
+                if (\array_key_exists('id', $attr)) {
                     $value['selector'] = $attr['id'];
                 } else {
                     $value['selector'] = 'textarea#'.uniqid('tinymce');
                 }
                 // Do not use a nested options resolver to allow the user to define only some options and not the
                 // whole set
-                $value = array_merge($this->getTinyMceDefaultConfiguration(), $value);
-
-                return $value;
+                return array_merge($this->getTinyMceDefaultConfiguration(), $value);
             })
         ;
     }

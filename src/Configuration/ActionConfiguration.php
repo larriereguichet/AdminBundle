@@ -387,8 +387,8 @@ class ActionConfiguration extends Configuration
     {
         return function (Options $options, $order) {
             foreach ($order as $field => $sort) {
-                if (!is_string($sort) || !is_string($field) || !in_array(strtolower($sort), ['asc', 'desc'])) {
-                    throw new Exception('Order value should be an array of string (["field" => $key]), got '.gettype($sort));
+                if (!\is_string($sort) || !\is_string($field) || !\in_array(strtolower($sort), ['asc', 'desc'])) {
+                    throw new Exception('Order value should be an array of string (["field" => $key]), got '.\gettype($sort));
                 }
             }
 
@@ -428,7 +428,7 @@ class ActionConfiguration extends Configuration
                     'delete',
                 ];
 
-                if (in_array($options->offsetGet('name'), $idActions)) {
+                if (\in_array($options->offsetGet('name'), $idActions)) {
                     $value = [
                         'id',
                     ];
@@ -448,7 +448,7 @@ class ActionConfiguration extends Configuration
             $normalizedData = [];
 
             foreach ($data as $name => $field) {
-                if (is_string($field)) {
+                if (\is_string($field)) {
                     $field = [
                         'name' => $field,
                         'type' => TextType::class,
@@ -484,7 +484,7 @@ class ActionConfiguration extends Configuration
                 'delete' => DeleteType::class,
             ];
 
-            if (key_exists($options->offsetGet('name'), $mapping)) {
+            if (\array_key_exists($options->offsetGet('name'), $mapping)) {
                 $value = $mapping[$options->offsetGet('name')];
             }
 
@@ -495,7 +495,7 @@ class ActionConfiguration extends Configuration
     private function getRouteParametersNormalizer(): Closure
     {
         return function (Options $options, $value) {
-            if (count($value) > 0) {
+            if (\count($value) > 0) {
                 return $value;
             }
 

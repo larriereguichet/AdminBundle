@@ -29,7 +29,7 @@ class CreateFieldDefinitionListener
 
         foreach ($fieldNames as $fieldName) {
             // Remove the primary key field if it's not managed manually
-            if (!$metadata->isIdentifierNatural() && in_array($fieldName, $metadata->identifier)) {
+            if (!$metadata->isIdentifierNatural() && \in_array($fieldName, $metadata->identifier)) {
                 continue;
             }
             $mapping = $metadata->getFieldMapping($fieldName);
@@ -37,7 +37,7 @@ class CreateFieldDefinitionListener
 
             // When a field is defined as nullable in the Doctrine entity configuration, the associated form field
             // should not be required neither
-            if (key_exists('nullable', $mapping) && true === $mapping['nullable']) {
+            if (\array_key_exists('nullable', $mapping) && true === $mapping['nullable']) {
                 $formOptions['required'] = false;
             }
             $event->addDefinition($fieldName, new FieldDefinition($metadata->getTypeOfField($fieldName), [], $formOptions));
@@ -60,11 +60,11 @@ class CreateFieldDefinitionListener
 
     private function isJoinColumnNullable(array $relation): bool
     {
-        if (!key_exists('joinColumns', $relation)) {
+        if (!\array_key_exists('joinColumns', $relation)) {
             return false;
         }
 
-        if (!key_exists('nullable', $relation['joinColumns'])) {
+        if (!\array_key_exists('nullable', $relation['joinColumns'])) {
             return false;
         }
 

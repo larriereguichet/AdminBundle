@@ -42,7 +42,7 @@ class FormUtils
         ];
         $type = $shortType;
 
-        if (key_exists($shortType, $mapping)) {
+        if (\array_key_exists($shortType, $mapping)) {
             $type = $mapping[$shortType];
         }
 
@@ -54,7 +54,7 @@ class FormUtils
         $mapping = [];
         $options = [];
 
-        if (key_exists($type, $mapping)) {
+        if (\array_key_exists($type, $mapping)) {
             $options = $mapping[$type];
         }
 

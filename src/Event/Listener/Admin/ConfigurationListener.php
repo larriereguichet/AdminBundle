@@ -70,6 +70,6 @@ class ConfigurationListener
             'delete_template' => $this->appConfig->getDeleteTemplate(),
         ];
 
-        return key_exists($actionName.'_template', $map) ? $map[$actionName.'_template'] : '';
+        return \array_key_exists($actionName.'_template', $map) ? $map[$actionName.'_template'] : '';
     }
 }

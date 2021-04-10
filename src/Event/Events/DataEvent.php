@@ -25,7 +25,7 @@ class DataEvent extends AbstractEvent
 
     public function hasFilter(string $name): bool
     {
-        return key_exists($name, $this->filters);
+        return \array_key_exists($name, $this->filters);
     }
 
     public function removeFilter(string $name): self
