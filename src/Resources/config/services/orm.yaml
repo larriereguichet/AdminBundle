@@ -6,16 +6,13 @@ services:
     LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandlerInterface: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandler'
     LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandler: ~
 
-    ### DataProviders ###
-#    LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider:
-#        arguments:
-#            $entityManager: '@doctrine.orm.entity_manager'
-#            $eventDispatcher: '@event_dispatcher'
-#            $handler: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandlerInterface'
-#        class: LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider
-#        tags:
-#            - {name: lag.admin.data_provider}
-    #####################
+    LAG\AdminBundle\Bridge\Doctrine\ORMDataProvider:
+        tags:
+            - { name: lag.admin.data_provider, identifier: doctrine }
+
+    LAG\AdminBundle\Bridge\Doctrine\ORMDataPersister:
+        tags:
+            - {name: lag.admin.data_persister, identifier: doctrine}
 
     LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper'
     LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper:

@@ -9,15 +9,11 @@ interface AdminHelperInterface
 {
     /**
      * Define the current admin based on the request parameters.
-     *
-     * @param AdminInterface $admin
      */
     public function setAdmin(AdminInterface $admin): void;
 
     /**
      * Returns the current admin.
-     *
-     * @return AdminInterface
      *
      * @throws Exception An exception is thrown if no admin has been defined
      */
@@ -25,8 +21,6 @@ interface AdminHelperInterface
 
     /**
      * Return true if the current admin has been defined.
-     *
-     * @return bool
      */
     public function hasAdmin(): bool;
 }

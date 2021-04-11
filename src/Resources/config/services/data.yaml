@@ -12,11 +12,3 @@ services:
     LAG\AdminBundle\DataPersister\Registry\DataPersisterRegistry:
         arguments:
             - !tagged_iterator {tag: lag.admin.data_persister, index_by: identifier}
-
-    LAG\AdminBundle\Bridge\Doctrine\ORMDataProvider:
-        tags:
-            - { name: lag.admin.data_provider, identifier: doctrine }
-   
-    LAG\AdminBundle\Bridge\Doctrine\ORMDataPersister:
-        tags:
-            - {name: lag.admin.data_persister, identifier: doctrine}
