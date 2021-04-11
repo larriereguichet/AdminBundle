@@ -1,6 +1,5 @@
 {
     "devDependencies": {
-        "@symfony/ux-dropzone": "file:vendor/symfony/ux-dropzone/Resources/assets",
         "@symfony/webpack-encore": "^0.31.0",
         "core-js": "^3.6.5",
         "postcss-loader": "^3.0.0",
