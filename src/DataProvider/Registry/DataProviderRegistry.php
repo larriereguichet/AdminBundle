@@ -8,7 +8,7 @@ use LAG\AdminBundle\Exception\DataProvider\MissingDataProviderException;
 
 class DataProviderRegistry implements DataProviderRegistryInterface
 {
-    private array $dataProviders;
+    private array $dataProviders = [];
 
     /**
      * DataProviderRegistry constructor.
@@ -17,7 +17,9 @@ class DataProviderRegistry implements DataProviderRegistryInterface
      */
     public function __construct(iterable $dataProviders)
     {
-        $this->dataProviders = iterator_to_array($dataProviders);
+        foreach ($dataProviders as $dataProvider) {
+            $this->dataProviders[$dataProvider->getName()] = $dataProvider;
+        }
     }
 
     public function get(string $name): DataProviderInterface
