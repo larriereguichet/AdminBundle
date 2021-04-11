@@ -5,6 +5,8 @@ bin
 !bin/php-cs-fixer-modified-files
 build
 composer.lock
+yarn.lock
+symfony.lock
 phpunit.xml
 tests/app/var
 vendor
