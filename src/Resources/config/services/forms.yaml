@@ -1,13 +1,16 @@
 services:
-    LAG\AdminBundle\Form\Extension\CollectionExtensionType:
-        arguments:
-            $registry: '@LAG\AdminBundle\Assets\Registry\ScriptRegistryInterface'
-            $translator: '@translator'
-        tags:
-            - {name: form.type_extension}
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    
+    ### Form Types ###
+    LAG\AdminBundle\Form\Type\TinyMce\TinyMceType: ~
 
-    LAG\AdminBundle\Form\Extension\AssetsExtension:
-        arguments:
-            $scriptRegistry: '@LAG\AdminBundle\Assets\Registry\ScriptRegistryInterface'
+    LAG\AdminBundle\Form\Type\Select2\Select2EntityType:
+        tags:
+            - {name: form.type}
+    
+    ### Form Extensions ###
+    LAG\AdminBundle\Form\Extension\CollectionExtensionType:
         tags:
             - {name: form.type_extension}

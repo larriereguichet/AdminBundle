@@ -1,0 +1,252 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        <div class="sf-toolbar-icon">
+            {{ include('@LAGAdmin/debug/icon.svg') }}
+            <span class="sf-toolbar-value">
+                Admin
+            </span>
+        </div>
+    {% endset %}
+
+    {% set text %}
+        <b>Application</b>
+
+        {% if collector.data.error is defined %}
+            <b>{{ collector.data.error }}</b>
+            The invalid configuration is : {{ dump(collector.data.configuration) }}
+        {% endif %}
+
+        <div class="sf-toolbar-info-piece">
+            <b>Locale</b>
+            <span class="sf-toolbar-status">
+                {{ collector.data.application.locale|default('~') }}
+            </span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Pagination</b>
+            <span class="sf-toolbar-status">
+                {{ collector.data.application.pager ?: 'false' }}
+            </span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Translation</b>
+            {% for key, value in collector.data.application.translation %}
+                <span class="sf-toolbar-status">
+                    {{ key }}: {{ value }}
+                </span>
+                <br/>
+            {% endfor %}
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Admin</b>
+            <span>
+                {{ collector.data.application.admin }}<br>
+            </span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Action</b>
+            <span>
+                {{ collector.data.application.action }}<br>
+            </span>
+        </div>
+        <hr>
+        <b>Admins</b>
+
+        {% for name, admin in collector.data.admins %}
+            <div class="sf-toolbar-info-piece">
+                <b>{{ name | capitalize }}</b>
+                <span class="sf-toolbar-status ">
+                    {{ admin.entity_class }}
+                </span>
+            </div>
+        {% endfor %}
+
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {'link': true}) }}
+{% endblock %}
+
+{% block menu %}
+    <span class="label">
+        <span class="icon">
+            {{ include('@LAGAdmin/debug/icon.svg') }}
+        </span>
+        <strong>Admin</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('.tab-navigation li a').on('click', function () {
+                let targetSelector = $(this).attr('href');
+                $('.tabs .tab').hide();
+                $(targetSelector).show();
+                $('.tab-navigation li').removeClass('active');
+                $(this).parents('li').addClass('active');
+
+                return false;
+            });
+
+            $('.toggle-icon').on('click', function () {
+                $(this).toggleClass('closed');
+
+                $(this).parent().next('table').toggleClass('hidden');
+            });
+        });
+    </script>
+    <style>
+        .tab {
+            display: none;
+        }
+
+        .tab.active {
+            display: block;
+        }
+
+        table tbody tr td:first-child {
+            font-weight: bold;
+        }
+
+        .toggle-icon {
+            background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgBAMAAADpp+X/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QweDgwx4LcKwAAAABVQTFRFAAAA////////////////ZmZm////bvjBwAAAAAV0Uk5TABZwsuCVEUjgAAAAAWJLR0QF+G/pxwAAAE1JREFUGNNjSHMSYGBgUEljSGYAAzMGBwiDhUEBwmBiEIAwGBmwgTQgQGWgA7h2uIFwK+CWwp1BpHvYEqDuATEYkBlY3IOmBq6dCPcAAIT5Eg2IksjQAAAAAElFTkSuQmCC") no-repeat top left #5eb5e0;
+            cursor: pointer;
+            display: inline-block;
+            height: 16px;
+            width: 16px;
+        }
+
+        .closed .toggle-icon, .closed.toggle-icon {
+            background-position: bottom left;
+        }
+    </style>
+
+    <ul class="tab-navigation">
+        <li class="active">
+            <a href="#tab-admins">Admins</a>
+        </li>
+        <li>
+            <a href="#tab-application">Application</a>
+        </li>
+        <li>
+            <a href="#tab-menus">Menus</a>
+        </li>
+    </ul>
+
+    <div class="tabs">
+        <div id="tab-admins"
+             class="tab">
+            <h1>Admins</h1>
+
+            {% for name, admin in collector.data.admins %}
+                <h3>{{ name | capitalize }} ({{ name }})</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="key">Key</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>{{ admin.entity_class }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                {% for actionName, action in admin.configuration.actions %}
+                    <h4>{{ actionName }}</h4>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th class="key">Key</th>
+                            <th scope="col">Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, value in action %}
+                            <tr>
+
+                                <td>{{ key }}</td>
+                                <td>
+                                    {% if value is iterable %}
+                                        {{ dump(value) }}
+                                    {% else %}
+                                        {{ value }}
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        {% include '@LAGAdmin/debug/_applications.html.twig' %}
+
+        <div id="tab-menus"
+             class="tab">
+            <h1>Menus</h1>
+
+            {% for menuName, menu in collector.data.menus %}
+                <h3>
+                    {{ menuName }}
+                </h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="key">Key</th>
+                        <th class="col">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Attributes</td>
+                        <td>{{ dump(menu.attributes | default([])) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Children :</td>
+                        <td>
+                            <table>
+                                {% for childName, child in menu.children | default([]) %}
+
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>{{ childName }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Uri</td>
+                                        <td>{{ child.uri }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Attributes</td>
+                                        <td>{{ dump(child.attributes | default([])) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">---</td>
+                                    </tr>
+
+                                {% endfor %}
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            {% endfor %}
+
+
+            <h4>Raw configuration : </h4>
+            {{ dump(collector.data.menus) }}
+        </div>
+    </div>
+
+{% endblock %}

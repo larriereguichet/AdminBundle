@@ -2,38 +2,56 @@
 
 namespace LAG\AdminBundle\Field;
 
+use Closure;
+use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AutoField extends AbstractField
 {
-    public function render($value = null): string
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        if (null === $value) {
-            return '';
-        }
+        $resolver
+            ->setDefaults([
+                'template' => '@LAGAdmin/fields/auto.html.twig',
+                'date_format' => 'd/m/Y',
+            ])
+            ->setAllowedTypes('date_format', 'string')
+        ;
+    }
 
-        if (is_string($value)) {
-            return $value;
-        }
-
-        if (is_array($value)) {
-            return implode(',', $value);
-        }
-
-        if (is_object($value)) {
-            if (method_exists($value, '__toString')) {
-                return (string) $value;
-            } else {
-                if ($value instanceof Collection) {
-                    $value = $value->toArray();
-                }
-
-                if (is_array($value)) {
-                    return implode(',', $value);
-                }
+    public function getDataTransformer(): ?Closure
+    {
+        return function ($data) {
+            if ($data === null) {
+                return '';
             }
-        }
 
-        return '';
+            if (\is_string($data)) {
+                return $data;
+            }
+
+            if (is_numeric($data)) {
+                return (string) $data;
+            }
+
+            if (\is_array($data)) {
+                return implode(',', $data);
+            }
+
+            if ($data instanceof DateTimeInterface) {
+                return $data->format($this->getOption('date_format'));
+            }
+
+            if ($data instanceof Collection) {
+                return implode(',', $data->toArray());
+            }
+
+            if (\is_object($data) && method_exists($data, '__toString')) {
+                return (string) $data;
+            }
+
+            return '';
+        };
     }
 }

@@ -2,16 +2,13 @@
 
 namespace LAG\AdminBundle\Admin;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\AdminEvent;
-use LAG\AdminBundle\Event\Events\EntityEvent;
-use LAG\AdminBundle\Event\Events\FilterEvent;
+use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events\DataEvent;
 use LAG\AdminBundle\Event\Events\FormEvent;
+use LAG\AdminBundle\Event\Events\RequestEvent;
 use LAG\AdminBundle\Event\Events\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,96 +16,64 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class Admin implements AdminInterface
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
+    private AdminConfiguration $configuration;
+    private EventDispatcherInterface $eventDispatcher;
+    private ActionInterface $action;
+    private Request $request;
+    /** @var FormInterface[] */
+    private array $forms = [];
 
     /**
-     * @var AdminConfiguration
+     * @var mixed
      */
-    private $configuration;
+    private $data;
 
-    /**
-     * @var AdminResource
-     */
-    private $resource;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var ActionInterface
-     */
-    private $action;
-
-    /**
-     * @var ArrayCollection
-     */
-    private $entities;
-
-    /**
-     * @var FormInterface[]
-     */
-    private $forms = [];
-
-    /**
-     * @var Request
-     */
-    private $request;
-
-    /**
-     * Admin constructor.
-     */
     public function __construct(
-        AdminResource $resource,
+        string $name,
         AdminConfiguration $configuration,
         EventDispatcherInterface $eventDispatcher
     ) {
-        $this->name = $resource->getName();
+        $this->name = $name;
         $this->configuration = $configuration;
-        $this->resource = $resource;
         $this->eventDispatcher = $eventDispatcher;
-        $this->entities = new ArrayCollection();
     }
 
     public function handleRequest(Request $request)
     {
         $this->request = $request;
-        $event = new AdminEvent($this, $request);
-        $this->eventDispatcher->dispatch($event, Events::ADMIN_HANDLE_REQUEST);
+        $requestEvent = new RequestEvent($this, $request);
+        // The handleRequest event should configured the current action
+        $this->eventDispatcher->dispatch($requestEvent, AdminEvents::ADMIN_REQUEST);
 
-        if (!$event->hasAction()) {
+        if (!$requestEvent->hasAction()) {
             throw new Exception('The current action was not set during the dispatch of the event');
         }
-        $this->action = $event->getAction();
+        $this->action = $requestEvent->getAction();
 
-        // Dispatch an event to allow entities to be filtered
-        $filterEvent = new FilterEvent($this, $request);
-        $this->eventDispatcher->dispatch($filterEvent, Events::ADMIN_FILTER);
+        // Load the data from the database
+        $dataEvent = new DataEvent($this, $request);
+        $this->eventDispatcher->dispatch($dataEvent, AdminEvents::ADMIN_DATA);
+        $this->data = $dataEvent->getData();
 
-        $event = new EntityEvent($this, $request);
-        $event->setFilters($filterEvent->getFilters());
-        $this->eventDispatcher->dispatch($event, Events::ENTITY_LOAD);
+        // Create and handle forms
+        $formEvent = new FormEvent($this, $request);
 
-        if (null !== $event->getEntities()) {
-            $this->entities = $event->getEntities();
+        if ($dataEvent->getFilterForm() !== null) {
+            $formEvent->addForm('filter', $dataEvent->getFilterForm());
         }
-        $event = new FormEvent($this, $request);
-        $this->eventDispatcher->dispatch($event, Events::ADMIN_CREATE_FORM);
+        $this->eventDispatcher->dispatch($formEvent, AdminEvents::ADMIN_FORM);
+        $this->forms = $formEvent->getForms();
 
-        // Merge the regular forms and the filter forms
-        $this->forms = array_merge($filterEvent->getForms(), $event->getForms());
-
-        $this->handleEntityForm($request);
-        $this->eventDispatcher->dispatch(new FormEvent($this, $request), Events::ADMIN_HANDLE_FORM);
+        foreach ($this->forms as $form) {
+            $form->handleRequest($request);
+        }
+        $this->eventDispatcher->dispatch($formEvent, AdminEvents::ADMIN_HANDLE_FORM);
     }
 
     public function getRequest(): Request
     {
-        if (null === $this->request) {
+        if (!isset($this->request)) {
             throw new Exception('The handleRequest() method should be called before calling getRequest()');
         }
 
@@ -125,11 +90,6 @@ class Admin implements AdminInterface
         return $this->configuration->get('entity');
     }
 
-    public function getResource(): AdminResource
-    {
-        return $this->resource;
-    }
-
     public function getEventDispatcher(): EventDispatcherInterface
     {
         return $this->eventDispatcher;
@@ -142,11 +102,11 @@ class Admin implements AdminInterface
 
     public function createView(): ViewInterface
     {
-        if (null === $this->request) {
+        if (!isset($this->request)) {
             throw new Exception('The handleRequest() method should be called before creating a view');
         }
         $event = new ViewEvent($this, $this->request);
-        $this->eventDispatcher->dispatch($event, Events::ADMIN_VIEW);
+        $this->eventDispatcher->dispatch($event, AdminEvents::ADMIN_VIEW);
 
         return $event->getView();
     }
@@ -161,11 +121,6 @@ class Admin implements AdminInterface
         return null !== $this->action;
     }
 
-    public function getEntities()
-    {
-        return $this->entities;
-    }
-
     public function getForms(): array
     {
         return $this->forms;
@@ -173,7 +128,7 @@ class Admin implements AdminInterface
 
     public function hasForm(string $name): bool
     {
-        return key_exists($name, $this->forms);
+        return \array_key_exists($name, $this->forms);
     }
 
     public function getForm(string $name): FormInterface
@@ -185,20 +140,8 @@ class Admin implements AdminInterface
         return $this->forms[$name];
     }
 
-    private function handleEntityForm(Request $request)
+    public function getData()
     {
-        if (!key_exists('entity', $this->forms)) {
-            return;
-        }
-        $form = $this->forms['entity'];
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->entities->isEmpty()) {
-                $this->entities->add($form->getData());
-            }
-            $event = new EntityEvent($this, $request);
-            $this->eventDispatcher->dispatch($event, Events::ENTITY_SAVE);
-        }
+        return $this->data;
     }
 }

@@ -2,11 +2,12 @@
 
 namespace LAG\AdminBundle\View;
 
-use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
-use Pagerfanta\Pagerfanta;
 
+/**
+ * A view represents admin data that needs to be passed in the Twig template.
+ */
 interface ViewInterface
 {
     /**
@@ -15,47 +16,21 @@ interface ViewInterface
     public function getTemplate(): string;
 
     /**
-     * @return ActionConfiguration
+     * Return the base template the main template (returned buy getTemplate()) should extends.
      */
-    public function getConfiguration();
+    public function getBase(): string;
 
-    public function getName();
+    public function getActionConfiguration(): ActionConfiguration;
 
-    public function getActionName();
+    public function getName(): string;
 
-    /**
-     * @return Collection|Pagerfanta|array
-     */
-    public function getEntities();
-
-    public function setEntities($entities);
-
-    /**
-     * @return AdminConfiguration
-     */
-    public function getAdminConfiguration();
-
-    /**
-     * @return bool
-     */
-    public function haveToPaginate();
-
-    /**
-     * @return int
-     */
-    public function getTotalCount();
-
-    /**
-     * @return Pagerfanta|null
-     */
-    public function getPager();
+    public function getActionName(): string;
 
     public function getData();
 
-    public function getForms();
+    public function getFields(): array;
 
-    /**
-     * @return string
-     */
-    public function getBase();
+    public function getAdminConfiguration(): AdminConfiguration;
+
+    public function getForms(): array;
 }

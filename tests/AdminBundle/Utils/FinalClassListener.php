@@ -3,73 +3,73 @@
 namespace LAG\AdminBundle\Tests\Utils;
 
 use DG\BypassFinals;
-use Throwable;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
+use Throwable;
 
 class FinalClassListener implements TestListener
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function addError(Test $test, Throwable $e, $time): void
     {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function addWarning(Test $test, Warning $e, $time): void
     {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function addFailure(Test $test, AssertionFailedError $e, $time): void
     {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function addIncompleteTest(Test $test, Throwable $e, $time): void
     {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function addRiskyTest(Test $test, Throwable $e, $time): void
     {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function addSkippedTest(Test $test, Throwable $e, $time): void
     {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function startTestSuite(TestSuite $suite): void
     {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function endTestSuite(TestSuite $suite): void
     {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function startTest(Test $test): void
     {
@@ -77,7 +77,7 @@ class FinalClassListener implements TestListener
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function endTest(Test $test, $time): void
     {

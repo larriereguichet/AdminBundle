@@ -1,0 +1,37 @@
+framework:
+    secret: test
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    form: ~
+    csrf_protection: false
+    validation:
+        enabled: false
+
+
+#framework:
+#    secret: '%env(APP_SECRET)%'
+#
+#    default_locale: fr
+#
+#    csrf_protection: true
+#
+#    http_method_override: true
+#
+#    ide: 'phpstorm://open?url=file://%%f&line=%%l'
+#
+#    session:
+#        handler_id: ~
+#
+#    esi: false
+#
+#    fragments: true
+#
+#    php_errors:
+#        log: true
+#
+#    cache:
+#        prefix_seed: lag/admin-bundle
+#
+#    assets:
+#        json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'

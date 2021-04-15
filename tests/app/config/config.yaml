@@ -1,0 +1,6 @@
+imports:
+    - {resource: packages/*}
+#    - {resource: packages/security.php}
+
+#services:
+#    translator.logging.inner: '@Psr\Log\LoggerInterface'

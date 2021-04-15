@@ -4,8 +4,8 @@ all: install
 
 current_dir = $(shell pwd)
 
-include etc/make/assets.mk
-include etc/make/tests.mk
+include .make/assets.mk
+include .make/tests.mk
 
 install:
 	composer install

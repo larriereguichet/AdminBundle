@@ -2,119 +2,171 @@
 
 namespace LAG\AdminBundle\Configuration;
 
+use Closure;
 use JK\Configuration\Configuration;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider;
-use LAG\AdminBundle\Configuration\Behavior\TranslationConfigurationTrait;
+use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Controller\AdminAction;
+use LAG\AdminBundle\Exception\Exception;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use function Symfony\Component\String\u;
 
 /**
  * Ease Admin configuration manipulation.
  */
 class AdminConfiguration extends Configuration
 {
-    use TranslationConfigurationTrait;
-
-    /**
-     * @var ApplicationConfiguration
-     */
-    protected $application;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * AdminConfiguration constructor.
-     */
-    public function __construct(string $name, ApplicationConfiguration $application)
-    {
-        parent::__construct();
-
-        $this->application = $application;
-        $this->name = $name;
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
+    protected function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults([
-                'actions' => [
-                    'list' => [],
-                    'create' => [],
-                    'edit' => [],
-                    'delete' => [],
-                ],
-                'batch' => true,
-                'class' => $this->application->getParameter('admin_class'),
-                'routing_url_pattern' => $this->application->getParameter('routing_url_pattern'),
-                'routing_name_pattern' => $this->application->getParameter('routing_name_pattern'),
-                'controller' => AdminAction::class,
-                'max_per_page' => $this->application->getParameter('max_per_page'),
-                'form' => null,
-                'form_options' => [],
-                'pager' => $this->application->getParameter('pager'),
-                'permissions' => $this->application->getParameter('permissions'),
-                'string_length' => $this->application->getParameter('string_length'),
-                'string_length_truncate' => $this->application->getParameter('string_length_truncate'),
-                'date_format' => $this->application->getParameter('date_format'),
-                'data_provider' => ORMDataProvider::class,
-                'page_parameter' => $this->application->getParameter('page_parameter'),
-                'list_template' => $this->application->get('list_template'),
-                'edit_template' => $this->application->get('edit_template'),
-                'create_template' => $this->application->get('create_template'),
-                'delete_template' => $this->application->get('delete_template'),
-                'menus' => $this->application->get('menus'),
+            ->setRequired('entity')
+            ->setAllowedTypes('entity', 'string')
+            ->setRequired('name')
+            ->setAllowedTypes('name', 'string')
+
+            ->setDefault('actions', [
+                'list' => [],
+                'create' => [],
+                'edit' => [],
+                'delete' => [],
             ])
-            ->setRequired([
-                'entity',
-            ])
-            ->setAllowedTypes('string_length', 'integer')
-            ->setAllowedTypes('string_length_truncate', 'string')
+            ->setAllowedTypes('actions', 'array')
+            ->setNormalizer('actions', $this->getActionNormalizer())
+
+            ->setDefault('controller', AdminAction::class)
+            ->setAllowedTypes('controller', 'string')
+
+            ->setDefault('batch', [])
+            ->setAllowedTypes('batch', 'array')
+
+            ->setDefault('admin_class', Admin::class)
+            ->setAllowedTypes('admin_class', 'string')
+            ->setDefault('action_class', Action::class)
+            ->setAllowedTypes('action_class', 'string')
+
+            ->setDefault('routes_pattern', 'lag_admin.{admin}.{action}')
+            ->setAllowedTypes('routes_pattern', 'string')
+            ->setNormalizer('routes_pattern', $this->getRoutesPatternNormalizer())
+
+            ->setDefault('pager', 'pagerfanta')
+            ->setAllowedValues('pager', ['pagerfanta', false])
+            ->setDefault('max_per_page', 25)
+            ->setAllowedTypes('max_per_page', 'integer')
+            ->setDefault('page_parameter', 'page')
             ->setAllowedTypes('page_parameter', 'string')
-            ->setAllowedValues('pager', [
-                null,
-                'pagerfanta',
-            ])
-            ->setAllowedTypes('menus', ['array', 'null'])
-            ->setNormalizer('actions', function (Options $options, $actions) {
-                $normalizedActions = [];
-                $addBatchAction = false;
 
-                foreach ($actions as $name => $action) {
-                    // action configuration is an array by default
-                    if (null === $action) {
-                        $action = [];
-                    }
-                    $normalizedActions[$name] = $action;
+            ->setDefault('permissions', 'ROLE_ADMIN')
+            ->setAllowedTypes('permissions', 'string')
 
-                    // in list action, if no batch was configured or disabled, we add a batch action
-                    if ('list' == $name && (!array_key_exists('batch', $action) || null === $action['batch'])) {
-                        $addBatchAction = true;
-                    }
-                }
+            ->setDefault('date_format', 'Y-m-d')
+            ->setAllowedTypes('date_format', 'string')
 
-                // add empty default batch action
-                if ($addBatchAction) {
-                    $normalizedActions['batch'] = [];
-                }
+            ->setDefault('data_provider', 'doctrine')
+            ->setAllowedTypes('data_provider', 'string')
+            ->setDefault('data_persister', 'doctrine')
+            ->setAllowedTypes('data_persister', 'string')
 
-                return $normalizedActions;
+            ->setDefault('create_template', '@LAGAdmin/crud/create.html.twig')
+            ->setAllowedTypes('create_template', 'string')
+            ->setDefault('edit_template', '@LAGAdmin/crud/edit.html.twig')
+            ->setAllowedTypes('edit_template', 'string')
+            ->setDefault('list_template', '@LAGAdmin/crud/list.html.twig')
+            ->setAllowedTypes('list_template', 'string')
+            ->setDefault('delete_template', '@LAGAdmin/crud/delete.html.twig')
+            ->setAllowedTypes('delete_template', 'string')
+
+            ->setDefault('menus', [])
+            ->setAllowedTypes('menus', 'array')
+
+            ->setDefault('translation', function (OptionsResolver $translationResolver) {
+                $translationResolver
+                    ->setDefault('enabled', true)
+                    ->setAllowedTypes('enabled', 'boolean')
+                    ->setDefault('pattern', 'admin.{admin}.{key}')
+                    ->setAllowedTypes('pattern', 'string')
+                    ->setDefault('catalog', 'admin')
+                    ->setAllowedTypes('catalog', 'string')
+                ;
             })
         ;
-
-        $this->configureTranslation(
-            $resolver,
-            $this->application->getTranslationPattern(),
-            $this->application->getTranslationCatalog()
-        );
     }
 
     public function getName(): string
     {
-        return $this->name;
+        return $this->getString('name');
+    }
+
+    public function getAdminClass(): string
+    {
+        return $this->getString('admin_class');
+    }
+
+    public function getActionClass(): string
+    {
+        return $this->getString('action_class');
+    }
+
+    public function getActions(): array
+    {
+        return $this->get('actions');
+    }
+
+    public function hasAction(string $actionName): bool
+    {
+        return \array_key_exists($actionName, $this->getActions());
+    }
+
+    public function getAction(string $actionName): array
+    {
+        return $this->getActions()[$actionName];
+    }
+
+    public function getEntityClass(): string
+    {
+        return $this->getString('entity');
+    }
+
+    public function getController(): string
+    {
+        return $this->getString('controller');
+    }
+
+    public function getBatch(): array
+    {
+        return $this->get('batch');
+    }
+
+    public function getRoutesPattern(): string
+    {
+        return $this->getString('routes_pattern');
+    }
+
+    public function isPaginationEnabled(): bool
+    {
+        $pager = $this->get('pager');
+
+        return $pager === false ? false : true;
+    }
+
+    public function getPager(): string
+    {
+        if (!$this->isPaginationEnabled()) {
+            throw new Exception(sprintf('The pagination is not enabled for the admin "%s"', $this->getString('name')));
+        }
+
+        return $this->get('pager');
+    }
+
+    public function getMaxPerPage(): int
+    {
+        return $this->getInt('max_per_page');
+    }
+
+    public function getPageParameter(): string
+    {
+        return $this->get('page_parameter');
     }
 
     public function getPermissions(): array
@@ -126,5 +178,129 @@ class AdminConfiguration extends Configuration
         }
 
         return $roles;
+    }
+
+    public function getDateFormat(): string
+    {
+        return $this->getString('date_format');
+    }
+
+    public function getActionRouteParameters(string $actionName): array
+    {
+        $actionConfiguration = $this->getAction($actionName);
+
+        if (empty($actionConfiguration['route_parameters'])) {
+            return [];
+        }
+
+        return $actionConfiguration['route_parameters'];
+    }
+
+    public function getDataProvider(): string
+    {
+        return $this->getString('data_provider');
+    }
+
+    public function getDataPersister(): string
+    {
+        return $this->getString('data_persister');
+    }
+
+    public function getCreateTemplate(): string
+    {
+        return $this->getString('create_template');
+    }
+
+    public function getEditTemplate(): string
+    {
+        return $this->getString('edit_template');
+    }
+
+    public function getListTemplate(): string
+    {
+        return $this->getString('list_template');
+    }
+
+    public function getDeleteTemplate(): string
+    {
+        return $this->getString('delete_template');
+    }
+
+    public function getMenus(): array
+    {
+        return $this->get('menus');
+    }
+
+    public function isTranslationEnabled(): bool
+    {
+        return $this->get('translation')['enabled'];
+    }
+
+    public function getTranslationPattern(): string
+    {
+        if (!$this->isTranslationEnabled()) {
+            throw new Exception('The translation is not enabled');
+        }
+
+        return $this->get('translation')['pattern'];
+    }
+
+    public function getTranslationCatalog(): string
+    {
+        if (!$this->isTranslationEnabled()) {
+            throw new Exception('The translation is not enabled');
+        }
+
+        return $this->get('translation')['catalog'];
+    }
+
+    private function getActionNormalizer(): Closure
+    {
+        return function (Options $options, $actions) {
+            $normalizedActions = [];
+//            $addBatchAction = false;
+
+            foreach ($actions as $name => $action) {
+                // action configuration is an array by default
+                if (null === $action) {
+                    $action = [];
+                }
+
+                if (!\array_key_exists('route_parameters', $action)) {
+                    if ($name === 'edit' || $name === 'delete') {
+                        $action['route_parameters'] = ['id' => null];
+                    }
+                }
+                $normalizedActions[$name] = $action;
+
+                // in list action, if no batch was configured or disabled, we add a batch action
+//                if ('list' == $name && (!\array_key_exists('batch', $action) || null === $action['batch'])) {
+//                    $addBatchAction = true;
+//                }
+            }
+
+            // add empty default batch action
+//            if ($addBatchAction) {
+//             TODO enable mass action
+//            $normalizedActions['batch'] = [];
+//            }
+
+            return $normalizedActions;
+        };
+    }
+
+    private function getRoutesPatternNormalizer(): Closure
+    {
+        return function (Options $options, $value) {
+            if (!u($value)->containsAny('{action}')) {
+                throw new InvalidOptionsException(sprintf('The "%s" parameters in admin "%s" should contains the "%s" parameters', 'routes_pattern', $options->offsetGet('name'), '{action}'));
+            }
+
+            if (!u($value)->containsAny('{admin}')) {
+                throw new InvalidOptionsException(sprintf('The "%s" parameters in admin "%s" should contains the "%s" parameters', 'routes_pattern', $options->offsetGet('name'), '{admin}'));
+            }
+
+            return $value;
+        };
     }
 }

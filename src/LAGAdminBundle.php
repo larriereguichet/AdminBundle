@@ -2,9 +2,6 @@
 
 namespace LAG\AdminBundle;
 
-use LAG\AdminBundle\DependencyInjection\CompilerPass\ApplicationConfigurationCompilerPass;
-use LAG\AdminBundle\DependencyInjection\CompilerPass\DataProviderCompilerPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class LAGAdminBundle extends Bundle
@@ -31,25 +28,4 @@ class LAGAdminBundle extends Bundle
     // TODO from configuration
     const REQUEST_PARAMETER_ADMIN = '_admin';
     const REQUEST_PARAMETER_ACTION = '_action';
-
-    /**
-     * Do not load entities on handleRequest (for create method for example).
-     */
-    const LOAD_STRATEGY_NONE = 'strategy_none';
-
-    /**
-     * Load one entity on handleRequest (edit method for example).
-     */
-    const LOAD_STRATEGY_UNIQUE = 'strategy_unique';
-
-    /**
-     * Load multiple entities on handleRequest (list method for example).
-     */
-    const LOAD_STRATEGY_MULTIPLE = 'strategy_multiple';
-
-    public function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new DataProviderCompilerPass());
-        $container->addCompilerPass(new ApplicationConfigurationCompilerPass());
-    }
 }

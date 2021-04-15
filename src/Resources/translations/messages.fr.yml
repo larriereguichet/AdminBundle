@@ -7,6 +7,11 @@ lag:
         cancel: Annuler
         saved: Les modifications ont été sauvegardées
         welcome_message: 'Bienvenue %username%'
+
+        login: Se connecter
+        login_form:
+            login: Email
+            password: Mot de passe
         logout: Se déconnecter
 
         # List
@@ -39,6 +44,11 @@ lag:
         no_record: Aucun élément n'a été trouvé
         delete_confirmation_title: Attention
         delete_confirmation_warning: Vous allez supprimer un élément. Cette action n'est pas réversible
+        no_notifications: Pas de nouvelles notifications !
+        
+        reset_filters: Effacer les filtres
 
         yes: Oui
         no: Non
+
+        loading: Chargement...

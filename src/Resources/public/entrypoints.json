@@ -1,0 +1,42 @@
+{
+  "entrypoints": {
+    "js/jquery": {
+      "js": [
+        "/bundles/lagadmin/js/jquery.js"
+      ]
+    },
+    "js/jquery-easing": {
+      "js": [
+        "/bundles/lagadmin/js/jquery-easing.js"
+      ]
+    },
+    "js/sb-admin": {
+      "js": [
+        "/bundles/lagadmin/js/sb-admin.js"
+      ]
+    },
+    "js/bootstrap": {
+      "js": [
+        "/bundles/lagadmin/js/bootstrap.js"
+      ]
+    },
+    "build/admin": {
+      "css": [
+        "/bundles/lagadmin/build/admin.css"
+      ],
+      "js": [
+        "/bundles/lagadmin/build/admin.js"
+      ]
+    },
+    "css/sb-admin": {
+      "css": [
+        "/bundles/lagadmin/css/sb-admin.css"
+      ]
+    },
+    "css/fa": {
+      "css": [
+        "/bundles/lagadmin/css/fa.css"
+      ]
+    }
+  }
+}

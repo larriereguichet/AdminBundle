@@ -2,33 +2,24 @@
 
 namespace LAG\AdminBundle\Field;
 
-use LAG\AdminBundle\Configuration\ActionConfiguration;
+use Closure;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CountField extends AbstractField
 {
-    public function isSortable(): bool
-    {
-        return false;
-    }
-
-    public function configureOptions(OptionsResolver $resolver, ActionConfiguration $configuration)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+            'template' => '@LAGAdmin/fields/string.html.twig',
+            'translation' => false,
             'empty_string' => null,
         ]);
     }
 
-    public function render($value = null): string
+    public function getDataTransformer(): ?Closure
     {
-        $count = count($value);
-
-        if ($count > 0 || null === $this->options['empty_string']) {
-            $render = $count;
-        } else {
-            $render = $this->options['empty_string'];
-        }
-
-        return $render;
+        return function ($data) {
+            return is_countable($data) ? \count($data) : 0;
+        };
     }
 }

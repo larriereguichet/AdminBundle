@@ -2,40 +2,17 @@
 
 namespace LAG\AdminBundle\Field;
 
-use DateTime;
-use Exception;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DateField extends AbstractField
+class DateField extends AbstractField implements ApplicationAwareInterface
 {
-    public function isSortable(): bool
-    {
-        return true;
-    }
+    use ApplicationAware;
 
-    public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'format' => $actionConfiguration->getParameter('date_format'),
+            'format' => $this->applicationConfiguration->getDateFormat(),
+            'template' => '@LAGAdmin/fields/date.html.twig',
         ]);
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @throws Exception
-     */
-    public function render($value = null): string
-    {
-        if (null === $value) {
-            return '';
-        }
-
-        if (!$value instanceof DateTime) {
-            throw new Exception('Expected Datetime, got '.gettype($value));
-        }
-
-        return $value->format($this->options['format']);
     }
 }

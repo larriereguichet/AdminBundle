@@ -2,83 +2,42 @@
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
-use Doctrine\ORM\EntityManagerInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\ConfigurationEvent;
-use LAG\AdminBundle\Factory\ConfigurationFactory;
+use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events\Configuration\AdminConfigurationEvent;
 use LAG\AdminBundle\Field\Helper\FieldConfigurationHelper;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Add extra default configuration for actions and fields.
  */
+// TODO remove this class
 class ExtraConfigurationSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ApplicationConfiguration
-     */
-    private $applicationConfiguration;
+    private ApplicationConfiguration $applicationConfiguration;
+    private MetadataHelperInterface $metadataHelper;
+    private TranslatorInterface $translator;
 
-    /**
-     * @var ResourceRegistryInterface
-     */
-    private $registry;
-
-    /**
-     * @var ConfigurationFactory
-     */
-    private $configurationFactory;
-
-    /**
-     * @var MetadataHelperInterface
-     */
-    private $metadataHelper;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
-            Events::CONFIGURATION_ADMIN => 'enrichAdminConfiguration',
+            AdminEvents::ADMIN_CONFIGURATION => 'enrichAdminConfiguration',
         ];
     }
 
-    /**
-     * ExtraConfigurationSubscriber constructor.
-     */
     public function __construct(
-        ApplicationConfigurationStorage $applicationConfigurationStorage,
-        EntityManagerInterface $entityManager,
-        ResourceRegistryInterface $registry,
-        ConfigurationFactory $configurationFactory,
+        ApplicationConfiguration $applicationConfiguration,
         MetadataHelperInterface $metadataHelper,
         TranslatorInterface $translator
     ) {
-        $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
-        $this->registry = $registry;
-        $this->configurationFactory = $configurationFactory;
+        $this->applicationConfiguration = $applicationConfiguration;
         $this->metadataHelper = $metadataHelper;
-        $this->entityManager = $entityManager;
         $this->translator = $translator;
     }
 
-    public function enrichAdminConfiguration(ConfigurationEvent $event)
+    public function enrichAdminConfiguration(AdminConfigurationEvent $event): void
     {
         if (!$this->isExtraConfigurationEnabled()) {
             return;
@@ -90,15 +49,14 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
         // Add default field configuration: it provides a type, a form type, and a view according to the found metadata
         $helper = new FieldConfigurationHelper(
-            $this->entityManager,
             $this->translator,
             $this->applicationConfiguration,
             $this->metadataHelper
         );
-        $helper->addDefaultFields($configuration, $event->getEntityClass(), $event->getAdminName());
+        //$helper->addDefaultFields($configuration, $configuration['entity'], $event->getAdminName());
         $helper->addDefaultStrategy($configuration);
         $helper->addDefaultRouteParameters($configuration);
-        $helper->addDefaultFormUse($configuration);
+        //$helper->addDefaultFormUse($configuration);
         $helper->provideActionsFieldConfiguration($configuration, $event->getAdminName());
 
         // Filters
@@ -112,11 +70,11 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
      */
     private function addDefaultActions(array &$configuration)
     {
-        if (!key_exists('actions', $configuration) || !is_array($configuration['actions'])) {
+        if (!\array_key_exists('actions', $configuration) || !\is_array($configuration['actions'])) {
             $configuration['actions'] = [];
         }
 
-        if (0 !== count($configuration['actions'])) {
+        if (0 !== \count($configuration['actions'])) {
             return;
         }
         $configuration['actions'] = [
@@ -133,15 +91,14 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
     private function addDefaultFilters(array &$configuration): void
     {
         // Add the filters only for the "list" action
-        if (!key_exists('list', $configuration['actions'])) {
+        if (!\array_key_exists('list', $configuration['actions'])) {
             return;
         }
 
         // If some filters are already configured, we do not add the default filters
-        if (key_exists('filter', $configuration['actions']['list'])) {
+        if (\array_key_exists('filter', $configuration['actions']['list'])) {
             return;
         }
-        // TODO add a default unified filter
         $metadata = $this->metadataHelper->findMetadata($configuration['entity']);
 
         if (null === $metadata) {
@@ -162,14 +119,14 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         $configuration['actions']['list']['filters'] = $filters;
     }
 
-    private function getOperatorFromFieldType($type)
+    private function getOperatorFromFieldType($type): string
     {
         $mapping = [
             'string' => 'like',
             'text' => 'like',
         ];
 
-        if (key_exists($type, $mapping)) {
+        if (\array_key_exists($type, $mapping)) {
             return $mapping[$type];
         }
 
@@ -178,6 +135,7 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
 
     private function isExtraConfigurationEnabled(): bool
     {
-        return $this->applicationConfiguration->getParameter('enable_extra_configuration');
+        // TODO
+        return true;
     }
 }

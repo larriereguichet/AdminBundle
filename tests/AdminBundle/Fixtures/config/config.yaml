@@ -1,3 +1,6 @@
+parameters:
+    file_cache_dir: 'var/cache'
+
 framework:
     secret: '%env(APP_SECRET)%'
     default_locale: fr
@@ -27,6 +30,9 @@ framework:
         fallbacks:
             - en
 
+sensio_framework_extra:
+    router:
+        annotations: false
 
 security:
     encoders:
@@ -89,6 +95,18 @@ monolog:
             channels: ["!event"]
 
 
-services:
-    translator.logging.inner:
-        synthetic: true
+#services:
+#    translator.logging.inner:
+#        synthetic: true
+#
+#    annotations.filesystem_cache:
+#        synthetic: true
+#        arguments:
+#            - cache
+#
+#    security.authentication.listener.anonymous:
+#        abstract: true
+#        synthetic: true
+#        arguments:
+#            - test
+#            - test

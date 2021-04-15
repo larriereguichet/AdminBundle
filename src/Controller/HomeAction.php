@@ -2,41 +2,20 @@
 
 namespace LAG\AdminBundle\Controller;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
 class HomeAction
 {
-    /**
-     * @var Environment
-     */
-    private $twig;
+    private Environment $twig;
 
-    /**
-     * @var ApplicationConfiguration
-     */
-    private $applicationConfiguration;
-
-    /**
-     * HomeAction constructor.
-     */
-    public function __construct(
-        Environment $twig,
-        ApplicationConfigurationStorage $applicationConfigurationStorage
-    ) {
+    public function __construct(Environment $twig)
+    {
         $this->twig = $twig;
-        $this->applicationConfiguration = $applicationConfigurationStorage->getConfiguration();
     }
 
-    /**
-     * @return Response
-     */
-    public function __invoke()
+    public function __invoke(): Response
     {
-        $content = $this->twig->render($this->applicationConfiguration->getParameter('homepage_template'));
-
-        return new Response($content);
+        return new Response($this->twig->render('@LAGAdmin/pages/home.html.twig'));
     }
 }

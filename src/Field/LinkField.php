@@ -2,74 +2,46 @@
 
 namespace LAG\AdminBundle\Field;
 
-use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Field\Traits\EntityAwareTrait;
-use LAG\AdminBundle\Field\Traits\TwigAwareTrait;
-use LAG\AdminBundle\Routing\RoutingLoader;
-use LAG\AdminBundle\Utils\TranslationUtils;
-use LAG\Component\StringUtils\StringUtils;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
-class LinkField extends StringField implements TwigAwareFieldInterface, EntityAwareFieldInterface
+class LinkField extends AbstractField implements ApplicationAwareInterface
 {
-    use TwigAwareTrait;
-    use EntityAwareTrait;
+    use ApplicationAware;
 
-    /**
-     * @var ActionConfiguration
-     */
-    protected $actionConfiguration;
-
-    public function isSortable(): bool
+    public function getParent(): ?string
     {
-        return true;
+        return StringField::class;
     }
 
-    public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        parent::configureOptions($resolver, $actionConfiguration);
-
-        $this->actionConfiguration = $actionConfiguration;
+        $appConfig = $this->getApplicationConfiguration();
 
         $resolver
             ->setDefaults([
-                'template' => '@LAGAdmin/Field/link.html.twig',
-                'title' => '',
-                'icon' => '',
-                'target' => '_self',
-                'route' => '',
-                'parameters' => [],
-                'url' => '',
-                'text' => '',
                 'admin' => null,
                 'action' => null,
-                'class' => '',
                 'default' => '~',
+                'icon' => null,
+                'mapped' => true,
+                'route' => null,
+                'route_parameters' => [],
+                'target' => '_self',
+                'template' => '@LAGAdmin/fields/link.html.twig',
+                'text' => '',
+                'title' => null,
+                'url' => '',
             ])
-            ->setAllowedTypes('route', 'string')
-            ->setAllowedTypes('parameters', 'array')
-            ->setAllowedTypes('length', 'integer')
-            ->setAllowedTypes('url', 'string')
-            ->setAllowedTypes('default', 'string')
-            ->setAllowedValues('target', [
-                '_self',
-                '_blank',
-            ])
-            ->setNormalizer('route', function (Options $options, $value) use ($actionConfiguration) {
-                // route or url should be defined
+            ->setNormalizer('route', function (Options $options, $value) use ($appConfig) {
+                // A route, an url or an admin should be defined
                 if (!$value && !$options->offsetGet('url') && !$options->offsetGet('admin')) {
                     throw new InvalidOptionsException('Either an url or a route should be defined');
                 }
 
                 if ($options->offsetGet('admin')) {
-                    $value = RoutingLoader::generateRouteName(
-                        $options->offsetGet('admin'),
-                        $options->offsetGet('action'),
-                        $actionConfiguration->getAdminConfiguration()->getParameter('routing_name_pattern')
-                    );
+                    $value = $appConfig->getRouteName($options->offsetGet('admin'), $options->offsetGet('action'));
                 }
 
                 return $value;
@@ -82,87 +54,13 @@ class LinkField extends StringField implements TwigAwareFieldInterface, EntityAw
 
                 return $value;
             })
-            ->setNormalizer('parameters', function (Options $options, $values) {
-                $cleanedValues = [];
-
-                foreach ($values as $name => $method) {
-                    if (null === $method) {
-                        $method = $name;
-                    }
-                    $cleanedValues[$name] = $method;
-                }
-
-                return $cleanedValues;
-            })
-            ->setNormalizer('text', function (Options $options, $value) use ($actionConfiguration) {
+            ->setNormalizer('text', function (Options $options, $value) {
                 if ($value) {
                     return $value;
                 }
 
-                if ($actionConfiguration->getAdminConfiguration()->isTranslationEnabled() && $options->offsetGet('action')) {
-                    return $this
-                        ->translator
-                        ->trans(TranslationUtils::getActionTranslationKey(
-                            $actionConfiguration->getAdminConfiguration()->getTranslationPattern(),
-                            $actionConfiguration->getAdminName(),
-                            $options->offsetGet('action')
-                        ))
-                    ;
-                }
-
-                return $options->offsetGet('route');
+                return ucfirst($options->offsetGet('route'));
             })
         ;
-    }
-
-    public function render($value = null): string
-    {
-        if (null === $value) {
-            return $this->options['default'];
-        }
-        $value = parent::render($value);
-
-        $accessor = PropertyAccess::createPropertyAccessorBuilder()
-            ->disableExceptionOnInvalidIndex()
-            ->disableExceptionOnInvalidPropertyPath()
-            ->getPropertyAccessor()
-        ;
-        $options = $this->options;
-
-        foreach ($options['parameters'] as $name => $method) {
-            // Allow static values by prefixing it with an underscore
-            if (StringUtils::startsWith($method, '_')) {
-                $options['parameters'][$name] = StringUtils::end($method, -1);
-            } else {
-                if ($accessor->isReadable($this->entity, $method)) {
-                    $options['parameters'][$name] = $accessor->getValue($this->entity, $method);
-                }
-            }
-        }
-
-        if ($value) {
-            $options['text'] = $value;
-        }
-
-        if ('' === $options['text'] && $options['action']) {
-            $text = ucfirst($options['action']);
-
-            if (!$this->actionConfiguration->getAdminConfiguration()->isTranslationEnabled()) {
-                $translationKey = TranslationUtils::getActionTranslationKey(
-                    $this->actionConfiguration->getAdminConfiguration()->getTranslationPattern(),
-                    $this->actionConfiguration->getAdminName(),
-                    $options['action']
-                );
-                $text = $this
-                    ->translator
-                    ->trans($translationKey, [], $this->actionConfiguration->getAdminConfiguration()->getTranslationCatalog())
-                ;
-            }
-            $options['text'] = $text;
-        }
-
-        return $this->twig->render($this->options['template'], [
-            'options' => $options,
-        ]);
     }
 }

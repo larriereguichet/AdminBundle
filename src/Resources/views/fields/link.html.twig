@@ -1,0 +1,23 @@
+{% use '@LAGAdmin/fields/field-base.html.twig' %}
+
+{% set attr = attr is defined ? attr : options.attr %}
+{% set url = (options.route) ? admin_route(options.route, options.route_parameters, object) : options.url %}
+{% set attr = attr|merge({
+    href: url,
+    title: options.translate_title ?
+        options.title|default(options.text)|lower|trans([], options.translation_domain) :
+        options.title|default(options.text)
+}) %}
+{% set text = text is defined ? text : data %}
+
+<a{{ block('attributes') }}>
+    {# font awesome icons #}
+    {% if options.icon %}
+        <span class="text">
+            <i class="fa fa-{{ options.icon }}"></i>
+            {% include '@LAGAdmin/fields/string.html.twig' with {data: text, options: options} %}
+        </span>
+    {% else %}
+        {% include '@LAGAdmin/fields/string.html.twig' with {data: text, options: options} %}
+    {% endif %}
+</a>

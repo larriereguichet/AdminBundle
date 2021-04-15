@@ -1,0 +1,52 @@
+name: Build and Test AdminBundle
+
+on:
+    - push
+
+jobs:
+    build:
+        name: Build and Test
+        runs-on: ubuntu-latest
+        env:
+            extensions: json
+            composer_version: 2
+        strategy:
+            matrix:
+                php_version:
+                    - '7.4'
+#                    - '8.0' TODO fix
+        steps:
+            -   uses: actions/checkout@v2
+            
+            -   name: Cache vendors
+                uses: actions/cache@v2
+                with:
+                    path: |
+                        ~/.composer/cache
+                    key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+            
+            -   name: Setup PHP with extensions
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php_version }}
+                    extensions: ${{ env.extensions }}
+                    ini-values: memory_limit=-1
+                    coverage: pcov
+                    tools: composer, php-cs-fixer, cs2pr
+            
+            -   name: Install dependencies
+                run: composer install --no-interaction
+            
+            -   name: Run phpunit
+                run: bin/phpunit
+            
+            -   name: Run php-cs-fixer
+                run: php-cs-fixer fix --dry-run --using-cache=no --verbose --diff --allow-risky=yes
+            
+            -   name: Run phpstan
+                run: bin/phpstan analyse src/
+            
+            -   name: Upload code coverage to Scrutinizer CI
+                run: |
+                    wget https://scrutinizer-ci.com/ocular.phar
+                    php ocular.phar code-coverage:upload --format=php-clover var/phpunit/logs/clover.xml

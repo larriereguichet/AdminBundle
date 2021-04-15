@@ -2,57 +2,37 @@
 
 namespace LAG\AdminBundle\Event\Events;
 
-use LAG\AdminBundle\Event\AbstractEvent;
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Field\Definition\FieldDefinitionInterface;
+use LAG\AdminBundle\Exception\Form\FormMissingException;
 use Symfony\Component\Form\FormInterface;
 
 class FormEvent extends AbstractEvent
 {
-    /**
-     * @var FormInterface[]
-     */
-    private $forms = [];
+    private array $forms = [];
 
-    /**
-     * @var FieldDefinitionInterface[]
-     */
-    private $definitions = [];
-
-    /**
-     * @throws Exception
-     */
-    public function addForm(FormInterface $form, string $identifier)
+    public function addForm(string $name, FormInterface $form): self
     {
-        if (array_key_exists($identifier, $this->forms)) {
-            throw new Exception('A form with the identifier "'.$identifier.'" was already added');
-        }
-        $this->forms[$identifier] = $form;
+        $this->forms[$name] = $form;
+
+        return $this;
     }
 
-    /**
-     * @return FormInterface[]
-     */
-    public function getForms()
+    public function hasForm(string $name): bool
+    {
+        return \array_key_exists($name, $this->forms);
+    }
+
+    public function removeForm(string $name): self
+    {
+        if (!$this->hasForm($name)) {
+            throw new FormMissingException('The form "'.$name.'" does not exists');
+        }
+        unset($this->forms[$name]);
+
+        return $this;
+    }
+
+    public function getForms(): array
     {
         return $this->forms;
-    }
-
-    public function addFieldDefinition(string $name, FieldDefinitionInterface $definition): void
-    {
-        $this->definitions[$name] = $definition;
-    }
-
-    public function removeFieldDefinition(string $name): void
-    {
-        unset($this->definitions[$name]);
-    }
-
-    /**
-     * @return FieldDefinitionInterface[]
-     */
-    public function getFieldDefinitions(): array
-    {
-        return $this->definitions;
     }
 }

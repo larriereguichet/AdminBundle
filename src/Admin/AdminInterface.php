@@ -2,10 +2,8 @@
 
 namespace LAG\AdminBundle\Admin;
 
-use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +12,21 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 interface AdminInterface
 {
     /**
+     * Do not load entities on handleRequest (for create method for example).
+     */
+    const LOAD_STRATEGY_NONE = 'strategy_none';
+
+    /**
+     * Load one entity on handleRequest (edit method for example).
+     */
+    const LOAD_STRATEGY_UNIQUE = 'strategy_unique';
+
+    /**
+     * Load multiple entities on handleRequest (list method for example).
+     */
+    const LOAD_STRATEGY_MULTIPLE = 'strategy_multiple';
+
+    /**
      * Handle the request: load the forms and the entities.
      *
      * @throws Exception
@@ -21,8 +34,8 @@ interface AdminInterface
     public function handleRequest(Request $request);
 
     /**
-     * Return the handled request. The handleRequest() method should have been called before. If not an exception will
-     * be thrown.
+     * Return the request handled by the admin. If no request was previously handled, an exception will be thrown. The
+     * getRequest() method should be after the handleRequest() method.
      *
      * @throws Exception
      */
@@ -37,11 +50,6 @@ interface AdminInterface
      * Return the class of the entity managed by the Admin.
      */
     public function getEntityClass(): string;
-
-    /**
-     * Return the Resource used to create the Admin.
-     */
-    public function getResource(): AdminResource;
 
     /**
      * Return the event dispatcher associated to the Admin.
@@ -64,11 +72,9 @@ interface AdminInterface
     public function hasAction(): bool;
 
     /**
-     * Return the loaded entities in the Admin.
-     *
-     * @return Collection
+     * Return the data loaded into the Admin.
      */
-    public function getEntities();
+    public function getData();
 
     /**
      * Return the forms associated to the Admin.

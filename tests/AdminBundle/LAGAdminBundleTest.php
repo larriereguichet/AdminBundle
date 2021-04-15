@@ -2,48 +2,19 @@
 
 namespace LAG\AdminBundle\Tests;
 
-use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Knp\Bundle\MenuBundle\KnpMenuBundle;
-use LAG\AdminBundle\LAGAdminBundle;
-use Nyholm\BundleTest\BaseBundleTestCase;
-use Nyholm\BundleTest\CompilerPass\PublicServicePass;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
-use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Bundle\MonologBundle\MonologBundle;
-use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
 class LAGAdminBundleTest extends KernelTestBase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        // Make all services public
-        $this->addCompilerPass(new PublicServicePass());
-    }
-
     public function testInitBundle()
     {
         $kernel = $this->createKernel();
-        $kernel->addConfigFile(__DIR__.'/Fixtures/config/config.yaml');
-        $kernel->addBundle(FrameworkBundle::class);
-        $kernel->addBundle(MonologBundle::class);
-        $kernel->addBundle(SensioFrameworkExtraBundle::class);
-        $kernel->addBundle(SecurityBundle::class);
-        $kernel->addBundle(DoctrineBundle::class);
-        $kernel->addBundle(TwigBundle::class);
-        $kernel->addBundle(KnpMenuBundle::class);
-
-        // Boot the kernel.
-        $this->bootKernel();
 
         // Get the container
-        $container = $this->getContainer();
+        $container = $kernel->getContainer();
 
-        // Test if you services exists
+        // Test if declared services exists
         $finder = new Finder();
         $finder
             ->in(__DIR__.'/../../src/Resources/config/services')
@@ -52,7 +23,7 @@ class LAGAdminBundleTest extends KernelTestBase
         $services = [];
 
         foreach ($finder as $file) {
-            $data = Yaml::parseFile($file->getRealPath());
+            $data = Yaml::parseFile($file->getRealPath(), Yaml::PARSE_CUSTOM_TAGS);
             $services = array_merge($services, $data['services']);
         }
 
@@ -60,7 +31,9 @@ class LAGAdminBundleTest extends KernelTestBase
             if ('_defaults' === $service) {
                 continue;
             }
-            $this->assertTrue($container->has($service));
+            $this->assertTrue($container->has($service), sprintf(
+                'The service "%s" does not exists in the service container', $service
+            ));
         }
     }
 }

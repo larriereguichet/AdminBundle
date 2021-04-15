@@ -2,32 +2,47 @@
 
 namespace LAG\AdminBundle\Tests\Field;
 
-use LAG\AdminBundle\Configuration\ActionConfiguration;
+use Doctrine\Common\Collections\ArrayCollection;
+use Iterator;
 use LAG\AdminBundle\Field\ArrayField;
-use LAG\AdminBundle\Tests\AdminTestBase;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use LAG\AdminBundle\Field\View\TextView;
 
-class ArrayFieldTest extends AdminTestBase
+class ArrayFieldTest extends FieldTestCase
 {
-    public function testRender()
+    public function testRender(): void
     {
-        $resolver = new OptionsResolver();
-        $configuration = $this->createMock(ActionConfiguration::class);
-
-        $field = new ArrayField('my_field');
-        $field->configureOptions($resolver, $configuration);
-        $options = $resolver->resolve([
-            'glue' => ' ',
+        $field = $this->factory->create('myField', [
+            'type' => 'array',
         ]);
-        $field->setOptions($options);
+        $this->assertEquals([
+            'attr' => [
+                'class' => 'admin-field admin-field-array',
+            ],
+            'header_attr' => [
+                'class' => 'admin-header admin-header-array',
+            ],
+            'label' => null,
+            'mapped' => false,
+            'property_path' => 'myField',
+            'template' => '@LAGAdmin/fields/auto.html.twig',
+            'translation' => false,
+            'translation_domain' => null,
+            'sortable' => false,
+            'glue' => ', ',
+        ], $field->getOptions());
+        $this->assertInstanceOf(ArrayField::class, $field);
 
-        $render = $field->render([
-            'My Field',
-            'is a',
-            'panda',
-        ]);
-        $this->assertEquals('My Field is a panda', $render);
-        $this->assertEquals('', $field->render(null));
-        $this->assertFalse($field->isSortable());
+        $view = $field->createView();
+        $this->assertInstanceOf(TextView::class, $view);
+
+        $transformer = $field->getDataTransformer();
+        $this->assertEquals('', $transformer(null));
+        $this->assertEquals('My, Little, Panda', $transformer(new ArrayCollection(['My', 'Little', 'Panda'])));
+        $this->assertEquals('Panda', $transformer($this->getIterator()));
+    }
+
+    private function getIterator(): Iterator
+    {
+        yield 'Panda';
     }
 }

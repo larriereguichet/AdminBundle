@@ -5,157 +5,114 @@ namespace LAG\AdminBundle\Tests\Admin;
 use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
-use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Event\Events\AdminEvent;
-use LAG\AdminBundle\Event\Events;
-use LAG\AdminBundle\Event\Events\EntityEvent;
+use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events\DataEvent;
 use LAG\AdminBundle\Event\Events\FormEvent;
+use LAG\AdminBundle\Event\Events\RequestEvent;
 use LAG\AdminBundle\Event\Events\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Resource\AdminResource;
-use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\View\ViewInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class AdminTest extends AdminTestBase
+class AdminTest extends TestCase
 {
+    private Admin $admin;
+    private MockObject $configuration;
+    private MockObject $eventDispatcher;
+
     /**
      * @dataProvider getHandleRequestProvider
      */
     public function testHandleRequest($entities)
     {
-        $resource = $this->createMock(AdminResource::class);
-        $resource
-            ->expects($this->once())
-            ->method('getName')
-            ->willReturn('admin_test')
-        ;
-        $configuration = $this->createMock(AdminConfiguration::class);
         $action = $this->createMock(ActionInterface::class);
         $form = $this->createMock(FormInterface::class);
-        $form
-            ->expects($this->once())
-            ->method('isValid')
-            ->willReturn(true)
-        ;
-        $form
-            ->expects($this->once())
-            ->method('isSubmitted')
-            ->willReturn(true)
-        ;
 
-        $eventDispatcher = $this->createMock(EventDispatcher::class);
-        $eventDispatcher
-            ->expects($this->exactly(6))
+        $this->eventDispatcher
+            ->expects($this->exactly(4))
             ->method('dispatch')
-            ->willReturnCallback(function($event, $eventName) use ($action, $form, $entities) {
-                if (Events::ADMIN_HANDLE_REQUEST === $eventName) {
-                    /** @var AdminEvent $event */
-                    $this->assertInstanceOf(AdminEvent::class, $event);
+            ->willReturnCallback(function ($event, $eventName) use ($action, $form, $entities) {
+                if (AdminEvents::ADMIN_REQUEST === $eventName) {
+                    $this->assertInstanceOf(RequestEvent::class, $event);
                     $event->setAction($action);
                 }
 
-                if (Events::ENTITY_LOAD === $eventName) {
-                    /** @var EntityEvent $event */
-                    $this->assertInstanceOf(EntityEvent::class, $event);
-                    $event->setEntities(new ArrayCollection($entities));
+                if (AdminEvents::ADMIN_DATA === $eventName) {
+                    $this->assertInstanceOf(DataEvent::class, $event);
+                    $event->setData(new ArrayCollection($entities));
+                    $event->setFilterForm($form);
                 }
 
-                if (Events::ADMIN_CREATE_FORM === $eventName) {
-                    /** @var FormEvent $event */
+                if (AdminEvents::ADMIN_FORM === $eventName) {
                     $this->assertInstanceOf(FormEvent::class, $event);
-                    $event->addForm($form, 'entity');
+                    $event->addForm('entity', $form);
                 }
 
                 return $event;
             })
         ;
 
-        $admin = new Admin(
-            $resource,
-            $configuration,
-            $eventDispatcher
-        );
         $request = new Request();
 
-        $this->assertExceptionRaised(Exception::class, function() use ($admin) {
-            $admin->getRequest();
+        $this->assertExceptionRaised(Exception::class, function () {
+            $this->admin->getRequest();
         });
 
-        $admin->handleRequest($request);
+        $this->admin->handleRequest($request);
 
-        $this->assertEquals('admin_test', $admin->getName());
-        $this->assertEquals($resource, $admin->getResource());
-        $this->assertEquals($eventDispatcher, $admin->getEventDispatcher());
-        $this->assertEquals($configuration, $admin->getConfiguration());
-        $this->assertCount(1, $admin->getEntities());
+        $this->assertEquals('my_admin', $this->admin->getName());
+        $this->assertEquals($this->eventDispatcher, $this->admin->getEventDispatcher());
+        $this->assertEquals($this->configuration, $this->admin->getConfiguration());
+        $this->assertCount(count($entities), $this->admin->getData());
 
         if (count($entities) > 0) {
-            $this->assertEquals('test', $admin->getEntities()[0]);
+            $this->assertEquals('test', $this->admin->getData()[0]);
         }
-        $this->assertEquals($request, $admin->getRequest());
-        $this->assertTrue($admin->hasForm('entity'));
-        $this->assertCount(1, $admin->getForms());
-        $this->assertEquals($form, $admin->getForms()['entity']);
-        $this->assertEquals($form, $admin->getForm('entity'));
-        $this->assertExceptionRaised(Exception::class, function() use ($admin) {
-            $admin->getForm('invalid');
+        $this->assertEquals($request, $this->admin->getRequest());
+        $this->assertTrue($this->admin->hasForm('entity'));
+        $this->assertCount(2, $this->admin->getForms());
+        $this->assertEquals($form, $this->admin->getForms()['entity']);
+        $this->assertEquals($form, $this->admin->getForm('entity'));
+        $this->assertExceptionRaised(Exception::class, function () {
+            $this->admin->getForm('invalid');
         });
     }
 
     public function getHandleRequestProvider(): array
     {
         return [
-            [['test', ], ],
-            [[]]
+            [['test']],
+            [[]],
         ];
     }
 
     public function testHandleRequestWithoutAction()
     {
-        $resource = $this->createMock(AdminResource::class);
-        $resource
-            ->expects($this->once())
-            ->method('getName')
-            ->willReturn('admin_test')
-        ;
-        $configuration = $this->createMock(AdminConfiguration::class);
-
-        $eventDispatcher = $this->createMock(EventDispatcher::class);
-        $eventDispatcher
+        $this->eventDispatcher
             ->expects($this->exactly(1))
             ->method('dispatch')
         ;
-
-        $admin = new Admin(
-            $resource,
-            $configuration,
-            $eventDispatcher
-        );
         $request = new Request();
 
-        $this->assertExceptionRaised(Exception::class, function() use ($admin, $request) {
-            $admin->handleRequest($request);
+        $this->assertExceptionRaised(Exception::class, function () use ($request) {
+            $this->admin->handleRequest($request);
         });
     }
 
     public function testCreateView()
     {
-        $resource = $this->createMock(AdminResource::class);
-        $configuration = $this->createMock(AdminConfiguration::class);
         $view = $this->createMock(ViewInterface::class);
 
-        $eventDispatcher = $this->createMock(EventDispatcher::class);
-        $eventDispatcher
+        $this->eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->willReturnCallback(function($event, $eventName) use ($view) {
-                $this->assertEquals(Events::ADMIN_VIEW, $eventName);
-                /** @var ViewEvent $event */
+            ->willReturnCallback(function ($event, $eventName) use ($view) {
+                $this->assertEquals(AdminEvents::ADMIN_VIEW, $eventName);
                 $this->assertInstanceOf(ViewEvent::class, $event);
 
                 $event->setView($view);
@@ -163,66 +120,49 @@ class AdminTest extends AdminTestBase
                 return $event;
             })
         ;
-
-        $admin = new Admin(
-            $resource,
-            $configuration,
-            $eventDispatcher
-        );
         $request = new Request();
-        $this->setPrivateProperty($admin, 'request', $request);
+        $this->setPrivateProperty($this->admin, 'request', $request);
 
-        $createdView = $admin->createView();
+        $createdView = $this->admin->createView();
         $this->assertInstanceOf(ViewInterface::class, $createdView);
         $this->assertEquals($view, $createdView);
     }
 
     public function testCreateViewWithoutRequest()
     {
-        list($admin) = $this->createAdmin();
         $this->expectException(Exception::class);
 
-        $admin->createView();
+        $this->admin->createView();
     }
 
     public function testGetAction()
     {
-        $resource = $this->createMock(AdminResource::class);
-        $configuration = $this->createMock(AdminConfiguration::class);
-        $eventDispatcher = $this->createMock(EventDispatcher::class);
-
-        $admin = new Admin(
-            $resource,
-            $configuration,
-            $eventDispatcher
-        );
         $action = $this->createMock(ActionInterface::class);
-        $this->setPrivateProperty($admin, 'action', $action);
+        $this->setPrivateProperty($this->admin, 'action', $action);
 
-        $this->assertEquals($action, $admin->getAction());
-        $this->assertTrue($admin->hasAction());
+        $this->assertEquals($action, $this->admin->getAction());
+        $this->assertTrue($this->admin->hasAction());
     }
 
     public function testHandleFormWithoutForm()
     {
-        $resource = $this->createMock(AdminResource::class);
         $configuration = $this->createMock(AdminConfiguration::class);
         $action = $this->createMock(ActionInterface::class);
 
         $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher
-            ->expects($this->exactly(5))
+            ->expects($this->exactly(4))
             ->method('dispatch')
-            ->willReturnCallback(function($event, $eventName) use ($action) {
+            ->willReturnCallback(function ($event, $eventName) use ($action) {
                 $this->assertContains($eventName, [
-                    Events::ADMIN_HANDLE_REQUEST,
-                    Events::ADMIN_FILTER,
-                    Events::ENTITY_LOAD,
-                    Events::ADMIN_CREATE_FORM,
-                    Events::ADMIN_HANDLE_FORM,
+                    AdminEvents::ADMIN_REQUEST,
+                    AdminEvents::ADMIN_DATA,
+                    AdminEvents::ADMIN_FORM,
+                    AdminEvents::ADMIN_HANDLE_FORM,
+                    AdminEvents::ADMIN_VIEW,
                 ]);
-                if ($eventName === Events::ADMIN_HANDLE_REQUEST) {
-                    $this->assertInstanceOf(AdminEvent::class, $event);
+
+                if ($eventName === AdminEvents::ADMIN_REQUEST) {
                     $event->setAction($action);
                 }
 
@@ -231,7 +171,7 @@ class AdminTest extends AdminTestBase
         ;
 
         $admin = new Admin(
-            $resource,
+            'my_admin',
             $configuration,
             $eventDispatcher
         );
@@ -242,89 +182,50 @@ class AdminTest extends AdminTestBase
 
     public function testHandleFormWithoutEntities()
     {
-        $resource = $this->createMock(AdminResource::class);
-        $configuration = $this->createMock(AdminConfiguration::class);
         $action = $this->createMock(ActionInterface::class);
         $form = $this->createMock(FormInterface::class);
 
-        $eventDispatcher = $this->createMock(EventDispatcher::class);
-        $eventDispatcher
-            ->expects($this->exactly(5))
+        $this->eventDispatcher
+            ->expects($this->exactly(4))
             ->method('dispatch')
-            ->willReturnCallback(function($event, $eventName) use ($action, $form) {
-                if (Events::ADMIN_HANDLE_REQUEST === $eventName) {
-                    /** @var AdminEvent $event */
-                    $this->assertInstanceOf(AdminEvent::class, $event);
+            ->willReturnCallback(function ($event, $eventName) use ($action, $form) {
+                if (AdminEvents::ADMIN_REQUEST === $eventName) {
+                    $this->assertInstanceOf(RequestEvent::class, $event);
                     $event->setAction($action);
                 }
 
-                if (Events::ENTITY_LOAD === $eventName) {
-                    /** @var EntityEvent $event */
-                    $this->assertInstanceOf(EntityEvent::class, $event);
-                    $event->setEntities(new ArrayCollection());
+                if (AdminEvents::ADMIN_DATA === $eventName) {
+                    $this->assertInstanceOf(DataEvent::class, $event);
+                    $event->setData(null);
                 }
 
-                if (Events::ADMIN_CREATE_FORM === $eventName) {
-                    /** @var FormEvent $event */
+                if (AdminEvents::ADMIN_FORM === $eventName) {
                     $this->assertInstanceOf(FormEvent::class, $event);
-                    $event->addForm($form, 'entity');
+                    $event->addForm('entity', $form);
                 }
 
                 return $event;
             })
         ;
-
-        $admin = new Admin(
-            $resource,
-            $configuration,
-            $eventDispatcher
-        );
         $request = new Request();
-
-        $admin->handleRequest($request);
+        $this->admin->handleRequest($request);
     }
 
     public function testGetEntityClass(): void
     {
-        $resource = $this->createMock(AdminResource::class);
-        $configuration = $this->createMock(AdminConfiguration::class);
-        $eventDispatcher = $this->createMock(EventDispatcher::class);
-
-        $configuration
+        $this->configuration
             ->expects($this->atLeastOnce())
             ->method('get')
             ->with('entity')
             ->willReturn('MyClass')
         ;
-
-        $admin = new Admin(
-            $resource,
-            $configuration,
-            $eventDispatcher
-        );
-        $this->assertEquals('MyClass', $admin->getEntityClass());
+        $this->assertEquals('MyClass', $this->admin->getEntityClass());
     }
 
-    /**
-     * @return MockObject[]|AdminInterface[]
-     */
-    protected function createAdmin(): array
+    protected function setUp(): void
     {
-        $resource = $this->createMock(AdminResource::class);
-        $configuration = $this->createMock(AdminConfiguration::class);
-        $eventDispatcher = $this->createMock(EventDispatcher::class);
-
-        $admin = new Admin(
-            $resource,
-            $configuration,
-            $eventDispatcher
-        );
-
-        return [
-            $admin,
-            $resource,
-            $configuration,
-            $eventDispatcher,
-        ];
+        $this->configuration = $this->createMock(AdminConfiguration::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcher::class);
+        $this->admin = new Admin('my_admin', $this->configuration, $this->eventDispatcher);
     }
 }

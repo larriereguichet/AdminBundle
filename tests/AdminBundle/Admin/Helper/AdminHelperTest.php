@@ -5,23 +5,25 @@ namespace LAG\AdminBundle\Tests\Admin\Helper;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Helper\AdminHelper;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\Tests\TestCase;
 
-class AdminHelperTest extends AdminTestBase
+class AdminHelperTest extends TestCase
 {
     public function testSettersAndGetters()
     {
         $helper = new AdminHelper();
 
-        $this->assertEquals(null, $helper->getCurrent());
+        $this->assertExceptionRaised(Exception::class, function () use ($helper) {
+            $helper->getAdmin();
+        });
 
         $admin = $this->createMock(AdminInterface::class);
-        $helper->setCurrent($admin);
+        $helper->setAdmin($admin);
 
-        $this->assertEquals($admin, $helper->getCurrent());
+        $this->assertEquals($admin, $helper->getAdmin());
 
         $this->assertExceptionRaised(Exception::class, function () use ($helper, $admin) {
-            $helper->setCurrent($admin);
+            $helper->setAdmin($admin);
         });
     }
 }

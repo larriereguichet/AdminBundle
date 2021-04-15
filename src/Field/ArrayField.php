@@ -2,42 +2,47 @@
 
 namespace LAG\AdminBundle\Field;
 
+use Closure;
 use Doctrine\Common\Collections\Collection;
 use Iterator;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Field\View\TextView;
+use LAG\AdminBundle\Field\View\View;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ArrayField extends AbstractField
 {
-    public function configureOptions(OptionsResolver $resolver, ActionConfiguration $actionConfiguration)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
-                'glue' => ',',
+                'glue' => ', ',
+                'sortable' => false,
             ])
             ->setAllowedTypes('glue', 'string')
         ;
     }
 
-    public function isSortable(): bool
+    public function createView(): View
     {
-        return false;
+        return new TextView($this->getName(), $this->getOptions(), $this->getDataTransformer());
     }
 
-    public function render($value = null): string
+    public function getDataTransformer(): ?Closure
     {
-        if (null === $value) {
-            return '';
-        }
+        return function ($data) {
+            if ($data === null) {
+                return '';
+            }
 
-        if ($value instanceof Collection) {
-            $value = $value->toArray();
-        }
+            if ($data instanceof Collection) {
+                $data = $data->toArray();
+            }
 
-        if ($value instanceof Iterator) {
-            $value = iterator_to_array($value);
-        }
+            if ($data instanceof Iterator) {
+                $data = iterator_to_array($data);
+            }
 
-        return implode($this->options['glue'], $value);
+            return implode($this->getOption('glue'), $data);
+        };
     }
 }

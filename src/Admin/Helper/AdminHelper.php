@@ -7,14 +7,10 @@ use LAG\AdminBundle\Exception\Exception;
 
 class AdminHelper implements AdminHelperInterface
 {
-    private $frozen = false;
+    private bool $frozen = false;
+    private AdminInterface $admin;
 
-    /**
-     * @var AdminInterface
-     */
-    private $admin;
-
-    public function setCurrent(AdminInterface $admin): void
+    public function setAdmin(AdminInterface $admin): void
     {
         if ($this->frozen) {
             throw new Exception('The current admin cannot be set twice in a request');
@@ -23,8 +19,17 @@ class AdminHelper implements AdminHelperInterface
         $this->frozen = true;
     }
 
-    public function getCurrent(): ?AdminInterface
+    public function getAdmin(): AdminInterface
     {
+        if (!$this->hasAdmin()) {
+            throw new Exception('No admin has been set yet.');
+        }
+
         return $this->admin;
+    }
+
+    public function hasAdmin(): bool
+    {
+        return isset($this->admin);
     }
 }

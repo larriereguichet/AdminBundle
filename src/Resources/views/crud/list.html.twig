@@ -1,0 +1,71 @@
+{% extends admin.base %}
+
+{% block page_title %}
+    {% include '@LAGAdmin/crud/_title.html.twig' %}
+{% endblock %}
+
+{% block content %}
+    <div class="admin-{{ admin.name }}">
+        {% block filterForm %}
+            <div class="dropdown mb-4 mt-3">
+                <button class="btn btn-primary dropdown-toggle no-arrow"
+                        type="button"
+                        id="filter-button"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                    {{ 'lag.admin.show_filter' | trans }}
+                </button>
+                <div class="dropdown-menu animated--fade-in" aria-labelledby="filter-button">
+                    {% include '@LAGAdmin/crud/list/_filters.html.twig' with {form: admin.forms.filter} %}
+                </div>
+            </div>
+        {% endblock %}
+        
+        {% block top_extra_content %}{% endblock %}
+        
+        {% block table %}
+            {% if admin.data | length > 0 %}
+                <table class="table">
+                    {% block table_head %}
+                        <thead>
+                        <tr>
+                            {% for field in admin.fields %}
+                                {% include '@LAGAdmin/crud/list/_header.html.twig' %}
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                    {% endblock %}
+                    
+                    {% block table_body %}
+                        <tbody>
+                        {% for entity in admin.data %}
+                            <tr>
+                                {% for field in admin.fields %}
+                                    <td>
+                                        {{ admin_field(field, entity) | raw }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    {% endblock %}
+                    <tfoot>
+                    </tfoot>
+                </table>
+            {% else %}
+                <p>{{ 'lag.admin.no_record' | trans }}</p>
+            {% endif %}
+        {% endblock %}
+        
+        {% block pagination %}
+            <div>
+                {% if admin.data %}
+                    {{ pagerfanta(admin.data, 'twitter_bootstrap4', {page: admin.data.currentPage}) }}
+                {% endif %}
+            </div>
+        {% endblock %}
+        
+        {% block bottom_extra_content %}{% endblock %}
+    </div>
+{% endblock %}

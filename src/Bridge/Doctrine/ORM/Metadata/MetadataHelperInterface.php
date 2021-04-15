@@ -6,8 +6,6 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 
 interface MetadataHelperInterface
 {
-    public function getFields(string $entityClass): array;
-
     /**
      * Return the Doctrine metadata of the given class.
      *

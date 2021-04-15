@@ -1,0 +1,63 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # TODO to remove
+    LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber:
+        class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
+    
+    # Request event
+    LAG\AdminBundle\Event\Listener\Request\ActionListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.request, priority: 255}
+    
+    LAG\AdminBundle\Event\Listener\Request\SecurityListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.request, priority: 200}
+
+    # Data event
+    LAG\AdminBundle\Event\Listener\Data\FilterDataListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.data, priority: 255}
+            
+    LAG\AdminBundle\Event\Listener\Data\OrderDataListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.data, priority: 255}
+    
+    LAG\AdminBundle\Event\Listener\Data\LoadDataListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.data, priority: -255}
+
+    # Form event
+    LAG\AdminBundle\Event\Listener\Form\FormListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.form, priority: 255}
+
+    # HandleForm event
+    LAG\AdminBundle\Event\Listener\Form\PersistDataListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.handle_form, priority: 0}
+    
+    LAG\AdminBundle\Event\Listener\Form\DeleteDataListener:
+        tags:
+            - { name: kernel.event_listener, event: lag.admin.handle_form, priority: 0}
+
+    # View event
+    LAG\AdminBundle\Event\Listener\View\ViewListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.view, priority: 255}
+
+    # Field event
+    LAG\AdminBundle\Event\Listener\Theme\FieldThemeListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.field_configuration, priority: 255}
+
+    # Configuration event
+    LAG\AdminBundle\Event\Listener\Action\ConfigurationListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.action_configuration, priority: 255}
+
+    LAG\AdminBundle\Event\Listener\Admin\ConfigurationListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.admin_configuration, priority: 255}

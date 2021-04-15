@@ -2,144 +2,169 @@
 
 namespace LAG\AdminBundle\Factory;
 
-use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
 use LAG\AdminBundle\Configuration\FieldConfiguration;
-use LAG\AdminBundle\Event\Events;
+use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events\FieldDefinitionEvent;
 use LAG\AdminBundle\Event\Events\FieldEvent;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Exception\Field\FieldConfigurationException;
 use LAG\AdminBundle\Exception\Field\FieldTypeNotFoundException;
+use LAG\AdminBundle\Field\ApplicationAwareInterface;
 use LAG\AdminBundle\Field\FieldInterface;
-use LAG\AdminBundle\Field\TranslatorAwareFieldInterface;
-use LAG\AdminBundle\Field\TwigAwareFieldInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use function Symfony\Component\String\u;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Twig\Environment;
 
 /**
  * Field factory. Instances fields.
  */
-class FieldFactory
+class FieldFactory implements FieldFactoryInterface
 {
     /**
-     * Application configuration.
-     *
-     * @var ApplicationConfiguration
-     */
-    protected $configuration;
-
-    /**
      * Field class mapping array, indexed by field type.
-     *
-     * @var array
      */
-    protected $fieldsMapping = [];
+    protected array $fieldsMapping = [];
+    protected EventDispatcherInterface $eventDispatcher;
+    protected ApplicationConfiguration $appConfig;
 
-    /**
-     * Translator for field values.
-     *
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * Twig engine.
-     *
-     * @var Environment
-     */
-    protected $twig;
-
-    /**
-     * @var ConfigurationFactory
-     */
-    protected $configurationFactory;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $eventDispatcher;
-
-    /**
-     * FieldFactory constructor.
-     */
     public function __construct(
-        ApplicationConfigurationStorage $applicationConfigurationStorage,
-        ConfigurationFactory $configurationFactory,
-        TranslatorInterface $translator,
         EventDispatcherInterface $eventDispatcher,
-        Environment $twig
+        ApplicationConfiguration $appConfig,
+        array $fieldsMapping
     ) {
-        $this->configuration = $applicationConfigurationStorage->getConfiguration();
-        $this->fieldsMapping = $this
-            ->configuration
-            ->getParameter('fields_mapping'); // shortcut to the fields mapping array
-        $this->translator = $translator;
-        $this->twig = $twig;
-        $this->configurationFactory = $configurationFactory;
+        $this->fieldsMapping = $fieldsMapping;
         $this->eventDispatcher = $eventDispatcher;
+        $this->appConfig = $appConfig;
     }
 
-    public function createFields(ActionConfiguration $configuration): array
-    {
-        $fields = [];
-
-        foreach ($configuration->getParameter('fields') as $field => $fieldConfiguration) {
-            $fields[] = $this->create($field, $fieldConfiguration, $configuration);
-        }
-
-        return $fields;
-    }
-
-    /**
-     * Create a new field instance according to the given configuration.
-     *
-     * @throws Exception
-     */
-    public function create(string $name, array $configuration, ActionConfiguration $actionConfiguration): FieldInterface
+    public function create(string $name, array $configuration, array $context = []): FieldInterface
     {
         try {
-            $resolver = new OptionsResolver();
-            $configuration = $this->resolveConfiguration($configuration, $actionConfiguration);
-
+            $configuration = $this->resolveConfiguration($name, $configuration, $context);
             // Dispatch an event to allow dynamic changes on the form type
-            $event = new FieldEvent(
-                $actionConfiguration->getAdminName(),
-                $actionConfiguration->getActionName(),
-                $name,
-                $actionConfiguration->getAdminConfiguration()->get('entity'),
-                $configuration['type']
-            );
-            $this->eventDispatcher->dispatch($event, Events::FIELD_PRE_CREATE);
-
-            if (null === $event->getType()) {
-                throw new FieldTypeNotFoundException($event->getAdminName(), $event->getActionName(), $name);
-            }
+            $event = new FieldEvent($name, $configuration['type'], $configuration['options'], $context);
+            $this->eventDispatcher->dispatch($event, AdminEvents::FIELD_CREATE);
             $type = $event->getType();
-            $options = array_merge($configuration['options'], $event->getOptions());
 
-            if (!key_exists($type, $this->fieldsMapping)) {
+            if ($type === null) {
                 $type = 'auto';
             }
-            $field = $this->instanciateField($name, $type);
-            $field->configureOptions($resolver, $actionConfiguration);
+            $options = array_merge($configuration['options'], $event->getOptions());
 
-            $field->setOptions($resolver->resolve($options));
+            // Allow the type to be a class name
+            if (!\array_key_exists($type, $this->fieldsMapping) && !class_exists($type)) {
+                throw new FieldTypeNotFoundException($type, $name, $context);
+            }
+            $field = $this->instanciateField($name, $type);
+
+            if ($field instanceof ApplicationAwareInterface) {
+                $field->setApplicationConfiguration($this->appConfig);
+            }
+            $this->configureField($field, $type, $options, $context);
         } catch (\Exception $exception) {
-            throw new Exception('An error has occurred when resolving the options for the field "'.$name.'": '.$exception->getMessage(), $exception->getCode(), $exception);
+            throw new FieldConfigurationException($name, $context, $exception->getMessage(), $exception);
         }
-        $event = new FieldEvent(
-            $actionConfiguration->getAdminName(),
-            $actionConfiguration->getActionName(),
-            $name,
-            $actionConfiguration->getAdminConfiguration()->get('entity'),
-            $type,
-            $field
-        );
-        $this->eventDispatcher->dispatch($event, Events::FIELD_POST_CREATE);
+        $event = new FieldEvent($name, $type, $options, $context);
+        $this->eventDispatcher->dispatch($event, AdminEvents::FIELD_CREATED);
 
         return $field;
+    }
+
+    public function createDefinitions(string $class): array
+    {
+        $event = new FieldDefinitionEvent($class);
+        $this->eventDispatcher->dispatch($event, AdminEvents::FIELD_DEFINITION_CREATE);
+
+        return $event->getDefinitions();
+    }
+
+    private function configureField(
+        FieldInterface $field,
+        string $type,
+        array $options,
+        array $context
+    ): void {
+        $resolver = new OptionsResolver();
+        $resolver
+            ->setDefaults([
+                'attr' => ['class' => 'admin-field admin-field-'.$type],
+                'header_attr' => ['class' => 'admin-header admin-header-'.$type],
+                'label' => null,
+                'mapped' => false,
+                'property_path' => $field->getName(),
+                'template' => '@LAGAdmin/fields/auto.html.twig',
+                'translation' => false, // Most of fields are values from database and should not be translated
+                'translation_domain' => null,
+                'sortable' => true,
+            ])
+            ->setAllowedTypes('attr', ['array', 'null'])
+            ->setAllowedTypes('header_attr', ['array', 'null'])
+            ->setAllowedTypes('label', ['string', 'null', 'boolean'])
+            ->setAllowedTypes('mapped', ['boolean'])
+            ->setAllowedTypes('property_path', ['string', 'null'])
+            ->setAllowedTypes('template', ['string'])
+            ->setAllowedTypes('translation', ['boolean'])
+            ->setAllowedTypes('translation_domain', ['string', 'null'])
+            ->setAllowedTypes('sortable', ['boolean'])
+            ->setNormalizer('attr', function (Options $options, $attr) {
+                if ($attr === null) {
+                    $attr = [];
+                }
+
+                return $attr;
+            })
+            ->setNormalizer('header_attr', function (Options $options, $attr) {
+                if ($attr === null) {
+                    $attr = [];
+                }
+
+                return $attr;
+            })
+            ->setNormalizer('mapped', function (Options $options, $mapped) use ($field) {
+                if (u($field->getName())->startsWith('_')) {
+                    return true;
+                }
+
+                return $mapped;
+            })
+            ->setNormalizer('property_path', function (Options $options, $propertyPath) use ($field) {
+                if (u($field->getName())->startsWith('_')) {
+                    return null;
+                }
+
+                return $propertyPath;
+            })
+        ;
+
+        if ($field->getParent()) {
+            $currentField = $field;
+            $parents = [];
+            // Keep track of processed parent types to avoid a infinite loop
+            $processedParents = [];
+
+            while ($currentField->getParent() !== null) {
+                if (\in_array($currentField->getParent(), $processedParents)) {
+                    throw new FieldConfigurationException($field->getName(), $context, 'An inheritance loop is found in '.implode(', ', $processedParents));
+                }
+                $parent = $this->instanciateField($currentField->getName(), $currentField->getParent());
+
+                if ($parent instanceof ApplicationAwareInterface) {
+                    $parent->setApplicationConfiguration($this->appConfig);
+                }
+                $parents[] = $parent;
+                $processedParents[] = $field->getParent();
+                $currentField = $parent;
+            }
+            $parents = array_reverse($parents);
+
+            foreach ($parents as $parent) {
+                $parent->configureOptions($resolver);
+            }
+        }
+        $field->configureOptions($resolver);
+        $field->setOptions($resolver->resolve($options));
     }
 
     /**
@@ -150,47 +175,39 @@ class FieldFactory
      */
     private function getFieldClass(string $type): string
     {
-        if (!array_key_exists($type, $this->fieldsMapping)) {
-            throw new Exception("Field type \"{$type}\" not found in field mapping. Allowed fields are \"".implode('", "', $this->fieldsMapping).'"');
+        if (\array_key_exists($type, $this->fieldsMapping)) {
+            return $this->fieldsMapping[$type];
         }
 
-        return $this->fieldsMapping[$type];
+        if (class_exists($type)) {
+            return $type;
+        }
+
+        throw new Exception(sprintf('Field type "%s" not found in field mapping. Allowed fields are "%s"', $type, implode('", "', $this->fieldsMapping)));
     }
 
-    /**
-     * @throws Exception
-     */
     private function instanciateField(string $name, string $type): FieldInterface
     {
         $fieldClass = $this->getFieldClass($type);
-        $field = new $fieldClass($name);
+        $field = new $fieldClass($name, $type);
 
         if (!$field instanceof FieldInterface) {
+            // TODO use an exception in the field namespace
             throw new Exception("Field class \"{$fieldClass}\" must implements ".FieldInterface::class);
-        }
-
-        if ($field instanceof TranslatorAwareFieldInterface) {
-            $field->setTranslator($this->translator);
-        }
-        if ($field instanceof TwigAwareFieldInterface) {
-            $field->setTwig($this->twig);
         }
 
         return $field;
     }
 
-    /**
-     * @return array
-     *
-     * @throws Exception
-     */
-    private function resolveConfiguration(array $configuration, ActionConfiguration $actionConfiguration)
+    private function resolveConfiguration(string $name, array $configuration, array $context): array
     {
-        $resolver = new OptionsResolver();
-        $fieldConfiguration = new FieldConfiguration(array_keys($this->fieldsMapping));
-        $fieldConfiguration->configureOptions($resolver);
-        $fieldConfiguration->setParameters($resolver->resolve($configuration));
-        $configuration = $fieldConfiguration->all();
+        $fieldConfiguration = new FieldConfiguration();
+        $fieldConfiguration->configure($configuration);
+        $configuration = $fieldConfiguration->toArray();
+
+        $event = new FieldEvent($name, $configuration['type'], $configuration['options'], $context);
+        $this->eventDispatcher->dispatch($event);
+        $configuration['options'] = $event->getOptions();
 
         // For collection of fields, we resolve the configuration of each item
         if ('collection' == $fieldConfiguration->getType()) {
@@ -203,17 +220,17 @@ class FieldFactory
                 }
 
                 // The type should be defined
-                if (!array_key_exists('type', $itemFieldConfiguration)) {
+                if (!\array_key_exists('type', $itemFieldConfiguration)) {
                     throw new Exception("Missing type configuration for field {$itemFieldName}");
                 }
 
                 // The field options are optional
-                if (!array_key_exists('options', $itemFieldConfiguration)) {
+                if (!\array_key_exists('options', $itemFieldConfiguration)) {
                     $itemFieldConfiguration['options'] = [];
                 }
 
                 // create collection item
-                $items[] = $this->create($itemFieldName, $itemFieldConfiguration, $actionConfiguration);
+                $items[] = $this->create($itemFieldName, $itemFieldConfiguration, $context);
             }
             // add created item to the field options
             $configuration['options'] = [

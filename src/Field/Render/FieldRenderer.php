@@ -2,74 +2,113 @@
 
 namespace LAG\AdminBundle\Field\Render;
 
-use LAG\AdminBundle\Field\EntityAwareFieldInterface;
-use LAG\AdminBundle\Field\FieldInterface;
-use LAG\AdminBundle\Field\RendererAwareFieldInterface;
-use LAG\AdminBundle\Utils\TranslationUtils;
+use Exception;
+use LAG\AdminBundle\Exception\View\FieldRenderingException;
+use LAG\AdminBundle\Field\View\TextView;
+use LAG\AdminBundle\Field\View\View;
+use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use LAG\AdminBundle\View\ViewInterface;
-use LAG\Component\StringUtils\StringUtils;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use function Symfony\Component\String\u;
+use Twig\Environment;
 
 class FieldRenderer implements FieldRendererInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private Environment $environment;
+    private TranslationHelperInterface $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(Environment $environment, TranslationHelperInterface $translator)
     {
+        $this->environment = $environment;
         $this->translator = $translator;
     }
 
-    public function render(FieldInterface $field, $entity): string
+    public function render(View $field, $data): string
     {
-        $value = null;
-        $accessor = PropertyAccess::createPropertyAccessor();
+        try {
+            $originalData = $data;
 
-        if ('_' !== substr($field->getName(), 0, 1)) {
-            // The name starts with a underscore, it is not a custom field and it should be mapped to the entity
-            $value = $accessor->getValue($entity, $field->getName());
+            if ($field->getOption('property_path') !== null) {
+                $accessor = PropertyAccess::createPropertyAccessor();
+                $data = $accessor->getValue($data, $field->getOption('property_path'));
+            }
+            $dataTransformer = $field->getDataTransformer();
+
+            if ($dataTransformer !== null) {
+                $data = $dataTransformer($data);
+            }
+            $context = [
+                'data' => $data,
+                'name' => $field->getName(),
+                'options' => $field->getOptions(),
+            ];
+
+            if ($field->getOption('mapped')) {
+                $context['object'] = $originalData;
+            }
+
+            if ($field instanceof TextView) {
+                $render = $data;
+            } else {
+                $render = $this->environment->render($field->getTemplate(), $context);
+            }
+
+            return trim($render);
+        } catch (Exception $exception) {
+            $message = sprintf(
+                'An exception has been thrown when rendering the field "%s" : "%s"',
+                $field->getName(),
+                $exception->getMessage()
+            );
+            throw new FieldRenderingException($message, $exception->getCode(), $exception);
         }
-
-        if ($field instanceof EntityAwareFieldInterface) {
-            // The field required the entity to be rendered
-            $field->setEntity($entity);
-        }
-
-        if ($field instanceof RendererAwareFieldInterface) {
-            // Some fields types (collections...) can require children render
-            $field->setRenderer($this);
-        }
-
-        return $field->render($value);
     }
 
-    public function renderHeader(ViewInterface $admin, FieldInterface $field): string
+    public function renderHeader(ViewInterface $admin, View $field): string
     {
-        if (StringUtils::startsWith($field->getName(), '_')) {
-            return '';
-        }
-        $configuration = $admin->getAdminConfiguration();
+        try {
+            $text = null;
+            $label = $field->getOption('label');
 
-        if ($configuration->isTranslationEnabled()) {
-            $key = TranslationUtils::getTranslationKey(
-                $configuration->getTranslationPattern(),
-                $admin->getName(),
-                StringUtils::underscore($field->getName())
-            );
-            $title = $this->translator->trans($key, [], $configuration->getTranslationCatalog());
-        } else {
-            $title = StringUtils::camelize($field->getName());
-            $title = preg_replace('/(?<!\ )[A-Z]/', ' $0', $title);
-            $title = trim($title);
-
-            if ('Id' === $title) {
-                $title = '#';
+            if ($label === false || u($field->getName())->startsWith('_')) {
+                $text = '';
             }
-        }
 
-        return $title;
+            if ($label !== null) {
+                $text = $label;
+            }
+
+            if ($label === false && $field->getName() === 'id') {
+                $text = '#';
+            }
+
+            if ($text === null) {
+                $adminConfig = $admin->getAdminConfiguration();
+
+                if ($adminConfig->isTranslationEnabled()) {
+                    $text = $this->translator->transWithPattern(
+                        $field->getName(),
+                        $adminConfig->getTranslationPattern(),
+                        $adminConfig->getName(),
+                        $adminConfig->getTranslationCatalog()
+                    );
+                } else {
+                    $text = ucfirst($field->getName());
+                }
+            }
+
+            return $this->environment->render('@LAGAdmin/fields/header.html.twig', [
+                'data' => $text,
+                'name' => $field->getName(),
+                'options' => $field->getOptions(),
+            ]);
+        } catch (Exception $exception) {
+            $message = sprintf(
+                'An exception has been thrown when rendering the header for the field "%s" : "%s"',
+                $field->getName(),
+                $exception->getMessage()
+            );
+            throw new FieldRenderingException($message, $exception->getCode(), $exception);
+        }
     }
 }

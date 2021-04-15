@@ -2,45 +2,28 @@
 
 namespace LAG\AdminBundle\Field\Helper;
 
-use Doctrine\ORM\EntityManagerInterface;
+use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\LAGAdminBundle;
-use LAG\AdminBundle\Routing\RoutingLoader;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @deprecated
+ */
 class FieldConfigurationHelper
 {
-    /**
-     * @var ApplicationConfiguration
-     */
-    private $applicationConfiguration;
-
-    /**
-     * @var MetadataHelperInterface
-     */
-    private $metadataHelper;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ApplicationConfiguration $appConfig;
+    private MetadataHelperInterface $metadataHelper;
+    private TranslatorInterface $translator;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
         TranslatorInterface $translator,
-        ApplicationConfiguration $applicationConfiguration,
+        ApplicationConfiguration $appConfig,
         MetadataHelperInterface $metadataHelper
     ) {
-        $this->entityManager = $entityManager;
         $this->translator = $translator;
         $this->metadataHelper = $metadataHelper;
-        $this->applicationConfiguration = $applicationConfiguration;
+        $this->appConfig = $appConfig;
     }
 
     public function addDefaultFields(array &$configuration, $entityClass, $adminName): void
@@ -73,7 +56,7 @@ class FieldConfigurationHelper
             }
 
             // If fields are already defined, nothing to do
-            if (key_exists('fields', $action) && is_array($action['fields']) && count($action['fields'])) {
+            if (\array_key_exists('fields', $action) && \is_array($action['fields']) && \count($action['fields'])) {
                 $fields = $action['fields'];
             } else {
                 $fields = [];
@@ -84,36 +67,22 @@ class FieldConfigurationHelper
                 }
                 $fields['_delete'] = null;
             }
-            $actionField = $this->getActionField($metadata->getFieldNames());
 
             foreach ($fields as $fieldName => $fieldConfiguration) {
+                if (\is_array($fieldConfiguration) && \array_key_exists('type', $fieldConfiguration)) {
+                    continue;
+                }
                 $fieldType = $metadata->getTypeOfField($fieldName);
 
                 if (
-                    'list' === $actionName &&
-                    $fieldName === $actionField &&
-                    key_exists('edit', $configuration['actions'])
-                ) {
-                    $fieldConfiguration = [
-                        'type' => 'action',
-                        'options' => [
-                            'admin' => $adminName,
-                            'action' => 'edit',
-                            'parameters' => [
-                                'id' => null,
-                            ],
-                            'class' => 'link',
-                        ],
-                    ];
-                } elseif (
                     '_delete' === $fieldName &&
                     !$metadata->hasField('_delete') &&
                     null === $fieldConfiguration &&
-                    key_exists('delete', $configuration['actions'])
+                    \array_key_exists('delete', $configuration['actions'])
                 ) {
                     $text = 'Delete';
 
-                    if ($this->applicationConfiguration->get('translation')) {
+                    if ($this->appConfig->get('translation')) {
                         $text = $this->translator->trans('lag.admin.delete');
                     }
                     // If a "delete" field is declared, and if it is not configured in the metadata, and if no
@@ -124,15 +93,14 @@ class FieldConfigurationHelper
                         'options' => [
                             'admin' => $adminName,
                             'action' => 'delete',
-                            'parameters' => [
+                            'route_parameters' => [
                                 'id' => null,
                             ],
                             'text' => $text,
-                            'class' => 'btn btn-sm btn-danger',
                             'icon' => 'times',
                         ],
                     ];
-                } elseif (key_exists($fieldType, $mapping)) {
+                } elseif (\array_key_exists($fieldType, $mapping)) {
                     $fieldConfiguration = $mapping[$metadata->getTypeOfField($fieldName)];
                 }
                 $configuration['actions'][$actionName]['fields'][$fieldName] = $fieldConfiguration;
@@ -143,10 +111,10 @@ class FieldConfigurationHelper
     public function addDefaultStrategy(array &$configuration)
     {
         $mapping = [
-            'list' => LAGAdminBundle::LOAD_STRATEGY_MULTIPLE,
-            'create' => LAGAdminBundle::LOAD_STRATEGY_NONE,
-            'delete' => LAGAdminBundle::LOAD_STRATEGY_UNIQUE,
-            'edit' => LAGAdminBundle::LOAD_STRATEGY_UNIQUE,
+            'list' => AdminInterface::LOAD_STRATEGY_MULTIPLE,
+            'create' => AdminInterface::LOAD_STRATEGY_NONE,
+            'delete' => AdminInterface::LOAD_STRATEGY_UNIQUE,
+            'edit' => AdminInterface::LOAD_STRATEGY_UNIQUE,
         ];
 
         foreach ($configuration['actions'] as $name => $action) {
@@ -154,11 +122,11 @@ class FieldConfigurationHelper
                 continue;
             }
 
-            if (key_exists('load_strategy', $action)) {
+            if (\array_key_exists('load_strategy', $action)) {
                 continue;
             }
 
-            if (!key_exists($name, $mapping)) {
+            if (!\array_key_exists($name, $mapping)) {
                 continue;
             }
             $configuration['actions'][$name]['load_strategy'] = $mapping[$name];
@@ -181,46 +149,26 @@ class FieldConfigurationHelper
                 $actionConfiguration = [];
             }
 
-            if (key_exists($name, $mapping) && !key_exists('route_requirements', $actionConfiguration)) {
-                $configuration['actions'][$name]['route_requirements'] = [
+            if (\array_key_exists($name, $mapping) && !\array_key_exists('route_parameters', $actionConfiguration)) {
+                $configuration['actions'][$name]['route_parameters'] = [
                     'id' => '\d+',
                 ];
             }
         }
     }
 
-    public function addDefaultFormUse(array &$configuration)
-    {
-        $mapping = [
-            'edit',
-            'create',
-            'delete',
-        ];
-
-        foreach ($configuration['actions'] as $name => $actionConfiguration) {
-            if (null === $actionConfiguration) {
-                $actionConfiguration = [];
-            }
-
-            if (!in_array($name, $mapping) && !isset($actionConfiguration['use_form'])) {
-                continue;
-            }
-            $configuration['actions'][$name]['use_form'] = true;
-        }
-    }
-
-    public function provideActionsFieldConfiguration(array &$configuration, string $adminName)
+    public function provideActionsFieldConfiguration(array &$configuration, string $adminName): void
     {
         foreach ($configuration['actions'] as $actionName => $actionConfiguration) {
             if (null === $actionConfiguration) {
                 $actionConfiguration = [];
             }
 
-            if (!key_exists('fields', $actionConfiguration)) {
+            if (!\array_key_exists('fields', $actionConfiguration)) {
                 continue;
             }
 
-            if (!key_exists('_actions', $actionConfiguration['fields'])) {
+            if (!\array_key_exists('_actions', $actionConfiguration['fields'])) {
                 continue;
             }
 
@@ -228,23 +176,18 @@ class FieldConfigurationHelper
                 continue;
             }
 
-            if (!key_exists('edit', $configuration['actions']) && !key_exists('delete', $configuration['actions'])) {
+            if (!\array_key_exists('edit', $configuration['actions']) && !\array_key_exists('delete', $configuration['actions'])) {
                 continue;
             }
             $configuration['actions'][$actionName]['fields']['_actions'] = [
                 'type' => 'action_collection',
                 'options' => [],
             ];
-            $pattern = $this->applicationConfiguration->get('routing_name_pattern');
 
-            if (key_exists('edit', $configuration['actions'])) {
+            if (\array_key_exists('edit', $configuration['actions'])) {
                 $configuration['actions'][$actionName]['fields']['_actions']['options']['actions']['edit'] = [
                         'title' => 'test',
-                        'route' => RoutingLoader::generateRouteName(
-                            $adminName,
-                            'edit',
-                            $pattern
-                        ),
+                        'route' => $this->appConfig->getRouteName($adminName, 'edit'),
                         'parameters' => [
                             'id' => null,
                         ],
@@ -252,14 +195,10 @@ class FieldConfigurationHelper
                 ];
             }
 
-            if (key_exists('delete', $configuration['actions'])) {
+            if (\array_key_exists('delete', $configuration['actions'])) {
                 $configuration['actions'][$actionName]['fields']['_actions']['options']['actions']['delete'] = [
                         'title' => 'test',
-                        'route' => RoutingLoader::generateRouteName(
-                            $adminName,
-                            'delete',
-                            $pattern
-                        ),
+                        'route' => $this->appConfig->getRouteName($adminName, 'delete'),
                         'parameters' => [
                             'id' => null,
                         ],
@@ -267,25 +206,5 @@ class FieldConfigurationHelper
                 ];
             }
         }
-    }
-
-    /**
-     * Return the default action field if found.
-     */
-    private function getActionField(array $fields): ?string
-    {
-        $mapping = [
-            'title',
-            'name',
-            'id',
-        ];
-
-        foreach ($mapping as $name) {
-            if (in_array($name, $fields)) {
-                return $name;
-            }
-        }
-
-        return null;
     }
 }

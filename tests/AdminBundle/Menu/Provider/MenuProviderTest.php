@@ -4,24 +4,26 @@ namespace LAG\AdminBundle\Tests\Menu\Provider;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Bridge\KnpMenu\Provider\MenuProvider;
+use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
 use LAG\AdminBundle\Configuration\MenuConfiguration;
-use LAG\AdminBundle\Factory\ConfigurationFactory;
-use LAG\AdminBundle\Tests\AdminTestBase;
+use LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface;
+use LAG\AdminBundle\Menu\Provider\MenuProvider;
+use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Security;
 
-class MenuProviderTest extends AdminTestBase
+class MenuProviderTest extends TestCase
 {
     public function testGet()
     {
-        list($provider, $menuFactory, $configurationFactory, $requestStack) = $this->createProvider();
+        [$provider, $menuFactory, $configurationFactory, $requestStack] = $this->createProvider();
 
         $menuConfiguration = $this->createMock(MenuConfiguration::class);
         $menuConfiguration
             ->expects($this->once())
-            ->method('all')
+            ->method('toArray')
             ->willReturn([
                 'attributes' => [
                     'class' => 'abitbol',
@@ -38,7 +40,8 @@ class MenuProviderTest extends AdminTestBase
                         'route' => 'road 66',
                         'icon' => 'fa-yes',
                     ],
-                ]
+                ],
+                'extras' => [],
             ])
         ;
 
@@ -62,7 +65,7 @@ class MenuProviderTest extends AdminTestBase
         $requestStack
             ->expects($this->once())
             ->method('getMasterRequest')
-            ->willReturn(new Request([], [], ['_route' =>'road 66']))
+            ->willReturn(new Request([], [], ['_route' => 'road 66']))
         ;
 
         $menuFactory
@@ -72,6 +75,7 @@ class MenuProviderTest extends AdminTestBase
                 'attributes' => [
                     'class' => 'abitbol',
                 ],
+                'extras' => [],
             ])
             ->willReturn($menuRoot)
         ;
@@ -90,35 +94,39 @@ class MenuProviderTest extends AdminTestBase
     public function testHas(): void
     {
         [$provider] = $this->createProvider([
-            'left' => []
+            'left' => [],
         ]);
 
         $this->assertTrue($provider->has('left'));
     }
 
     /**
-     * @param array $menuConfigurations
-     *
      * @return MenuProvider[]|MockObject[]
      */
     private function createProvider(array $menuConfigurations = []): array
     {
         $menuFactory = $this->createMock(FactoryInterface::class);
-        $configurationFactory = $this->createMock(ConfigurationFactory::class);
+        $configurationFactory = $this->createMock(ConfigurationFactoryInterface::class);
         $requestStack = $this->createMock(RequestStack::class);
+        $security = $this->createMock(Security::class);
+        $adminHelper = $this->createMock(AdminHelperInterface::class);
 
         $provider = new MenuProvider(
             $menuConfigurations,
             $menuFactory,
             $configurationFactory,
-            $requestStack
+            $requestStack,
+            $security,
+            $adminHelper
         );
 
         return [
             $provider,
             $menuFactory,
             $configurationFactory,
-            $requestStack
+            $requestStack,
+            $security,
+            $adminHelper,
         ];
     }
 }
