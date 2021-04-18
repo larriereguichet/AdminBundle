@@ -36,6 +36,12 @@ jobs:
             
             -   name: Install dependencies
                 run: composer install --no-interaction
+
+            -   name: Install yarn dependencies
+                run: yarn install --force
+
+            -   name: Build yarn dependencies
+                run: yarn run encore production
             
             -   name: Run phpunit
                 run: bin/phpunit
