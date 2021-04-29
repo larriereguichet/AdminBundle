@@ -96,7 +96,7 @@ class ApplicationConfiguration extends ServiceConfiguration
             ->setAllowedTypes('page_parameter', 'string')
 
             // List default parameters
-            ->setDefault('string_length', 200)
+            ->setDefault('string_length', 100)
             ->setAllowedTypes('string_length', 'integer')
             ->setDefault('string_truncate', '...')
             ->setAllowedTypes('string_truncate', 'string')

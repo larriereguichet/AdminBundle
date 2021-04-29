@@ -3,6 +3,7 @@
 namespace LAG\AdminBundle\Factory\Form;
 
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Translation\Helper\TranslationHelper;
 use LAG\AdminBundle\Utils\FormUtils;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -14,11 +15,16 @@ class FilterFormFactory implements FilterFormFactoryInterface
 {
     private FormFactoryInterface $formFactory;
     private TranslationHelper $helper;
+    private ApplicationConfiguration $appConfig;
 
-    public function __construct(FormFactoryInterface $formFactory, TranslationHelper $helper)
-    {
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        TranslationHelper $helper,
+        ApplicationConfiguration $appConfig
+    ) {
         $this->formFactory = $formFactory;
         $this->helper = $helper;
+        $this->appConfig = $appConfig;
     }
 
     public function create(AdminInterface $admin): FormInterface
@@ -42,9 +48,11 @@ class FilterFormFactory implements FilterFormFactoryInterface
                 // keys
                 'label' => $this->helper->transWithPattern(
                     $name,
-                    $configuration->getTranslationPattern(),
-                    $configuration->getName(),
-                    $configuration->getTranslationCatalog()
+                    [],
+                    $this->appConfig->getTranslationCatalog(),
+                    null,
+                    $this->appConfig->getTranslationPattern(),
+                    $configuration->getName()
                 ),
             ];
 

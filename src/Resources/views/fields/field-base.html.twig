@@ -1,1 +1,1 @@
-{% block attributes %}{% for attribute, value in attr|default(options.attr)|default({}) %} {{ attribute }}="{{ value }}"{% endfor %}{% endblock %}
+{% block attributes %}{% for attribute, value in attr|default(options.attr)|default({}) %} {{ attribute }}="{{ value|trim }}"{% endfor %}{% endblock %}

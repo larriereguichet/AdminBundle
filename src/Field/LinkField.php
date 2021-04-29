@@ -59,7 +59,7 @@ class LinkField extends AbstractField implements ApplicationAwareInterface
                     return $value;
                 }
 
-                return ucfirst($options->offsetGet('route'));
+                return $options->offsetGet('route');
             })
         ;
     }

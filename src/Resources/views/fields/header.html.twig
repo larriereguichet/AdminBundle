@@ -1,1 +1,7 @@
-{% include '@LAGAdmin/fields/_translated.string.html.twig' %}
+{% if data %}
+    {% if admin_is_translation_enabled() %}
+        {{ data|admin_trans([], options.translation_domain) }}
+    {% else %}
+        {{ data }}
+    {% endif %}
+{% endif %}

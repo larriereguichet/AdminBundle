@@ -17,9 +17,7 @@ class DataProviderRegistry implements DataProviderRegistryInterface
      */
     public function __construct(iterable $dataProviders)
     {
-        foreach ($dataProviders as $dataProvider) {
-            $this->dataProviders[$dataProvider->getName()] = $dataProvider;
-        }
+        $this->dataProviders = iterator_to_array($dataProviders);
     }
 
     public function get(string $name): DataProviderInterface

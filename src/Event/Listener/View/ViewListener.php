@@ -6,7 +6,7 @@ use LAG\AdminBundle\Event\Events\ViewEvent;
 use LAG\AdminBundle\Factory\ViewFactoryInterface;
 
 /**
- * Create a dynamic view using the view factory.
+ * Create a dynamic view using the factory.
  */
 class ViewListener
 {
@@ -19,8 +19,7 @@ class ViewListener
 
     public function __invoke(ViewEvent $event): void
     {
-        $admin = $event->getAdmin();
-        $view = $this->viewFactory->create($event->getRequest(), $admin);
+        $view = $this->viewFactory->create($event->getRequest(), $event->getAdmin());
         $event->setView($view);
     }
 }

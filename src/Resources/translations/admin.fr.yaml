@@ -1,5 +1,5 @@
-lag:
-    admin:
+lag_admin:
+    ui:
         save: Sauvegarder
         save_errors: Une erreur s'est produite durant la sauvegarde
         create: Ajouter
@@ -7,6 +7,7 @@ lag:
         cancel: Annuler
         saved: Les modifications ont été sauvegardées
         welcome_message: 'Bienvenue %username%'
+        return: Retour
 
         login: Se connecter
         login_form:

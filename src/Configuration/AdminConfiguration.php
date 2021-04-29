@@ -79,17 +79,6 @@ class AdminConfiguration extends Configuration
 
             ->setDefault('menus', [])
             ->setAllowedTypes('menus', 'array')
-
-            ->setDefault('translation', function (OptionsResolver $translationResolver) {
-                $translationResolver
-                    ->setDefault('enabled', true)
-                    ->setAllowedTypes('enabled', 'boolean')
-                    ->setDefault('pattern', 'admin.{admin}.{key}')
-                    ->setAllowedTypes('pattern', 'string')
-                    ->setDefault('catalog', 'admin')
-                    ->setAllowedTypes('catalog', 'string')
-                ;
-            })
         ;
     }
 
@@ -147,7 +136,7 @@ class AdminConfiguration extends Configuration
     {
         $pager = $this->get('pager');
 
-        return $pager === false ? false : true;
+        return !($pager === false);
     }
 
     public function getPager(): string
@@ -229,29 +218,6 @@ class AdminConfiguration extends Configuration
     public function getMenus(): array
     {
         return $this->get('menus');
-    }
-
-    public function isTranslationEnabled(): bool
-    {
-        return $this->get('translation')['enabled'];
-    }
-
-    public function getTranslationPattern(): string
-    {
-        if (!$this->isTranslationEnabled()) {
-            throw new Exception('The translation is not enabled');
-        }
-
-        return $this->get('translation')['pattern'];
-    }
-
-    public function getTranslationCatalog(): string
-    {
-        if (!$this->isTranslationEnabled()) {
-            throw new Exception('The translation is not enabled');
-        }
-
-        return $this->get('translation')['catalog'];
     }
 
     private function getActionNormalizer(): Closure

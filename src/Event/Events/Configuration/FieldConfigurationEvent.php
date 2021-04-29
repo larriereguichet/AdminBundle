@@ -1,11 +1,11 @@
 <?php
 
-namespace LAG\AdminBundle\Event\Events;
+namespace LAG\AdminBundle\Event\Events\Configuration;
 
 use LAG\AdminBundle\Field\FieldInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class FieldEvent extends Event
+class FieldConfigurationEvent extends Event
 {
     private string $fieldName;
     private ?string $type;
@@ -27,9 +27,9 @@ class FieldEvent extends Event
         $this->context = $context;
     }
 
-    public function getFieldName(): string
+    public function setType(string $type): void
     {
-        return $this->fieldName;
+        $this->type = $type;
     }
 
     public function getType(): ?string
@@ -37,14 +37,24 @@ class FieldEvent extends Event
         return $this->type;
     }
 
-    public function getField(): ?FieldInterface
+    public function setOptions(array $options): void
     {
-        return $this->field;
+        $this->options = $options;
     }
 
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    public function getFieldName(): string
+    {
+        return $this->fieldName;
+    }
+
+    public function getField(): ?FieldInterface
+    {
+        return $this->field;
     }
 
     public function getContext(): array

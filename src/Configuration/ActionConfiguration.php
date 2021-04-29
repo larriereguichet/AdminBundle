@@ -27,7 +27,6 @@ class ActionConfiguration extends Configuration
             ->setAllowedTypes('admin_name', 'string')
             ->setDefault('title', null)
             ->setAllowedTypes('title', ['string', 'null'])
-            ->setNormalizer('title', $this->getTitleNormalizer())
             ->setDefault('icon', null)
             ->setAllowedTypes('icon', ['string', 'null'])
             ->setDefault('action_class', Action::class)
@@ -48,7 +47,7 @@ class ActionConfiguration extends Configuration
             ->setNormalizer('path', $this->getPathNormalizer())
 
             // Fields
-            ->setRequired('fields')
+            ->setDefault('fields', [])
             ->setAllowedTypes('fields', 'array')
             ->setNormalizer('fields', $this->getFieldsNormalizer())
 
@@ -105,17 +104,9 @@ class ActionConfiguration extends Configuration
             ->setDefault('menus', [])
             ->setAllowedTypes('menus', 'array')
 
-            // Translation
-            ->setDefault('translation', function (OptionsResolver $translationResolver) {
-                $translationResolver
-                    ->setDefault('enabled', true)
-                    ->setAllowedTypes('enabled', 'boolean')
-                    ->setDefault('pattern', 'admin.{admin}.{key}')
-                    ->setAllowedTypes('pattern', 'string')
-                    ->setDefault('catalog', 'admin')
-                    ->setAllowedTypes('catalog', 'string')
-                ;
-            })
+            // Redirection after success
+            ->setDefault('redirect', null)
+            ->setAllowedTypes('redirect', ['string', 'null'])
         ;
     }
 
@@ -258,51 +249,14 @@ class ActionConfiguration extends Configuration
         return $this->get('menus');
     }
 
-    public function isTranslationEnabled(): bool
-    {
-        return $this->get('translation')['enabled'];
-    }
-
-    public function getTranslationPattern(): string
-    {
-        if (!$this->isTranslationEnabled()) {
-            throw new Exception('The translation is not enabled');
-        }
-
-        return $this->get('translation')['pattern'];
-    }
-
-    public function getTranslationCatalog(): string
-    {
-        if (!$this->isTranslationEnabled()) {
-            throw new Exception('The translation is not enabled');
-        }
-
-        return $this->get('translation')['catalog'];
-    }
-
     public function getRepositoryMethod(): ?string
     {
         return $this->get('repository_method');
     }
 
-    private function getTitleNormalizer(): Closure
+    public function getRedirect(): ?string
     {
-        return function (Options $options, $value) {
-            if ($value === null) {
-                if ($options->offsetGet('translation')['enabled']) {
-                    $value = u($options->offsetGet('translation')['pattern'])
-                        ->replace('{admin}', $options->offsetGet('admin_name'))
-                        ->replace('{key}', $options->offsetGet('name'))
-                        ->toString()
-                    ;
-                } else {
-                    $value = u($options->offsetGet('name'))->title()->toString();
-                }
-            }
-
-            return $value;
-        };
+        return $this->get('redirect');
     }
 
     private function getPathNormalizer(): Closure

@@ -6,21 +6,25 @@ use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
 use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Event\Events\Configuration\MenuConfigurationEvent;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 
 class DefaultMenuListener
 {
     private ResourceRegistryInterface $registry;
     private AdminHelperInterface $adminHelper;
+    private TranslationHelperInterface $translationHelper;
     private array $menuConfigurations;
 
     public function __construct(
         ResourceRegistryInterface $registry,
         AdminHelperInterface $adminHelper,
+        TranslationHelperInterface $translationHelper,
         array $menuConfigurations = []
     ) {
         $this->registry = $registry;
         $this->adminHelper = $adminHelper;
         $this->menuConfigurations = $menuConfigurations;
+        $this->translationHelper = $translationHelper;
     }
 
     public function __invoke(MenuConfigurationEvent $event): void
@@ -118,7 +122,7 @@ class DefaultMenuListener
                     $itemConfiguration['attributes']['class'] = '';
                 }
                 $itemConfiguration['attributes']['class'] .= '';
-                $itemConfiguration['linkAttributes'] = ['class' => 'btn btn-info btn-icon-split'];
+                $itemConfiguration['linkAttributes'] = [];
             }
             // When an url is set, nothing to add, the item menu can be build
             if (\array_key_exists('url', $itemConfiguration)) {
@@ -137,7 +141,12 @@ class DefaultMenuListener
 
             // At this point, an pair admin/action or an url or an admin should be defined
             if (!\array_key_exists('admin', $itemConfiguration)) {
-                throw new Exception(sprintf('The configuration of the children "%s" in the menu "%s" is invalid : no admin/action nor url configured, and no admin with the name "%s" exists', $itemName, $menuName, $itemName));
+                throw new Exception(sprintf(
+                    'The configuration of the children "%s" in the menu "%s" is invalid : no admin/action nor url configured, and no admin with the name "%s" exists',
+                    $itemName,
+                    $menuName,
+                    $itemName
+                ));
             }
             $menu['children'][$itemName] = $itemConfiguration;
         }
@@ -150,18 +159,16 @@ class DefaultMenuListener
         if (!$this->adminHelper->hasAdmin()) {
             return $menu;
         }
-
         $admin = $this->adminHelper->getAdmin();
 
         // Auto return link is be optional. It is configured by default for the edit, create and delete actions
-        if ($admin !== null && $admin->getAction()->getConfiguration()->get('add_return')) {
+        if ($admin !== null) {
             $menu['children']['return'] = [
                 'admin' => $admin->getName(),
                 'action' => 'list',
-                //'text' => $admin->getConfiguration()->getT('return'),
-                'text' => 'Return',
+                'text' => $this->translationHelper->transWithPattern('return', [], null, null, null,'ui'),
                 'icon' => 'fas fa-arrow-left',
-                'linkAttributes' => ['class' => 'btn btn-info btn-icon-split'],
+                'linkAttributes' => ['class' => 'btn btn-info btn-icon-split btn-sm'],
             ];
         }
 
