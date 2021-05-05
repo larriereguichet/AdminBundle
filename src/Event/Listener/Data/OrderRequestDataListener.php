@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Event\Listener\Data;
 
 use LAG\AdminBundle\Event\Events\DataEvent;
 
-class OrderDataListener
+class OrderRequestDataListener
 {
     public function __invoke(DataEvent $event): void
     {

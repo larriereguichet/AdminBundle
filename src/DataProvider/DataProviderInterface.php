@@ -20,7 +20,7 @@ interface DataProviderInterface
         array $orderBy = [],
         int $limit = 1,
         int $offset = 25
-    ): object;
+    ): DataSourceInterface;
 
     /**
      * Return a single entity. Throw an exception if no entity was found.

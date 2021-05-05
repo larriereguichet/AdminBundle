@@ -7,26 +7,17 @@
 {% block content %}
     <div class="admin-{{ admin.name }}">
         {% block filterForm %}
-            <div class="dropdown mb-4 mt-3">
-                <button class="btn btn-primary dropdown-toggle no-arrow"
-                        type="button"
-                        id="filter-button"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false">
-                    {{ 'lag.admin.show_filter' | trans }}
-                </button>
-                <div class="dropdown-menu animated--fade-in" aria-labelledby="filter-button">
-                    {% include '@LAGAdmin/crud/list/_filters.html.twig' with {form: admin.forms.filter} %}
-                </div>
-            </div>
+            {% if admin.forms.filter|default(false) %}
+                {% include '@LAGAdmin/crud/list/_filters.html.twig' with {form: admin.forms.filter} %}
+            {% endif %}
         {% endblock %}
         
         {% block top_extra_content %}{% endblock %}
-        
+
+        <div class="card">
         {% block table %}
             {% if admin.data | length > 0 %}
-                <table class="table admin-table">
+                <table class="admin-table table table-hover card-body">
                     {% block table_head %}
                         <thead>
                         <tr>
@@ -54,10 +45,11 @@
                     </tfoot>
                 </table>
             {% else %}
-                <p>{{ 'lag.admin.no_record' | trans }}</p>
+                <p class="card-body">{{ 'no_record'|admin_ui_trans }}</p>
             {% endif %}
         {% endblock %}
-        
+        </div>
+
         {% block pagination %}
             <div>
                 {% if admin.data %}

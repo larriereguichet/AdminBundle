@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Tests\Event\Listener\Form;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
-use LAG\AdminBundle\Event\Listener\Form\FormListener;
+use LAG\AdminBundle\Event\Listener\Form\AddDeleteFormListener;
 use LAG\AdminBundle\Factory\AdminFormFactoryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -85,13 +85,13 @@ class FormListenerTest extends TestCase
     }
 
     /**
-     * @return FormListener[]|MockObject[]
+     * @return AddDeleteFormListener[]|MockObject[]
      */
     private function createListener(): array
     {
         $formFactory = $this->createMock(AdminFormFactoryInterface::class);
 
-        $listener = new FormListener($formFactory);
+        $listener = new AddDeleteFormListener($formFactory);
 
         return [$listener, $formFactory];
     }

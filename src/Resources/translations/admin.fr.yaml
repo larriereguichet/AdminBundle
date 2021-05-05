@@ -36,18 +36,20 @@ lag_admin:
         batch_action_messages: Vous êtes sur le point de %action% les actions suivantes, êtes-vous sûr ?
 
         mass_action: Exécuter
-        filter: Filtrer
-        filter_reset: Réinitialiser
-        show_filter: Montrer les filtres
-        hide_filter: Cacher les filtres
 
         search_by: 'Recherche par %field%'
         no_record: Aucun élément n'a été trouvé
         delete_confirmation_title: Attention
         delete_confirmation_warning: Vous allez supprimer un élément. Cette action n'est pas réversible
         no_notifications: Pas de nouvelles notifications !
-        
+
+        # Filters
         reset_filters: Effacer les filtres
+        show_filters: Montrer les filtres
+        hide_filters: Cacher les filtres
+        filter: Filtrer
+        start_date: Depuis le
+        end_date: Jusqu'au
 
         yes: Oui
         no: Non

@@ -6,7 +6,7 @@ use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Event\Events\DataEvent;
-use LAG\AdminBundle\Event\Listener\Data\FilterDataListener;
+use LAG\AdminBundle\Event\Listener\Data\CreateDataFilterListener;
 use LAG\AdminBundle\Factory\Form\FilterFormFactoryInterface;
 use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Tests\TestCase;
@@ -116,13 +116,13 @@ class FilterDataListenerTest extends TestCase
     }
 
     /**
-     * @return FilterDataListener[]|MockObject[]
+     * @return CreateDataFilterListener[]|MockObject[]
      */
     private function createListener(): array
     {
         $filterFormFactory = $this->createMock(FilterFormFactoryInterface::class);
 
-        $listener = new FilterDataListener($filterFormFactory);
+        $listener = new CreateDataFilterListener($filterFormFactory);
 
         return [
             $listener,

@@ -6,7 +6,7 @@ use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Event\Events\DataEvent;
-use LAG\AdminBundle\Event\Listener\Data\OrderDataListener;
+use LAG\AdminBundle\Event\Listener\Data\OrderRequestDataListener;
 use LAG\AdminBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -98,11 +98,11 @@ class OrderDataListenerTest extends TestCase
     }
 
     /**
-     * @return OrderDataListener[]
+     * @return OrderRequestDataListener[]
      */
     private function createListener(): array
     {
-        $listener = new OrderDataListener();
+        $listener = new OrderRequestDataListener();
 
         return [$listener];
     }

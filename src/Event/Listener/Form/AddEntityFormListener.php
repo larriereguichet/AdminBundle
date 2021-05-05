@@ -6,7 +6,7 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Factory\AdminFormFactoryInterface;
 
-class FormListener
+class AddEntityFormListener
 {
     private AdminFormFactoryInterface $formFactory;
 
@@ -28,11 +28,6 @@ class FormListener
         ) {
             $form = $this->formFactory->createEntityForm($admin, $request, $admin->getData());
             $event->addForm('entity', $form);
-        }
-
-        if ($action->getName() === 'delete') {
-            $form = $this->formFactory->createDeleteForm($admin, $request, $admin->getData());
-            $event->addForm('delete', $form);
         }
     }
 }

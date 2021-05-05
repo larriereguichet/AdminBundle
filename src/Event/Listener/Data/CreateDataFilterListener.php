@@ -6,7 +6,7 @@ use LAG\AdminBundle\Event\Events\DataEvent;
 use LAG\AdminBundle\Factory\Form\FilterFormFactoryInterface;
 use LAG\AdminBundle\Filter\Filter;
 
-class FilterDataListener
+class CreateDataFilterListener
 {
     private FilterFormFactoryInterface $filterFormFactory;
 
@@ -24,7 +24,6 @@ class FilterDataListener
         if (\count($filters) === 0) {
             return;
         }
-
         $form = $this->filterFormFactory->create($admin);
         $form->handleRequest($request);
 
@@ -43,8 +42,22 @@ class FilterDataListener
                     continue;
                 }
 
+                if ($options['path'] === null) {
+                    $options['path'] = $name;
+                }
+
+                if (is_array($data[$name])) {
+                    $options['comparator'] = 'between';
+                }
                 // Create a new filter with submitted and configured values
-                $filter = new Filter($options['name'], $data[$name], $options['comparator'], $options['operator']);
+                $filter = new Filter(
+                    $options['name'],
+                    $data[$name],
+                    $options['type'],
+                    $options['path'],
+                    $options['comparator'],
+                    $options['operator']
+                );
                 $event->addFilter($filter);
             }
         }

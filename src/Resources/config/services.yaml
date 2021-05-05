@@ -1,5 +1,6 @@
 imports:
-    resource: 'services/*'
+    - {resource: 'services/*'}
+    - {resource: 'services/bridge/*'}
 
 services:
     _defaults:

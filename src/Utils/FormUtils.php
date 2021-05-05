@@ -2,10 +2,10 @@
 
 namespace LAG\AdminBundle\Utils;
 
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use LAG\AdminBundle\Form\Type\DateRangeType;
+use LAG\AdminBundle\Form\Type\Select2\Select2EntityType;
+use LAG\AdminBundle\Form\Type\Select2\Select2Type;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -20,11 +20,11 @@ class FormUtils
     public static function convertShortFormType(?string $shortType): ?string
     {
         $mapping = [
-            'choice' => ChoiceType::class,
+            'choice' => Select2Type::class,
             'string' => TextType::class,
-            'entity' => EntityType::class,
-            'date' => DateType::class,
-            'datetime' => DateType::class,
+            'entity' => Select2EntityType::class,
+            'date' => DateRangeType::class,
+            'datetime' => DateRangeType::class,
             'text' => TextareaType::class,
             'number' => NumberType::class,
             'float' => NumberType::class,

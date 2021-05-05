@@ -17,20 +17,24 @@ services:
             - {name: kernel.event_listener, event: lag.admin.request, priority: 200}
 
     # Data event
-    LAG\AdminBundle\Event\Listener\Data\FilterDataListener:
+    LAG\AdminBundle\Event\Listener\Data\CreateDataFilterListener:
         tags:
             - {name: kernel.event_listener, event: lag.admin.data, priority: 255}
-            
-    LAG\AdminBundle\Event\Listener\Data\OrderDataListener:
+
+    LAG\AdminBundle\Event\Listener\Data\OrderRequestDataListener:
         tags:
             - {name: kernel.event_listener, event: lag.admin.data, priority: 255}
-    
+
     LAG\AdminBundle\Event\Listener\Data\LoadDataListener:
         tags:
             - {name: kernel.event_listener, event: lag.admin.data, priority: -255}
 
     # Form event
-    LAG\AdminBundle\Event\Listener\Form\FormListener:
+    LAG\AdminBundle\Event\Listener\Form\AddEntityFormListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.form, priority: 255}
+
+    LAG\AdminBundle\Event\Listener\Form\AddDeleteFormListener:
         tags:
             - {name: kernel.event_listener, event: lag.admin.form, priority: 255}
 

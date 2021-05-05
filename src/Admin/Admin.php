@@ -51,7 +51,7 @@ class Admin implements AdminInterface
         }
         $this->action = $requestEvent->getAction();
 
-        // Load the data from the database
+        // Load data from the database
         $dataEvent = new DataEvent($this, $request);
         $this->eventDispatcher->dispatch($dataEvent, AdminEvents::ADMIN_DATA);
         $this->data = $dataEvent->getData();
@@ -65,8 +65,12 @@ class Admin implements AdminInterface
         $this->eventDispatcher->dispatch($formEvent, AdminEvents::ADMIN_FORM);
         $this->forms = $formEvent->getForms();
 
-        foreach ($this->forms as $form) {
-            $form->handleRequest($request);
+        foreach ($this->forms as $formName => $form) {
+            // The filter form has already been submitted to filter the data
+            if ($formName !== 'filter') {
+                $form->handleRequest($request);
+            }
+
         }
         $this->eventDispatcher->dispatch($formEvent, AdminEvents::ADMIN_HANDLE_FORM);
     }

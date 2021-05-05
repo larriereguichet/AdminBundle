@@ -9,6 +9,8 @@ services:
     LAG\AdminBundle\Form\Type\Select2\Select2EntityType:
         tags:
             - {name: form.type}
+
+    LAG\AdminBundle\Form\Type\DateRangeType: ~
     
     ### Form Extensions ###
     LAG\AdminBundle\Form\Extension\CollectionExtensionType:

@@ -4,8 +4,10 @@ namespace LAG\AdminBundle\Factory\Form;
 
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Form\Type\Select2\Select2Type;
 use LAG\AdminBundle\Translation\Helper\TranslationHelper;
 use LAG\AdminBundle\Utils\FormUtils;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -59,6 +61,10 @@ class FilterFormFactory implements FilterFormFactoryInterface
             if (DateType::class === $formType) {
                 $formOptions['html5'] = true;
                 $formOptions['widget'] = 'single_text';
+            }
+
+            if (Select2Type::class === $formType || ChoiceType::class === $formType) {
+                $formOptions['choice_translation_domain'] = $this->appConfig->getTranslationCatalog();
             }
             $formOptions = array_merge($formOptions, $filter['options']);
             $form->add($name, $formType, $formOptions);
