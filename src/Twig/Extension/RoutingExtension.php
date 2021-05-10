@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Twig\Extension;
 
+use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface;
@@ -19,19 +20,22 @@ class RoutingExtension extends AbstractExtension
     private ApplicationConfiguration $appConfig;
     private ConfigurationFactoryInterface $configurationFactory;
     private RouterInterface $router;
+    private ResourceRegistryInterface $resourceRegistry;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         SecurityHelper $security,
         ApplicationConfiguration $appConfig,
         ConfigurationFactoryInterface $configurationFactory,
-        RouterInterface $router
+        RouterInterface $router,
+        ResourceRegistryInterface $resourceRegistry
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->security = $security;
         $this->appConfig = $appConfig;
         $this->configurationFactory = $configurationFactory;
         $this->router = $router;
+        $this->resourceRegistry = $resourceRegistry;
     }
 
     public function getFunctions(): array
@@ -51,14 +55,18 @@ class RoutingExtension extends AbstractExtension
         $routeName = $this->appConfig->getRouteName($adminName, $actionName);
 
         if ($data !== null) {
-            $adminConfiguration = $this->configurationFactory->createAdminConfiguration($adminName);
+            $resource = $this->resourceRegistry->get($adminName);
+            $adminConfiguration = $this
+                ->configurationFactory
+                ->createAdminConfiguration($adminName, $resource->getConfiguration())
+            ;
             $accessor = PropertyAccess::createPropertyAccessor();
             $actionConfiguration = $this->configurationFactory->createActionConfiguration(
                 $actionName,
-                $adminConfiguration
+                $adminConfiguration->getAction($actionName)
             );
 
-            foreach ($actionConfiguration->getRouteRequirements() as $name => $requirements) {
+            foreach ($actionConfiguration->getRouteParameters() as $name => $requirements) {
                 $routeParameters[$name] = $accessor->getValue($data, $name);
             }
         }
