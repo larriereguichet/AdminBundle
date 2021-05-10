@@ -17,10 +17,6 @@ interface DataHandlerInterface
 
     /**
      * Handle the given data source and transform it into a query result (a collection, a pager...).
-     *
-     * @param DataSourceInterface $dataSource
-     *
-     * @return object
      */
-    public function handle(DataSourceInterface $dataSource): object;
+    public function handle(DataSourceInterface $dataSource);
 }

@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Bridge\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectRepository;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
@@ -53,6 +54,15 @@ class ORMDataProvider implements DataProviderInterface
                 throw new Exception(sprintf('The method "%s" does not exists for the class "%s"', $method, \get_class($repository)));
             }
             $data = $repository->$method($criteria, $orderBy, $limit, $offset);
+
+            if (!$data instanceof QueryBuilder) {
+                throw new Exception(sprintf(
+                    'The method "%s" of the repository "%s" should return a instance of "%s"',
+                    $method,
+                    get_class($repository),
+                    QueryBuilder::class
+                ));
+            }
         } else {
             $data = $repository->createQueryBuilder('entity');
         }

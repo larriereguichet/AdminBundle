@@ -23,7 +23,7 @@ class ResultsHandler implements DataHandlerInterface
         return $dataSource instanceof ORMDataSource;
     }
 
-    public function handle(DataSourceInterface $dataSource): object
+    public function handle(DataSourceInterface $dataSource)
     {
         if ($dataSource->isPaginated()) {
             $adapter = $this->getAdapter($dataSource->getData());

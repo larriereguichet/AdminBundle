@@ -28,7 +28,7 @@ class CompositeDataHandler implements DataHandlerInterface
         return false;
     }
 
-    public function handle(DataSourceInterface $dataSource): object
+    public function handle(DataSourceInterface $dataSource)
     {
         foreach ($this->dataHandlers as $dataHandler) {
             if ($dataHandler->supports($dataSource)) {

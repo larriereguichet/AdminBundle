@@ -24,7 +24,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * Assert that the given service class is configured in the services.yaml.
      */
-    protected function assertServiceExists(string $serviceClass)
+    protected function assertServiceExists(string $serviceClass): void
     {
         $containerBuilder = new ContainerBuilder();
         $testResourcesDirectory = __DIR__.'/../../src/Resources/config';

@@ -2,14 +2,13 @@
 
 namespace LAG\AdminBundle\Tests\Bridge\Doctrine;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Results\ResultsHandlerInterface;
+use LAG\AdminBundle\Bridge\Doctrine\DataSource\ORMDataSource;
 use LAG\AdminBundle\Bridge\Doctrine\ORMDataProvider;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
@@ -25,7 +24,6 @@ class ORMDataProviderTest extends TestCase
     private ORMDataProvider $dataProvider;
     private MockObject $entityManager;
     private MockObject $helper;
-    private MockObject $resultsHandler;
 
     /**
      * @dataProvider collectionDataProvider
@@ -40,7 +38,6 @@ class ORMDataProviderTest extends TestCase
         $request = new Request([
             'page' => $page,
         ]);
-        $entity = $this->createMock(stdClass::class);
         $queryBuilder = $this->createMock(QueryBuilder::class);
 
         $repository = $this->createMock(EntityRepository::class);
@@ -116,37 +113,10 @@ class ORMDataProviderTest extends TestCase
             ->method('getAdmin')
             ->willReturn($admin)
         ;
-        $expectException = false;
-
-        if (count($filters) > 0) {
-            foreach ($filters as $filter) {
-                if (!$filter instanceof FilterInterface) {
-                    $this->expectException(Exception::class);
-                    $expectException = true;
-                } else {
-                    if ($filter instanceof MockObject) {
-                        $queryBuilder
-                            ->expects($this->exactly(2))
-                            ->method('getRootAliases')
-                            ->willReturn(['entity'])
-                        ;
-                    }
-                }
-            }
-        }
-
-        if (!$expectException) {
-            $this->resultsHandler
-                ->expects($this->once())
-                ->method('handle')
-                ->with($queryBuilder, true, $page, $limit)
-                ->willReturn(new ArrayCollection([$entity]))
-            ;
-        }
-
         $data = $this->dataProvider->getCollection($class, $filters, $orderBy, $page, $limit);
 
-        $this->assertEquals(new ArrayCollection([$entity]), $data);
+        $this->assertInstanceOf(ORMDataSource::class, $data);
+        $this->assertInstanceOf(QueryBuilder::class, $data->getData());
     }
 
     /**
@@ -201,11 +171,6 @@ class ORMDataProviderTest extends TestCase
             ->willReturn($admin)
         ;
 
-        $this->resultsHandler
-            ->expects($this->never())
-            ->method('handle')
-        ;
-
         if (count($filters) > 0) {
             foreach ($filters as $filter) {
                 if (!$filter instanceof FilterInterface) {
@@ -231,14 +196,15 @@ class ORMDataProviderTest extends TestCase
         $request = new Request([
             'page' => $page,
         ]);
-        $entity = $this->createMock(stdClass::class);
+
+        $queryBuilder = $this->createMock(QueryBuilder::class);
 
         $repository = $this->createMock(EntityRepository::class);
         $repository
             ->expects($this->once())
             ->method('findBy')
             ->with($filters, $orderBy, $page, $limit)
-            ->willReturn([$entity])
+            ->willReturn($queryBuilder)
         ;
 
         $actionConfiguration = $this->createMock(ActionConfiguration::class);
@@ -307,17 +273,9 @@ class ORMDataProviderTest extends TestCase
             ->willReturn($admin)
         ;
 
-        $results = new ArrayCollection([$entity]);
-        $this->resultsHandler
-            ->expects($this->once())
-            ->method('handle')
-            ->with([$entity], true, $page, $limit)
-            ->willReturn($results)
-        ;
-
         $data = $this->dataProvider->getCollection($class, $filters, $orderBy, $page, $limit);
 
-        $this->assertEquals($results, $data);
+        $this->assertEquals($queryBuilder, $data->getData());
     }
 
     /**
@@ -399,11 +357,6 @@ class ORMDataProviderTest extends TestCase
             ->willReturn($admin)
         ;
 
-        $this->resultsHandler
-            ->expects($this->never())
-            ->method('handle')
-        ;
-
         if (count($filters) > 0) {
             foreach ($filters as $filter) {
                 if (!$filter instanceof FilterInterface) {
@@ -479,7 +432,6 @@ class ORMDataProviderTest extends TestCase
     {
         $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->helper = $this->createMock(AdminHelperInterface::class);
-        $this->resultsHandler = $this->createMock(ResultsHandlerInterface::class);
-        $this->dataProvider = new ORMDataProvider($this->entityManager, $this->helper, $this->resultsHandler);
+        $this->dataProvider = new ORMDataProvider($this->entityManager, $this->helper);
     }
 }
