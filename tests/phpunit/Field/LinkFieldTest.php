@@ -1,6 +1,6 @@
 <?php
 
-namespace AdminBundle\Field;
+namespace LAG\AdminBundle\Tests\Field;
 
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Field\LinkField;

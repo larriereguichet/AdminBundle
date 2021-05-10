@@ -1,6 +1,6 @@
 <?php
 
-namespace AdminBundle\Twig\Extension;
+namespace LAG\AdminBundle\Tests\Twig\Extension;
 
 use LAG\AdminBundle\Menu\Provider\MenuProvider;
 use LAG\AdminBundle\Tests\TestCase;

@@ -67,14 +67,11 @@
     "autoload": {
         "psr-4": {
             "LAG\\AdminBundle\\": "src/"
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "LAG\\AdminBundle\\Tests\\": "tests/AdminBundle/"
+            "LAG\\AdminBundle\\Tests\\": "tests/phpunit/"
         }
     },
     "config": {
