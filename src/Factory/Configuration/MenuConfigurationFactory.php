@@ -50,7 +50,7 @@ class MenuConfigurationFactory implements MenuConfigurationFactoryInterface
 
     private function configureAdminRoutes(array $options): array
     {
-        if (empty($options['children']) || !\is_array($options)) {
+        if (empty($options['children']) || !\is_array($options['children'])) {
             return $options;
         }
 
@@ -74,13 +74,13 @@ class MenuConfigurationFactory implements MenuConfigurationFactoryInterface
         $accessor = new PropertyAccessor(true);
         $data = $this->adminHelper->getAdmin()->getData();
 
-        if (!\is_object($data) || \is_array($data)) {
+        if (!\is_object($data) || !\is_array($data)) {
             throw new \LAG\AdminBundle\Exception\Exception('The data should be an object or an array to generate a menu with dynamic values');
         }
 
         foreach ($routeParameters as $name => $value) {
             // Dashed value are static
-            $hasDoubleDash = '__' === substr($value, 0, 2);
+            $hasDoubleDash = ('__' === substr($value, 0, 2));
 
             if (null === $value) {
                 $value = $name;

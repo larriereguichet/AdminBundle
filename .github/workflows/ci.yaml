@@ -50,9 +50,7 @@ jobs:
                 run: php-cs-fixer fix --dry-run --using-cache=no --verbose --diff --allow-risky=yes --config .php-cs-fixer.dist.php
             
             -   name: Run phpstan
-                run: |
-                    bin/phpstan analyse src/
-                    bin/phpstan analyse --level=1 tests/phpunit
+                run: make phpstan.analyse
             
             -   name: Upload code coverage to Scrutinizer CI
                 run: |

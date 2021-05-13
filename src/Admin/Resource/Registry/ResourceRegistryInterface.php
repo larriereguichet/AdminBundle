@@ -28,10 +28,8 @@ interface ResourceRegistryInterface
 
     /**
      * Get a resource from the registry. If no resource match the given name, an exception will be thrown.
-     *
-     * @param $resourceName
      */
-    public function get($resourceName): AdminResource;
+    public function get(string $resourceName): AdminResource;
 
     /**
      * Return an array of the registry resources.

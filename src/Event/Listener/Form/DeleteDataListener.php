@@ -16,9 +16,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class DeleteDataListener
 {
-    /**
-     * @var SessionInterface|Session
-     */
     private SessionInterface $session;
     private DataPersisterRegistryInterface $registry;
     private ApplicationConfiguration $appConfig;
@@ -54,7 +51,10 @@ class DeleteDataListener
                     'deleted'
                 );
             }
-            $this->session->getFlashBag()->add('success', $message);
+
+            if ($this->session instanceof Session) {
+                $this->session->getFlashBag()->add('success', $message);
+            }
         }
     }
 }

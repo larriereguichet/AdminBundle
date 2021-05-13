@@ -32,7 +32,7 @@ class ResourceRegistry implements ResourceRegistryInterface
         return \array_key_exists($resourceName, $this->items);
     }
 
-    public function get($resourceName): AdminResource
+    public function get(string $resourceName): AdminResource
     {
         if (!$this->has($resourceName)) {
             throw new Exception('Resource with name "'.$resourceName.'" not found');

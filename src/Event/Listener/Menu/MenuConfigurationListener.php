@@ -25,7 +25,7 @@ class MenuConfigurationListener
         $menuConfiguration = $event->getMenuConfiguration();
         $menuName = $event->getMenuName();
         $menuConfigurationFromAction = $admin->getAction()->getConfiguration()->getMenus();
-        $inherits = empty($menuConfiguration['inherits']) || false === $menuConfiguration['inherits'];
+        $inherits = $menuConfiguration['inherits'] ?? false;
 
         if (empty($menuConfigurationFromAction[$menuName])) {
             return;

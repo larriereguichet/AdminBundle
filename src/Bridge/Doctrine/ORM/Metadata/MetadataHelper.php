@@ -17,7 +17,7 @@ class MetadataHelper implements MetadataHelperInterface
         $this->entityManager = $entityManager;
     }
 
-    public function findMetadata($class): ?ClassMetadata
+    public function findMetadata(string $class): ?ClassMetadata
     {
         $metadata = null;
 

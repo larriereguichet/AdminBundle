@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Field;
 
 use Closure;
-use LAG\AdminBundle\Field\View\FieldView;
 use LAG\AdminBundle\Field\View\View;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -68,8 +67,6 @@ interface FieldInterface
 
     /**
      * Return the field view to be rendered with Twig.
-     *
-     * @return FieldView
      */
     public function createView(): View;
 

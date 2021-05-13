@@ -7,7 +7,6 @@ namespace LAG\AdminBundle\Bridge\Doctrine;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Persistence\ObjectRepository;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
 use LAG\AdminBundle\Bridge\Doctrine\DataSource\ORMDataSource;
@@ -86,7 +85,7 @@ class ORMDataProvider implements DataProviderInterface
         return new $class();
     }
 
-    private function getRepository(string $class): ObjectRepository
+    private function getRepository(string $class): EntityRepository
     {
         $repository = $this->entityManager->getRepository($class);
 
