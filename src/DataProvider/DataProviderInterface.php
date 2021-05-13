@@ -13,8 +13,6 @@ interface DataProviderInterface
 {
     /**
      * Return a collection of entities.
-     *
-     * @return mixed
      */
     public function getCollection(
         string $class,
@@ -27,16 +25,12 @@ interface DataProviderInterface
     /**
      * Return a single entity. Throw an exception if no entity was found.
      *
-     * @return mixed
-     *
      * @throws Exception
      */
     public function get(string $class, $identifier): object;
 
     /**
      * Create a new entity for the given admin. Return the created entity.
-     *
-     * @return mixed
      */
     public function create(string $class): object;
 }

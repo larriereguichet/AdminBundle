@@ -10,8 +10,6 @@ interface MetadataHelperInterface
 {
     /**
      * Return the Doctrine metadata of the given class.
-     *
-     * @param $class
      */
-    public function findMetadata($class): ?ClassMetadata;
+    public function findMetadata(string $class): ?ClassMetadata;
 }
