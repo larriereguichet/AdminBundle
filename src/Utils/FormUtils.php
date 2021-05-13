@@ -50,16 +50,4 @@ class FormUtils
 
         return $type;
     }
-
-    public static function getFormTypeOptions(?string $type): array
-    {
-        $mapping = [];
-        $options = [];
-
-        if (\array_key_exists($type, $mapping)) {
-            $options = $mapping[$type];
-        }
-
-        return $options;
-    }
 }

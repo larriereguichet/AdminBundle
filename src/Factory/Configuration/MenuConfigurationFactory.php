@@ -71,7 +71,7 @@ class MenuConfigurationFactory implements MenuConfigurationFactoryInterface
 
     private function configureAdminRouteParameters(array $routeParameters): array
     {
-        $accessor = new PropertyAccessor(true);
+        $accessor = new PropertyAccessor();
         $data = $this->adminHelper->getAdmin()->getData();
 
         if (!\is_object($data) && !\is_array($data)) {
