@@ -59,6 +59,6 @@ class MenuConfigurationListenerTest extends TestCase
     protected function setUp(): void
     {
         $this->adminHelper = $this->createMock(AdminHelperInterface::class);
-        $this->listener = new MenuConfigurationListener($this->adminHelper);
+        $this->listener = new MenuConfigurationListener([], $this->adminHelper);
     }
 }

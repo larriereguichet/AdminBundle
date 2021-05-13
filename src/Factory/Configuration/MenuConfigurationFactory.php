@@ -74,17 +74,16 @@ class MenuConfigurationFactory implements MenuConfigurationFactoryInterface
         $accessor = new PropertyAccessor(true);
         $data = $this->adminHelper->getAdmin()->getData();
 
-        if (!\is_object($data) || !\is_array($data)) {
+        if (!\is_object($data) && !\is_array($data)) {
             throw new \LAG\AdminBundle\Exception\Exception('The data should be an object or an array to generate a menu with dynamic values');
         }
 
         foreach ($routeParameters as $name => $value) {
-            // Dashed value are static
-            $hasDoubleDash = ('__' === substr($value, 0, 2));
-
             if (null === $value) {
                 $value = $name;
             }
+            // Dashed value are static
+            $hasDoubleDash = ('__' === substr($value, 0, 2));
 
             if ($data && $accessor->isReadable($data, $value) && !$hasDoubleDash) {
                 $routeParameters[$name] = $accessor->getValue($data, $value);
