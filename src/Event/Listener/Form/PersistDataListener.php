@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Listener\Form;
 
 use LAG\AdminBundle\DataPersister\Registry\DataPersisterRegistryInterface;
@@ -30,6 +32,7 @@ class PersistDataListener
 
         if ($form->isSubmitted() && $form->isValid()) {
             $configuration = $admin->getConfiguration();
+            // TODO add event
             $dataPersister = $this->registry->get($configuration->getDataPersister());
             $dataPersister->save($admin->getData());
             $this->flashMessageHelper->add('success', 'lag.admin.saved');

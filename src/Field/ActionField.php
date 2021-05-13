@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Field;
 
 use Symfony\Component\OptionsResolver\Options;
@@ -22,7 +24,7 @@ class ActionField extends AbstractField
                 'template' => '@LAGAdmin/fields/action.html.twig',
                 'translation' => true,
             ])
-            ->setNormalizer('attr', function (Options $options, $value) {
+            ->addNormalizer('attr', function (Options $options, $value) {
                 if (!empty($value['class'])) {
                     return $value;
                 }

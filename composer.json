@@ -35,15 +35,15 @@
         "pagerfanta/doctrine-collections-adapter": "^3.0",
         "pagerfanta/doctrine-orm-adapter": "^3.0",
         "sensio/framework-extra-bundle": "^6.1.2",
-        "symfony/dependency-injection": "^4.4|^5.1",
-        "symfony/event-dispatcher": "^4.4|^5.1",
+        "symfony/dependency-injection": "^4.4|^5.2",
+        "symfony/event-dispatcher": "^4.4|^5.2",
         "symfony/flex": "^1.11",
-        "symfony/form": "^4.4|^5.1",
-        "symfony/framework-bundle": "^4.4|^5.1",
-        "symfony/security-bundle": "^4.4|^5.1",
-        "symfony/serializer": "^4.4|^5.1",
-        "symfony/translation": "^4.4|^5.1",
-        "symfony/twig-bundle": "^4.4|^5.1",
+        "symfony/form": "^4.4|^5.2",
+        "symfony/framework-bundle": "^4.4|^5.2",
+        "symfony/security-bundle": "^4.4|^5.2",
+        "symfony/serializer": "^4.4|^5.2",
+        "symfony/translation": "^4.4|^5.2",
+        "symfony/twig-bundle": "^4.4|^5.2",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/intl-extra": "^3.1",
         "twig/string-extra": "^3.1",
@@ -51,30 +51,28 @@
     },
     "require-dev": {
         "dg/bypass-finals": "^1.1",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "nyholm/symfony-bundle-test": "^1.6",
         "php-parallel-lint/php-var-dump-check": "^0.5",
         "phpstan/phpstan": "^0.12",
         "phpunit/phpunit": "^9.5",
         "sensiolabs/security-checker": "^4.0|^5.0|^6.0",
-        "symfony/browser-kit": "^4.4|^5.1",
-        "symfony/console": "^4.4|^5.1",
-        "symfony/css-selector": "^4.4|^5.1",
-        "symfony/debug-bundle": "^5.1",
+        "symfony/browser-kit": "^4.4|^5.2",
+        "symfony/console": "^4.4|^5.2",
+        "symfony/css-selector": "^4.4|^5.2",
+        "symfony/debug-bundle": "^5.2",
         "symfony/monolog-bundle": "^3.5",
-        "symfony/var-dumper": "^4.4|^5.1",
+        "symfony/var-dumper": "^4.4|^5.2",
         "symfony/webpack-encore-bundle": "^1.7"
     },
     "autoload": {
         "psr-4": {
             "LAG\\AdminBundle\\": "src/"
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "LAG\\AdminBundle\\Tests\\": "tests/AdminBundle/"
+            "LAG\\AdminBundle\\Tests\\": "tests/phpunit/"
         }
     },
     "config": {

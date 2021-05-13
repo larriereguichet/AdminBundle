@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Message\Registry;
 
 use LAG\AdminBundle\Message\NotificationInterface;

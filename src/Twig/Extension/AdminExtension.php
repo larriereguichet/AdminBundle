@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Twig\Extension;
 
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
@@ -10,15 +12,15 @@ use Twig\TwigFunction;
 class AdminExtension extends AbstractExtension
 {
     private bool $mediaEnabled;
-    private ApplicationConfiguration $configuration;
+    private ApplicationConfiguration $appConfig;
     private SecurityHelper $security;
 
     public function __construct(
         bool $mediaEnabled,
-        ApplicationConfiguration $configuration,
+        ApplicationConfiguration $appConfig,
         SecurityHelper $security
     ) {
-        $this->configuration = $configuration;
+        $this->appConfig = $appConfig;
         $this->security = $security;
         $this->mediaEnabled = $mediaEnabled;
     }
@@ -29,13 +31,14 @@ class AdminExtension extends AbstractExtension
             new TwigFunction('admin_config', [$this, 'getApplicationParameter']),
             new TwigFunction('admin_action_allowed', [$this, 'isAdminActionAllowed']),
             new TwigFunction('admin_media_enabled', [$this, 'isMediaBundleEnabled']),
+            new TwigFunction('admin_is_translation_enabled', [$this, 'isTranslationEnabled']),
         ];
     }
 
     public function getApplicationParameter($name)
     {
         return $this
-            ->configuration
+            ->appConfig
             ->get($name)
         ;
     }
@@ -54,5 +57,10 @@ class AdminExtension extends AbstractExtension
     public function isMediaBundleEnabled(): bool
     {
         return $this->mediaEnabled;
+    }
+
+    public function isTranslationEnabled(): bool
+    {
+        return $this->appConfig->isTranslationEnabled();
     }
 }

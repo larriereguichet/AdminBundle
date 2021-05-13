@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Twig\Extension;
 
 use LAG\AdminBundle\Field\Render\FieldRendererInterface;
 use LAG\AdminBundle\Field\View\FieldView;
-use LAG\AdminBundle\View\ViewInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -38,8 +39,8 @@ class FieldExtension extends AbstractExtension
     /**
      * Return the field header label.
      */
-    public function renderFieldHeader(ViewInterface $admin, FieldView $field): string
+    public function renderFieldHeader(FieldView $field): string
     {
-        return $this->renderer->renderHeader($admin, $field);
+        return $this->renderer->renderHeader($field);
     }
 }

@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Factory;
 
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\FieldConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Event\Events\Configuration\FieldConfigurationEvent;
 use LAG\AdminBundle\Event\Events\FieldDefinitionEvent;
 use LAG\AdminBundle\Event\Events\FieldEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\Field\FieldConfigurationException;
 use LAG\AdminBundle\Exception\Field\FieldTypeNotFoundException;
+use LAG\AdminBundle\Field\AbstractField;
 use LAG\AdminBundle\Field\ApplicationAwareInterface;
 use LAG\AdminBundle\Field\FieldInterface;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use function Symfony\Component\String\u;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -43,6 +45,7 @@ class FieldFactory implements FieldFactoryInterface
     {
         try {
             $configuration = $this->resolveConfiguration($name, $configuration, $context);
+
             // Dispatch an event to allow dynamic changes on the form type
             $event = new FieldEvent($name, $configuration['type'], $configuration['options'], $context);
             $this->eventDispatcher->dispatch($event, AdminEvents::FIELD_CREATE);
@@ -62,10 +65,10 @@ class FieldFactory implements FieldFactoryInterface
             if ($field instanceof ApplicationAwareInterface) {
                 $field->setApplicationConfiguration($this->appConfig);
             }
-            $this->configureField($field, $type, $options, $context);
         } catch (\Exception $exception) {
-            throw new FieldConfigurationException($name, $context, $exception->getMessage(), $exception);
+            throw new FieldConfigurationException($name, $exception->getMessage(), $exception);
         }
+        $this->configureField($field, $options);
         $event = new FieldEvent($name, $type, $options, $context);
         $this->eventDispatcher->dispatch($event, AdminEvents::FIELD_CREATED);
 
@@ -80,63 +83,9 @@ class FieldFactory implements FieldFactoryInterface
         return $event->getDefinitions();
     }
 
-    private function configureField(
-        FieldInterface $field,
-        string $type,
-        array $options,
-        array $context
-    ): void {
+    private function configureField(FieldInterface $field, array $options): void
+    {
         $resolver = new OptionsResolver();
-        $resolver
-            ->setDefaults([
-                'attr' => ['class' => 'admin-field admin-field-'.$type],
-                'header_attr' => ['class' => 'admin-header admin-header-'.$type],
-                'label' => null,
-                'mapped' => false,
-                'property_path' => $field->getName(),
-                'template' => '@LAGAdmin/fields/auto.html.twig',
-                'translation' => false, // Most of fields are values from database and should not be translated
-                'translation_domain' => null,
-                'sortable' => true,
-            ])
-            ->setAllowedTypes('attr', ['array', 'null'])
-            ->setAllowedTypes('header_attr', ['array', 'null'])
-            ->setAllowedTypes('label', ['string', 'null', 'boolean'])
-            ->setAllowedTypes('mapped', ['boolean'])
-            ->setAllowedTypes('property_path', ['string', 'null'])
-            ->setAllowedTypes('template', ['string'])
-            ->setAllowedTypes('translation', ['boolean'])
-            ->setAllowedTypes('translation_domain', ['string', 'null'])
-            ->setAllowedTypes('sortable', ['boolean'])
-            ->setNormalizer('attr', function (Options $options, $attr) {
-                if ($attr === null) {
-                    $attr = [];
-                }
-
-                return $attr;
-            })
-            ->setNormalizer('header_attr', function (Options $options, $attr) {
-                if ($attr === null) {
-                    $attr = [];
-                }
-
-                return $attr;
-            })
-            ->setNormalizer('mapped', function (Options $options, $mapped) use ($field) {
-                if (u($field->getName())->startsWith('_')) {
-                    return true;
-                }
-
-                return $mapped;
-            })
-            ->setNormalizer('property_path', function (Options $options, $propertyPath) use ($field) {
-                if (u($field->getName())->startsWith('_')) {
-                    return null;
-                }
-
-                return $propertyPath;
-            })
-        ;
 
         if ($field->getParent()) {
             $currentField = $field;
@@ -146,7 +95,7 @@ class FieldFactory implements FieldFactoryInterface
 
             while ($currentField->getParent() !== null) {
                 if (\in_array($currentField->getParent(), $processedParents)) {
-                    throw new FieldConfigurationException($field->getName(), $context, 'An inheritance loop is found in '.implode(', ', $processedParents));
+                    throw new FieldConfigurationException($field->getName(), 'An inheritance loop is found in '.implode(', ', $processedParents));
                 }
                 $parent = $this->instanciateField($currentField->getName(), $currentField->getParent());
 
@@ -162,6 +111,10 @@ class FieldFactory implements FieldFactoryInterface
             foreach ($parents as $parent) {
                 $parent->configureOptions($resolver);
             }
+        }
+
+        if ($field instanceof AbstractField) {
+            $field->configureDefaultOptions($resolver);
         }
         $field->configureOptions($resolver);
         $field->setOptions($resolver->resolve($options));
@@ -205,8 +158,8 @@ class FieldFactory implements FieldFactoryInterface
         $fieldConfiguration->configure($configuration);
         $configuration = $fieldConfiguration->toArray();
 
-        $event = new FieldEvent($name, $configuration['type'], $configuration['options'], $context);
-        $this->eventDispatcher->dispatch($event);
+        $event = new FieldConfigurationEvent($name, $configuration['type'], $configuration['options'], $context);
+        $this->eventDispatcher->dispatch($event, AdminEvents::FIELD_CONFIGURATION);
         $configuration['options'] = $event->getOptions();
 
         // For collection of fields, we resolve the configuration of each item

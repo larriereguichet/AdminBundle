@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Field;
 
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -59,7 +61,7 @@ class LinkField extends AbstractField implements ApplicationAwareInterface
                     return $value;
                 }
 
-                return ucfirst($options->offsetGet('route'));
+                return $options->offsetGet('route');
             })
         ;
     }

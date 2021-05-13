@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Routing;
 
 use LAG\AdminBundle\Admin\Resource\AdminResource;
@@ -29,7 +31,7 @@ class RoutingLoader extends Loader
     public function load($resource, string $type = null): RouteCollection
     {
         if ($this->loaded) {
-            throw new RuntimeException('Do not add the Admin "extra" loader twice');
+            throw new RuntimeException('Do not add the Admin routing loader "extra" twice');
         }
         $routes = new RouteCollection();
         $resources = $this->resourceRegistry->all();

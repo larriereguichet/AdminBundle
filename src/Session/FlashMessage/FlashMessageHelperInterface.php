@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Session\FlashMessage;
 
 interface FlashMessageHelperInterface

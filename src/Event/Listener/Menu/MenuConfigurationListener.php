@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Listener\Menu;
 
 use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;

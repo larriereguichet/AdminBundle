@@ -25,3 +25,7 @@ services:
     LAG\AdminBundle\Twig\Extension\RoutingExtension:
         tags:
             - {name: twig.extension}
+
+    LAG\AdminBundle\Twig\Extension\TranslationExtension:
+        tags:
+            - {name: twig.extension}

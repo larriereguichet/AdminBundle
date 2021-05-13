@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Field;
 
 use Closure;
@@ -9,21 +11,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 interface FieldInterface
 {
-    const TYPE_AUTO = 'auto';
-    const TYPE_STRING = 'string';
-    const TYPE_TEXT = 'text';
-    const TYPE_FLOAT = 'float';
-    const TYPE_INTEGER = 'integer';
-    const TYPE_LINK = 'link';
-    const TYPE_ARRAY = 'array';
-    const TYPE_DATE = 'date';
-    const TYPE_COUNT = 'count';
-    const TYPE_ACTION = 'action';
-    const TYPE_COLLECTION = 'collection';
-    const TYPE_BOOLEAN = 'boolean';
-    const TYPE_MAPPED = 'mapped';
-    const TYPE_ACTION_COLLECTION = 'action_collection';
-    const TYPE_HEADER = 'header';
+    public const TYPE_AUTO = 'auto';
+    public const TYPE_STRING = 'string';
+    public const TYPE_TEXT = 'text';
+    public const TYPE_FLOAT = 'float';
+    public const TYPE_INTEGER = 'integer';
+    public const TYPE_LINK = 'link';
+    public const TYPE_ARRAY = 'array';
+    public const TYPE_DATE = 'date';
+    public const TYPE_COUNT = 'count';
+    public const TYPE_ACTION = 'action';
+    public const TYPE_COLLECTION = 'collection';
+    public const TYPE_BOOLEAN = 'boolean';
+    public const TYPE_MAPPED = 'mapped';
+    public const TYPE_ACTION_COLLECTION = 'action_collection';
+    public const TYPE_HEADER = 'header';
 
     /**
      * Return the field name.

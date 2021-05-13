@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Configuration;
 
 use JK\Configuration\Configuration;
@@ -19,6 +21,7 @@ class FilterConfiguration extends Configuration
                 'options' => [],
                 'comparator' => 'like',
                 'operator' => 'or',
+                'path' => null,
             ])
             ->setRequired('name')
             ->setAllowedTypes('name', 'string')
@@ -30,6 +33,7 @@ class FilterConfiguration extends Configuration
                 'and',
                 'or',
             ])
+            ->setAllowedTypes('path', ['string', 'null'])
         ;
     }
 }

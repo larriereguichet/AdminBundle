@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Configuration;
 
 use Closure;
@@ -28,7 +30,7 @@ use function Symfony\Component\String\u;
  */
 class ApplicationConfiguration extends ServiceConfiguration
 {
-    const FIELD_MAPPING = [
+    public const FIELD_MAPPING = [
         AbstractField::TYPE_STRING => StringField::class,
         AbstractField::TYPE_TEXT => StringField::class,
         AbstractField::TYPE_FLOAT => StringField::class,
@@ -96,7 +98,7 @@ class ApplicationConfiguration extends ServiceConfiguration
             ->setAllowedTypes('page_parameter', 'string')
 
             // List default parameters
-            ->setDefault('string_length', 200)
+            ->setDefault('string_length', 100)
             ->setAllowedTypes('string_length', 'integer')
             ->setDefault('string_truncate', '...')
             ->setAllowedTypes('string_truncate', 'string')

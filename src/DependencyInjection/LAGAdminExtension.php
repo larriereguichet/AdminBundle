@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
@@ -46,6 +48,9 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
             'twig' => [
                 'template' => '@LAGAdmin/menu/menu-base.html.twig',
             ],
+        ]);
+        $container->prependExtensionConfig('twig', [
+            'form_themes' => ['@LAGAdmin/form/fields.html.twig'],
         ]);
     }
 }

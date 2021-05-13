@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Configuration;
 
 use Closure;
@@ -26,8 +28,8 @@ class ActionConfiguration extends Configuration
             ->setRequired('admin_name')
             ->setAllowedTypes('admin_name', 'string')
             ->setDefault('title', null)
+            ->addNormalizer('title', $this->getTitleNormalizer())
             ->setAllowedTypes('title', ['string', 'null'])
-            ->setNormalizer('title', $this->getTitleNormalizer())
             ->setDefault('icon', null)
             ->setAllowedTypes('icon', ['string', 'null'])
             ->setDefault('action_class', Action::class)
@@ -42,26 +44,26 @@ class ActionConfiguration extends Configuration
             ->setAllowedTypes('route', 'string')
             ->setDefault('route_parameters', [])
             ->setAllowedTypes('route_parameters', 'array')
-            ->setNormalizer('route_parameters', $this->getRouteParametersNormalizer())
+            ->addNormalizer('route_parameters', $this->getRouteParametersNormalizer())
             ->setDefault('path', null)
             ->setAllowedTypes('path', ['string', 'null'])
-            ->setNormalizer('path', $this->getPathNormalizer())
+            ->addNormalizer('path', $this->getPathNormalizer())
 
             // Fields
-            ->setRequired('fields')
+            ->setDefault('fields', [])
             ->setAllowedTypes('fields', 'array')
-            ->setNormalizer('fields', $this->getFieldsNormalizer())
+            ->addNormalizer('fields', $this->getFieldsNormalizer())
 
             // Filter and orders
             ->setDefault('order', [])
             ->setAllowedTypes('order', 'array')
-            ->setNormalizer('order', $this->getOrderNormalizer())
+            ->addNormalizer('order', $this->getOrderNormalizer())
             ->setDefault('criteria', [])
             ->setAllowedTypes('criteria', 'array')
-            ->setNormalizer('criteria', $this->getCriteriaNormalizer())
+            ->addNormalizer('criteria', $this->getCriteriaNormalizer())
             ->setDefault('filters', [])
             ->setAllowedTypes('filters', 'array')
-            ->setNormalizer('filters', $this->getFiltersNormalizer())
+            ->addNormalizer('filters', $this->getFiltersNormalizer())
 
             // Security
             ->setDefault('permissions', ['ROLE_ADMIN'])
@@ -79,7 +81,7 @@ class ActionConfiguration extends Configuration
                 AdminInterface::LOAD_STRATEGY_UNIQUE,
                 AdminInterface::LOAD_STRATEGY_MULTIPLE,
             ])
-            ->setNormalizer('load_strategy', $this->getLoadStrategyNormalizer())
+            ->addNormalizer('load_strategy', $this->getLoadStrategyNormalizer())
             ->setDefault('repository_method', null)
             ->setAllowedTypes('repository_method', ['string', 'null'])
 
@@ -97,7 +99,7 @@ class ActionConfiguration extends Configuration
             // Form
             ->setDefault('form', null)
             ->setAllowedTypes('form', ['string', 'null', 'boolean'])
-            ->setNormalizer('form', $this->getFormNormalizer())
+            ->addNormalizer('form', $this->getFormNormalizer())
             ->setDefault('form_options', [])
             ->setAllowedTypes('form_options', 'array')
 
@@ -105,16 +107,13 @@ class ActionConfiguration extends Configuration
             ->setDefault('menus', [])
             ->setAllowedTypes('menus', 'array')
 
-            // Translation
-            ->setDefault('translation', function (OptionsResolver $translationResolver) {
-                $translationResolver
-                    ->setDefault('enabled', true)
-                    ->setAllowedTypes('enabled', 'boolean')
-                    ->setDefault('pattern', 'admin.{admin}.{key}')
-                    ->setAllowedTypes('pattern', 'string')
-                    ->setDefault('catalog', 'admin')
-                    ->setAllowedTypes('catalog', 'string')
-                ;
+            // Redirection after success
+            ->setDefault('redirect', null)
+            ->setAllowedTypes('redirect', ['string', 'null'])
+            ->setDefault('add_return_link', null)
+            ->setAllowedTypes('add_return_link', ['boolean', 'null'])
+            ->addNormalizer('add_return_link', function (Options $options, $value) {
+                return $value ?? $options->offsetGet('name') !== 'list';
             })
         ;
     }
@@ -258,47 +257,26 @@ class ActionConfiguration extends Configuration
         return $this->get('menus');
     }
 
-    public function isTranslationEnabled(): bool
-    {
-        return $this->get('translation')['enabled'];
-    }
-
-    public function getTranslationPattern(): string
-    {
-        if (!$this->isTranslationEnabled()) {
-            throw new Exception('The translation is not enabled');
-        }
-
-        return $this->get('translation')['pattern'];
-    }
-
-    public function getTranslationCatalog(): string
-    {
-        if (!$this->isTranslationEnabled()) {
-            throw new Exception('The translation is not enabled');
-        }
-
-        return $this->get('translation')['catalog'];
-    }
-
     public function getRepositoryMethod(): ?string
     {
         return $this->get('repository_method');
+    }
+
+    public function getRedirect(): ?string
+    {
+        return $this->get('redirect');
+    }
+
+    public function shouldAddReturnLink(): bool
+    {
+        return $this->getBool('add_return_link');
     }
 
     private function getTitleNormalizer(): Closure
     {
         return function (Options $options, $value) {
             if ($value === null) {
-                if ($options->offsetGet('translation')['enabled']) {
-                    $value = u($options->offsetGet('translation')['pattern'])
-                        ->replace('{admin}', $options->offsetGet('admin_name'))
-                        ->replace('{key}', $options->offsetGet('name'))
-                        ->toString()
-                    ;
-                } else {
-                    $value = u($options->offsetGet('name'))->title()->toString();
-                }
+                $value = u($options->offsetGet('name'))->camel()->title()->toString();
             }
 
             return $value;
@@ -333,6 +311,7 @@ class ActionConfiguration extends Configuration
             $snakeActionName = u($options->offsetGet('name'))
                 ->snake()
                 ->replace('_', '-')
+                ->toString()
             ;
 
             // Edit the the default action. It is not append to the path (ex: articles/{id} for edit,

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Listener\Form;
 
+use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\DataPersister\Registry\DataPersisterRegistryInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Translation\Helper\TranslationHelper;
@@ -18,17 +21,21 @@ class DeleteDataListener
      */
     private SessionInterface $session;
     private DataPersisterRegistryInterface $registry;
+    private ApplicationConfiguration $appConfig;
 
-    public function __construct(DataPersisterRegistryInterface $registry, SessionInterface $session)
-    {
+    public function __construct(
+        DataPersisterRegistryInterface $registry,
+        SessionInterface $session,
+        ApplicationConfiguration $appConfig
+    ) {
         $this->registry = $registry;
         $this->session = $session;
+        $this->appConfig = $appConfig;
     }
 
     public function __invoke(FormEvent $event): void
     {
         $admin = $event->getAdmin();
-        $configuration = $admin->getConfiguration();
 
         if (!$admin->hasForm('delete')) {
             return;
@@ -40,9 +47,9 @@ class DeleteDataListener
             $dataPersister->delete($admin->getData());
             $message = 'Deleted';
 
-            if ($configuration->isTranslationEnabled()) {
+            if ($this->appConfig->isTranslationEnabled()) {
                 $message = TranslationHelper::getTranslationKey(
-                    $configuration->getTranslationPattern(),
+                    $this->appConfig->getTranslationPattern(),
                     $admin->getName(),
                     'deleted'
                 );

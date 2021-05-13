@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Events;
 
 use LAG\AdminBundle\Field\FieldInterface;
@@ -25,16 +27,6 @@ class FieldEvent extends Event
         $this->field = $field;
         $this->options = $options;
         $this->context = $context;
-    }
-
-    public function setType(string $type): void
-    {
-        $this->type = $type;
-    }
-
-    public function setOptions(array $options): void
-    {
-        $this->options = $options;
     }
 
     public function getFieldName(): string

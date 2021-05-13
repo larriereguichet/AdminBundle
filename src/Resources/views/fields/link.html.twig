@@ -9,15 +9,17 @@
         options.title|default(options.text)
 }) %}
 {% set text = text is defined ? text : data %}
+{% if options.translation %}{% set text = text|trans([], options.translation_domain) %}{% endif %}
 
+<div class="btn-group" role="group">
 <a{{ block('attributes') }}>
     {# font awesome icons #}
     {% if options.icon %}
         <span class="text">
-            <i class="fa fa-{{ options.icon }}"></i>
-            {% include '@LAGAdmin/fields/string.html.twig' with {data: text, options: options} %}
+            <i class="fa fa-{{ options.icon }}"></i>&nbsp;{{ text|u.truncate(options.length, options.replace) }}
         </span>
     {% else %}
-        {% include '@LAGAdmin/fields/string.html.twig' with {data: text, options: options} %}
+        {{ text|u.truncate(options.length, options.replace) }}
     {% endif %}
 </a>
+</div>

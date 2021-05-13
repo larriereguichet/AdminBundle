@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Field\Helper;
 
 use LAG\AdminBundle\Admin\AdminInterface;
@@ -83,7 +85,7 @@ class FieldConfigurationHelper
                     $text = 'Delete';
 
                     if ($this->appConfig->get('translation')) {
-                        $text = $this->translator->trans('lag.admin.delete');
+                        $text = $this->translator->trans('lag.admin.delete', [], $this->appConfig->getTranslationCatalog());
                     }
                     // If a "delete" field is declared, and if it is not configured in the metadata, and if no
                     // configuration is declared for this field, and if the "delete" action is allowed, we add a default
