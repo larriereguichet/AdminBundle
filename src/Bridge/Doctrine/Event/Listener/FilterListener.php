@@ -86,10 +86,6 @@ class FilterListener
         );
         $queryBuilder->$method($dql);
         $queryBuilder->setParameter($parameterName, $value);
-
-//        $queryBuilder->$method($dql);
-//        $queryBuilder->setParameter($parameterName, $value);
-//        dump($queryBuilder->getDQL());
     }
 
     private function addAssociationFilter(QueryBuilder $queryBuilder, FilterInterface $criterion): void
