@@ -8,5 +8,5 @@ use Knp\Menu\ItemInterface;
 
 interface MenuFactoryInterface
 {
-    public function create(string $name, array $options = []): ?ItemInterface;
+    public function create(string $name, array $options = []): ItemInterface;
 }

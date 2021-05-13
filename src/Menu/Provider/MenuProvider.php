@@ -26,11 +26,13 @@ class MenuProvider implements MenuProviderInterface
 
     public function get(string $name, array $options = []): ItemInterface
     {
+        $options = array_merge($this->menuConfigurations[$name] ?? [], $options);
+
         return $this->menuFactory->create($name, $options);
     }
 
     public function has(string $name, array $options = []): bool
     {
-        return array_key_exists($name, $this->menuConfigurations);
+        return \array_key_exists($name, $this->menuConfigurations);
     }
 }

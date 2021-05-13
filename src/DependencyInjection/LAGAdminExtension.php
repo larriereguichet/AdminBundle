@@ -24,9 +24,11 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
             $loader->load('services_dev.yaml');
         }
 
-        if ($container->getParameter('kernel.environment') === 'prod')
+        if ($container->getParameter('kernel.environment') === 'prod') {
+            $loader->load('services_prod.yaml');
+        }
 
-        if (!\array_key_exists('application', $config)) {
+        if (!\array_key_exists('resources_path', $config)) {
             $config['resources_path'] = '%kernel.project_dir%/config/admin/resources';
         }
         if (!\array_key_exists('menus', $config)) {
