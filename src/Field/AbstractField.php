@@ -22,7 +22,7 @@ abstract class AbstractField implements FieldInterface
     public function __construct(string $name, string $type)
     {
         if (class_exists($type)) {
-            $type = u($type)->afterLast('\\')->lower();
+            $type = u($type)->afterLast('\\')->lower()->toString();
         }
         $this->name = $name;
         $this->type = $type;

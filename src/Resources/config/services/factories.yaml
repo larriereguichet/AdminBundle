@@ -26,7 +26,6 @@ services:
     LAG\AdminBundle\Factory\Form\FilterFormFactory: ~
 
     # Configuration factories
-#    LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface: '@LAG\AdminBundle\Factory\Configuration\CachedConfigurationFactory'
     LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface: '@LAG\AdminBundle\Factory\Configuration\ConfigurationFactory'
     LAG\AdminBundle\Factory\Configuration\ConfigurationFactory: ~
     LAG\AdminBundle\Factory\Configuration\CachedConfigurationFactory: ~

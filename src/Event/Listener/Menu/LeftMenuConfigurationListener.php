@@ -23,8 +23,9 @@ class LeftMenuConfigurationListener
         $menuConfiguration['attributes']['class'] = 'navbar-nav bg-gradient-primary sidebar sidebar-dark accordion';
         $menuConfiguration['extras']['brand'] = true;
         $menuConfiguration['extras']['homepage'] = true;
+        $menuConfiguration['children'] = $menuConfiguration['children'] ?? [];
 
-        if (isset($menuConfiguration['children']) && \is_array($menuConfiguration['children'])) {
+        if (\count($menuConfiguration['children']) > 0) {
             foreach ($menuConfiguration['children'] as $index => $item) {
                 if (empty($item['attributes']['class'])) {
                     $item['attributes']['class'] = 'nav-item';
@@ -48,6 +49,9 @@ class LeftMenuConfigurationListener
                     'action' => 'list',
                     'attributes' => [
                         'class' => 'nav-item',
+                    ],
+                    'linkAttributes' => [
+                        'class' => 'nav-link',
                     ],
                 ];
             }

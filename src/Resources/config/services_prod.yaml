@@ -1,0 +1,2 @@
+services:
+    LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface: '@LAG\AdminBundle\Factory\Configuration\CachedConfigurationFactory'
