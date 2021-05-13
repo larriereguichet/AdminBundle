@@ -26,6 +26,7 @@ class AdminExtensionTest extends TestCase
                 'admin_config',
                 'admin_action_allowed',
                 'admin_media_enabled',
+                'admin_is_translation_enabled',
             ]);
             $this->assertTrue(method_exists($this->adminExtension, $function->getCallable()[1]));
         }

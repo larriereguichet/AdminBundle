@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Listener\View;
 
 use LAG\AdminBundle\Event\Events\ViewEvent;

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Listener\Form;
 
 use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Factory\AdminFormFactoryInterface;
 
-class AddDeleteFormListener
+class CreateDeleteFormListener
 {
     private AdminFormFactoryInterface $formFactory;
 

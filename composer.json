@@ -51,6 +51,7 @@
     },
     "require-dev": {
         "dg/bypass-finals": "^1.1",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "nyholm/symfony-bundle-test": "^1.6",
         "php-parallel-lint/php-var-dump-check": "^0.5",
         "phpstan/phpstan": "^0.12",

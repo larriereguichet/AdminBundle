@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Form\Type\TinyMce;
 
 use Symfony\Component\Form\AbstractType;

@@ -2,12 +2,12 @@
 
 namespace LAG\AdminBundle\Tests\Utils;
 
+use LAG\AdminBundle\Form\Type\DateRangeType;
+use LAG\AdminBundle\Form\Type\Select2\Select2EntityType;
+use LAG\AdminBundle\Form\Type\Select2\Select2Type;
 use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\Utils\FormUtils;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -17,12 +17,12 @@ class FormUtilsTest extends TestCase
 {
     public function testConvertShortFormType()
     {
-        $this->assertEquals(ChoiceType::class, FormUtils::convertShortFormType('choice'));
+        $this->assertEquals(Select2Type::class, FormUtils::convertShortFormType('choice'));
         $this->assertEquals(TextareaType::class, FormUtils::convertShortFormType('array'));
         $this->assertEquals(TextType::class, FormUtils::convertShortFormType('string'));
-        $this->assertEquals(EntityType::class, FormUtils::convertShortFormType('entity'));
-        $this->assertEquals(DateType::class, FormUtils::convertShortFormType('date'));
-        $this->assertEquals(DateType::class, FormUtils::convertShortFormType('datetime'));
+        $this->assertEquals(Select2EntityType::class, FormUtils::convertShortFormType('entity'));
+        $this->assertEquals(DateRangeType::class, FormUtils::convertShortFormType('date'));
+        $this->assertEquals(DateRangeType::class, FormUtils::convertShortFormType('datetime'));
         $this->assertEquals(TextareaType::class, FormUtils::convertShortFormType('text'));
         $this->assertEquals(NumberType::class, FormUtils::convertShortFormType('number'));
         $this->assertEquals(IntegerType::class, FormUtils::convertShortFormType('integer'));

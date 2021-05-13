@@ -17,7 +17,7 @@ class FieldTestCase extends TestCase
 
     protected function createField(string $name, array $configuration, array $context = []): FieldInterface
     {
-        return $this->factory->create($name, $configuration, $configuration, $context);
+        return $this->factory->create($name, $configuration, $context);
     }
 
     protected function setUp(): void

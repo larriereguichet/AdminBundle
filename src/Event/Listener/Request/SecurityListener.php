@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Listener\Request;
 
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;

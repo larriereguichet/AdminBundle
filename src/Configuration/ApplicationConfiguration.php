@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Configuration;
 
 use Closure;
@@ -28,7 +30,7 @@ use function Symfony\Component\String\u;
  */
 class ApplicationConfiguration extends ServiceConfiguration
 {
-    const FIELD_MAPPING = [
+    public const FIELD_MAPPING = [
         AbstractField::TYPE_STRING => StringField::class,
         AbstractField::TYPE_TEXT => StringField::class,
         AbstractField::TYPE_FLOAT => StringField::class,

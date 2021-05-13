@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Admin\Helper;
 
 use LAG\AdminBundle\Admin\AdminInterface;

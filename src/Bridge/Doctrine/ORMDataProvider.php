@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,16 +58,12 @@ class ORMDataProvider implements DataProviderInterface
             $data = $repository->$method($criteria, $orderBy, $limit, $offset);
 
             if (!$data instanceof QueryBuilder) {
-                throw new Exception(sprintf(
-                    'The method "%s" of the repository "%s" should return a instance of "%s"',
-                    $method,
-                    get_class($repository),
-                    QueryBuilder::class
-                ));
+                throw new Exception(sprintf('The method "%s" of the repository "%s" should return a instance of "%s"', $method, \get_class($repository), QueryBuilder::class));
             }
         } else {
             $data = $repository->createQueryBuilder('entity');
         }
+
         return new ORMDataSource($data, $isPaginated, $page, $maxPerPage);
     }
 

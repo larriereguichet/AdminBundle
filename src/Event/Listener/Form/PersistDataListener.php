@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Listener\Form;
 
 use LAG\AdminBundle\DataPersister\Registry\DataPersisterRegistryInterface;

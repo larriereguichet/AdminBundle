@@ -38,7 +38,7 @@ class ApplicationConfigurationTest extends TestCase
             'pager' => 'pagerfanta',
             'max_per_page' => 25,
             'page_parameter' => 'page',
-            'string_length' => 200,
+            'string_length' => 100,
             'string_truncate' => '...',
             'permissions' => 'ROLE_ADMIN',
             'translation' => [
@@ -96,7 +96,7 @@ class ApplicationConfigurationTest extends TestCase
         $this->assertEquals(25, $configuration->getMaxPerPage());
         $this->assertEquals('page', $configuration->getPageParameter());
 
-        $this->assertEquals(200, $configuration->getStringLength());
+        $this->assertEquals(100, $configuration->getStringLength());
         $this->assertEquals('...', $configuration->getStringTruncate());
 
         $this->assertEquals('ROLE_ADMIN', $configuration->getPermissions());
@@ -130,7 +130,6 @@ class ApplicationConfigurationTest extends TestCase
     public function testConfigurationWithoutConfiguration(): void
     {
         $this->expectException(InvalidConfigurationException::class);
-        /* @noinspection PhpExpressionResultUnusedInspection */
         new ApplicationConfiguration([]);
     }
 

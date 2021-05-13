@@ -31,6 +31,8 @@ class FilterDataListenerTest extends TestCase
                     'name' => 'my_filter',
                     'comparator' => 'like',
                     'operator' => '=',
+                    'path' => 'my_property',
+                    'type' => 'string',
                 ],
                 'empty_filter' => [],
                 'false_filter' => [],

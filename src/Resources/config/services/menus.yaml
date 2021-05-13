@@ -2,19 +2,34 @@ services:
     _defaults:
         autoconfigure: true
         autowire: true
-    
+
+    # Knp Bridge
     LAG\AdminBundle\Menu\Provider\MenuProvider:
         arguments:
             $menuConfigurations: '%lag_admin.menu.menus%'
         tags:
             - {name: knp_menu.provider}
 
-    LAG\AdminBundle\Event\Listener\Menu\DefaultMenuListener:
-        arguments:
-            $menuConfigurations: '%lag_admin.menu.menus%'
-        tags:
-            - {name: kernel.event_listener, event: lag.admin.menu_configuration, priority: 255}
-    
+    # Factories
+    LAG\AdminBundle\Menu\Factory\MenuFactoryInterface: '@LAG\AdminBundle\Menu\Factory\MenuFactory'
+    LAG\AdminBundle\Menu\Factory\MenuFactory: ~
+
+    LAG\AdminBundle\Menu\Factory\MenuItemFactoryInterface: '@LAG\AdminBundle\Menu\Factory\MenuItemFactory'
+    LAG\AdminBundle\Menu\Factory\MenuItemFactory: ~
+
+    # Listeners
     LAG\AdminBundle\Event\Listener\Menu\MenuConfigurationListener:
         tags:
-            - {name: kernel.event_listener, event: lag.admin.menu_configuration, priority: 0}
+            - {name: kernel.event_listener, event: lag.admin.menu_configuration, priority: 255}
+
+    LAG\AdminBundle\Event\Listener\Menu\MenuItemConfigurationListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.menu_configuration, priority: 254}
+
+    LAG\AdminBundle\Event\Listener\Menu\CreateTopMenuListener:
+        tags:
+            - {name: kernel.event_listener, event: lag.admin.menu_top_create, priority: 255}
+
+    LAG\AdminBundle\Event\Listener\Menu\LeftMenuConfigurationListener:
+        tags:
+            - { name: kernel.event_listener, event: lag.admin.menu_left_configuration, priority: 255 }

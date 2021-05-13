@@ -1,6 +1,6 @@
 <?php
 
-$finder = \PhpCsFixer\Finder::create()
+$finder = PhpCsFixer\Finder::create()
     ->in('src/')
     ->exclude([
         'bin',
@@ -8,15 +8,16 @@ $finder = \PhpCsFixer\Finder::create()
         'vendor',
     ])
 ;
+$config = new PhpCsFixer\Config();
 
-return \PhpCsFixer\Config::create()
+return $config
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'phpdoc_align' => false,
         'yoda_style' => false,
         'elseif' => true,
-        'strict_types' => true,
+        'declare_strict_types' => true,
     ])
     ->setFinder($finder)
 ;

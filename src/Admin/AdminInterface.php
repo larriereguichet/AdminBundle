@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Admin;
 
 use LAG\AdminBundle\Configuration\AdminConfiguration;
@@ -14,17 +16,17 @@ interface AdminInterface
     /**
      * Do not load entities on handleRequest (for create method for example).
      */
-    const LOAD_STRATEGY_NONE = 'strategy_none';
+    public const LOAD_STRATEGY_NONE = 'strategy_none';
 
     /**
      * Load one entity on handleRequest (edit method for example).
      */
-    const LOAD_STRATEGY_UNIQUE = 'strategy_unique';
+    public const LOAD_STRATEGY_UNIQUE = 'strategy_unique';
 
     /**
      * Load multiple entities on handleRequest (list method for example).
      */
-    const LOAD_STRATEGY_MULTIPLE = 'strategy_multiple';
+    public const LOAD_STRATEGY_MULTIPLE = 'strategy_multiple';
 
     /**
      * Handle the request: load the forms and the entities.

@@ -11,7 +11,7 @@ class StringFieldTest extends FieldTestCase
         $field = $this->factory->create('name', ['type' => 'string']);
 
         $this->assertEquals([
-            'length' => 200,
+            'length' => 100,
             'replace' => '...',
             'translate_title' => true,
             'attr' => ['class' => 'admin-field admin-field-string'],
@@ -21,7 +21,7 @@ class StringFieldTest extends FieldTestCase
             'property_path' => 'name',
             'template' => '@LAGAdmin/fields/string.html.twig',
             'translation' => false,
-            'translation_domain' => null,
+            'translation_domain' => 'admin',
             'sortable' => true,
         ], $field->getOptions());
         $this->assertInstanceOf(StringField::class, $field);

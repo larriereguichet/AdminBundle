@@ -34,7 +34,7 @@ services:
         tags:
             - {name: kernel.event_listener, event: lag.admin.form, priority: 255}
 
-    LAG\AdminBundle\Event\Listener\Form\AddDeleteFormListener:
+    LAG\AdminBundle\Event\Listener\Form\CreateDeleteFormListener:
         tags:
             - {name: kernel.event_listener, event: lag.admin.form, priority: 255}
 

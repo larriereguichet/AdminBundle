@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Events;
 
 use LAG\AdminBundle\Exception\Filter\FilterMissingException;
@@ -11,7 +13,7 @@ class DataEvent extends AbstractEvent
     /**
      * @var mixed
      */
-    private $data;
+    private $data = null;
     private ?FormInterface $form = null;
     private array $filters = [];
     private array $orderBy = [];

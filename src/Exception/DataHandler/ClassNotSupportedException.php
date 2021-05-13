@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Exception\DataHandler;
 
 use Exception;
@@ -11,7 +13,7 @@ class ClassNotSupportedException extends Exception
     {
         parent::__construct(sprintf(
             'The data of type "%s" is not supported by any data handlers',
-            get_class($dataSource->getData())
+            \get_class($dataSource->getData())
         ));
     }
 }

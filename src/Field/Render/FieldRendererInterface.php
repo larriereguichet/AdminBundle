@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Field\Render;
 
 use LAG\AdminBundle\Field\View\View;

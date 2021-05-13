@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Admin;
 
 use LAG\AdminBundle\Configuration\AdminConfiguration;
@@ -70,7 +72,6 @@ class Admin implements AdminInterface
             if ($formName !== 'filter') {
                 $form->handleRequest($request);
             }
-
         }
         $this->eventDispatcher->dispatch($formEvent, AdminEvents::ADMIN_HANDLE_FORM);
     }

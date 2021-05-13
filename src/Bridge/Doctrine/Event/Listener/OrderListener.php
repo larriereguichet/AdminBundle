@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\Doctrine\Event\Listener;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,7 +34,7 @@ class OrderListener
 
         foreach ($order as $field => $orderValue) {
             if ($metadata->hasField($field)) {
-                $this->addFieldOrder($queryBuilder ,$field, $orderValue);
+                $this->addFieldOrder($queryBuilder, $field, $orderValue);
             }
 
             if ($metadata->hasAssociation($field)) {
@@ -47,7 +49,7 @@ class OrderListener
         $queryBuilder->addOrderBy($alias.'.'.$field, $orderValue);
     }
 
-    private function addAssociationOrder(QueryBuilder $queryBuilder, ClassMetadata $metadata,string $field, string $orderValue): void
+    private function addAssociationOrder(QueryBuilder $queryBuilder, ClassMetadata $metadata, string $field, string $orderValue): void
     {
         $joins = $queryBuilder->getDQLPart('join');
         $alias = $queryBuilder->getRootAliases()[0];

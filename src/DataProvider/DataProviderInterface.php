@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\DataProvider;
 
 use LAG\AdminBundle\Exception\Exception;

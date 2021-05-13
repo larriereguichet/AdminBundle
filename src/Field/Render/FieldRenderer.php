@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Field\Render;
 
 use Exception;
@@ -72,12 +74,12 @@ class FieldRenderer implements FieldRendererInterface
             $text = null;
             $label = $field->getOption('label');
 
-            if ($label === false || u($field->getName())->startsWith('_')) {
-                $text = '';
-            }
-
             if ($label !== null) {
                 $text = $label;
+            }
+
+            if ($label === false || u($field->getName())->startsWith('_')) {
+                $text = '';
             }
 
             if ($label === false && $field->getName() === 'id') {

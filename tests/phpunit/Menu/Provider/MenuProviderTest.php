@@ -2,131 +2,47 @@
 
 namespace LAG\AdminBundle\Tests\Menu\Provider;
 
-use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
-use LAG\AdminBundle\Configuration\MenuConfiguration;
 use LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface;
+use LAG\AdminBundle\Menu\Factory\MenuFactoryInterface;
 use LAG\AdminBundle\Menu\Provider\MenuProvider;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 
 class MenuProviderTest extends TestCase
 {
-    public function testGet()
+    private MenuProvider $provider;
+    private MockObject $menuFactory;
+    private MockObject $configurationFactory;
+    private MockObject $security;
+
+    public function testGet(): void
     {
-        [$provider, $menuFactory, $configurationFactory, $requestStack] = $this->createProvider();
-
-        $menuConfiguration = $this->createMock(MenuConfiguration::class);
-        $menuConfiguration
+        $menu = $this->createMock(ItemInterface::class);
+        $this
+            ->menuFactory
             ->expects($this->once())
-            ->method('toArray')
-            ->willReturn([
-                'attributes' => [
-                    'class' => 'abitbol',
-                ],
-                'children' => [
-                    'first' => [
-                        'text' => 'Yes !',
-                        'attributes' => [
-                            'class' => 'child-class',
-                        ],
-                        'linkAttributes' => [
-                            'class' => 'link-class',
-                        ],
-                        'route' => 'road 66',
-                        'icon' => 'fa-yes',
-                    ],
-                ],
-                'extras' => [],
-            ])
+            ->method('create')
+            ->willReturn($menu)
         ;
 
-        $menuRoot = $this->createMock(ItemInterface::class);
-        $menuRoot
-            ->expects($this->atLeastOnce())
-            ->method('addChild')
-            ->with('Yes !', [
-                'attributes' => [
-                    'class' => 'child-class',
-                ],
-                'linkAttributes' => [
-                    'class' => 'link-class',
-                ],
-                'route' => 'road 66',
-                'text' => 'Yes !',
-                'icon' => 'fa-yes',
-            ])
-        ;
-
-        $requestStack
-            ->expects($this->once())
-            ->method('getMasterRequest')
-            ->willReturn(new Request([], [], ['_route' => 'road 66']))
-        ;
-
-        $menuFactory
-            ->expects($this->once())
-            ->method('createItem')
-            ->with('root', [
-                'attributes' => [
-                    'class' => 'abitbol',
-                ],
-                'extras' => [],
-            ])
-            ->willReturn($menuRoot)
-        ;
-
-        $configurationFactory
-            ->expects($this->once())
-            ->method('createMenuConfiguration')
-            ->with('my_menu')
-            ->willReturn($menuConfiguration)
-        ;
-
-        $menu = $provider->get('my_menu', []);
-        $this->assertEquals($menuRoot, $menu);
-    }
-
-    public function testHas(): void
-    {
-        [$provider] = $this->createProvider([
-            'left' => [],
+        $result = $this->provider->get('my_menu', [
+            'my_options' => 'options',
         ]);
-
-        $this->assertTrue($provider->has('left'));
+        $this->assertEquals($menu, $result);
     }
 
-    /**
-     * @return MenuProvider[]|MockObject[]
-     */
-    private function createProvider(array $menuConfigurations = []): array
+    protected function setUp(): void
     {
-        $menuFactory = $this->createMock(FactoryInterface::class);
-        $configurationFactory = $this->createMock(ConfigurationFactoryInterface::class);
-        $requestStack = $this->createMock(RequestStack::class);
-        $security = $this->createMock(Security::class);
-        $adminHelper = $this->createMock(AdminHelperInterface::class);
-
-        $provider = new MenuProvider(
-            $menuConfigurations,
-            $menuFactory,
-            $configurationFactory,
-            $requestStack,
-            $security,
-            $adminHelper
+        $this->menuFactory = $this->createMock(MenuFactoryInterface::class);
+        $this->configurationFactory = $this->createMock(ConfigurationFactoryInterface::class);
+        $this->security = $this->createMock(Security::class);
+        $this->provider = new MenuProvider(
+            [],
+            $this->menuFactory,
+            $this->configurationFactory,
+            $this->security
         );
-
-        return [
-            $provider,
-            $menuFactory,
-            $configurationFactory,
-            $requestStack,
-            $security,
-            $adminHelper,
-        ];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\DataProvider\DataSourceHandler;
 
 use LAG\AdminBundle\DataProvider\DataSourceInterface;
@@ -8,10 +10,6 @@ interface DataHandlerInterface
 {
     /**
      * Return true if the given data source is supported by the handler.
-     *
-     * @param DataSourceInterface $dataSource
-     *
-     * @return bool
      */
     public function supports(DataSourceInterface $dataSource): bool;
 

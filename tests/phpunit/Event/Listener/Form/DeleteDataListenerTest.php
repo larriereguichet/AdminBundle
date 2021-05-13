@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Tests\Event\Listener\Form;
 
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\DataPersister\DataPersisterInterface;
 use LAG\AdminBundle\DataPersister\Registry\DataPersisterRegistryInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
@@ -17,12 +18,14 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class DeleteDataListenerTest extends TestCase
 {
+    private DeleteDataListener $listener;
+    private ApplicationConfiguration $appConfig;
+    private MockObject $session;
+    private MockObject $registry;
+
     public function testInvoke(): void
     {
-        [$listener, $registry, $session] = $this->createListener();
-
         $event = $this->createMock(FormEvent::class);
-
         $admin = $this->createMock(AdminInterface::class);
         $configuration = $this->createMock(AdminConfiguration::class);
 
@@ -69,13 +72,13 @@ class DeleteDataListenerTest extends TestCase
         ;
 
         $dataPersister = $this->createMock(DataPersisterInterface::class);
-        $registry
+        $this
+            ->registry
             ->expects($this->once())
             ->method('get')
             ->with('my_data_persister')
             ->willReturn($dataPersister)
         ;
-
         $data = new stdClass();
 
         $admin
@@ -89,16 +92,6 @@ class DeleteDataListenerTest extends TestCase
             ->with()
         ;
 
-        $configuration
-            ->expects($this->once())
-            ->method('isTranslationEnabled')
-            ->willReturn(true)
-        ;
-        $configuration
-            ->expects($this->once())
-            ->method('getTranslationPattern')
-            ->willReturn('lag.{admin}.{key}')
-        ;
         $admin
             ->expects($this->once())
             ->method('getName')
@@ -106,7 +99,8 @@ class DeleteDataListenerTest extends TestCase
         ;
 
         $flashBag = $this->createMock(FlashBagInterface::class);
-        $session
+        $this
+            ->session
             ->expects($this->once())
             ->method('getFlashBag')
             ->willReturn($flashBag)
@@ -114,26 +108,17 @@ class DeleteDataListenerTest extends TestCase
         $flashBag
             ->expects($this->once())
             ->method('add')
-            ->with('success', 'lag.my_admin.deleted')
+            ->with('success', 'admin.my_admin.deleted')
         ;
 
-        $listener->__invoke($event);
+        $this->listener->__invoke($event);
     }
 
     public function testInvokeWithoutForm(): void
     {
-        [$listener] = $this->createListener();
-
         $event = $this->createMock(FormEvent::class);
 
         $admin = $this->createMock(AdminInterface::class);
-        $configuration = $this->createMock(AdminConfiguration::class);
-
-        $admin
-            ->expects($this->once())
-            ->method('getConfiguration')
-            ->willReturn($configuration)
-        ;
         $event
             ->expects($this->once())
             ->method('getAdmin')
@@ -146,23 +131,18 @@ class DeleteDataListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $listener->__invoke($event);
+        $this->listener->__invoke($event);
     }
 
-    /**
-     * @return DeleteDataListener[]|MockObject[]
-     */
-    private function createListener(): array
+    protected function setUp(): void
     {
-        $registry = $this->createMock(DataPersisterRegistryInterface::class);
-        $session = $this->createMock(Session::class);
+        $this->registry = $this->createMock(DataPersisterRegistryInterface::class);
+        $this->session = $this->createMock(Session::class);
+        $this->appConfig = $this->createApplicationConfiguration([
+            'resources_path' => __DIR__,
+            'translation' => ['enabled' => true],
+        ]);
 
-        $listener = new DeleteDataListener($registry, $session);
-
-        return [
-            $listener,
-            $registry,
-            $session,
-        ];
+        $this->listener = new DeleteDataListener($this->registry, $this->session, $this->appConfig);
     }
 }

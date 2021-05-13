@@ -2,11 +2,12 @@
 
 namespace LAG\AdminBundle\Tests\Event\Listener\Data;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\DataProvider\DataSourceHandler\DataHandlerInterface;
+use LAG\AdminBundle\DataProvider\DataSourceInterface;
 use LAG\AdminBundle\DataProvider\Registry\DataProviderRegistryInterface;
 use LAG\AdminBundle\Event\Events\DataEvent;
 use LAG\AdminBundle\Event\Listener\Data\LoadDataListener;
@@ -16,119 +17,83 @@ use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class LoadDataListenerTest extends TestCase
 {
+    private LoadDataListener $listener;
+    private MockObject $registry;
+    private MockObject $dataHandler;
+    private MockObject $eventDispatcher;
+
     public function testInvokeWithNoneStrategy(): void
     {
-        [$listener] = $this->createListener();
-
-        $request = new Request();
-
-        $action = $this->createMock(ActionInterface::class);
-        $admin = $this->createMock(AdminInterface::class);
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
-
-        $event = $this->createMock(DataEvent::class);
-        $event
-            ->expects($this->once())
-            ->method('getRequest')
-            ->willReturn($request)
-        ;
-        $event
-            ->expects($this->once())
-            ->method('getAdmin')
-            ->willReturn($admin)
-        ;
-
-        $admin
-            ->expects($this->once())
-            ->method('getAction')
-            ->willReturn($action)
-        ;
-        $action
-            ->expects($this->once())
-            ->method('getConfiguration')
-            ->willReturn($actionConfiguration)
-        ;
+        [$event,,,,$actionConfiguration] = $this->createDataEvent();
 
         $actionConfiguration
             ->expects($this->once())
             ->method('getLoadStrategy')
             ->willReturn(AdminInterface::LOAD_STRATEGY_NONE)
         ;
-
-        $listener->__invoke($event);
+        $this->listener->__invoke($event);
     }
 
-    public function testInvokeWithStrategyUnique(): void
+    public function testInvokeWithData(): void
     {
-        [$listener, $registry] = $this->createListener();
+        [$event,,,,$actionConfiguration] = $this->createDataEvent();
+        $data = new stdClass();
+        $data->test = true;
+        $event->setData($data);
 
-        $request = new Request(['id' => 666]);
-
-        $action = $this->createMock(ActionInterface::class);
-        $admin = $this->createMock(AdminInterface::class);
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
-        $dataProvider = $this->createMock(AdminAwareDataProviderInterface::class);
-
-        $event = $this->createMock(DataEvent::class);
-        $event
-            ->expects($this->once())
-            ->method('getRequest')
-            ->willReturn($request)
-        ;
-        $event
-            ->expects($this->once())
-            ->method('getAdmin')
-            ->willReturn($admin)
-        ;
-
-        $admin
-            ->expects($this->once())
-            ->method('getAction')
-            ->willReturn($action)
-        ;
-        $admin
-            ->expects($this->once())
-            ->method('getConfiguration')
-            ->willReturn($adminConfiguration)
-        ;
-
-        $action
-            ->expects($this->once())
-            ->method('getConfiguration')
-            ->willReturn($actionConfiguration)
-        ;
         $actionConfiguration
             ->expects($this->once())
             ->method('getLoadStrategy')
             ->willReturn(AdminInterface::LOAD_STRATEGY_UNIQUE)
         ;
+        $this->listener->__invoke($event);
+    }
 
+    public function testInvokeWithStrategyUnique(): void
+    {
+        [$event,$admin,,$adminConfiguration,$actionConfiguration,$request] = $this->createDataEvent();
+        $request->query->set('id', 666);
+
+        $dataProvider = $this->createMock(AdminAwareDataProviderInterface::class);
+        $data = new stdClass();
+        $data->test = true;
+
+        $actionConfiguration
+            ->expects($this->once())
+            ->method('getLoadStrategy')
+            ->willReturn(AdminInterface::LOAD_STRATEGY_UNIQUE)
+        ;
+        $actionConfiguration
+            ->expects($this->once())
+            ->method('getRouteParameters')
+            ->willReturn(['id' => []])
+        ;
         $adminConfiguration
             ->expects($this->once())
             ->method('getDataProvider')
             ->willReturn('my_provider_key')
         ;
-        $registry
+        $this
+            ->registry
             ->expects($this->once())
             ->method('get')
             ->with('my_provider_key')
             ->willReturn($dataProvider)
         ;
-
         $dataProvider
             ->expects($this->once())
             ->method('setAdmin')
             ->with($admin)
         ;
-
-        $actionConfiguration
+        $dataProvider
             ->expects($this->once())
-            ->method('getRouteParameters')
-            ->willReturn(['id' => []])
+            ->method('get')
+            ->with('MyClass', 666)
+            ->willReturn($data)
         ;
         $admin
             ->expects($this->once())
@@ -136,47 +101,16 @@ class LoadDataListenerTest extends TestCase
             ->willReturn('MyClass')
         ;
 
-        $data = new stdClass();
-        $data->test = true;
+        $this->listener->__invoke($event);
 
-        $dataProvider
-            ->expects($this->once())
-            ->method('get')
-            ->with('MyClass', 666)
-            ->willReturn($data)
-        ;
-        $event
-            ->expects($this->once())
-            ->method('setData')
-        ;
-
-        $listener->__invoke($event);
+        $this->assertEquals($data, $event->getData());
     }
 
     public function testInvokeWithStrategyUniqueWithoutIdentifier(): void
     {
-        [$listener, $registry] = $this->createListener();
+        [$event,$admin,$action,$adminConfiguration,$actionConfiguration,] = $this->createDataEvent();
 
-        $request = new Request([]);
-
-        $action = $this->createMock(ActionInterface::class);
-        $admin = $this->createMock(AdminInterface::class);
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $dataProvider = $this->createMock(AdminAwareDataProviderInterface::class);
-
-        $event = $this->createMock(DataEvent::class);
-        $event
-            ->expects($this->once())
-            ->method('getRequest')
-            ->willReturn($request)
-        ;
-        $event
-            ->expects($this->once())
-            ->method('getAdmin')
-            ->willReturn($admin)
-        ;
-
         $admin
             ->expects($this->once())
             ->method('getAction')
@@ -204,7 +138,8 @@ class LoadDataListenerTest extends TestCase
             ->method('getDataProvider')
             ->willReturn('my_provider_key')
         ;
-        $registry
+        $this
+            ->registry
             ->expects($this->once())
             ->method('get')
             ->with('my_provider_key')
@@ -224,32 +159,14 @@ class LoadDataListenerTest extends TestCase
         ;
 
         $this->expectException(Exception::class);
-        $listener->__invoke($event);
+        $this->listener->__invoke($event);
     }
 
     public function testInvokeWithStrategyMultiple(): void
     {
-        [$listener, $registry] = $this->createListener();
+        [$event,$admin,$action,$adminConfiguration,$actionConfiguration,] = $this->createDataEvent();
 
-        $request = new Request();
-
-        $action = $this->createMock(ActionInterface::class);
-        $admin = $this->createMock(AdminInterface::class);
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
         $dataProvider = $this->createMock(AdminAwareDataProviderInterface::class);
-
-        $event = $this->createMock(DataEvent::class);
-        $event
-            ->expects($this->once())
-            ->method('getRequest')
-            ->willReturn($request)
-        ;
-        $event
-            ->expects($this->once())
-            ->method('getAdmin')
-            ->willReturn($admin)
-        ;
 
         $admin
             ->expects($this->once())
@@ -278,7 +195,8 @@ class LoadDataListenerTest extends TestCase
             ->method('getDataProvider')
             ->willReturn('my_provider_key')
         ;
-        $registry
+        $this
+            ->registry
             ->expects($this->once())
             ->method('get')
             ->with('my_provider_key')
@@ -307,34 +225,66 @@ class LoadDataListenerTest extends TestCase
             ->willReturn(25)
         ;
 
-        $data = new ArrayCollection([new stdClass()]);
+        $dataSource = $this->createMock(DataSourceInterface::class);
         $dataProvider
             ->expects($this->once())
             ->method('getCollection')
             ->with('MyClass', [], [], 1, 25)
+            ->willReturn($dataSource)
+        ;
+        $data = new stdClass();
+        $this
+            ->dataHandler
+            ->expects($this->once())
+            ->method('handle')
             ->willReturn($data)
         ;
 
-        $event
-            ->expects($this->once())
-            ->method('setData')
-            ->with($data)
-        ;
+        $this->listener->__invoke($event);
+        $this->assertEquals($data, $event->getData());
+    }
 
-        $listener->__invoke($event);
+    protected function setUp(): void
+    {
+        $this->registry = $this->createMock(DataProviderRegistryInterface::class);
+        $this->dataHandler = $this->createMock(DataHandlerInterface::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $this->listener = new LoadDataListener($this->registry, $this->dataHandler, $this->eventDispatcher);
     }
 
     /**
-     * @return LoadDataListener[]|MockObject[]
+     * @return DataEvent[]|Request[]|MockObject[]
      */
-    private function createListener(): array
+    private function createDataEvent(): array
     {
-        $registry = $this->createMock(DataProviderRegistryInterface::class);
-        $listener = new LoadDataListener($registry);
+        $request = new Request();
+        $action = $this->createMock(ActionInterface::class);
+        $admin = $this->createMock(AdminInterface::class);
+        $adminConfiguration = $this->createMock(AdminConfiguration::class);
+        $actionConfiguration = $this->createMock(ActionConfiguration::class);
+        $event = new DataEvent($admin, $request);
+
+        $admin
+            ->expects($this->once())
+            ->method('getAction')
+            ->willReturn($action)
+        ;
+        $admin
+            ->method('getConfiguration')
+            ->willReturn($adminConfiguration)
+        ;
+        $action
+            ->method('getConfiguration')
+            ->willReturn($actionConfiguration)
+        ;
 
         return [
-            $listener,
-            $registry,
+            $event,
+            $admin,
+            $action,
+            $adminConfiguration,
+            $actionConfiguration,
+            $request,
         ];
     }
 }

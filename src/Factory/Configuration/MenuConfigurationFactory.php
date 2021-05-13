@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Factory\Configuration;
 
 use Exception;
@@ -32,6 +34,7 @@ class MenuConfigurationFactory implements MenuConfigurationFactoryInterface
     {
         $event = new MenuConfigurationEvent($menuName, $options);
         $this->eventDispatcher->dispatch($event, MenuEvents::MENU_CONFIGURATION);
+        $this->eventDispatcher->dispatch($event, sprintf(MenuEvents::MENU_CONFIGURATION_SPECIFIC, $menuName));
         $options = $event->getMenuConfiguration();
         $menuConfiguration = new MenuConfiguration($menuName);
 

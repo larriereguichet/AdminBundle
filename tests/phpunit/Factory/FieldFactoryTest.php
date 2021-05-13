@@ -25,12 +25,11 @@ class FieldFactoryTest extends TestCase
             ->expects($this->exactly(3))
             ->method('dispatch')
             ->willReturnCallback(function ($event) {
-                /* @var FieldEvent $event */
-                $this->assertInstanceOf(FieldEvent::class, $event);
-
-                $this->assertEquals([
-                    'template' => 'string.html.twig',
-                ], $event->getOptions());
+                if ($event instanceof FieldEvent) {
+                    $this->assertEquals([
+                        'template' => 'string.html.twig',
+                    ], $event->getOptions());
+                }
 
                 return $event;
             })
@@ -42,7 +41,7 @@ class FieldFactoryTest extends TestCase
 
         $this->assertEquals([
             'template' => 'string.html.twig',
-            'length' => 200,
+            'length' => 100,
             'replace' => '...',
             'translate_title' => true,
             'attr' => [
@@ -55,7 +54,7 @@ class FieldFactoryTest extends TestCase
             'mapped' => false,
             'property_path' => 'name',
             'translation' => false,
-            'translation_domain' => null,
+            'translation_domain' => 'admin',
             'sortable' => true,
         ], $field->getOptions());
         $this->assertEquals('name', $field->getName());

@@ -7,7 +7,6 @@ use LAG\AdminBundle\Field\View\FieldView;
 use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
 use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\Twig\Extension\FieldExtension;
-use LAG\AdminBundle\View\AdminView;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class FieldExtensionTest extends TestCase
@@ -39,17 +38,15 @@ class FieldExtensionTest extends TestCase
     public function testRenderHeader(): void
     {
         $field = $this->createMock(FieldView::class);
-        $admin = $this->createMock(AdminView::class);
-
         $this
             ->renderer
             ->expects($this->once())
             ->method('renderHeader')
-            ->with($admin, $field)
+            ->with($field)
             ->willReturn('<p>A beautiful bamboo</p>')
         ;
 
-        $this->assertEquals('<p>A beautiful bamboo</p>', $this->extension->renderFieldHeader($admin, $field));
+        $this->assertEquals('<p>A beautiful bamboo</p>', $this->extension->renderFieldHeader($field));
     }
 
     public function testGetFunctions()

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Field;
 
 use Closure;
@@ -54,10 +56,11 @@ abstract class AbstractField implements FieldInterface
                     $value = [];
                 }
 
-                if (!key_exists('class', $value)) {
+                if (!\array_key_exists('class', $value)) {
                     $value['class'] = '';
                 }
                 $value['class'] .= ' admin-field admin-field-'.$this->getType();
+                $value['class'] = trim($value['class']);
 
                 return $value;
             })
@@ -66,10 +69,11 @@ abstract class AbstractField implements FieldInterface
                     $value = [];
                 }
 
-                if (!key_exists('class', $value)) {
+                if (!\array_key_exists('class', $value)) {
                     $value['class'] = '';
                 }
                 $value['class'] .= ' admin-header admin-header-'.$this->getType();
+                $value['class'] = trim($value['class']);
 
                 return $value;
             })

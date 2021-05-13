@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Factory;
 
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
@@ -93,10 +95,7 @@ class FieldFactory implements FieldFactoryInterface
 
             while ($currentField->getParent() !== null) {
                 if (\in_array($currentField->getParent(), $processedParents)) {
-                    throw new FieldConfigurationException(
-                        $field->getName(),
-                        'An inheritance loop is found in '.implode(', ', $processedParents)
-                    );
+                    throw new FieldConfigurationException($field->getName(), 'An inheritance loop is found in '.implode(', ', $processedParents));
                 }
                 $parent = $this->instanciateField($currentField->getName(), $currentField->getParent());
 

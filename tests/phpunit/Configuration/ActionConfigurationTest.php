@@ -30,7 +30,7 @@ class ActionConfigurationTest extends TestCase
         $this->assertEquals([
             'name' => 'my_action',
             'admin_name' => 'my_admin',
-            'title' => 'admin.my_admin.my_action',
+            'title' => 'MyAction',
             'icon' => null,
             'action_class' => 'LAG\AdminBundle\Admin\Action',
             'controller' => 'LAG\AdminBundle\Controller\AdminAction',
@@ -57,11 +57,8 @@ class ActionConfigurationTest extends TestCase
             'menus' => [],
             'fields' => [],
             'template' => 'template.html.twig',
-            'translation' => [
-                'enabled' => true,
-                'pattern' => 'admin.{admin}.{key}',
-                'catalog' => 'admin',
-            ],
+            'redirect' => null,
+            'add_return_link' => true,
         ], $configuration->toArray());
     }
 
@@ -79,7 +76,7 @@ class ActionConfigurationTest extends TestCase
 
         $this->assertEquals('my_action', $configuration->getName());
         $this->assertEquals('my_admin', $configuration->getAdminName());
-        $this->assertEquals('admin.my_admin.my_action', $configuration->getTitle());
+        $this->assertEquals('MyAction', $configuration->getTitle());
         $this->assertEquals('', $configuration->getIcon());
         $this->assertEquals(Action::class, $configuration->getActionClass());
 
@@ -113,12 +110,6 @@ class ActionConfigurationTest extends TestCase
 
         $this->assertEquals([], $configuration->getFields());
         $this->assertEquals('template.html.twig', $configuration->getTemplate());
-
-        $this->assertEquals(true, $configuration->isTranslationEnabled());
-        $this->assertEquals('admin', $configuration->getTranslationCatalog());
-
-        $this->assertEquals('admin.{admin}.{key}', $configuration->getTranslationPattern());
-        $this->assertEquals('admin', $configuration->getTranslationCatalog());
     }
 
     public function testWithoutConfiguration(): void
@@ -164,42 +155,6 @@ class ActionConfigurationTest extends TestCase
 
         $this->expectException(Exception::class);
         $configuration->getMaxPerPage();
-    }
-
-    public function testWithoutTranslation(): void
-    {
-        $configuration = new ActionConfiguration();
-        $configuration->configure([
-            'name' => 'my_action',
-            'admin_name' => 'my_admin',
-            'fields' => [],
-            'path' => '/my-action',
-            'route' => 'my_action',
-            'template' => 'template.html.twig',
-            'translation' => ['enabled' => false],
-        ]);
-        $this->assertFalse($configuration->isTranslationEnabled());
-
-        $this->expectException(Exception::class);
-        $configuration->getTranslationCatalog();
-    }
-
-    public function testWithoutTranslationPattern(): void
-    {
-        $configuration = new ActionConfiguration();
-        $configuration->configure([
-            'name' => 'my_action',
-            'admin_name' => 'my_admin',
-            'fields' => [],
-            'path' => '/my-action',
-            'route' => 'my_action',
-            'template' => 'template.html.twig',
-            'translation' => ['enabled' => false],
-        ]);
-        $this->assertFalse($configuration->isTranslationEnabled());
-
-        $this->expectException(Exception::class);
-        $configuration->getTranslationPattern();
     }
 
     /**
@@ -356,6 +311,7 @@ class ActionConfigurationTest extends TestCase
                         'options' => [],
                         'comparator' => 'like',
                         'operator' => 'or',
+                        'path' => null,
                     ],
                 ],
             ],
@@ -368,6 +324,7 @@ class ActionConfigurationTest extends TestCase
                         'options' => [],
                         'comparator' => 'like',
                         'operator' => 'or',
+                        'path' => null,
                     ],
                 ],
             ],

@@ -22,7 +22,7 @@ class AutoFieldTest extends FieldTestCase
             'property_path' => 'auto',
             'template' => '@LAGAdmin/fields/auto.html.twig',
             'translation' => false,
-            'translation_domain' => null,
+            'translation_domain' => 'admin',
             'sortable' => true,
             'date_format' => 'd/m/Y',
         ], $field->getOptions());

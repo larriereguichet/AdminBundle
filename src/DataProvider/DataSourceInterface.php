@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\DataProvider;
 
 use LAG\AdminBundle\Filter\FilterInterface;
@@ -15,22 +17,16 @@ interface DataSourceInterface
 
     /**
      * Return true if the data source should be paginated.
-     *
-     * @return bool
      */
     public function isPaginated(): bool;
 
     /**
      * Return the current page.
-     *
-     * @return int
      */
     public function getPage(): int;
 
     /**
      * Return the number of elements displayed in a page.
-     *
-     * @return int
      */
     public function getMaxPerPage(): int;
 
@@ -43,8 +39,6 @@ interface DataSourceInterface
 
     /**
      * Return orders.
-     *
-     * @return array
      */
     public function getOrderBy(): array;
 }

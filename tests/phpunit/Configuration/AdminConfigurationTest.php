@@ -48,11 +48,6 @@ class AdminConfigurationTest extends TestCase
             'list_template' => '@LAGAdmin/crud/list.html.twig',
             'delete_template' => '@LAGAdmin/crud/delete.html.twig',
             'menus' => [],
-            'translation' => [
-                'enabled' => true,
-                'pattern' => 'admin.{admin}.{key}',
-                'catalog' => 'admin',
-            ],
             'name' => 'my_admin',
             'entity' => 'MyEntity',
         ], $configuration->toArray());
@@ -108,9 +103,6 @@ class AdminConfigurationTest extends TestCase
         $this->assertEquals('@LAGAdmin/crud/delete.html.twig', $configuration->getDeleteTemplate());
 
         $this->assertEquals([], $configuration->getMenus());
-        $this->assertEquals(true, $configuration->isTranslationEnabled());
-        $this->assertEquals('admin.{admin}.{key}', $configuration->getTranslationPattern());
-        $this->assertEquals('admin', $configuration->getTranslationCatalog());
     }
 
     public function testGetPager(): void
@@ -124,34 +116,6 @@ class AdminConfigurationTest extends TestCase
 
         $this->expectException(Exception::class);
         $configuration->getPager();
-    }
-
-    public function testGetTranslationPattern(): void
-    {
-        $configuration = new AdminConfiguration();
-        $configuration->configure([
-            'name' => 'my_admin',
-            'entity' => 'MyEntity',
-            'translation' => ['enabled' => false],
-        ]);
-        $this->assertFalse($configuration->isTranslationEnabled());
-
-        $this->expectException(Exception::class);
-        $configuration->getTranslationPattern();
-    }
-
-    public function testGetTranslationCatalog(): void
-    {
-        $configuration = new AdminConfiguration();
-        $configuration->configure([
-            'name' => 'my_admin',
-            'entity' => 'MyEntity',
-            'translation' => ['enabled' => false],
-        ]);
-        $this->assertFalse($configuration->isTranslationEnabled());
-
-        $this->expectException(Exception::class);
-        $configuration->getTranslationCatalog();
     }
 
     public function testGetActions(): void

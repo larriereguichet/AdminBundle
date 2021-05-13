@@ -17,19 +17,12 @@ phpunit.run.stop-on-failure:
 
 # PHPCSFixer
 php-cs-fixer.fix:
-	php-cs-fixer fix --using-cache=no --diff --allow-risky=yes
-
-php-cs-fixer.install:
-	@echo "Install binary using composer (globally)"
-	composer global require friendsofphp/php-cs-fixer
-	@echo "Exporting composer binary path"
-	@export PATH="$PATH:$HOME/.composer/vendor/bin"
-
+	bin/php-cs-fixer fix --using-cache=no --diff --allow-risky=yes --config .php-cs-fixer.dist.php
 
 # phpstan
 phpstan.analyse:
 	bin/phpstan analyse --level=1 src
-	bin/phpstan analyse --level=1 tests/AdminBundle
+	bin/phpstan analyse --level=1 tests/phpunit
 
 
 # Misc

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Factory\Form;
 
 use LAG\AdminBundle\Admin\AdminInterface;

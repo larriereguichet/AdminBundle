@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Listener\Data;
 
 use LAG\AdminBundle\Event\Events\DataEvent;
@@ -46,7 +48,7 @@ class CreateDataFilterListener
                     $options['path'] = $name;
                 }
 
-                if (is_array($data[$name])) {
+                if (\is_array($data[$name])) {
                     $options['comparator'] = 'between';
                 }
                 // Create a new filter with submitted and configured values

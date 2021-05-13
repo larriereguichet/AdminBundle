@@ -26,7 +26,7 @@ class ArrayFieldTest extends FieldTestCase
             'property_path' => 'myField',
             'template' => '@LAGAdmin/fields/auto.html.twig',
             'translation' => false,
-            'translation_domain' => null,
+            'translation_domain' => 'admin',
             'sortable' => false,
             'glue' => ', ',
         ], $field->getOptions());

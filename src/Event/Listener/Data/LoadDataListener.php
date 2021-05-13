@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Listener\Data;
 
 use LAG\AdminBundle\Admin\AdminAwareInterface;
@@ -43,13 +45,9 @@ class LoadDataListener
         $actionConfiguration = $admin->getAction()->getConfiguration();
         $strategy = $actionConfiguration->getLoadStrategy();
 
-        // Some action (as create for example) does not require to load data from the database
-        if ($strategy === AdminInterface::LOAD_STRATEGY_NONE) {
-            return;
-        }
-
-        // If an other event already load data, do not load twice
-        if ($event->getData() !== null) {
+        // Some action (as create for example) does not require to load data from the database. If an other event
+        // already load data, do not load twice
+        if ($strategy === AdminInterface::LOAD_STRATEGY_NONE || $event->getData() !== null) {
             return;
         }
         // The data provider is configured in the admin as it make no sense to hae different data provider for each
@@ -79,7 +77,7 @@ class LoadDataListener
             // should override the default order configured in action
             $orderBy = $event->getOrderBy();
 
-            if (count($orderBy) === 0) {
+            if (\count($orderBy) === 0) {
                 $orderBy = $actionConfiguration->getOrder();
             }
             $page = $request->get($actionConfiguration->getPageParameter(), 1);

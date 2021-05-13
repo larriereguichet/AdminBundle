@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\Doctrine\Event\Listener;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -42,7 +44,6 @@ class FilterListener
             if ($metadata->hasAssociation($filter->getName())) {
                 $this->addAssociationFilter($queryBuilder, $filter);
             }
-
         }
     }
 
