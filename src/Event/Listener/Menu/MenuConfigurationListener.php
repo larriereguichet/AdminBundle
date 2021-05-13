@@ -9,11 +9,13 @@ use LAG\AdminBundle\Event\Events\Configuration\MenuConfigurationEvent;
 
 class MenuConfigurationListener
 {
+    private array $menusConfiguration;
     private AdminHelperInterface $helper;
 
-    public function __construct(AdminHelperInterface $helper)
+    public function __construct(array $menusConfiguration, AdminHelperInterface $helper)
     {
         $this->helper = $helper;
+        $this->menusConfiguration = $menusConfiguration;
     }
 
     public function __invoke(MenuConfigurationEvent $event): void
@@ -23,18 +25,13 @@ class MenuConfigurationListener
         }
         $admin = $this->helper->getAdmin();
         $menuConfiguration = $event->getMenuConfiguration();
-        $menuName = $event->getMenuName();
         $menuConfigurationFromAction = $admin->getAction()->getConfiguration()->getMenus();
         $inherits = $menuConfiguration['inherits'] ?? false;
-
-        if (empty($menuConfigurationFromAction[$menuName])) {
-            return;
-        }
+        $menuConfiguration = $menuConfigurationFromAction[$event->getMenuName()] ?? [];
 
         if ($inherits) {
-            $menuConfiguration = array_merge_recursive($menuConfiguration, $menuConfigurationFromAction[$menuName]);
-        } else {
-            $menuConfiguration = $menuConfigurationFromAction[$menuName];
+            $menuConfiguration = array_merge($this->menusConfiguration[$event->getMenuName()] ?? [], $menuConfiguration);
+            $menuConfiguration = array_merge($menuConfiguration, $menuConfigurationFromAction[$event->getMenuName()]);
         }
         $event->setMenuConfiguration($menuConfiguration);
     }

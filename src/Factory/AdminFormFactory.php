@@ -55,10 +55,7 @@ class AdminFormFactory implements AdminFormFactoryInterface
                 continue;
             }
             $formType = FormUtils::convertShortFormType($definition->getType());
-            $formOptions = array_merge(
-                FormUtils::getFormTypeOptions($definition->getType()),
-                $definition->getFormOptions()
-            );
+            $formOptions = $definition->getFormOptions();
 
             $formBuilder->add($name, $formType, $formOptions);
         }

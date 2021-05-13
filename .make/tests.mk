@@ -21,7 +21,7 @@ php-cs-fixer.fix:
 
 # phpstan
 phpstan.analyse:
-	bin/phpstan analyse --level=3 src
+	bin/phpstan analyse --level=5 src
 
 # Misc
 bc.check:

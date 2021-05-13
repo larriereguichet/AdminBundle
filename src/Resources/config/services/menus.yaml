@@ -19,6 +19,8 @@ services:
 
     # Listeners
     LAG\AdminBundle\Event\Listener\Menu\MenuConfigurationListener:
+        arguments:
+            $menusConfiguration: '%lag_admin.menu.menus%'
         tags:
             - {name: kernel.event_listener, event: lag.admin.menu_configuration, priority: 255}
 
