@@ -40,8 +40,18 @@ class CreateDataFilterListener
 
                 // Do not submit false boolean values. If we want to have three values (true false and null) we should
                 // use a select
-                if (\is_bool($data[$name]) && false === $data[$name]) {
+                if ($data[$name] === false) {
                     continue;
+                }
+
+                if (\is_array($data[$name])) {
+                    $check = array_filter($data[$name], function ($value) {
+                        return $value !== null;
+                    });
+
+                    if (\count($check) === 0) {
+                        continue;
+                    }
                 }
 
                 if ($options['path'] === null) {
