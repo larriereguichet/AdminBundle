@@ -6,7 +6,7 @@ services:
 
     LAG\AdminBundle\Twig\Extension\AdminExtension:
         arguments:
-            $mediaEnabled: '%lag_admin.media.bundle_enabled%'
+            $mediaEnabled: '%lag_admin.media_bundle_enabled%'
         tags:
             - {name: twig.extension}
 
