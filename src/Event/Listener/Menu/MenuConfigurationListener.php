@@ -20,18 +20,18 @@ class MenuConfigurationListener
 
     public function __invoke(MenuConfigurationEvent $event): void
     {
-        if (!$this->helper->hasAdmin()) {
-            return;
-        }
-        $admin = $this->helper->getAdmin();
         $menuConfiguration = $event->getMenuConfiguration();
-        $menuConfigurationFromAction = $admin->getAction()->getConfiguration()->getMenus();
         $inherits = $menuConfiguration['inherits'] ?? false;
         $menuConfiguration = $menuConfigurationFromAction[$event->getMenuName()] ?? [];
+        $menuConfiguration = array_merge($this->menusConfiguration[$event->getMenuName()] ?? [], $menuConfiguration);
 
-        if ($inherits) {
-            $menuConfiguration = array_merge($this->menusConfiguration[$event->getMenuName()] ?? [], $menuConfiguration);
-            $menuConfiguration = array_merge($menuConfiguration, $menuConfigurationFromAction[$event->getMenuName()]);
+        if ($this->helper->hasAdmin()) {
+            $admin = $this->helper->getAdmin();
+            $menuConfigurationFromAction = $admin->getAction()->getConfiguration()->getMenus();
+
+            if ($inherits) {
+                $menuConfiguration = array_merge($menuConfiguration, $menuConfigurationFromAction[$event->getMenuName()]);
+            }
         }
         $event->setMenuConfiguration($menuConfiguration);
     }
