@@ -20,9 +20,9 @@
     {% endblock %}
     
     {% block admin_stylesheets %}
-        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/sb-admin.css') }}"/>
-        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/css/fa.css') }}"/>
-        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/build/admin.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/sb-admin-css.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/fa.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/admin.css') }}"/>
     
         {% if admin_media_enabled() %}
             <link rel="stylesheet" href="{{ asset('/bundles/jkmedia/assets/media.css') }}"/>
@@ -76,11 +76,11 @@
                 {# Media js should always be called before the admin js to preserve tinymce media working #}
                 <script src="{{ asset('/bundles/jkmedia/assets/media.js') }}"></script>
                 {% endif %}
-                <script src="{{ asset('/bundles/lagadmin/js/jquery.js') }}"></script>
-                <script src="{{ asset('/bundles/lagadmin/js/jquery-easing.js') }}"></script>
-                <script src="{{ asset('/bundles/lagadmin/js/bootstrap.js') }}"></script>
-                <script src="{{ asset('/bundles/lagadmin/js/sb-admin.js') }}"></script>
-                <script src="{{ asset('/bundles/lagadmin/build/admin.js') }}"></script>
+                <script src="{{ asset('/bundles/lagadmin/jquery.js') }}"></script>
+                <script src="{{ asset('/bundles/lagadmin/jquery-easing.js') }}"></script>
+                <script src="{{ asset('/bundles/lagadmin/bootstrap.js') }}"></script>
+                <script src="{{ asset('/bundles/lagadmin/sb-admin.js') }}"></script>
+                <script src="{{ asset('/bundles/lagadmin/admin.js') }}"></script>
             {% endblock %}
             {% block javascripts %}{% endblock %}
         </footer>

@@ -37,7 +37,7 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('lag_admin.application.configuration', $config);
         $container->setParameter('lag_admin.menu.menus', $config['menus']);
         $container->setParameter('lag_admin.resources.path', $config['resources_path']);
-        $container->setParameter('lag_admin.media.bundle_enabled', \array_key_exists('JKMediaBundle', $container->getParameter('kernel.bundles')));
+        $container->setParameter('lag_admin.media_bundle_enabled', \array_key_exists('JKMediaBundle', $container->getParameter('kernel.bundles')));
         $container->setParameter('lag_admin.fields.mapping', $config['fields_mapping']);
     }
 

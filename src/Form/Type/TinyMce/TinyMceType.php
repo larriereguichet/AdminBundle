@@ -25,9 +25,10 @@ class TinyMceType extends AbstractType
             ->setDefaults([
                 'attr' => [],
                 'tinymce_options' => [],
+                'custom_buttons' => [],
             ])
             ->setAllowedTypes('tinymce_options', 'array')
-            ->setNormalizer('tinymce_options', function (Options $options, $value) {
+            ->addNormalizer('tinymce_options', function (Options $options, $value) {
                 $attr = $options->offsetGet('attr');
 
                 if (\array_key_exists('id', $attr)) {
@@ -38,6 +39,16 @@ class TinyMceType extends AbstractType
                 // Do not use a nested options resolver to allow the user to define only some options and not the
                 // whole set
                 return array_merge($this->getTinyMceDefaultConfiguration(), $value);
+            })
+            ->setAllowedTypes('custom_buttons', 'array')
+            ->addNormalizer('custom_buttons', function (Options $options, $value) {
+                foreach ($value as $item => $button) {
+                    $buttonResolver = new OptionsResolver();
+                    $buttonResolver->setDefaults([
+                        'event_name' => 'tinymce-button-'.$item,
+                        'text' => u($item)->title(false)->toString(),
+                    ]);
+                }
             })
         ;
     }
@@ -60,16 +71,14 @@ class TinyMceType extends AbstractType
             'language' => 'fr_FR',
             'selector' => uniqid('tinymce'),
             'toolbar1' => 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter '
-                .'alignright alignjustify | bullist numlist outdent indent | link image toolbar2: print preview '
-                .'media | forecolor backcolor emoticons code',
+                .'alignright alignjustify | bullist numlist outdent indent | link ',
+            'toolbar2' => ' print preview | forecolor backcolor emoticons code',
             'image_advtab' => true,
             'relative_urls' => false,
             'convert_urls' => false,
             'theme' => 'silver',
             'skin' => 'oxide',
             'imagetools_toolbar' => 'rotateleft rotateright | flipv fliph | editimage imageoptions',
-            //'content_css' => $this->packages->getUrl('build/cms.tinymce.content.css'),
-            //'content_css' => $this->packages->getUrl('/bundles/jkmedia/assets/media-editor.css'),
             'content_css' => '',
             'body_class' => 'mceForceColors container',
             'browser_spellcheck' => true,
@@ -79,7 +88,6 @@ class TinyMceType extends AbstractType
                 'autolink',
                 'charmap',
                 'code',
-                'colorpicker',
                 'emoticons',
                 'fullscreen',
                 'directionality',
@@ -100,12 +108,11 @@ class TinyMceType extends AbstractType
                 'table',
                 'textpattern',
                 'template',
-                'textcolor',
                 'wordcount',
                 'visualblocks',
                 'visualchars',
             ],
-            'height' => 400,
+            'height' => 1000,
         ];
     }
 }

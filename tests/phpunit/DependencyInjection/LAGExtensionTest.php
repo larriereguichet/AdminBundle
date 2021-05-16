@@ -26,7 +26,7 @@ class LAGExtensionTest extends TestCase
                     'lag_admin.menu.menus',
                     'lag_admin.menu.enable',
                     'lag_admin.resources.path',
-                    'lag_admin.media.bundle_enabled',
+                    'lag_admin.media_bundle_enabled',
                     'lag_admin.fields.mapping',
                 ]);
 
