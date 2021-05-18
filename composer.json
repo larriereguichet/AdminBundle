@@ -34,7 +34,7 @@
         "lag/string-utils": "^1.2",
         "pagerfanta/doctrine-collections-adapter": "^3.0",
         "pagerfanta/doctrine-orm-adapter": "^3.0",
-        "sensio/framework-extra-bundle": "^6.1.2",
+        "sensio/framework-extra-bundle": "^6.1",
         "symfony/dependency-injection": "^4.4|^5.2",
         "symfony/event-dispatcher": "^4.4|^5.2",
         "symfony/flex": "^1.11",
