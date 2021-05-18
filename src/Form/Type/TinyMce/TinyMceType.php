@@ -38,7 +38,7 @@ class TinyMceType extends AbstractType
                 }
                 // Do not use a nested options resolver to allow the user to define only some options and not the
                 // whole set
-                return array_merge($this->getTinyMceDefaultConfiguration(), $value);
+                return array_replace_recursive($this->getTinyMceDefaultConfiguration(), $value);
             })
             ->setAllowedTypes('custom_buttons', 'array')
             ->addNormalizer('custom_buttons', function (Options $options, $value) {
@@ -62,6 +62,7 @@ class TinyMceType extends AbstractType
         ;
         $view->vars['attr']['data-controller'] = 'tinymce';
         $view->vars['attr']['data-options'] = json_encode($options['tinymce_options']);
+        $view->vars['attr']['data-custom-buttons'] = json_encode($options['custom_buttons']);
     }
 
     private function getTinyMceDefaultConfiguration(): array
@@ -79,7 +80,7 @@ class TinyMceType extends AbstractType
             'theme' => 'silver',
             'skin' => 'oxide',
             'imagetools_toolbar' => 'rotateleft rotateright | flipv fliph | editimage imageoptions',
-            'content_css' => '',
+            'content_css' => [],
             'body_class' => 'mceForceColors container',
             'browser_spellcheck' => true,
             'plugins' => [

@@ -47,7 +47,24 @@ export default class extends Controller {
     initialize() {
         const dataset = this.element.dataset;
         this.options = JSON.parse(dataset.options) || {};
-        document.addEventListener('tinymce-insert-content', event => {
+        const customButtons = JSON.parse(dataset.customButtons) || {};
+    
+        this.options.setup = function (editor) {
+            for (const key in customButtons) {
+                if (customButtons.hasOwnProperty(key)) {
+                    let event = new CustomEvent(customButtons[key].event);
+                    
+                    editor.ui.registry.addButton(key, {
+                        text: customButtons[key].text,
+                        onAction: function () {
+                            window.dispatchEvent(event);
+                        }
+                    });
+                }
+            }
+        };
+        
+        window.addEventListener('tinymce-insert-content', event => {
             this.insert(event.detail);
         });
     }
@@ -57,7 +74,7 @@ export default class extends Controller {
             detail: this.options
         });
         window.dispatchEvent(event);
-        tinymce.init(event.detail).then();
+        tinymce.init(event.detail);
     }
 
     insert(content) {
