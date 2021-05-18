@@ -53,6 +53,7 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
                 'template' => '@LAGAdmin/menu/menu-base.html.twig',
             ],
         ]);
+
         $container->prependExtensionConfig('twig', [
             'form_themes' => ['@LAGAdmin/form/fields.html.twig'],
         ]);
