@@ -6,23 +6,15 @@ namespace LAG\AdminBundle\Session\FlashMessage;
 
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-class FlashMessageHelper implements FlashMessageHelperInterface
+class FlashMessageHelper
 {
-    private ApplicationConfiguration $appConfig;
-    private SessionInterface $session;
-    private TranslationHelperInterface $translationHelper;
-
     public function __construct(
-        ApplicationConfiguration $appConfig,
-        SessionInterface $session,
-        TranslationHelperInterface $translationHelper
+        private ApplicationConfiguration $appConfig,
+        private RequestStack $requestStack,
+        private TranslationHelperInterface $translationHelper
     ) {
-        $this->appConfig = $appConfig;
-        $this->session = $session;
-        $this->translationHelper = $translationHelper;
     }
 
     public function add(string $type, string $message, array $messageParameters = []): void
@@ -33,9 +25,7 @@ class FlashMessageHelper implements FlashMessageHelperInterface
                 ->trans($message, $messageParameters, $this->appConfig->getTranslationCatalog())
             ;
         }
-
-        if ($this->session instanceof Session) {
-            $this->session->getFlashBag()->add($type, $message);
-        }
+        $session = $this->requestStack->getSession();
+        $session->getFlashBag()->add($type, $message);
     }
 }

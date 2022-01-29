@@ -3,5 +3,4 @@ services:
         autowire: true
         autoconfigure: true
         
-    LAG\AdminBundle\Session\FlashMessage\FlashMessageHelperInterface: '@LAG\AdminBundle\Session\FlashMessage\FlashMessageHelper'
     LAG\AdminBundle\Session\FlashMessage\FlashMessageHelper: ~

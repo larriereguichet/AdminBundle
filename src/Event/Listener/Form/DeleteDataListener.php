@@ -7,27 +7,19 @@ namespace LAG\AdminBundle\Event\Listener\Form;
 use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\DataPersister\Registry\DataPersisterRegistryInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
+use LAG\AdminBundle\Session\FlashMessage\FlashMessageHelper;
 use LAG\AdminBundle\Translation\Helper\TranslationHelper;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Remove data when the remove form is submitted and valid.
  */
 class DeleteDataListener
 {
-    private SessionInterface $session;
-    private DataPersisterRegistryInterface $registry;
-    private ApplicationConfiguration $appConfig;
-
     public function __construct(
-        DataPersisterRegistryInterface $registry,
-        SessionInterface $session,
-        ApplicationConfiguration $appConfig
+        private  DataPersisterRegistryInterface $registry,
+        private FlashMessageHelper $flashMessageHelper,
+        private ApplicationConfiguration $appConfig
     ) {
-        $this->registry = $registry;
-        $this->session = $session;
-        $this->appConfig = $appConfig;
     }
 
     public function __invoke(FormEvent $event): void
@@ -51,10 +43,7 @@ class DeleteDataListener
                     'deleted'
                 );
             }
-
-            if ($this->session instanceof Session) {
-                $this->session->getFlashBag()->add('success', $message);
-            }
+            $this->flashMessageHelper->add('success', $message);
         }
     }
 }
