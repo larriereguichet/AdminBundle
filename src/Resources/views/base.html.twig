@@ -15,8 +15,12 @@
     {% endblock %}
     
     {% block favicon %}
-        <link rel="shortcut icon" href="{{ asset('/bundles/lagadmin/favicon.ico') }}" type="image/x-icon">
-        <link rel="icon" href="{{ asset('/bundles/lagadmin/favicon.ico') }}" type="image/x-icon">
+        <link rel="shortcut icon"
+              href="{{ asset('/bundles/lagadmin/favicon.ico') }}"
+              type="image/x-icon">
+        <link rel="icon"
+              href="{{ asset('/bundles/lagadmin/favicon.ico') }}"
+              type="image/x-icon">
     {% endblock %}
     
     {% block admin_stylesheets %}
@@ -27,7 +31,8 @@
         {% if admin_media_enabled() %}
             <link rel="stylesheet" href="{{ asset('/bundles/jkmedia/assets/media.css') }}"/>
         {% endif %}
-        
+
+        {# TODO #}
 {#        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />#}
     {% endblock %}
     
@@ -69,23 +74,22 @@
     </div>
     {% endblock %}
     
-    {% block footer %}
-        <footer>
-            {% block admin_javascripts %}
-                {% if admin_media_enabled() %}
-                {# Media js should always be called before the admin js to preserve tinymce media working #}
-                <script src="{{ asset('/bundles/jkmedia/assets/media.js') }}"></script>
-                {% endif %}
-                <script src="{{ asset('/bundles/lagadmin/jquery.js') }}"></script>
-                <script src="{{ asset('/bundles/lagadmin/jquery-easing.js') }}"></script>
-                <script src="{{ asset('/bundles/lagadmin/bootstrap.js') }}"></script>
-                <script src="{{ asset('/bundles/lagadmin/sb-admin.js') }}"></script>
-                <script src="{{ asset('/bundles/lagadmin/admin.js') }}"></script>
-            {% endblock %}
-            {% block javascripts %}{% endblock %}
-        </footer>
+    {% block footer %}{% endblock %}
+
+    {% block admin_javascripts %}
+        {% if admin_media_enabled() %}
+        {# Media js should always be called before the admin js to preserve tinymce media working #}
+        <script src="{{ asset('/bundles/jkmedia/assets/media.js') }}"></script>
+        {% endif %}
+        <script src="{{ asset('/bundles/lagadmin/jquery.js') }}"></script>
+        <script src="{{ asset('/bundles/lagadmin/jquery-easing.js') }}"></script>
+        <script src="{{ asset('/bundles/lagadmin/bootstrap.js') }}"></script>
+        <script src="{{ asset('/bundles/lagadmin/sb-admin.js') }}"></script>
+        <script src="{{ asset('/bundles/lagadmin/admin.js') }}"></script>
     {% endblock %}
-    
+
+    {% block javascripts %}{% endblock %}
+
     {% block modal %}
         {% include '@LAGAdmin/modal/modal.html.twig' %}
     {% endblock %}

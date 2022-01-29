@@ -6,19 +6,14 @@ namespace LAG\AdminBundle\Event\Listener\Form;
 
 use LAG\AdminBundle\DataPersister\Registry\DataPersisterRegistryInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
-use LAG\AdminBundle\Session\FlashMessage\FlashMessageHelperInterface;
+use LAG\AdminBundle\Session\FlashMessage\FlashMessageHelper;
 
 class PersistDataListener
 {
-    private DataPersisterRegistryInterface $registry;
-    private FlashMessageHelperInterface $flashMessageHelper;
-
     public function __construct(
-        DataPersisterRegistryInterface $registry,
-        FlashMessageHelperInterface $flashMessageHelper
+        private DataPersisterRegistryInterface $registry,
+        private FlashMessageHelper $flashMessageHelper
     ) {
-        $this->registry = $registry;
-        $this->flashMessageHelper = $flashMessageHelper;
     }
 
     public function __invoke(FormEvent $event): void
