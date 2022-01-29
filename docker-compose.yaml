@@ -1,50 +1,51 @@
-version: "3"
+version: '3.4'
 
 services:
     php:
         build:
-            context: .docker/php
+            context: .
         ports:
-            - 8000:8000
+            - '8000:8000'
         volumes:
-            - .:/home/docker/www/admin-bundle
-        environment:
-            SYMFONY_VERSION: 5.1
-        #command: bash -c "/home/docker/entrypoint.sh"
-        command: sh /home/docker/entrypoint.sh
+            - ./src:/srv/app/bundle
+            - ./docker/symfony/routes.yaml:/srv/app/config/routes/routes.yaml
+            - ./docker/symfony/bundles.php:/srv/app/config/bundles.php
+            - ./docker/symfony/composer.json:/srv/app/composer.json
+            - ./docker/symfony/admin/resources:/srv/app/config/admin/resources
+        command: symfony serve --dir=/srv/app/public
 
-    js:
-        image: node:stretch-slim
-        volumes:
-            - .:/home/docker/www/admin-bundle
-        working_dir: /home/docker/www/app
-        command: bash -c "yarn encore dev --watch"
-
-    db:
-        image: mariadb:latest
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_USER: admin_test
-            MYSQL_PASSWORD: admin_test
-            MYSQL_DATABASE: admin_test
-            MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-        volumes:
-            - ./.docker/mysql/data_test:/var/lib/mysql
-
-    db_test:
-        image: mysql:5.7
-        ports:
-            - "3307:3306"
-        environment:
-            MYSQL_USER: admin_test
-            MYSQL_PASSWORD: admin_test
-            MYSQL_DATABASE: admin_test
-            MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-        volumes:
-            - ./.docker/mysql/data:/var/lib/mysql
-
-    mailcatcher:
-        image: zolweb/docker-mailcatcher:latest
-        ports:
-            - "1080:1080"
+#    js:
+#        image: node:stretch-slim
+#        volumes:
+#            - .:/home/docker/www/admin-bundle
+#        working_dir: /home/docker/www/app
+#        command: bash -c "yarn encore dev --watch"
+#
+#    db:
+#        image: mariadb:latest
+#        ports:
+#            - "3306:3306"
+#        environment:
+#            MYSQL_USER: admin_test
+#            MYSQL_PASSWORD: admin_test
+#            MYSQL_DATABASE: admin_test
+#            MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+#        volumes:
+#            - ./.docker/mysql/data_test:/var/lib/mysql
+#
+#    db_test:
+#        image: mysql:5.7
+#        ports:
+#            - "3307:3306"
+#        environment:
+#            MYSQL_USER: admin_test
+#            MYSQL_PASSWORD: admin_test
+#            MYSQL_DATABASE: admin_test
+#            MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+#        volumes:
+#            - ./.docker/mysql/data:/var/lib/mysql
+#
+#    mailcatcher:
+#        image: zolweb/docker-mailcatcher:latest
+#        ports:
+#            - "1080:1080"
