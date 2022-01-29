@@ -9,11 +9,8 @@ use LAG\AdminBundle\DataPersister\DataPersisterInterface;
 
 class ORMDataPersister implements DataPersisterInterface
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function save($data): void

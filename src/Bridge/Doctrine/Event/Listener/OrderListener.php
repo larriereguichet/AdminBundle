@@ -13,11 +13,8 @@ use LAG\AdminBundle\Event\Events\DataOrderEvent;
 
 class OrderListener
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function __invoke(DataOrderEvent $event): void

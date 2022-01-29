@@ -16,15 +16,10 @@ use LAG\AdminBundle\Exception\Exception;
 
 class ORMDataProvider implements DataProviderInterface
 {
-    private EntityManagerInterface $entityManager;
-    private AdminHelperInterface $adminHelper;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        AdminHelperInterface $adminHelper
+        private EntityManagerInterface $entityManager,
+        private AdminHelperInterface $adminHelper
     ) {
-        $this->entityManager = $entityManager;
-        $this->adminHelper = $adminHelper;
     }
 
     public function getCollection(

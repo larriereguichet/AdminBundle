@@ -22,7 +22,7 @@ class ResourceLoader
         $fileSystem = new Filesystem();
 
         if (!$fileSystem->exists($resourcesPath) || !is_dir($resourcesPath)) {
-            throw new Exception(sprintf('The resources path %s should be a directory', $resourcesPath));
+            throw new Exception(sprintf('The resources path %s does not exists or is not a directory', $resourcesPath));
         }
         $finder = new Finder();
         $finder

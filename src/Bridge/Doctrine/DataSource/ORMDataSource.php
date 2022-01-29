@@ -9,27 +9,14 @@ use LAG\AdminBundle\DataProvider\DataSourceInterface;
 
 class ORMDataSource implements DataSourceInterface
 {
-    private QueryBuilder $data;
-    private bool $pagination;
-    private int $page;
-    private int $maxPerPage;
-    private array $orderBy;
-    private array $filters;
-
     public function __construct(
-        QueryBuilder $data,
-        bool $pagination,
-        int $page = 1,
-        int $maxPerPage = 25,
-        array $orderBy = [],
-        array $filters = []
+        private QueryBuilder $data,
+        private bool $pagination,
+        private int $page = 1,
+        private int $maxPerPage = 25,
+        private array $orderBy = [],
+        private array $filters = []
     ) {
-        $this->data = $data;
-        $this->pagination = $pagination;
-        $this->page = $page;
-        $this->maxPerPage = $maxPerPage;
-        $this->orderBy = $orderBy;
-        $this->filters = $filters;
     }
 
     public function getData(): QueryBuilder
