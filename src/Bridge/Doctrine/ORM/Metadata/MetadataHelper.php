@@ -10,11 +10,8 @@ use Exception;
 
 class MetadataHelper implements MetadataHelperInterface
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function findMetadata(string $class): ?ClassMetadata

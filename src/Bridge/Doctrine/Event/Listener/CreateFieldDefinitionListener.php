@@ -11,11 +11,8 @@ use LAG\AdminBundle\Field\Definition\FieldDefinition;
 
 class CreateFieldDefinitionListener
 {
-    private MetadataHelperInterface $metadataHelper;
-
-    public function __construct(MetadataHelperInterface $metadataHelper)
+    public function __construct(private MetadataHelperInterface $metadataHelper)
     {
-        $this->metadataHelper = $metadataHelper;
     }
 
     public function __invoke(FieldDefinitionEvent $event): void

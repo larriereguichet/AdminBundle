@@ -18,34 +18,25 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class Admin implements AdminInterface
 {
-    private string $name;
-    private AdminConfiguration $configuration;
-    private EventDispatcherInterface $eventDispatcher;
     private ActionInterface $action;
     private Request $request;
+    private mixed $data;
+
     /** @var FormInterface[] */
     private array $forms = [];
 
-    /**
-     * @var mixed
-     */
-    private $data;
-
     public function __construct(
-        string $name,
-        AdminConfiguration $configuration,
-        EventDispatcherInterface $eventDispatcher
+        private string $name,
+        private AdminConfiguration $configuration,
+        private EventDispatcherInterface $eventDispatcher
     ) {
-        $this->name = $name;
-        $this->configuration = $configuration;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function handleRequest(Request $request)
     {
         $this->request = $request;
         $requestEvent = new RequestEvent($this, $request);
-        // The handleRequest event should configured the current action
+        // The handleRequest event should be configured the current action
         $this->eventDispatcher->dispatch($requestEvent, AdminEvents::ADMIN_REQUEST);
 
         if (!$requestEvent->hasAction()) {
@@ -123,7 +114,7 @@ class Admin implements AdminInterface
 
     public function hasAction(): bool
     {
-        return null !== $this->action;
+        return isset($this->action);
     }
 
     public function getForms(): array
