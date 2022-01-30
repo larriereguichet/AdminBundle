@@ -1,7 +1,9 @@
 {% block header %}
     {% block topMenu %}
-        {{ knp_menu_render('top', {
-            template: '@LAGAdmin/menu/top.html.twig'
-        }) }}
+        {% if admin_has_menu('top') %}
+            {{ knp_menu_render('top', {
+                template: '@LAGAdmin/menu/top.html.twig'
+            }) }}
+        {% endif %}
     {% endblock %}
 {% endblock %}
