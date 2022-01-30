@@ -27,7 +27,7 @@ class ConfigurationListener
 
     private function configureDefaultRoute(string $actionName, array &$configuration): void
     {
-        if (empty($configuration['route'])) {
+        if (empty($configuration['route']) && !empty($configuration['admin_name'])) {
             $configuration['route'] = $this->appConfig->getRouteName(
                 $configuration['admin_name'],
                 $actionName
