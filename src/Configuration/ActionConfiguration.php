@@ -9,6 +9,7 @@ use JK\Configuration\Configuration;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Controller\AdminAction;
+use LAG\AdminBundle\Exception\Action\ActionConfigurationException;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Form\Type\AdminType;
 use LAG\AdminBundle\Form\Type\DeleteType;
@@ -34,8 +35,9 @@ class ActionConfiguration extends Configuration
             ->setAllowedTypes('icon', ['string', 'null'])
             ->setDefault('action_class', Action::class)
             ->setAllowedTypes('action_class', 'string')
-            ->setRequired('template')
-            ->setAllowedTypes('template', 'string')
+            ->setDefault('template', null)
+            ->addNormalizer('template', $this->getTemplateNormalizer())
+            ->setAllowedTypes('template', ['string', 'null'])
 
             // Routing
             ->setDefault('controller', AdminAction::class)
@@ -280,6 +282,27 @@ class ActionConfiguration extends Configuration
             }
 
             return $value;
+        };
+    }
+
+    private function getTemplateNormalizer(): Closure
+    {
+        return function (Options $options, $value) {
+            $map = [
+                'create' => '@LAGAdmin/crud/create.html.twig',
+                'edit' => '@LAGAdmin/crud/edit.html.twig',
+                'list' => '@LAGAdmin/crud/list.html.twig',
+                'delete' => '@LAGAdmin/crud/delete.html.twig',
+                'batch' => '@LAGAdmin/crud/batch.html.twig',
+            ];
+
+            if (array_key_exists($options->offsetGet('name'), $map) && $value === null) {
+                return $map[$options->offsetGet('name')];
+            }
+
+            throw new ActionConfigurationException(
+                'The template should be defined if the action is not named create, edit, list, delete or batch'
+            );
         };
     }
 

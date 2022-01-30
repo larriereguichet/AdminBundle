@@ -17,15 +17,12 @@ use Symfony\Component\Routing\RouteCollection;
 class RoutingLoader extends Loader
 {
     private bool $loaded = false;
-    private ConfigurationFactoryInterface $configurationFactory;
-    private ResourceRegistryInterface $resourceRegistry;
 
     public function __construct(
-        ResourceRegistryInterface $resourceRegistry,
-        ConfigurationFactoryInterface $configurationFactory
+        private ResourceRegistryInterface $resourceRegistry,
+        private ConfigurationFactoryInterface $configurationFactory
     ) {
-        $this->configurationFactory = $configurationFactory;
-        $this->resourceRegistry = $resourceRegistry;
+        parent::__construct();
     }
 
     public function load($resource, string $type = null): RouteCollection
@@ -57,6 +54,7 @@ class RoutingLoader extends Loader
 
         foreach ($configuration->get('actions') as $actionName => $actionOptions) {
             try {
+                $actionOptions['admin_name'] = $resource->getName();
                 $actionConfiguration = $this
                     ->configurationFactory
                     ->createActionConfiguration($actionName, $actionOptions);
