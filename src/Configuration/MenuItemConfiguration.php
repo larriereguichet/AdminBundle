@@ -32,6 +32,7 @@ class MenuItemConfiguration extends Configuration
                 'uri' => null,
                 'attributes' => [],
                 'linkAttributes' => [],
+                'labelAttributes' => [],
                 'label' => null,
                 'icon' => null,
                 'text' => null,
@@ -40,21 +41,27 @@ class MenuItemConfiguration extends Configuration
             ])
 
             ->setNormalizer('admin', function (Options $options, $adminName) {
-                // The user has to defined either an admin name and an action name, or a route name with optional
+                // The user has to be defined either an admin name and an action name, or a route name with optional
                 // parameters, or an url
-                if (null === $adminName
-                    && null === $options->offsetGet('route')
-                    && null === $options->offsetGet('uri')
+                if (
+                    $adminName === null
+                    && $options->offsetGet('route') === null
+                    && $options->offsetGet('uri') === null
+                    && $options->offsetGet('children') === null
                 ) {
                     throw new InvalidOptionsException('You should either defined an admin name, or route name or an uri');
                 }
 
                 return $adminName;
             })
-            // if an admin name is set, an action name can provided. This action will be the menu link
+            // if an admin name is set, an action name can be provided. This action will be the menu link
             ->setNormalizer('action', function (Options $options, $action) {
                 // if an action name is provided, an admin name should be defined too
-                if (null !== $action && null === $options->offsetGet('admin')) {
+                if (
+                    $action !== null
+                    && $options->offsetGet('admin') === null
+                    && $options->offsetGet('children') === null
+                ) {
                     throw new InvalidOptionsException('You should provide an admin name for this action '.$action);
                 }
 
@@ -102,12 +109,14 @@ class MenuItemConfiguration extends Configuration
             })
             ->setNormalizer('linkAttributes', function (Options $options, $linkAttributes) {
                 if (!$linkAttributes) {
-                    $linkAttributes = [];
+                    $linkAttributes = [
+                        'class' => 'nav-link text-white'
+                    ];
                 }
 
-                if ('left' === $this->menuName && empty($linkAttributes)) {
-                    $linkAttributes = ['class' => 'list-group-item list-group-item-action'];
-                }
+//                if ('left' === $this->menuName && empty($linkAttributes)) {
+//                    $linkAttributes = ['class' => 'nav-link text-white'];
+//                }
 
                 return $linkAttributes;
             })

@@ -15,18 +15,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ActionFactory implements ActionFactoryInterface
 {
-    private EventDispatcherInterface $eventDispatcher;
-    private ActionConfigurationFactoryInterface $configurationFactory;
-    private ResourceRegistryInterface $registry;
-
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        ActionConfigurationFactoryInterface $configurationFactory,
-        ResourceRegistryInterface $registry
+        private EventDispatcherInterface $eventDispatcher,
+        private ActionConfigurationFactoryInterface $configurationFactory,
+        private ResourceRegistryInterface $registry
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->configurationFactory = $configurationFactory;
-        $this->registry = $registry;
     }
 
     public function create(string $actionName, array $options = []): ActionInterface

@@ -39,7 +39,6 @@ class MenuConfigurationFactory implements MenuConfigurationFactoryInterface
         $menuConfiguration = new MenuConfiguration($menuName);
 
         try {
-            $options = $this->configureAdminRoutes($options);
             $menuConfiguration->configure($options);
         } catch (Exception $exception) {
             throw new ConfigurationException('menu', $menuName, $exception);
@@ -48,26 +47,26 @@ class MenuConfigurationFactory implements MenuConfigurationFactoryInterface
         return $menuConfiguration;
     }
 
-    private function configureAdminRoutes(array $options): array
-    {
-        if (empty($options['children']) || !\is_array($options['children'])) {
-            return $options;
-        }
-
-        foreach ($options['children'] as $name => $child) {
-            if (empty($child['admin']) || empty($child['action'])) {
-                continue;
-            }
-            $options['children'][$name]['route'] = $this->appConfig->getRouteName($child['admin'], $child['action']);
-
-            if (empty($child['routeParameters'])) {
-                continue;
-            }
-            $options['children'][$name]['routeParameters'] = $this->configureAdminRouteParameters($child['routeParameters']);
-        }
-
-        return $options;
-    }
+//    private function configureAdminRoutes(array $options): array
+//    {
+//        if (empty($options['children']) || !\is_array($options['children'])) {
+//            return $options;
+//        }
+//
+//        foreach ($options['children'] as $name => $child) {
+//            if (empty($child['admin']) || empty($child['action'])) {
+//                continue;
+//            }
+//            $options['children'][$name]['route'] = $this->appConfig->getRouteName($child['admin'], $child['action']);
+//
+//            if (empty($child['routeParameters'])) {
+//                continue;
+//            }
+//            $options['children'][$name]['routeParameters'] = $this->configureAdminRouteParameters($child['routeParameters']);
+//        }
+//
+//        return $options;
+//    }
 
     private function configureAdminRouteParameters(array $routeParameters): array
     {

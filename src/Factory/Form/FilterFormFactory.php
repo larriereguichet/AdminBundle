@@ -53,10 +53,10 @@ class FilterFormFactory implements FilterFormFactoryInterface
                 'label' => $this->helper->transWithPattern(
                     $name,
                     [],
+                    $configuration->getName(),
                     $this->appConfig->getTranslationCatalog(),
                     null,
                     $this->appConfig->getTranslationPattern(),
-                    $configuration->getName()
                 ),
             ];
 

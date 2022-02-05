@@ -38,7 +38,7 @@ class MenuFactory implements MenuFactoryInterface
     {
         $menuConfiguration = $this->configurationFactory->createMenuConfiguration($name, $options);
         $menu = $this->factory->createItem('root', [
-            'attributes' => $menuConfiguration->get('attributes'),
+            'childrenAttributes' => $menuConfiguration->get('attributes'),
             'extras' => $menuConfiguration->get('extras'),
         ]);
 

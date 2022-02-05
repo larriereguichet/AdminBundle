@@ -7,36 +7,46 @@ namespace LAG\AdminBundle\Menu\Factory;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
+use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use function Symfony\Component\String\u;
 
 class MenuItemFactory implements MenuItemFactoryInterface
 {
-    private FactoryInterface $factory;
-    private AdminHelperInterface $adminHelper;
-    private RequestStack $requestStack;
-
-    public function __construct(FactoryInterface $factory, AdminHelperInterface $adminHelper, RequestStack $requestStack)
+    public function __construct(
+        private FactoryInterface $factory,
+        private AdminHelperInterface $adminHelper,
+        private RequestStack $requestStack,
+        private ApplicationConfiguration $applicationConfiguration,
+        private TranslatorInterface $translator,
+    )
     {
-        $this->factory = $factory;
-        $this->adminHelper = $adminHelper;
-        $this->requestStack = $requestStack;
     }
 
     public function create(string $name, array $options = []): ItemInterface
     {
         $options = $this->mapRouteParameters($options);
-        $child = $this->factory->createItem($name, $options);
+
+        if (isset($options['admin']) && isset($options['action']) && count($options['children']) === 0) {
+            $options['route'] = $this->applicationConfiguration->getRouteName($options['admin'], $options['action']);
+        }
+        $child = $this->factory->createItem($this->translator->trans($options['text'] ?: $name, [], $this->applicationConfiguration->getTranslationCatalog()), $options);
 
         if (isset($options['icon'])) {
             $child->setExtra('icon', $options['icon']);
         }
-        $currentRoute = $this->requestStack->getMasterRequest()->get('_route');
+        $currentRoute = $this->requestStack->getCurrentRequest()->get('_route');
 
-        if (isset($options['route']) && $options['route'] === $currentRoute) {
+        if (($options['route'] ?: null) === $currentRoute) {
             $class = $child->setCurrent(true)->getAttribute('class');
-            $child->setAttribute('class', $class.' current');
+            $child->setAttribute('class', $class.' active');
+        }
+
+        foreach ($options['children'] as $name => $childConfiguration) {
+            $childItem = $this->create($name, $childConfiguration);
+            $child->addChild($childItem);
         }
 
         return $child;
