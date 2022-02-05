@@ -53,12 +53,15 @@ class MenuItemConfigurationListener
                 $itemConfiguration['admin'] = $this->adminHelper->getAdmin()->getName();
             }
             // The default admins action is list
-            if (\array_key_exists('admin', $itemConfiguration) && empty($itemConfiguration['action'])) {
+            if (empty($itemConfiguration['action'])) {
                 $itemConfiguration['action'] = 'list';
             }
 
-            // At this point, an pair admin/action or an url or an admin should be defined
-            if ($itemConfiguration['admin'] === null) {
+            // At this point, a pair of admin/action or an url or an admin should be defined
+            if (
+                $itemConfiguration['admin'] === null &&
+                (array_key_exists('children', $itemConfiguration) && count($itemConfiguration['children']) === 0)
+            ) {
                 throw new Exception(sprintf('The configuration of the children "%s" in the menu "%s" is invalid : no admin/action nor url configured, and no admin with the name "%s" exists', $itemName, $menuName, $itemName));
             }
             $menuConfiguration['children'][$itemName] = $itemConfiguration;

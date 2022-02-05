@@ -239,6 +239,7 @@ class AdminConfiguration extends Configuration
                         $action['route_parameters'] = ['id' => null];
                     }
                 }
+                $action['admin_name'] = $options->offsetGet('name');
                 $normalizedActions[$name] = $action;
 
                 // in list action, if no batch was configured or disabled, we add a batch action

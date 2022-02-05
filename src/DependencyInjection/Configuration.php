@@ -72,7 +72,12 @@ class Configuration implements ConfigurationInterface
                 ->end()
 
                 // Menus
-                ->variableNode('menus')->end()
+                ->variableNode('menus')
+                    ->defaultValue([
+                        'top' => null,
+                        'left' => null,
+                    ])
+                ->end()
             ->end()
         ->end();
 

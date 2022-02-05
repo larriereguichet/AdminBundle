@@ -24,7 +24,7 @@ class MenuConfiguration extends Configuration
                 'children' => [],
                 'attributes' => [],
                 'extras' => [
-                    'permissions' => ['ROLE_USER'],
+                    'permissions' => ['ROLE_ADMIN'],
                 ],
                 'inherits' => true,
             ])
@@ -53,7 +53,7 @@ class MenuConfiguration extends Configuration
                 }
 
                 if (!\array_key_exists('permissions', $extras)) {
-                    $extras['permissions'] = ['ROLE_USER'];
+                    $extras['permissions'] = ['ROLE_ADMIN'];
                 }
 
                 return $extras;

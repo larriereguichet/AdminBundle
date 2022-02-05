@@ -12,39 +12,30 @@ use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 
 class CreateTopMenuListener
 {
-    private AdminHelperInterface $adminHelper;
-    private TranslationHelperInterface $translationHelper;
-    private MenuItemFactoryInterface $menuItemFactory;
-    private ApplicationConfiguration $appConfig;
-
     public function __construct(
-        AdminHelperInterface $adminHelper,
-        TranslationHelperInterface $translationHelper,
-        MenuItemFactoryInterface $menuItemFactory,
-        ApplicationConfiguration $appConfig
+        private AdminHelperInterface $adminHelper,
+        private TranslationHelperInterface $translationHelper,
+        private MenuItemFactoryInterface $menuItemFactory,
+        private ApplicationConfiguration $appConfig
     ) {
-        $this->adminHelper = $adminHelper;
-        $this->translationHelper = $translationHelper;
-        $this->menuItemFactory = $menuItemFactory;
-        $this->appConfig = $appConfig;
     }
 
     public function __invoke(MenuEvent $event): void
     {
-        if ($event->getMenuName() !== 'top' || !$this->adminHelper->hasAdmin()) {
+        if (!$this->adminHelper->hasAdmin()) {
             return;
         }
         $admin = $this->adminHelper->getAdmin();
         $menu = $event->getMenu();
 
-        // Do not add the return link when we already are on the list action
+        // Do not add the return link when we are on the list action
         if (!$admin->getAction()->getConfiguration()->shouldAddReturnLink() || !$admin->getConfiguration()->hasAction('list')) {
             return;
         }
         $child = $this->menuItemFactory->create('return', [
             'admin' => $admin->getName(),
             'action' => 'list',
-            'text' => $this->translationHelper->transWithPattern('return', [], null, null, null, 'ui'),
+            'text' => $this->translationHelper->transWithPattern('return', [], 'ui'),
             'icon' => 'fas fa-arrow-left',
             'route' => $this->appConfig->getRouteName($admin->getName(), 'list'),
         ]);

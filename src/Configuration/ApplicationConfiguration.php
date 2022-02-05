@@ -9,7 +9,6 @@ use JK\Configuration\ServiceConfiguration;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Field\AbstractField;
 use LAG\AdminBundle\Field\ActionCollectionField;
 use LAG\AdminBundle\Field\ActionField;
 use LAG\AdminBundle\Field\ArrayField;
@@ -17,9 +16,12 @@ use LAG\AdminBundle\Field\AutoField;
 use LAG\AdminBundle\Field\BooleanField;
 use LAG\AdminBundle\Field\CountField;
 use LAG\AdminBundle\Field\DateField;
+use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\LinkField;
 use LAG\AdminBundle\Field\MappedField;
 use LAG\AdminBundle\Field\StringField;
+use LAG\AdminBundle\Translation\Helper\TranslationHelper;
+use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,19 +33,19 @@ use function Symfony\Component\String\u;
 class ApplicationConfiguration extends ServiceConfiguration
 {
     public const FIELD_MAPPING = [
-        AbstractField::TYPE_STRING => StringField::class,
-        AbstractField::TYPE_TEXT => StringField::class,
-        AbstractField::TYPE_FLOAT => StringField::class,
-        AbstractField::TYPE_INTEGER => StringField::class,
-        AbstractField::TYPE_ARRAY => ArrayField::class,
-        AbstractField::TYPE_ACTION => ActionField::class,
-        AbstractField::TYPE_BOOLEAN => BooleanField::class,
-        AbstractField::TYPE_MAPPED => MappedField::class,
-        AbstractField::TYPE_ACTION_COLLECTION => ActionCollectionField::class,
-        AbstractField::TYPE_LINK => LinkField::class,
-        AbstractField::TYPE_DATE => DateField::class,
-        AbstractField::TYPE_COUNT => CountField::class,
-        AbstractField::TYPE_AUTO => AutoField::class,
+        FieldInterface::TYPE_STRING => StringField::class,
+        FieldInterface::TYPE_TEXT => StringField::class,
+        FieldInterface::TYPE_FLOAT => StringField::class,
+        FieldInterface::TYPE_INTEGER => StringField::class,
+        FieldInterface::TYPE_ARRAY => ArrayField::class,
+        FieldInterface::TYPE_ACTION => ActionField::class,
+        FieldInterface::TYPE_BOOLEAN => BooleanField::class,
+        FieldInterface::TYPE_MAPPED => MappedField::class,
+        FieldInterface::TYPE_ACTION_COLLECTION => ActionCollectionField::class,
+        FieldInterface::TYPE_LINK => LinkField::class,
+        FieldInterface::TYPE_DATE => DateField::class,
+        FieldInterface::TYPE_COUNT => CountField::class,
+        FieldInterface::TYPE_AUTO => AutoField::class,
     ];
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -263,6 +265,15 @@ class ApplicationConfiguration extends ServiceConfiguration
         }
 
         return $this->get('translation')['pattern'];
+    }
+
+    public function getTranslationKey(string $admin, string $key): string
+    {
+        if (!$this->isTranslationEnabled()) {
+            throw new Exception('The translation is not enabled');
+        }
+
+        return TranslationHelper::getTranslationKey($this->getTranslationPattern(), $admin, $key);
     }
 
     public function getTranslationCatalog(): string
