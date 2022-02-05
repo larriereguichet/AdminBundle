@@ -8,11 +8,29 @@ services:
             - '8000:8000'
         volumes:
             - ./src:/srv/app/bundle
-            - ./docker/symfony/routes.yaml:/srv/app/config/routes/routes.yaml
             - ./docker/symfony/bundles.php:/srv/app/config/bundles.php
             - ./docker/symfony/composer.json:/srv/app/composer.json
+            - ./docker/symfony/.env:/srv/app/.env
             - ./docker/symfony/admin/resources:/srv/app/config/admin/resources
+            - ./docker/symfony/config/routes.yaml:/srv/app/config/routes/routes.yaml
+            - ./docker/symfony/config/packages/lag_admin.yaml:/srv/app/config/packages/lag_admin.yaml
+            - ./docker/symfony/config/packages/security.yaml:/srv/app/config/packages/security.yaml
+            - ./docker/symfony/config/packages/translation.yaml:/srv/app/config/packages/translation.yaml
+            - ./docker/symfony/translations/:/srv/app/translations/
+            - ./docker/symfony/src/Entity:/srv/app/src/Entity
         command: symfony serve --dir=/srv/app/public
+
+    db:
+        image: mysql:8.0
+        ports:
+            - '3306:3306'
+        environment:
+            MYSQL_USER: admin_test
+            MYSQL_PASSWORD: admin_test
+            MYSQL_DATABASE: admin_test
+            MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
 
 #    js:
 #        image: node:stretch-slim

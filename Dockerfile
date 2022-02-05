@@ -18,10 +18,10 @@ RUN apt-get update; \
                 /usr/share/doc/* /usr/share/groff/* /usr/share/info/* /usr/share/linda/* \
                 /usr/share/lintian/* /usr/share/locale/* /usr/share/man/*
 
-RUN docker-php-ext-install zip; \
-    docker-php-ext-install pdo_mysql;
+RUN docker-php-ext-install zip pdo pdo_mysql;
 
-RUN docker-php-ext-configure zip
+RUN docker-php-ext-configure zip pdo pdo_mysql; \
+    docker-php-ext-enable zip pdo pdo_mysql
 
 COPY .docker/php/composer_install.sh .
 RUN chmod +x ./composer_install.sh; \
