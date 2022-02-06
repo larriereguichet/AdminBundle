@@ -78,9 +78,6 @@ class AdminConfiguration extends Configuration
             ->setAllowedTypes('list_template', 'string')
             ->setDefault('delete_template', '@LAGAdmin/crud/delete.html.twig')
             ->setAllowedTypes('delete_template', 'string')
-
-            ->setDefault('menus', [])
-            ->setAllowedTypes('menus', 'array')
         ;
     }
 
@@ -215,11 +212,6 @@ class AdminConfiguration extends Configuration
     public function getDeleteTemplate(): string
     {
         return $this->getString('delete_template');
-    }
-
-    public function getMenus(): array
-    {
-        return $this->get('menus');
     }
 
     private function getActionNormalizer(): Closure

@@ -105,10 +105,6 @@ class ActionConfiguration extends Configuration
             ->setDefault('form_options', [])
             ->setAllowedTypes('form_options', 'array')
 
-            // Menus
-            ->setDefault('menus', [])
-            ->setAllowedTypes('menus', 'array')
-
             // Redirection after success
             ->setDefault('redirect', null)
             ->setAllowedTypes('redirect', ['string', 'null'])
@@ -252,11 +248,6 @@ class ActionConfiguration extends Configuration
     public function getFormOptions(): array
     {
         return $this->get('form_options');
-    }
-
-    public function getMenus(): array
-    {
-        return $this->get('menus');
     }
 
     public function getRepositoryMethod(): ?string

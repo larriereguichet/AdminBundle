@@ -56,7 +56,6 @@ class ConfigurationListener
             'edit_template' => $this->appConfig->getEditTemplate(),
             'create_template' => $this->appConfig->getCreateTemplate(),
             'delete_template' => $this->appConfig->getDeleteTemplate(),
-            'menus' => $this->appConfig->getMenus(),
         ];
     }
 

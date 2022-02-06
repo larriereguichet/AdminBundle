@@ -31,11 +31,7 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         if (!\array_key_exists('resources_path', $config)) {
             $config['resources_path'] = '%kernel.project_dir%/config/admin/resources';
         }
-        if (!\array_key_exists('menus', $config)) {
-            $config['menus'] = [];
-        }
         $container->setParameter('lag_admin.application.configuration', $config);
-        $container->setParameter('lag_admin.menu.menus', $config['menus']);
         $container->setParameter('lag_admin.resources.path', $config['resources_path']);
         $container->setParameter('lag_admin.media_bundle_enabled', \array_key_exists('JKMediaBundle', $container->getParameter('kernel.bundles')));
         $container->setParameter('lag_admin.fields.mapping', $config['fields_mapping']);

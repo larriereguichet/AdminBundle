@@ -30,7 +30,6 @@ class Configuration implements ConfigurationInterface
                 // Templates
                 ->scalarNode('base_template')->defaultValue('@LAGAdmin/base.html.twig')->end()
                 ->scalarNode('ajax_template')->defaultValue('@LAGAdmin/empty.html.twig')->end()
-                ->scalarNode('menu_template')->defaultValue('@LAGAdmin/menu/menu.html.twig')->end()
                 ->scalarNode('create_template')->defaultValue('@LAGAdmin/crud/create.html.twig')->end()
                 ->scalarNode('edit_template')->defaultValue('@LAGAdmin/crud/edit.html.twig')->end()
                 ->scalarNode('list_template')->defaultValue('@LAGAdmin/crud/list.html.twig')->end()
@@ -69,14 +68,6 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('fields_mapping')
                     ->prototype('scalar')->end()
                     ->defaultValue(ApplicationConfiguration::FIELD_MAPPING)
-                ->end()
-
-                // Menus
-                ->variableNode('menus')
-                    ->defaultValue([
-                        'top' => null,
-                        'left' => null,
-                    ])
                 ->end()
             ->end()
         ->end();

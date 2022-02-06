@@ -14,16 +14,13 @@ use Throwable;
 class AdminDataCollector extends DataCollector
 {
     private ResourceRegistryInterface $registry;
-    private array $menuConfigurations;
     private ApplicationConfiguration $appConfig;
 
     public function __construct(
         ResourceRegistryInterface $registry,
         ApplicationConfiguration $appConfig,
-        array $menuConfigurations = []
     ) {
         $this->registry = $registry;
-        $this->menuConfigurations = $menuConfigurations;
         $this->appConfig = $appConfig;
     }
 
@@ -32,7 +29,6 @@ class AdminDataCollector extends DataCollector
         $data = [
             'admins' => [],
             'application' => [],
-            'menus' => [],
         ];
 
         foreach ($this->registry->all() as $resource) {
@@ -46,7 +42,6 @@ class AdminDataCollector extends DataCollector
         // configuration
         if ($this->appConfig->isFrozen()) {
             $data['application'] = $this->appConfig->toArray();
-            $data['menus'] = $this->menuConfigurations;
         }
         $data['application']['admin'] = $request->attributes->get('_admin');
         $data['application']['action'] = $request->attributes->get('_action');

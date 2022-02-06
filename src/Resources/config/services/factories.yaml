@@ -35,6 +35,3 @@ services:
 
     LAG\AdminBundle\Factory\Configuration\ActionConfigurationFactoryInterface: '@LAG\AdminBundle\Factory\Configuration\ActionConfigurationFactory'
     LAG\AdminBundle\Factory\Configuration\ActionConfigurationFactory: ~
-
-    LAG\AdminBundle\Factory\Configuration\MenuConfigurationFactoryInterface: '@LAG\AdminBundle\Factory\Configuration\MenuConfigurationFactory'
-    LAG\AdminBundle\Factory\Configuration\MenuConfigurationFactory: ~

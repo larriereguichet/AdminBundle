@@ -22,7 +22,6 @@ lag_admin:
                     route: ~
                     route_parameters: []
                     path: ~
-                    route_parameters: []
                     route_defaults':
                         _controller: LAG\AdminBundle\Admin\Admin
                     icon: null
@@ -32,7 +31,6 @@ lag_admin:
                     max_per_page: ~
                     criteria: []
                     filters: []
-                    menus: []
                     template: ~
                     sortable: ~
                     string_length: ~
