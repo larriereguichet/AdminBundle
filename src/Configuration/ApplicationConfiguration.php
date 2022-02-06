@@ -69,8 +69,6 @@ class ApplicationConfiguration extends ServiceConfiguration
             ->setAllowedTypes('base_template', 'string')
             ->setDefault('ajax_template', '@LAGAdmin/empty.html.twig')
             ->setAllowedTypes('ajax_template', 'string')
-            ->setDefault('menu_template', '@LAGAdmin/menu/menu.html.twig')
-            ->setAllowedTypes('menu_template', 'string')
             ->setDefault('create_template', '@LAGAdmin/crud/create.html.twig')
             ->setAllowedTypes('create_template', 'string')
             ->setDefault('edit_template', '@LAGAdmin/crud/edit.html.twig')
@@ -126,10 +124,6 @@ class ApplicationConfiguration extends ServiceConfiguration
             // Fields default mapping
             ->setDefault('fields_mapping', [])
             ->setNormalizer('fields_mapping', $this->getFieldsMappingNormalizer())
-
-            ->setDefault('menus', [])
-            ->setAllowedTypes('menus', ['array', 'null'])
-            ->setNormalizer('menus', $this->getMenusNormalizer())
         ;
     }
 
@@ -166,11 +160,6 @@ class ApplicationConfiguration extends ServiceConfiguration
     public function getAjaxTemplate(): string
     {
         return $this->getString('ajax_template');
-    }
-
-    public function getMenuTemplate(): string
-    {
-        return $this->getString('menu_template');
     }
 
     public function getCreateTemplate(): string
@@ -267,15 +256,6 @@ class ApplicationConfiguration extends ServiceConfiguration
         return $this->get('translation')['pattern'];
     }
 
-    public function getTranslationKey(string $admin, string $key): string
-    {
-        if (!$this->isTranslationEnabled()) {
-            throw new Exception('The translation is not enabled');
-        }
-
-        return TranslationHelper::getTranslationKey($this->getTranslationPattern(), $admin, $key);
-    }
-
     public function getTranslationCatalog(): string
     {
         if (!$this->isTranslationEnabled()) {
@@ -288,11 +268,6 @@ class ApplicationConfiguration extends ServiceConfiguration
     public function getFieldsMapping(): array
     {
         return $this->get('fields_mapping');
-    }
-
-    public function getMenus(): array
-    {
-        return $this->get('menus');
     }
 
     public function getRouteName(string $adminName, string $actionName): string
@@ -338,17 +313,6 @@ class ApplicationConfiguration extends ServiceConfiguration
             }
 
             return array_merge(self::FIELD_MAPPING, $value);
-        };
-    }
-
-    private function getMenusNormalizer(): Closure
-    {
-        return function (Options $options, $value) {
-            if ($value === null) {
-                $value = [];
-            }
-
-            return $value;
         };
     }
 }
