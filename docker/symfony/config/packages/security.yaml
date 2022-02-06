@@ -22,6 +22,8 @@ security:
                 login_path: lag_admin.login
                 check_path: lag_admin.login_check
                 default_target_path: lag_admin.dashboard
+            logout:
+                path: lag_admin.logout
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
