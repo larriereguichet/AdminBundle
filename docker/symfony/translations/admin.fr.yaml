@@ -1,2 +1,6 @@
 admin:
-    projects: Projets
+    ui:
+        project: Projets
+
+    project:
+        create: Créer un projet
