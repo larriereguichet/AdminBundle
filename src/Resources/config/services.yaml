@@ -8,21 +8,12 @@ services:
         autoconfigure: true
         public: false
 
-    ### Routing ###
-    LAG\AdminBundle\Routing\RoutingLoader:
-        class: LAG\AdminBundle\Routing\RoutingLoader
-        tags:
-            - {name: routing.loader}
-    ################
-
     ### Controllers ###
     LAG\AdminBundle\Controller\AdminAction:
-        class: LAG\AdminBundle\Controller\AdminAction
         tags:
             - {name: controller.service_arguments}
 
     LAG\AdminBundle\Controller\HomeAction:
-        class: LAG\AdminBundle\Controller\HomeAction
         tags:
             - {name: controller.service_arguments}
     ###################
