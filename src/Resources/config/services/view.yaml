@@ -1,0 +1,8 @@
+services:
+    # Factories
+    LAG\AdminBundle\View\Factory\ViewFactoryInterface: '@LAG\AdminBundle\View\Factory\ViewFactory'
+    LAG\AdminBundle\View\Factory\ViewFactory: ~
+
+    # Handlers
+    LAG\AdminBundle\View\Handler\ViewHandlerInterface: '@LAG\AdminBundle\View\Handler\ViewHandler'
+    LAG\AdminBundle\View\Handler\ViewHandler: ~

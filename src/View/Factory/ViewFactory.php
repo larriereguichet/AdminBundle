@@ -2,14 +2,19 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Factory;
+namespace LAG\AdminBundle\View\Factory;
 
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Utils\RedirectionUtils;
+use LAG\AdminBundle\Factory\FieldFactoryInterface;
+use LAG\AdminBundle\Routing\Parameter\ParametersMapper;
+use LAG\AdminBundle\Routing\Redirection\RedirectionUtils;
+use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\View\AdminView;
 use LAG\AdminBundle\View\RedirectView;
-use LAG\AdminBundle\View\Template;
+use LAG\AdminBundle\View\Template\Template;
+use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class ViewFactory implements ViewFactoryInterface
@@ -17,14 +22,24 @@ class ViewFactory implements ViewFactoryInterface
     public function __construct(
         private FieldFactoryInterface $fieldFactory,
         private ApplicationConfiguration $appConfig,
-        private RedirectionUtils $redirectionUtils
+        private RouteNameGeneratorInterface $routeNameGenerator,
     ) {
     }
 
-    public function create(Request $request, AdminInterface $admin): AdminView
+    public function create(Request $request, AdminInterface $admin): ViewInterface
     {
-        if ($this->redirectionUtils->isRedirectionRequired($admin)) {
-            return new RedirectView($this->redirectionUtils->getRedirectionUrl($admin));
+        if (RedirectionUtils::isRedirectionRequired($admin)) {
+            $targetRoute = $admin->getAction()->getConfiguration()->getTargetRoute();
+            $targetRouteParameters = $admin->getAction()->getConfiguration()->getTargetRouteParameters();
+
+            if ($admin->getConfiguration()->hasAction($targetRoute)) {
+                $targetRoute = $this->routeNameGenerator->generateRouteName($admin->getName(), $targetRoute);
+            }
+
+            return new RedirectView(
+                $targetRoute,
+                (new ParametersMapper())->map($admin->getData(), $targetRouteParameters),
+            );
         }
         $actionConfiguration = $admin->getAction()->getConfiguration();
         $fields = [];

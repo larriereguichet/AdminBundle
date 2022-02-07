@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Admin;
 
-use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\View\AdminView;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;

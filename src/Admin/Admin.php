@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Admin;
 
-use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\DataEvent;
 use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Event\Events\RequestEvent;
 use LAG\AdminBundle\Event\Events\ViewEvent;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\View\AdminView;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
