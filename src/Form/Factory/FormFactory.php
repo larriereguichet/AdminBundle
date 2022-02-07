@@ -2,38 +2,26 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Factory;
+namespace LAG\AdminBundle\Form\Factory;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\DataProvider\Registry\DataProviderRegistryInterface;
+use LAG\AdminBundle\Factory\FieldFactoryInterface;
 use LAG\AdminBundle\Utils\FormUtils;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormFactoryInterface as SymfonyFormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class AdminFormFactory implements AdminFormFactoryInterface
+class FormFactory implements FormFactoryInterface
 {
-    private DataProviderRegistryInterface $registry;
-    private FormFactoryInterface $formFactory;
-    private FieldFactoryInterface $fieldFactory;
-
     public function __construct(
-        DataProviderRegistryInterface $registry,
-        FormFactoryInterface $formFactory,
-        FieldFactoryInterface $fieldFactory
+        private SymfonyFormFactoryInterface $formFactory,
+        private FieldFactoryInterface $fieldFactory
     ) {
-        $this->registry = $registry;
-        $this->formFactory = $formFactory;
-        $this->fieldFactory = $fieldFactory;
     }
 
-    public function createEntityForm(AdminInterface $admin, Request $request, object $data = null): FormInterface
+    public function createEntityForm(AdminInterface $admin, Request $request, object $data): FormInterface
     {
-        if ($data === null) {
-            $dataProviderName = $admin->getConfiguration()->getDataProvider();
-            $data = $this->registry->get($dataProviderName)->create($admin->getEntityClass());
-        }
         $action = $admin->getAction();
         $formType = $action->getConfiguration()->getForm();
 
@@ -51,12 +39,11 @@ class AdminFormFactory implements AdminFormFactoryInterface
                 continue;
             }
 
-            if ($name === 'id') {
+            if (in_array($name, ['id', 'identifier', 'uuid'])) {
                 continue;
             }
             $formType = FormUtils::convertShortFormType($definition->getType());
             $formOptions = $definition->getFormOptions();
-
             $formBuilder->add($name, $formType, $formOptions);
         }
 
