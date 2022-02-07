@@ -24,6 +24,7 @@ class PersistDataListener
             return;
         }
         $form = $admin->getForm('entity');
+        dump($form->getData());
 
         if ($form->isSubmitted() && $form->isValid()) {
             $configuration = $admin->getConfiguration();

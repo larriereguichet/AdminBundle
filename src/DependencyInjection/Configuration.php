@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\DependencyInjection;
 
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\Admin;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 

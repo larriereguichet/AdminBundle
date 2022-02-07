@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Form\Type;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Translation\Helper\TranslationHelper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -21,6 +21,7 @@ class DateRangeType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // TODO labels
         $builder
             ->add('startDate', DateType::class, [
                 'label' => TranslationHelper::getTranslationKey($this->appConfig->getTranslationPattern(), 'ui', 'start_date'),

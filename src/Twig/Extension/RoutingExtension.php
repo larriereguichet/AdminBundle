@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Extension;
 
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
