@@ -5,31 +5,23 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Factory;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Utils\RedirectionUtils;
 use LAG\AdminBundle\View\AdminView;
 use LAG\AdminBundle\View\RedirectView;
 use LAG\AdminBundle\View\Template;
-use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class ViewFactory implements ViewFactoryInterface
 {
-    private FieldFactoryInterface $fieldFactory;
-    private ApplicationConfiguration $appConfig;
-    private RedirectionUtils $redirectionUtils;
-
     public function __construct(
-        FieldFactoryInterface $fieldFactory,
-        ApplicationConfiguration $appConfig,
-        RedirectionUtils $redirectionUtils
+        private FieldFactoryInterface $fieldFactory,
+        private ApplicationConfiguration $appConfig,
+        private RedirectionUtils $redirectionUtils
     ) {
-        $this->fieldFactory = $fieldFactory;
-        $this->appConfig = $appConfig;
-        $this->redirectionUtils = $redirectionUtils;
     }
 
-    public function create(Request $request, AdminInterface $admin): ViewInterface
+    public function create(Request $request, AdminInterface $admin): AdminView
     {
         if ($this->redirectionUtils->isRedirectionRequired($admin)) {
             return new RedirectView($this->redirectionUtils->getRedirectionUrl($admin));

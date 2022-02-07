@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Factory\Configuration;
 
 use Exception;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\Configuration\ActionConfigurationEvent;
 use LAG\AdminBundle\Exception\Action\ActionConfigurationException;
@@ -13,11 +13,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ActionConfigurationFactory implements ActionConfigurationFactoryInterface
 {
-    private EventDispatcherInterface $eventDispatcher;
-
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(private EventDispatcherInterface $eventDispatcher)
     {
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function create(string $actionName, array $options = []): ActionConfiguration
