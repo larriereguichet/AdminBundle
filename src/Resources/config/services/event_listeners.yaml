@@ -25,7 +25,7 @@ services:
         tags:
             - {name: kernel.event_listener, event: lag.admin.data, priority: 255}
 
-    LAG\AdminBundle\Event\Listener\Data\LoadDataListener:
+    LAG\AdminBundle\Event\Listener\Data\LoadListener:
         tags:
             - {name: kernel.event_listener, event: lag.admin.data, priority: -255}
 
