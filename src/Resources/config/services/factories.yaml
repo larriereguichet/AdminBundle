@@ -16,8 +16,8 @@ services:
         arguments:
             $fieldsMapping: '%lag_admin.fields.mapping%'
 
-    LAG\AdminBundle\Factory\AdminFormFactoryInterface: '@LAG\AdminBundle\Factory\AdminFormFactory'
-    LAG\AdminBundle\Factory\AdminFormFactory: ~
+    LAG\AdminBundle\Form\Factory\FormFactoryInterface: '@LAG\AdminBundle\Form\Factory\FormFactory'
+    LAG\AdminBundle\Form\Factory\FormFactory: ~
     
     LAG\AdminBundle\Factory\Form\FilterFormFactoryInterface: '@LAG\AdminBundle\Factory\Form\FilterFormFactory'
     LAG\AdminBundle\Factory\Form\FilterFormFactory: ~
