@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Listener\Request;
 
-use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
+use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
 use LAG\AdminBundle\Event\Events\RequestEvent;
 use LAG\AdminBundle\Factory\ActionFactoryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
@@ -15,12 +15,12 @@ use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 class ActionListener
 {
     private ActionFactoryInterface $actionFactory;
-    private AdminHelperInterface $helper;
+    private AdminContextInterface $helper;
     private ParametersExtractorInterface $extractor;
 
     public function __construct(
-        ActionFactoryInterface $actionFactory,
-        AdminHelperInterface $helper,
+        ActionFactoryInterface       $actionFactory,
+        AdminContextInterface        $helper,
         ParametersExtractorInterface $extractor
     ) {
         $this->actionFactory = $actionFactory;

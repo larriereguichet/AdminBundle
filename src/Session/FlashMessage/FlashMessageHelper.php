@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Session\FlashMessage;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,7 +22,7 @@ class FlashMessageHelper
         if ($this->appConfig->isTranslationEnabled()) {
             $message = $this
                 ->translationHelper
-                ->trans($message, $messageParameters, $this->appConfig->getTranslationCatalog())
+                ->translate($message, $messageParameters, $this->appConfig->getTranslationCatalog())
             ;
         }
         $session = $this->requestStack->getSession();

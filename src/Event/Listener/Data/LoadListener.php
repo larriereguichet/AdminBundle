@@ -19,20 +19,13 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 /**
  * Load data from the database, according ot the configured strategy on the current action.
  */
-class LoadDataListener
+class LoadListener
 {
-    private DataProviderRegistryInterface $registry;
-    private DataHandlerInterface $dataHandler;
-    private EventDispatcherInterface $eventDispatcher;
-
     public function __construct(
-        DataProviderRegistryInterface $registry,
-        DataHandlerInterface $dataHandler,
-        EventDispatcherInterface $eventDispatcher
+        private DataProviderRegistryInterface $registry,
+        private DataHandlerInterface $dataHandler,
+        private EventDispatcherInterface $eventDispatcher
     ) {
-        $this->registry = $registry;
-        $this->dataHandler = $dataHandler;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function __invoke(DataEvent $event): void
@@ -45,18 +38,22 @@ class LoadDataListener
         $actionConfiguration = $admin->getAction()->getConfiguration();
         $strategy = $actionConfiguration->getLoadStrategy();
 
-        // Some action (as create for example) does not require to load data from the database. If an other event
-        // already load data, do not load twice
-        if ($strategy === AdminInterface::LOAD_STRATEGY_NONE || $event->getData() !== null) {
+        // If another event already load data, do not load twice
+        if ($event->getData() !== null) {
             return;
         }
-        // The data provider is configured in the admin as it make no sense to hae different data provider for each
+        // The data provider is configured in the admin as it make no sense to have different data provider for each
         // action in the same admin. It should be a service tagged with a name
         $dataProviderName = $admin->getConfiguration()->getDataProvider();
         $dataProvider = $this->registry->get($dataProviderName);
 
         if ($dataProvider instanceof AdminAwareInterface) {
             $dataProvider->setAdmin($admin);
+        }
+
+        if ($strategy === AdminInterface::LOAD_STRATEGY_NONE) {
+            $data = $dataProvider->create($admin->getEntityClass());
+            $event->setData($data);
         }
 
         // Load only one entity from the database using its identifier (for the edit action for example)
@@ -100,7 +97,7 @@ class LoadDataListener
         }
     }
 
-    private function extractIdentifier(Request $request, array $routeRequirements)
+    private function extractIdentifier(Request $request, array $routeRequirements): mixed
     {
         foreach ($routeRequirements as $name => $requirement) {
             if ($request->get($name) !== null) {

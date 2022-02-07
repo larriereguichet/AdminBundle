@@ -6,13 +6,13 @@ namespace LAG\AdminBundle\Event\Listener\Form;
 
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
-use LAG\AdminBundle\Factory\AdminFormFactoryInterface;
+use LAG\AdminBundle\Form\Factory\FormFactoryInterface;
 
 class AddEntityFormListener
 {
-    private AdminFormFactoryInterface $formFactory;
+    private FormFactoryInterface $formFactory;
 
-    public function __construct(AdminFormFactoryInterface $formFactory)
+    public function __construct(FormFactoryInterface $formFactory)
     {
         $this->formFactory = $formFactory;
     }

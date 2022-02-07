@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Listener\Form;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\DataPersister\Registry\DataPersisterRegistryInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Session\FlashMessage\FlashMessageHelper;
@@ -37,6 +37,7 @@ class DeleteDataListener
             $message = 'Deleted';
 
             if ($this->appConfig->isTranslationEnabled()) {
+                // TODO
                 $message = TranslationHelper::getTranslationKey(
                     $this->appConfig->getTranslationPattern(),
                     $admin->getName(),
