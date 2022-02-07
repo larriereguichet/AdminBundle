@@ -1,5 +1,4 @@
-
-lag_admin:
+admin:
     ui:
         save: Sauvegarder
         save_errors: Une erreur s'est produite durant la sauvegarde
@@ -12,7 +11,7 @@ lag_admin:
 
         login: Se connecter
         login_form:
-            login: Email
+            login: Login
             password: Mot de passe
         logout: Se déconnecter
 
