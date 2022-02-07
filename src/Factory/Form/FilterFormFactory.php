@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Factory\Form;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Form\Type\Select2\Select2Type;
 use LAG\AdminBundle\Translation\Helper\TranslationHelper;
 use LAG\AdminBundle\Utils\FormUtils;
@@ -17,18 +17,11 @@ use Symfony\Component\Form\FormInterface;
 
 class FilterFormFactory implements FilterFormFactoryInterface
 {
-    private FormFactoryInterface $formFactory;
-    private TranslationHelper $helper;
-    private ApplicationConfiguration $appConfig;
-
     public function __construct(
-        FormFactoryInterface $formFactory,
-        TranslationHelper $helper,
-        ApplicationConfiguration $appConfig
+        private FormFactoryInterface $formFactory,
+        private TranslationHelper $helper,
+        private ApplicationConfiguration $appConfig
     ) {
-        $this->formFactory = $formFactory;
-        $this->helper = $helper;
-        $this->appConfig = $appConfig;
     }
 
     public function create(AdminInterface $admin): FormInterface
