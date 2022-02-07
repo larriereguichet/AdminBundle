@@ -5,22 +5,25 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\View;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\View\ActionView;
+use LAG\AdminBundle\View\Template\Template;
 
 class AdminView implements ViewInterface
 {
-    private AdminInterface $admin;
-    private Template $template;
-    private array $fields;
-    private array $forms;
+    private ActionView $action;
 
-    public function __construct(AdminInterface $admin, Template $template, array $fields = [], array $forms = [])
-    {
-        $this->admin = $admin;
-        $this->fields = $fields;
-        $this->template = $template;
-        $this->forms = $forms;
+    public function __construct(
+        private AdminInterface $admin,
+        private Template $template,
+        private array $fields = [],
+        private array $forms = []
+    ) {
+        $this->action = new ActionView(
+            $this->admin->getAction()->getName(),
+            $this->admin->getAction()->getConfiguration()->toArray(),
+            $this->admin->getAction()->getConfiguration()->getTitle(),
+        );
     }
 
     public function getData()
@@ -28,19 +31,14 @@ class AdminView implements ViewInterface
         return $this->admin->getData();
     }
 
-    public function getActionConfiguration(): ActionConfiguration
+    public function getAction(): ActionView
     {
-        return $this->admin->getAction()->getConfiguration();
-    }
-
-    public function getActionName(): string
-    {
-        return $this->admin->getAction()->getName();
+        return $this->action;
     }
 
     public function getTitle(): string
     {
-        return $this->admin->getAction()->getConfiguration()->getTitle();
+        return $this->admin->getConfiguration()->getTitle();
     }
 
     public function getName(): string

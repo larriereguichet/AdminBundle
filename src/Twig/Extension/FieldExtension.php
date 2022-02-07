@@ -21,17 +21,15 @@ class FieldExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('admin_field', [$this, 'renderField']),
-            new TwigFunction('admin_field_header', [$this, 'renderFieldHeader']),
+            new TwigFunction('admin_field', [$this, 'renderField', ['is_safe' => ['html']]]),
+            new TwigFunction('admin_field_header', [$this, 'renderFieldHeader', ['is_safe' => ['html']]]),
         ];
     }
 
     /**
      * Render a field with the value of the given data.
-     *
-     * @param mixed          $data
      */
-    public function renderField(FieldView $field, $data): string
+    public function renderField(FieldView $field, object $data): string
     {
         return $this->renderer->render($field, $data);
     }

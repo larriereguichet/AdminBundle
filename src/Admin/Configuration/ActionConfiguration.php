@@ -104,13 +104,10 @@ class ActionConfiguration extends Configuration
             ->setAllowedTypes('form_options', 'array')
 
             // Redirection after success
-            ->setDefault('redirect', null)
-            ->setAllowedTypes('redirect', ['string', 'null'])
-            ->setDefault('add_return_link', null)
-            ->setAllowedTypes('add_return_link', ['boolean', 'null'])
-            ->addNormalizer('add_return_link', function (Options $options, $value) {
-                return $value ?? $options->offsetGet('name') !== 'list';
-            })
+            ->setDefault('target_route', 'list')
+            ->setAllowedTypes('target_route', 'string')
+            ->setDefault('target_route_parameters', [])
+            ->setAllowedTypes('target_route_parameters', 'array')
         ;
     }
 
@@ -253,14 +250,14 @@ class ActionConfiguration extends Configuration
         return $this->get('repository_method');
     }
 
-    public function getRedirect(): ?string
+    public function getTargetRoute(): string
     {
-        return $this->get('redirect');
+        return $this->getString('target_route');
     }
 
-    public function shouldAddReturnLink(): bool
+    public function getTargetRouteParameters(): array
     {
-        return $this->getBool('add_return_link');
+        return $this->get('target_route_parameters');
     }
 
     private function getTitleNormalizer(): Closure

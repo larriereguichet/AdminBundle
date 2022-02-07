@@ -35,15 +35,8 @@ class UrlGenerator implements UrlGeneratorInterface
         $mappedRouteParameters = $routeParameters;
 
         if ($data !== null) {
-            $accessor = PropertyAccess::createPropertyAccessor();
-            $mappedRouteParameters = [];
-
-            foreach ($routeParameters as $parameter => $value) {
-                if ($value === null) {
-                    $value = $accessor->getValue($data, $parameter);
-                }
-                $mappedRouteParameters[$parameter] = $value;
-            }
+            $mapper = new ParametersMapper();
+            $mappedRouteParameters = $mapper->map($data, $routeParameters);
         }
 
         return $this->router->generate($routeName, $mappedRouteParameters);

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Field\Helper;
 
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**

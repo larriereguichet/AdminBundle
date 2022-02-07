@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Event\Listener\View;
 
 use LAG\AdminBundle\Event\Events\ViewEvent;
-use LAG\AdminBundle\Factory\ViewFactoryInterface;
+use LAG\AdminBundle\View\Factory\ViewFactoryInterface;
 
 /**
  * Create a dynamic view using the factory.
