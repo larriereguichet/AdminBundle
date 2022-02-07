@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Factory;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\FieldConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\Configuration\FieldConfigurationEvent;
@@ -20,25 +20,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Field factory. Instances fields.
+ * Field factory. Create field instances.
  */
 class FieldFactory implements FieldFactoryInterface
 {
     /**
      * Field class mapping array, indexed by field type.
      */
-    protected array $fieldsMapping = [];
-    protected EventDispatcherInterface $eventDispatcher;
-    protected ApplicationConfiguration $appConfig;
+    private array $fieldsMapping;
 
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        ApplicationConfiguration $appConfig,
+        private EventDispatcherInterface $eventDispatcher,
+        private ApplicationConfiguration $appConfig,
         array $fieldsMapping
     ) {
         $this->fieldsMapping = $fieldsMapping;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->appConfig = $appConfig;
     }
 
     public function create(string $name, array $configuration, array $context = []): FieldInterface
