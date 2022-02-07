@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Configuration;
+namespace LAG\AdminBundle\Admin\Configuration;
 
 use Closure;
 use JK\Configuration\Configuration;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Configuration\FilterConfiguration;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Action\ActionConfigurationException;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Form\Type\AdminType;
-use LAG\AdminBundle\Form\Type\DeleteType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -101,7 +100,6 @@ class ActionConfiguration extends Configuration
             // Form
             ->setDefault('form', null)
             ->setAllowedTypes('form', ['string', 'null', 'boolean'])
-            ->addNormalizer('form', $this->getFormNormalizer())
             ->setDefault('form_options', [])
             ->setAllowedTypes('form_options', 'array')
 
@@ -458,30 +456,6 @@ class ActionConfiguration extends Configuration
             }
 
             return $normalizedData;
-        };
-    }
-
-    private function getFormNormalizer(): Closure
-    {
-        return function (Options $options, $value) {
-            if ($value !== null && $value !== false) {
-                return $value;
-            }
-
-            if ($value === false) {
-                return null;
-            }
-            $mapping = [
-                'create' => AdminType::class,
-                'edit' => AdminType::class,
-                'delete' => DeleteType::class,
-            ];
-
-            if (\array_key_exists($options->offsetGet('name'), $mapping)) {
-                $value = $mapping[$options->offsetGet('name')];
-            }
-
-            return $value;
         };
     }
 

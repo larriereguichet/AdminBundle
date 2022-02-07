@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Configuration;
+namespace LAG\AdminBundle\Admin\Configuration;
 
 use Closure;
 use JK\Configuration\ServiceConfiguration;
@@ -20,8 +20,6 @@ use LAG\AdminBundle\Field\FieldInterface;
 use LAG\AdminBundle\Field\LinkField;
 use LAG\AdminBundle\Field\MappedField;
 use LAG\AdminBundle\Field\StringField;
-use LAG\AdminBundle\Translation\Helper\TranslationHelper;
-use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
