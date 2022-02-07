@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Listener\Request;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\Events\RequestEvent;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;

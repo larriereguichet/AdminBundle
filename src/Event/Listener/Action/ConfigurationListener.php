@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Listener\Action;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\Events\Configuration\ActionConfigurationEvent;
 
 class ConfigurationListener

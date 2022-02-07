@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
+use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
 use LAG\AdminBundle\Bridge\Doctrine\DataSource\ORMDataSource;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\DataProvider\DataSourceInterface;
@@ -18,7 +18,7 @@ class ORMDataProvider implements DataProviderInterface
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private AdminHelperInterface $adminHelper
+        private AdminContextInterface $adminHelper
     ) {
     }
 

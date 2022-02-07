@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Extension;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
