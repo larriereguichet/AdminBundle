@@ -9,11 +9,10 @@ use Twig\Environment;
 
 class HomeAction
 {
-    private Environment $twig;
-
-    public function __construct(Environment $twig)
+    public function __construct(
+        private Environment $twig,
+    )
     {
-        $this->twig = $twig;
     }
 
     public function __invoke(): Response
