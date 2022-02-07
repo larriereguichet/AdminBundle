@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Routing\Parameter\ParametersMapper;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Routing\RouterInterface;
 
