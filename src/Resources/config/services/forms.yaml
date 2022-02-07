@@ -11,6 +11,8 @@ services:
             - {name: form.type}
 
     LAG\AdminBundle\Form\Type\DateRangeType: ~
+
+    LAG\AdminBundle\Form\Type\Security\LoginType: ~
     
     ### Form Extensions ###
     LAG\AdminBundle\Form\Extension\CollectionExtensionType:
