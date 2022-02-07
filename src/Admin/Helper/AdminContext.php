@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Admin\Helper;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Exception\Exception;
 
-class AdminHelper implements AdminHelperInterface
+class AdminContext implements AdminContextInterface
 {
     private bool $frozen = false;
     private AdminInterface $admin;

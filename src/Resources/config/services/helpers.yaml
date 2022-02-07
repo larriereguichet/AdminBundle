@@ -1,3 +1,0 @@
-services:
-    LAG\AdminBundle\Admin\Helper\AdminHelper: ~
-    LAG\AdminBundle\Admin\Helper\AdminHelperInterface: '@LAG\AdminBundle\Admin\Helper\AdminHelper'
