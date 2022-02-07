@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Configuration;
+namespace LAG\AdminBundle\Admin\Configuration;
 
 use Closure;
 use JK\Configuration\Configuration;
@@ -27,6 +27,15 @@ class AdminConfiguration extends Configuration
             ->setAllowedTypes('entity', 'string')
             ->setRequired('name')
             ->setAllowedTypes('name', 'string')
+            ->setDefault('title', null)
+            ->setAllowedTypes('title', ['string', 'null'])
+            ->addNormalizer('title', function (Options $options, $value) {
+                if ($value === null) {
+                    $value = u($options->offsetGet('name'))->title()->toString();
+                }
+
+                return $value;
+            })
 
             ->setDefault('actions', [
                 'list' => [],
@@ -94,6 +103,11 @@ class AdminConfiguration extends Configuration
     public function getActionClass(): string
     {
         return $this->getString('action_class');
+    }
+
+    public function getTitle(): string
+    {
+        return $this->getString('title');
     }
 
     public function getActions(): array
