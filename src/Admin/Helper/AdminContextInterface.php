@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Admin\Helper;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Exception\Exception;
 
-interface AdminHelperInterface
+interface AdminContextInterface
 {
     /**
      * Define the current admin based on the request parameters.
