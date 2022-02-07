@@ -4,61 +4,61 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Translation\Helper;
 
-use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use Symfony\Component\String\UnicodeString;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationHelper implements TranslationHelperInterface
 {
-    private TranslatorInterface $translator;
-    private ApplicationConfiguration $appConfig;
-    private AdminHelperInterface $adminHelper;
-
     public function __construct(
-        TranslatorInterface $translator,
-        ApplicationConfiguration $appConfig,
-        AdminHelperInterface $adminHelper
+        private TranslatorInterface $translator,
+        private ApplicationConfiguration $applicationConfiguration,
+        private AdminContextInterface $adminHelper
     ) {
-        $this->translator = $translator;
-        $this->appConfig = $appConfig;
-        $this->adminHelper = $adminHelper;
     }
 
-    /**
-     * Return the translation pattern with keys "{admin}" and "{key}" replaced by their values.
-     */
-    public static function getTranslationKey(
-        string $translationPattern,
-        string $adminName,
-        string $key
-    ): string {
-        $u = new UnicodeString($key);
-        $u = $u->snake();
-        $translationPattern = str_replace('{key}', $u->toString(), $translationPattern);
+    public function getTranslationKey(string $key , string $adminName = 'ui'): string
+    {
+        $translationPattern = $this->applicationConfiguration->getTranslationPattern();
+        $translationPattern = str_replace('{key}', $key, $translationPattern);
 
         return str_replace('{admin}', $adminName, $translationPattern);
     }
 
-    public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
+    public function translate(string $id, array $parameters = [], string $domain = null, string $locale = null): string
     {
+        if ($domain === null) {
+            $domain = $this->applicationConfiguration->getTranslationCatalog();
+        }
+
         return $this->translator->trans($id, $parameters, $domain, $locale);
     }
 
+    public function translateKey(string $key, string $adminName = 'ui'): string
+    {
+        return $this->translate($this->getTranslationKey($key, $adminName));
+    }
+
+    public function getTranslationDomain(): string
+    {
+        return $this->applicationConfiguration->getTranslationCatalog();
+    }
+
+    /** @deprecated  */
     public function transWithPattern(
         string $id,
         array $parameters = [],
+        string $adminName = null,
         string $domain = null,
         string $locale = null,
         string $pattern = null,
-        string $adminName = null
     ): string {
         if ($pattern === null) {
-            $pattern = $this->appConfig->getTranslationPattern();
+            $pattern = $this->applicationConfiguration->getTranslationPattern();
         }
 
         if ($domain === null) {
-            $domain = $this->appConfig->getTranslationCatalog();
+            $domain = $this->applicationConfiguration->getTranslationCatalog();
         }
 
         if ($adminName === null) {
@@ -70,6 +70,6 @@ class TranslationHelper implements TranslationHelperInterface
             $id
         );
 
-        return $this->trans($id, [], $domain, $locale);
+        return $this->translate($id, [], $domain, $locale);
     }
 }

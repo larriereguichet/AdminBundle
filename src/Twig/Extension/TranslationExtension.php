@@ -21,23 +21,23 @@ class TranslationExtension extends AbstractExtension
     {
         return [
             new TwigFilter('admin_trans', [$this, 'translate']),
+            new TwigFilter('admin_trans_key', [$this, 'translateKey']),
             new TwigFilter('admin_ui_trans', [$this, 'translateUI']),
         ];
     }
 
-    public function translate(
-        string $id,
-        array $parameters = [],
-        string $domain = null,
-        string $locale = null,
-        string $pattern = null,
-        string $adminName = null
-    ): string {
-        return $this->translationHelper->transWithPattern($id, $parameters, $domain, $locale, $pattern, $adminName);
+    public function translate(string $id, array $parameters = []): string
+    {
+        return $this->translationHelper->translate($id, $parameters);
+    }
+
+    public function translateKey(string $key, string $adminName = 'ui'): string
+    {
+        return $this->translationHelper->translateKey($key, $adminName);
     }
 
     public function translateUI(string $id, array $parameters = []): string
     {
-        return $this->translationHelper->transWithPattern($id, $parameters, null, null, null, 'ui');
+        return $this->translationHelper->transWithPattern($id, $parameters, 'ui');
     }
 }
