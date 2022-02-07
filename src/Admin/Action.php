@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Admin;
 
-use LAG\AdminBundle\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 
 class Action implements ActionInterface
 {

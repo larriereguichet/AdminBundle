@@ -10,9 +10,6 @@ services:
     
     LAG\AdminBundle\Factory\AdminFactoryInterface: '@LAG\AdminBundle\Factory\AdminFactory'
     LAG\AdminBundle\Factory\AdminFactory: ~
-    
-    LAG\AdminBundle\Factory\ViewFactoryInterface: '@LAG\AdminBundle\Factory\ViewFactory'
-    LAG\AdminBundle\Factory\ViewFactory: ~
 
     LAG\AdminBundle\Factory\FieldFactoryInterface: '@LAG\AdminBundle\Factory\FieldFactory'
     LAG\AdminBundle\Factory\FieldFactory:

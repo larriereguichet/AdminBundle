@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\View;
+namespace LAG\AdminBundle\View\Template;
 
 /**
  * This is a value object to encapsulate Twig template values.

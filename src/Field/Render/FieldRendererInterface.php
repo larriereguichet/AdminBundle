@@ -9,7 +9,7 @@ use LAG\AdminBundle\Field\View\View;
 interface FieldRendererInterface
 {
     /**
-     * Render a field view using Twig or a the view data for a text View. The data transformer will be called before
+     * Render a field view using Twig or a view data for a text View. The data transformer will be called before
      * rendering data.
      */
     public function render(View $field, $data): string;

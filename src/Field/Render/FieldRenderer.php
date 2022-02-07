@@ -5,25 +5,20 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Field\Render;
 
 use Exception;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Exception\View\FieldRenderingException;
 use LAG\AdminBundle\Field\View\TextView;
 use LAG\AdminBundle\Field\View\View;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use function Symfony\Component\String\u;
 use Twig\Environment;
+use function Symfony\Component\String\u;
 
 class FieldRenderer implements FieldRendererInterface
 {
-    private Environment $environment;
-    private ApplicationConfiguration $appConfig;
-
     public function __construct(
-        Environment $environment,
-        ApplicationConfiguration $appConfig
+        private Environment $environment,
+        private ApplicationConfiguration $appConfig
     ) {
-        $this->environment = $environment;
-        $this->appConfig = $appConfig;
     }
 
     public function render(View $field, $data): string
