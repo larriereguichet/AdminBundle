@@ -17,7 +17,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.1",
-        "axios": "^0.21.1",
+        "axios": "^0.27.1",
         "bootstrap": "^4.5",
         "jquery": "^3.5",
         "jquery-easing": "^0.0.1",
