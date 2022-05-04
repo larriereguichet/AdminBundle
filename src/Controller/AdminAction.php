@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Controller;
 
-use LAG\AdminBundle\Factory\AdminFactoryInterface;
+use LAG\AdminBundle\Admin\Factory\AdminFactoryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\View\Handler\ViewHandlerInterface;
-use LAG\AdminBundle\View\RedirectView;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Twig\Environment;
 
 class AdminAction
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Field\Helper;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -14,18 +14,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class FieldConfigurationHelper
 {
-    private ApplicationConfiguration $appConfig;
+    private ApplicationConfiguration $applicationConfiguration;
     private MetadataHelperInterface $metadataHelper;
     private TranslatorInterface $translator;
 
     public function __construct(
         TranslatorInterface $translator,
-        ApplicationConfiguration $appConfig,
+        ApplicationConfiguration $applicationConfiguration,
         MetadataHelperInterface $metadataHelper
     ) {
         $this->translator = $translator;
         $this->metadataHelper = $metadataHelper;
-        $this->appConfig = $appConfig;
+        $this->applicationConfiguration = $applicationConfiguration;
     }
 
     public function addDefaultFields(array &$configuration, $entityClass, $adminName): void
@@ -84,8 +84,8 @@ class FieldConfigurationHelper
                 ) {
                     $text = 'Delete';
 
-                    if ($this->appConfig->get('translation')) {
-                        $text = $this->translator->trans('lag.admin.delete', [], $this->appConfig->getTranslationCatalog());
+                    if ($this->applicationConfiguration->get('translation')) {
+                        $text = $this->translator->trans('lag.admin.delete', [], $this->applicationConfiguration->getTranslationDomain());
                     }
                     // If a "delete" field is declared, and if it is not configured in the metadata, and if no
                     // configuration is declared for this field, and if the "delete" action is allowed, we add a default
@@ -113,10 +113,10 @@ class FieldConfigurationHelper
     public function addDefaultStrategy(array &$configuration)
     {
         $mapping = [
-            'list' => AdminInterface::LOAD_STRATEGY_MULTIPLE,
+            'index' => AdminInterface::LOAD_STRATEGY_MULTIPLE,
             'create' => AdminInterface::LOAD_STRATEGY_NONE,
             'delete' => AdminInterface::LOAD_STRATEGY_UNIQUE,
-            'edit' => AdminInterface::LOAD_STRATEGY_UNIQUE,
+            'update' => AdminInterface::LOAD_STRATEGY_UNIQUE,
         ];
 
         foreach ($configuration['actions'] as $name => $action) {
@@ -138,7 +138,7 @@ class FieldConfigurationHelper
     public function addDefaultRouteParameters(array &$configuration)
     {
         $mapping = [
-            'edit' => [
+            'update' => [
                 'id' => '\d+',
             ],
             'delete' => [
@@ -178,7 +178,7 @@ class FieldConfigurationHelper
                 continue;
             }
 
-            if (!\array_key_exists('edit', $configuration['actions']) && !\array_key_exists('delete', $configuration['actions'])) {
+            if (!\array_key_exists('update', $configuration['actions']) && !\array_key_exists('delete', $configuration['actions'])) {
                 continue;
             }
             $configuration['actions'][$actionName]['fields']['_actions'] = [
@@ -186,10 +186,10 @@ class FieldConfigurationHelper
                 'options' => [],
             ];
 
-            if (\array_key_exists('edit', $configuration['actions'])) {
-                $configuration['actions'][$actionName]['fields']['_actions']['options']['actions']['edit'] = [
+            if (\array_key_exists('update', $configuration['actions'])) {
+                $configuration['actions'][$actionName]['fields']['_actions']['options']['actions']['update'] = [
                         'title' => 'test',
-                        'route' => $this->appConfig->getRouteName($adminName, 'edit'),
+                        'route' => $this->applicationConfiguration->getRouteName($adminName, 'update'),
                         'parameters' => [
                             'id' => null,
                         ],
@@ -200,7 +200,7 @@ class FieldConfigurationHelper
             if (\array_key_exists('delete', $configuration['actions'])) {
                 $configuration['actions'][$actionName]['fields']['_actions']['options']['actions']['delete'] = [
                         'title' => 'test',
-                        'route' => $this->appConfig->getRouteName($adminName, 'delete'),
+                        'route' => $this->applicationConfiguration->getRouteName($adminName, 'delete'),
                         'parameters' => [
                             'id' => null,
                         ],

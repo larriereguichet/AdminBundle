@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\Twig\Extension;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
 use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\Twig\Extension\AdminExtension;

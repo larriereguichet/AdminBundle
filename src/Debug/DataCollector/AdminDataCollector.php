@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Debug\DataCollector;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,14 +14,14 @@ use Throwable;
 class AdminDataCollector extends DataCollector
 {
     private ResourceRegistryInterface $registry;
-    private ApplicationConfiguration $appConfig;
+    private ApplicationConfiguration $applicationConfiguration;
 
     public function __construct(
         ResourceRegistryInterface $registry,
-        ApplicationConfiguration $appConfig,
+        ApplicationConfiguration $applicationConfiguration,
     ) {
         $this->registry = $registry;
-        $this->appConfig = $appConfig;
+        $this->applicationConfiguration = $applicationConfiguration;
     }
 
     public function collect(Request $request, Response $response, Throwable $exception = null)
@@ -40,8 +40,8 @@ class AdminDataCollector extends DataCollector
 
         // When the application configuration is not defined or resolved, we can not access to the admin/menus
         // configuration
-        if ($this->appConfig->isFrozen()) {
-            $data['application'] = $this->appConfig->toArray();
+        if ($this->applicationConfiguration->isFrozen()) {
+            $data['application'] = $this->applicationConfiguration->toArray();
         }
         $data['application']['admin'] = $request->attributes->get('_admin');
         $data['application']['action'] = $request->attributes->get('_action');

@@ -23,6 +23,7 @@ class ActionField extends AbstractField
             ->setDefaults([
                 'template' => '@LAGAdmin/fields/action.html.twig',
                 'translation' => true,
+                'property_path' => null,
             ])
             ->addNormalizer('attr', function (Options $options, $value) {
                 if (!empty($value['class'])) {
@@ -30,11 +31,11 @@ class ActionField extends AbstractField
                 }
                 $action = null;
 
-                if ($options->offsetGet('action')) {
+                if ($options->offsetExists('action')) {
                     $action = $options->offsetGet('action');
                 }
 
-                if ('edit' === $action) {
+                if ('update' === $action) {
                     $value['class'] = 'btn btn-primary btn-sm';
                 } elseif ('delete' === $action) {
                     $value['class'] = 'btn btn-danger btn-sm';

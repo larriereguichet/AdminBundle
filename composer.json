@@ -25,7 +25,7 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "johnkrovitch/configuration": "^2.2",
         "johnkrovitch/orm-pack": "^3.1",
         "knplabs/knp-menu-bundle": "^3.2",
@@ -38,7 +38,7 @@
         "symfony/translation": "^6.0",
         "symfony/twig-bundle": "^6.0",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/intl-extra": "^3.1",
+        "twig/intl-extra": "^3.3",
         "twig/string-extra": "^3.1",
         "twig/twig": "^3.0"
     },

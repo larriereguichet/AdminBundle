@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Translation\Helper;
 
+/** @deprecated  */
 interface TranslationHelperInterface
 {
     /**

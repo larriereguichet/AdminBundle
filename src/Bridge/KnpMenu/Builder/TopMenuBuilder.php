@@ -6,10 +6,10 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
-use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use function Symfony\Component\String\u;
 
-class TopMenuBuilder implements MenuBuilderInterface
+class TopMenuBuilder
 {
     use MenuBuilderTrait;
 
@@ -17,10 +17,8 @@ class TopMenuBuilder implements MenuBuilderInterface
         private FactoryInterface $factory,
         private AdminContextInterface $adminContext,
         private RouteNameGeneratorInterface $routeNameGenerator,
-        private TranslationHelperInterface $translationHelper,
         private EventDispatcherInterface $eventDispatcher,
-    )
-    {
+    ) {
     }
 
     public function createMenu(array $options = []): ItemInterface
@@ -31,16 +29,23 @@ class TopMenuBuilder implements MenuBuilderInterface
             return $menu;
         }
         $admin = $this->adminContext->getAdmin();
-        $action = $admin->getAction()->getName();
+        $action = $admin->getAction();
 
-        if ($action === 'list') {
+        if ($action->getName() === 'index') {
             if ($admin->getConfiguration()->hasAction('create')) {
-                $menu->addChild($this->translationHelper->getTranslationKey('create', $admin->getName()), [
-                    'route' => $this->routeNameGenerator->generateRouteName($admin->getName(), 'create'),
-                    'extras' => [
-                        'icon' => 'plus'
-                    ],
-                ]);
+                $menu
+                    ->addChild($action->getName(), [
+                        'route' => $this->routeNameGenerator->generateRouteName($admin->getName(), 'create'),
+                        'extras' => [
+                            'icon' => 'plus'
+                        ],
+                    ])
+                    ->setLabel(sprintf(
+                        'lag_admin.%s.%s',
+                        u($admin->getName())->lower()->snake()->toString(),
+                        'create',
+                    ))
+                ;
             }
         }
         $this->dispatchMenuEvents('top', $menu);

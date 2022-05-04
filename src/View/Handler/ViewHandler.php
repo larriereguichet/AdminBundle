@@ -2,8 +2,8 @@
 
 namespace LAG\AdminBundle\View\Handler;
 
+use LAG\AdminBundle\Admin\View\AdminView;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\View\AdminView;
 use LAG\AdminBundle\View\RedirectView;
 use LAG\AdminBundle\View\ViewInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,6 +24,7 @@ class ViewHandler implements ViewHandlerInterface
         if ($view instanceof AdminView) {
             return new Response($this->environment->render($view->getTemplate(), [
                 'admin' => $view,
+                'action' => $view->getAction(),
             ]));
         }
 

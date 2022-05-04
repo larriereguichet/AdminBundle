@@ -1,0 +1,20 @@
+{% extends '@LAGAdmin/menu/menu-base.html.twig' %}
+
+{% block list %}
+        {% import _self as knp_menu %}
+        {% set classes = listAttributes.class|default('') %}
+        {% set classes = classes ~ ' nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0' %}
+        {% set listAttributes = listAttributes|merge({'class': classes}) %}
+
+        <ul{{ knp_menu.attributes(listAttributes) }}>
+            {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
+                {{ block('children') }}
+            {% endif %}
+        </ul>
+{% endblock %}
+
+{% block linkElement %}
+    {% import _self as knp_menu %}
+    {% set attributes = item.linkAttributes|merge({'class': 'nav-link text-white'}) %}
+    <a href="{{ item.uri }}"{{ knp_menu.attributes(attributes) }}>{{ block('label') }}</a>
+{% endblock %}

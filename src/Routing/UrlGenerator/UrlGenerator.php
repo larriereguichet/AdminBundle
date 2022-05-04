@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Routing\Parameter\ParametersMapper;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Routing\RouterInterface;
 
 class UrlGenerator implements UrlGeneratorInterface
 {
-    private RouterInterface $router;
-    private ApplicationConfiguration $appConfig;
-
-    public function __construct(RouterInterface $router, ApplicationConfiguration $appConfig)
-    {
-        $this->router = $router;
-        $this->appConfig = $appConfig;
+    public function __construct(
+        private RouterInterface $router,
+        private ApplicationConfiguration $applicationConfiguration,
+    ) {
     }
 
     public function generate(
@@ -26,7 +23,7 @@ class UrlGenerator implements UrlGeneratorInterface
         array $routeParameters = [],
         object $data = null
     ): string {
-        $routeName = $this->appConfig->getRouteName($adminName, $actionName);
+        $routeName = $this->applicationConfiguration->getRouteName($adminName, $actionName);
 
         return $this->generateFromRouteName($routeName, $routeParameters, $data);
     }

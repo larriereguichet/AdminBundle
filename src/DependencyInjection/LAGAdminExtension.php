@@ -17,7 +17,7 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('services.yaml');
 
         if ($container->getParameter('kernel.environment') === 'dev') {
@@ -28,9 +28,12 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
             $loader->load('services_prod.yaml');
         }
 
+        // TODO move
         if (!\array_key_exists('resources_path', $config)) {
             $config['resources_path'] = '%kernel.project_dir%/config/admin/resources';
         }
+        $container->setParameter('lag_admin.translation.domain', $config['translation']['domain']);
+
         $container->setParameter('lag_admin.application.configuration', $config);
         $container->setParameter('lag_admin.resources.path', $config['resources_path']);
         $container->setParameter('lag_admin.media_bundle_enabled', \array_key_exists('JKMediaBundle', $container->getParameter('kernel.bundles')));
@@ -44,14 +47,23 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container): void
     {
-        $container->prependExtensionConfig('knp_menu', [
-            'twig' => [
-                'template' => '@LAGAdmin/menu/menu-base.html.twig',
-            ],
-        ]);
+        $configs = $container->getExtensionConfig($this->getAlias());
+        $resolvingBag = $container->getParameterBag();
+        $configs = $resolvingBag->resolveValue($configs);
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
+//        // TODO remove this and pass when calling template instead
+//        $container->prependExtensionConfig('knp_menu', [
+//            'twig' => [
+//                'template' => '@LAGAdmin/menu/menu-base.html.twig',
+//            ],
+//        ]);
 
         $container->prependExtensionConfig('twig', [
             'form_themes' => ['@LAGAdmin/form/theme.html.twig'],
+            'globals' => [
+                'admin_translation_catalog' => $config['translation']['domain'],
+            ],
         ]);
     }
 }

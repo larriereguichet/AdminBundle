@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Listener\Form;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\DataPersister\Registry\DataPersisterRegistryInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Session\FlashMessage\FlashMessageHelper;
@@ -18,7 +18,7 @@ class DeleteDataListener
     public function __construct(
         private  DataPersisterRegistryInterface $registry,
         private FlashMessageHelper $flashMessageHelper,
-        private ApplicationConfiguration $appConfig
+        private ApplicationConfiguration $applicationConfiguration
     ) {
     }
 
@@ -36,10 +36,10 @@ class DeleteDataListener
             $dataPersister->delete($admin->getData());
             $message = 'Deleted';
 
-            if ($this->appConfig->isTranslationEnabled()) {
+            if ($this->applicationConfiguration->isTranslationEnabled()) {
                 // TODO
                 $message = TranslationHelper::getTranslationKey(
-                    $this->appConfig->getTranslationPattern(),
+                    $this->applicationConfiguration->getTranslationPattern(),
                     $admin->getName(),
                     'deleted'
                 );

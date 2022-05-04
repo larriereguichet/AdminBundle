@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\Field\Render;
 
 use Exception;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Exception\View\FieldRenderingException;
 use LAG\AdminBundle\Field\Render\FieldRenderer;
 use LAG\AdminBundle\Field\View\TextView;
@@ -18,7 +18,7 @@ class FieldRendererTest extends TestCase
 {
     private FieldRenderer $renderer;
     private MockObject $environment;
-    private ApplicationConfiguration $appConfig;
+    private ApplicationConfiguration $applicationConfiguration;
 
     public function testService()
     {
@@ -193,7 +193,7 @@ class FieldRendererTest extends TestCase
     {
         parent::setUp();
         $this->environment = $this->createMock(Environment::class);
-        $this->appConfig = new ApplicationConfiguration(['resources_path' => 'test']);
-        $this->renderer = new FieldRenderer($this->environment, $this->appConfig);
+        $this->applicationConfiguration = new ApplicationConfiguration(['resources_path' => 'test']);
+        $this->renderer = new FieldRenderer($this->environment, $this->applicationConfiguration);
     }
 }

@@ -34,12 +34,14 @@ class ConfigurationException extends Exception
             $typeMessage = 'An error has occurred when resolving the configuration of the admin "%s"';
         }
         $message = sprintf($typeMessage, $resourceName);
+        $code = 0;
 
-        if ($previous) {
+        if ($previous !== null) {
             $message .= ' : '.$previous->getMessage();
+            $code = $previous->getCode();
         }
 
-        parent::__construct($message, $previous->getCode(), $previous);
+        parent::__construct($message, $code, $previous);
         $this->configuration = $configuration;
     }
 

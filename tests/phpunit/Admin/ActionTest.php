@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\Admin;
 
 use LAG\AdminBundle\Admin\Action;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Tests\TestCase;
 
 class ActionTest extends TestCase

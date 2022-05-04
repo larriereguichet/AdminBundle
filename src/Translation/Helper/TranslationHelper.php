@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Translation\Helper;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -28,7 +28,7 @@ class TranslationHelper implements TranslationHelperInterface
     public function translate(string $id, array $parameters = [], string $domain = null, string $locale = null): string
     {
         if ($domain === null) {
-            $domain = $this->applicationConfiguration->getTranslationCatalog();
+            $domain = $this->applicationConfiguration->getTranslationDomain();
         }
 
         return $this->translator->trans($id, $parameters, $domain, $locale);
@@ -41,7 +41,7 @@ class TranslationHelper implements TranslationHelperInterface
 
     public function getTranslationDomain(): string
     {
-        return $this->applicationConfiguration->getTranslationCatalog();
+        return $this->applicationConfiguration->getTranslationDomain();
     }
 
     /** @deprecated  */
@@ -58,7 +58,7 @@ class TranslationHelper implements TranslationHelperInterface
         }
 
         if ($domain === null) {
-            $domain = $this->applicationConfiguration->getTranslationCatalog();
+            $domain = $this->applicationConfiguration->getTranslationDomain();
         }
 
         if ($adminName === null) {

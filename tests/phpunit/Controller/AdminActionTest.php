@@ -3,8 +3,8 @@
 namespace LAG\AdminBundle\Tests\Controller;
 
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use LAG\AdminBundle\Controller\AdminAction;
-use LAG\AdminBundle\Factory\AdminFactory;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\View\RedirectView;

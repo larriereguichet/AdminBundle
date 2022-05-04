@@ -1,0 +1,10 @@
+{% set yes = options.translation ? 'lag.admin.yes' | trans({}, options.translation_domain) : 'Yes' %}
+{% set no = options.translation ? 'lag.admin.no' | trans({}, options.translation_domain) : 'No' %}
+
+{% if value %}
+    <i class="fa fa-check text-success"
+       title="{{ yes }}"></i>
+{% else %}
+    <i class="fa fa-times text-danger"
+       title="{{ No }}"></i>
+{% endif %}

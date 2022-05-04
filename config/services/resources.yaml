@@ -1,0 +1,8 @@
+services:
+    lag_admin.resource.registry: '@LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistry'
+
+    LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface: '@LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistry'
+
+    LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistry:
+        arguments:
+            $resourcesPath: '%lag_admin.resources.path%'

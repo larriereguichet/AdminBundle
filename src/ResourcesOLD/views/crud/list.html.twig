@@ -1,0 +1,76 @@
+{% extends admin.base %}
+
+{% block page_title %}
+    {{ parent() }} - {{ admin.action.title }}
+{% endblock %}
+
+{% block content %}
+    <div class="admin-{{ admin.name }}">
+        {% block filterForm %}
+            {% if admin.forms.filter|default(false) %}
+                {% include '@LAGAdmin/crud/list/_filters.html.twig' with {form: admin.forms.filter} %}
+            {% endif %}
+        {% endblock %}
+        
+        {% block top_extra_content %}{% endblock %}
+
+        {{ dump(admin) }}
+
+        <div class="card">
+        {% block table %}
+            {% if admin.data|length > 0 %}
+                <table class="admin-table table table-hover card-body">
+                    {% block table_head %}
+                        <thead>
+                        <tr>
+                            {% for field in admin.fields %}
+                                {% include '@LAGAdmin/crud/list/_header.html.twig' %}
+                            {% endfor %}
+                            <th></th>
+                        </tr>
+                        </thead>
+                    {% endblock %}
+
+                    {% block table_body %}
+                        <tbody>
+                        {% for entity in admin.data %}
+                            <tr>
+                                {% for field in admin.fields %}
+                                    <td>
+                                        {{ admin_field(field, entity)|raw }}
+                                    </td>
+                                {% endfor %}
+                                <td>
+                                    {% for action in admin.action.configuration.listActions %}
+                                        {{ dump(action) }}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+{#                        {% if admin. %}#}
+{#                        <tr>#}
+{#                            <td></td>#}
+{#                        </tr>#}
+                        </tbody>
+                    {% endblock %}
+                    <tfoot>
+                    </tfoot>
+                </table>
+            {% else %}
+                <p class="card-body">{{ 'no_record'|admin_trans_key }}</p>
+            {% endif %}
+        {% endblock %}
+        </div>
+
+        {% block pagination %}
+            <div>
+                {% if admin.data|length > 0 %}
+                    {{ pagerfanta(admin.data, 'twitter_bootstrap4', {page: admin.data.currentPage}) }}
+                {% endif %}
+            </div>
+        {% endblock %}
+        
+        {% block bottom_extra_content %}{% endblock %}
+    </div>
+{% endblock %}

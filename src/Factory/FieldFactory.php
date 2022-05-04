@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Factory;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Configuration\FieldConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\Configuration\FieldConfigurationEvent;
@@ -31,7 +31,7 @@ class FieldFactory implements FieldFactoryInterface
 
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
-        private ApplicationConfiguration $appConfig,
+        private ApplicationConfiguration $applicationConfiguration,
         array $fieldsMapping
     ) {
         $this->fieldsMapping = $fieldsMapping;
@@ -59,7 +59,7 @@ class FieldFactory implements FieldFactoryInterface
             $field = $this->instanciateField($name, $type);
 
             if ($field instanceof ApplicationAwareInterface) {
-                $field->setApplicationConfiguration($this->appConfig);
+                $field->setApplicationConfiguration($this->applicationConfiguration);
             }
         } catch (\Exception $exception) {
             throw new FieldConfigurationException($name, $exception->getMessage(), $exception);
@@ -96,7 +96,7 @@ class FieldFactory implements FieldFactoryInterface
                 $parent = $this->instanciateField($currentField->getName(), $currentField->getParent());
 
                 if ($parent instanceof ApplicationAwareInterface) {
-                    $parent->setApplicationConfiguration($this->appConfig);
+                    $parent->setApplicationConfiguration($this->applicationConfiguration);
                 }
                 $parents[] = $parent;
                 $processedParents[] = $field->getParent();

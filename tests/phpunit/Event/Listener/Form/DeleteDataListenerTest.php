@@ -3,8 +3,8 @@
 namespace LAG\AdminBundle\Tests\Event\Listener\Form;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\DataPersister\DataPersisterInterface;
 use LAG\AdminBundle\DataPersister\Registry\DataPersisterRegistryInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class DeleteDataListenerTest extends TestCase
 {
     private DeleteDataListener $listener;
-    private ApplicationConfiguration $appConfig;
+    private ApplicationConfiguration $applicationConfiguration;
     private MockObject $session;
     private MockObject $registry;
 
@@ -138,11 +138,11 @@ class DeleteDataListenerTest extends TestCase
     {
         $this->registry = $this->createMock(DataPersisterRegistryInterface::class);
         $this->session = $this->createMock(Session::class);
-        $this->appConfig = $this->createApplicationConfiguration([
+        $this->applicationConfiguration = $this->createApplicationConfiguration([
             'resources_path' => __DIR__,
             'translation' => ['enabled' => true],
         ]);
 
-        $this->listener = new DeleteDataListener($this->registry, $this->session, $this->appConfig);
+        $this->listener = new DeleteDataListener($this->registry, $this->session, $this->applicationConfiguration);
     }
 }

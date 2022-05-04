@@ -25,7 +25,7 @@ class FieldThemeListener
             $newClass = 'btn btn-info btn-sm';
             $actionName = !empty($options['action']) && $options['action'] !== null ? $options['action'] : '';
 
-            if ($actionName === 'create' || $actionName === 'edit') {
+            if ($actionName === 'create' || $actionName === 'update') {
                 $newClass = 'btn btn-primary btn-sm';
             }
 

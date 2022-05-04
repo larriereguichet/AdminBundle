@@ -17,6 +17,6 @@ class ActionConfigurationException extends Exception
             $previous ? $previous->getMessage() : ''
         );
 
-        parent::__construct($message, $previous->getCode(), $previous);
+        parent::__construct($message, $previous?->getCode() ?? 0, $previous);
     }
 }

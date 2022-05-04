@@ -4,14 +4,14 @@ namespace LAG\AdminBundle\Bridge\KnpMenu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface;
 use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use function Symfony\Component\String\u;
 
-class LeftMenuBuilder implements MenuBuilderInterface
+class LeftMenuBuilder
 {
     use MenuBuilderTrait;
 
@@ -19,7 +19,7 @@ class LeftMenuBuilder implements MenuBuilderInterface
         private FactoryInterface $factory,
         private ResourceRegistryInterface $resourceRegistry,
         private TranslationHelperInterface $translationHelper,
-        private ConfigurationFactoryInterface $configurationFactory,
+        private AdminConfigurationFactoryInterface $adminConfigurationFactory,
         private RouteNameGeneratorInterface $routeNameGenerator,
         private EventDispatcherInterface $eventDispatcher,
     )
@@ -32,17 +32,20 @@ class LeftMenuBuilder implements MenuBuilderInterface
 
         foreach ($this->resourceRegistry->all() as $resource) {
             $configuration = $this
-                ->configurationFactory
-                ->createAdminConfiguration($resource->getName(), $resource->getConfiguration())
+                ->adminConfigurationFactory
+                ->create($resource->getName(), $resource->getConfiguration())
             ;
 
-            if (!$configuration->hasAction('list')) {
+            if (!$configuration->hasAction('index')) {
                 continue;
             }
             $translationKey = u($resource->getName())->snake()->toString();
-            $menu->addChild($this->translationHelper->getTranslationKey($translationKey), [
-                'route' => $this->routeNameGenerator->generateRouteName($resource->getName(), 'list'),
-            ]);
+            $menu
+                ->addChild($resource->getName(), [
+                    'route' => $this->routeNameGenerator->generateRouteName($resource->getName(), 'index'),
+                ])
+                ->setLabel('lag_admin.menu.'.$translationKey)
+            ;
         }
         $this->dispatchMenuEvents('left', $menu);
 

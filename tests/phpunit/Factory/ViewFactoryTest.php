@@ -4,14 +4,14 @@ namespace LAG\AdminBundle\Tests\Factory;
 
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\View\AdminView;
 use LAG\AdminBundle\Factory\FieldFactoryInterface;
-use LAG\AdminBundle\Factory\ViewFactory;
 use LAG\AdminBundle\Field\StringField;
+use LAG\AdminBundle\Routing\Redirection\RedirectionUtils;
 use LAG\AdminBundle\Tests\TestCase;
-use LAG\AdminBundle\Utils\RedirectionUtils;
-use LAG\AdminBundle\View\AdminView;
+use LAG\AdminBundle\View\Factory\ViewFactory;
 use LAG\AdminBundle\View\RedirectView;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +22,7 @@ class ViewFactoryTest extends TestCase
     private ViewFactory $viewFactory;
     private MockObject $fieldFactory;
     private MockObject $redirectionUtils;
-    private ApplicationConfiguration $appConfig;
+    private ApplicationConfiguration $applicationConfiguration;
 
     public function testCreateWithRedirection(): void
     {
@@ -94,7 +94,7 @@ class ViewFactoryTest extends TestCase
 
         $resolver = new OptionsResolver();
         $field = new StringField('title', 'string');
-        $field->setApplicationConfiguration($this->appConfig);
+        $field->setApplicationConfiguration($this->applicationConfiguration);
         $field->configureOptions($resolver);
         $field->setOptions($resolver->resolve());
 
@@ -153,7 +153,7 @@ class ViewFactoryTest extends TestCase
 
         $resolver = new OptionsResolver();
         $field = new StringField('title', 'string');
-        $field->setApplicationConfiguration($this->appConfig);
+        $field->setApplicationConfiguration($this->applicationConfiguration);
         $field->configureOptions($resolver);
         $field->setOptions($resolver->resolve());
 
@@ -171,14 +171,14 @@ class ViewFactoryTest extends TestCase
     protected function setUp(): void
     {
         $this->fieldFactory = $this->createMock(FieldFactoryInterface::class);
-        $this->appConfig = $this->createApplicationConfiguration([
+        $this->applicationConfiguration = $this->createApplicationConfiguration([
             'resources_path' => 'my-directory/',
         ]);
         $this->redirectionUtils = $this->createMock(RedirectionUtils::class);
 
         $this->viewFactory = new ViewFactory(
             $this->fieldFactory,
-            $this->appConfig,
+            $this->applicationConfiguration,
             $this->redirectionUtils
         );
     }
