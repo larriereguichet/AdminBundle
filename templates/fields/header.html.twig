@@ -1,0 +1,7 @@
+{% if data %}
+    {% if admin_is_translation_enabled() %}
+        {{ data|admin_trans }}
+    {% else %}
+        {{ data }}
+    {% endif %}
+{% endif %}

@@ -4,14 +4,14 @@ namespace LAG\AdminBundle\Tests\Factory;
 
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Bridge\Doctrine\ORMDataProvider;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\DataProvider\Registry\DataProviderRegistryInterface;
-use LAG\AdminBundle\Factory\AdminFormFactory;
-use LAG\AdminBundle\Factory\AdminFormFactoryInterface;
 use LAG\AdminBundle\Factory\FieldFactoryInterface;
 use LAG\AdminBundle\Field\Definition\FieldDefinitionInterface;
+use LAG\AdminBundle\Form\Factory\FormFactory;
+use LAG\AdminBundle\Form\Factory\FormFactoryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
@@ -25,13 +25,13 @@ class AdminFormFactoryTest extends TestCase
 {
     private MockObject $dataProviderRegistry;
     private MockObject $formFactory;
-    private AdminFormFactoryInterface $adminFormFactory;
+    private FormFactoryInterface $adminFormFactory;
     private MockObject $fieldFactory;
 
     public function testServiceExists(): void
     {
-        $this->assertServiceExists(AdminFormFactory::class);
-        $this->assertServiceExists(AdminFormFactoryInterface::class);
+        $this->assertServiceExists(FormFactory::class);
+        $this->assertServiceExists(FormFactoryInterface::class);
     }
 
     public function testCreateEntityForm(): void
@@ -250,6 +250,6 @@ class AdminFormFactoryTest extends TestCase
         $this->formFactory = $this->createMock(FormFactoryInterface::class);
         $this->fieldFactory = $this->createMock(FieldFactoryInterface::class);
 
-        $this->adminFormFactory = new AdminFormFactory($this->dataProviderRegistry, $this->formFactory, $this->fieldFactory);
+        $this->adminFormFactory = new FormFactory($this->dataProviderRegistry, $this->formFactory, $this->fieldFactory);
     }
 }

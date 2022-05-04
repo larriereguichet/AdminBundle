@@ -67,17 +67,12 @@ my_admin:
 You can also deny access using your custom code to check permissions. Here is an example :
 
 ```php
-use LAG\AdminBundle\Event\EventsOLD;
-use LAG\AdminBundle\Event\EventsOLD\AdminEvent;
-use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;use LAG\AdminBundle\Configuration\ApplicationConfigurationStorage;use LAG\AdminBundle\Event\EventsOLD;use LAG\AdminBundle\Event\EventsOLD\AdminEvent;use Symfony\Component\EventDispatcher\EventSubscriberInterface;use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MySubscriber implements EventSubscriberInterface
 {
     /**
-     * @var ApplicationConfiguration
+     * @var \LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration
      */
     private $applicationConfiguration;
     

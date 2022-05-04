@@ -11,11 +11,9 @@ use Twig\TwigFunction;
 
 class FieldExtension extends AbstractExtension
 {
-    private FieldRendererInterface $renderer;
-
-    public function __construct(FieldRendererInterface $renderer)
-    {
-        $this->renderer = $renderer;
+    public function __construct(
+        private FieldRendererInterface $renderer,
+    ) {
     }
 
     public function getFunctions(): array
@@ -29,7 +27,7 @@ class FieldExtension extends AbstractExtension
     /**
      * Render a field with the value of the given data.
      */
-    public function renderField(FieldView $field, object $data): string
+    public function renderField(FieldView $field, ?object $data): string
     {
         return $this->renderer->render($field, $data);
     }

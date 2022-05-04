@@ -6,9 +6,9 @@ use Closure;
 use Exception;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
@@ -221,8 +221,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
         return new Definition($class);
     }
 
-    protected function createApplicationConfiguration(array $appConfig): ApplicationConfiguration
+    protected function createApplicationConfiguration(array $applicationConfiguration): ApplicationConfiguration
     {
-        return new ApplicationConfiguration($appConfig);
+        return new ApplicationConfiguration($applicationConfiguration);
     }
 }

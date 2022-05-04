@@ -1,0 +1,20 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    
+    ### Form Types ###
+    LAG\AdminBundle\Form\Type\TinyMce\TinyMceType: ~
+
+    LAG\AdminBundle\Form\Type\Select2\Select2EntityType:
+        tags:
+            - {name: form.type}
+
+    LAG\AdminBundle\Form\Type\DateRangeType: ~
+
+    LAG\AdminBundle\Form\Type\Security\LoginType: ~
+    
+    ### Form Extensions ###
+    LAG\AdminBundle\Form\Extension\CollectionExtensionType:
+        tags:
+            - {name: form.type_extension}

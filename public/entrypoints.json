@@ -1,0 +1,21 @@
+{
+  "entrypoints": {
+    "admin": {
+      "js": [
+        "/bundles/lagadmin/runtime.js",
+        "/bundles/lagadmin/admin.js"
+      ],
+      "css": [
+        "/bundles/lagadmin/admin.css"
+      ]
+    },
+    "fa": {
+      "js": [
+        "/bundles/lagadmin/runtime.js"
+      ],
+      "css": [
+        "/bundles/lagadmin/fa.css"
+      ]
+    }
+  }
+}

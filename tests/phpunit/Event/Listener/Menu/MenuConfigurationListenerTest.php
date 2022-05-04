@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\Event\Listener\Menu;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
+use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
 use LAG\AdminBundle\Event\Events\Configuration\MenuConfigurationEvent;
 use LAG\AdminBundle\Event\Listener\Menu\MenuConfigurationListener;
 use LAG\AdminBundle\Tests\TestCase;
@@ -58,7 +58,7 @@ class MenuConfigurationListenerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->adminHelper = $this->createMock(AdminHelperInterface::class);
+        $this->adminHelper = $this->createMock(AdminContextInterface::class);
         $this->listener = new MenuConfigurationListener([], $this->adminHelper);
     }
 }

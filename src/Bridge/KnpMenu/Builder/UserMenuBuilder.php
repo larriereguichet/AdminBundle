@@ -7,7 +7,7 @@ use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class UserMenuBuilder implements MenuBuilderInterface
+class UserMenuBuilder
 {
     use MenuBuilderTrait;
 

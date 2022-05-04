@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Tests\Configuration;
 use JK\Configuration\Exception\InvalidConfigurationException;
 use LAG\AdminBundle\Admin\Action;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Form\Type\AdminType;
@@ -17,7 +17,7 @@ class ActionConfigurationTest extends TestCase
 {
     public function testDefaultConfiguration(): void
     {
-        $configuration = new ActionConfiguration();
+        $configuration = new \LAG\AdminBundle\Admin\Configuration\ActionConfiguration();
         $configuration->configure([
             'name' => 'my_action',
             'admin_name' => 'my_admin',
@@ -54,7 +54,6 @@ class ActionConfigurationTest extends TestCase
             'date_format' => 'Y-m-d',
             'form' => null,
             'form_options' => [],
-            'menus' => [],
             'fields' => [],
             'template' => 'template.html.twig',
             'redirect' => null,
@@ -105,8 +104,6 @@ class ActionConfigurationTest extends TestCase
 
         $this->assertEquals(null, $configuration->getForm());
         $this->assertEquals([], $configuration->getFormOptions());
-
-        $this->assertEquals([], $configuration->getMenus());
 
         $this->assertEquals([], $configuration->getFields());
         $this->assertEquals('template.html.twig', $configuration->getTemplate());
@@ -221,7 +218,7 @@ class ActionConfigurationTest extends TestCase
 
     public function testFieldNormalizer(): void
     {
-        $configuration = new ActionConfiguration();
+        $configuration = new \LAG\AdminBundle\Admin\Configuration\ActionConfiguration();
         $configuration->configure([
             'name' => 'my_action',
             'admin_name' => 'my_admin',
@@ -274,7 +271,7 @@ class ActionConfigurationTest extends TestCase
     {
         return [
             ['create', AdminInterface::LOAD_STRATEGY_NONE],
-            ['edit', AdminInterface::LOAD_STRATEGY_UNIQUE],
+            ['update', AdminInterface::LOAD_STRATEGY_UNIQUE],
             ['list', AdminInterface::LOAD_STRATEGY_MULTIPLE],
             ['delete', AdminInterface::LOAD_STRATEGY_UNIQUE],
             ['custom', AdminInterface::LOAD_STRATEGY_UNIQUE],
@@ -357,7 +354,7 @@ class ActionConfigurationTest extends TestCase
             [false, 'my_action',  null],
             [null, 'create',  AdminType::class],
             ['MyForm', 'create',  'MyForm'],
-            [null, 'edit',  AdminType::class],
+            [null, 'update',  AdminType::class],
             [null, 'delete',  DeleteType::class],
         ];
     }
@@ -388,7 +385,7 @@ class ActionConfigurationTest extends TestCase
     {
         return [
             ['my_action', ['id' => null], ['id' => null]],
-            ['edit', [], ['id' => null]],
+            ['update', [], ['id' => null]],
         ];
     }
 }

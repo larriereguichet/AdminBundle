@@ -19,7 +19,7 @@ class LinkField extends AbstractField implements ApplicationAwareInterface
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $appConfig = $this->getApplicationConfiguration();
+        $applicationConfiguration = $this->getApplicationConfiguration();
 
         $resolver
             ->setDefaults([
@@ -36,14 +36,14 @@ class LinkField extends AbstractField implements ApplicationAwareInterface
                 'title' => null,
                 'url' => '',
             ])
-            ->setNormalizer('route', function (Options $options, $value) use ($appConfig) {
+            ->setNormalizer('route', function (Options $options, $value) use ($applicationConfiguration) {
                 // A route, an url or an admin should be defined
                 if (!$value && !$options->offsetGet('url') && !$options->offsetGet('admin')) {
                     throw new InvalidOptionsException('Either an url or a route should be defined');
                 }
 
                 if ($options->offsetGet('admin')) {
-                    $value = $appConfig->getRouteName($options->offsetGet('admin'), $options->offsetGet('action'));
+                    $value = $applicationConfiguration->getRouteName($options->offsetGet('admin'), $options->offsetGet('action'));
                 }
 
                 return $value;

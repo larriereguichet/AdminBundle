@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\Configuration;
 
 use JK\Configuration\Exception\InvalidConfigurationException;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\TestCase;
 
@@ -11,12 +11,12 @@ class ApplicationConfigurationTest extends TestCase
 {
     public function testService(): void
     {
-        $this->assertServiceExists(ApplicationConfiguration::class);
+        $this->assertServiceExists(\LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration::class);
     }
 
     public function testConfigurationWithDefaultConfiguration(): void
     {
-        $configuration = new ApplicationConfiguration([
+        $configuration = new \LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration([
             'resources_path' => 'test/',
         ]);
 
@@ -27,9 +27,8 @@ class ApplicationConfigurationTest extends TestCase
             'action_class' => 'LAG\AdminBundle\Admin\Action',
             'base_template' => '@LAGAdmin/base.html.twig',
             'ajax_template' => '@LAGAdmin/empty.html.twig',
-            'menu_template' => '@LAGAdmin/menu/menu.html.twig',
             'create_template' => '@LAGAdmin/crud/create.html.twig',
-            'edit_template' => '@LAGAdmin/crud/edit.html.twig',
+            'update_template' => '@LAGAdmin/crud/update.html.twig',
             'list_template' => '@LAGAdmin/crud/list.html.twig',
             'delete_template' => '@LAGAdmin/crud/delete.html.twig',
             'routes_pattern' => 'lag_admin.{admin}.{action}',
@@ -61,7 +60,6 @@ class ApplicationConfigurationTest extends TestCase
                 'count' => 'LAG\AdminBundle\Field\CountField',
                 'auto' => 'LAG\AdminBundle\Field\AutoField',
             ],
-            'menus' => [],
             'enable_security' => true,
             'resources_path' => 'test/',
         ], $configuration->toArray());
@@ -82,7 +80,7 @@ class ApplicationConfigurationTest extends TestCase
         $this->assertEquals('@LAGAdmin/empty.html.twig', $configuration->getAjaxTemplate());
         $this->assertEquals('@LAGAdmin/menu/menu.html.twig', $configuration->getMenuTemplate());
         $this->assertEquals('@LAGAdmin/crud/create.html.twig', $configuration->getCreateTemplate());
-        $this->assertEquals('@LAGAdmin/crud/edit.html.twig', $configuration->getEditTemplate());
+        $this->assertEquals('@LAGAdmin/crud/update.html.twig', $configuration->getEditTemplate());
         $this->assertEquals('@LAGAdmin/crud/list.html.twig', $configuration->getListTemplate());
         $this->assertEquals('@LAGAdmin/crud/delete.html.twig', $configuration->getDeleteTemplate());
 
@@ -103,7 +101,7 @@ class ApplicationConfigurationTest extends TestCase
 
         $this->assertEquals(true, $configuration->isTranslationEnabled());
         $this->assertEquals('admin.{admin}.{key}', $configuration->getTranslationPattern());
-        $this->assertEquals('admin', $configuration->getTranslationCatalog());
+        $this->assertEquals('admin', $configuration->getTranslationDomain());
 
         $this->assertEquals([
             'string' => 'LAG\AdminBundle\Field\StringField',
@@ -121,7 +119,6 @@ class ApplicationConfigurationTest extends TestCase
             'auto' => 'LAG\AdminBundle\Field\AutoField',
         ], $configuration->getFieldsMapping());
 
-        $this->assertEquals([], $configuration->getMenus());
         $this->assertEquals('test/', $configuration->getResourcesPath());
 
         $this->assertTrue($configuration->isSecurityEnabled());
@@ -130,12 +127,12 @@ class ApplicationConfigurationTest extends TestCase
     public function testConfigurationWithoutConfiguration(): void
     {
         $this->expectException(InvalidConfigurationException::class);
-        new ApplicationConfiguration([]);
+        new \LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration([]);
     }
 
     public function testWithoutPagination(): void
     {
-        $configuration = new ApplicationConfiguration([
+        $configuration = new \LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration([
             'resources_path' => 'test/',
             'pager' => false,
         ]);
@@ -148,7 +145,7 @@ class ApplicationConfigurationTest extends TestCase
 
     public function testWithoutTranslation(): void
     {
-        $configuration = new ApplicationConfiguration([
+        $configuration = new \LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration([
             'resources_path' => 'test/',
             'translation' => ['enabled' => false],
         ]);
@@ -172,7 +169,7 @@ class ApplicationConfigurationTest extends TestCase
 
     public function testGetRouteName(): void
     {
-        $configuration = new ApplicationConfiguration(['resources_path' => 'test/']);
+        $configuration = new \LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration(['resources_path' => 'test/']);
 
         $this->assertEquals('lag_admin.panda.bamboo', $configuration->getRouteName('panda', 'bamboo'));
     }
@@ -180,7 +177,7 @@ class ApplicationConfigurationTest extends TestCase
     public function testWithoutAdminPlaceHolder(): void
     {
         $this->expectException(InvalidConfigurationException::class);
-        new ApplicationConfiguration([
+        new \LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration([
             'resources_path' => 'test/',
             'routes_pattern' => 'test',
         ]);
@@ -189,7 +186,7 @@ class ApplicationConfigurationTest extends TestCase
     public function testWithoutActionPlaceHolder(): void
     {
         $this->expectException(InvalidConfigurationException::class);
-        new ApplicationConfiguration([
+        new \LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration([
             'resources_path' => 'test/',
             'routes_pattern' => 'test.{admin}',
         ]);
@@ -197,21 +194,11 @@ class ApplicationConfigurationTest extends TestCase
 
     public function testFieldsMappingNormalizer(): void
     {
-        $configuration = new ApplicationConfiguration([
+        $configuration = new \LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration([
             'resources_path' => 'test/',
             'fields_mapping' => null,
         ]);
 
-        $this->assertEquals(ApplicationConfiguration::FIELD_MAPPING, $configuration->getFieldsMapping());
-    }
-
-    public function testMenuNormalizer(): void
-    {
-        $configuration = new ApplicationConfiguration([
-            'resources_path' => 'test/',
-            'menus' => null,
-        ]);
-
-        $this->assertEquals([], $configuration->getMenus());
+        $this->assertEquals(\LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration::FIELD_MAPPING, $configuration->getFieldsMapping());
     }
 }

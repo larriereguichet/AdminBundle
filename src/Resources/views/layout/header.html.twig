@@ -1,9 +1,0 @@
-{% block header %}
-    {% block topMenu %}
-        {% if admin_has_menu('top') %}
-            {{ knp_menu_render('top', {
-                template: '@LAGAdmin/menu/top.html.twig'
-            }) }}
-        {% endif %}
-    {% endblock %}
-{% endblock %}

@@ -2,32 +2,36 @@
 
 namespace LAG\AdminBundle\Routing\Loader;
 
+use LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface;
+use LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface;
 use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Exception\ConfigurationException;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class ResourceLoader implements ResourceLoaderInterface
 {
-    public function __construct(private ConfigurationFactoryInterface $configurationFactory)
-    {
+    public function __construct(
+        private AdminConfigurationFactoryInterface $adminConfigurationFactory,
+        private ActionConfigurationFactoryInterface $actionConfigurationFactory,
+    ) {
     }
 
     public function loadRoutes(AdminResource $resource, RouteCollection $routes): void
     {
         $configuration = $this
-            ->configurationFactory
-            ->createAdminConfiguration($resource->getName(), $resource->getConfiguration())
+            ->adminConfigurationFactory
+            ->create($resource->getName(), $resource->getConfiguration())
         ;
 
         foreach ($configuration->get('actions') as $name => $options) {
             try {
-                $options['admin_name'] = $resource->getName();
-                $actionConfiguration = $this
-                    ->configurationFactory
-                    ->createActionConfiguration($name, $options);
+                $actionConfiguration = $this->actionConfigurationFactory->create(
+                    $resource->getName(),
+                    $name,
+                    $options
+                );
             } catch (Exception $exception) {
                 throw new ConfigurationException('admin', $resource->getName(), $exception);
             }

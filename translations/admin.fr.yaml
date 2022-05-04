@@ -1,0 +1,80 @@
+lag_admin:
+    actions:
+        index: Liste
+        create: Créer
+        delete: Supprimer
+        update: Mettre à jour
+
+    home:
+        title: Accueil - AdminBundle
+
+    index:
+        no_record: Aucun élément n'a encore été créé
+
+    list:
+        available_actions_for_item: Action disponible pour cet élément
+
+    security:
+        login: Se connecter
+        login_label: Email
+        password_label: Mot de passe
+
+# TODO old
+admin:
+
+    ui:
+        save: Sauvegarder
+        save_errors: Une erreur s'est produite durant la sauvegarde
+        create: Ajouter
+        save_and_return_to_list: Sauvegarder et retourner à la liste
+        cancel: Annuler
+        saved: Les modifications ont été sauvegardées
+        welcome_message: 'Bienvenue %username%'
+        return: Retour
+
+        login: Se connecter
+        login_form:
+            login: Login
+            password: Mot de passe
+        logout: Se déconnecter
+
+        # List
+        'true': Oui
+        'false': Non
+        batch_action: Exécuter
+        batch_empty: Choisissez une action
+        edit: Editer
+        element_count: '%page_count% éléments sur %total_count%'
+
+        # Delete
+        add: Ajouter
+        delete: Supprimer
+        deleting: 'Vous allez supprimer cette entité (identifiant: %id%). Etes-vous sûr(e) ?'
+        deleted: 'Entity "%entity%" has been succesfully removed'
+        deleted_errors: Une erreur a été rencontrée durant la suppression
+
+        # Batch
+        warning: Attention !
+        batch_action_title: Action de masse
+        batch_action_messages: Vous êtes sur le point de %action% les actions suivantes, êtes-vous sûr ?
+
+        mass_action: Exécuter
+
+        search_by: 'Recherche par %field%'
+        no_record: Aucun élément n'a été trouvé
+        delete_confirmation_title: Attention
+        delete_confirmation_warning: Vous allez supprimer un élément. Cette action n'est pas réversible
+        no_notifications: Pas de nouvelles notifications !
+
+        # Filters
+        reset_filters: Effacer les filtres
+        show_filters: Montrer les filtres
+        hide_filters: Cacher les filtres
+        filter: Filtrer
+        start_date: Depuis le
+        end_date: Jusqu'au
+
+        yes: Oui
+        no: Non
+
+        loading: Chargement...

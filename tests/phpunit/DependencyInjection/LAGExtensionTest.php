@@ -23,7 +23,6 @@ class LAGExtensionTest extends TestCase
                 $this->assertContains($parameter, [
                     'lag_admin.application.configuration',
                     'lag.admins',
-                    'lag_admin.menu.menus',
                     'lag_admin.menu.enable',
                     'lag_admin.resources.path',
                     'lag_admin.media_bundle_enabled',

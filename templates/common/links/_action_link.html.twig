@@ -1,0 +1,20 @@
+{% set classMap = {
+    index: 'btn-secondary',
+    create: 'btn-primary',
+    update: 'btn-primary',
+    delete: 'btn-danger'
+} %}
+{% set iconMap = {
+    update: 'fa-solid fa-pencil',
+    delete: 'fa-solid fa-trash'
+} %}
+
+
+{% set class = class|default(classMap[options.action]|default('')) %}
+{% set icon = icon|default(iconMap[options.action]|default('')) %}
+{% set text = text|default(options.text)|default('lag_admin.actions.' ~ options.action) %}
+
+<a href="{{ admin_link(options, data) }}" class="btn btn-sm {{ class }}">
+    <i class="{{ icon }}"></i>
+    {{ text|admin_trans }}
+</a>

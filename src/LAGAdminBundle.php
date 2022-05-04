@@ -30,4 +30,9 @@ class LAGAdminBundle extends Bundle
     // TODO from configuration
     public const REQUEST_PARAMETER_ADMIN = '_admin';
     public const REQUEST_PARAMETER_ACTION = '_action';
+
+    public function getPath(): string
+    {
+        return __DIR__.'/../';
+    }
 }

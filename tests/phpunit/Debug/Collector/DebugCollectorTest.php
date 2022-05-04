@@ -2,9 +2,9 @@
 
 namespace LAG\AdminBundle\Tests\Debug\Collector;
 
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -83,7 +83,6 @@ class DebugCollectorTest extends TestCase
                 'admin' => 'panda',
                 'action' => 'bamboo',
             ],
-            'menus' => [],
         ], $data);
     }
 
@@ -93,14 +92,14 @@ class DebugCollectorTest extends TestCase
     private function createCollector(): array
     {
         $registry = $this->createMock(ResourceRegistryInterface::class);
-        $appConfig = $this->createMock(ApplicationConfiguration::class);
+        $applicationConfiguration = $this->createMock(ApplicationConfiguration::class);
 
-        $collector = new AdminDataCollector($registry, $appConfig, []);
+        $collector = new AdminDataCollector($registry, $applicationConfiguration, []);
 
         return [
             $collector,
             $registry,
-            $appConfig,
+            $applicationConfiguration,
         ];
     }
 }

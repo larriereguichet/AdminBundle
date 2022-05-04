@@ -8,27 +8,27 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 
 Encore
     // directory where compiled assets will be stored
-    .setOutputPath('./src/Resources/public/')
+    .setOutputPath('./public/')
     .setManifestKeyPrefix('')
     // public path used by the web server to access the output path
     .setPublicPath('/bundles/lagadmin')
 
     // TODO remove bootstrap js
-    .addEntry('jquery', './node_modules/jquery-easing/jquery.easing.1.3.js')
-    .addEntry('jquery-easing', './node_modules/jquery/dist/jquery.js')
-    .addEntry('sb-admin', './node_modules/startbootstrap-sb-admin-2/js/sb-admin-2.js')
-    .addEntry('bootstrap', './node_modules/bootstrap/dist/js/bootstrap.bundle.js')
+    // .addEntry('jquery', './node_modules/jquery-easing/jquery.easing.1.3.js')
+    // .addEntry('jquery-easing', './node_modules/jquery/dist/jquery.js')
+    // .addEntry('sb-admin', './node_modules/startbootstrap-sb-admin-2/js/sb-admin-2.js')
+    // .addEntry('bootstrap', './node_modules/bootstrap/dist/js/bootstrap.bundle.js')
     .addEntry('admin', './assets/js/admin.js')
     
-    .addStyleEntry('sb-admin-css', './node_modules/startbootstrap-sb-admin-2/css/sb-admin-2.css')
+    // .addStyleEntry('sb-admin-css', './node_modules/startbootstrap-sb-admin-2/css/sb-admin-2.css')
     .addStyleEntry('fa', './node_modules/@fortawesome/fontawesome-free/css/all.css')
     
     // TODO
-    .disableSingleRuntimeChunk()
+    //.disableSingleRuntimeChunk()
+    .enableSingleRuntimeChunk()
     
     .enableVersioning(false)
     .cleanupOutputBeforeBuild()
-    .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
 
     .configureBabel(() => {}, {

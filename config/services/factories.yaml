@@ -1,0 +1,48 @@
+services:
+    _defaults:
+        public: false
+
+    # Admin objects factories
+    LAG\AdminBundle\Action\Factory\ActionFactoryInterface: '@LAG\AdminBundle\Action\Factory\ActionFactory'
+    LAG\AdminBundle\Action\Factory\ActionFactory:
+        arguments:
+            $eventDispatcher: '@event_dispatcher'
+            $configurationFactory: '@LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface'
+            $registry: '@LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface'
+    
+    LAG\AdminBundle\Admin\Factory\AdminFactoryInterface: '@LAG\AdminBundle\Admin\Factory\AdminFactory'
+    LAG\AdminBundle\Admin\Factory\AdminFactory:
+        arguments:
+            $registry: '@LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface'
+            $eventDispatcher: '@event_dispatcher'
+            $configurationFactory: '@LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface'
+
+    LAG\AdminBundle\Factory\FieldFactoryInterface: '@LAG\AdminBundle\Factory\FieldFactory'
+    LAG\AdminBundle\Factory\FieldFactory:
+        arguments:
+            $fieldsMapping: '%lag_admin.fields.mapping%'
+            $eventDispatcher: '@event_dispatcher'
+            $applicationConfiguration: '@LAG\AdminBundle\Application\Configuration\ApplicationConfiguration'
+
+    LAG\AdminBundle\Form\Factory\FormFactoryInterface: '@LAG\AdminBundle\Form\Factory\FormFactory'
+    LAG\AdminBundle\Form\Factory\FormFactory:
+        arguments:
+            $formFactory: '@form.factory'
+            $fieldFactory: '@LAG\AdminBundle\Factory\FieldFactoryInterface'
+    
+    LAG\AdminBundle\Factory\Form\FilterFormFactoryInterface: '@LAG\AdminBundle\Factory\Form\FilterFormFactory'
+    LAG\AdminBundle\Factory\Form\FilterFormFactory:
+        arguments:
+            $formFactory: '@form.factory'
+            $applicationConfiguration: '@LAG\AdminBundle\Application\Configuration\ApplicationConfiguration'
+
+    # Configuration factories
+    LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface: '@LAG\AdminBundle\Admin\Factory\AdminConfigurationFactory'
+    LAG\AdminBundle\Admin\Factory\AdminConfigurationFactory:
+        arguments:
+            $eventDispatcher: '@event_dispatcher'
+
+    LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface: '@LAG\AdminBundle\Action\Factory\ActionConfigurationFactory'
+    LAG\AdminBundle\Action\Factory\ActionConfigurationFactory:
+        arguments:
+            $eventDispatcher: '@event_dispatcher'

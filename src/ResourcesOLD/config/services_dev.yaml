@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    lag.admin.data_collector:
+        class: LAG\AdminBundle\Debug\DataCollector\AdminDataCollector
+        autowire: true
+        tags:
+            -
+                name: data_collector
+                template: '@LAGAdmin/debug/template.html.twig'
+                id: 'admin.data_collector'
+        public: false

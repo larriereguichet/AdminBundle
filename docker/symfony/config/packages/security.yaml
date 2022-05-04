@@ -21,7 +21,7 @@ security:
             form_login:
                 login_path: lag_admin.login
                 check_path: lag_admin.login_check
-                default_target_path: lag_admin.dashboard
+                default_target_path: lag_admin.homepage
             logout:
                 path: lag_admin.logout
 

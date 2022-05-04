@@ -2,21 +2,21 @@
 
 namespace LAG\AdminBundle\Tests\Factory;
 
+use LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface;
+use LAG\AdminBundle\Action\Factory\ActionFactory;
+use LAG\AdminBundle\Action\Factory\ActionFactoryInterface;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\ActionEvent;
-use LAG\AdminBundle\Factory\ActionFactory;
-use LAG\AdminBundle\Factory\ActionFactoryInterface;
-use LAG\AdminBundle\Factory\Configuration\ActionConfigurationFactoryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ActionFactoryTest extends TestCase
 {
-    private ActionFactory $actionFactory;
+    private \LAG\AdminBundle\Action\Factory\ActionFactory $actionFactory;
     private MockObject $eventDispatcher;
     private MockObject $configurationFactory;
     private MockObject $resourceRegistry;
@@ -83,6 +83,6 @@ class ActionFactoryTest extends TestCase
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->configurationFactory = $this->createMock(ActionConfigurationFactoryInterface::class);
         $this->resourceRegistry = $this->createMock(ResourceRegistryInterface::class);
-        $this->actionFactory = new ActionFactory($this->eventDispatcher, $this->configurationFactory, $this->resourceRegistry);
+        $this->actionFactory = new \LAG\AdminBundle\Action\Factory\ActionFactory($this->eventDispatcher, $this->configurationFactory, $this->resourceRegistry);
     }
 }

@@ -1,0 +1,5 @@
+services:
+    LAG\AdminBundle\Translation\Helper\TranslationHelperInterface: '@LAG\AdminBundle\Translation\Helper\TranslationHelper'
+    LAG\AdminBundle\Translation\Helper\TranslationHelper:
+        autoconfigure: true
+        autowire: true

@@ -46,7 +46,7 @@ lag_admin:
             data_provider: ~
                 page_parameter: ~
                 list_template: ~
-                edit_template: ~
+                update_template: ~
                 create_template: ~
                 delete_template:  ~
 ```

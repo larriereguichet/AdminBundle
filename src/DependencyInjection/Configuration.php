@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\DependencyInjection;
 
-use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Admin\Admin;
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -31,7 +31,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('base_template')->defaultValue('@LAGAdmin/base.html.twig')->end()
                 ->scalarNode('ajax_template')->defaultValue('@LAGAdmin/empty.html.twig')->end()
                 ->scalarNode('create_template')->defaultValue('@LAGAdmin/crud/create.html.twig')->end()
-                ->scalarNode('edit_template')->defaultValue('@LAGAdmin/crud/edit.html.twig')->end()
+                ->scalarNode('update_template')->defaultValue('@LAGAdmin/crud/update.html.twig')->end()
                 ->scalarNode('list_template')->defaultValue('@LAGAdmin/crud/list.html.twig')->end()
                 ->scalarNode('delete_template')->defaultValue('@LAGAdmin/crud/delete.html.twig')->end()
 
@@ -60,7 +60,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->booleanNode('enabled')->defaultTrue()->end()
                         ->scalarNode('pattern')->defaultValue('admin.{admin}.{key}')->end()
-                        ->scalarNode('catalog')->defaultValue('admin')->end()
+                        ->scalarNode('domain')->defaultValue('admin')->end()
                     ->end()
                 ->end()
 

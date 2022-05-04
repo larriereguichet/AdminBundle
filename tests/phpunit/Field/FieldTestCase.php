@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\Field;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Factory\FieldFactory;
 use LAG\AdminBundle\Factory\FieldFactoryInterface;
 use LAG\AdminBundle\Field\FieldInterface;

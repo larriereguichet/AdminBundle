@@ -38,7 +38,7 @@ abstract class AbstractField implements FieldInterface
                 'mapped' => false,
                 'property_path' => $this->getName(),
                 'template' => '@LAGAdmin/fields/auto.html.twig',
-                'translation' => false, // Most of fields are values from database and should not be translated
+                'translation' => false, // Most of the fields are values from database and should not be translated
                 'translation_domain' => 'admin',
                 'sortable' => true,
             ])
@@ -113,7 +113,7 @@ abstract class AbstractField implements FieldInterface
             $this->name,
             $this->getOption('template'),
             $this->getOptions(),
-            $this->getDataTransformer()
+            $this->getDataTransformer(),
         );
     }
 

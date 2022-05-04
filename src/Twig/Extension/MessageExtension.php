@@ -10,11 +10,9 @@ use Twig\TwigFunction;
 
 class MessageExtension extends AbstractExtension
 {
-    private NotificationRegistryInterface $registry;
-
-    public function __construct(NotificationRegistryInterface $registry)
-    {
-        $this->registry = $registry;
+    public function __construct(
+        private NotificationRegistryInterface $registry
+    ) {
     }
 
     public function getFunctions(): array

@@ -6,8 +6,10 @@ namespace LAG\AdminBundle\Admin\Configuration;
 
 use Closure;
 use JK\Configuration\Configuration;
-use LAG\AdminBundle\Admin\Action;
+use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Admin\Admin;
+use LAG\AdminBundle\Admin\Configuration\Normalizer\LinkNormalizer;
+use LAG\AdminBundle\Application\Configuration\ActionLinkConfiguration;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -38,14 +40,59 @@ class AdminConfiguration extends Configuration
             })
 
             ->setDefault('actions', [
-                'list' => [],
+                'index' => [],
                 'create' => [],
-                'edit' => [],
+                'update' => [],
                 'delete' => [],
             ])
             ->setAllowedTypes('actions', 'array')
             ->setNormalizer('actions', $this->getActionNormalizer())
 
+            // Linked actions
+            ->setDefault('list_actions', [
+                'update' => [],
+                'delete' => [],
+            ])
+            ->setAllowedTypes('list_actions', 'array')
+            ->setNormalizer('list_actions', function (Options $options, $value) {
+                foreach ($value as $actionName => $actionConfiguration) {
+                    $configuration = new ActionLinkConfiguration();
+
+                    if (!array_key_exists('admin', $actionConfiguration)) {
+                        $actionConfiguration['admin'] = $options->offsetGet('name');
+                    }
+
+                    if (!array_key_exists('action', $actionConfiguration)) {
+                        $actionConfiguration['action'] = $actionName;
+                    }
+                    $value[$actionName] = $configuration->configure($actionConfiguration)->toArray();
+                }
+
+                return $value;
+            })
+
+            ->setDefault('item_actions', [
+                'create' => [],
+            ])
+            ->setAllowedTypes('item_actions', 'array')
+            ->setNormalizer('item_actions', function (Options $options, $value) {
+                foreach ($value as $actionName => $actionConfiguration) {
+                    $configuration = new ActionLinkConfiguration();
+
+                    if (!array_key_exists('admin', $actionConfiguration)) {
+                        $actionConfiguration['admin'] = $options->offsetGet('name');
+                    }
+
+                    if (!array_key_exists('action', $actionConfiguration)) {
+                        $actionConfiguration['action'] = $actionName;
+                    }
+                    $value[$actionName] = $configuration->configure($actionConfiguration)->toArray();
+                }
+
+                return $value;
+            })
+
+            // Controller
             ->setDefault('controller', AdminAction::class)
             ->setAllowedTypes('controller', 'string')
 
@@ -81,8 +128,8 @@ class AdminConfiguration extends Configuration
 
             ->setDefault('create_template', '@LAGAdmin/crud/create.html.twig')
             ->setAllowedTypes('create_template', 'string')
-            ->setDefault('edit_template', '@LAGAdmin/crud/edit.html.twig')
-            ->setAllowedTypes('edit_template', 'string')
+            ->setDefault('update_template', '@LAGAdmin/crud/update.html.twig')
+            ->setAllowedTypes('update_template', 'string')
             ->setDefault('list_template', '@LAGAdmin/crud/list.html.twig')
             ->setAllowedTypes('list_template', 'string')
             ->setDefault('delete_template', '@LAGAdmin/crud/delete.html.twig')
@@ -123,6 +170,16 @@ class AdminConfiguration extends Configuration
     public function getAction(string $actionName): array
     {
         return $this->getActions()[$actionName];
+    }
+
+    public function getListActions(): array
+    {
+        return $this->get('list_actions');
+    }
+
+    public function getItemActions(): array
+    {
+        return $this->get('item_actions');
     }
 
     public function getEntityClass(): string
@@ -213,9 +270,9 @@ class AdminConfiguration extends Configuration
         return $this->getString('create_template');
     }
 
-    public function getEditTemplate(): string
+    public function getUpdateTemplate(): string
     {
-        return $this->getString('edit_template');
+        return $this->getString('update_template');
     }
 
     public function getListTemplate(): string
@@ -241,7 +298,7 @@ class AdminConfiguration extends Configuration
                 }
 
                 if (!\array_key_exists('route_parameters', $action)) {
-                    if ($name === 'edit' || $name === 'delete') {
+                    if ($name === 'update' || $name === 'delete') {
                         $action['route_parameters'] = ['id' => null];
                     }
                 }
@@ -249,7 +306,7 @@ class AdminConfiguration extends Configuration
                 $normalizedActions[$name] = $action;
 
                 // in list action, if no batch was configured or disabled, we add a batch action
-//                if ('list' == $name && (!\array_key_exists('batch', $action) || null === $action['batch'])) {
+//                if ('index' == $name && (!\array_key_exists('batch', $action) || null === $action['batch'])) {
 //                    $addBatchAction = true;
 //                }
             }

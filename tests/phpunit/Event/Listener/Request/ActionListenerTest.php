@@ -2,13 +2,13 @@
 
 namespace LAG\AdminBundle\Tests\Event\Listener\Request;
 
+use LAG\AdminBundle\Action\Factory\ActionFactoryInterface;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
 use LAG\AdminBundle\Event\Events\RequestEvent;
 use LAG\AdminBundle\Event\Listener\Request\ActionListener;
-use LAG\AdminBundle\Factory\ActionFactoryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -78,7 +78,7 @@ class ActionListenerTest extends TestCase
     protected function setUp(): void
     {
         $this->actionFactory = $this->createMock(ActionFactoryInterface::class);
-        $this->adminHelper = $this->createMock(AdminHelperInterface::class);
+        $this->adminHelper = $this->createMock(AdminContextInterface::class);
         $this->extractor = $this->createMock(ParametersExtractorInterface::class);
         $this->listener = new ActionListener($this->actionFactory, $this->adminHelper, $this->extractor);
     }

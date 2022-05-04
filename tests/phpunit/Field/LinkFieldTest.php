@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\Field;
 
-use LAG\AdminBundle\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Field\LinkField;
 use LAG\AdminBundle\Tests\TestCase;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,9 +14,9 @@ class LinkFieldTest extends TestCase
     public function testDefaultOptions(): void
     {
         $resolver = new OptionsResolver();
-        $appConfig = new ApplicationConfiguration(['resources_path' => 'test']);
+        $applicationConfiguration = new ApplicationConfiguration(['resources_path' => 'test']);
 
-        $this->field->setApplicationConfiguration($appConfig);
+        $this->field->setApplicationConfiguration($applicationConfiguration);
         $this->field->configureOptions($resolver);
         $this->field->setOptions($resolver->resolve([
             'url' => '/test',
@@ -41,9 +41,9 @@ class LinkFieldTest extends TestCase
     public function testOptions(): void
     {
         $resolver = new OptionsResolver();
-        $appConfig = new ApplicationConfiguration(['resources_path' => 'test']);
+        $applicationConfiguration = new ApplicationConfiguration(['resources_path' => 'test']);
 
-        $this->field->setApplicationConfiguration($appConfig);
+        $this->field->setApplicationConfiguration($applicationConfiguration);
         $this->field->configureOptions($resolver);
         $this->field->setOptions($resolver->resolve([
             'url' => '/test',
