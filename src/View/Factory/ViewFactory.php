@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\View\Factory;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Admin\View\AdminView;
 use LAG\AdminBundle\Factory\FieldFactoryInterface;
 use LAG\AdminBundle\Routing\Parameter\ParametersMapper;
 use LAG\AdminBundle\Routing\Redirection\RedirectionUtils;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
-use LAG\AdminBundle\View\AdminView;
 use LAG\AdminBundle\View\RedirectView;
 use LAG\AdminBundle\View\Template\Template;
 use LAG\AdminBundle\View\ViewInterface;
@@ -21,7 +20,7 @@ class ViewFactory implements ViewFactoryInterface
 {
     public function __construct(
         private FieldFactoryInterface $fieldFactory,
-        private ApplicationConfiguration $appConfig,
+        private ApplicationConfiguration $applicationConfiguration,
         private RouteNameGeneratorInterface $routeNameGenerator,
     ) {
     }
@@ -43,20 +42,48 @@ class ViewFactory implements ViewFactoryInterface
         }
         $actionConfiguration = $admin->getAction()->getConfiguration();
         $fields = [];
+        $fieldConfigurations = $actionConfiguration->getFields();
         $context = [
             'admin_name' => $actionConfiguration->getAdminName(),
             'action_name' => $actionConfiguration->getName(),
             'entity_class' => $admin->getConfiguration()->getEntityClass(),
         ];
 
-        foreach ($actionConfiguration->getFields() as $name => $configuration) {
-            $fields[$name] = $this->fieldFactory->create($name, $configuration, $context);
+
+        if (count($fieldConfigurations) > 0) {
+            foreach ($actionConfiguration->getFields() as $name => $configuration) {
+                $fields[$name] = $this->fieldFactory->create($name, $configuration, $context);
+            }
+        } else {
+            $reflectionClass = new \ReflectionClass($admin->getEntityClass());
+
+            foreach ($reflectionClass->getProperties() as $reflectionProperty) {
+                $fields[$reflectionProperty->getName()] = $this
+                    ->fieldFactory
+                    ->create($reflectionProperty->getName(), [], $context)
+                ;
+            }
+//            $allowedItemActions = [];
+//
+//            if ($admin->getConfiguration()->hasAction('update')) {
+//                $allowedItemActions['update'] = [];
+//            }
+//
+//            if ($admin->getConfiguration()->hasAction('delete')) {
+//                $allowedItemActions['delete'] = [];
+//            }
+//
+//            if (count($allowedItemActions) > 0) {
+//                $fields['_actions'] = $this->fieldFactory->create('_actions', [
+//                    'type' => ActionCollectionField::class,
+//                ], $context);
+//            }
         }
 
         if ($request->isXmlHttpRequest()) {
-            $template = $this->appConfig->get('ajax_template');
+            $template = $this->applicationConfiguration->get('ajax_template');
         } else {
-            $template = $this->appConfig->get('base_template');
+            $template = $this->applicationConfiguration->get('base_template');
         }
         $template = new Template($actionConfiguration->getTemplate(), $template);
         $fieldViews = [];
@@ -74,7 +101,7 @@ class ViewFactory implements ViewFactoryInterface
             $admin,
             $template,
             $fieldViews,
-            $formViews
+            $formViews,
         );
     }
 }

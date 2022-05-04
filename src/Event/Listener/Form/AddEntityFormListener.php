@@ -25,7 +25,7 @@ class AddEntityFormListener
 
         if (
             $action->getName() === 'create' ||
-            $action->getName() === 'edit' ||
+            $action->getName() === 'update' ||
             $action->getConfiguration()->getLoadStrategy() === AdminInterface::LOAD_STRATEGY_UNIQUE
         ) {
             $form = $this->formFactory->createEntityForm($admin, $request, $admin->getData());

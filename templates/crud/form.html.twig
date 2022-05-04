@@ -1,0 +1,63 @@
+{% extends admin.base %}
+
+{% block page_title %}
+    {{ action.title }}
+{% endblock %}
+
+{% block title %}
+    {{ action.title }}
+{% endblock %}
+
+{% block content %}
+    {% set form = admin.forms.entity %}
+
+    {% block form %}
+        <div class="card">
+            {{ form_start(form, {attr: {class: 'card-body'}}) }}
+            {{ form_errors(form) }}
+
+            {% block form_widgets %}
+                {{ form_row(form) }}
+            {% endblock %}
+
+            {% block form_rest %}
+                {{ form_rest(form) }}
+            {% endblock %}
+
+            {% block form_actions %}
+                <div class="text-end">
+                    <div class="text-right btn-group"
+                         role="group">
+
+                        {% if admin_action_allowed(admin.name, 'list') %}
+                            <a href="{{ admin_url(admin.name, 'list') }}"
+                               class="btn btn-secondary"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
+                                {{ 'cancel'|admin_trans_key }}</a>
+                        {% endif %}
+
+                        {% block delete_action %}
+                            {% if admin.data and admin_action_allowed(admin.name, 'delete') %}
+                                <a href="{{ admin_url(admin.name, 'delete', admin.data) }}"
+                                   class="btn btn-danger"
+                                   role="button">{{ 'delete'|admin_trans_key }}
+                                    <i class="fa fa-trash-alt"></i>
+                                </a>
+                            {% endif %}
+                        {% endblock %}
+
+                        {% block submit_action %}
+                            <button type="submit"
+                                    value="save"
+                                    name="submit"
+                                    class="btn btn-primary">
+                                <i class="fa fa-save"></i>
+                                {{ 'save'|admin_trans_key }}
+                            </button>
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+            {{ form_end(form) }}
+        </div>
+    {% endblock %}
+{% endblock %}

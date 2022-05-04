@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Subscriber;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\Configuration\AdminConfigurationEvent;
@@ -81,8 +81,8 @@ class ExtraConfigurationSubscriber implements EventSubscriberInterface
         }
         $configuration['actions'] = [
             'create' => [],
-            'list' => [],
-            'edit' => [],
+            'index' => [],
+            'update' => [],
             'delete' => [],
         ];
     }

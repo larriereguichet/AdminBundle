@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Tests\Configuration;
 
 use JK\Configuration\Exception\InvalidConfigurationException;
 use LAG\AdminBundle\Admin\Action;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\TestCase;
@@ -23,7 +23,7 @@ class AdminConfigurationTest extends TestCase
         $this->assertEquals([
             'actions' => [
                 'create' => [],
-                'edit' => [
+                'update' => [
                     'route_parameters' => ['id' => null],
                 ],
                 'list' => [],
@@ -44,10 +44,9 @@ class AdminConfigurationTest extends TestCase
             'data_provider' => 'doctrine',
             'data_persister' => 'doctrine',
             'create_template' => '@LAGAdmin/crud/create.html.twig',
-            'edit_template' => '@LAGAdmin/crud/edit.html.twig',
+            'update_template' => '@LAGAdmin/crud/update.html.twig',
             'list_template' => '@LAGAdmin/crud/list.html.twig',
             'delete_template' => '@LAGAdmin/crud/delete.html.twig',
-            'menus' => [],
             'name' => 'my_admin',
             'entity' => 'MyEntity',
         ], $configuration->toArray());
@@ -66,7 +65,7 @@ class AdminConfigurationTest extends TestCase
         $this->assertEquals('MyEntity', $configuration->getEntityClass());
         $this->assertEquals([
             'create' => [],
-            'edit' => [
+            'update' => [
                 'route_parameters' => ['id' => null],
             ],
             'list' => [],
@@ -78,7 +77,7 @@ class AdminConfigurationTest extends TestCase
         $this->assertEquals(false, $configuration->hasAction('wrong'));
         $this->assertEquals([], $configuration->getAction('create'));
         $this->assertEquals([], $configuration->getActionRouteParameters('create'));
-        $this->assertEquals(['id' => null], $configuration->getActionRouteParameters('edit'));
+        $this->assertEquals(['id' => null], $configuration->getActionRouteParameters('update'));
 
         $this->assertEquals(AdminAction::class, $configuration->getController());
         $this->assertEquals([], $configuration->getBatch());
@@ -98,11 +97,9 @@ class AdminConfigurationTest extends TestCase
         $this->assertEquals('doctrine', $configuration->getDataPersister());
 
         $this->assertEquals('@LAGAdmin/crud/create.html.twig', $configuration->getCreateTemplate());
-        $this->assertEquals('@LAGAdmin/crud/edit.html.twig', $configuration->getEditTemplate());
+        $this->assertEquals('@LAGAdmin/crud/update.html.twig', $configuration->getUpdateTemplate());
         $this->assertEquals('@LAGAdmin/crud/list.html.twig', $configuration->getListTemplate());
         $this->assertEquals('@LAGAdmin/crud/delete.html.twig', $configuration->getDeleteTemplate());
-
-        $this->assertEquals([], $configuration->getMenus());
     }
 
     public function testGetPager(): void
@@ -142,7 +139,7 @@ class AdminConfigurationTest extends TestCase
     public function testWithoutAdminPlaceHolder(): void
     {
         $this->expectException(InvalidConfigurationException::class);
-        $configuration = new AdminConfiguration();
+        $configuration = new \LAG\AdminBundle\Admin\Configuration\AdminConfiguration();
         $configuration->configure([
             'name' => 'my_admin',
             'entity' => 'MyEntity',

@@ -1,0 +1,27 @@
+<header class="p-3 bg-dark text-white">
+    {% block brand %}
+        <a href=""
+           class="navbar-brand col-md-3 col-lg-2 me-0 px-3">
+            AdminBundle
+        </a>
+    {% endblock %}
+    <div class="container-fluid">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            {% block top_menu %}
+                {{ knp_menu_render('top', {
+                    template: '@LAGAdmin/menu/top.html.twig'
+                }) }}
+            {% endblock %}
+
+{#                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">#}
+{#                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">#}
+{#                </form>#}
+
+            <div class="dropdown text-end">
+                {{ knp_menu_render('user', {
+                    template: '@LAGAdmin/menu/user.html.twig'
+                }) }}
+            </div>
+        </div>
+    </div>
+</header>

@@ -2,13 +2,12 @@
 
 namespace LAG\AdminBundle\Tests\Factory;
 
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface;
 use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\AdminEvent;
-use LAG\AdminBundle\Factory\AdminFactory;
-use LAG\AdminBundle\Factory\Configuration\AdminConfigurationFactoryInterface;
 use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -20,7 +19,7 @@ class AdminFactoryTest extends TestCase
     private MockObject $eventDispatcher;
     private MockObject $adminConfigurationFactory;
     private AdminConfiguration $adminConfiguration;
-    private AdminFactory $adminFactory;
+    private \LAG\AdminBundle\Admin\Factory\AdminFactory $adminFactory;
 
     public function testCreate(): void
     {
@@ -69,7 +68,7 @@ class AdminFactoryTest extends TestCase
             'entity' => FakeEntity::class,
         ]);
 
-        $this->adminFactory = new AdminFactory(
+        $this->adminFactory = new \LAG\AdminBundle\Admin\Factory\AdminFactory(
             $this->registry,
             $this->eventDispatcher,
             $this->adminConfigurationFactory

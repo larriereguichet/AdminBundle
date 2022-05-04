@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Routing\Route;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 
 class RouteNameGenerator implements RouteNameGeneratorInterface
 {

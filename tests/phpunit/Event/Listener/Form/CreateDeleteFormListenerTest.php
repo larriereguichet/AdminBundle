@@ -6,7 +6,7 @@ use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;
 use LAG\AdminBundle\Event\Listener\Form\CreateDeleteFormListener;
-use LAG\AdminBundle\Factory\AdminFormFactoryInterface;
+use LAG\AdminBundle\Form\Factory\FormFactoryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\FormInterface;
@@ -63,7 +63,7 @@ class CreateDeleteFormListenerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->formFactory = $this->createMock(AdminFormFactoryInterface::class);
+        $this->formFactory = $this->createMock(FormFactoryInterface::class);
         $this->listener = new CreateDeleteFormListener($this->formFactory);
     }
 }

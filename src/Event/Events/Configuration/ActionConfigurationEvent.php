@@ -8,13 +8,16 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ActionConfigurationEvent extends Event
 {
-    private string $actionName;
-    private array $configuration;
+    public function __construct(
+        private string $adminName,
+        private string $actionName,
+        private array $configuration
+    ) {
+    }
 
-    public function __construct(string $actionName, array $configuration)
+    public function getAdminName(): string
     {
-        $this->actionName = $actionName;
-        $this->configuration = $configuration;
+        return $this->adminName;
     }
 
     public function getActionName(): string

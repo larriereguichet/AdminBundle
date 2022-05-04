@@ -10,8 +10,8 @@ class Project
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer')]
-    private int $id;
+    public int $id;
 
     #[ORM\Column('name')]
-    private string $name;
+    public string $name;
 }

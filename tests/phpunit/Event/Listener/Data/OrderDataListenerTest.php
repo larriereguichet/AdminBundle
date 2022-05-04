@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Tests\Event\Listener\Data;
 
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Event\Events\DataEvent;
 use LAG\AdminBundle\Event\Listener\Data\OrderRequestDataListener;
 use LAG\AdminBundle\Tests\TestCase;

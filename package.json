@@ -1,11 +1,10 @@
 {
     "devDependencies": {
-        "@symfony/webpack-encore": "^1.1.2",
+        "@symfony/webpack-encore": "^1.8",
         "core-js": "^3.6.5",
         "file-loader": "^6.0.0",
         "postcss-loader": "^5.2.0",
-        "regenerator-runtime": "^0.13.7",
-        "webpack-notifier": "^1.6.0"
+        "regenerator-runtime": "^0.13.7"
     },
     "license": "UNLICENSED",
     "private": true,
@@ -16,20 +15,16 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^5.15.1",
-        "axios": "^0.21.1",
-        "bootstrap": "^4.5",
-        "jquery": "^3.5",
-        "jquery-easing": "^0.0.1",
+        "@fortawesome/fontawesome-free": "^6.1.1",
+        "@popperjs/core": "^2.11.2",
+        "axios": "^0.21",
+        "bootstrap": "5.2.0-beta1",
+        "choices.js": "^10.0.0",
         "node-sass": "^5.0.0",
-        "popper.js": "^1.14.7",
         "sass-loader": "^11.0",
-        "select2": "^4.0.13",
-        "select2-bootstrap-theme": "^0.1.0-beta.10",
-        "serialize-javascript": "^5.0.1",
-        "startbootstrap-sb-admin-2": "^4.1.1",
-        "stimulus": "^2.0",
-        "tinymce": "^5.6.2",
-        "tinymce-i18n": "^20.12.25"
+        "serialize-javascript": "^5.0",
+        "stimulus": "^3.0",
+        "tinymce": "^5.6",
+        "tinymce-i18n": "^20.12"
     }
 }

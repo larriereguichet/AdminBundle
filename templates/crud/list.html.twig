@@ -1,0 +1,80 @@
+{% extends admin.base %}
+
+{% block title %}{{ admin.title|pluralize }} - {{ admin.action.title }}{% endblock %}
+
+{% block page_title %}{{ parent() }} - {{ admin.title|pluralize }} - {{ admin.action.title }}{% endblock %}
+
+{% block content %}
+    <div class="admin-index admin-{{ admin.name }}">
+        {% block filterForm %}
+            {% if admin.forms.filter|default(false) %}
+                {% include '@LAGAdmin/crud/list/_filters.html.twig' with {form: admin.forms.filter} %}
+            {% endif %}
+        {% endblock %}
+
+        {% block top_extra_content %}{% endblock %}
+
+        <div class="card">
+            {% block table %}
+                <table class="admin-table table mb-0">
+                    {% block table_head %}
+                        <thead>
+                        <tr>
+                            {% for field in admin.fields %}
+                                {% include '@LAGAdmin/crud/list/_header.html.twig' %}
+                            {% endfor %}
+                            <th></th>
+                        </tr>
+                        </thead>
+                    {% endblock %}
+
+                    {% block table_body %}
+                        {% if admin.data|length > 0 %}
+                            <tbody>
+                            {% for entity in admin.data %}
+                                <tr>
+                                    {% for field in admin.fields %}
+                                        <td>
+                                            {{ admin_field(field, entity)|raw }}
+                                        </td>
+                                    {% endfor %}
+                                    <td>
+                                        <div class="btn-group"
+                                             role="group"
+                                             aria-label="{{ 'lag_admin.list.available_actions_for_item'|admin_trans }}">
+                                            {% for linkAction in admin.configuration.listActions %}
+                                                {% include '@LAGAdmin/common/links/_action_link.html.twig' with {
+                                                    data: entity,
+                                                    options: linkAction
+                                                } %}
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <tfoot>
+                            <tr>
+                                <td colspan="{{ admin.fields|length + 1 }}">
+                                    {{ 'lag_admin.index.no_record'|admin_trans }}
+                                </td>
+                            </tr>
+                            </tfoot>
+                        {% endif %}
+                    {% endblock %}
+                </table>
+            {% endblock %}
+        </div>
+
+        {% block pagination %}
+            <div class="admin-pagination mt-2">
+                {% if admin.data|length > 0 %}
+                    {{ pagerfanta(admin.data, 'twitter_bootstrap4', {page: admin.data.currentPage}) }}
+                {% endif %}
+            </div>
+        {% endblock %}
+
+        {% block bottom_extra_content %}{% endblock %}
+    </div>
+{% endblock %}

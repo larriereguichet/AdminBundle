@@ -1,0 +1,39 @@
+services:
+    LAG\AdminBundle\Twig\Extension\AdminExtension:
+        arguments:
+            $mediaEnabled: '%lag_admin.media_bundle_enabled%'
+            $applicationConfiguration: '@lag_admin.application'
+            $security: '@lag_admin.security.helper'
+        tags: ['twig.extension']
+
+    LAG\AdminBundle\Twig\Extension\FieldExtension:
+        arguments:
+            $renderer: '@LAG\AdminBundle\Field\Render\FieldRenderer'
+        tags: ['twig.extension']
+
+    LAG\AdminBundle\Twig\Extension\MessageExtension:
+        arguments:
+            $registry: '@LAG\AdminBundle\Message\Registry\NotificationRegistryInterface'
+        tags: ['twig.extension']
+
+    LAG\AdminBundle\Twig\Extension\RoutingExtension:
+        arguments:
+            $urlGenerator: '@LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface'
+            $security: '@lag_admin.security.helper'
+            $applicationConfiguration: '@lag_admin.application'
+            $adminConfigurationFactory: '@LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface'
+            $actionConfigurationFactory: '@LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface'
+            $router: '@router'
+            $resourceRegistry: '@lag_admin.resource.registry'
+            $urlResolver: '@lag_admin.routing.url_resolver'
+        tags: ['twig.extension']
+
+    LAG\AdminBundle\Twig\Extension\TranslationExtension:
+        arguments:
+            $translationHelper: '@LAG\AdminBundle\Translation\Helper\TranslationHelper'
+            $translator: '@translator'
+            $configuration: '@lag_admin.application'
+        tags: ['twig.extension']
+
+    LAG\AdminBundle\Twig\Extension\StringExtension:
+        tags: ['twig.extension']

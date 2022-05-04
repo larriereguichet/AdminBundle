@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\Event\Listener\Form;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\DataPersister\DataPersisterInterface;
 use LAG\AdminBundle\DataPersister\Registry\DataPersisterRegistryInterface;
 use LAG\AdminBundle\Event\Events\FormEvent;

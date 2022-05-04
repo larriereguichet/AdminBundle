@@ -1,0 +1,45 @@
+lag:
+    admin:
+        save: Save
+        save_errors: An error has occured during saving
+        create: 'Create %entity%'
+        save_and_return_to_list: Save and Return
+        cancel: Cancel
+        saved: Save successfully
+        welcome_message: Welcome
+        logout: Logout
+
+        # List
+        list: '%entity% List'
+        'true': True
+        'false': False
+        batch_action:
+        batch_empty:
+        edit: 'Edit %entity%'
+        element_count:
+
+        # Delete
+        delete: Delete
+        deleting:
+        deleted:
+        deleted_errors:
+
+        # Batch
+        warning:
+        batch_action_title:
+        batch_action_messages:
+
+        mass_action:
+        filter: Filters
+        filter_reset:
+        show_filter: Show filters
+        hide_filter: Hide filters
+
+        search_by:
+        no_record: No record yet
+
+        delete_confirmation_title:
+        delete_confirmation_warning:
+
+        yes:
+        no:

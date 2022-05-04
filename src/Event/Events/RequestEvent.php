@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Events;
 
-use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Exception\Action\MissingActionException;
 
 class RequestEvent extends AbstractEvent

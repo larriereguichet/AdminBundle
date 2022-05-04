@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event;
 
-class AdminEvents
+// TODO enum
+enum AdminEvents: string
 {
     public const ADMIN_REQUEST = 'lag.admin.request';
     public const ADMIN_DATA = 'lag.admin.data';

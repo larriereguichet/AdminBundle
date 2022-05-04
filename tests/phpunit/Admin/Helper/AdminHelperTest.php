@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\Admin\Helper;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Helper\AdminHelper;
+use LAG\AdminBundle\Admin\Helper\AdminContext;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\TestCase;
 
@@ -11,7 +11,7 @@ class AdminHelperTest extends TestCase
 {
     public function testSettersAndGetters()
     {
-        $helper = new AdminHelper();
+        $helper = new AdminContext();
 
         $this->assertExceptionRaised(Exception::class, function () use ($helper) {
             $helper->getAdmin();

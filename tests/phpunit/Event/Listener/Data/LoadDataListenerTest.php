@@ -4,13 +4,13 @@ namespace LAG\AdminBundle\Tests\Event\Listener\Data;
 
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\DataProvider\DataSourceHandler\DataHandlerInterface;
 use LAG\AdminBundle\DataProvider\DataSourceInterface;
 use LAG\AdminBundle\DataProvider\Registry\DataProviderRegistryInterface;
 use LAG\AdminBundle\Event\Events\DataEvent;
-use LAG\AdminBundle\Event\Listener\Data\LoadDataListener;
+use LAG\AdminBundle\Event\Listener\Data\LoadListener;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\DataProvider\AdminAwareDataProviderInterface;
 use LAG\AdminBundle\Tests\TestCase;
@@ -21,7 +21,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class LoadDataListenerTest extends TestCase
 {
-    private LoadDataListener $listener;
+    private LoadListener $listener;
     private MockObject $registry;
     private MockObject $dataHandler;
     private MockObject $eventDispatcher;
@@ -249,7 +249,7 @@ class LoadDataListenerTest extends TestCase
         $this->registry = $this->createMock(DataProviderRegistryInterface::class);
         $this->dataHandler = $this->createMock(DataHandlerInterface::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->listener = new LoadDataListener($this->registry, $this->dataHandler, $this->eventDispatcher);
+        $this->listener = new LoadListener($this->registry, $this->dataHandler, $this->eventDispatcher);
     }
 
     /**

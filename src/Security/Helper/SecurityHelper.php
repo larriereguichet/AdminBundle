@@ -4,32 +4,27 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Security\Helper;
 
+use LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface;
+use LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface;
 use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Factory\Configuration\ConfigurationFactoryInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class SecurityHelper
 {
-    private Security $security;
-    private ConfigurationFactoryInterface $configurationFactory;
-    private ResourceRegistryInterface $registry;
-
     public function __construct(
-        Security $security,
-        ConfigurationFactoryInterface $configurationFactory,
-        ResourceRegistryInterface $registry
+        private Security $security,
+        private AdminConfigurationFactoryInterface $adminConfigurationFactory,
+        private ActionConfigurationFactoryInterface $actionConfigurationFactory,
+        private ResourceRegistryInterface $registry
     ) {
-        $this->security = $security;
-        $this->configurationFactory = $configurationFactory;
-        $this->registry = $registry;
     }
 
     public function isActionAllowed(string $adminName, string $actionName): bool
     {
         $resource = $this->registry->get($adminName);
-        $adminConfiguration = $this->configurationFactory->createAdminConfiguration(
+        $adminConfiguration = $this->adminConfigurationFactory->create(
             $adminName,
             $resource->getConfiguration()
         );
@@ -37,9 +32,10 @@ class SecurityHelper
         if (!$adminConfiguration->hasAction($actionName)) {
             return false;
         }
-        $actionConfiguration = $this->configurationFactory->createActionConfiguration(
+        $actionConfiguration = $this->actionConfigurationFactory->create(
+            $adminName,
             $actionName,
-            $adminConfiguration->getAction($actionName)
+            $adminConfiguration->getAction($actionName),
         );
 
         return $this->isGranted($actionConfiguration->getPermissions());

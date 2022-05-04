@@ -5,22 +5,21 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Factory\Form;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Form\Type\Select2\Select2Type;
-use LAG\AdminBundle\Translation\Helper\TranslationHelper;
 use LAG\AdminBundle\Utils\FormUtils;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use function Symfony\Component\String\u;
 
 class FilterFormFactory implements FilterFormFactoryInterface
 {
     public function __construct(
         private FormFactoryInterface $formFactory,
-        private TranslationHelper $helper,
-        private ApplicationConfiguration $appConfig
+        private ApplicationConfiguration $applicationConfiguration
     ) {
     }
 
@@ -43,14 +42,7 @@ class FilterFormFactory implements FilterFormFactoryInterface
                 'required' => false,
                 // The label translation key should use the admin translation pattern to have predictable translation
                 // keys
-                'label' => $this->helper->transWithPattern(
-                    $name,
-                    [],
-                    $configuration->getName(),
-                    $this->appConfig->getTranslationCatalog(),
-                    null,
-                    $this->appConfig->getTranslationPattern(),
-                ),
+                'label' => sprintf('lag_admin.%s.form_label', u($admin->getName())->title()),
             ];
 
             if (DateType::class === $formType) {
@@ -59,7 +51,7 @@ class FilterFormFactory implements FilterFormFactoryInterface
             }
 
             if (Select2Type::class === $formType || ChoiceType::class === $formType) {
-                $formOptions['choice_translation_domain'] = $this->appConfig->getTranslationCatalog();
+                $formOptions['choice_translation_domain'] = $this->applicationConfiguration->getTranslationDomain();
             }
             $formOptions = array_merge($formOptions, $filter['options']);
             $form->add($name, $formType, $formOptions);

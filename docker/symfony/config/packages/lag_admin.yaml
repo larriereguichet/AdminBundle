@@ -1,14 +1,4 @@
 framework:
     default_locale: fr
 
-lag_admin:
-    menus:
-        left:
-            children:
-                projects:
-                    text: admin.projects
-                    children:
-                        project:
-                            admin: project
-                            action: list
-                            text: admin.projects
+lag_admin: ~

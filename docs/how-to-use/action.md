@@ -264,13 +264,13 @@ Actions are created when the `AdminEvents::HANDLE_REQUEST` event is dispatched, 
 found admin. Each action defines fields and parameters to build a view. The action and admin name are defined in the
 routing parameters (`_route` and `_admin` parameters).
 
-The actions are created using `LAG\AdminBundle\Factory\ActionFactory` factory class.
+The actions are created using `LAG\AdminBundle\Action\Factory\ActionFactory` factory class.
 
 When creating a form, the `Events::ADMIN_CREATE_FORM` event is dispatched, allowing you to override the form. The form
 is created using the `LAG\AdminBundle\Factory\FormFactory` factory class.
 
 When creating a view, the `Events::ADMIN_VIEW` event is dispatched, allowing you to override the view. The form
-is created using the `LAG\AdminBundle\Factory\ViewFactory` factory class.
+is created using the `LAG\AdminBundle\View\Factory\ViewFactory` factory class.
 
 You can learn more about events in the 
 [Events](events.md) documentation.

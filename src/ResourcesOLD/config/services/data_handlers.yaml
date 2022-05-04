@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autowire: true
+
+    LAG\AdminBundle\DataProvider\DataSourceHandler\CompositeDataHandler:
+        arguments:
+            $dataHandlers: !tagged_iterator lag.admin.data_handler
+
+    LAG\AdminBundle\DataProvider\DataSourceHandler\DataHandlerInterface: '@LAG\AdminBundle\DataProvider\DataSourceHandler\CompositeDataHandler'

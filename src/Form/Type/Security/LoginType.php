@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Form\Type\Security;
 
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -12,8 +13,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class LoginType extends AbstractType
 {
-    public function __construct(private TranslationHelperInterface $translationHelper)
-    {
+    public function __construct(
+        private ApplicationConfiguration $configuration
+    ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -21,14 +23,14 @@ class LoginType extends AbstractType
         $builder
             ->add('_username', TextType::class, [
                 'attr' => ['class' => 'form-control-user'],
-                'label' => $this->translationHelper->getTranslationKey('login_form.login'),
-                'translation_domain' => $this->translationHelper->getTranslationDomain(),
+                'label' => 'lag_admin.security.login_label',
+                'translation_domain' => $this->configuration->getTranslationDomain(),
                 'block_prefix' => '_',
             ])
             ->add('_password', PasswordType::class, [
                 'attr' => ['class' => 'form-control-user'],
-                'label' => $this->translationHelper->getTranslationKey('login_form.password'),
-                'translation_domain' => $this->translationHelper->getTranslationDomain(),
+                'label' => 'lag_admin.security.password_label',
+                'translation_domain' => $this->configuration->getTranslationDomain(),
             ])
         ;
     }

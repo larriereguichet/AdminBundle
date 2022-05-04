@@ -4,25 +4,18 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Extension;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class AdminExtension extends AbstractExtension
 {
-    private bool $mediaEnabled;
-    private ApplicationConfiguration $appConfig;
-    private SecurityHelper $security;
-
     public function __construct(
-        bool $mediaEnabled,
-        ApplicationConfiguration $appConfig,
-        SecurityHelper $security
+        private bool $mediaEnabled,
+        private ApplicationConfiguration $applicationConfiguration,
+        private SecurityHelper $security
     ) {
-        $this->appConfig = $appConfig;
-        $this->security = $security;
-        $this->mediaEnabled = $mediaEnabled;
     }
 
     public function getFunctions(): array
@@ -38,7 +31,7 @@ class AdminExtension extends AbstractExtension
     public function getApplicationParameter($name)
     {
         return $this
-            ->appConfig
+            ->applicationConfiguration
             ->get($name)
         ;
     }
@@ -61,6 +54,6 @@ class AdminExtension extends AbstractExtension
 
     public function isTranslationEnabled(): bool
     {
-        return $this->appConfig->isTranslationEnabled();
+        return $this->applicationConfiguration->isTranslationEnabled();
     }
 }

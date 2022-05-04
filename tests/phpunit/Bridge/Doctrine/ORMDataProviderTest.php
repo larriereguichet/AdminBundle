@@ -7,11 +7,11 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Helper\AdminHelperInterface;
+use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
+use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
 use LAG\AdminBundle\Bridge\Doctrine\DataSource\ORMDataSource;
 use LAG\AdminBundle\Bridge\Doctrine\ORMDataProvider;
-use LAG\AdminBundle\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Tests\TestCase;
@@ -431,7 +431,7 @@ class ORMDataProviderTest extends TestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->helper = $this->createMock(AdminHelperInterface::class);
+        $this->helper = $this->createMock(AdminContextInterface::class);
         $this->dataProvider = new ORMDataProvider($this->entityManager, $this->helper);
     }
 }

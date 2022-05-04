@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Listener\Request;
 
-use LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\Events\RequestEvent;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SecurityListener
 {
-    private ApplicationConfiguration $appConfig;
+    private ApplicationConfiguration $applicationConfiguration;
     private SecurityHelper $security;
 
-    public function __construct(ApplicationConfiguration $appConfig, SecurityHelper $security)
+    public function __construct(ApplicationConfiguration $applicationConfiguration, SecurityHelper $security)
     {
-        $this->appConfig = $appConfig;
+        $this->applicationConfiguration = $applicationConfiguration;
         $this->security = $security;
     }
 
     public function __invoke(RequestEvent $event): void
     {
-        if (!$this->appConfig->isSecurityEnabled()) {
+        if (!$this->applicationConfiguration->isSecurityEnabled()) {
             return;
         }
         $admin = $event->getAdmin();

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Listener\Request;
 
+use LAG\AdminBundle\Action\Factory\ActionFactoryInterface;
 use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
 use LAG\AdminBundle\Event\Events\RequestEvent;
-use LAG\AdminBundle\Factory\ActionFactoryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 
 /**
