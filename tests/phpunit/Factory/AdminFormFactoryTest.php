@@ -2,9 +2,9 @@
 
 namespace LAG\AdminBundle\Tests\Factory;
 
-use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Action\ActionInterface;
+use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Bridge\Doctrine\ORMDataProvider;
 use LAG\AdminBundle\DataProvider\Registry\DataProviderRegistryInterface;
@@ -17,15 +17,14 @@ use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdminFormFactoryTest extends TestCase
 {
+    private FormFactoryInterface $adminFormFactory;
     private MockObject $dataProviderRegistry;
     private MockObject $formFactory;
-    private FormFactoryInterface $adminFormFactory;
     private MockObject $fieldFactory;
 
     public function testServiceExists(): void

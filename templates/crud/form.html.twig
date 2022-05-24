@@ -29,27 +29,17 @@
                     <div class="text-right btn-group"
                          role="group">
 
-                        {% if admin_action_allowed(admin.name, 'list') %}
-                            <a href="{{ admin_url(admin.name, 'list') }}"
-                               class="btn btn-secondary"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
+                        {% if admin_action_allowed(admin.name, 'index') %}
+                            <a href="{{ admin_url(admin.name, 'index') }}"
+                               class="btn btn-light"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
                                 {{ 'cancel'|admin_trans_key }}</a>
                         {% endif %}
-
-                        {% block delete_action %}
-                            {% if admin.data and admin_action_allowed(admin.name, 'delete') %}
-                                <a href="{{ admin_url(admin.name, 'delete', admin.data) }}"
-                                   class="btn btn-danger"
-                                   role="button">{{ 'delete'|admin_trans_key }}
-                                    <i class="fa fa-trash-alt"></i>
-                                </a>
-                            {% endif %}
-                        {% endblock %}
 
                         {% block submit_action %}
                             <button type="submit"
                                     value="save"
                                     name="submit"
-                                    class="btn btn-primary">
+                                    class="btn btn-success">
                                 <i class="fa fa-save"></i>
                                 {{ 'save'|admin_trans_key }}
                             </button>
