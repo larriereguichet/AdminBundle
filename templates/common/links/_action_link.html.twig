@@ -15,6 +15,6 @@
 {% set text = text|default(options.text)|default('lag_admin.actions.' ~ options.action) %}
 
 <a href="{{ admin_link(options, data) }}" class="btn btn-sm {{ class }}">
-    <i class="{{ icon }}"></i>
+    <i class="{{ icon }} pe-1"></i>
     {{ text|admin_trans }}
 </a>
