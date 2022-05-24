@@ -21,10 +21,6 @@
     {% endblock %}
 
     {% block admin_stylesheets %}
-        {#        <link rel="stylesheet" href="{{ asset('/bundles/lagadmin/sb-admin-css.css') }}"/> #}
-{#        <link href="/your-path-to-fontawesome/css/fontawesome.css" rel="stylesheet">#}
-{#        <link href="/your-path-to-fontawesome/css/brands.css" rel="stylesheet">#}
-{#        <link href="/your-path-to-fontawesome/css/solid.css" rel="stylesheet">#}
         <link rel="stylesheet"
               href="{{ asset('/bundles/lagadmin/fa.css') }}"/>
         <link rel="stylesheet"
@@ -58,12 +54,20 @@
                 {% endblock %}
             </div>
             <div class="col py-3">
-                {% block page_title_container %}
-                    <h1 class="h3 mb-3 text-gray-800">
-                        {% block title %}{% endblock %}
-                    </h1>
-                {% endblock %}
-                {% block content %}{% endblock %}
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card_title">
+                            {% block page_title_container %}
+                                <h1 class="h3 mb-3 text-gray-800">
+                                    {% block title %}{% endblock %}
+                                </h1>
+                            {% endblock %}
+                        </div>
+                        <div class="card_text">
+                            {% block content %}{% endblock %}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -73,13 +77,9 @@
 
     {% block admin_javascripts %}
         {% if admin_media_enabled() %}
-        {# Media js should always be called before the admin js to preserve tinymce media working #}
-        <script src="{{ asset('/bundles/jkmedia/assets/media.js') }}"></script>
+            {# Media js should always be called before the admin js to preserve tinymce media working #}
+            <script src="{{ asset('/bundles/jkmedia/assets/media.js') }}"></script>
         {% endif %}
-        {#        <script src="{{ asset('/bundles/lagadmin/jquery.js') }}"></script> #}
-        {#        <script src="{{ asset('/bundles/lagadmin/jquery-easing.js') }}"></script> #}
-        {#        <script src="{{ asset('/bundles/lagadmin/bootstrap.js') }}"></script> #}
-        {#        <script src="{{ asset('/bundles/lagadmin/sb-admin.js') }}"></script> #}
         <script src="{{ asset('/bundles/lagadmin/runtime.js') }}"></script>
         <script src="{{ asset('/bundles/lagadmin/admin.js') }}"></script>
     {% endblock %}
@@ -96,53 +96,3 @@
     </body>
 {% endblock %}
 </html>
-
-{# {% block body %} #}
-{# {% set admin = admin|default(null) %} #}
-
-{# <body> #}
-{# {% block navbar %} #}
-{# {% include '@LAGAdmin/Layout/header.html.twig' %} #}
-{# {% endblock %} #}
-
-{# {% block container %} #}
-{# <div id="admin-main-container" #}
-{# class="container-fluid"> #}
-{# <div class="row"> #}
-{# {% block layout %} #}
-{# {% block left_menu %} #}
-{# <nav class="col-2 d-none d-md-block sidebar"> #}
-{# {{ knp_menu_render('left') }} #}
-{# </nav> #}
-{# {% endblock %} #}
-
-{# {% block content_container %} #}
-{# <main class="col-10 content-container" #}
-{# role="main"> #}
-
-{# {% block flash_messages %} #}
-{# {% include "@LAGAdmin/Layout/flash_messages.html.twig" %} #}
-{# {% endblock %} #}
-
-{# {% block content %}{% endblock %} #}
-{# </main> #}
-{# {% endblock %} #}
-{# {% endblock %} #}
-{# </div> #}
-{# </div> #}
-{# {% endblock %} #}
-
-{# {% block footer %} #}
-{# <footer> #}
-{# {% block admin_javascripts %} #}
-{# <script src="{{ asset('/bundles/lagadmin/assets/admin.js') }}"></script> #}
-
-{# Inject scripts in footer section #}
-{# {{ admin_dump_scripts('footer') | raw }} #}
-{# {% endblock %} #}
-{# {% block javascripts %}{% endblock %} #}
-{# </footer> #}
-{# {% endblock %} #}
-{# </body> #}
-{# {% endblock %} #}
-{# </html> #}
