@@ -33,7 +33,11 @@ class AdminConfiguration extends Configuration
             ->setAllowedTypes('title', ['string', 'null'])
             ->addNormalizer('title', function (Options $options, $value) {
                 if ($value === null) {
-                    $value = u($options->offsetGet('name'))->title()->toString();
+                    $value = u($options->offsetGet('name'))
+                        ->camel()
+                        ->title()
+                        ->toString()
+                    ;
                 }
 
                 return $value;
@@ -147,7 +151,7 @@ class AdminConfiguration extends Configuration
 
     public function getIndexActions(): array
     {
-        return $this->get(index_actions);
+        return $this->get('index_actions');
     }
 
     public function getItemActions(): array

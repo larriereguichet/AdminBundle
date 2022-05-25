@@ -9,6 +9,7 @@ use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\TestCase;
 
+// TODO trmove
 class AdminConfigurationTest extends TestCase
 {
     public function testDefaultConfiguration(): void
