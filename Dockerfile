@@ -1,7 +1,4 @@
-FROM php:8.0
-
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -; \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list;
+FROM php:8.1
 
 RUN apt-get update; \
     apt-get install -y \
@@ -10,6 +7,8 @@ RUN apt-get update; \
         libzip-dev \
         libpng-dev \
         nodejs \
+        unzip \
+        zip \
         zsh \
         wget \
         yarn; \
@@ -23,11 +22,13 @@ RUN docker-php-ext-install zip pdo pdo_mysql;
 RUN docker-php-ext-configure zip pdo pdo_mysql; \
     docker-php-ext-enable zip pdo pdo_mysql
 
-COPY .docker/php/composer_install.sh .
-RUN chmod +x ./composer_install.sh; \
-    ./composer_install.sh; \
-    mv composer.phar /usr/local/bin/composer; \
-    rm composer_install.sh
+RUN pecl install pcov && docker-php-ext-enable pcov
+
+# Install composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
 RUN wget https://get.symfony.com/cli/installer -O - | bash; \
     mv /root/.symfony/bin/symfony /usr/local/bin/symfony; \
@@ -36,8 +37,6 @@ RUN wget https://get.symfony.com/cli/installer -O - | bash; \
 WORKDIR /srv/app
 
 RUN git config --global user.email "test@example.com"
-RUN symfony new /srv/app --debug --webapp
-
 RUN symfony server:ca:install
 
 VOLUME /srv/app

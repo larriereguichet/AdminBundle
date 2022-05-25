@@ -14,6 +14,7 @@ use LAG\AdminBundle\Configuration\FilterConfiguration;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Action\ActionConfigurationException;
 use LAG\AdminBundle\Exception\Exception;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -57,6 +58,7 @@ class ActionConfiguration extends Configuration
             ->setAllowedTypes('permissions', 'array')
         ;
     }
+
     protected function configureRouting(OptionsResolver $resolver): void
     {
         $resolver
@@ -137,7 +139,7 @@ class ActionConfiguration extends Configuration
     {
         $resolver
             ->setDefault('form', null)
-            ->setAllowedTypes('form', ['string', 'null', 'boolean'])
+            ->setAllowedTypes('form', ['string', 'null'])
             ->setDefault('form_options', [])
             ->setAllowedTypes('form_options', 'array')
         ;
@@ -229,11 +231,6 @@ class ActionConfiguration extends Configuration
         return $this->get('permissions');
     }
 
-    public function getExport(): array
-    {
-        return $this->get('export');
-    }
-
     public function getLoadStrategy(): string
     {
         return $this->getString('load_strategy');
@@ -316,7 +313,10 @@ class ActionConfiguration extends Configuration
 
     private function getTemplateNormalizer(): Closure
     {
-        return function (Options $options, $value) {
+        return function (Options $options, $value): string {
+            if ($value) {
+                return $value;
+            }
             $map = [
                 'create' => '@LAGAdmin/crud/create.html.twig',
                 'update' => '@LAGAdmin/crud/update.html.twig',
@@ -325,12 +325,12 @@ class ActionConfiguration extends Configuration
                 'batch' => '@LAGAdmin/crud/batch.html.twig',
             ];
 
-            if (array_key_exists($options->offsetGet('name'), $map) && $value === null) {
+            if (array_key_exists($options->offsetGet('name'), $map)) {
                 return $map[$options->offsetGet('name')];
             }
 
             throw new ActionConfigurationException(
-                'The template should be defined if the action is not named create, update, list, delete or batch'
+                'The template should be defined if the action is not named '.implode(', ', array_keys($map))
             );
         };
     }
