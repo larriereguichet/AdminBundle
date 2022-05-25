@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ActionCollectionField extends AbstractField implements FieldFactoryAwareInterface
 {
-    /** @var FieldInterface[] */
+    /** @var Field[] */
     protected array $fields = [];
     private FieldFactoryInterface $fieldFactory;
 

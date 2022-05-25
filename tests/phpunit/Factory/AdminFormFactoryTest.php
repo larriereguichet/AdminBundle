@@ -6,7 +6,7 @@ use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Bridge\Doctrine\ORMDataProvider;
+use LAG\AdminBundle\Bridge\Doctrine\DataProvider;
 use LAG\AdminBundle\DataProvider\Registry\DataProviderRegistryInterface;
 use LAG\AdminBundle\Factory\FieldFactoryInterface;
 use LAG\AdminBundle\Field\Definition\FieldDefinitionInterface;

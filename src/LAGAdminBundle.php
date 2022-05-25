@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle;
 
+use LAG\AdminBundle\DependencyInjection\CompilerPass\ResourceCompilerPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class LAGAdminBundle extends Bundle
@@ -30,6 +32,11 @@ class LAGAdminBundle extends Bundle
     // TODO from configuration
     public const REQUEST_PARAMETER_ADMIN = '_admin';
     public const REQUEST_PARAMETER_ACTION = '_action';
+
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new ResourceCompilerPass());
+    }
 
     public function getPath(): string
     {

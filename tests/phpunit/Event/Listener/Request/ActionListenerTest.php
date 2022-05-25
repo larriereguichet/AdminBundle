@@ -2,11 +2,11 @@
 
 namespace LAG\AdminBundle\Tests\Event\Listener\Request;
 
+use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Action\Factory\ActionFactoryInterface;
-use LAG\AdminBundle\Admin\ActionInterface;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
+use LAG\AdminBundle\Admin\Context\AdminContextInterface;
 use LAG\AdminBundle\Event\Events\RequestEvent;
 use LAG\AdminBundle\Event\Listener\Request\ActionListener;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;

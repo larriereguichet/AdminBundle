@@ -36,7 +36,12 @@ RUN wget https://get.symfony.com/cli/installer -O - | bash; \
 
 WORKDIR /srv/app
 
+COPY . .
+
 RUN git config --global user.email "test@example.com"
 RUN symfony server:ca:install
+
+RUN composer self-update
+RUN composer install
 
 VOLUME /srv/app

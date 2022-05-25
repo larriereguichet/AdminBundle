@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Security\Helper;
 
 use LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface;
 use LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface;
-use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;

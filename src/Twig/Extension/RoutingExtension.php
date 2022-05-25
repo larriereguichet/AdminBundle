@@ -6,9 +6,9 @@ namespace LAG\AdminBundle\Twig\Extension;
 
 use LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface;
 use LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface;
-use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Resolver\RoutingUrlResolverInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;

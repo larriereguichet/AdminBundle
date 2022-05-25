@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Routing\Loader;
 
-use LAG\AdminBundle\Admin\Resource\AdminResource;
+use LAG\AdminBundle\Resource\AdminResource;
 use Symfony\Component\Routing\RouteCollection;
 
 interface ResourceLoaderInterface

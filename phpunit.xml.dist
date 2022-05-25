@@ -5,10 +5,8 @@
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
   <coverage>
     <include>
-      <directory>src/</directory>
+      <directory>src/Resource/Locator</directory>
     </include>
-
-    <exclude></exclude>
 
     <report>
       <clover outputFile="var/phpunit/logs/clover.xml"/>
@@ -18,7 +16,7 @@
 
   <testsuites>
     <testsuite name="AdminBundle Test Suite">
-      <directory>tests/phpunit</directory>
+      <directory>tests/phpunit/Resource/Locator</directory>
     </testsuite>
   </testsuites>
 

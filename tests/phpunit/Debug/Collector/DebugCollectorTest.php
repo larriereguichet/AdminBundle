@@ -3,9 +3,9 @@
 namespace LAG\AdminBundle\Tests\Debug\Collector;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Admin\Resource\AdminResource;
-use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
+use LAG\AdminBundle\Resource\AdminResource;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\ParameterBag;

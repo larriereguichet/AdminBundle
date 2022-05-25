@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Factory;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Field\Definition\FieldDefinitionInterface;
-use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Field\Field;
 
 /**
  * Field factory. Instances fields.
@@ -19,7 +19,7 @@ interface FieldFactoryInterface
      *
      * @throws Exception
      */
-    public function create(string $name, array $configuration, array $context = []): FieldInterface;
+    public function create(string $name, array $configuration, array $context = []): Field;
 
     /**
      * Return the definition of the field.

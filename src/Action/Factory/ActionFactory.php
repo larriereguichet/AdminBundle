@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Action\Factory;
 
 use LAG\AdminBundle\Action\ActionInterface;
-use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\ActionEvent;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ActionFactory implements ActionFactoryInterface

@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Translation\Helper;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
+use LAG\AdminBundle\Admin\Context\AdminContextInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationHelper implements TranslationHelperInterface
 {
-    public function __construct(
-        private TranslatorInterface $translator,
-        private ApplicationConfiguration $applicationConfiguration,
-        private AdminContextInterface $adminHelper
-    ) {
-    }
+//    public function __construct(
+//        private TranslatorInterface $translator,
+//        private ApplicationConfiguration $applicationConfiguration,
+//        private AdminContextInterface $adminHelper
+//    ) {
+//    }
 
     public function getTranslationKey(string $key , string $adminName = 'ui'): string
     {

@@ -5,13 +5,13 @@ namespace LAG\AdminBundle\Tests\Bridge\Doctrine;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Action\ActionInterface;
+use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
-use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
+use LAG\AdminBundle\Admin\Context\AdminContextInterface;
 use LAG\AdminBundle\Bridge\Doctrine\DataSource\ORMDataSource;
-use LAG\AdminBundle\Bridge\Doctrine\ORMDataProvider;
+use LAG\AdminBundle\Bridge\Doctrine\DataProvider;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Tests\TestCase;
@@ -113,7 +113,7 @@ class ORMDataProviderTest extends TestCase
             ->method('getAdmin')
             ->willReturn($admin)
         ;
-        $data = $this->dataProvider->getCollection($class, $filters, $orderBy, $page, $limit);
+        $data = $this->dataProvider->getCollectionOLD($class, $filters, $orderBy, $page, $limit);
 
         $this->assertInstanceOf(ORMDataSource::class, $data);
         $this->assertInstanceOf(QueryBuilder::class, $data->getData());
@@ -180,7 +180,7 @@ class ORMDataProviderTest extends TestCase
         }
 
         $this->expectException(Exception::class);
-        $this->dataProvider->getCollection($class, $filters, $orderBy, $page, $limit);
+        $this->dataProvider->getCollectionOLD($class, $filters, $orderBy, $page, $limit);
     }
 
     /**
@@ -273,7 +273,7 @@ class ORMDataProviderTest extends TestCase
             ->willReturn($admin)
         ;
 
-        $data = $this->dataProvider->getCollection($class, $filters, $orderBy, $page, $limit);
+        $data = $this->dataProvider->getCollectionOLD($class, $filters, $orderBy, $page, $limit);
 
         $this->assertEquals($queryBuilder, $data->getData());
     }
@@ -365,7 +365,7 @@ class ORMDataProviderTest extends TestCase
             }
         }
         $this->expectException(Exception::class);
-        $this->dataProvider->getCollection($class, $filters, $orderBy, $page, $limit);
+        $this->dataProvider->getCollectionOLD($class, $filters, $orderBy, $page, $limit);
     }
 
     public function testCreate(): void
@@ -403,7 +403,7 @@ class ORMDataProviderTest extends TestCase
             ->with(666)
             ->willReturn($data)
         ;
-        $foundData = $this->dataProvider->get('MyClass', 666);
+        $foundData = $this->dataProvider->getOLD('MyClass', 666);
         $this->assertEquals($data, $foundData);
     }
 
@@ -425,7 +425,7 @@ class ORMDataProviderTest extends TestCase
             ->willReturn(null)
         ;
         $this->expectException(Exception::class);
-        $this->dataProvider->get('MyClass', 666);
+        $this->dataProvider->getOLD('MyClass', 666);
     }
 
     protected function setUp(): void

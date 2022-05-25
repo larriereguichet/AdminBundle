@@ -6,7 +6,6 @@ namespace LAG\AdminBundle\Application\Configuration;
 
 use Closure;
 use JK\Configuration\ServiceConfiguration;
-use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Field\ActionCollectionField;
@@ -16,10 +15,11 @@ use LAG\AdminBundle\Field\AutoField;
 use LAG\AdminBundle\Field\BooleanField;
 use LAG\AdminBundle\Field\CountField;
 use LAG\AdminBundle\Field\DateField;
-use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Field\LinkField;
 use LAG\AdminBundle\Field\MappedField;
 use LAG\AdminBundle\Field\StringField;
+use LAG\AdminBundle\Metadata\Action;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,19 +31,19 @@ use function Symfony\Component\String\u;
 class ApplicationConfiguration extends ServiceConfiguration
 {
     public const FIELD_MAPPING = [
-        FieldInterface::TYPE_STRING => StringField::class,
-        FieldInterface::TYPE_TEXT => StringField::class,
-        FieldInterface::TYPE_FLOAT => StringField::class,
-        FieldInterface::TYPE_INTEGER => StringField::class,
-        FieldInterface::TYPE_ARRAY => ArrayField::class,
-        FieldInterface::TYPE_ACTION => ActionField::class,
-        FieldInterface::TYPE_BOOLEAN => BooleanField::class,
-        FieldInterface::TYPE_MAPPED => MappedField::class,
-        FieldInterface::TYPE_ACTION_COLLECTION => ActionCollectionField::class,
-        FieldInterface::TYPE_LINK => LinkField::class,
-        FieldInterface::TYPE_DATE => DateField::class,
-        FieldInterface::TYPE_COUNT => CountField::class,
-        FieldInterface::TYPE_AUTO => AutoField::class,
+        Field::TYPE_STRING => StringField::class,
+        Field::TYPE_TEXT => StringField::class,
+        Field::TYPE_FLOAT => StringField::class,
+        Field::TYPE_INTEGER => StringField::class,
+        Field::TYPE_ARRAY => ArrayField::class,
+        Field::TYPE_ACTION => ActionField::class,
+        Field::TYPE_BOOLEAN => BooleanField::class,
+        Field::TYPE_MAPPED => MappedField::class,
+        Field::TYPE_ACTION_COLLECTION => ActionCollectionField::class,
+        Field::TYPE_LINK => LinkField::class,
+        Field::TYPE_DATE => DateField::class,
+        Field::TYPE_COUNT => CountField::class,
+        Field::TYPE_AUTO => AutoField::class,
     ];
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -55,8 +55,8 @@ class ApplicationConfiguration extends ServiceConfiguration
             ->setAllowedTypes('description', 'string')
 
             // Admins
-            ->setRequired('resources_path')
-            ->setAllowedTypes('resources_path', 'string')
+            ->setRequired('resources_paths')
+            ->setAllowedTypes('resources_paths', 'array')
             ->setDefault('admin_class', Admin::class)
             ->setAllowedTypes('admin_class', 'string')
             ->setDefault('action_class', Action::class)

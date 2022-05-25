@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Admin\Factory;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\AdminEvent;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AdminFactory implements AdminFactoryInterface

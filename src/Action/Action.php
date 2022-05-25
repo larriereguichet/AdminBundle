@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Action;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\View\ActionView;
 
-class Action implements ActionInterface
+class Action
 {
     public function __construct(private string $name, private ActionConfiguration $configuration)
     {

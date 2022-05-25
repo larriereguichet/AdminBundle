@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use function Symfony\Component\String\u;
 
-abstract class AbstractField implements FieldInterface
+abstract class AbstractField implements Field
 {
     private string $name;
     private string $type;

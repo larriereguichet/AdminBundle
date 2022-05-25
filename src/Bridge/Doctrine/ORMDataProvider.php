@@ -4,22 +4,27 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Bridge\Doctrine;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
 use LAG\AdminBundle\Bridge\Doctrine\DataSource\ORMDataSource;
 use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\DataProvider\DataSourceInterface;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Metadata\Action;
 
 class ORMDataProvider implements DataProviderInterface
 {
-    public function __construct(
-        private EntityManagerInterface $entityManager,
-        private AdminContextInterface $adminHelper
-    ) {
+//    public function __construct(
+//        private EntityManagerInterface $entityManager,
+//        private AdminContextInterface $adminHelper
+//    ) {
+//    }
+
+    public function provide(Admin $admin, Action $action, array $uriVariables = [], array $context = []): mixed
+    {
+        // TODO: Implement provide() method.
     }
 
     public function getCollection(

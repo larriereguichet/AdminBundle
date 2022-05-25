@@ -60,7 +60,7 @@ class LoadListener
         if ($strategy === AdminInterface::LOAD_STRATEGY_UNIQUE) {
             // Only single identifier are handled yet (no composite key)
             $identifier = $this->extractIdentifier($request, $actionConfiguration->getRouteParameters());
-            $data = $dataProvider->get($admin->getEntityClass(), $identifier);
+            $data = $dataProvider->getOLD($admin->getEntityClass(), $identifier);
             $event->setData($data);
         }
 
@@ -80,7 +80,7 @@ class LoadListener
             $page = $request->get($actionConfiguration->getPageParameter(), 1);
 
             // Create a data source according to the data provider
-            $data = $dataProvider->getCollection(
+            $data = $dataProvider->getCollectionOLD(
                 $admin->getEntityClass(),
                 $filters,
                 $orderBy,

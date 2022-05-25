@@ -6,10 +6,10 @@ namespace LAG\AdminBundle\Admin\Configuration;
 
 use Closure;
 use JK\Configuration\Configuration;
-use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Configuration\Normalizer\LinkNormalizer;
-use LAG\AdminBundle\Application\Configuration\ActionLinkConfiguration;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\DataProcessor\ORMDataProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -24,21 +24,47 @@ class AdminConfiguration extends Configuration
 {
     protected function configureOptions(OptionsResolver $resolver): void
     {
+        $this->configureMain($resolver);
+        $this->configureActions($resolver);
+        $this->configureRouting($resolver);
+        $this->configureData($resolver);
+    }
+
+    protected function configureMain(OptionsResolver $resolver): void
+    {
         $resolver
-            ->setRequired('entity')
-            ->setAllowedTypes('entity', 'string')
             ->setRequired('name')
             ->setAllowedTypes('name', 'string')
+
+            ->setRequired('data_class')
+            ->setAllowedTypes('data_class', 'string')
+
             ->setDefault('title', null)
             ->setAllowedTypes('title', ['string', 'null'])
             ->addNormalizer('title', function (Options $options, $value) {
                 if ($value === null) {
-                    $value = u($options->offsetGet('name'))->title()->toString();
+                    $value = u($options->offsetGet('name'))
+                        ->camel()
+                        ->title()
+                        ->toString()
+                    ;
                 }
 
                 return $value;
             })
 
+            ->setDefault('group', null)
+            ->setAllowedTypes('group', ['string', 'null'])
+
+
+            ->setDefault('admin_class', Admin::class)
+            ->setAllowedTypes('admin_class', 'string')
+        ;
+    }
+
+    protected function configureActions(OptionsResolver $resolver): void
+    {
+        $resolver
             ->setDefault('actions', [
                 'index' => [],
                 'create' => [],
@@ -49,69 +75,56 @@ class AdminConfiguration extends Configuration
             ->setNormalizer('actions', $this->getActionNormalizer())
 
             // Linked actions
-            ->setDefault('list_actions', [
-                'update' => [],
-                'delete' => [],
+            ->setDefault('collection_actions', [
+                'create' => [],
             ])
-            ->setAllowedTypes('list_actions', 'array')
-            ->setNormalizer('list_actions', function (Options $options, $value) {
-                foreach ($value as $actionName => $actionConfiguration) {
-                    $configuration = new ActionLinkConfiguration();
-
-                    if (!array_key_exists('admin', $actionConfiguration)) {
-                        $actionConfiguration['admin'] = $options->offsetGet('name');
-                    }
-
-                    if (!array_key_exists('action', $actionConfiguration)) {
-                        $actionConfiguration['action'] = $actionName;
-                    }
-                    $value[$actionName] = $configuration->configure($actionConfiguration)->toArray();
-                }
-
-                return $value;
+            ->setAllowedTypes('collection_actions', 'array')
+            ->setNormalizer('collection_actions', function (Options $options, $value) {
+                return LinkNormalizer::normalizeAdminLinks($options, $value);
             })
 
             ->setDefault('item_actions', [
-                'create' => [],
+                'update' => [],
+                'delete' => [],
             ])
             ->setAllowedTypes('item_actions', 'array')
             ->setNormalizer('item_actions', function (Options $options, $value) {
-                foreach ($value as $actionName => $actionConfiguration) {
-                    $configuration = new ActionLinkConfiguration();
+                return LinkNormalizer::normalizeAdminLinks($options, $value);
+            })
+        ;
+    }
 
-                    if (!array_key_exists('admin', $actionConfiguration)) {
-                        $actionConfiguration['admin'] = $options->offsetGet('name');
-                    }
+    protected function configureRouting(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefault('controller', AdminAction::class)
+            ->setAllowedTypes('controller', 'string')
 
-                    if (!array_key_exists('action', $actionConfiguration)) {
-                        $actionConfiguration['action'] = $actionName;
-                    }
-                    $value[$actionName] = $configuration->configure($actionConfiguration)->toArray();
+            ->setDefault('routes_pattern', 'lag_admin.{admin}.{action}')
+            ->setAllowedTypes('routes_pattern', 'string')
+            ->setNormalizer('routes_pattern', function (Options $options, $value) {
+                if (!u($value)->containsAny('{action}')) {
+                    throw new InvalidOptionsException(sprintf('The "%s" parameters in admin "%s" should contains the "%s" parameters', 'routes_pattern', $options->offsetGet('name'), '{action}'));
+                }
+
+                if (!u($value)->containsAny('{admin}')) {
+                    throw new InvalidOptionsException(sprintf('The "%s" parameters in admin "%s" should contains the "%s" parameters', 'routes_pattern', $options->offsetGet('name'), '{admin}'));
                 }
 
                 return $value;
             })
+        ;
+    }
 
-            // Controller
-            ->setDefault('controller', AdminAction::class)
-            ->setAllowedTypes('controller', 'string')
+    protected function configureData(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefault('pagination', true)
+            ->setAllowedValues('pagination', 'boolean')
 
-            ->setDefault('batch', [])
-            ->setAllowedTypes('batch', 'array')
-
-            ->setDefault('admin_class', Admin::class)
-            ->setAllowedTypes('admin_class', 'string')
-            ->setDefault('action_class', Action::class)
-            ->setAllowedTypes('action_class', 'string')
-
-            ->setDefault('routes_pattern', 'lag_admin.{admin}.{action}')
-            ->setAllowedTypes('routes_pattern', 'string')
-            ->setNormalizer('routes_pattern', $this->getRoutesPatternNormalizer())
-
-            ->setDefault('pager', 'pagerfanta')
-            ->setAllowedValues('pager', ['pagerfanta', false])
             ->setDefault('max_per_page', 25)
             ->setAllowedTypes('max_per_page', 'integer')
+
             ->setDefault('page_parameter', 'page')
             ->setAllowedTypes('page_parameter', 'string')
 
@@ -121,19 +134,11 @@ class AdminConfiguration extends Configuration
             ->setDefault('date_format', 'Y-m-d')
             ->setAllowedTypes('date_format', 'string')
 
-            ->setDefault('data_provider', 'doctrine')
+            ->setDefault('data_provider', ORMDataProvider::class)
             ->setAllowedTypes('data_provider', 'string')
-            ->setDefault('data_persister', 'doctrine')
-            ->setAllowedTypes('data_persister', 'string')
 
-            ->setDefault('create_template', '@LAGAdmin/crud/create.html.twig')
-            ->setAllowedTypes('create_template', 'string')
-            ->setDefault('update_template', '@LAGAdmin/crud/update.html.twig')
-            ->setAllowedTypes('update_template', 'string')
-            ->setDefault('list_template', '@LAGAdmin/crud/list.html.twig')
-            ->setAllowedTypes('list_template', 'string')
-            ->setDefault('delete_template', '@LAGAdmin/crud/delete.html.twig')
-            ->setAllowedTypes('delete_template', 'string')
+            ->setDefault('data_processor', ORMDataProcessor::class)
+            ->setAllowedTypes('data_processor', 'string')
         ;
     }
 
@@ -157,6 +162,11 @@ class AdminConfiguration extends Configuration
         return $this->getString('title');
     }
 
+    public function getGroup(): ?string
+    {
+        return $this->get('group');
+    }
+
     public function getActions(): array
     {
         return $this->get('actions');
@@ -172,9 +182,9 @@ class AdminConfiguration extends Configuration
         return $this->getActions()[$actionName];
     }
 
-    public function getListActions(): array
+    public function getIndexActions(): array
     {
-        return $this->get('list_actions');
+        return $this->get('index_actions');
     }
 
     public function getItemActions(): array
@@ -190,11 +200,6 @@ class AdminConfiguration extends Configuration
     public function getController(): string
     {
         return $this->getString('controller');
-    }
-
-    public function getBatch(): array
-    {
-        return $this->get('batch');
     }
 
     public function getRoutesPattern(): string
@@ -289,7 +294,6 @@ class AdminConfiguration extends Configuration
     {
         return function (Options $options, $actions) {
             $normalizedActions = [];
-//            $addBatchAction = false;
 
             foreach ($actions as $name => $action) {
                 // action configuration is an array by default
@@ -305,34 +309,9 @@ class AdminConfiguration extends Configuration
                 $action['admin_name'] = $options->offsetGet('name');
                 $normalizedActions[$name] = $action;
 
-                // in list action, if no batch was configured or disabled, we add a batch action
-//                if ('index' == $name && (!\array_key_exists('batch', $action) || null === $action['batch'])) {
-//                    $addBatchAction = true;
-//                }
             }
-
-            // add empty default batch action
-//            if ($addBatchAction) {
-//             TODO enable mass action
-//            $normalizedActions['batch'] = [];
-//            }
 
             return $normalizedActions;
-        };
-    }
-
-    private function getRoutesPatternNormalizer(): Closure
-    {
-        return function (Options $options, $value) {
-            if (!u($value)->containsAny('{action}')) {
-                throw new InvalidOptionsException(sprintf('The "%s" parameters in admin "%s" should contains the "%s" parameters', 'routes_pattern', $options->offsetGet('name'), '{action}'));
-            }
-
-            if (!u($value)->containsAny('{admin}')) {
-                throw new InvalidOptionsException(sprintf('The "%s" parameters in admin "%s" should contains the "%s" parameters', 'routes_pattern', $options->offsetGet('name'), '{admin}'));
-            }
-
-            return $value;
         };
     }
 }
