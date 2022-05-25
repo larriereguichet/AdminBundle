@@ -11,6 +11,7 @@ use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\ActionEvent;
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -89,6 +90,12 @@ class ActionFactoryTest extends TestCase
         ]);
         $this->assertEquals($actionConfiguration, $action->getConfiguration());
         $this->assertEquals('list', $action->getName());
+    }
+
+    public function testCreateWithoutAdminName(): void
+    {
+        $this->expectException(Exception::class);
+        $this->actionFactory->create('an_action', []);
     }
 
     protected function setUp(): void

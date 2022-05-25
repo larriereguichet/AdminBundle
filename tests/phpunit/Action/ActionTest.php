@@ -4,6 +4,7 @@ namespace LAG\AdminBundle\Tests\Action;
 
 use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
+use LAG\AdminBundle\Action\View\ActionView;
 use LAG\AdminBundle\Tests\TestCase;
 
 class ActionTest extends TestCase
@@ -15,5 +16,6 @@ class ActionTest extends TestCase
 
         $this->assertEquals('test', $action->getName());
         $this->assertEquals($configuration, $action->getConfiguration());
+        $this->assertEquals(new ActionView('test', $action->getConfiguration()), $action->createView());
     }
 }

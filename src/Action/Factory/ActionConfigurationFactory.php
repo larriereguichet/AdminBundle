@@ -20,6 +20,7 @@ class ActionConfigurationFactory implements ActionConfigurationFactoryInterface
     public function create(string $adminName, string $actionName, array $options = []): ActionConfiguration
     {
         $options['name'] = $actionName;
+        $options['admin_name'] = $adminName;
         $event = new ActionConfigurationEvent($adminName, $actionName, $options);
         $this->eventDispatcher->dispatch($event, AdminEvents::ACTION_CONFIGURATION);
         $configuration = new ActionConfiguration();
