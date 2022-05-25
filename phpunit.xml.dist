@@ -8,13 +8,7 @@
       <directory>src/</directory>
     </include>
 
-    <exclude>
-      <directory>Resources</directory>
-      <directory>Debug</directory>
-      <directory>Tests</directory>
-      <directory>vendor</directory>
-      <directory>DataFixtures</directory>
-    </exclude>
+    <exclude></exclude>
 
     <report>
       <clover outputFile="var/phpunit/logs/clover.xml"/>

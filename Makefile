@@ -1,19 +1,27 @@
 all: install
 
-.PHONY: tests install update assets@build security@check phpunit@run
-
 current_dir = $(shell pwd)
+DOCKER_COMPOSE=docker-compose
+PHP = $(DOCKER_COMPOSE) run --rm php
+JS = $(DOCKER_COMPOSE) run --rm js
 
-include .make/assets.mk
-include .make/tests.mk
+include make/php.mk
+include make/js.mk
 
-install:
-	composer install
-	make assets
+install: build composer.install assets
 
-update:
-	composer update
-	make assets
+update: composer.update assets
 
-assets@build:
-	php sam.php
+build: docker.pull docker.build
+
+docker.pull:
+	$(DOCKER_COMPOSE) pull
+
+docker.build:
+	$(DOCKER_COMPOSE) build
+
+composer.install:
+	$(PHP) composer install
+
+composer.update:
+	$(PHP) composer update

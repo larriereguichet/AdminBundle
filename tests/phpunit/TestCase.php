@@ -4,9 +4,9 @@ namespace LAG\AdminBundle\Tests;
 
 use Closure;
 use Exception;
-use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Action\ActionInterface;
+use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -27,7 +27,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function assertServiceExists(string $serviceClass): void
     {
         $containerBuilder = new ContainerBuilder();
-        $testResourcesDirectory = __DIR__.'/../../src/Resources/config';
+        $testResourcesDirectory = __DIR__.'/../../config';
         $locator = new FileLocator([
             $testResourcesDirectory,
         ]);

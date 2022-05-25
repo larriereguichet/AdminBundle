@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event;
 
-// TODO enum
 enum AdminEvents: string
 {
     public const ADMIN_REQUEST = 'lag.admin.request';
@@ -25,3 +24,4 @@ enum AdminEvents: string
     public const FIELD_CREATED = 'lag.admin.field_created';
     public const FIELD_DEFINITION_CREATE = 'lag.admin.field_definition_create';
 }
+// TODO enum
