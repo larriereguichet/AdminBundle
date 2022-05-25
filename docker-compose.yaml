@@ -4,21 +4,14 @@ services:
     php:
         build:
             context: .
+        depends_on:
+            - db
+            - js
         ports:
             - '8000:8000'
         volumes:
-            - ./src:/srv/app/bundle
-            - ./docker/symfony/bundles.php:/srv/app/config/bundles.php
-            - ./docker/symfony/composer.json:/srv/app/composer.json
-            - ./docker/symfony/.env:/srv/app/.env
-            - ./docker/symfony/admin/resources:/srv/app/config/admin/resources
-            - ./docker/symfony/config/routes.yaml:/srv/app/config/routes/routes.yaml
-            - ./docker/symfony/config/packages/lag_admin.yaml:/srv/app/config/packages/lag_admin.yaml
-            - ./docker/symfony/config/packages/security.yaml:/srv/app/config/packages/security.yaml
-            - ./docker/symfony/config/packages/translation.yaml:/srv/app/config/packages/translation.yaml
-            - ./docker/symfony/translations/:/srv/app/translations/
-            - ./docker/symfony/src/Entity:/srv/app/src/Entity
-        command: symfony serve --dir=/srv/app/public
+            - ./:/srv/bundle
+        working_dir: /srv/bundle
 
     db:
         image: mysql:8.0
@@ -32,13 +25,13 @@ services:
         volumes:
             - ./docker/mysql/data:/var/lib/mysql
 
-#    js:
-#        image: node:stretch-slim
-#        volumes:
-#            - .:/home/docker/www/admin-bundle
-#        working_dir: /home/docker/www/app
-#        command: bash -c "yarn encore dev --watch"
-#
+    js:
+        image: node:stretch-slim
+        volumes:
+            - .:/srv/admin-bundle
+        working_dir: /home/docker/www/app
+        command: bash -c "yarn encore dev --watch"
+
 #    db:
 #        image: mariadb:latest
 #        ports:

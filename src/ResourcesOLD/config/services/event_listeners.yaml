@@ -2,10 +2,6 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
-
-    # TODO to remove
-    LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber:
-        class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
     
     # Request event
     LAG\AdminBundle\Event\Listener\Request\ActionListener:
@@ -61,6 +57,10 @@ services:
     LAG\AdminBundle\Event\Listener\Action\Configuration\DefaultRouteListener:
         tags:
             - {name: kernel.event_listener, event: lag.admin.action_configuration, priority: 255}
+
+    LAG\AdminBundle\Event\Listener\Action\Configuration\DefaultFormListener:
+        tags:
+            - { name: kernel.event_listener, event: lag.admin.action_configuration, priority: 255 }
 
     LAG\AdminBundle\Event\Listener\Admin\Configuration\DefaultRouteListener:
         tags:
