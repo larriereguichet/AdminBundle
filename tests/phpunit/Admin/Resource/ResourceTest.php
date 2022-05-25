@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Tests\Admin\Resource;
 
-use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\TestCase;
 
@@ -10,7 +9,7 @@ class ResourceTest extends TestCase
 {
     public function testResource(): void
     {
-        $resource = new AdminResource('panda', [
+        $resource = new \LAG\AdminBundle\Resource\AdminResource('panda', [
             'entity' => 'App\\Panda',
         ]);
 
@@ -24,6 +23,6 @@ class ResourceTest extends TestCase
     public function testResourceWithoutEntity(): void
     {
         $this->expectException(Exception::class);
-        new AdminResource('wrong', []);
+        new \LAG\AdminBundle\Resource\AdminResource('wrong', []);
     }
 }

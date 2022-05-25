@@ -4,9 +4,6 @@ services:
     php:
         build:
             context: .
-        depends_on:
-            - db
-            - js
         ports:
             - '8000:8000'
         volumes:

@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Tests\Field;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Factory\FieldFactory;
 use LAG\AdminBundle\Factory\FieldFactoryInterface;
-use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Tests\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -15,7 +15,7 @@ class FieldTestCase extends TestCase
     protected FieldFactoryInterface $factory;
     protected ApplicationConfiguration $applicationConfiguration;
 
-    protected function createField(string $name, array $configuration, array $context = []): FieldInterface
+    protected function createField(string $name, array $configuration, array $context = []): Field
     {
         return $this->factory->create($name, $configuration, $context);
     }

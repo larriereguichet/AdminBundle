@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\Admin;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use LAG\AdminBundle\Admin\ActionInterface;
+use LAG\AdminBundle\Action\ActionInterface;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Event\AdminEvents;
@@ -56,13 +56,7 @@ class AdminTest extends TestCase
                 return $event;
             })
         ;
-
         $request = new Request();
-
-        $this->assertExceptionRaised(Exception::class, function () {
-            $this->admin->getRequest();
-        });
-
         $this->admin->handleRequest($request);
 
         $this->assertEquals('my_admin', $this->admin->getName());
@@ -78,9 +72,6 @@ class AdminTest extends TestCase
         $this->assertCount(2, $this->admin->getForms());
         $this->assertEquals($form, $this->admin->getForms()['entity']);
         $this->assertEquals($form, $this->admin->getForm('entity'));
-        $this->assertExceptionRaised(Exception::class, function () {
-            $this->admin->getForm('invalid');
-        });
     }
 
     public function getHandleRequestProvider(): array
@@ -91,17 +82,17 @@ class AdminTest extends TestCase
         ];
     }
 
-    public function testHandleRequestWithoutAction()
+    public function testHandleRequestWithoutAction(): void
     {
-        $this->eventDispatcher
+        $this
+            ->eventDispatcher
             ->expects($this->exactly(1))
             ->method('dispatch')
         ;
         $request = new Request();
 
-        $this->assertExceptionRaised(Exception::class, function () use ($request) {
-            $this->admin->handleRequest($request);
-        });
+        $this->expectException(Exception::class);
+        $this->admin->handleRequest($request);
     }
 
     public function testCreateView()

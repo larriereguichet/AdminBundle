@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\DependencyInjection;
 
-use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Metadata\Action;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -23,7 +23,13 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('description')->defaultValue('Admin')->end()
 
                 // Where the Admin resources file are located
-                ->scalarNode('resources_path')->defaultValue('%kernel.project_dir%/config/admin/resources')->end()
+                ->arrayNode('resources_paths')
+                    ->prototype('scalar')->end()
+                    ->defaultValue([
+                        '%kernel.project_dir%/config/admin/resources',
+                        '%kernel.project_dir%/src/Entity',
+                    ])
+                ->end()
                 ->scalarNode('admin_class')->defaultValue(Admin::class)->end()
                 ->scalarNode('action_class')->defaultValue(Action::class)->end()
 

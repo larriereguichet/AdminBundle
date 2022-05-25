@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Events\Configuration;
 
-use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Field\Field;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class FieldConfigurationEvent extends Event
 {
     private string $fieldName;
     private ?string $type;
-    private ?FieldInterface $field;
+    private ?Field $field;
     private array $options;
     private array $context;
 
@@ -20,7 +20,7 @@ class FieldConfigurationEvent extends Event
         string $type = null,
         array $options = [],
         array $context = [],
-        FieldInterface $field = null
+        Field $field = null
     ) {
         $this->fieldName = $fieldName;
         $this->type = $type;
@@ -54,7 +54,7 @@ class FieldConfigurationEvent extends Event
         return $this->fieldName;
     }
 
-    public function getField(): ?FieldInterface
+    public function getField(): ?Field
     {
         return $this->field;
     }

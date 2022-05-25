@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Bridge\KnpMenu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
+use LAG\AdminBundle\Admin\Context\AdminContextInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use function Symfony\Component\String\u;

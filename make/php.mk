@@ -6,7 +6,7 @@ tests.stop-on-failure: phpunit.stop-on-failure php-cs-fixer.fix phpstan.analyse 
 
 # PHPUnit
 phpunit.run:
-	bin/phpunit
+	$(PHP) bin/phpunit
 	@echo "Results file generated file://$(current_dir)/var/phpunit/coverage/index.html"
 
 phpunit.stop-on-failure:

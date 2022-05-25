@@ -68,13 +68,13 @@ class AdminView implements ViewInterface
         return $this->forms;
     }
 
-    public function getListActions(): array
+    public function getIndexActions(): array
     {
-        return $this->action->getConfiguration()->getListActions();
+        return $this->getConfiguration()->getIndexActions();
     }
 
     public function getItemActions(): array
     {
-        return $this->action->getConfiguration()->getItemActions();
+        return $this->getConfiguration()->getItemActions();
     }
 }

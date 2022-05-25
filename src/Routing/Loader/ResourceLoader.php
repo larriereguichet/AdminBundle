@@ -4,9 +4,9 @@ namespace LAG\AdminBundle\Routing\Loader;
 
 use LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface;
 use LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface;
-use LAG\AdminBundle\Admin\Resource\AdminResource;
 use LAG\AdminBundle\Exception\ConfigurationException;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Resource\AdminResource;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 

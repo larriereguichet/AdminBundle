@@ -15,8 +15,7 @@ class LoginAction
     public function __construct(
         private FormFactoryInterface $formFactory,
         private Environment $environment,
-    )
-    {
+    ) {
     }
 
     public function __invoke(Request $request, string $template): Response

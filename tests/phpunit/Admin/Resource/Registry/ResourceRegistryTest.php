@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Tests\Admin\Resource\Registry;
 
-use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistry;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Tests\TestCase;
 
@@ -14,7 +13,7 @@ class ResourceRegistryTest extends TestCase
 
         $this->assertTrue($registry->has('panda'));
         $this->assertCount(1, $registry->all());
-        $this->assertCount(1, $registry->keys());
+        $this->assertCount(1, $registry->getResourceNames());
 
         $resource = $registry->get('panda');
 
@@ -49,9 +48,9 @@ class ResourceRegistryTest extends TestCase
         $registry->remove('wrong');
     }
 
-    private function createRegistry(string $path): ResourceRegistry
+    private function createRegistry(string $path): \LAG\AdminBundle\Resource\Registry\ResourceRegistry
     {
-        return new ResourceRegistry($path);
+        return new \LAG\AdminBundle\Resource\Registry\ResourceRegistry($path);
     }
 
     private function getFixturesPath(): string

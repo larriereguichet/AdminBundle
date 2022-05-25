@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Event\Listener\Theme;
 
 use LAG\AdminBundle\Event\Events\Configuration\FieldConfigurationEvent;
-use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Field\Field;
 
 class FieldThemeListener
 {
     public function __invoke(FieldConfigurationEvent $event): void
     {
-        if ($event->getType() === FieldInterface::TYPE_ACTION) {
+        if ($event->getType() === Field::TYPE_ACTION) {
             $options = $event->getOptions();
 
             if (empty($options['attr'])) {

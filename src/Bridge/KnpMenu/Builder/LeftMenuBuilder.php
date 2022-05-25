@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Bridge\KnpMenu\Builder;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface;
-use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -28,7 +28,7 @@ class LeftMenuBuilder
 
     public function createMenu(array $options = []): ItemInterface
     {
-        $menu = $this->factory->createItem('root');
+        $menu = $this->factory->createItem('root', $options);
 
         foreach ($this->resourceRegistry->all() as $resource) {
             $configuration = $this

@@ -2,15 +2,16 @@
 
 namespace LAG\AdminBundle\Tests\Action\Factory;
 
-use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface;
 use LAG\AdminBundle\Action\Factory\ActionFactory;
 use LAG\AdminBundle\Action\Factory\ActionFactoryInterface;
-use LAG\AdminBundle\Admin\Resource\AdminResource;
-use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\ActionEvent;
+use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Resource\AdminResource;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -89,6 +90,12 @@ class ActionFactoryTest extends TestCase
         ]);
         $this->assertEquals($actionConfiguration, $action->getConfiguration());
         $this->assertEquals('list', $action->getName());
+    }
+
+    public function testCreateWithoutAdminName(): void
+    {
+        $this->expectException(Exception::class);
+        $this->actionFactory->create('an_action', []);
     }
 
     protected function setUp(): void

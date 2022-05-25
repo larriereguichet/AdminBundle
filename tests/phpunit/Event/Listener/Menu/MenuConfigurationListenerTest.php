@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\Event\Listener\Menu;
 
 use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
+use LAG\AdminBundle\Admin\Context\AdminContextInterface;
 use LAG\AdminBundle\Event\Events\Configuration\MenuConfigurationEvent;
 use LAG\AdminBundle\Event\Listener\Menu\MenuConfigurationListener;
 use LAG\AdminBundle\Tests\TestCase;

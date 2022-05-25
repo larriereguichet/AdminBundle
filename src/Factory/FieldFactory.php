@@ -15,7 +15,7 @@ use LAG\AdminBundle\Exception\Field\FieldConfigurationException;
 use LAG\AdminBundle\Exception\Field\FieldTypeNotFoundException;
 use LAG\AdminBundle\Field\AbstractField;
 use LAG\AdminBundle\Field\ApplicationAwareInterface;
-use LAG\AdminBundle\Field\FieldInterface;
+use LAG\AdminBundle\Field\Field;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -37,7 +37,7 @@ class FieldFactory implements FieldFactoryInterface
         $this->fieldsMapping = $fieldsMapping;
     }
 
-    public function create(string $name, array $configuration, array $context = []): FieldInterface
+    public function create(string $name, array $configuration, array $context = []): Field
     {
         try {
             $configuration = $this->resolveConfiguration($name, $configuration, $context);
@@ -79,7 +79,7 @@ class FieldFactory implements FieldFactoryInterface
         return $event->getDefinitions();
     }
 
-    private function configureField(FieldInterface $field, array $options): void
+    private function configureField(Field $field, array $options): void
     {
         $resolver = new OptionsResolver();
 
@@ -135,14 +135,14 @@ class FieldFactory implements FieldFactoryInterface
         throw new Exception(sprintf('Field type "%s" not found in field mapping. Allowed fields are "%s"', $type, implode('", "', $this->fieldsMapping)));
     }
 
-    private function instanciateField(string $name, string $type): FieldInterface
+    private function instanciateField(string $name, string $type): Field
     {
         $fieldClass = $this->getFieldClass($type);
         $field = new $fieldClass($name, $type);
 
-        if (!$field instanceof FieldInterface) {
+        if (!$field instanceof Field) {
             // TODO use an exception in the field namespace
-            throw new Exception("Field class \"{$fieldClass}\" must implements ".FieldInterface::class);
+            throw new Exception("Field class \"{$fieldClass}\" must implements ".Field::class);
         }
 
         return $field;

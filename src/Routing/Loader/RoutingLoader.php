@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\Loader;
 
-use LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;

@@ -8,12 +8,12 @@ services:
         arguments:
             $eventDispatcher: '@event_dispatcher'
             $configurationFactory: '@LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface'
-            $registry: '@LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface'
+            $registry: '@LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface'
     
     LAG\AdminBundle\Admin\Factory\AdminFactoryInterface: '@LAG\AdminBundle\Admin\Factory\AdminFactory'
     LAG\AdminBundle\Admin\Factory\AdminFactory:
         arguments:
-            $registry: '@LAG\AdminBundle\Admin\Resource\Registry\ResourceRegistryInterface'
+            $registry: '@LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface'
             $eventDispatcher: '@event_dispatcher'
             $configurationFactory: '@LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface'
 

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Field\Render;
 
 use Exception;
-use LAG\AdminBundle\Admin\Helper\AdminContextInterface;
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Exception\View\FieldRenderingException;
 use LAG\AdminBundle\Field\View\TextView;
 use LAG\AdminBundle\Field\View\View;
@@ -18,8 +16,6 @@ class FieldRenderer implements FieldRendererInterface
 {
     public function __construct(
         private Environment $environment,
-        private ApplicationConfiguration $applicationConfiguration,
-        private AdminContextInterface $adminContext,
     ) {
     }
 

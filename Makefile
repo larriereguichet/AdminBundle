@@ -8,17 +8,29 @@ JS = $(DOCKER_COMPOSE) run --rm js
 include make/php.mk
 include make/js.mk
 
-install: build composer.install assets
+install: build assets
 
 update: composer.update assets
 
 build: docker.pull docker.build
+
+start:
+	$(DOCKER_COMPOSE) up
+
+start.d:
+	$(DOCKER_COMPOSE) up -d
+
+stop:
+	$(DOCKER_COMPOSE) stop
 
 docker.pull:
 	$(DOCKER_COMPOSE) pull
 
 docker.build:
 	$(DOCKER_COMPOSE) build
+
+php:
+	$(PHP) bash
 
 composer.install:
 	$(PHP) composer install

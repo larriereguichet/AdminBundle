@@ -3,12 +3,11 @@
 namespace LAG\AdminBundle\Tests\Action\Configuration;
 
 use JK\Configuration\Exception\InvalidConfigurationException;
-use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Form\Type\DeleteType;
+use LAG\AdminBundle\Metadata\Action;
 use LAG\AdminBundle\Tests\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -29,7 +28,7 @@ class ActionConfigurationTest extends TestCase
             'route' => '/my_admin/index',
             'title' => 'Index',
             'icon' => null,
-            'action_class' => 'LAG\AdminBundle\Action\Action',
+            'action_class' => 'LAG\AdminBundle\Metadata\Action',
             'template' => '@LAGAdmin/crud/list.html.twig',
             'permissions' => [
                 'ROLE_ADMIN',
@@ -116,6 +115,8 @@ class ActionConfigurationTest extends TestCase
         $this->assertEquals(AdminAction::class, $configuration->getController());
         $this->assertEquals('/my-action', $configuration->getPath());
         $this->assertEquals('my_action', $configuration->getRoute());
+        $this->assertEquals('index', $configuration->getTargetRoute());
+        $this->assertEquals([], $configuration->getTargetRouteParameters());
         $this->assertEquals([], $configuration->getRouteParameters());
 
         $this->assertEquals([], $configuration->getOrder());
@@ -128,6 +129,7 @@ class ActionConfigurationTest extends TestCase
         $this->assertEquals('pagerfanta', $configuration->getPager());
         $this->assertEquals(25, $configuration->getMaxPerPage());
         $this->assertEquals('page', $configuration->getPageParameter());
+        $this->assertEquals(null, $configuration->getRepositoryMethod());
 
         $this->assertEquals('Y-m-d', $configuration->getDateFormat());
 
@@ -385,5 +387,19 @@ class ActionConfigurationTest extends TestCase
             ['my_action', ['id' => null], ['id' => null]],
             ['update', [], ['id' => null]],
         ];
+    }
+
+    public function testTemplateNormalizerWithWrongTemplate(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $configuration = new ActionConfiguration();
+        $configuration->configure([
+            'name' => 'custom_action',
+            'admin_name' => 'my_admin',
+            'fields' => [],
+            'path' => '/my-action',
+            'route' => 'my_action',
+            'route_parameters' => [],
+        ]);
     }
 }
