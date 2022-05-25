@@ -12,11 +12,9 @@ class DefaultFormListener
         $actionName = $event->getActionName();
         $configuration = $event->getConfiguration();
 
-
         if ($actionName === 'delete' && ($configuration['form'] ?? null) === null) {
             $configuration['form'] = DeleteType::class;
         }
-
         $event->setConfiguration($configuration);
     }
 }

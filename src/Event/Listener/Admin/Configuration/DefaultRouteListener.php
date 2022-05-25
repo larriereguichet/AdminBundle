@@ -24,8 +24,8 @@ class DefaultRouteListener
             $configuration['item_actions'][$actionName] = $this->configureDefaultRoute($actionName, $actionConfiguration);
         }
 
-        foreach ($configuration['list_actions'] ?? [] as $actionName => $actionConfiguration) {
-            $configuration['list_actions'][$actionName] = $this->configureDefaultRoute($actionName, $actionConfiguration);
+        foreach ($configuration[index_actions] ?? [] as $actionName => $actionConfiguration) {
+            $configuration[index_actions][$actionName] = $this->configureDefaultRoute($actionName, $actionConfiguration);
         }
 
         $event->setConfiguration($configuration);

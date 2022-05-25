@@ -14,7 +14,6 @@ use LAG\AdminBundle\Configuration\FilterConfiguration;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Action\ActionConfigurationException;
 use LAG\AdminBundle\Exception\Exception;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -174,16 +173,6 @@ class ActionConfiguration extends Configuration
     public function getTemplate(): string
     {
         return $this->get('template');
-    }
-
-    public function getListActions(): array
-    {
-        return $this->get('list_actions');
-    }
-
-    public function getItemActions(): array
-    {
-        return $this->get('item_actions');
     }
 
     public function getController(): string

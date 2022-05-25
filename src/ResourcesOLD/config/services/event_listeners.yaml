@@ -69,7 +69,3 @@ services:
     LAG\AdminBundle\Event\Listener\Admin\Configuration\ConfigurationListener:
         tags:
             - {name: kernel.event_listener, event: lag.admin.admin_configuration, priority: 255}
-
-    LAG\AdminBundle\Event\Listener\Admin\Configuration\DefaultLinkedActionsListener:
-        tags:
-            - {name: kernel.event_listener, event: lag.admin.admin_configuration, priority: 255}

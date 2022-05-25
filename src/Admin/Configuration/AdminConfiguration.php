@@ -49,47 +49,20 @@ class AdminConfiguration extends Configuration
             ->setNormalizer('actions', $this->getActionNormalizer())
 
             // Linked actions
-            ->setDefault('list_actions', [
+            ->setDefault('index_actions', [
                 'update' => [],
                 'delete' => [],
             ])
-            ->setAllowedTypes('list_actions', 'array')
-            ->setNormalizer('list_actions', function (Options $options, $value) {
-                foreach ($value as $actionName => $actionConfiguration) {
-                    $configuration = new ActionLinkConfiguration();
-
-                    if (!array_key_exists('admin', $actionConfiguration)) {
-                        $actionConfiguration['admin'] = $options->offsetGet('name');
-                    }
-
-                    if (!array_key_exists('action', $actionConfiguration)) {
-                        $actionConfiguration['action'] = $actionName;
-                    }
-                    $value[$actionName] = $configuration->configure($actionConfiguration)->toArray();
-                }
-
-                return $value;
+            ->setAllowedTypes('index_actions', 'array')
+            ->setNormalizer('index_actions', function (Options $options, $value) {
+                return LinkNormalizer::normalizeAdminLinks($options, $value);
             })
 
             ->setDefault('item_actions', [
                 'create' => [],
             ])
             ->setAllowedTypes('item_actions', 'array')
-            ->setNormalizer('item_actions', function (Options $options, $value) {
-                foreach ($value as $actionName => $actionConfiguration) {
-                    $configuration = new ActionLinkConfiguration();
-
-                    if (!array_key_exists('admin', $actionConfiguration)) {
-                        $actionConfiguration['admin'] = $options->offsetGet('name');
-                    }
-
-                    if (!array_key_exists('action', $actionConfiguration)) {
-                        $actionConfiguration['action'] = $actionName;
-                    }
-                    $value[$actionName] = $configuration->configure($actionConfiguration)->toArray();
-                }
-
-                return $value;
+            ->setNormalizer('item_actions', function (Options $options, $value) {return LinkNormalizer::normalizeAdminLinks($options, $value);
             })
 
             // Controller
@@ -172,9 +145,9 @@ class AdminConfiguration extends Configuration
         return $this->getActions()[$actionName];
     }
 
-    public function getListActions(): array
+    public function getIndexActions(): array
     {
-        return $this->get('list_actions');
+        return $this->get(index_actions);
     }
 
     public function getItemActions(): array
