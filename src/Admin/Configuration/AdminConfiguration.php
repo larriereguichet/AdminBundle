@@ -9,7 +9,6 @@ use JK\Configuration\Configuration;
 use LAG\AdminBundle\Action\Action;
 use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Admin\Configuration\Normalizer\LinkNormalizer;
-use LAG\AdminBundle\Application\Configuration\ActionLinkConfiguration;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -24,11 +23,22 @@ class AdminConfiguration extends Configuration
 {
     protected function configureOptions(OptionsResolver $resolver): void
     {
+        $this->configureMain($resolver);
+        $this->configureActions($resolver);
+        $this->configureRouting($resolver);
+        $this->configureData($resolver);
+        $this->configureTemplating($resolver);
+    }
+
+    protected function configureMain(OptionsResolver $resolver): void
+    {
         $resolver
             ->setRequired('entity')
             ->setAllowedTypes('entity', 'string')
+
             ->setRequired('name')
             ->setAllowedTypes('name', 'string')
+
             ->setDefault('title', null)
             ->setAllowedTypes('title', ['string', 'null'])
             ->addNormalizer('title', function (Options $options, $value) {
@@ -43,6 +53,21 @@ class AdminConfiguration extends Configuration
                 return $value;
             })
 
+            ->setDefault('group', null)
+            ->setAllowedTypes('group', ['string', 'null'])
+
+
+            ->setDefault('admin_class', Admin::class)
+            ->setAllowedTypes('admin_class', 'string')
+
+            ->setDefault('action_class', Action::class)
+            ->setAllowedTypes('action_class', 'string')
+        ;
+    }
+
+    protected function configureActions(OptionsResolver $resolver): void
+    {
+        $resolver
             ->setDefault('actions', [
                 'index' => [],
                 'create' => [],
@@ -54,41 +79,44 @@ class AdminConfiguration extends Configuration
 
             // Linked actions
             ->setDefault('index_actions', [
-                'update' => [],
-                'delete' => [],
+                'create' => [],
             ])
             ->setAllowedTypes('index_actions', 'array')
             ->setNormalizer('index_actions', function (Options $options, $value) {
                 return LinkNormalizer::normalizeAdminLinks($options, $value);
             })
-
             ->setDefault('item_actions', [
-                'create' => [],
+                'update' => [],
+                'delete' => [],
             ])
             ->setAllowedTypes('item_actions', 'array')
-            ->setNormalizer('item_actions', function (Options $options, $value) {return LinkNormalizer::normalizeAdminLinks($options, $value);
+            ->setNormalizer('item_actions', function (Options $options, $value) {
+                return LinkNormalizer::normalizeAdminLinks($options, $value);
             })
+        ;
+    }
 
-            // Controller
+    protected function configureRouting(OptionsResolver $resolver): void
+    {
+        $resolver
             ->setDefault('controller', AdminAction::class)
             ->setAllowedTypes('controller', 'string')
-
-            ->setDefault('batch', [])
-            ->setAllowedTypes('batch', 'array')
-
-            ->setDefault('admin_class', Admin::class)
-            ->setAllowedTypes('admin_class', 'string')
-            ->setDefault('action_class', Action::class)
-            ->setAllowedTypes('action_class', 'string')
 
             ->setDefault('routes_pattern', 'lag_admin.{admin}.{action}')
             ->setAllowedTypes('routes_pattern', 'string')
             ->setNormalizer('routes_pattern', $this->getRoutesPatternNormalizer())
+        ;
+    }
 
+    protected function configureData(OptionsResolver $resolver): void
+    {
+        $resolver
             ->setDefault('pager', 'pagerfanta')
             ->setAllowedValues('pager', ['pagerfanta', false])
+
             ->setDefault('max_per_page', 25)
             ->setAllowedTypes('max_per_page', 'integer')
+
             ->setDefault('page_parameter', 'page')
             ->setAllowedTypes('page_parameter', 'string')
 
@@ -100,9 +128,15 @@ class AdminConfiguration extends Configuration
 
             ->setDefault('data_provider', 'doctrine')
             ->setAllowedTypes('data_provider', 'string')
+
             ->setDefault('data_persister', 'doctrine')
             ->setAllowedTypes('data_persister', 'string')
+        ;
+    }
 
+    protected function configureTemplating(OptionsResolver $resolver): void
+    {
+        $resolver
             ->setDefault('create_template', '@LAGAdmin/crud/create.html.twig')
             ->setAllowedTypes('create_template', 'string')
             ->setDefault('update_template', '@LAGAdmin/crud/update.html.twig')
@@ -132,6 +166,11 @@ class AdminConfiguration extends Configuration
     public function getTitle(): string
     {
         return $this->getString('title');
+    }
+
+    public function getGroup(): ?string
+    {
+        return $this->get('group');
     }
 
     public function getActions(): array
@@ -167,11 +206,6 @@ class AdminConfiguration extends Configuration
     public function getController(): string
     {
         return $this->getString('controller');
-    }
-
-    public function getBatch(): array
-    {
-        return $this->get('batch');
     }
 
     public function getRoutesPattern(): string
@@ -266,7 +300,6 @@ class AdminConfiguration extends Configuration
     {
         return function (Options $options, $actions) {
             $normalizedActions = [];
-//            $addBatchAction = false;
 
             foreach ($actions as $name => $action) {
                 // action configuration is an array by default
@@ -282,17 +315,7 @@ class AdminConfiguration extends Configuration
                 $action['admin_name'] = $options->offsetGet('name');
                 $normalizedActions[$name] = $action;
 
-                // in list action, if no batch was configured or disabled, we add a batch action
-//                if ('index' == $name && (!\array_key_exists('batch', $action) || null === $action['batch'])) {
-//                    $addBatchAction = true;
-//                }
             }
-
-            // add empty default batch action
-//            if ($addBatchAction) {
-//             TODO enable mass action
-//            $normalizedActions['batch'] = [];
-//            }
 
             return $normalizedActions;
         };
