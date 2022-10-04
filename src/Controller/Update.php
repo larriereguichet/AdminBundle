@@ -2,13 +2,18 @@
 
 namespace LAG\AdminBundle\Controller;
 
-use LAG\AdminBundle\Admin\AdminInterface;
+use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Request\Context\ContextProviderInterface;
+use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
+use LAG\AdminBundle\State\DataProcessorInterface;
+use LAG\AdminBundle\State\DataProviderInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
-class Update
+class Update extends AbstractOperationController
 {
-    public function __invoke(AdminInterface $admin): Response
-    {
-
-    }
 }
