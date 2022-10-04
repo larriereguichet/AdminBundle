@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Registry;
 
-use LAG\AdminBundle\Resource\AdminResource;
+use LAG\AdminBundle\Metadata\Admin;
 
 interface ResourceRegistryInterface
 {
@@ -16,12 +16,12 @@ interface ResourceRegistryInterface
     /**
      * Get a resource from the registry. If no resource match the given name, an exception will be thrown.
      */
-    public function get(string $resourceName): AdminResource;
+    public function get(string $resourceName): Admin;
 
     /**
      * Return an array of the registry resources.
      *
-     * @return AdminResource[]
+     * @return Admin[]
      */
     public function all(): array;
 
