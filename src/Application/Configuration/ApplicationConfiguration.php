@@ -19,7 +19,7 @@ use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Field\LinkField;
 use LAG\AdminBundle\Field\MappedField;
 use LAG\AdminBundle\Field\StringField;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Operation;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -55,11 +55,11 @@ class ApplicationConfiguration extends ServiceConfiguration
             ->setAllowedTypes('description', 'string')
 
             // Admins
-            ->setRequired('resources_paths')
-            ->setAllowedTypes('resources_paths', 'array')
+            ->setRequired('resource_paths')
+            ->setAllowedTypes('resource_paths', 'array')
             ->setDefault('admin_class', Admin::class)
             ->setAllowedTypes('admin_class', 'string')
-            ->setDefault('action_class', Action::class)
+            ->setDefault('action_class', Operation::class)
             ->setAllowedTypes('action_class', 'string')
 
             // Templates

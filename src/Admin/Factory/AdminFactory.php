@@ -4,33 +4,43 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Admin\Factory;
 
-use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Event\AdminEvents;
-use LAG\AdminBundle\Event\Events\AdminEvent;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Event\AdminEvent;
+use LAG\AdminBundle\Exception\Validation\InvalidAdminException;
+use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Validation\Constraint\AdminValid;
+use Symfony\Component\Validator\Constraints\Valid;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AdminFactory implements AdminFactoryInterface
 {
     public function __construct(
-        private ResourceRegistryInterface $registry,
         private EventDispatcherInterface $eventDispatcher,
-        private AdminConfigurationFactoryInterface $configurationFactory
+        private ValidatorInterface $validator,
+        private OperationFactoryInterface $operationFactory,
     ) {
     }
 
-    public function create(string $name, array $options = []): AdminInterface
+    public function create(Admin $resource): Admin
     {
-        $resource = $this->registry->get($name);
-        $configuration = $this
-            ->configurationFactory
-            ->create($name, array_merge($resource->getConfiguration(), $options))
-        ;
-        $adminClass = $configuration->getAdminClass();
-        $admin = new $adminClass($name, $configuration, $this->eventDispatcher);
+        $event = new AdminEvent($resource);
+        $this->eventDispatcher->dispatch($event, AdminEvent::ADMIN_CREATE);
+        $resource = $event->getAdmin();
+        $errors = $this->validator->validate($resource, [new AdminValid(), new Valid()]);
 
-        $this->eventDispatcher->dispatch(new AdminEvent($admin), AdminEvents::ADMIN_CREATE);
+        if ($errors->count() > 0) {
+            throw new InvalidAdminException($resource->getName(), $errors);
+        }
+        $operations = [];
 
-        return $admin;
+        foreach ($resource->getOperations() as $operation) {
+            $operations[] = $this->operationFactory->create($operation);
+        }
+        $resource = $resource->withOperations($operations);
+
+        $event = new AdminEvent($resource);
+        $this->eventDispatcher->dispatch($event, AdminEvent::ADMIN_CREATED);
+
+        return $event->getAdmin();
     }
 }

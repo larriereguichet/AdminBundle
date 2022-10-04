@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Admin;
 
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Operation;
 
+/** @deprecated  */
 interface AdminInterface
 {
-    public function setCurrentAction(string $actionName): void;
-
-    public function getCurrentAction(): Action;
+//    public function setCurrentAction(string $actionName): void;
+//
+//    public function getCurrentAction(): Action;
 
 //    /**
 //     * Do not load entities on handleRequest (for create method for example).
