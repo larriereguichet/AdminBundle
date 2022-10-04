@@ -10,7 +10,7 @@
 } %}
 
 
-{% set class = class|default(classMap[options.action]|default('')) %}
+{% set class = class|default(classMap[action.operationName]|default('')) %}
 {% set icon = icon|default(iconMap[options.action]|default('')) %}
 {% set text = text|default(options.text)|default('lag_admin.actions.' ~ options.action) %}
 

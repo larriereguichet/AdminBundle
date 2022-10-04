@@ -1,0 +1,24 @@
+<th class="text-dark">
+    {% if header.sortable %}
+        {% set order = 'asc' %}
+
+        {% if app.request.query.get('order') == 'asc' %}
+            {% set order = 'desc' %}
+        {% endif %}
+
+        <a href="?sort={{ header.name }}&order={{ order }}"
+           class="text-dark">
+            {{ header.label|trans }}
+
+            {% if app.request.query.get('sort') == header.name %}
+                {% if order == 'asc' %}
+                    <i class="fa fa-caret-down sort-icon sort-asc"></i>
+                {% else %}
+                    <i class="fa fa-caret-up sort-icon sort-desc"></i>
+                {% endif %}
+            {% endif %}
+        </a>
+    {% else %}
+        {{ header.label|trans }}
+    {% endif %}
+</th>

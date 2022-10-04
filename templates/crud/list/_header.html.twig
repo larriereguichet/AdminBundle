@@ -1,30 +1,24 @@
 {% use '@LAGAdmin/fields/field-base.html.twig' %}
 
-{% set options = field.options %}
-{% set attr = options.header_attr %}
-{% set attr = attr | merge({class: (attr.class | default('')) ~ ' text-dark'})  %}
+{% if header.sortable %}
+    {% set order = 'asc' %}
 
-<th {{ block('attributes') }}>
-    {% if field.options.sortable %}
-        {% set order = 'asc' %}
-
-        {% if app.request.get('order') == 'asc' %}
-            {% set order = 'desc' %}
-        {% endif %}
-
-        <a href="?sort={{ field.name }}&order={{ order }}"
-           class="text-dark">
-            {{ admin_field_header(field) }}
-
-            {% if app.request.get('sort') == field.name %}
-                {% if order == 'asc' %}
-                    <i class="fa fa-caret-down sort-icon sort-asc"></i>
-                {% else %}
-                    <i class="fa fa-caret-up sort-icon sort-desc"></i>
-                {% endif %}
-            {% endif %}
-        </a>
-    {% else %}
-        {{ admin_field_header(field) }}
+    {% if app.request.get('order') == 'asc' %}
+        {% set order = 'desc' %}
     {% endif %}
-</th>
+
+    <a href="?sort={{ header.name }}&order={{ order }}"
+       class="text-dark">
+        {{ header.label|trans }}
+
+        {% if app.request.get('sort') == header.name %}
+            {% if order == 'asc' %}
+                <i class="fa fa-caret-down sort-icon sort-asc"></i>
+            {% else %}
+                <i class="fa fa-caret-up sort-icon sort-desc"></i>
+            {% endif %}
+        {% endif %}
+    </a>
+{% else %}
+    {{ header.label|trans }}
+{% endif %}
