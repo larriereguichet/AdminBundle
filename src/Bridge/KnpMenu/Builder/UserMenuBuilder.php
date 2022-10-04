@@ -13,16 +13,14 @@ class UserMenuBuilder
 
     public function __construct(
         private FactoryInterface $factory,
-        private TranslationHelperInterface $translationHelper,
         private EventDispatcherInterface $eventDispatcher,
-    )
-    {
+    ) {
     }
 
     public function createMenu(array $options = []): ItemInterface
     {
         $menu = $this->factory->createItem('root');
-        $menu->addChild($this->translationHelper->getTranslationKey('logout'), [
+        $menu->addChild('lag_admin.security.logout', [
             'route' => 'lag_admin.logout',
             'extras' => ['icon' => 'sign-out-alt'],
         ]);
