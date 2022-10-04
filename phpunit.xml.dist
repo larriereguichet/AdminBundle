@@ -4,10 +4,6 @@
          bootstrap="tests/bootstrap.php"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
   <coverage>
-    <include>
-      <directory>src/Resource/Locator</directory>
-    </include>
-
     <report>
       <clover outputFile="var/phpunit/logs/clover.xml"/>
       <html outputDirectory="var/phpunit/coverage" lowUpperBound="35" highLowerBound="70"/>
