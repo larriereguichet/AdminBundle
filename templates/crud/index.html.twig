@@ -1,0 +1,42 @@
+{% extends '@LAGAdmin/base.html.twig' %}
+
+{% block page_title %}{{ parent() }} - {{ resource.title|trans }} - {{ operation.title|trans }}{% endblock %}
+
+{% block title %}{{ resource.title|title }} - {{ operation.title|title }}{% endblock %}
+
+{% block content %}
+    <div class="admin-index admin-{{ resource.name }}">
+        {% block filter_form %}
+            {% if form %}
+                {% include '@LAGAdmin/crud/list/_filters.html.twig' with {form: form} %}
+            {% endif %}
+        {% endblock %}
+
+        {% if operation.listActions|length > 0 %}
+        <div class="row justify-content-end mb-2">
+            <div class="col-3 text-end">
+                {% for action in operation.listActions %}
+                    {{ lag_admin_action(action) }}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card">
+            {% block grid %}
+                {{ lag_admin_grid(grid, operation) }}
+            {% endblock %}
+        </div>
+
+        {% block pagination %}
+            <div class="admin-pagination mt-2">
+                {% if data|length > 0 and operation.pagination %}
+                    {{ pagerfanta(data, 'twitter_bootstrap5', {page: data.currentPage}) }}
+                {% endif %}
+            </div>
+        {% endblock %}
+
+        {% block bottom_extra_content %}{% endblock %}
+    </div>
+{% endblock %}
+

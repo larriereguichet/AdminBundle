@@ -1,0 +1,55 @@
+{% block table %}
+    <table class="admin-table table table-responsive mb-0">
+        {% block table_head %}
+            <thead>
+            <tr>
+                {% for header in grid.headers %}
+                    <th class="text-dark">
+                        {% include '@LAGAdmin/crud/list/_header.html.twig' with {'header': header} %}
+                    </th>
+                {% endfor %}
+                <th>{# Empty columns labels for actions buttons #}</th>
+            </tr>
+            </thead>
+        {% endblock %}
+
+        {% block table_body %}
+            {% if grid.rows|length > 0 %}
+                <tbody>
+                {% for row in grid.rows %}
+                    <tr>
+                        {% for cell in row.cells %}
+                            <td>
+                                {{ lag_admin_grid_cell(cell) }}
+                            </td>
+                        {% endfor %}
+                        <td>
+                            <div class="btn-group"
+                                 role="group"
+                                 aria-label="{{ 'lag_admin.list.available_actions_for_item'|trans }}">
+                                {% for action in operation.itemActions %}
+                                    {{ lag_admin_action(action, row.data) }}
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            {% else %}
+
+            {% endif %}
+        {% endblock %}
+
+        {% block table_footer %}
+            {% if grid.empty %}
+                <tfoot>
+                <tr>
+                    <td colspan="{{ grid.headers|length + 1 }}">
+                        {{ 'lag_admin.index.no_record'|trans }}
+                    </td>
+                </tr>
+                </tfoot>
+            {% endif %}
+        {% endblock %}
+    </table>
+{% endblock %}
