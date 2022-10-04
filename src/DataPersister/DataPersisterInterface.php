@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\DataPersister;
 
 use LAG\AdminBundle\Exception\Exception;
 
+/** @deprecated  */
 interface DataPersisterInterface
 {
     /**
