@@ -2,11 +2,10 @@
 
 namespace LAG\AdminBundle\Grid\Factory;
 
-use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Grid\Grid;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 
 interface GridFactoryInterface
 {
-    public function create(mixed $data, Admin $admin, Action $action): Grid;
+    public function create(CollectionOperationInterface $operation, iterable $data): Grid;
 }

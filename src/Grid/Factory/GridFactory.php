@@ -2,42 +2,52 @@
 
 namespace LAG\AdminBundle\Grid\Factory;
 
-use LAG\AdminBundle\Admin\Admin;
-use LAG\AdminBundle\Event\GridFieldEvent;
+use LAG\AdminBundle\Event\GridEvent;
 use LAG\AdminBundle\Grid\Grid;
 use LAG\AdminBundle\Grid\Header;
 use LAG\AdminBundle\Grid\Row;
-use LAG\AdminBundle\Metadata\Action;
-use Pagerfanta\Pagerfanta;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use function Symfony\Component\String\u;
 
 class GridFactory implements GridFactoryInterface
 {
     public function __construct(
+        private CellFactoryInterface $cellFactory,
         private EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
-    public function create(mixed $data, Admin $admin, Action $action): Grid
+    public function create(CollectionOperationInterface $operation, iterable $data): Grid
     {
         $headers = [];
         $rows = [];
-        $gridName = $admin->getName().'_'.$action->getName();
 
-        foreach ($action->getFields() as $field) {
+        foreach ($operation->getProperties() as $property) {
             $headers[] = new Header(
-                $field->getLabel(),
-                $field->isSortable(),
+                $property->getName(),
+                $property->getLabel() ?? u($property->getName())->title()->toString(),
+                $property->isSortable(),
             );
         }
 
-        if ($data instanceof Pagerfanta) {
-            foreach ($data->getCurrentPageResults() as $index => $rowData) {
-                $rows[] = new Row($index, $rowData);
-            }
-        }
-        $this->eventDispatcher->dispatch(new GridFieldEvent($gridName, $rows));
+        foreach ($data as $index => $item) {
+            $fields = [];
 
-        return new Grid($gridName, $headers, $rows);
+            foreach ($operation->getProperties() as $property) {
+                $fields[$property->getName()] = $this->cellFactory->create($property, $item);
+            }
+            $rows[] = new Row($index, $fields, $item);
+        }
+        $grid = new Grid(
+            $operation->getResourceName().'_'.$operation->getName(),
+            $operation->getGridTemplate(),
+            $headers,
+            $rows
+        );
+        $this->eventDispatcher->dispatch(new GridEvent($grid), GridEvent::GRID_CREATED);
+
+        return $grid;
     }
 }
