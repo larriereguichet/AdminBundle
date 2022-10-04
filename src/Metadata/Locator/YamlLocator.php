@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Resource\Locator;
+namespace LAG\AdminBundle\Metadata\Locator;
 
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;
@@ -10,9 +10,9 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
-class YamlLocator implements ResourceLocatorInterface
+class YamlLocator implements MetadataLocatorInterface
 {
-    public function locate(string $resourceDirectory): iterable
+    public function locateCollection(string $resourceDirectory): iterable
     {
         $fileSystem = new Filesystem();
 
@@ -38,6 +38,7 @@ class YamlLocator implements ResourceLocatorInterface
                     ->mapper()
                     ->map(Admin::class, Source::array($configuration ?? []))
                 ;
+                $resource = $resource->withName($name);
                 $resources[] = $resource;
             }
         }

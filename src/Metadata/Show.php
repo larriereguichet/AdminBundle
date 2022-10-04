@@ -1,8 +1,7 @@
 <?php
 
-namespace LAG\AdminBundle\Action;
+namespace LAG\AdminBundle\Metadata;
 
-class Show
+class Show extends Operation
 {
-
 }

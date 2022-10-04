@@ -1,9 +1,7 @@
 <?php
 
-namespace LAG\AdminBundle\Action;
+namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Metadata\Action;
-
-class Update extends Action
+class Update extends Operation
 {
 }

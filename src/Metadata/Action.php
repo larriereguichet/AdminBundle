@@ -1,35 +1,108 @@
 <?php
 
-declare(strict_types=1);
-
 namespace LAG\AdminBundle\Metadata;
-
-use LAG\AdminBundle\Bridge\Doctrine\ORM\DataProcessor\ORMDataProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\DataProvider\ORMDataProvider;
 
 class Action
 {
     public function __construct(
-        public readonly ?string $name = null,
-        public readonly ?string $title = null,
-        public readonly ?string $description = null,
-        public readonly ?string $icon = null,
-        public readonly ?string $template = null,
-        public readonly ?array $permissions = null,
-        public readonly ?string $controller = null,
-        public readonly ?string $route = null,
-        public readonly ?array $routeParameters = null,
-        public readonly ?string $path = null,
-        public readonly ?string $targetRoute = null,
-        public readonly ?array $targetRouteParameters = null,
-        public readonly ?array $fields = null,
-        public readonly ?string $formType = null,
-        public readonly array $formOptions = [],
-        public readonly array $collectionActions = [],
-        public readonly array $itemActions = [],
-        public readonly string $processor = ORMDataProcessor::class,
-        public readonly string $provider = ORMDataProvider::class,
+        private ?string $routeName = null,
+        private array $routeParameters = [],
+        private ?string $resourceName = null,
+        private ?string $operationName = null,
+        private ?string $template = '@LAGAdmin/grid/actions/button.html.twig',
+        private ?string $label = null,
+        private ?string $type = null,
     ) {
     }
 
+    public function getResourceName(): ?string
+    {
+        return $this->resourceName;
+    }
+
+    public function withResourceName(?string $resourceName): self
+    {
+        $self = clone $this;
+        $self->resourceName = $resourceName;
+
+        return $self;
+    }
+
+    public function getRouteName(): ?string
+    {
+        return $this->routeName;
+    }
+
+    public function withRouteName(?string $routeName): self
+    {
+        $self = clone $this;
+        $self->routeName = $routeName;
+
+        return $self;
+    }
+
+    public function getRouteParameters(): array
+    {
+        return $this->routeParameters;
+    }
+
+    public function withRouteParameters(array $routeParameters): self
+    {
+        $self = clone $this;
+        $self->routeParameters = $routeParameters;
+
+        return $self;
+    }
+
+    public function getOperationName(): ?string
+    {
+        return $this->operationName;
+    }
+
+    public function withOperationName(?string $operationName): self
+    {
+        $self = clone $this;
+        $self->operationName = $operationName;
+
+        return $self;
+    }
+
+    public function getTemplate(): ?string
+    {
+        return $this->template;
+    }
+
+    public function withTemplate(?string $template): self
+    {
+        $self = clone $this;
+        $self->template = $template;
+
+        return $self;
+    }
+
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
+
+    public function withLabel(?string $label): self
+    {
+        $self = clone $this;
+        $self->label = $label;
+
+        return $self;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function withType(?string $type): self
+    {
+        $self = clone $this;
+        $self->type = $type;
+
+        return $self;
+    }
 }

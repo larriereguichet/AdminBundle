@@ -2,6 +2,6 @@
 
 namespace LAG\AdminBundle\Metadata;
 
-class Delete extends Action
+class Delete extends Operation
 {
 }
