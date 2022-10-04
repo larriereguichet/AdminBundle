@@ -1,4 +1,0 @@
-services:
-    LAG\AdminBundle\Admin\Configuration\ApplicationConfiguration:
-        arguments:
-            $configuration: '%lag_admin.application.configuration%'

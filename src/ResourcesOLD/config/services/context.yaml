@@ -1,3 +1,0 @@
-services:
-    LAG\AdminBundle\Admin\Context\AdminContextInterface: '@LAG\AdminBundle\Admin\Context\AdminContext'
-    LAG\AdminBundle\Admin\Context\AdminContext: ~
