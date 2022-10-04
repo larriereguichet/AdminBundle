@@ -26,6 +26,7 @@ class AdminDataCollector extends DataCollector
 
     public function collect(Request $request, Response $response, Throwable $exception = null)
     {
+        return;
         $data = [
             'admins' => [],
             'application' => [],

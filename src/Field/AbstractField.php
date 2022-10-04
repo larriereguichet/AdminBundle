@@ -132,12 +132,17 @@ abstract class AbstractField implements Field
         return $this->name;
     }
 
+    public function getLabel(): string
+    {
+        return $this->options['label'];
+    }
+
     public function getOptions(): array
     {
         return $this->options;
     }
 
-    public function getOption(string $name)
+    public function getOption(string $name): mixed
     {
         if (!\array_key_exists($name, $this->options)) {
             throw new Exception('Invalid option "'.$name.'" for field "'.$this->name.'"');

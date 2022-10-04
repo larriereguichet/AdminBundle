@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Field;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class StringField extends AbstractField implements ApplicationAwareInterface
+class StringField extends AbstractField
 {
     use ApplicationAware;
 

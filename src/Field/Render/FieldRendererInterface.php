@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\Field\Render;
 
 use LAG\AdminBundle\Field\View\View;
 
+/** @deprecated  */
 interface FieldRendererInterface
 {
     /**

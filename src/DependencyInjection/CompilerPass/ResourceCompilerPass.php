@@ -11,6 +11,6 @@ class ResourceCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $registry = $container->getDefinition(ResourceRegistry::class);
-        $paths = $container->getParameter('lag_admin.resources.paths');
+        $paths = $container->getParameter('lag_admin.resource.paths');
     }
 }
