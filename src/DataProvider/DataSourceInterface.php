@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\DataProvider;
 
 use LAG\AdminBundle\Filter\FilterInterface;
 
+/** @deprecated  */
 interface DataSourceInterface
 {
     /**
