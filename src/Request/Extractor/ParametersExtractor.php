@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ParametersExtractor implements ParametersExtractorInterface
 {
-    public function getAdminName(Request $request): string
+    public function getResourceName(Request $request): string
     {
         if (!$this->supports($request)) {
             throw new Exception('No admin resource was found in the request. The route is wrongly configured');
@@ -19,7 +19,7 @@ class ParametersExtractor implements ParametersExtractorInterface
         return $request->get('_route_params')[LAGAdminBundle::REQUEST_PARAMETER_ADMIN];
     }
 
-    public function getActionName(Request $request): string
+    public function getOperationName(Request $request): string
     {
         if (!$this->supports($request)) {
             throw new Exception('No action resource was found in the request. The route is wrongly configured');
