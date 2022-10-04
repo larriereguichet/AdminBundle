@@ -1,23 +1,24 @@
 <?php
 
-namespace LAG\AdminBundle\Resource\Locator;
+namespace LAG\AdminBundle\Metadata\Locator;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\Admin;
 
-class CompositeLocator implements ResourceLocatorInterface
+class CompositeLocator implements MetadataLocatorInterface
 {
     public function __construct(
-        private readonly iterable $locators,
+        private iterable $locators,
     ) {
     }
 
-    public function locate(string $resourceDirectory): array
+    public function locateCollection(string $resourceDirectory): array
     {
         $resources = [];
 
+        /** @var MetadataLocatorInterface $locator */
         foreach ($this->locators as $locator) {
-            foreach ($locator->locate($resourceDirectory) as $resource) {
+            foreach ($locator->locateCollection($resourceDirectory) as $resource) {
                 if (!$resource instanceof Admin) {
                     throw new Exception(sprintf(
                         'The locator "%s" returns an instance of "%s", expected an instance of "%s"',
