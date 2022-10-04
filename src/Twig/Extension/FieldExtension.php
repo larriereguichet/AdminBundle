@@ -34,6 +34,8 @@ class FieldExtension extends AbstractExtension
 
     /**
      * Return the field header label.
+     *
+     * @deprecated
      */
     public function renderFieldHeader(FieldView $field): string
     {
