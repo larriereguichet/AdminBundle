@@ -17,4 +17,4 @@ lag_admin.homepage:
 
 lag_admin:
     resource: .
-    type: extra
+    type: lag_admin

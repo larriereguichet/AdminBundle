@@ -1,6 +1,47 @@
 services:
-    _defaults:
-        autowire: true
+    lag_admin.action.renderer: '@LAG\AdminBundle\Action\Render\ActionRenderer'
+    LAG\AdminBundle\Action\Render\ActionRendererInterface: '@LAG\AdminBundle\Action\Render\ActionRenderer'
+    LAG\AdminBundle\Action\Render\ActionRenderer:
+        arguments:
+            $urlGenerator: '@lag_admin.routing.url_generator'
+            $environment: '@twig'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # Factories
     LAG\AdminBundle\View\Factory\ViewFactoryInterface: '@LAG\AdminBundle\View\Factory\ViewFactory'

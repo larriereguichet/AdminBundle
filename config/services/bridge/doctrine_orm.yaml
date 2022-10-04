@@ -1,0 +1,85 @@
+services:
+    # Data providers
+    LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProvider:
+        arguments:
+            $registry: '@doctrine'
+        tags:
+            - { name: lag_admin.data_provider, identifier: doctrine }
+
+    # Data providers
+    LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProcessor:
+        arguments:
+            $registry: '@doctrine'
+        tags:
+            - { name: lag_admin.data_processor, identifier: doctrine }
+
+    # Event listeners
+    LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\ResourceCreateListener:
+        arguments:
+            $propertyProvider: '@lag_admin.orm.property_factory'
+        tags:
+            - { name: kernel.event_listener, event: lag_admin.admin.create, priority: 200 }
+
+    # Property provider
+    lag_admin.orm.property_factory: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactory'
+    LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactory'
+    LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactory:
+        arguments:
+            $metadataHelper: '@lag_admin.orm.metadata_helper'
+
+    lag_admin.orm.metadata_helper: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper'
+    LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper'
+    LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#    # Data handlers
+#
+#    LAG\AdminBundle\Bridge\Doctrine\DataHandler\ResultsHandler:
+#        tags:
+#            - { name: lag.admin.data_handler, priority: -255 }
+#
+#    LAG\AdminBundle\Bridge\Doctrine\ORMDataPersister:
+#        tags:
+#            - { name: lag.admin.data_persister, identifier: doctrine }
+#
+#
+#
+#    # Event listeners
+#    LAG\AdminBundle\Bridge\Doctrine\Event\Listener\CreateFieldDefinitionListener:
+#        tags:
+#            - { name: kernel.event_listener, event: lag.admin.field_definition_create, priority: 0 }
+#
+#    LAG\AdminBundle\Bridge\Doctrine\Event\Listener\FilterListener:
+#        tags:
+#            - { name: kernel.event_listener, event: lag.admin.data_filter, priority: 255 }
+#
+#    LAG\AdminBundle\Bridge\Doctrine\Event\Listener\OrderListener:
+#        tags:
+#            - { name: kernel.event_listener, event: lag.admin.data_order, priority: 254 }

@@ -4,6 +4,13 @@ services:
             $mediaEnabled: '%lag_admin.media_bundle_enabled%'
             $applicationConfiguration: '@lag_admin.application'
             $security: '@lag_admin.security.helper'
+            $actionRenderer: '@lag_admin.action.renderer'
+        tags: ['twig.extension']
+
+    LAG\AdminBundle\Twig\Extension\GridExtension:
+        arguments:
+            $gridRenderer: '@lag_admin.grid.renderer'
+            $cellRenderer: '@lag_admin.grid.cell_renderer'
         tags: ['twig.extension']
 
     LAG\AdminBundle\Twig\Extension\FieldExtension:
@@ -30,7 +37,6 @@ services:
 
     LAG\AdminBundle\Twig\Extension\TranslationExtension:
         arguments:
-            $translationHelper: '@LAG\AdminBundle\Translation\Helper\TranslationHelper'
             $translator: '@translator'
             $configuration: '@lag_admin.application'
         tags: ['twig.extension']
