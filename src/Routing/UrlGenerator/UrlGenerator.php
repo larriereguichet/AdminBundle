@@ -5,30 +5,58 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Operation;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Parameter\ParametersMapper;
-use Symfony\Component\PropertyAccess\PropertyAccess;
+use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\String\Inflector\EnglishInflector;
+use function Symfony\Component\String\u;
 
 class UrlGenerator implements UrlGeneratorInterface
 {
     public function __construct(
         private RouterInterface $router,
-        private ApplicationConfiguration $applicationConfiguration,
+        private ResourceRegistryInterface $resourceRegistry,
     ) {
     }
 
-    public function generate(
-        string $adminName,
-        string $actionName,
-        array $routeParameters = [],
-        object $data = null
+    public function generatePath(
+        Admin $resource,
+        OperationInterface $operation,
     ): string {
-        $routeName = $this->applicationConfiguration->getRouteName($adminName, $actionName);
+        $inflector = new EnglishInflector();
+        $path = u('/')
+            ->append($inflector->pluralize($resource->getName())[0])
+        ;
 
-        return $this->generateFromRouteName($routeName, $routeParameters, $data);
+        if ($operation instanceof CollectionOperationInterface) {
+            return $path->toString();
+        }
+
+        if (!$operation instanceof Create) {
+            foreach ($resource->getIdentifiers() as $identifier) {
+                $path = $path
+                    ->append('/{')
+                    ->append($identifier)
+                    ->append('}')
+                ;
+            }
+        }
+
+        return $path
+            ->append('/')
+            ->append($operation->getName())
+            ->lower()
+            ->toString()
+        ;
     }
 
-    public function generateFromRouteName(string $routeName, array $routeParameters = [], object $data = null): string
+    public function generateFromRouteName(string $routeName, array $routeParameters = [], mixed $data = null): string
     {
         $mappedRouteParameters = $routeParameters;
 
@@ -38,5 +66,17 @@ class UrlGenerator implements UrlGeneratorInterface
         }
 
         return $this->router->generate($routeName, $mappedRouteParameters);
+    }
+
+    public function generateFromOperationName(string $resourceName, string $operationName, mixed $data = null): string
+    {
+        $resource = $this->resourceRegistry->get($resourceName);
+        $operation = $resource->getOperation($operationName);
+
+        return $this->generateFromRouteName(
+            $operation->getRoute(),
+            array_keys($operation->getRouteParameters()),
+            $data,
+        );
     }
 }

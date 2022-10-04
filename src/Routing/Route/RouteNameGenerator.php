@@ -2,16 +2,19 @@
 
 namespace LAG\AdminBundle\Routing\Route;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use function Symfony\Component\String\u;
 
 class RouteNameGenerator implements RouteNameGeneratorInterface
 {
-    public function __construct(private ApplicationConfiguration $applicationConfiguration)
+    public function generateRouteName(Admin $admin, OperationInterface $operation): string
     {
-    }
-
-    public function generateRouteName(string $adminName, string $actionName): string
-    {
-        return $this->applicationConfiguration->getRouteName($adminName, $actionName);
+        return u($admin->getRoutePattern())
+            ->replace('{resource}', $admin->getName())
+            ->replace('{operation}', $operation->getName())
+            ->lower()
+            ->toString()
+        ;
     }
 }
