@@ -6,7 +6,7 @@ use JK\Configuration\Exception\InvalidConfigurationException;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Tests\TestCase;
 
 class AdminConfigurationTest extends TestCase
@@ -96,7 +96,7 @@ class AdminConfigurationTest extends TestCase
         $this->assertEquals(AdminAction::class, $configuration->getController());
 
         $this->assertEquals('MyAdminClass', $configuration->getAdminClass());
-        $this->assertEquals(Action::class, $configuration->getActionClass());
+        $this->assertEquals(Operation::class, $configuration->getActionClass());
 
         $this->assertEquals('lag_admin.{admin}.{action}', $configuration->getRoutesPattern());
         $this->assertEquals('pagerfanta', $configuration->getPager());

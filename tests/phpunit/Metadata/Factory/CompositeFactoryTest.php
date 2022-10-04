@@ -1,30 +1,30 @@
 <?php
 
-namespace LAG\AdminBundle\Tests\Resource\Locator;
+namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\Admin;
-use LAG\AdminBundle\Resource\Locator\CompositeLocator;
-use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
+use LAG\AdminBundle\Metadata\Locator\CompositeLocator;
+use LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface;
 use LAG\AdminBundle\Tests\TestCase;
 
-class CompositeLocatorTest extends TestCase
+class CompositeFactoryTest extends TestCase
 {
-    public function testLocate(): void
+    public function testCreateResources(): void
     {
-        $locator1 = $this->createMock(ResourceLocatorInterface::class);
+        $locator1 = $this->createMock(MetadataLocatorInterface::class);
         $locator1
             ->expects($this->once())
-            ->method('locate')
+            ->method('locateCollection')
             ->with('/a/directory')
             ->willReturn([
                 new Admin('an_admin'),
             ])
         ;
-        $locator2 = $this->createMock(ResourceLocatorInterface::class);
+        $locator2 = $this->createMock(MetadataLocatorInterface::class);
         $locator2
             ->expects($this->once())
-            ->method('locate')
+            ->method('locateCollection')
             ->with('/a/directory')
             ->willReturn([
                 new Admin('an_other_admin'),
@@ -35,21 +35,21 @@ class CompositeLocatorTest extends TestCase
         $this->assertEquals([
             new Admin('an_admin'),
             new Admin('an_other_admin'),
-        ], $compositeLocator->locate('/a/directory'));
+        ], $compositeLocator->locateCollection('/a/directory'));
     }
 
     public function testLocateWithNoLocators(): void
     {
         $compositeLocator = $this->createLocator([]);
-        $this->assertEquals([], $compositeLocator->locate('/a/directory'));
+        $this->assertEquals([], $compositeLocator->locateCollection('/a/directory'));
     }
 
     public function testWithWrongLocator(): void
     {
-        $wrongLocator = $this->createMock(ResourceLocatorInterface::class);
+        $wrongLocator = $this->createMock(MetadataLocatorInterface::class);
         $wrongLocator
             ->expects($this->once())
-            ->method('locate')
+            ->method('locateCollection')
             ->with('/a/directory')
             ->willReturn([
                 new \stdClass(),
@@ -58,11 +58,11 @@ class CompositeLocatorTest extends TestCase
 
         $this->expectException(Exception::class);
         $compositeLocator = $this->createLocator([$wrongLocator]);
-        $compositeLocator->locate('/a/directory');
+        $compositeLocator->locateCollection('/a/directory');
     }
 
     public function createLocator(array $locators): CompositeLocator
     {
-        return new CompositeLocator($locators);
+        return new \LAG\AdminBundle\Metadata\Locator\CompositeLocator($locators);
     }
 }

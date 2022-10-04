@@ -7,7 +7,7 @@ use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Tests\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -28,7 +28,7 @@ class ActionConfigurationTest extends TestCase
             'route' => '/my_admin/index',
             'title' => 'Index',
             'icon' => null,
-            'action_class' => 'LAG\AdminBundle\Metadata\Action',
+            'action_class' => 'LAG\AdminBundle\Metadata\Operation',
             'template' => '@LAGAdmin/crud/list.html.twig',
             'permissions' => [
                 'ROLE_ADMIN',
@@ -70,7 +70,7 @@ class ActionConfigurationTest extends TestCase
             'admin_name' => 'my_admin',
             'title' => 'MyAction',
             'icon' => null,
-            'action_class' => Action::class,
+            'action_class' => Operation::class,
             'controller' => AdminAction::class,
             'path' => '/my-action',
             'route' => 'my_action',
@@ -110,7 +110,7 @@ class ActionConfigurationTest extends TestCase
         $this->assertEquals('my_admin', $configuration->getAdminName());
         $this->assertEquals('MyAction', $configuration->getTitle());
         $this->assertEquals('', $configuration->getIcon());
-        $this->assertEquals(Action::class, $configuration->getActionClass());
+        $this->assertEquals(Operation::class, $configuration->getActionClass());
 
         $this->assertEquals(AdminAction::class, $configuration->getController());
         $this->assertEquals('/my-action', $configuration->getPath());

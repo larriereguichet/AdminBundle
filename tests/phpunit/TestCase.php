@@ -9,7 +9,7 @@ use LAG\AdminBundle\Admin\AdminInterface;
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Controller\AdminAction;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Operation;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
@@ -137,7 +137,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             ],
             'controller' => AdminAction::class,
             'admin_class' => Admin::class,
-            'action_class' => Action::class,
+            'action_class' => Operation::class,
             'routes_pattern' => 'lag_admin.{admin}.{action}',
             'pager' => 'pagerfanta',
             'max_per_page' => 25,

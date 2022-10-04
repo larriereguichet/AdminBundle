@@ -1,18 +1,18 @@
 <?php
 
-namespace LAG\AdminBundle\Tests\Resource\Locator;
+namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\Admin;
-use LAG\AdminBundle\Resource\Locator\YamlLocator;
+use LAG\AdminBundle\Metadata\Locator\YamlLocator;
 use LAG\AdminBundle\Tests\TestCase;
 
-class YamlLocatorTest extends TestCase
+class YamlFactoryTest extends TestCase
 {
-    public function testLocate(): void
+    public function testCreateResources(): void
     {
         $locator = $this->createLocator();
-        $resources = $locator->locate(__DIR__.'/../../../resources/admin');
+        $resources = $locator->locateCollection(__DIR__.'/../../../resources/admin');
 
         foreach ($resources as $resource) {
             $this->assertInstanceOf(Admin::class, $resource);
@@ -24,7 +24,7 @@ class YamlLocatorTest extends TestCase
     {
         $this->expectException(Exception::class);
         $locator = $this->createLocator();
-        $locator->locate('/wrong/path');
+        $locator->locateCollection('/wrong/path');
     }
 
     public function testService(): void
@@ -33,8 +33,8 @@ class YamlLocatorTest extends TestCase
         $this->assertServiceHasTag(YamlLocator::class, 'lag_admin.resource.locator');
     }
 
-    private function createLocator(): YamlLocator
+    private function createLocator(): \LAG\AdminBundle\Metadata\Locator\YamlLocator
     {
-        return new YamlLocator();
+        return new \LAG\AdminBundle\Metadata\Locator\YamlLocator();
     }    
 }

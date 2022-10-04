@@ -9,7 +9,7 @@ use LAG\AdminBundle\Action\Factory\ActionFactoryInterface;
 use LAG\AdminBundle\Event\AdminEvents;
 use LAG\AdminBundle\Event\Events\ActionEvent;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\TestCase;
@@ -63,7 +63,7 @@ class ActionFactoryTest extends TestCase
                 'my_admin', 'list', [
                 'title' => 'My title',
                 'admin_name' => 'my_admin',
-                'action_class' => Action::class,
+                'action_class' => Operation::class,
             ])
             ->willReturn($actionConfiguration)
         ;
@@ -71,7 +71,7 @@ class ActionFactoryTest extends TestCase
         $actionConfiguration
             ->expects($this->once())
             ->method('getActionClass')
-            ->willReturn(Action::class)
+            ->willReturn(Operation::class)
         ;
 
         $this
@@ -86,7 +86,7 @@ class ActionFactoryTest extends TestCase
 
         $action = $this->actionFactory->create('list', [
             'admin_name' => 'my_admin',
-            'action_class' => Action::class,
+            'action_class' => Operation::class,
         ]);
         $this->assertEquals($actionConfiguration, $action->getConfiguration());
         $this->assertEquals('list', $action->getName());

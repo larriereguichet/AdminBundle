@@ -21,7 +21,7 @@ class AdminActionTest extends TestCase
         $extractor = $this->createMock(ParametersExtractorInterface::class);
         $extractor
             ->expects($this->once())
-            ->method('getAdminName')
+            ->method('getResourceName')
             ->willReturn('my_admin')
         ;
 
@@ -78,7 +78,7 @@ class AdminActionTest extends TestCase
         $extractor = $this->createMock(ParametersExtractorInterface::class);
         $extractor
             ->expects($this->once())
-            ->method('getAdminName')
+            ->method('getResourceName')
             ->willReturn('my_admin')
         ;
 
