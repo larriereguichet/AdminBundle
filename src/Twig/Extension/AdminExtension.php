@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Extension;
 
+use LAG\AdminBundle\Action\Render\ActionRendererInterface;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Metadata\Action;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -14,7 +16,8 @@ class AdminExtension extends AbstractExtension
     public function __construct(
         private bool $mediaEnabled,
         private ApplicationConfiguration $applicationConfiguration,
-        private SecurityHelper $security
+        private SecurityHelper $security,
+        private ActionRendererInterface $actionRenderer,
     ) {
     }
 
@@ -25,6 +28,7 @@ class AdminExtension extends AbstractExtension
             new TwigFunction('admin_action_allowed', [$this, 'isAdminActionAllowed']),
             new TwigFunction('admin_media_enabled', [$this, 'isMediaBundleEnabled']),
             new TwigFunction('admin_is_translation_enabled', [$this, 'isTranslationEnabled']),
+            new TwigFunction('lag_admin_action', [$this, 'renderAction'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -55,5 +59,11 @@ class AdminExtension extends AbstractExtension
     public function isTranslationEnabled(): bool
     {
         return $this->applicationConfiguration->isTranslationEnabled();
+    }
+
+    public function renderAction(Action $action, mixed $data = null): string
+    {
+        return $this->actionRenderer->render($action, $data);
+
     }
 }
