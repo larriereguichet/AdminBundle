@@ -11,7 +11,7 @@ use LAG\AdminBundle\Configuration\FilterConfiguration;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Exception\Action\ActionConfigurationException;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Operation;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -44,7 +44,7 @@ class ActionConfiguration extends Configuration
             ->setDefault('icon', null)
             ->setAllowedTypes('icon', ['string', 'null'])
 
-            ->setDefault('action_class', Action::class)
+            ->setDefault('action_class', Operation::class)
             ->setAllowedTypes('action_class', 'string')
 
             ->setDefault('template', null)
