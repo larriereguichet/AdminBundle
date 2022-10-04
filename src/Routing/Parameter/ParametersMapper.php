@@ -11,8 +11,8 @@ class ParametersMapper
         $accessor = PropertyAccess::createPropertyAccessor();
         $mappedRouteParameters = [];
 
-        foreach ($routeParameters as $parameter => $requirements) {
-            $mappedRouteParameters[$requirements] = $accessor->getValue($data, (string)$requirements);
+        foreach ($routeParameters as $parameter) {
+            $mappedRouteParameters[$parameter] = $accessor->getValue($data, (string)$parameter);
         }
 
         return $mappedRouteParameters;

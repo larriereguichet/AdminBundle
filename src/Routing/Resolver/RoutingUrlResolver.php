@@ -19,6 +19,7 @@ class RoutingUrlResolver implements RoutingUrlResolverInterface
 
     public function resolve(array $linkOptions, object $data = null): string
     {
+        // TODO remove ?
         // Url has most priority, if it is defined, it becomes the link url
         if ($linkOptions['url'] !== null) {
             return $linkOptions['url'];
@@ -38,7 +39,7 @@ class RoutingUrlResolver implements RoutingUrlResolverInterface
             );
             $route = $this->router->getRouteCollection()->get($routeName);
 
-            return $this->urlGenerator->generate(
+            return $this->urlGenerator->generatePath(
                 $linkOptions['admin'],
                 $linkOptions['action'],
                 $route->getRequirements(),
