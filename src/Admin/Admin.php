@@ -4,30 +4,34 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Admin;
 
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Action\Show;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProvider;
+use LAG\AdminBundle\Controller\Update;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Index;
 
+/** @deprecated  */
 class Admin implements AdminInterface
 {
-    private ?string $currentAction = null;
-
     public function __construct(
-        private readonly string $name,
-        private readonly string $dataClass,
-        private readonly array $actions = [],
-        private readonly bool $paginated = true,
-        private readonly int $itemPerPage = 25,
-        private readonly array $order = [],
+        private string $name,
+        private string $dataClass,
+        private ?string $title = null,
+        private ?string $group = null,
+        private ?string $icon = null,
+        private ?string $adminClass = Admin::class,
+        private array $actions = [
+            new Index(),
+            new Create(),
+            new Update(),
+            new Delete(),
+            new Show(),
+        ],
+        private string $processor = ORMDataProcessor::class,
+        private string $provider = ORMDataProvider::class,
     ) {
-    }
-
-    public function setCurrentAction(string $actionName): void
-    {
-        $this->currentAction = $actionName;
-    }
-
-    public function getCurrentAction(): Action
-    {
-        return $this->actions[$this->currentAction];
     }
 
     public function getName(): string
@@ -40,30 +44,99 @@ class Admin implements AdminInterface
         return $this->dataClass;
     }
 
-    public function getFormType(): ?string
+    public function getTitle(): ?string
     {
-        return $this->formType;
+        return $this->title;
     }
 
-    public function getFormOptions(): array
+    public function getGroup(): ?string
     {
-        return $this->formOptions;
+        return $this->group;
     }
 
-    public function isPaginated(): bool
+    public function getIcon(): ?string
     {
-        return $this->paginated;
+        return $this->icon;
     }
 
-    public function getItemPerPage(): int
+    public function getAdminClass(): ?string
     {
-        return $this->itemPerPage;
+        return $this->adminClass;
     }
 
-    public function getOrder(): array
+    public function getActions(): array
     {
-        return $this->order;
+        return $this->actions;
     }
+
+    public function getProcessor(): string
+    {
+        return $this->processor;
+    }
+
+    public function getProvider(): string
+    {
+        return $this->provider;
+    }
+
+
+
+//    private ?string $currentAction = null;
+//
+//    public function __construct(
+//        private readonly string $name,
+//        private readonly string $dataClass,
+//        private readonly array $actions = [],
+//        private readonly bool $paginated = true,
+//        private readonly int $itemPerPage = 25,
+//        private readonly array $order = [],
+//    ) {
+//    }
+//
+//    public function setCurrentAction(string $actionName): void
+//    {
+//        $this->currentAction = $actionName;
+//    }
+//
+//    public function getCurrentAction(): Action
+//    {
+//        return $this->actions[$this->currentAction];
+//    }
+//
+//    public function getName(): string
+//    {
+//        return $this->name;
+//    }
+//
+//    public function getDataClass(): string
+//    {
+//        return $this->dataClass;
+//    }
+//
+//    public function getFormType(): ?string
+//    {
+//        return $this->formType;
+//    }
+//
+//    public function getFormOptions(): array
+//    {
+//        return $this->formOptions;
+//    }
+//
+//    public function isPaginated(): bool
+//    {
+//        return $this->paginated;
+//    }
+//
+//    public function getItemPerPage(): int
+//    {
+//        return $this->itemPerPage;
+//    }
+//
+//    public function getOrder(): array
+//    {
+//        return $this->order;
+//    }
 
 
 //    private ActionInterface $action;

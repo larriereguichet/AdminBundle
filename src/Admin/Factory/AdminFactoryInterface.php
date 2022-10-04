@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Admin\Factory;
 
-use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Metadata\Admin;
 
 interface AdminFactoryInterface
 {
     /**
-     * Create an Admin instance from the request parameters.
-     *
-     * @throws Exception
+     * Create a new Admin metadata instance.
      */
-    public function create(string $name, array $options = []): AdminInterface;
+    public function create(Admin $resource): Admin;
 }
