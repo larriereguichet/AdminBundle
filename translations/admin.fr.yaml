@@ -14,10 +14,24 @@ lag_admin:
     list:
         available_actions_for_item: Action disponible pour cet élément
 
+    resource:
+        delete: Supprimer
+        update: Mettre à jour
+
     security:
         login: Se connecter
         login_label: Email
         password_label: Mot de passe
+
+    ui:
+        cancel: Annuler
+        create: Créer
+        return: Retour
+        save: Sauvegarder
+
+
+
+
 
 # TODO old
 admin:
