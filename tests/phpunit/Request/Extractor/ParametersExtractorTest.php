@@ -42,7 +42,7 @@ class ParametersExtractorTest extends TestCase
 
     public function testGetAdminName(): void
     {
-        $adminName = $this->extractor->getAdminName(new Request([], [], [
+        $adminName = $this->extractor->getResourceName(new Request([], [], [
             '_route_params' => [
                 '_admin' => 'my_admin',
                 '_action' => 'my_action',
@@ -55,14 +55,14 @@ class ParametersExtractorTest extends TestCase
     public function testGetAdminNameWithException(): void
     {
         $this->expectException(Exception::class);
-        $this->extractor->getAdminName(new Request([], [], [
+        $this->extractor->getResourceName(new Request([], [], [
             '_route_params' => [],
         ]));
     }
 
     public function testGetActionName(): void
     {
-        $actionName = $this->extractor->getActionName(new Request([], [], [
+        $actionName = $this->extractor->getOperationName(new Request([], [], [
             '_route_params' => [
                 '_admin' => 'my_admin',
                 '_action' => 'my_action',
@@ -75,7 +75,7 @@ class ParametersExtractorTest extends TestCase
     public function testGetActionNameWithException(): void
     {
         $this->expectException(Exception::class);
-        $this->extractor->getActionName(new Request([], [], [
+        $this->extractor->getOperationName(new Request([], [], [
             '_route_params' => [],
         ]));
     }

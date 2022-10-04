@@ -7,7 +7,7 @@ use LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Event\Events\Configuration\ActionConfigurationEvent;
 use LAG\AdminBundle\Exception\Action\ActionConfigurationException;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -55,7 +55,7 @@ class ActionConfigurationFactoryTest extends TestCase
                     'admin_name' => 'my_admin',
                     'title' => 'MyAction',
                     'icon' => null,
-                    'action_class' => Action::class,
+                    'action_class' => Operation::class,
                     'template' => 'test.html.twig',
                     'permissions' => ['ROLE_ADMIN'],
                     'controller' => AdminAction::class,
@@ -89,7 +89,7 @@ class ActionConfigurationFactoryTest extends TestCase
                     'admin_name' => 'my_admin',
                     'title' => 'Index',
                     'icon' => null,
-                    'action_class' => Action::class,
+                    'action_class' => Operation::class,
                     'template' => '@LAGAdmin/crud/list.html.twig',
                     'permissions' => ['ROLE_ADMIN'],
                     'controller' => AdminAction::class,

@@ -16,7 +16,7 @@ use LAG\AdminBundle\Field\DateField;
 use LAG\AdminBundle\Field\LinkField;
 use LAG\AdminBundle\Field\MappedField;
 use LAG\AdminBundle\Field\StringField;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Tests\TestCase;
 
 class ApplicationConfigurationTest extends TestCase
@@ -37,7 +37,7 @@ class ApplicationConfigurationTest extends TestCase
             'title' => 'Admin Application',
             'description' => 'Admin Application',
             'admin_class' => Admin::class,
-            'action_class' => Action::class,
+            'action_class' => Operation::class,
             'base_template' => '@LAGAdmin/base.html.twig',
             'ajax_template' => '@LAGAdmin/empty.html.twig',
             'create_template' => '@LAGAdmin/crud/create.html.twig',
@@ -87,7 +87,7 @@ class ApplicationConfigurationTest extends TestCase
         $this->assertEquals('Admin Application', $configuration->getTitle());
         $this->assertEquals('Admin Application', $configuration->getDescription());
         $this->assertEquals(Admin::class, $configuration->getAdminClass());
-        $this->assertEquals(Action::class, $configuration->getActionClass());
+        $this->assertEquals(Operation::class, $configuration->getActionClass());
 
         $this->assertEquals('@LAGAdmin/base.html.twig', $configuration->getBaseTemplate());
         $this->assertEquals('@LAGAdmin/empty.html.twig', $configuration->getAjaxTemplate());

@@ -42,7 +42,7 @@ class ActionListenerTest extends TestCase
         $this
             ->extractor
             ->expects($this->once())
-            ->method('getActionName')
+            ->method('getOperationName')
             ->willReturn('my_action')
         ;
 

@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Tests\Action;
 
 use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
 use LAG\AdminBundle\Action\View\ActionView;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Tests\TestCase;
 
 class ActionTest extends TestCase
@@ -12,7 +12,7 @@ class ActionTest extends TestCase
     public function testGetters(): void
     {
         $configuration = $this->createMock(ActionConfiguration::class);
-        $action = new Action('test', $configuration);
+        $action = new Operation('test', $configuration);
 
         $this->assertEquals('test', $action->getName());
         $this->assertEquals($configuration, $action->getConfiguration());
