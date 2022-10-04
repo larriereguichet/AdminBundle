@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\DataProvider\Registry;
 
 use Exception;
-use LAG\AdminBundle\DataProvider\DataProviderInterface;
+use LAG\AdminBundle\State\DataProviderInterface;
 
 interface DataProviderRegistryInterface
 {

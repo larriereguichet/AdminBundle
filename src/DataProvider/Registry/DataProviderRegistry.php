@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\DataProvider\Registry;
 
 use Iterator;
-use LAG\AdminBundle\DataProvider\DataProviderInterface;
 use LAG\AdminBundle\Exception\DataProvider\MissingDataProviderException;
+use LAG\AdminBundle\State\DataProviderInterface;
 
 class DataProviderRegistry implements DataProviderRegistryInterface
 {
