@@ -1,0 +1,12 @@
+services:
+    lag_admin.state.data_provider: '@LAG\AdminBundle\State\DataProviderInterface'
+    LAG\AdminBundle\State\DataProviderInterface: '@LAG\AdminBundle\State\CompositeDataProvider'
+    LAG\AdminBundle\State\CompositeDataProvider:
+        arguments:
+            $providers: !tagged_iterator lag_admin.data_provider
+
+    lag_admin.state.data_processor: '@LAG\AdminBundle\State\CompositeDataProcessor'
+    LAG\AdminBundle\State\DataProcessorInterface: '@LAG\AdminBundle\State\CompositeDataProcessor'
+    LAG\AdminBundle\State\CompositeDataProcessor:
+        arguments:
+            $processors: !tagged_iterator lag_admin.data_processor

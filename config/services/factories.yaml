@@ -1,21 +1,56 @@
 services:
-    _defaults:
-        public: false
+    lag_admin.admin.factory: '@LAG\AdminBundle\Admin\Factory\AdminFactory'
+    LAG\AdminBundle\Admin\Factory\AdminFactoryInterface: '@LAG\AdminBundle\Admin\Factory\AdminFactory'
+    LAG\AdminBundle\Admin\Factory\AdminFactory:
+        arguments:
+            $eventDispatcher: '@event_dispatcher'
+            $validator: '@validator'
+            $operationFactory: '@lag_admin.operation.factory'
 
-    # Admin objects factories
+    lag_admin.operation.factory: '@LAG\AdminBundle\Admin\Factory\OperationFactory'
+    LAG\AdminBundle\Admin\Factory\OperationFactoryInterface: '@LAG\AdminBundle\Admin\Factory\OperationFactory'
+    LAG\AdminBundle\Admin\Factory\OperationFactory:
+        arguments:
+            $eventDispatcher: '@event_dispatcher'
+            $validator: '@validator'
+            $propertyFactory: '@lag_admin.property.factory'
+
+    lag_admin.property.factory: '@LAG\AdminBundle\Property\Factory\PropertyFactory'
+    LAG\AdminBundle\Property\Factory\PropertyFactoryInterface: '@LAG\AdminBundle\Property\Factory\PropertyFactory'
+    LAG\AdminBundle\Property\Factory\PropertyFactory:
+        arguments:
+            $eventDispatcher: '@event_dispatcher'
+            $validator: '@validator'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     LAG\AdminBundle\Action\Factory\ActionFactoryInterface: '@LAG\AdminBundle\Action\Factory\ActionFactory'
     LAG\AdminBundle\Action\Factory\ActionFactory:
         arguments:
             $eventDispatcher: '@event_dispatcher'
             $configurationFactory: '@LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface'
             $registry: '@LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface'
-    
-    LAG\AdminBundle\Admin\Factory\AdminFactoryInterface: '@LAG\AdminBundle\Admin\Factory\AdminFactory'
-    LAG\AdminBundle\Admin\Factory\AdminFactory:
-        arguments:
-            $registry: '@LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface'
-            $eventDispatcher: '@event_dispatcher'
-            $configurationFactory: '@LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface'
+
 
     LAG\AdminBundle\Factory\FieldFactoryInterface: '@LAG\AdminBundle\Factory\FieldFactory'
     LAG\AdminBundle\Factory\FieldFactory:
