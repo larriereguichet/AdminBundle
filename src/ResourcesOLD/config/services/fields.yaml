@@ -1,8 +1,0 @@
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: false
-
-    LAG\AdminBundle\Field\Render\FieldRendererInterface: '@LAG\AdminBundle\Field\Render\FieldRenderer'
-    LAG\AdminBundle\Field\Render\FieldRenderer: ~

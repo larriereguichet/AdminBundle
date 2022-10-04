@@ -1,3 +1,0 @@
-services:
-    LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface: '@LAG\AdminBundle\Request\Extractor\ParametersExtractor'
-    LAG\AdminBundle\Request\Extractor\ParametersExtractor: ~
