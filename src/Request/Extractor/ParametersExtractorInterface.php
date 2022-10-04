@@ -14,14 +14,14 @@ interface ParametersExtractorInterface
      *
      * @throws Exception If no admin name can be found
      */
-    public function getAdminName(Request $request): string;
+    public function getResourceName(Request $request): string;
 
     /**
      * Return the admin name contained in the request parameters (_route_params).
      *
      * @throws Exception If no action name can be found
      */
-    public function getActionName(Request $request): string;
+    public function getOperationName(Request $request): string;
 
     /**
      * Return true if the current Request is supported. Supported means that the Request has the required valid
