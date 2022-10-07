@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Property\Factory;
+namespace LAG\AdminBundle\Metadata\Factory;
 
 use LAG\AdminBundle\Event\Events\PropertyEvent;
 use LAG\AdminBundle\Event\PropertyEvents;

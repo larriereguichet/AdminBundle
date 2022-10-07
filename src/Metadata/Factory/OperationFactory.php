@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Admin\Factory;
+namespace LAG\AdminBundle\Metadata\Factory;
 
 use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Exception\Validation\InvalidOperationException;
@@ -8,7 +8,6 @@ use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
 use LAG\AdminBundle\Metadata\Admin;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Property\Factory\PropertyFactoryInterface;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;

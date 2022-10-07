@@ -1,15 +1,15 @@
 services:
     lag_admin.admin.factory: '@LAG\AdminBundle\Admin\Factory\AdminFactoryInterface'
-    LAG\AdminBundle\Admin\Factory\AdminFactoryInterface:
-        class: LAG\AdminBundle\Admin\Factory\AdminFactory
+    LAG\AdminBundle\Metadata\Factory\AdminFactoryInterface:
+        class: LAG\AdminBundle\Metadata\Factory\AdminFactory
         arguments:
             $eventDispatcher: '@event_dispatcher'
             $validator: '@validator'
             $operationFactory: '@lag_admin.operation.factory'
 
     lag_admin.operation.factory: '@LAG\AdminBundle\Admin\Factory\OperationFactoryInterface'
-    LAG\AdminBundle\Admin\Factory\OperationFactoryInterface:
-        class: LAG\AdminBundle\Admin\Factory\OperationFactory
+    LAG\AdminBundle\Metadata\Factory\OperationFactoryInterface:
+        class: LAG\AdminBundle\Metadata\Factory\OperationFactory
         arguments:
             $eventDispatcher: '@event_dispatcher'
             $validator: '@validator'
@@ -17,8 +17,8 @@ services:
             $filterFactory: '@lag_admin.filter.factory'
 
     lag_admin.property.factory: '@LAG\AdminBundle\Property\Factory\PropertyFactoryInterface'
-    LAG\AdminBundle\Property\Factory\PropertyFactoryInterface:
-        class: LAG\AdminBundle\Property\Factory\PropertyFactory
+    LAG\AdminBundle\Metadata\Factory\PropertyFactoryInterface:
+        class: LAG\AdminBundle\Metadata\Factory\PropertyFactory
         arguments:
             $eventDispatcher: '@event_dispatcher'
             $validator: '@validator'

@@ -53,7 +53,7 @@ config
 ```
 
 ## Under the hood
-Admins are created by the `LAG\AdminBundle\Admin\Factory\AdminFactory` when the controller 
+Admins are created by the `LAG\AdminBundle\Metadata\Factory\AdminFactory` when the controller 
 `LAG\AdminBundle\Controller\AdminAction` is called by the routing.
 
 ## Full configuration
