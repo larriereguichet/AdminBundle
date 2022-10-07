@@ -1,0 +1,7 @@
+services:
+    lag_admin.filter.factory: '@LAG\AdminBundle\Filter\Factory\FilterFactoryInterface'
+    LAG\AdminBundle\Filter\Factory\FilterFactoryInterface:
+        class: LAG\AdminBundle\Filter\Factory\FilterFactory
+        arguments:
+            $validator: '@validator'
+            $eventDispatcher: '@event_dispatcher'

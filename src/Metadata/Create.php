@@ -2,8 +2,8 @@
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
 
 class Create extends Operation
 {

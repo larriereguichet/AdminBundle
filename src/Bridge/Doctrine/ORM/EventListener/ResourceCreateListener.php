@@ -16,7 +16,7 @@ class ResourceCreateListener
 
     public function __invoke(AdminEvent $event): void
     {
-        $resource = $event->getAdmin();
+        $resource = $event->getResource();
         $operations = [];
 
         foreach ($resource->getOperations() as $operation) {
@@ -24,7 +24,7 @@ class ResourceCreateListener
             $operations[$operation->getName()] = $operation;
         }
         $resource = $resource->withOperations($operations);
-        $event->setAdmin($resource);
+        $event->setResource($resource);
     }
 
     private function addOperationDefault(Admin $resource, OperationInterface $operation): OperationInterface

@@ -6,5 +6,5 @@ use LAG\AdminBundle\Metadata\Action;
 
 interface ActionRendererInterface
 {
-    public function render(Action $action, mixed $data = null): string;
+    public function render(Action $action, mixed $data = null, array $options = []): string;
 }

@@ -23,10 +23,7 @@ Encore
     // .addStyleEntry('sb-admin-css', './node_modules/startbootstrap-sb-admin-2/css/sb-admin-2.css')
     .addStyleEntry('fa', './node_modules/@fortawesome/fontawesome-free/css/all.css')
     
-    // TODO
-    //.disableSingleRuntimeChunk()
-    .enableSingleRuntimeChunk()
-    
+    .disableSingleRuntimeChunk()
     .enableVersioning(false)
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())

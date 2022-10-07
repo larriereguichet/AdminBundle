@@ -10,12 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class AdminResolver implements ArgumentValueResolverInterface
+class AdminArgumentValueResolver implements ArgumentValueResolverInterface
 {
     public function __construct(
         private ParametersExtractorInterface $extractor,
         private ResourceRegistryInterface $resourceRegistry,
-        private AdminFactoryInterface $adminFactory,
     ) {
     }
 
@@ -31,9 +30,8 @@ class AdminResolver implements ArgumentValueResolverInterface
 
         $this->resourceRegistry->load();
         $resource = $this->resourceRegistry->get($resourceName);
-        $admin = $this->adminFactory->create($resource);
-        $operation = $admin->getOperation($operationName);
+        $operation = $resource->getOperation($operationName);
 
-        yield $admin->withCurrentOperation($operation);
+        yield $resource->withCurrentOperation($operation);
     }
 }

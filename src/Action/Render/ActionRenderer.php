@@ -14,16 +14,21 @@ class ActionRenderer implements ActionRendererInterface
     ) {
     }
 
-    public function render(Action $action, mixed $data = null): string
-    {
+    public function render(
+        Action $action,
+        mixed $data = null,
+        array $options = []
+    ): string {
         if ($action->getRouteName()) {
             $url = $this->urlGenerator->generateFromRouteName($action->getRouteName(), $action->getRouteParameters(), $data);
         } else {
             $url = $this->urlGenerator->generateFromOperationName($action->getResourceName(), $action->getOperationName(), $data);
         }
+
         return $this->environment->render($action->getTemplate(), [
             'action' => $action,
             'url' => $url,
+            'options' => $options,
         ]);
     }
 }

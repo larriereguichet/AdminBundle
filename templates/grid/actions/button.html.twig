@@ -1,5 +1,5 @@
 <a href="{{ url }}"
-   class="btn btn-{{ action.type }}"
+   class="btn btn-{{ action.type }} {{ options.class|default('') }}"
    role="button">
     {{ action.label|trans({}, 'admin') }}
 </a>

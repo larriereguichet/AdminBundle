@@ -22,13 +22,12 @@ class CreateListener
 {
     public function __construct(
         private RouteNameGeneratorInterface $routeNameGenerator,
-    )
-    {
+    ) {
     }
 
     public function __invoke(AdminEvent $event): void
     {
-        $resource = $event->getAdmin();
+        $resource = $event->getResource();
         $operations = [];
         $resource = $this->addResourceDefault($resource);
 
@@ -37,7 +36,7 @@ class CreateListener
             $operations[$operation->getName()] = $operation;
         }
         $resource = $resource->withOperations($operations);
-        $event->setAdmin($resource);
+        $event->setResource($resource);
     }
 
     private function addResourceDefault(Admin $resource): Admin
@@ -108,90 +107,28 @@ class CreateListener
         if (!$operation->getRoute()) {
             $route = $this->routeNameGenerator->generateRouteName($resource, $operation);
             $operation = $operation->withRoute($route);
+        }
 
-            if (!$operation->getRouteParameters()) {
-                if (!$operation instanceof CollectionOperationInterface && !$operation instanceof Create) {
-                    // TODO identifiers
-                    $operation = $operation->withRouteParameters([
-                        'id' => null,
-                    ]);
-                } else {
-                    $operation = $operation->withRouteParameters([]);
-                }
+        if (!$operation->getRouteParameters()) {
+            if (!$operation instanceof CollectionOperationInterface && !$operation instanceof Create) {
+                // TODO identifiers
+                $operation = $operation->withRouteParameters([
+                    'id' => null,
+                ]);
+            } else {
+                $operation = $operation->withRouteParameters([]);
             }
         }
 
         if (count($operation->getMethods()) === 0) {
             if ($operation instanceof Create) {
                 $operation = $operation->withMethods(['GET', 'POST']);
-            }
-            elseif ($operation instanceof Update) {
+            } elseif ($operation instanceof Update) {
                 $operation = $operation->withMethods(['GET', 'POST', 'PUT']);
-            }
-            elseif ($operation instanceof Delete) {
+            } elseif ($operation instanceof Delete) {
                 $operation = $operation->withMethods(['GET', 'POST', 'DELETE']);
             } else {
                 $operation = $operation->withMethods(['GET']);
-            }
-        }
-
-        if (!$operation->getItemActions()) {
-            $actions = [];
-
-            if ($operation instanceof CollectionOperationInterface) {
-                if ($resource->hasOperation('update')) {
-                    $actions[] = new Action(
-                        resourceName: $resource->getName(),
-                        operationName: 'update',
-                        label: 'lag_admin.resource.update',
-                        type: 'secondary'
-                    );
-                }
-
-                if ($resource->hasOperation('delete')) {
-                    $actions[] = new Action(
-                        resourceName: $resource->getName(),
-                        operationName: 'delete',
-                        label: 'lag_admin.resource.delete',
-                        type: 'danger'
-                    );
-                }
-            } else {
-                if ($resource->hasOperation('index')) {
-                    $actions[] = new Action(
-                        resourceName: $resource->getName(),
-                        operationName: 'index',
-                        label: 'lag_admin.ui.cancel',
-                        type: 'light',
-                    );
-                }
-            }
-            $operation = $operation->withItemActions($actions);
-        }
-
-        if ($operation instanceof CollectionOperationInterface && !$operation->getListActions()) {
-            if ($resource->hasOperation('create')) {
-                $operation = $operation->withListActions([new Action(
-                    resourceName: $resource->getName(),
-                    operationName: 'create',
-                    label: 'lag_admin.ui.create',
-                    type: 'primary',
-                )]);
-            }
-        }
-
-        if (!$operation->getFormType()) {
-            if ($operation instanceof Create || $operation instanceof Update) {
-                $operation = $operation->withFormType(OperationDataType::class);
-                $operation = $operation->withFormOptions(['exclude' => $resource->getIdentifiers()]);
-            }
-        }
-
-        if (!$operation->getTargetRoute()) {
-            if ($resource->hasOperation('index')) {
-                $operation = $operation->withTargetRoute(
-                    $this->routeNameGenerator->generateRouteName($resource, $resource->getOperation('index')),
-                );
             }
         }
 

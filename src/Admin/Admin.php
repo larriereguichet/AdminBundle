@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Admin;
 
 use LAG\AdminBundle\Action\Show;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
 use LAG\AdminBundle\Controller\Update;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;

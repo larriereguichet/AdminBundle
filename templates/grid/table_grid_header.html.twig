@@ -1,9 +1,7 @@
-{% use '@LAGAdmin/fields/field-base.html.twig' %}
-
 {% if header.sortable %}
     {% set order = 'asc' %}
 
-    {% if app.request.get('order') == 'asc' %}
+    {% if app.request.query.get('order') == 'asc' %}
         {% set order = 'desc' %}
     {% endif %}
 
@@ -11,7 +9,7 @@
        class="text-dark">
         {{ header.label|trans }}
 
-        {% if app.request.get('sort') == header.name %}
+        {% if app.request.query.get('sort') == header.name %}
             {% if order == 'asc' %}
                 <i class="fa fa-caret-down sort-icon sort-asc"></i>
             {% else %}

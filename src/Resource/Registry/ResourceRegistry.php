@@ -52,6 +52,8 @@ class ResourceRegistry implements ResourceRegistryInterface
 
     public function get(string $resourceName): Admin
     {
+        $this->load();
+
         if (!$this->has($resourceName)) {
             throw new Exception('Resource with name "'.$resourceName.'" not found');
         }

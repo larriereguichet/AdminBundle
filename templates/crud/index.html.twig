@@ -2,25 +2,30 @@
 
 {% block page_title %}{{ parent() }} - {{ resource.title|trans }} - {{ operation.title|trans }}{% endblock %}
 
-{% block title %}{{ resource.title|title }} - {{ operation.title|title }}{% endblock %}
+{% block title_container %}
+    <div class="row mb-2 mt-2">
+        <div class="col-6">
+            <h1>{{ resource.title|title }} - {{ operation.title|title }}</h1>
+        </div>
+        <div class="col-6">
+            {% if operation.listActions|length > 0 %}
+                {% for action in operation.listActions %}
+                    {{ lag_admin_action(action, null, {
+                        class: 'float-end'
+                    }) }}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
 
 {% block content %}
     <div class="admin-index admin-{{ resource.name }}">
         {% block filter_form %}
             {% if form %}
-                {% include '@LAGAdmin/crud/list/_filters.html.twig' with {form: form} %}
+                {% include '@LAGAdmin/crud/index/_filters.html.twig' with {form: form} %}
             {% endif %}
         {% endblock %}
-
-        {% if operation.listActions|length > 0 %}
-        <div class="row justify-content-end mb-2">
-            <div class="col-3 text-end">
-                {% for action in operation.listActions %}
-                    {{ lag_admin_action(action) }}
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
 
         <div class="card">
             {% block grid %}

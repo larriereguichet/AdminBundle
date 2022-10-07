@@ -5,6 +5,7 @@ services:
             $applicationConfiguration: '@lag_admin.application'
             $security: '@lag_admin.security.helper'
             $actionRenderer: '@lag_admin.action.renderer'
+            $urlGenerator: '@lag_admin.routing.url_generator'
         tags: ['twig.extension']
 
     LAG\AdminBundle\Twig\Extension\GridExtension:

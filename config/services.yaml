@@ -9,10 +9,6 @@ services:
         public: false
 
     ### Controllers ###
-    LAG\AdminBundle\Controller\AdminAction:
-        tags:
-            - {name: controller.service_arguments}
-
     LAG\AdminBundle\Controller\HomeAction:
         tags:
             - {name: controller.service_arguments}

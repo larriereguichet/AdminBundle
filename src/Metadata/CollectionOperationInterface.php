@@ -2,6 +2,8 @@
 
 namespace LAG\AdminBundle\Metadata;
 
+use LAG\AdminBundle\Metadata\Filter\FilterInterface;
+
 interface CollectionOperationInterface extends OperationInterface
 {
     public function hasPagination(): bool;
@@ -24,13 +26,16 @@ interface CollectionOperationInterface extends OperationInterface
 
     public function withOrderBy(array $orderBy): self;
 
-    public function getFilters(): array;
+    /** @return FilterInterface[]|null */
+    public function getFilters(): ?array;
+
+    public function getFilter(string $name): ?FilterInterface;
 
     public function hasFilters(): bool;
 
     public function withFilters(array $filters): self;
 
-    public function getListActions(): array;
+    public function getListActions(): ?array;
 
     public function withListActions(array $listActions): self;
 

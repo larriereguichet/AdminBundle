@@ -25,7 +25,7 @@ class RequestListener
             $permissions = $argument->getCurrentOperation()->getPermissions();
 
             foreach ($permissions as $permission) {
-                if (!$this->security->isGranted($permission, $user)) {
+                if ($user === null || !$this->security->isGranted($permission, $user)) {
                     throw new AccessDeniedException();
                 }
             }

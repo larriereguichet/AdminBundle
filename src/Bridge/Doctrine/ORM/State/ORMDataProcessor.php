@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Bridge\Doctrine\ORM;
+namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use LAG\AdminBundle\Metadata\Create;
