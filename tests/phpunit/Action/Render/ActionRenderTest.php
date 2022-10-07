@@ -2,12 +2,12 @@
 
 namespace LAG\AdminBundle\Tests\Action\Render;
 
-use LAG\AdminBundle\Action\Render\ActionRenderer;
-use LAG\AdminBundle\Action\Render\ActionRendererInterface;
 use LAG\AdminBundle\Exception\Validation\InvalidActionException;
 use LAG\AdminBundle\Metadata\Action;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Twig\Render\ActionRenderer;
+use LAG\AdminBundle\Twig\Render\ActionRendererInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
