@@ -1,24 +1,19 @@
 services:
-    # Request parameters resolvers
-    LAG\AdminBundle\Request\Resolver\AdminResolver:
+    LAG\AdminBundle\Request\Resolver\AdminArgumentValueResolver:
         arguments:
             $extractor: '@lag_admin.request.parameters_extractor'
             $resourceRegistry: '@lag_admin.resource.registry'
-            $adminFactory: '@lag_admin.admin.factory'
         tags:
             - { name: controller.argument_value_resolver, priority: 255 }
 
+    lag_admin.request.parameters_extractor: '@LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface'
     LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface:
         class: LAG\AdminBundle\Request\Extractor\ParametersExtractor
-    lag_admin.request.parameters_extractor:
-        alias: LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface
 
+    lag_admin.request_uri_variables_extractor: '@LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface'
     LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface:
         class: LAG\AdminBundle\Request\Uri\UriVariablesExtractor
-    lag_admin.request_uri_variables_extractor:
-        alias: LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface
 
+    lag_admin.request.context_provider: '@LAG\AdminBundle\Request\Context\ContextProviderInterface'
     LAG\AdminBundle\Request\Context\ContextProviderInterface:
         class: LAG\AdminBundle\Request\Context\ContextProvider
-    lag_admin.request.context_provider:
-        alias: LAG\AdminBundle\Request\Context\ContextProviderInterface

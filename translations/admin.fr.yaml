@@ -26,8 +26,12 @@ lag_admin:
     ui:
         cancel: Annuler
         create: Créer
+        filter: Filtrer
+        reset: Réinitialiser
         return: Retour
         save: Sauvegarder
+        show: Voir
+        show_filters: Voir les filtres
 
 
 

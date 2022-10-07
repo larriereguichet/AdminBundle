@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProvider;
-use LAG\AdminBundle\Controller\AdminAction;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class Operation implements OperationInterface

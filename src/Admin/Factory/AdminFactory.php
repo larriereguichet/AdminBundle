@@ -25,7 +25,7 @@ class AdminFactory implements AdminFactoryInterface
     {
         $event = new AdminEvent($resource);
         $this->eventDispatcher->dispatch($event, AdminEvent::ADMIN_CREATE);
-        $resource = $event->getAdmin();
+        $resource = $event->getResource();
         $errors = $this->validator->validate($resource, [new AdminValid(), new Valid()]);
 
         if ($errors->count() > 0) {
@@ -34,13 +34,13 @@ class AdminFactory implements AdminFactoryInterface
         $operations = [];
 
         foreach ($resource->getOperations() as $operation) {
-            $operations[] = $this->operationFactory->create($operation);
+            $operations[] = $this->operationFactory->create($resource, $operation);
         }
         $resource = $resource->withOperations($operations);
 
         $event = new AdminEvent($resource);
         $this->eventDispatcher->dispatch($event, AdminEvent::ADMIN_CREATED);
 
-        return $event->getAdmin();
+        return $event->getResource();
     }
 }

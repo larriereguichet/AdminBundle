@@ -1,16 +1,20 @@
 services:
-    # Admin events
     LAG\AdminBundle\EventListener\Admin\CreateListener:
         arguments:
             $routeNameGenerator: '@lag_admin.routing.route_name_generator'
         tags:
             - { name: kernel.event_listener, event: lag_admin.admin.create, priority: 255 }
 
+    LAG\AdminBundle\EventListener\Operation\CreateListener:
+        arguments:
+            $routeNameGenerator: '@lag_admin.routing.route_name_generator'
+        tags:
+            - { name: kernel.event_listener, event: lag_admin.operation.create, priority: 255 }
+
     LAG\AdminBundle\EventListener\Property\CreateListener:
         tags:
             - { name: kernel.event_listener, event: lag_admin.property.create, priority: 255 }
 
-    # KernelEvent
     LAG\AdminBundle\EventListener\Security\RequestListener:
         arguments:
             $security: '@security.helper'

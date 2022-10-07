@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\ORMDataProvider;
-use LAG\AdminBundle\Controller\AdminAction;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Metadata\Filter\FilterInterface;
 
 abstract class CollectionOperation extends Operation implements CollectionOperationInterface
 {
@@ -37,8 +37,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         private string $pageParameter = 'page',
         private array $criteria = [],
         private array $orderBy = [],
-        private array $filters = [],
-        private array $listActions = [],
+        private ?array $filters = null,
+        private ?array $listActions = null,
         private ?string $gridTemplate = '@LAGAdmin/grid/table_grid.html.twig',
     ) {
         parent::__construct(
@@ -131,14 +131,25 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $self;
     }
 
-    public function getFilters(): array
+    public function getFilters(): ?array
     {
         return $this->filters;
     }
 
+    public function getFilter(string $name): ?FilterInterface
+    {
+        foreach ($this->filters as $filter) {
+            if ($filter->getName() === $name) {
+                return $filter;
+            }
+        }
+
+        return null;
+    }
+
     public function hasFilters(): bool
     {
-        return count($this->filters) > 0;
+        return $this->filters !== null && count($this->filters) > 0;
     }
 
     public function withFilters(array $filters): CollectionOperationInterface
@@ -149,7 +160,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $self;
     }
 
-    public function getListActions(): array
+    public function getListActions(): ?array
     {
         return $this->listActions;
     }

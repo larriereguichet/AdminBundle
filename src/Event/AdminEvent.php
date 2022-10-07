@@ -12,17 +12,17 @@ class AdminEvent extends Event
     public const ADMIN_CREATE = 'lag_admin.admin.create';
     public const ADMIN_CREATED = 'lag_admin.admin.created';
 
-    public function __construct(private Admin $admin)
+    public function __construct(private Admin $resource)
     {
     }
 
-    public function setAdmin(Admin $admin): void
+    public function setResource(Admin $resource): void
     {
-        $this->admin = $admin;
+        $this->resource = $resource;
     }
 
-    public function getAdmin(): Admin
+    public function getResource(): Admin
     {
-        return $this->admin;
+        return $this->resource;
     }
 }

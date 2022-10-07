@@ -6,11 +6,11 @@ use LAG\AdminBundle\Exception\Exception;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class InvalidAdminException extends Exception
+class InvalidFilterException extends Exception
 {
-    public function __construct(?string $propertyName, ConstraintViolationListInterface $errors)
+    public function __construct(?string $filterName, ConstraintViolationListInterface $errors)
     {
-        $message = sprintf('The configuration of the admin "%s" is not valid :', $propertyName);
+        $message = sprintf('The configuration of the admin "%s" is not valid :', $filterName);
 
         /** @var ConstraintViolationInterface $error */
         foreach ($errors as $error) {

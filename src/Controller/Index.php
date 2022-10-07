@@ -34,7 +34,7 @@ class Index
         $form = null;
 
         if ($operation->getFormType()) {
-            $form = $this->formFactory->create($operation->getFormType(), $operation->getFormOptions());
+            $form = $this->formFactory->create($operation->getFormType(), [], $operation->getFormOptions());
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {

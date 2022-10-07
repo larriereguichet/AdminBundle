@@ -1,11 +1,11 @@
 {% block table %}
-    <table class="admin-table table table-responsive mb-0">
+    <table class="admin-table table table-responsive align-middle mb-0">
         {% block table_head %}
             <thead>
             <tr>
                 {% for header in grid.headers %}
                     <th class="text-dark">
-                        {% include '@LAGAdmin/crud/list/_header.html.twig' with {'header': header} %}
+                        {% include '@LAGAdmin/grid/table_grid_header.html.twig' with {'header': header} %}
                     </th>
                 {% endfor %}
                 <th>{# Empty columns labels for actions buttons #}</th>
@@ -28,7 +28,9 @@
                                  role="group"
                                  aria-label="{{ 'lag_admin.list.available_actions_for_item'|trans }}">
                                 {% for action in operation.itemActions %}
-                                    {{ lag_admin_action(action, row.data) }}
+                                    {{ lag_admin_action(action, row.data, {
+                                        class: 'btn-sm btn-ouline'
+                                    }) }}
                                 {% endfor %}
                             </div>
                         </td>

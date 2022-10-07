@@ -44,8 +44,8 @@ class AbstractOperationController
                 $this->dataProcessor->process($data, $operation, $uriVariables, $context);
 
                 return new RedirectResponse($this->urlGenerator->generateFromRouteName(
-                    $operation->getTargetRoute(),
-                    $operation->getRouteParameters(),
+                    $operation->getTargetRoute() ?? $operation->getRoute(),
+                    $operation->getTargetRouteParameters() ?? $operation->getRouteParameters(),
                 ));
             }
         }
