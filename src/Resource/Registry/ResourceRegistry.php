@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Registry;
 
-use LAG\AdminBundle\Admin\Factory\AdminFactoryInterface;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\UnexpectedTypeException;
 use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\Factory\AdminFactoryInterface;
 use LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface;
 
 class ResourceRegistry implements ResourceRegistryInterface

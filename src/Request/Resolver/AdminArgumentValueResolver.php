@@ -2,7 +2,6 @@
 
 namespace LAG\AdminBundle\Request\Resolver;
 
-use LAG\AdminBundle\Admin\Factory\AdminFactoryInterface;
 use LAG\AdminBundle\Metadata\Admin;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Admin\Factory;
+namespace LAG\AdminBundle\Metadata\Factory;
 
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Exception\Validation\InvalidAdminException;

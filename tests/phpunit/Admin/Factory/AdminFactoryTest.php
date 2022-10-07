@@ -4,9 +4,9 @@ namespace LAG\AdminBundle\Tests\Admin\Factory;
 
 use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface;
-use LAG\AdminBundle\Admin\Factory\AdminFactory;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Event\AdminEvents;
+use LAG\AdminBundle\Metadata\Factory\AdminFactory;
 use LAG\AdminBundle\Resource\AdminResource;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\Fixtures\FakeEntity;
@@ -20,7 +20,7 @@ class AdminFactoryTest extends TestCase
     private MockObject $eventDispatcher;
     private MockObject $adminConfigurationFactory;
     private AdminConfiguration $adminConfiguration;
-    private AdminFactory $adminFactory;
+    private \LAG\AdminBundle\Metadata\Factory\AdminFactory $adminFactory;
 
     public function testCreate(): void
     {

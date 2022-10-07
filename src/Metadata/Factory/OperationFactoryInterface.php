@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Admin\Factory;
+namespace LAG\AdminBundle\Metadata\Factory;
 
 use LAG\AdminBundle\Metadata\Admin;
 use LAG\AdminBundle\Metadata\OperationInterface;
