@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Extension;
 
-use LAG\AdminBundle\Action\Render\ActionRendererInterface;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Metadata\Action;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
+use LAG\AdminBundle\Twig\Render\ActionRendererInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

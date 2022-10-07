@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Action\Render;
+namespace LAG\AdminBundle\Twig\Render;
 
 use LAG\AdminBundle\Exception\Validation\InvalidActionException;
 use LAG\AdminBundle\Metadata\Action;
