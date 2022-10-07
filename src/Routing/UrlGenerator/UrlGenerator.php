@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Operation;
@@ -26,7 +26,7 @@ class UrlGenerator implements UrlGeneratorInterface
     }
 
     public function generatePath(
-        Admin $resource,
+        AdminResource $resource,
         OperationInterface $operation,
     ): string {
         $inflector = new EnglishInflector();

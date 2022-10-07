@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class Operation implements OperationInterface
 {
-    private Admin $resource;
+    private AdminResource $resource;
 
     public function __construct(
         #[Assert\NotBlank(message: 'The operation name should not be empty')]
@@ -304,12 +304,12 @@ abstract class Operation implements OperationInterface
         return $self;
     }
 
-    public function getResource(): Admin
+    public function getResource(): AdminResource
     {
         return $this->resource;
     }
 
-    public function withResource(Admin $resource): self
+    public function withResource(AdminResource $resource): self
     {
         $self = clone $this;
         $self->resource = $resource;

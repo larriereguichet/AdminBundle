@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Request\Resolver;
 
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +19,7 @@ class AdminArgumentValueResolver implements ArgumentValueResolverInterface
 
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        return $argument->getType() === Admin::class && $this->extractor->supports($request);
+        return $argument->getType() === AdminResource::class && $this->extractor->supports($request);
     }
 
     public function resolve(Request $request, ArgumentMetadata $argument): iterable

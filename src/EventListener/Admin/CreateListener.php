@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\EventListener\Admin;
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Form\Type\OperationDataType;
 use LAG\AdminBundle\Metadata\Action;
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
@@ -39,7 +39,7 @@ class CreateListener
         $event->setResource($resource);
     }
 
-    private function addResourceDefault(Admin $resource): Admin
+    private function addResourceDefault(AdminResource $resource): AdminResource
     {
         if (!$resource->getTitle()) {
             $inflector = new EnglishInflector();
@@ -49,7 +49,7 @@ class CreateListener
         return $resource;
     }
 
-    private function addOperationDefault(Admin $resource, OperationInterface $operation): Operation
+    private function addOperationDefault(AdminResource $resource, OperationInterface $operation): Operation
     {
         if (!$operation->getName()) {
             $operation = $operation->withName(

@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Metadata\Locator;
 use CuyZ\Valinor\Mapper\Source\Source;
 use CuyZ\Valinor\MapperBuilder;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
@@ -36,7 +36,7 @@ class YamlLocator implements MetadataLocatorInterface
             foreach ($yaml as $name => $configuration) {
                 $resource = (new MapperBuilder())
                     ->mapper()
-                    ->map(Admin::class, Source::array($configuration ?? []))
+                    ->map(AdminResource::class, Source::array($configuration ?? []))
                 ;
                 $resource = $resource->withName($name);
                 $resources[] = $resource;

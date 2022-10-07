@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Locator\CompositeLocator;
 use LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface;
 use LAG\AdminBundle\Tests\TestCase;
@@ -18,7 +18,7 @@ class CompositeFactoryTest extends TestCase
             ->method('locateCollection')
             ->with('/a/directory')
             ->willReturn([
-                new Admin('an_admin'),
+                new AdminResource('an_admin'),
             ])
         ;
         $locator2 = $this->createMock(MetadataLocatorInterface::class);
@@ -27,14 +27,14 @@ class CompositeFactoryTest extends TestCase
             ->method('locateCollection')
             ->with('/a/directory')
             ->willReturn([
-                new Admin('an_other_admin'),
+                new AdminResource('an_other_admin'),
             ])
         ;
 
         $compositeLocator = $this->createLocator([$locator1, $locator2]);
         $this->assertEquals([
-            new Admin('an_admin'),
-            new Admin('an_other_admin'),
+            new AdminResource('an_admin'),
+            new AdminResource('an_other_admin'),
         ], $compositeLocator->locateCollection('/a/directory'));
     }
 

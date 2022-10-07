@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
 use LAG\AdminBundle\Event\AdminEvent;
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\OperationInterface;
 
 class ResourceCreateListener
@@ -27,7 +27,7 @@ class ResourceCreateListener
         $event->setResource($resource);
     }
 
-    private function addOperationDefault(Admin $resource, OperationInterface $operation): OperationInterface
+    private function addOperationDefault(AdminResource $resource, OperationInterface $operation): OperationInterface
     {
         if (count($operation->getProperties()) === 0) {
             $operation = $operation->withProperties($this->propertyProvider->createProperties($resource->getDataClass()));

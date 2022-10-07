@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Metadata\Locator;
 
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\AttributesHelper;
 use function Symfony\Component\String\u;
 
@@ -14,10 +14,10 @@ class AttributeLocator implements MetadataLocatorInterface
         $resources = [];
 
         foreach ($classes as $reflectionClass) {
-            $attributes = $reflectionClass->getAttributes(Admin::class);
+            $attributes = $reflectionClass->getAttributes(AdminResource::class);
 
             foreach ($attributes as $attribute) {
-                /** @var Admin $resource */
+                /** @var AdminResource $resource */
                 $resource = $attribute->newInstance();
                 $resource = $resource->withDataClass($reflectionClass->getParentClass());
 

@@ -8,7 +8,7 @@ use LAG\AdminBundle\Exception\Operation\OperationMissingException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class Admin
+class AdminResource
 {
     private OperationInterface $currentOperation;
 
@@ -19,7 +19,7 @@ class Admin
         private ?string $group = null,
         private ?string $icon = null,
         /** @var OperationInterface[] $operations */
-        #[Assert\Valid()]
+        #[Assert\Valid]
         private array $operations = [
             new Index(),
             new Create(),

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class AdminEvent extends Event
@@ -12,16 +12,16 @@ class AdminEvent extends Event
     public const ADMIN_CREATE = 'lag_admin.admin.create';
     public const ADMIN_CREATED = 'lag_admin.admin.created';
 
-    public function __construct(private Admin $resource)
+    public function __construct(private AdminResource $resource)
     {
     }
 
-    public function setResource(Admin $resource): void
+    public function setResource(AdminResource $resource): void
     {
         $this->resource = $resource;
     }
 
-    public function getResource(): Admin
+    public function getResource(): AdminResource
     {
         return $this->resource;
     }

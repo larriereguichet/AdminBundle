@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Metadata\OperationInterface;
 
@@ -15,7 +15,7 @@ interface UrlGeneratorInterface
      * data object.
      */
     public function generatePath(
-        Admin $resource,
+        AdminResource $resource,
         OperationInterface $operation,
     ): string;
 

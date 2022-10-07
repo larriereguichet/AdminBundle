@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Validation\Validator;
 
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -11,8 +11,8 @@ class AdminValidator extends ConstraintValidator
 {
     public function validate(mixed $value, Constraint $constraint)
     {
-        if (!$value instanceof Admin) {
-            throw new UnexpectedTypeException($value, Admin::class);
+        if (!$value instanceof AdminResource) {
+            throw new UnexpectedTypeException($value, AdminResource::class);
         }
 
         if (!$value->getName()) {

@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Metadata\Factory;
 
 use LAG\AdminBundle\Event\AdminEvent;
 use LAG\AdminBundle\Exception\Validation\InvalidAdminException;
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Validation\Constraint\AdminValid;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,7 +21,7 @@ class AdminFactory implements AdminFactoryInterface
     ) {
     }
 
-    public function create(Admin $resource): Admin
+    public function create(AdminResource $resource): AdminResource
     {
         $event = new AdminEvent($resource);
         $this->eventDispatcher->dispatch($event, AdminEvent::ADMIN_CREATE);

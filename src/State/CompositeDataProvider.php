@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\State;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\OperationInterface;
 
 class CompositeDataProvider implements DataProviderInterface

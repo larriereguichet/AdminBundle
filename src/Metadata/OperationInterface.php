@@ -90,9 +90,9 @@ interface OperationInterface
 
     public function withIdentifiers(array $identifiers): self;
 
-    public function getResource(): Admin;
+    public function getResource(): AdminResource;
 
-    public function withResource(Admin $resource): self;
+    public function withResource(AdminResource $resource): self;
 
     public function getItemActions(): ?array;
 

@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Metadata\Factory;
 use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Exception\Validation\InvalidOperationException;
 use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Component\Validator\Constraints\Valid;
@@ -22,7 +22,7 @@ class OperationFactory implements OperationFactoryInterface
     ) {
     }
 
-    public function create(Admin $resource, OperationInterface $operation): OperationInterface
+    public function create(AdminResource $resource, OperationInterface $operation): OperationInterface
     {
         $operation = $operation
             ->withResource($resource)
