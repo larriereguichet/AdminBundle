@@ -2,9 +2,9 @@
 
 namespace LAG\AdminBundle\Tests\Entity;
 
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 
-#[Admin]
+#[AdminResource]
 class FakeEntity
 {
     public int $id;

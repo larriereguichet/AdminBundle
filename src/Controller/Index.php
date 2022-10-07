@@ -4,7 +4,7 @@ namespace LAG\AdminBundle\Controller;
 
 use LAG\AdminBundle\Exception\Operation\InvalidCollectionOperationException;
 use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
@@ -26,7 +26,7 @@ class Index
     ) {
     }
 
-    public function __invoke(Request $request, Admin $resource): Response
+    public function __invoke(Request $request, AdminResource $resource): Response
     {
         $operation = $this->getOperation($resource);
         $uriVariables = $this->uriVariablesExtractor->extractVariables($operation, $request);
@@ -53,7 +53,7 @@ class Index
         ]));
     }
 
-    private function getOperation(Admin $resource): CollectionOperationInterface
+    private function getOperation(AdminResource $resource): CollectionOperationInterface
     {
         $operation = $resource->getCurrentOperation();
 

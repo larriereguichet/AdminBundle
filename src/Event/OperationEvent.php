@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -12,12 +12,12 @@ class OperationEvent extends Event
     const OPERATION_CREATED = 'lag_admin.operation.created';
 
     public function __construct(
-        private Admin $resource,
+        private AdminResource $resource,
         private OperationInterface $operation,
     ) {
     }
 
-    public function getResource(): Admin
+    public function getResource(): AdminResource
     {
         return $this->resource;
     }

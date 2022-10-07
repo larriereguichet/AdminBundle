@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Controller;
 
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;

@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Locator\YamlLocator;
 use LAG\AdminBundle\Tests\TestCase;
 
@@ -15,7 +15,7 @@ class YamlFactoryTest extends TestCase
         $resources = $locator->locateCollection(__DIR__.'/../../../resources/admin');
 
         foreach ($resources as $resource) {
-            $this->assertInstanceOf(Admin::class, $resource);
+            $this->assertInstanceOf(AdminResource::class, $resource);
         }
         $this->assertCount(1, $resources);
     }

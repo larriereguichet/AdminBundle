@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\EventListener\Security;
 
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
@@ -19,7 +19,7 @@ class RequestListener
         $user = $this->security->getUser();
 
         foreach ($event->getArguments() as $argument) {
-            if (!$argument instanceof Admin) {
+            if (!$argument instanceof AdminResource) {
                 continue;
             }
             $permissions = $argument->getCurrentOperation()->getPermissions();

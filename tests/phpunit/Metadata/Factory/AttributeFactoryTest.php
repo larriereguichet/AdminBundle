@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Tests\TestCase;
 
 class AttributeFactoryTest extends TestCase
@@ -13,7 +13,7 @@ class AttributeFactoryTest extends TestCase
         $resources = $locator->locateCollection(__DIR__.'/../../Entity');
 
         foreach ($resources as $resource) {
-            $this->assertInstanceOf(Admin::class, $resource);
+            $this->assertInstanceOf(AdminResource::class, $resource);
         }
         $this->assertCount(1, $resources);
     }

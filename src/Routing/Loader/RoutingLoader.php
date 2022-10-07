@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\Loader;
 
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use RuntimeException;
@@ -43,7 +43,7 @@ class RoutingLoader extends Loader
         return 'lag_admin' === $type;
     }
 
-    private function loadResource(Admin $resource, RouteCollection $routes): void
+    private function loadResource(AdminResource $resource, RouteCollection $routes): void
     {
         $identifiers = [];
 

@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Resource\Registry;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\UnexpectedTypeException;
-use LAG\AdminBundle\Metadata\Admin;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Factory\AdminFactoryInterface;
 use LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface;
 
@@ -32,8 +32,8 @@ class ResourceRegistry implements ResourceRegistryInterface
             $resources = $this->locator->locateCollection($path);
 
             foreach ($resources as $resource) {
-                if (!$resource instanceof Admin) {
-                    throw new UnexpectedTypeException($resource, Admin::class);
+                if (!$resource instanceof AdminResource) {
+                    throw new UnexpectedTypeException($resource, AdminResource::class);
                 }
 
                 if (!$resource->getName()) {
@@ -50,7 +50,7 @@ class ResourceRegistry implements ResourceRegistryInterface
         return \array_key_exists($resourceName, $this->resources);
     }
 
-    public function get(string $resourceName): Admin
+    public function get(string $resourceName): AdminResource
     {
         $this->load();
 
