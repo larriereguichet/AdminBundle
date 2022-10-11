@@ -4,7 +4,9 @@ namespace LAG\AdminBundle\Bridge\KnpMenu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface;
+use LAG\AdminBundle\Event\Events\MenuCreatedEvent;
+use LAG\AdminBundle\Event\Events\MenuCreateEvent;
+use LAG\AdminBundle\Event\MenuEvents;
 use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
@@ -14,21 +16,24 @@ use function Symfony\Component\String\u;
 
 class LeftMenuBuilder
 {
-    use MenuBuilderTrait;
-
     public function __construct(
         private FactoryInterface $factory,
         private ResourceRegistryInterface $resourceRegistry,
-        private AdminConfigurationFactoryInterface $adminConfigurationFactory,
         private RouteNameGeneratorInterface $routeNameGenerator,
         private EventDispatcherInterface $eventDispatcher,
-    )
-    {
+    ) {
     }
 
     public function createMenu(array $options = []): ItemInterface
     {
         $menu = $this->factory->createItem('root', $options);
+        $this->eventDispatcher->dispatch($event = new MenuCreateEvent($menu), MenuEvents::MENU_CREATE);
+        $this->eventDispatcher->dispatch($event = new MenuCreateEvent($event->getMenu()), sprintf(
+            MenuEvents::NAME_EVENT_PATTERN,
+            'left',
+            'create',
+        ));
+        $menu = $event->getMenu();
 
         foreach ($this->resourceRegistry->all() as $resource) {
             foreach ($resource->getOperations() as $operation) {
@@ -45,7 +50,12 @@ class LeftMenuBuilder
                 ;
             }
         }
-        $this->dispatchMenuEvents('left', $menu);
+        $this->eventDispatcher->dispatch(new MenuCreatedEvent($menu), MenuEvents::MENU_CREATED);
+        $this->eventDispatcher->dispatch(new MenuCreateEvent($menu), sprintf(
+            MenuEvents::NAME_EVENT_PATTERN,
+            'left',
+            'created',
+        ));
 
 
         return $menu;
