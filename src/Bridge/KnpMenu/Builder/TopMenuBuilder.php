@@ -4,18 +4,23 @@ namespace LAG\AdminBundle\Bridge\KnpMenu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Admin\Context\AdminContextInterface;
+use LAG\AdminBundle\Event\Events\MenuCreatedEvent;
+use LAG\AdminBundle\Event\Events\MenuCreateEvent;
+use LAG\AdminBundle\Event\MenuEvents;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use function Symfony\Component\String\u;
 
 class TopMenuBuilder
 {
-    use MenuBuilderTrait;
-
     public function __construct(
+        private ParametersExtractorInterface $parametersExtractor,
+        private ResourceRegistryInterface $registry,
+        private RequestStack $requestStack,
         private FactoryInterface $factory,
-        private AdminContextInterface $adminContext,
         private RouteNameGeneratorInterface $routeNameGenerator,
         private EventDispatcherInterface $eventDispatcher,
     ) {
@@ -24,31 +29,49 @@ class TopMenuBuilder
     public function createMenu(array $options = []): ItemInterface
     {
         $menu = $this->factory->createItem('root', $options);
+        $request = $this->requestStack->getMainRequest();
 
-        if (!$this->adminContext->hasAdmin()) {
+        if (!$this->parametersExtractor->supports($request)) {
             return $menu;
         }
-        $admin = $this->adminContext->getAdmin();
-        $action = $admin->getAction();
+        $resourceName = $this->parametersExtractor->getResourceName($request);
+        $operationName = $this->parametersExtractor->getOperationName($request);
 
-        if ($action->getName() === 'index') {
-            if ($admin->getConfiguration()->hasAction('create')) {
-                $menu
-                    ->addChild($action->getName(), [
-                        'route' => $this->routeNameGenerator->generateRouteName($admin->getName(), 'create'),
-                        'extras' => [
-                            'icon' => 'plus'
-                        ],
-                    ])
-                    ->setLabel(sprintf(
-                        'lag_admin.%s.%s',
-                        u($admin->getName())->lower()->snake()->toString(),
-                        'create',
-                    ))
+        $resource = $this->registry->get($resourceName);
+        $operation = $resource->getOperation($operationName);
+
+        $this->eventDispatcher->dispatch($event = new MenuCreateEvent($menu), MenuEvents::MENU_CREATE);
+        $this->eventDispatcher->dispatch($event = new MenuCreateEvent($event->getMenu()), sprintf(
+            MenuEvents::NAME_EVENT_PATTERN,
+            'top',
+            'create',
+        ));
+        $menu = $event->getMenu();
+
+        if (!$operation instanceof Index) {
+            return $menu;
+        }
+
+        foreach ($operation->getListActions() as $listAction) {
+            $route = $listAction->getRouteName();
+
+            if ($route === null) {
+                $route = $this
+                    ->routeNameGenerator
+                    ->generateRouteName($resource, $resource->getOperation($listAction->getOperationName()))
                 ;
             }
+
+            $menu->addChild($listAction->getLabel(), [
+                'route' => $route,
+            ]);
         }
-        $this->dispatchMenuEvents('top', $menu);
+        $this->eventDispatcher->dispatch(new MenuCreatedEvent($menu), MenuEvents::MENU_CREATED);
+        $this->eventDispatcher->dispatch(new MenuCreateEvent($menu), sprintf(
+            MenuEvents::NAME_EVENT_PATTERN,
+            'top',
+            'created',
+        ));
 
         return $menu;
     }
