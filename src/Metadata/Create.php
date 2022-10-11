@@ -8,18 +8,18 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
 class Create extends Operation
 {
     public function __construct(
-        ?string $name = null,
+        ?string $name = 'create',
         ?string $resourceName = null,
         ?string $title = null,
         ?string $description = null,
         ?string $icon = null,
-        ?string $template = null,
+        ?string $template = '@LAGAdmin/crud/create.html.twig',
         ?array $permissions = [],
-        ?string $controller = null,
+        ?string $controller = \LAG\AdminBundle\Controller\Create::class,
         ?string $route = null,
         ?array $routeParameters = null,
-        array $methods = [],
-        ?string $path = null,
+        array $methods = ['POST', 'GET'],
+        string $path = '/create',
         ?string $targetRoute = null,
         ?array $targetRouteParameters = null,
         array $properties = [],
