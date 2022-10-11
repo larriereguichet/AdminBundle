@@ -1,17 +1,27 @@
 services:
-    _defaults:
-        autoconfigure: true
-        autowire: true
-
-    # Menu builders
     LAG\AdminBundle\Bridge\KnpMenu\Builder\TopMenuBuilder:
+        arguments:
+            $parametersExtractor: '@lag_admin.request.parameters_extractor'
+            $requestStack: '@request_stack'
+            $registry: '@lag_admin.resource.registry'
+            $factory: '@knp_menu.factory'
+            $routeNameGenerator: '@lag_admin.routing.route_name_generator'
+            $eventDispatcher: '@event_dispatcher'
         tags:
             - { name: knp_menu.menu_builder, method: createMenu, alias: top }
 
     LAG\AdminBundle\Bridge\KnpMenu\Builder\UserMenuBuilder:
+        arguments:
+            $factory: '@knp_menu.factory'
+            $eventDispatcher: '@event_dispatcher'
         tags:
             - { name: knp_menu.menu_builder, method: createMenu, alias: user }
 
     LAG\AdminBundle\Bridge\KnpMenu\Builder\LeftMenuBuilder:
+        arguments:
+            $factory: '@knp_menu.factory'
+            $resourceRegistry: '@lag_admin.resource.registry'
+            $routeNameGenerator: '@lag_admin.routing.route_name_generator'
+            $eventDispatcher: '@event_dispatcher'
         tags:
             - { name: knp_menu.menu_builder, method: createMenu, alias: left }
