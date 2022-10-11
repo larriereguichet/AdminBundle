@@ -122,7 +122,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
     {
         return $this->orderBy;
     }
-    
+
     public function withOrderBy(array $orderBy): self
     {
         $self = clone $this;
