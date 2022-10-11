@@ -16,16 +16,14 @@ class MetadataHelper implements MetadataHelperInterface
 
     public function findMetadata(string $class): ?ClassMetadata
     {
-        $metadata = null;
-
         try {
             // We could not use the hasMetadataFor() method as it is not working if the entity is not loaded. But
             // the getMetadataFor() method could throw an exception if the class is not found
-            $metadata = $this->entityManager->getMetadataFactory()->getMetadataFor($class);
+            return $this->entityManager->getMetadataFactory()->getMetadataFor($class);
         } catch (Exception) {
             // If an exception is raised, nothing to do. Extra data from metadata will be not used.
         }
 
-        return $metadata;
+        return null;
     }
 }

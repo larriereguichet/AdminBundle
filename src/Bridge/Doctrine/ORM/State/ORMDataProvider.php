@@ -3,12 +3,14 @@
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectRepository;
 use LAG\AdminBundle\Bridge\Doctrine\DataSource\ORMDataSource;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\EntityManagerNotFoundException;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\QueryBuilder\QueryBuilderHelper;
 use LAG\AdminBundle\Event\Events\DataOrderEvent;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
@@ -27,30 +29,53 @@ class ORMDataProvider implements DataProviderInterface
 
     public function provide(OperationInterface $operation, array $uriVariables = [], array $context = []): mixed
     {
-        $manager = $this->registry->getManagerForClass($operation->getResource()->getDataClass());
-
-        if ($manager === null) {
-            throw new EntityManagerNotFoundException($operation);
-        }
-        $repository = $manager->getRepository($operation->getResource()->getDataClass());
-
         if ($operation instanceof Create) {
             $class = $operation->getResource()->getDataClass();
 
             return new $class();
         }
+        $manager = $this->registry->getManagerForClass($operation->getResource()->getDataClass());
+
+        if ($manager === null) {
+            throw new EntityManagerNotFoundException($operation);
+        }
+        /** @var EntityRepository $repository */
+        $repository = $manager->getRepository($operation->getResource()->getDataClass());
+        // Add a suffix to avoid error if the resource is named with a reserved keyword
+        $rootAlias = $operation->getResourceName().'_entity';
+
+        $queryBuilder = $repository->createQueryBuilder($rootAlias);
+        $helper = new QueryBuilderHelper(
+            $queryBuilder,
+            $manager->getClassMetadata($operation->getResource()->getDataClass()),
+        );
 
         if ($operation instanceof CollectionOperationInterface) {
-            $queryBuilder = $this->createCollectionQueryBuilder(
-                $repository,
-                $operation,
-                $context['filters'] ?? [],
-            );
+            $orderBy = $operation->getOrderBy();
+
+            if (($context['sort'] ?? false) && ($context['order'] ?? false)) {
+                $orderBy[$context['sort']] = $context['order'];
+            }
+            $helper->addOrderBy($orderBy);
+            $filters = [];
+
+            foreach ($operation->getFilters() as $filter) {
+                $data = $context['filters'][$filter->getName()] ?? null;
+
+                if ($data) {
+                    $filters[] = $filter->withData($data);
+                }
+            }
+            $helper->addFilters($filters);
 
             if (!$operation->hasPagination()) {
-                return $queryBuilder->getQuery()->getResult();
+                return $helper
+                    ->getQueryBuilder()
+                    ->getQuery()
+                    ->getResult()
+                ;
             }
-            $pager = new Pagerfanta(new QueryAdapter($queryBuilder, true));
+            $pager = new Pagerfanta(new QueryAdapter($helper->getQueryBuilder(), true));
             $pager->setMaxPerPage($operation->getItemPerPage());
             $pager->setCurrentPage($context['page'] ?? 1);
 
@@ -151,143 +176,143 @@ class ORMDataProvider implements DataProviderInterface
         ;
     }
 
-    //    public function __invoke(DataOrderEvent $event): void
-    //    {
-    //        $dataSource = $event->getDataSource();
-    //
-    //        if (!$dataSource instanceof ORMDataSource) {
-    //            return;
-    //        }
-    //        $order = $event->getOrderBy();
-    //        $queryBuilder = $event->getDataSource()->getData();
-    //        $queryBuilder->resetDQLPart('orderBy');
-    //        $metadata = $this->entityManager->getClassMetadata($event->getAdmin()->getEntityClass());
-    //
-    //        foreach ($order as $field => $orderValue) {
-    //            if ($metadata->hasField($field)) {
-    //                $this->addFieldOrder($queryBuilder, $field, $orderValue);
-    //            }
-    //
-    //            if ($metadata->hasAssociation($field)) {
-    //                $this->addAssociationOrder($queryBuilder, $metadata, $field, $orderValue);
-    //            }
-    //        }
-    //    }
-    //
-    //    private function addFieldOrder(QueryBuilder $queryBuilder, string $field, string $orderValue): void
-    //    {
-    //        $alias = $queryBuilder->getRootAliases()[0];
-    //        $queryBuilder->addOrderBy($alias.'.'.$field, $orderValue);
-    //    }
-    //
-    //    private function addAssociationOrder(QueryBuilder $queryBuilder, ClassMetadata $metadata, string $field, string $orderValue): void
-    //    {
-    //        $joins = $queryBuilder->getDQLPart('join');
-    //        $alias = $queryBuilder->getRootAliases()[0];
-    //
-    //        $joinAlias = null;
-    //
-    //        /** @var Join[] $rootJoins */
-    //        foreach ($joins as $rootEntityJoin => $rootJoins) {
-    //            if ($rootEntityJoin !== $alias) {
-    //                continue;
-    //            }
-    //            foreach ($rootJoins as $join) {
-    //                if ($join->getJoin() === $alias.'.'.$field) {
-    //                    $joinAlias = $join->getAlias();
-    //                }
-    //            }
-    //        }
-    //        $associationTargetClass = $metadata->getAssociationTargetClass($field);
-    //        $associationTargetMetadata = $this->entityManager->getClassMetadata($associationTargetClass);
-    //
-    //        foreach ($associationTargetMetadata->getIdentifier() as $identifier) {
-    //            if ($joinAlias === null) {
-    //                $queryBuilder
-    //                    ->innerJoin($alias.'.'.$field, $field)
-    //                    ->addOrderBy($field.'.'.$identifier, $orderValue)
-    //
-    //                ;
-    //            } else {
-    //                $queryBuilder
-    //                    ->addOrderBy($field.'.'.$identifier, $orderValue)
-    //                ;
-    //            }
-    //        }
-    //    }
+    public function __invoke(DataOrderEvent $event): void
+    {
+        $dataSource = $event->getDataSource();
 
-//    public function getCollection(
-//        string $class,
-//        array $criteria = [],
-//        array $orderBy = [],
-//        int $limit = 1,
-//        int $offset = 25
-//    ): DataSourceInterface {
-//        $admin = $this->getAdmin();
-//        $adminConfiguration = $admin->getConfiguration();
-//        $actionConfiguration = $admin->getAction()->getConfiguration();
-//        $repository = $this->getRepository($adminConfiguration->getEntityClass());
-//
-//        // Allow to change the default method in configuration
-//        $method = $actionConfiguration->getRepositoryMethod();
-//        $isPaginated = ('pagerfanta' === $actionConfiguration->getPager());
-//
-//        // Fetch pagination parameters
-//        $pageParameter = $actionConfiguration->getPageParameter();
-//        $page = (int) $admin->getRequest()->get($pageParameter, 1);
-//        $maxPerPage = $actionConfiguration->getMaxPerPage();
-//
-//        // The repository could return an object, an array, a collection, a pager or a query builder. The results
-//        // handler will act according to result type
-//        if ($method) {
-//            if (!method_exists($repository, $method)) {
-//                throw new Exception(sprintf('The method "%s" does not exists for the class "%s"', $method, \get_class($repository)));
-//            }
-//            $data = $repository->$method($criteria, $orderBy, $limit, $offset);
-//
-//            if (!$data instanceof QueryBuilder) {
-//                throw new Exception(sprintf('The method "%s" of the repository "%s" should return a instance of "%s"', $method, \get_class($repository), QueryBuilder::class));
-//            }
-//        } else {
-//            $data = $repository->createQueryBuilder('entity');
-//        }
-//
-//        return new ORMDataSource($data, $isPaginated, $page, $maxPerPage);
-//    }
-//
-//    public function get(string $class, $identifier): object
-//    {
-//        $item = $this
-//            ->getRepository($class)
-//            ->find($identifier)
-//        ;
-//
-//        if ($item === null) {
-//            throw new Exception(sprintf('Item of class "%s" with identifier "%s" not found.', $class, $identifier));
-//        }
-//
-//        return $item;
-//    }
-//
-//    public function create(string $class): object
-//    {
-//        return new $class();
-//    }
-//
-//    private function getRepository(string $class): EntityRepository
-//    {
-//        $repository = $this->entityManager->getRepository($class);
-//
-//        if (!$repository instanceof EntityRepository) {
-//            $admin = $this->adminHelper->getAdmin();
-//            throw new Exception(sprintf('The repository of admin "%s" should be an instance of "%s" to use the default method createQueryBuilder()', $admin->getName(), EntityRepository::class));
-//        }
-//
-//        return $repository;
-//    }
-//
-//    private function getAdmin(): AdminInterface
-//    {
-//        return $this->adminHelper->getAdmin();
-//    }
+        if (!$dataSource instanceof ORMDataSource) {
+            return;
+        }
+        $order = $event->getOrderBy();
+        $queryBuilder = $event->getDataSource()->getData();
+        $queryBuilder->resetDQLPart('orderBy');
+        $metadata = $this->entityManager->getClassMetadata($event->getAdmin()->getEntityClass());
+
+        foreach ($order as $field => $orderValue) {
+            if ($metadata->hasField($field)) {
+                $this->addFieldOrder($queryBuilder, $field, $orderValue);
+            }
+
+            if ($metadata->hasAssociation($field)) {
+                $this->addAssociationOrder($queryBuilder, $metadata, $field, $orderValue);
+            }
+        }
+    }
+
+    private function addFieldOrder(QueryBuilder $queryBuilder, string $field, string $orderValue): void
+    {
+        $alias = $queryBuilder->getRootAliases()[0];
+        $queryBuilder->addOrderBy($alias.'.'.$field, $orderValue);
+    }
+
+    private function addAssociationOrder(QueryBuilder $queryBuilder, ClassMetadata $metadata, string $field, string $orderValue): void
+    {
+        $joins = $queryBuilder->getDQLPart('join');
+        $alias = $queryBuilder->getRootAliases()[0];
+
+        $joinAlias = null;
+
+        /** @var Join[] $rootJoins */
+        foreach ($joins as $rootEntityJoin => $rootJoins) {
+            if ($rootEntityJoin !== $alias) {
+                continue;
+            }
+            foreach ($rootJoins as $join) {
+                if ($join->getJoin() === $alias.'.'.$field) {
+                    $joinAlias = $join->getAlias();
+                }
+            }
+        }
+        $associationTargetClass = $metadata->getAssociationTargetClass($field);
+        $associationTargetMetadata = $this->entityManager->getClassMetadata($associationTargetClass);
+
+        foreach ($associationTargetMetadata->getIdentifier() as $identifier) {
+            if ($joinAlias === null) {
+                $queryBuilder
+                    ->innerJoin($alias.'.'.$field, $field)
+                    ->addOrderBy($field.'.'.$identifier, $orderValue)
+
+                ;
+            } else {
+                $queryBuilder
+                    ->addOrderBy($field.'.'.$identifier, $orderValue)
+                ;
+            }
+        }
+    }
+
+    public function getCollection(
+        string $class,
+        array $criteria = [],
+        array $orderBy = [],
+        int $limit = 1,
+        int $offset = 25
+    ): DataSourceInterface {
+        $admin = $this->getAdmin();
+        $adminConfiguration = $admin->getConfiguration();
+        $actionConfiguration = $admin->getAction()->getConfiguration();
+        $repository = $this->getRepository($adminConfiguration->getEntityClass());
+
+        // Allow to change the default method in configuration
+        $method = $actionConfiguration->getRepositoryMethod();
+        $isPaginated = ('pagerfanta' === $actionConfiguration->getPager());
+
+        // Fetch pagination parameters
+        $pageParameter = $actionConfiguration->getPageParameter();
+        $page = (int) $admin->getRequest()->get($pageParameter, 1);
+        $maxPerPage = $actionConfiguration->getMaxPerPage();
+
+        // The repository could return an object, an array, a collection, a pager or a query builder. The results
+        // handler will act according to result type
+        if ($method) {
+            if (!method_exists($repository, $method)) {
+                throw new Exception(sprintf('The method "%s" does not exists for the class "%s"', $method, \get_class($repository)));
+            }
+            $data = $repository->$method($criteria, $orderBy, $limit, $offset);
+
+            if (!$data instanceof QueryBuilder) {
+                throw new Exception(sprintf('The method "%s" of the repository "%s" should return a instance of "%s"', $method, \get_class($repository), QueryBuilder::class));
+            }
+        } else {
+            $data = $repository->createQueryBuilder('entity');
+        }
+
+        return new ORMDataSource($data, $isPaginated, $page, $maxPerPage);
+    }
+
+    public function get(string $class, $identifier): object
+    {
+        $item = $this
+            ->getRepository($class)
+            ->find($identifier)
+        ;
+
+        if ($item === null) {
+            throw new Exception(sprintf('Item of class "%s" with identifier "%s" not found.', $class, $identifier));
+        }
+
+        return $item;
+    }
+
+    public function create(string $class): object
+    {
+        return new $class();
+    }
+
+    private function getRepository(string $class): EntityRepository
+    {
+        $repository = $this->entityManager->getRepository($class);
+
+        if (!$repository instanceof EntityRepository) {
+            $admin = $this->adminHelper->getAdmin();
+            throw new Exception(sprintf('The repository of admin "%s" should be an instance of "%s" to use the default method createQueryBuilder()', $admin->getName(), EntityRepository::class));
+        }
+
+        return $repository;
+    }
+
+    private function getAdmin(): AdminInterface
+    {
+        return $this->adminHelper->getAdmin();
+    }
 }
