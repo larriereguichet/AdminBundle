@@ -20,9 +20,9 @@ interface FilterInterface
 
     public function withOperator(string $operator): self;
 
-    public function getValue(): mixed;
+    public function getData(): mixed;
 
-    public function withValue(mixed $value): self;
+    public function withData(mixed $data): self;
 
     public function getFormType(): string;
 
@@ -31,4 +31,6 @@ interface FilterInterface
     public function getFormOptions(): array;
 
     public function withFormOptions(array $formOptions): self;
+
+
 }
