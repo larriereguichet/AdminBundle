@@ -15,43 +15,27 @@ class SecurityHelper
 {
     public function __construct(
         private Security $security,
-        private AdminConfigurationFactoryInterface $adminConfigurationFactory,
-        private ActionConfigurationFactoryInterface $actionConfigurationFactory,
         private ResourceRegistryInterface $registry
     ) {
     }
 
-    public function isActionAllowed(string $adminName, string $actionName): bool
-    {
-        $resource = $this->registry->get($adminName);
-        $adminConfiguration = $this->adminConfigurationFactory->create(
-            $adminName,
-            $resource->getConfiguration()
-        );
-
-        if (!$adminConfiguration->hasAction($actionName)) {
-            return false;
-        }
-        $actionConfiguration = $this->actionConfigurationFactory->create(
-            $adminName,
-            $actionName,
-            $adminConfiguration->getAction($actionName),
-        );
-
-        return $this->isGranted($actionConfiguration->getPermissions());
-    }
-
-    public function isGranted(array $permissions): bool
+    public function isOperationAllowed(string $resourceName, string $operationName): bool
     {
         $user = $this->getUser();
+        $resource = $this->registry->get($resourceName);
 
-        foreach ($permissions as $permission) {
-            if ($this->security->isGranted($permission, $user)) {
-                return true;
+        if (!$resource->hasOperation($operationName)) {
+            return false;
+        }
+        $operation = $resource->getOperation($operationName);
+
+        foreach ($operation->getPermissions() ?? [] as $permission) {
+            if (!$this->security->isGranted($permission, $user)) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     public function getUser(): UserInterface
