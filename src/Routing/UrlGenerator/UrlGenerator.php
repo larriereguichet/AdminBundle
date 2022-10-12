@@ -29,29 +29,27 @@ class UrlGenerator implements UrlGeneratorInterface
         AdminResource $resource,
         OperationInterface $operation,
     ): string {
-        $inflector = new EnglishInflector();
-        $path = u('/')
-            ->append($inflector->pluralize($resource->getName())[0])
+        $resource = $operation->getResource();
+        $resourceName = (new EnglishInflector())->pluralize($resource->getName())[0];
+
+        $path = u($resource->getPrefix())
+            ->replace('{resourceName}', $resourceName)
         ;
 
-        if ($operation instanceof CollectionOperationInterface) {
-            return $path->toString();
+        foreach ($operation->getRouteParameters() as $parameter => $requirement) {
+            $path = $path
+                ->append('/')
+                ->append('{'.$parameter.'}')
+            ;
         }
+        $operationPath = u($operation->getPath());
 
-        if (!$operation instanceof Create) {
-            foreach ($resource->getIdentifiers() as $identifier) {
-                $path = $path
-                    ->append('/{')
-                    ->append($identifier)
-                    ->append('}')
-                ;
-            }
+        if ($operationPath->length() > 0) {
+            $operationPath = $operationPath->ensureStart('/');
         }
 
         return $path
-            ->append('/')
-            ->append($operation->getName())
-            ->lower()
+            ->append($operationPath->toString())
             ->toString()
         ;
     }
