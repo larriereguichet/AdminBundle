@@ -77,8 +77,6 @@ class CreateListener
             }
         }
 
-
-
         if (!$operation->getFormType()) {
             if ($operation instanceof Create || $operation instanceof Update) {
                 $operation = $operation
@@ -98,6 +96,12 @@ class CreateListener
             $operation = $operation->withFormOptions([
                 'operation' => $operation,
             ]);
+        }
+
+        if ($operation instanceof Index) {
+            if ($operation->getListActions() === null) {
+                $operation = $operation->withListActions([]);
+            }
         }
 
         $event->setOperation($operation);
