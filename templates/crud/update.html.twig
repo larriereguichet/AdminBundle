@@ -9,7 +9,7 @@
         {% block form %}
             {{ form_start(form, {method: 'POST' in operation.methods ? 'POST': 'PUT'}) }}
                 <div class="row">
-                    {% for child in form.children %}
+                    {% for child in form %}
                         <div class="col-6">
                             {{ form_row(child) }}
                         </div>
@@ -17,8 +17,8 @@
                 </div>
 
                 {% block form_buttons %}
-                    <div class="row">
-                        <div class="col-3">
+                    <div class="row mt-3 justify-content-end">
+                        <div class="col-3 text-end">
                             {% for action in operation.itemActions %}
                                 {{ lag_admin_action(action, data) }}
                             {% endfor %}
