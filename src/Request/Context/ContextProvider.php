@@ -19,6 +19,14 @@ class ContextProvider implements ContextProviderInterface
             if ($request->query->has($pageParameter)) {
                 $context[$pageParameter] = $request->query->get($pageParameter);
             }
+
+            if ($request->query->has('sort')) {
+                $context['sort'] = $request->query->get('sort');
+            }
+
+            if ($request->query->has('order')) {
+                $context['order'] = $request->query->get('order');
+            }
         }
 
         return $context;
