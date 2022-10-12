@@ -1,9 +1,6 @@
 services:
     lag_admin.security.helper: '@LAG\AdminBundle\Security\Helper\SecurityHelper'
-
     LAG\AdminBundle\Security\Helper\SecurityHelper:
         arguments:
             $security: '@security.helper'
-            $adminConfigurationFactory: '@LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface'
-            $actionConfigurationFactory: '@LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface'
             $registry: '@lag_admin.resource.registry'
