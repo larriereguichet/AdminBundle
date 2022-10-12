@@ -1,5 +1,5 @@
 services:
-    lag_admin.admin.factory: '@LAG\AdminBundle\Admin\Factory\AdminFactoryInterface'
+    lag_admin.admin.factory: '@LAG\AdminBundle\Metadata\Factory\AdminFactoryInterface'
     LAG\AdminBundle\Metadata\Factory\AdminFactoryInterface:
         class: LAG\AdminBundle\Metadata\Factory\AdminFactory
         arguments:
@@ -7,7 +7,7 @@ services:
             $validator: '@validator'
             $operationFactory: '@lag_admin.operation.factory'
 
-    lag_admin.operation.factory: '@LAG\AdminBundle\Admin\Factory\OperationFactoryInterface'
+    lag_admin.operation.factory: '@LAG\AdminBundle\Metadata\Factory\OperationFactoryInterface'
     LAG\AdminBundle\Metadata\Factory\OperationFactoryInterface:
         class: LAG\AdminBundle\Metadata\Factory\OperationFactory
         arguments:
@@ -16,69 +16,39 @@ services:
             $propertyFactory: '@lag_admin.property.factory'
             $filterFactory: '@lag_admin.filter.factory'
 
-    lag_admin.property.factory: '@LAG\AdminBundle\Property\Factory\PropertyFactoryInterface'
+    lag_admin.property.factory: '@LAG\AdminBundle\Metadata\Factory\PropertyFactoryInterface'
     LAG\AdminBundle\Metadata\Factory\PropertyFactoryInterface:
         class: LAG\AdminBundle\Metadata\Factory\PropertyFactory
         arguments:
             $eventDispatcher: '@event_dispatcher'
             $validator: '@validator'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    LAG\AdminBundle\Action\Factory\ActionFactoryInterface: '@LAG\AdminBundle\Action\Factory\ActionFactory'
-    LAG\AdminBundle\Action\Factory\ActionFactory:
-        arguments:
-            $eventDispatcher: '@event_dispatcher'
-            $configurationFactory: '@LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface'
-            $registry: '@LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface'
-
-
-    LAG\AdminBundle\Factory\FieldFactoryInterface: '@LAG\AdminBundle\Factory\FieldFactory'
-    LAG\AdminBundle\Factory\FieldFactory:
-        arguments:
-            $fieldsMapping: '%lag_admin.fields.mapping%'
-            $eventDispatcher: '@event_dispatcher'
-            $applicationConfiguration: '@LAG\AdminBundle\Application\Configuration\ApplicationConfiguration'
-
-    LAG\AdminBundle\Form\Factory\FormFactoryInterface: '@LAG\AdminBundle\Form\Factory\FormFactory'
-    LAG\AdminBundle\Form\Factory\FormFactory:
-        arguments:
-            $formFactory: '@form.factory'
-            $fieldFactory: '@LAG\AdminBundle\Factory\FieldFactoryInterface'
-    
-    LAG\AdminBundle\Factory\Form\FilterFormFactoryInterface: '@LAG\AdminBundle\Factory\Form\FilterFormFactory'
-    LAG\AdminBundle\Factory\Form\FilterFormFactory:
-        arguments:
-            $formFactory: '@form.factory'
-            $applicationConfiguration: '@LAG\AdminBundle\Application\Configuration\ApplicationConfiguration'
-
-    # Configuration factories
-    LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface: '@LAG\AdminBundle\Admin\Factory\AdminConfigurationFactory'
-    LAG\AdminBundle\Admin\Factory\AdminConfigurationFactory:
-        arguments:
-            $eventDispatcher: '@event_dispatcher'
-
-    LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface: '@LAG\AdminBundle\Action\Factory\ActionConfigurationFactory'
-    LAG\AdminBundle\Action\Factory\ActionConfigurationFactory:
-        arguments:
-            $eventDispatcher: '@event_dispatcher'
+#    LAG\AdminBundle\Factory\FieldFactoryInterface: '@LAG\AdminBundle\Factory\FieldFactory'
+#    LAG\AdminBundle\Factory\FieldFactory:
+#        arguments:
+#            $fieldsMapping: '%lag_admin.fields.mapping%'
+#            $eventDispatcher: '@event_dispatcher'
+#            $applicationConfiguration: '@LAG\AdminBundle\Application\Configuration\ApplicationConfiguration'
+#
+#    LAG\AdminBundle\Form\Factory\FormFactoryInterface: '@LAG\AdminBundle\Form\Factory\FormFactory'
+#    LAG\AdminBundle\Form\Factory\FormFactory:
+#        arguments:
+#            $formFactory: '@form.factory'
+#            $fieldFactory: '@LAG\AdminBundle\Factory\FieldFactoryInterface'
+#
+#    LAG\AdminBundle\Factory\Form\FilterFormFactoryInterface: '@LAG\AdminBundle\Factory\Form\FilterFormFactory'
+#    LAG\AdminBundle\Factory\Form\FilterFormFactory:
+#        arguments:
+#            $formFactory: '@form.factory'
+#            $applicationConfiguration: '@LAG\AdminBundle\Application\Configuration\ApplicationConfiguration'
+#
+#    # Configuration factories
+#    LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface: '@LAG\AdminBundle\Admin\Factory\AdminConfigurationFactory'
+#    LAG\AdminBundle\Admin\Factory\AdminConfigurationFactory:
+#        arguments:
+#            $eventDispatcher: '@event_dispatcher'
+#
+#    LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface: '@LAG\AdminBundle\Action\Factory\ActionConfigurationFactory'
+#    LAG\AdminBundle\Action\Factory\ActionConfigurationFactory:
+#        arguments:
+#            $eventDispatcher: '@event_dispatcher'

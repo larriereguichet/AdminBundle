@@ -1,5 +1,5 @@
 services:
-    lag_admin.action.renderer: '@LAG\AdminBundle\Action\Render\ActionRendererInterface'
+    lag_admin.action.renderer: '@LAG\AdminBundle\Twig\Render\ActionRendererInterface'
     LAG\AdminBundle\Twig\Render\ActionRendererInterface:
         class: LAG\AdminBundle\Twig\Render\ActionRenderer
         arguments:

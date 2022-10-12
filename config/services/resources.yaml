@@ -1,15 +1,15 @@
 services:
-    lag_admin.resource.registry: '@LAG\AdminBundle\Resource\Registry\ResourceRegistry'
-    LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface: '@LAG\AdminBundle\Resource\Registry\ResourceRegistry'
-    LAG\AdminBundle\Resource\Registry\ResourceRegistry:
+    lag_admin.resource.registry: '@LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface'
+    LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface:
+        class: LAG\AdminBundle\Resource\Registry\ResourceRegistry
         arguments:
             $resourcePaths: '%lag_admin.resource.paths%'
             $locator: '@lag_admin.metadata.locator'
             $adminFactory: '@lag_admin.admin.factory'
 
-    lag_admin.metadata.locator: '@LAG\AdminBundle\Metadata\Locator\CompositeLocator'
-    LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface: '@LAG\AdminBundle\Metadata\Locator\CompositeLocator'
-    LAG\AdminBundle\Metadata\Locator\CompositeLocator:
+    lag_admin.metadata.locator: '@LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface'
+    LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface:
+        class: LAG\AdminBundle\Metadata\Locator\CompositeLocator
         arguments:
             $locators: !tagged_iterator lag_admin.resource.locator
 
