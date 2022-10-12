@@ -2,22 +2,7 @@
 
 {% block page_title %}{{ parent() }} - {{ resource.title|trans }} - {{ operation.title|trans }}{% endblock %}
 
-{% block title_container %}
-    <div class="row mb-2 mt-2">
-        <div class="col-6">
-            <h1>{{ resource.title|title }} - {{ operation.title|title }}</h1>
-        </div>
-        <div class="col-6">
-            {% if operation.listActions|length > 0 %}
-                {% for action in operation.listActions %}
-                    {{ lag_admin_action(action, null, {
-                        class: 'float-end'
-                    }) }}
-                {% endfor %}
-            {% endif %}
-        </div>
-    </div>
-{% endblock %}
+{% block title %}{{ resource.title|title }} - {{ operation.title|title }}{% endblock %}
 
 {% block content %}
     <div class="admin-index admin-{{ resource.name }}">
