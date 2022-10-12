@@ -12,7 +12,7 @@ class Filter implements FilterInterface
         private ?string $propertyPath = null,
         private string $comparator = '=',
         private string $operator = 'and',
-        private mixed $value = null,
+        private mixed $data = null,
         private string $formType = TextType::class,
         private array $formOptions = [],
     ) {
@@ -70,15 +70,15 @@ class Filter implements FilterInterface
         return $self;
     }
 
-    public function getValue(): mixed
+    public function getData(): mixed
     {
-        return $this->value;
+        return $this->data;
     }
 
-    public function withValue(mixed $value): self
+    public function withData(mixed $data): self
     {
         $self = clone $this;
-        $self->value = $value;
+        $self->data = $data;
 
         return $self;
     }
