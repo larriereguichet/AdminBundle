@@ -1,8 +1,6 @@
 services:
     LAG\AdminBundle\Twig\Extension\AdminExtension:
         arguments:
-            $mediaEnabled: '%lag_admin.media_bundle_enabled%'
-            $applicationConfiguration: '@lag_admin.application'
             $security: '@lag_admin.security.helper'
             $actionRenderer: '@lag_admin.action.renderer'
             $urlGenerator: '@lag_admin.routing.url_generator'
@@ -22,18 +20,6 @@ services:
     LAG\AdminBundle\Twig\Extension\MessageExtension:
         arguments:
             $registry: '@LAG\AdminBundle\Message\Registry\NotificationRegistryInterface'
-        tags: ['twig.extension']
-
-    LAG\AdminBundle\Twig\Extension\RoutingExtension:
-        arguments:
-            $urlGenerator: '@LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface'
-            $security: '@lag_admin.security.helper'
-            $applicationConfiguration: '@lag_admin.application'
-            $adminConfigurationFactory: '@LAG\AdminBundle\Admin\Factory\AdminConfigurationFactoryInterface'
-            $actionConfigurationFactory: '@LAG\AdminBundle\Action\Factory\ActionConfigurationFactoryInterface'
-            $router: '@router'
-            $resourceRegistry: '@lag_admin.resource.registry'
-            $urlResolver: '@lag_admin.routing.url_resolver'
         tags: ['twig.extension']
 
     LAG\AdminBundle\Twig\Extension\TranslationExtension:
