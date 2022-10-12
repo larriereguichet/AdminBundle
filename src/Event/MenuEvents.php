@@ -6,6 +6,8 @@ namespace LAG\AdminBundle\Event;
 
 class MenuEvents
 {
-    public const MENU_CREATED = 'lag.admin.menu_created';
-    public const MENU_CREATED_SPECIFIC = 'lag.admin.menu_%s_created';
+    public const MENU_CREATE = 'lag_admin.menu.create';
+    public const MENU_CREATED = 'lag_admin.menu.created';
+
+    public const NAME_EVENT_PATTERN = 'lag_admin.menu.%s.created';
 }
