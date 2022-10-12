@@ -46,6 +46,10 @@ class CreateListener
             $resource = $resource->withTitle($inflector->pluralize($resource->getName())[0]);
         }
 
+        if ($resource->getPrefix() === null) {
+            $resource = $resource->withPrefix($resource->getName());
+        }
+
         return $resource;
     }
 
@@ -72,38 +76,6 @@ class CreateListener
             });
         }
 
-        if (!$operation->getTemplate()) {
-            $operation = $operation->withTemplate(match ($operation->getName()) {
-                'index' => '@LAGAdmin/crud/index.html.twig',
-                'create' => '@LAGAdmin/crud/create.html.twig',
-                'update' => '@LAGAdmin/crud/update.html.twig',
-                'delete' => '@LAGAdmin/crud/delete.html.twig',
-                default => '@LAGAdmin/crud/show.html.twig',
-            });
-        }
-
-        if (!$operation->getController()) {
-            if ($operation instanceof Index) {
-                $operation = $operation->withController(\LAG\AdminBundle\Controller\Index::class);
-            }
-
-            if ($operation instanceof Create) {
-                $operation = $operation->withController(\LAG\AdminBundle\Controller\Create::class);
-            }
-
-            if ($operation instanceof Update) {
-                $operation = $operation->withController(\LAG\AdminBundle\Controller\Update::class);
-            }
-
-            if ($operation instanceof Delete) {
-                $operation = $operation->withController(\LAG\AdminBundle\Controller\Delete::class);
-            }
-
-            if ($operation instanceof Show) {
-                $operation = $operation->withController(\LAG\AdminBundle\Controller\Show::class);
-            }
-        }
-
         if (!$operation->getRoute()) {
             $route = $this->routeNameGenerator->generateRouteName($resource, $operation);
             $operation = $operation->withRoute($route);
@@ -117,18 +89,6 @@ class CreateListener
                 ]);
             } else {
                 $operation = $operation->withRouteParameters([]);
-            }
-        }
-
-        if (count($operation->getMethods()) === 0) {
-            if ($operation instanceof Create) {
-                $operation = $operation->withMethods(['GET', 'POST']);
-            } elseif ($operation instanceof Update) {
-                $operation = $operation->withMethods(['GET', 'POST', 'PUT']);
-            } elseif ($operation instanceof Delete) {
-                $operation = $operation->withMethods(['GET', 'POST', 'DELETE']);
-            } else {
-                $operation = $operation->withMethods(['GET']);
             }
         }
 
