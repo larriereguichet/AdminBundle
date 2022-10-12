@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.css'
 import '../scss/admin.scss'
 
 import { Application } from 'stimulus'

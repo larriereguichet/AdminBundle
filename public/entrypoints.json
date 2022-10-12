@@ -16,6 +16,14 @@
       "css": [
         "/bundles/lagadmin/fa.css"
       ]
+    },
+    "bootstrap": {
+      "js": [
+        "/bundles/lagadmin/runtime.js"
+      ],
+      "css": [
+        "/bundles/lagadmin/bootstrap.css"
+      ]
     }
   }
 }
