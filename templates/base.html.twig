@@ -35,7 +35,12 @@
     <title>{% block page_title %}{{ admin_config('title') }}{% endblock %}</title>
 
     {% block stylesheets %}{% endblock %}
-    {% block head_javascripts %}{% endblock %}
+
+    {% block javascripts %}
+        <script src="{{ asset('/bundles/lagadmin/admin.js') }}"
+                defer="defer"></script>
+    {% endblock %}
+
     {% block head %}{% endblock %}
 </head>
 
@@ -74,17 +79,6 @@
     {% endblock %}
 
     {% block footer %}{% endblock %}
-
-    {% block admin_javascripts %}
-        {% if admin_media_enabled() %}
-            {# Media js should always be called before the admin js to preserve tinymce media working #}
-            <script src="{{ asset('/bundles/jkmedia/assets/media.js') }}"></script>
-        {% endif %}
-        <script src="{{ asset('/bundles/lagadmin/runtime.js') }}"></script>
-        <script src="{{ asset('/bundles/lagadmin/admin.js') }}"></script>
-    {% endblock %}
-
-    {% block javascripts %}{% endblock %}
 
     {% block modal %}
         {% include '@LAGAdmin/modal/modal.html.twig' %}
