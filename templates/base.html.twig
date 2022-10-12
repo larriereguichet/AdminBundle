@@ -21,11 +21,6 @@
     {% endblock %}
 
     {% block admin_stylesheets %}
-        <link rel="stylesheet"
-              href="{{ asset('/bundles/lagadmin/fa.css') }}"/>
-        <link rel="stylesheet"
-              href="{{ asset('/bundles/lagadmin/admin.css') }}"/>
-
         {% if admin_media_enabled() %}
             <link rel="stylesheet"
                   href="{{ asset('/bundles/jkmedia/assets/media.css') }}"/>
@@ -34,11 +29,21 @@
 
     <title>{% block page_title %}{{ admin_config('title') }}{% endblock %}</title>
 
-    {% block stylesheets %}{% endblock %}
+    {% block stylesheets %}
+        <link rel="stylesheet"
+              href="{{ asset('/bundles/lagadmin/fa.css') }}"/>
+        <link rel="stylesheet"
+              href="{{ asset('/bundles/lagadmin/admin.css') }}"/>
+        <link rel="stylesheet"
+              href="{{ asset('/bundles/lagadmin/boostrap.css') }}"/>
+    {% endblock %}
 
     {% block javascripts %}
+        <script src="{{ asset('/bundles/lagadmin/runtime.js') }}"
+                defer="defer"></script>
         <script src="{{ asset('/bundles/lagadmin/admin.js') }}"
                 defer="defer"></script>
+
     {% endblock %}
 
     {% block head %}{% endblock %}
