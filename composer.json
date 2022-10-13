@@ -5,7 +5,7 @@
     "keywords": [
         "Admin",
         "Backoffice",
-        "Symfony2",
+        "Symfony",
         "Generic"
     ],
     "homepage": "https://github.com/larriereguichet/AdminBundle",
@@ -27,6 +27,7 @@
     "require": {
         "php": "^8.1",
         "cuyz/valinor": "^0.9.0",
+        "friendsofsymfony/ckeditor-bundle": "^2.4",
         "johnkrovitch/configuration": "^2.2",
         "johnkrovitch/orm-pack": "^3.1",
         "knplabs/knp-menu-bundle": "^3.2",
@@ -77,7 +78,6 @@
             "symfony/flex": true
         }
     },
-
     "scripts": {
         "auto-scripts": {
             "security-checker security:check": "script",
