@@ -2,16 +2,5 @@ imports:
     - {resource: 'services/*'}
     - {resource: 'services/bridge/*'}
 
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-        public: false
-
-    ### Controllers ###
-    LAG\AdminBundle\Controller\HomeAction:
-        tags:
-            - {name: controller.service_arguments}
-    ###################
 
 
