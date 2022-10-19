@@ -30,6 +30,6 @@
         "startbootstrap-sb-admin-2": "^4.1.1",
         "stimulus": "^2.0.0",
         "tinymce": "^5.6.2",
-        "tinymce-i18n": "^20.12.25"
+        "tinymce-i18n": "^22.10.18"
     }
 }
