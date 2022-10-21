@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
-class AbstractOperationController
+class ItemOperationController
 {
     public function __construct(
         private UriVariablesExtractorInterface $uriVariablesExtractor,
