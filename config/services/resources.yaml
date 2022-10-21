@@ -3,7 +3,7 @@ services:
     LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface:
         class: LAG\AdminBundle\Resource\Registry\ResourceRegistry
         arguments:
-            $resourcePaths: '%lag_admin.resource.paths%'
+            $resourcePaths: '%lag_admin.resource_paths%'
             $locator: '@lag_admin.metadata.locator'
             $adminFactory: '@lag_admin.admin.factory'
 
