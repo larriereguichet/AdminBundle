@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Factory;
 
-use LAG\AdminBundle\Event\AdminEvent;
+use LAG\AdminBundle\Event\Events\ResourceCreatedEvent;
+use LAG\AdminBundle\Event\Events\ResourceCreateEvent;
+use LAG\AdminBundle\Event\ResourceEvents;
 use LAG\AdminBundle\Exception\Validation\InvalidAdminException;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Validation\Constraint\AdminValid;
@@ -23,8 +25,8 @@ class AdminFactory implements AdminFactoryInterface
 
     public function create(AdminResource $resource): AdminResource
     {
-        $event = new AdminEvent($resource);
-        $this->eventDispatcher->dispatch($event, AdminEvent::ADMIN_CREATE);
+        $event = new ResourceCreateEvent($resource);
+        $this->eventDispatcher->dispatch($event, ResourceEvents::ADMIN_CREATE);
         $resource = $event->getResource();
         $errors = $this->validator->validate($resource, [new AdminValid(), new Valid()]);
 
@@ -38,8 +40,8 @@ class AdminFactory implements AdminFactoryInterface
         }
         $resource = $resource->withOperations($operations);
 
-        $event = new AdminEvent($resource);
-        $this->eventDispatcher->dispatch($event, AdminEvent::ADMIN_CREATED);
+        $event = new ResourceCreatedEvent($resource);
+        $this->eventDispatcher->dispatch($event, ResourceEvents::ADMIN_CREATED);
 
         return $event->getResource();
     }
