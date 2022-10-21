@@ -17,41 +17,40 @@ class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
     public function createProperties(string $resourceClass): array
     {
         $metadata = $this->metadataHelper->findMetadata($resourceClass);
-        $fields = [];
+        $properties = [];
 
         if ($metadata === null) {
-            return $fields;
+            return $properties;
         }
 
         foreach ($metadata->getFieldNames() as $fieldName) {
             $fieldType = $metadata->getTypeOfField($fieldName);
 
             if (str_contains($fieldType, 'datetime')) {
-                $fields[$fieldName] = new DateProperty($fieldName);
-                continue;
+                $properties[$fieldName] = new DateProperty($fieldName);
+            }
+            elseif ($fieldType === 'boolean') {
+                $properties[$fieldName] = new BooleanProperty($fieldName);
+
+            } else {
+                $properties[$fieldName] = new StringProperty($fieldName);
             }
 
-            if ($fieldType === 'boolean') {
-                $fields[$fieldName] = new BooleanProperty($fieldName);
-                continue;
-            }
-            $fields[$fieldName] = new StringProperty($fieldName);
-
-            if (count($fields) > 10) {
-                return $fields;
+            if (count($properties) > 10) {
+                return $properties;
             }
         }
 
         foreach ($metadata->getAssociationNames() as $associationName) {
-            $fields[$associationName] = new CountProperty($associationName);
+            $properties[$associationName] = new CountProperty($associationName);
 
-            if (count($fields) > 10) {
-                return $fields;
+            if (count($properties) > 10) {
+                return $properties;
             }
         }
 
 
-        return $fields;
+        return $properties;
     }
 
 

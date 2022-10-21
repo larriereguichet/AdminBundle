@@ -16,7 +16,7 @@ services:
     # Event listeners
     LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\ResourceCreateListener:
         arguments:
-            $propertyProvider: '@lag_admin.orm.property_factory'
+            $propertyFactory: '@lag_admin.orm.property_factory'
         tags:
             - { name: kernel.event_listener, event: lag_admin.admin.create, priority: 200 }
 
