@@ -2,6 +2,6 @@
 
 namespace LAG\AdminBundle\Controller;
 
-class Create extends AbstractOperationController
+class Create extends ItemOperationController
 {
 }

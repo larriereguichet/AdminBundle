@@ -14,6 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
-class Update extends AbstractOperationController
+class Update extends ItemOperationController
 {
 }
