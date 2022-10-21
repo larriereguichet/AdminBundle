@@ -17,6 +17,7 @@ class DateProperty extends AbstractProperty
         array $headerAttr = [],
         private string $dateFormat = 'medium',
         private string $timeFormat = 'short',
+        private bool $localization = true,
     ) {
         parent::__construct(
             $name,
@@ -54,6 +55,19 @@ class DateProperty extends AbstractProperty
     {
         $self = clone $this;
         $self->timeFormat = $timeFormat;
+
+        return $self;
+    }
+
+    public function isLocalization(): bool
+    {
+        return $this->localization;
+    }
+
+    public function withLocalization(bool $localization): self
+    {
+        $self = clone $this;
+        $self->localization = $localization;
 
         return $self;
     }
