@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Bridge\Doctrine\ORM;
+namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Exception;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\OperationInterface;
