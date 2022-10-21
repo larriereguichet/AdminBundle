@@ -2,7 +2,9 @@
 
 namespace LAG\AdminBundle\Metadata\Factory;
 
-use LAG\AdminBundle\Event\OperationEvent;
+use LAG\AdminBundle\Event\Events\OperationCreatedEvent;
+use LAG\AdminBundle\Event\Events\OperationCreateEvent;
+use LAG\AdminBundle\Event\OperationEvents;
 use LAG\AdminBundle\Exception\Validation\InvalidOperationException;
 use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
 use LAG\AdminBundle\Metadata\AdminResource;
@@ -28,7 +30,7 @@ class OperationFactory implements OperationFactoryInterface
             ->withResource($resource)
             ->withResourceName($resource->getName())
         ;
-        $this->eventDispatcher->dispatch($event = new OperationEvent($resource, $operation), OperationEvent::OPERATION_CREATE);
+        $this->eventDispatcher->dispatch($event = new OperationCreateEvent($operation), OperationEvents::OPERATION_CREATE);
         $errors = $this->validator->validate($operation = $event->getOperation(), [new Valid()]);
 
         if ($errors->count() > 0) {
@@ -50,8 +52,8 @@ class OperationFactory implements OperationFactoryInterface
             $operation = $operation->withFilters($filters);
         }
 
-        $this->eventDispatcher->dispatch($event = new OperationEvent($resource, $operation), OperationEvent::OPERATION_CREATED);
+        $this->eventDispatcher->dispatch(new OperationCreatedEvent($operation), OperationEvents::OPERATION_CREATED);
 
-        return $event->getOperation();
+        return $operation;
     }
 }
