@@ -2,7 +2,8 @@
 
 namespace LAG\AdminBundle\Metadata\Factory;
 
-use LAG\AdminBundle\Event\Events\PropertyEvent;
+use LAG\AdminBundle\Event\Events\PropertyCreatedEvent;
+use LAG\AdminBundle\Event\Events\PropertyCreateEvent;
 use LAG\AdminBundle\Event\PropertyEvents;
 use LAG\AdminBundle\Exception\Validation\InvalidPropertyException;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
@@ -21,17 +22,17 @@ class PropertyFactory implements PropertyFactoryInterface
 
     public function create(PropertyInterface $property): PropertyInterface
     {
-        $event = new PropertyEvent($property);
+        $event = new PropertyCreateEvent($property);
         $this->eventDispatcher->dispatch($event, PropertyEvents::PROPERTY_CREATE->value);
+        $property = $event->getProperty();
 
-        $errors = $this->validator->validate($event->getProperty(), [new Valid()]);
+        $errors = $this->validator->validate($property, [new Valid()]);
 
         if ($errors->count() > 0) {
             throw new InvalidPropertyException($property->getName(), $errors);
         }
-        $event = new PropertyEvent($property);
-        $this->eventDispatcher->dispatch($event, PropertyEvents::PROPERTY_CREATE->value);
+        $this->eventDispatcher->dispatch(new PropertyCreatedEvent($property), PropertyEvents::PROPERTY_CREATED->value);
 
-        return $event->getProperty();
+        return $property;
     }
 }
