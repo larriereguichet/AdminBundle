@@ -22,7 +22,7 @@ class UserMenuBuilder
         $menu = $this->factory->createItem('root');
         $this->eventDispatcher->dispatch($event = new MenuCreateEvent($menu), MenuEvents::MENU_CREATE);
         $this->eventDispatcher->dispatch($event = new MenuCreateEvent($event->getMenu()), sprintf(
-            MenuEvents::NAME_EVENT_PATTERN,
+            MenuEvents::NAMED_EVENT_PATTERN,
             'user',
             'create',
         ));
@@ -33,7 +33,7 @@ class UserMenuBuilder
         ]);
         $this->eventDispatcher->dispatch(new MenuCreatedEvent($menu), MenuEvents::MENU_CREATED);
         $this->eventDispatcher->dispatch(new MenuCreateEvent($menu), sprintf(
-            MenuEvents::NAME_EVENT_PATTERN,
+            MenuEvents::NAMED_EVENT_PATTERN,
             'user',
             'created',
         ));
