@@ -16,24 +16,21 @@ class LAGExtensionTest extends TestCase
      */
     public function testLoad(): void
     {
-        $this->container
+        $this
+            ->container
             ->expects($this->atLeastOnce())
             ->method('setParameter')
             ->willReturnCallback(function ($parameter, $value) {
                 $this->assertContains($parameter, [
                     'lag_admin.application.configuration',
-                    'lag.admins',
-                    'lag_admin.menu.enable',
-                    'lag_admin.resource.paths',
-                    'lag_admin.media_bundle_enabled',
-                    'lag_admin.fields.mapping',
+                    'lag_admin.resource_paths',
+                    'lag_admin.title',
+                    'lag_admin.translation_domain',
+                    'lag_admin.resource_paths',
+                    'lag_admin.date_format',
+                    'lag_admin.time_format',
+                    'lag_admin.date_localization',
                 ]);
-
-                if ('lag.admin.enable_extra_configuration' === $parameter) {
-                    $this->assertContains($value, [
-                        true,
-                    ]);
-                }
             })
         ;
 
@@ -50,7 +47,7 @@ class LAGExtensionTest extends TestCase
         $extension->load([
             'kernel.bundles' => [],
         ], $this->container);
-        // Everything went fine
+
         $this->assertTrue(true);
     }
 

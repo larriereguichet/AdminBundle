@@ -1,6 +1,6 @@
 <?php
 
-namespace LAG\AdminBundle\Tests\Action\Render;
+namespace LAG\AdminBundle\Tests\Twig\Render;
 
 use LAG\AdminBundle\Exception\Validation\InvalidActionException;
 use LAG\AdminBundle\Metadata\Action;
@@ -14,7 +14,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 
-class ActionRenderTest extends TestCase
+class ActionRendererTest extends TestCase
 {
     private ActionRendererInterface $actionRenderer;
     private MockObject $urlGenerator;

@@ -7,12 +7,12 @@ use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Locator\YamlLocator;
 use LAG\AdminBundle\Tests\TestCase;
 
-class YamlFactoryTest extends TestCase
+class YamlLocatorTest extends TestCase
 {
     public function testCreateResources(): void
     {
         $locator = $this->createLocator();
-        $resources = $locator->locateCollection(__DIR__.'/../../../resources/admin');
+        $resources = $locator->locateCollection(__DIR__.'/../../../app/config/resources/admin');
 
         foreach ($resources as $resource) {
             $this->assertInstanceOf(AdminResource::class, $resource);
@@ -33,8 +33,8 @@ class YamlFactoryTest extends TestCase
         $this->assertServiceHasTag(YamlLocator::class, 'lag_admin.resource.locator');
     }
 
-    private function createLocator(): \LAG\AdminBundle\Metadata\Locator\YamlLocator
+    private function createLocator(): YamlLocator
     {
-        return new \LAG\AdminBundle\Metadata\Locator\YamlLocator();
+        return new YamlLocator();
     }    
 }

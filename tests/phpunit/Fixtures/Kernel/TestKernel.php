@@ -44,7 +44,7 @@ class TestKernel extends Kernel
     protected function buildContainer(): ContainerBuilder
     {
         $container = parent::buildContainer();
-        $container->addCompilerPass(new PublicServiceCompilerPass(__DIR__.'/../../../../src/Resources/config/services'));
+        $container->addCompilerPass(new PublicServiceCompilerPass(__DIR__.'/../../../../config/services'));
 
         return $container;
     }
