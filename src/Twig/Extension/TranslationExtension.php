@@ -9,6 +9,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
+// TODO remove
 class TranslationExtension extends AbstractExtension
 {
     public function __construct(
@@ -28,6 +29,6 @@ class TranslationExtension extends AbstractExtension
 
     public function translate(string $id, array $parameters = []): string
     {
-        return $this->translator->trans($id, $parameters, $this->configuration->getTranslationDomain());
+        return $this->translator->trans($id, $parameters, $this->configuration->get('translation_domain'));
     }
 }
