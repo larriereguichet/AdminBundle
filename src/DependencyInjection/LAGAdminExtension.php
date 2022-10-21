@@ -23,16 +23,13 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         if ($container->getParameter('kernel.environment') === 'dev') {
             $loader->load('services_dev.yaml');
         }
-
-        if ($container->getParameter('kernel.environment') === 'prod') {
-            $loader->load('services_prod.yaml');
-        }
-        $container->setParameter('lag_admin.translation.domain', $config['translation']['domain']);
         $container->setParameter('lag_admin.application.configuration', $config);
-        $container->setParameter('lag_admin.resource.paths', $config['resource_paths']);
-        // TODO ?
-        $container->setParameter('lag_admin.media_bundle_enabled', \array_key_exists('JKMediaBundle', $container->getParameter('kernel.bundles')));
-        $container->setParameter('lag_admin.fields.mapping', $config['fields_mapping']);
+        $container->setParameter('lag_admin.resource_paths', $config['resource_paths']);
+        $container->setParameter('lag_admin.translation_domain', $config['translation_domain']);
+        $container->setParameter('lag_admin.title', $config['title']);
+        $container->setParameter('lag_admin.date_format', $config['date_format']);
+        $container->setParameter('lag_admin.time_format', $config['time_format']);
+        $container->setParameter('lag_admin.date_localization', $config['date_localization']);
     }
 
     public function getAlias(): string
@@ -57,7 +54,7 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         $container->prependExtensionConfig('twig', [
             'form_themes' => ['@LAGAdmin/form/theme.html.twig'],
             'globals' => [
-                'admin_translation_catalog' => $config['translation']['domain'],
+                'lag_admin_translation_catalog' => $config['translation_domain'],
             ],
         ]);
     }

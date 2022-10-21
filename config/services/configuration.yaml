@@ -1,6 +1,5 @@
 services:
     lag_admin.application: '@LAG\AdminBundle\Application\Configuration\ApplicationConfiguration'
-
     LAG\AdminBundle\Application\Configuration\ApplicationConfiguration:
         arguments:
             $configuration: '%lag_admin.application.configuration%'
