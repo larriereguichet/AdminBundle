@@ -9,5 +9,5 @@ class MenuEvents
     public const MENU_CREATE = 'lag_admin.menu.create';
     public const MENU_CREATED = 'lag_admin.menu.created';
 
-    public const NAME_EVENT_PATTERN = 'lag_admin.menu.%s.created';
+    public const NAMED_EVENT_PATTERN = 'lag_admin.menu.%s.created';
 }
