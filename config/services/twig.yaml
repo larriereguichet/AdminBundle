@@ -1,6 +1,7 @@
 services:
     LAG\AdminBundle\Twig\Extension\AdminExtension:
         arguments:
+            $applicationConfiguration: '@lag_admin.application'
             $security: '@lag_admin.security.helper'
             $actionRenderer: '@lag_admin.action.renderer'
             $urlGenerator: '@lag_admin.routing.url_generator'
@@ -10,11 +11,6 @@ services:
         arguments:
             $gridRenderer: '@lag_admin.grid.renderer'
             $cellRenderer: '@lag_admin.grid.cell_renderer'
-        tags: ['twig.extension']
-
-    LAG\AdminBundle\Twig\Extension\FieldExtension:
-        arguments:
-            $renderer: '@LAG\AdminBundle\Field\Render\FieldRenderer'
         tags: ['twig.extension']
 
     LAG\AdminBundle\Twig\Extension\MessageExtension:

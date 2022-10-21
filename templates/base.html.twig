@@ -8,7 +8,7 @@
         <meta name="viewport"
               content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <meta name="description"
-              content="{{ admin_config('description') }}"/>
+              content="{{ lag_admin_config('description') }}"/>
     {% endblock %}
 
     {% block favicon %}
@@ -21,13 +21,13 @@
     {% endblock %}
 
     {% block admin_stylesheets %}
-        {% if admin_media_enabled() %}
-            <link rel="stylesheet"
-                  href="{{ asset('/bundles/jkmedia/assets/media.css') }}"/>
-        {% endif %}
+{#        {% if admin_media_enabled() %}#}
+{#            <link rel="stylesheet"#}
+{#                  href="{{ asset('/bundles/jkmedia/assets/media.css') }}"/>#}
+{#        {% endif %}#}
     {% endblock %}
 
-    <title>{% block page_title %}{{ admin_config('title') }}{% endblock %}</title>
+    <title>{% block page_title %}{{ lag_admin_config('title') }}{% endblock %}</title>
 
     {% block stylesheets %}
         <link rel="stylesheet"
@@ -35,7 +35,7 @@
         <link rel="stylesheet"
               href="{{ asset('/bundles/lagadmin/admin.css') }}"/>
         <link rel="stylesheet"
-              href="{{ asset('/bundles/lagadmin/boostrap.css') }}"/>
+              href="{{ asset('/bundles/lagadmin/bootstrap.css') }}"/>
     {% endblock %}
 
     {% block javascripts %}
@@ -89,9 +89,9 @@
         {% include '@LAGAdmin/modal/modal.html.twig' %}
     {% endblock %}
 
-    {% if admin_media_enabled() %}
-        {% include '@JKMedia/Modal/modal.html.twig' %}
-    {% endif %}
+{#    {% if admin_media_enabled() %}#}
+{#        {% include '@JKMedia/Modal/modal.html.twig' %}#}
+{#    {% endif %}#}
     </body>
 {% endblock %}
 </html>
