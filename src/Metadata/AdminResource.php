@@ -19,7 +19,6 @@ class AdminResource
         private ?string $group = null,
         private ?string $icon = null,
         /** @var OperationInterface[] $operations */
-        #[Assert\Valid]
         private array $operations = [
             new Index(),
             new Create(),
