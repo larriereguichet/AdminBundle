@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\EventListener\Operation;
 
-use LAG\AdminBundle\Event\OperationEvent;
+use LAG\AdminBundle\Event\Events\OperationCreateEvent;
 use LAG\AdminBundle\Form\Type\OperationDataType;
 use LAG\AdminBundle\Form\Type\ResourceFilterType;
 use LAG\AdminBundle\Metadata\Action;
@@ -19,10 +19,10 @@ class CreateListener
     ) {
     }
 
-    public function __invoke(OperationEvent $event): void
+    public function __invoke(OperationCreateEvent $event): void
     {
         $operation = $event->getOperation();
-        $resource = $event->getResource();
+        $resource = $operation->getResource();
 
         if (!$operation->getItemActions()) {
             $actions = [];

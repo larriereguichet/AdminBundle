@@ -2,18 +2,12 @@
 
 namespace LAG\AdminBundle\EventListener\Admin;
 
-use LAG\AdminBundle\Event\AdminEvent;
-use LAG\AdminBundle\Form\Type\OperationDataType;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Event\Events\ResourceCreateEvent;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
-use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Show;
-use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
 use function Symfony\Component\String\u;
@@ -25,7 +19,7 @@ class CreateListener
     ) {
     }
 
-    public function __invoke(AdminEvent $event): void
+    public function __invoke(ResourceCreateEvent $event): void
     {
         $resource = $event->getResource();
         $operations = [];
