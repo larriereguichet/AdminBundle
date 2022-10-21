@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Debug\DataCollector;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,30 +14,28 @@ use Throwable;
 
 class AdminDataCollector extends DataCollector
 {
-    private ResourceRegistryInterface $registry;
-    private ApplicationConfiguration $applicationConfiguration;
-
     public function __construct(
-        ResourceRegistryInterface $registry,
-        ApplicationConfiguration $applicationConfiguration,
+        private ResourceRegistryInterface $registry,
+        private ApplicationConfiguration $applicationConfiguration,
+        private ParametersExtractorInterface $parametersExtractor,
     ) {
-        $this->registry = $registry;
-        $this->applicationConfiguration = $applicationConfiguration;
     }
 
-    public function collect(Request $request, Response $response, Throwable $exception = null)
+    public function collect(Request $request, Response $response, Throwable $exception = null): void
     {
-        return;
         $data = [
-            'admins' => [],
+            'resources' => [],
             'application' => [],
         ];
 
         foreach ($this->registry->all() as $resource) {
-            $data['admins'][$resource->getName()] = [
-                'entity_class' => $resource->getEntityClass(),
-                'configuration' => $resource->getConfiguration(),
-            ];
+            $reflection = new \ReflectionClass($resource);
+
+            foreach ($reflection->getProperties() as $reflectionProperty) {
+                if ($reflectionProperty->isInitialized($resource)) {
+                    $data['resources'][$resource->getName()][$reflectionProperty->getName()] = $reflectionProperty->getValue($resource);
+                }
+            }
         }
 
         // When the application configuration is not defined or resolved, we can not access to the admin/menus
@@ -44,20 +43,18 @@ class AdminDataCollector extends DataCollector
         if ($this->applicationConfiguration->isFrozen()) {
             $data['application'] = $this->applicationConfiguration->toArray();
         }
-        $data['application']['admin'] = $request->attributes->get('_admin');
-        $data['application']['action'] = $request->attributes->get('_action');
+
+        if ($this->parametersExtractor->supports($request)) {
+            $data['application']['resource'] = $this->parametersExtractor->getResourceName($request);
+            $data['application']['operation'] = $this->parametersExtractor->getOperationName($request);
+        }
 
         $this->data = $data;
     }
 
-    /**
-     * Returns the name of the collector.
-     *
-     * @return string The collector name
-     */
-    public function getName()
+    public function getName(): string
     {
-        return 'admin.data_collector';
+        return self::class;
     }
 
     public function reset()
@@ -65,7 +62,7 @@ class AdminDataCollector extends DataCollector
         $this->data = [];
     }
 
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
