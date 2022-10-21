@@ -24,13 +24,13 @@ class LoginType extends AbstractType
             ->add('_username', TextType::class, [
                 'attr' => ['class' => 'form-control-user'],
                 'label' => 'lag_admin.security.login_label',
-                'translation_domain' => $this->configuration->getTranslationDomain(),
+                'translation_domain' => $this->configuration->get('translation_domain'),
                 'block_prefix' => '_',
             ])
             ->add('_password', PasswordType::class, [
                 'attr' => ['class' => 'form-control-user'],
                 'label' => 'lag_admin.security.password_label',
-                'translation_domain' => $this->configuration->getTranslationDomain(),
+                'translation_domain' => $this->configuration->get('translation_domain'),
             ])
         ;
     }
