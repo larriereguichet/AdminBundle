@@ -35,6 +35,11 @@ class MetadataHelperTest extends TestCase
         $helper->findMetadata('MyLittleClass');
     }
 
+    public function testService(): void
+    {
+        $this->assertServiceExists(MetadataHelper::class);
+    }
+
     /**
      * @return MetadataHelper[]|MockObject[]
      */
