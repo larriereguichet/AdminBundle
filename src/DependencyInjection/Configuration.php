@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\DependencyInjection;
 
-use LAG\AdminBundle\Admin\Admin;
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Metadata\Operation;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -21,8 +18,8 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('title')->defaultValue('Admin')->end()
                 ->scalarNode('description')->defaultValue('Admin')->end()
+                ->scalarNode('translation_domain')->defaultValue('admin')->end()
 
-                // Where the Admin resources file are located
                 ->arrayNode('resource_paths')
                     ->prototype('scalar')->end()
                     ->defaultValue([
@@ -31,21 +28,9 @@ class Configuration implements ConfigurationInterface
                     ])
                 ->end()
 
-                // Translation
-                ->arrayNode('translation')
-                    ->canBeEnabled()
-                    ->children()
-                        ->booleanNode('enabled')->defaultTrue()->end()
-                        ->scalarNode('pattern')->defaultValue('admin.{admin}.{key}')->end()
-                        ->scalarNode('domain')->defaultValue('admin')->end()
-                    ->end()
-                ->end()
-
-                // Fields default mapping
-                ->arrayNode('fields_mapping')
-                    ->prototype('scalar')->end()
-                    ->defaultValue(ApplicationConfiguration::FIELD_MAPPING)
-                ->end()
+                ->scalarNode('date_format')->defaultValue('medium')->end()
+                ->scalarNode('time_format')->defaultValue('short')->end()
+                ->booleanNode('date_localization')->defaultValue(true)->end()
             ->end()
         ->end();
 
