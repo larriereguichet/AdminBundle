@@ -16,11 +16,19 @@ class ConfigurationTest extends TestCase
     {
         $configuration = new Configuration();
         $tree = $configuration->getConfigTreeBuilder();
-        /** @var ArrayNode $arrayNode */
-        $arrayNode = $tree->buildTree();
-        $this->assertInstanceOf(ArrayNode::class, $arrayNode);
+        $data = $tree->buildTree()->finalize([]);
 
-        $this->assertArrayHasKey('title', $arrayNode->getChildren());
-        $this->assertArrayHasKey('description', $arrayNode->getChildren());
+        $this->assertEquals([
+            'title' => 'Admin',
+            'description' => 'Admin',
+            'translation_domain' => 'admin',
+            'resource_paths' => [
+                '%kernel.project_dir%/config/admin/resources',
+                '%kernel.project_dir%/src/Entity',
+            ],
+            'date_format' => 'medium',
+            'time_format' => 'short',
+            'date_localization' => true,
+        ], $data);
     }
 }

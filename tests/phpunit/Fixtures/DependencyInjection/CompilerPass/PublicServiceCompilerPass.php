@@ -25,25 +25,9 @@ class PublicServiceCompilerPass implements CompilerPassInterface
             ->name('*.yaml')
         ;
 
-        foreach ($finder as $fileInfo) {
-            $data = Yaml::parse(file_get_contents($fileInfo->getRealPath()), Yaml::PARSE_CUSTOM_TAGS);
-
-            if (empty($data['services'])) {
-                continue;
-            }
-
-            foreach ($data['services'] as $id => $service) {
-                if ($id === '_defaults') {
-                    continue;
-                }
-
-                if (u($id)->endsWith('Interface')) {
-                    $alias = $container->getAlias($id);
-                    $alias->setPublic(true);
-                } else {
-                    $definition = $container->getDefinition($id);
-                    $definition->setPublic(true);
-                }
+        foreach ($container->getDefinitions() as $service => $definition) {
+            if (u($service)->startsWith('LAG')) {
+                $definition->setPublic(true);
             }
         }
     }
