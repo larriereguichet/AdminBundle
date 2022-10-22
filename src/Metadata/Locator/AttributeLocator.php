@@ -22,7 +22,7 @@ class AttributeLocator implements MetadataLocatorInterface
             foreach ($attributes as $attribute) {
                 /** @var AdminResource $resource */
                 $resource = $attribute->newInstance();
-                $resource = $resource->withDataClass($reflectionClass->getParentClass());
+                $resource = $resource->withDataClass($reflectionClass->getName());
 
                 if (!$resource->getName()) {
                     $resource = $resource->withName(
