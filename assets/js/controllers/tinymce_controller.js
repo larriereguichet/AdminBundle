@@ -1,83 +1,80 @@
-import {Controller} from "stimulus";
-import tinymce from 'tinymce/tinymce';
-import 'tinymce/plugins/advlist';
-import 'tinymce/plugins/anchor';
-import 'tinymce/plugins/autolink';
-import 'tinymce/plugins/autoresize';
-import 'tinymce/plugins/autosave';
-import 'tinymce/plugins/bbcode';
-import 'tinymce/plugins/charmap';
-import 'tinymce/plugins/code';
-import 'tinymce/plugins/codesample';
-import 'tinymce/plugins/contextmenu';
-import 'tinymce/plugins/directionality';
-import 'tinymce/plugins/emoticons';
-import 'tinymce/plugins/fullpage';
-import 'tinymce/plugins/fullscreen';
-import 'tinymce/plugins/help';
-import 'tinymce/plugins/hr';
-import 'tinymce/plugins/image';
-import 'tinymce/plugins/imagetools';
-import 'tinymce/plugins/importcss';
-import 'tinymce/plugins/insertdatetime';
-import 'tinymce/plugins/legacyoutput';
-import 'tinymce/plugins/link';
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/media';
-import 'tinymce/plugins/nonbreaking';
-import 'tinymce/plugins/noneditable';
-import 'tinymce/plugins/pagebreak';
-import 'tinymce/plugins/paste';
-import 'tinymce/plugins/preview';
-import 'tinymce/plugins/print';
-import 'tinymce/plugins/quickbars';
-import 'tinymce/plugins/save';
-import 'tinymce/plugins/searchreplace';
-import 'tinymce/plugins/spellchecker';
-import 'tinymce/plugins/tabfocus';
-import 'tinymce/plugins/table';
-import 'tinymce/plugins/template';
-import 'tinymce/plugins/textpattern';
-import 'tinymce/plugins/toc';
-import 'tinymce/plugins/visualblocks';
-import 'tinymce/plugins/visualchars';
-import 'tinymce/plugins/wordcount';
-
-export default class extends Controller {
-    initialize() {
-        const dataset = this.element.dataset;
-        this.options = JSON.parse(dataset.options) || {};
-        const customButtons = JSON.parse(dataset.customButtons) || {};
-    
-        this.options.setup = function (editor) {
-            for (const key in customButtons) {
-                if (customButtons.hasOwnProperty(key)) {
-                    let event = new CustomEvent(customButtons[key].event);
-                    
-                    editor.ui.registry.addButton(key, {
-                        text: customButtons[key].text,
-                        onAction: function () {
-                            window.dispatchEvent(event);
-                        }
-                    });
-                }
-            }
-        };
-        
-        window.addEventListener('tinymce-insert-content', event => {
-            this.insert(event.detail);
-        });
-    }
-
-    connect() {
-        let event = new CustomEvent('tinymce-initialize', {
-            detail: this.options
-        });
-        window.dispatchEvent(event);
-        tinymce.init(event.detail);
-    }
-
-    insert(content) {
-        tinymce.activeEditor.insertContent(content);
-    }
-}
+// import {Controller} from "@hotwired/stimulus";
+//
+// /* Import TinyMCE */
+// import tinymce from 'tinymce';
+//
+// /* Default icons are required. After that, import custom icons if applicable */
+// import 'tinymce/icons/default';
+//
+// /* Required TinyMCE components */
+// import 'tinymce/themes/silver';
+// import 'tinymce/models/dom';
+//
+// /* Import a skin (can be a custom skin instead of the default) */
+// import 'tinymce/skins/ui/oxide/skin.css';
+//
+// /* Import plugins */
+// import 'tinymce/plugins/advlist';
+// import 'tinymce/plugins/code';
+// import 'tinymce/plugins/emoticons';
+// import 'tinymce/plugins/emoticons/js/emojis';
+// import 'tinymce/plugins/link';
+// import 'tinymce/plugins/lists';
+// import 'tinymce/plugins/table';
+//
+// /* content UI CSS is required */
+// import contentUiSkinCss from 'tinymce/skins/ui/oxide/content.css';
+//
+// /* The default content CSS can be changed or replaced with appropriate CSS for the editor content. */
+// import contentCss from 'tinymce/skins/content/default/content.css';
+//
+// /* Initialize TinyMCE */
+// export function render () {
+//     tinymce.init({
+//         selector: 'textarea#editor',
+//         plugins: 'advlist code emoticons link lists table',
+//         toolbar: 'bold italic | bullist numlist | link emoticons',
+//         skin: false,
+//         content_css: false,
+//         content_style: contentUiSkinCss.toString() + '\n' + contentCss.toString(),
+//     });
+// };
+//
+// export default class extends Controller {
+//     initialize() {
+//         const dataset = this.element.dataset;
+//         this.options = JSON.parse(dataset.options) || {};
+//         const customButtons = JSON.parse(dataset.customButtons) || {};
+//
+//         this.options.setup = function (editor) {
+//             for (const key in customButtons) {
+//                 if (customButtons.hasOwnProperty(key)) {
+//                     let event = new CustomEvent(customButtons[key].event);
+//
+//                     editor.ui.registry.addButton(key, {
+//                         text: customButtons[key].text,
+//                         onAction: function () {
+//                             window.dispatchEvent(event);
+//                         }
+//                     });
+//                 }
+//             }
+//         };
+//
+//         window.addEventListener('tinymce-insert-content', event => {
+//             this.insert(event.detail);
+//         });
+//     }
+//
+//     connect() {
+//         let event = new CustomEvent('tinymce-initialize', {
+//             detail: this.options
+//         });
+//         window.dispatchEvent(event);
+//         tinymce.init(event.detail);
+//     }
+//
+//     insert(content) {
+//         tinymce.activeEditor.insertContent(content);
+//     }
+// }
