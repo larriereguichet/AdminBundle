@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Metadata\Factory;
+namespace LAG\AdminBundle\Tests\Metadata\Locator;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\AdminResource;
