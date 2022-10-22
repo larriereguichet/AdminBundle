@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
@@ -29,7 +31,7 @@ class ResourceCreateListener
 
     private function addOperationDefault(AdminResource $resource, OperationInterface $operation): OperationInterface
     {
-        if (count($operation->getProperties()) === 0) {
+        if (\count($operation->getProperties()) === 0) {
             $operation = $operation->withProperties($this->propertyFactory->createProperties($resource->getDataClass()));
         }
 

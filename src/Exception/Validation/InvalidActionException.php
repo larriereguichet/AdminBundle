@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Exception\Validation;
 
 use LAG\AdminBundle\Exception\Exception;
@@ -14,7 +16,7 @@ class InvalidActionException extends Exception
 
         /** @var ConstraintViolationInterface $error */
         foreach ($errors as $error) {
-            $message .= PHP_EOL.$error->getPropertyPath().': '.$error->getMessage();
+            $message .= \PHP_EOL.$error->getPropertyPath().': '.$error->getMessage();
         }
 
         parent::__construct($message);

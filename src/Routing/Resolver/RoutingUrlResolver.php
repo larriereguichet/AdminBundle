@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Routing\Resolver;
 
 use LAG\AdminBundle\Exception\Exception;
@@ -47,10 +49,7 @@ class RoutingUrlResolver implements RoutingUrlResolverInterface
             );
         }
 
-        throw new Exception(sprintf(
-            'Unable to resolve an url for the link with data "%s"',
-            print_r($linkOptions, true)
-        ));
+        throw new Exception(sprintf('Unable to resolve an url for the link with data "%s"', print_r($linkOptions, true)));
     }
 
     private function resolveRouteParameters(array $routeParameters, object $data = null): array
@@ -63,10 +62,7 @@ class RoutingUrlResolver implements RoutingUrlResolverInterface
                 $resolved[$property] = $value;
             } else {
                 if ($data === null) {
-                    throw new Exception(sprintf(
-                        'The url parameter "%s" can not be resolved as passed data is null',
-                        $property,
-                    ));
+                    throw new Exception(sprintf('The url parameter "%s" can not be resolved as passed data is null', $property));
                 }
                 $resolved[$property] = $accessor->getValue($data, $property);
             }

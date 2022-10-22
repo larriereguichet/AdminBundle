@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Routing\Parameter;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -12,7 +14,7 @@ class ParametersMapper
         $mappedRouteParameters = [];
 
         foreach ($routeParameters as $parameter) {
-            $mappedRouteParameters[$parameter] = $accessor->getValue($data, (string)$parameter);
+            $mappedRouteParameters[$parameter] = $accessor->getValue($data, (string) $parameter);
         }
 
         return $mappedRouteParameters;

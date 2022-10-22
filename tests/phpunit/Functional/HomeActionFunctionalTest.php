@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Functional;
 
 use LAG\AdminBundle\LAGAdminBundle;
@@ -10,7 +12,7 @@ class HomeActionFunctionalTest extends BaseBundleTestCase
     public function testDashboard()
     {
         // TODO add a functional test
-        //$client = static::createClient();
+        // $client = static::createClient();
         $this->assertTrue(true);
     }
 

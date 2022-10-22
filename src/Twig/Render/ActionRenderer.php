@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Twig\Render;
 
 use LAG\AdminBundle\Exception\Validation\InvalidActionException;

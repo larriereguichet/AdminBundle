@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\Metadata;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
@@ -13,6 +15,7 @@ use LAG\AdminBundle\Metadata\Property\PropertyInterface;
 use LAG\AdminBundle\Metadata\Property\StringProperty;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+
 use function Symfony\Component\String\u;
 
 class MetadataPropertyFactoryTest extends TestCase
@@ -41,9 +44,9 @@ class MetadataPropertyFactoryTest extends TestCase
             ])
         ;
         $metadata
-            ->expects($this->exactly(count($types)))
+            ->expects($this->exactly(\count($types)))
             ->method('getTypeOfField')
-            ->willReturnCallback(fn($type) => $types[$type])
+            ->willReturnCallback(fn ($type) => $types[$type])
         ;
 
         $this
@@ -55,7 +58,7 @@ class MetadataPropertyFactoryTest extends TestCase
         ;
 
         $properties = $this->factory->createProperties('MyClass');
-        $this->assertCount(count($types) + 1, $properties);
+        $this->assertCount(\count($types) + 1, $properties);
 
         foreach ($properties as $property) {
             $this->assertInstanceOf(PropertyInterface::class, $property);
@@ -100,9 +103,9 @@ class MetadataPropertyFactoryTest extends TestCase
             ->method('getAssociationNames')
         ;
         $metadata
-            ->expects($this->exactly(count($types)))
+            ->expects($this->exactly(\count($types)))
             ->method('getTypeOfField')
-            ->willReturnCallback(fn($type) => $types[$type])
+            ->willReturnCallback(fn ($type) => $types[$type])
         ;
 
         $this
@@ -114,7 +117,7 @@ class MetadataPropertyFactoryTest extends TestCase
         ;
 
         $properties = $this->factory->createProperties('MyClass');
-        $this->assertCount(count($types), $properties);
+        $this->assertCount(\count($types), $properties);
 
         foreach ($properties as $property) {
             $this->assertInstanceOf(PropertyInterface::class, $property);
@@ -169,7 +172,7 @@ class MetadataPropertyFactoryTest extends TestCase
         ;
 
         $properties = $this->factory->createProperties('MyClass');
-        $this->assertCount(count($types), $properties);
+        $this->assertCount(\count($types), $properties);
 
         foreach ($properties as $property) {
             $this->assertInstanceOf(CountProperty::class, $property);

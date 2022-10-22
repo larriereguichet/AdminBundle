@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Twig\Extension;
 
 use Symfony\Component\String\Inflector\EnglishInflector;

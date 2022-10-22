@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\EventListener\Security;
 
 use LAG\AdminBundle\Metadata\AdminResource;

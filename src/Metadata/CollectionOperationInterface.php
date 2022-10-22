@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;

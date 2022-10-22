@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener;
 
 use LAG\AdminBundle\Event\Events\OperationCreateEvent;
@@ -30,7 +32,7 @@ class OperationCreateListener
                 ->createFromProperty($property)
             ;
 
-            if (in_array($filter->getName(), $operation->getIdentifiers())) {
+            if (\in_array($filter->getName(), $operation->getIdentifiers())) {
                 $filter = $filter->withComparator('=');
             }
             $filters[] = $filter;
@@ -44,7 +46,7 @@ class OperationCreateListener
             return false;
         }
 
-        if (count($operation->getProperties()) === 0) {
+        if (\count($operation->getProperties()) === 0) {
             return false;
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -20,7 +22,7 @@ class OperationDataType extends AbstractType
             $reflection = new \ReflectionClass($data);
 
             foreach ($reflection->getProperties() as $property) {
-                if (in_array($property->getName(), $options['exclude'])) {
+                if (\in_array($property->getName(), $options['exclude'])) {
                     continue;
                 }
 

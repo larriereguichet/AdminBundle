@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Grid;
 
 class Grid
@@ -14,6 +16,6 @@ class Grid
 
     public function isEmpty(): bool
     {
-        return count($this->rows) === 0;
+        return \count($this->rows) === 0;
     }
 }

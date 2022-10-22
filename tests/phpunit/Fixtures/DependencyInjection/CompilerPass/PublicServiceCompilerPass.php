@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Fixtures\DependencyInjection\CompilerPass;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
+
 use function Symfony\Component\String\u;
-use Symfony\Component\Yaml\Yaml;
 
 class PublicServiceCompilerPass implements CompilerPassInterface
 {

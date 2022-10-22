@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Grid\Factory;
 
 use LAG\AdminBundle\Grid\Grid;

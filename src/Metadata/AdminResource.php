@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
 use LAG\AdminBundle\Exception\Operation\OperationMissingException;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AdminResource
@@ -127,11 +128,7 @@ class AdminResource
             }
         }
 
-        throw new OperationMissingException(sprintf(
-            'The operation with name "%s" does not exists in the resource "%s"',
-            $operationName,
-            $this->getName(),
-        ));
+        throw new OperationMissingException(sprintf('The operation with name "%s" does not exists in the resource "%s"', $operationName, $this->getName()));
     }
 
     public function withOperations(array $operations): self

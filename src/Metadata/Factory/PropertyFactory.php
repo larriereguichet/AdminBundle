@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata\Factory;
 
 use LAG\AdminBundle\Event\Events\PropertyCreatedEvent;
@@ -16,8 +18,7 @@ class PropertyFactory implements PropertyFactoryInterface
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
         private ValidatorInterface $validator,
-    )
-    {
+    ) {
     }
 
     public function create(PropertyInterface $property): PropertyInterface
