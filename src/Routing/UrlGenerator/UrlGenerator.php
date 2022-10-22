@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Parameter\ParametersMapper;
-use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
+
 use function Symfony\Component\String\u;
 
 class UrlGenerator implements UrlGeneratorInterface

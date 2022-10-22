@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Field;
 
 use LAG\AdminBundle\Factory\FieldFactoryInterface;
-use LAG\AdminBundle\Field\Render\FieldRendererInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -53,7 +52,7 @@ class ActionCollectionField extends AbstractField implements FieldFactoryAwareIn
         $resolver = new OptionsResolver();
         $field = new ActionField($actionName, 'action');
 
-        //$actionLinkConfiguration['class'] = 'btn btn-secondary';
+        // $actionLinkConfiguration['class'] = 'btn btn-secondary';
         $field->configureDefaultOptions($resolver);
         $field->configureOptions($resolver);
         $field->setOptions($resolver->resolve($actionLinkConfiguration));

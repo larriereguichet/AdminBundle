@@ -39,7 +39,7 @@ class FormFactory implements FormFactoryInterface
                 continue;
             }
 
-            if (in_array($name, ['id', 'identifier', 'uuid'])) {
+            if (\in_array($name, ['id', 'identifier', 'uuid'])) {
                 continue;
             }
             $formType = FormUtils::convertShortFormType($definition->getType());

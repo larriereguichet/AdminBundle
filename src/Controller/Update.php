@@ -1,18 +1,8 @@
 <?php
 
-namespace LAG\AdminBundle\Controller;
+declare(strict_types=1);
 
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
-use LAG\AdminBundle\State\DataProcessorInterface;
-use LAG\AdminBundle\State\DataProviderInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Twig\Environment;
+namespace LAG\AdminBundle\Controller;
 
 class Update extends ItemOperationController
 {

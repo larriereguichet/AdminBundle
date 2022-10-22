@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Field\Field;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
 
 interface OperationInterface
@@ -97,5 +98,4 @@ interface OperationInterface
     public function getItemActions(): ?array;
 
     public function withItemActions(array $itemActions): self;
-
 }

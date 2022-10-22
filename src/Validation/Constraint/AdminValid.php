@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Validation\Constraint;
 
 use LAG\AdminBundle\Validation\Validator\AdminValidator;

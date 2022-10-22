@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\QueryBuilder;
 
 use Doctrine\ORM\Query\Expr\Join;
@@ -8,6 +10,7 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\UnexpectedTypeException;
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
+
 use function Symfony\Component\String\u;
 
 class QueryBuilderHelper
@@ -57,12 +60,11 @@ class QueryBuilderHelper
             }
 
             if ($propertyPath->containsAny('.')) {
-
             } elseif ($this->metadata->hasField($propertyPath->toString())) {
                 $method = $filter->getOperator() === 'and' ? 'andWhere' : 'orWhere';
 
                 if ('between' === $filter->getComparator()) {
-                    if (!is_array($data) || count($data) === 2) {
+                    if (!\is_array($data) || \count($data) === 2) {
                         throw new Exception('Parameters for a between comparison filter are invalid');
                     }
                     $parameterName1 = u($filter->getName())

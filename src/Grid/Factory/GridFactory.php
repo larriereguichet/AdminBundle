@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Grid\Factory;
 
 use LAG\AdminBundle\Event\GridEvent;
@@ -7,9 +9,10 @@ use LAG\AdminBundle\Grid\Grid;
 use LAG\AdminBundle\Grid\Header;
 use LAG\AdminBundle\Grid\Row;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\OperationInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 use function Symfony\Component\String\u;
+
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class GridFactory implements GridFactoryInterface
 {

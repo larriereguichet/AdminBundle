@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\Metadata;
 
 use Doctrine\ORM\EntityManagerInterface;

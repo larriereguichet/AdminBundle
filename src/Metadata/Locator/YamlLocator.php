@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata\Locator;
 
 use CuyZ\Valinor\Mapper\Source\Source;
@@ -17,10 +19,7 @@ class YamlLocator implements MetadataLocatorInterface
         $fileSystem = new Filesystem();
 
         if (!$fileSystem->exists($resourceDirectory) || !is_dir($resourceDirectory)) {
-            throw new Exception(sprintf(
-                'The resources path %s does not exists or is not a directory',
-                $resourceDirectory
-            ));
+            throw new Exception(sprintf('The resources path %s does not exists or is not a directory', $resourceDirectory));
         }
         $finder = new Finder();
         $finder

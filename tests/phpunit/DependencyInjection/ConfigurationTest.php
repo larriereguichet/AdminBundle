@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\DependencyInjection;
 
 use LAG\AdminBundle\DependencyInjection\Configuration;
 use LAG\AdminBundle\Tests\TestCase;
-use Symfony\Component\Config\Definition\ArrayNode;
 
 class ConfigurationTest extends TestCase
 {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata;
 
 use LAG\AdminBundle\Metadata\Property\BooleanProperty;
@@ -28,15 +30,13 @@ class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
 
             if (str_contains($fieldType, 'datetime')) {
                 $properties[$fieldName] = new DateProperty($fieldName);
-            }
-            elseif ($fieldType === 'boolean') {
+            } elseif ($fieldType === 'boolean') {
                 $properties[$fieldName] = new BooleanProperty($fieldName);
-
             } else {
                 $properties[$fieldName] = new StringProperty($fieldName);
             }
 
-            if (count($properties) > 10) {
+            if (\count($properties) > 10) {
                 return $properties;
             }
         }
@@ -44,14 +44,11 @@ class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
         foreach ($metadata->getAssociationNames() as $associationName) {
             $properties[$associationName] = new CountProperty($associationName);
 
-            if (count($properties) > 10) {
+            if (\count($properties) > 10) {
                 return $properties;
             }
         }
 
-
         return $properties;
     }
-
-
 }

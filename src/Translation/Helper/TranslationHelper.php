@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Translation\Helper;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Admin\Context\AdminContextInterface;
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationHelper implements TranslationHelperInterface
@@ -17,7 +17,7 @@ class TranslationHelper implements TranslationHelperInterface
 //    ) {
 //    }
 
-    public function getTranslationKey(string $key , string $adminName = 'ui'): string
+    public function getTranslationKey(string $key, string $adminName = 'ui'): string
     {
         $translationPattern = $this->applicationConfiguration->getTranslationPattern();
         $translationPattern = str_replace('{key}', $key, $translationPattern);

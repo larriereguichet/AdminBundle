@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\EventListener\Operation;
 
 use LAG\AdminBundle\Event\Events\OperationCreateEvent;
@@ -85,14 +87,14 @@ class CreateListener
                 ;
             }
 
-            if ($operation instanceof Index && count($operation->getFilters() ?? []) > 0) {
+            if ($operation instanceof Index && \count($operation->getFilters() ?? []) > 0) {
                 $operation = $operation
                     ->withFormType(ResourceFilterType::class)
                 ;
             }
         }
 
-        if (is_a($operation->getFormType(), ResourceFilterType::class, true) && !array_key_exists('operation', $operation->getFormOptions())) {
+        if (is_a($operation->getFormType(), ResourceFilterType::class, true) && !\array_key_exists('operation', $operation->getFormOptions())) {
             $operation = $operation->withFormOptions([
                 'operation' => $operation,
             ]);

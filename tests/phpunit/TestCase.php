@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests;
 
 use LAG\AdminBundle\Action\ActionInterface;
@@ -19,6 +21,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
+
 use function Symfony\Component\String\u;
 
 class TestCase extends \PHPUnit\Framework\TestCase
@@ -79,13 +82,13 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function assertSubscribedMethodsExists(EventSubscriberInterface $subscriber)
     {
         $methods = forward_static_call([
-            get_class($subscriber),
+            \get_class($subscriber),
             'getSubscribedEvents',
         ]);
         $this->assertIsArray($methods);
 
         foreach ($methods as $method) {
-            if (is_array($method)) {
+            if (\is_array($method)) {
                 $this->assertArrayHasKey(0, $method);
                 $method = $method[0];
             } else {

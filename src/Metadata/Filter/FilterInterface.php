@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata\Filter;
 
 interface FilterInterface
@@ -31,6 +33,4 @@ interface FilterInterface
     public function getFormOptions(): array;
 
     public function withFormOptions(array $formOptions): self;
-
-
 }

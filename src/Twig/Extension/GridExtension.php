@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Twig\Extension;
 
 use LAG\AdminBundle\Grid\Cell;
@@ -15,8 +17,7 @@ class GridExtension extends AbstractExtension
     public function __construct(
         private GridRendererInterface $gridRenderer,
         private CellRendererInterface $cellRenderer,
-    )
-    {
+    ) {
     }
 
     public function getFunctions(): array

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\KnpMenu\Builder;
 
 use Knp\Menu\FactoryInterface;
@@ -11,8 +13,10 @@ use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 use function Symfony\Component\String\u;
+
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class LeftMenuBuilder
 {
@@ -56,7 +60,6 @@ class LeftMenuBuilder
             'left',
             'created',
         ));
-
 
         return $menu;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Controller;
 
 use LAG\AdminBundle\Metadata\AdminResource;

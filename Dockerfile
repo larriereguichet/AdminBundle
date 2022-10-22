@@ -2,13 +2,16 @@ FROM php:8.1
 
 RUN apt-get update; \
     apt-get install -y \
+        apt-transport-https \
         git \
-        zlib1g-dev \
-        libzip-dev \
+        gnupg \
+        libicu-dev \
         libpng-dev \
+        libzip-dev \
         nodejs \
         unzip \
         zip \
+        zlib1g-dev \
         zsh \
         wget \
         yarn; \
@@ -17,10 +20,19 @@ RUN apt-get update; \
                 /usr/share/doc/* /usr/share/groff/* /usr/share/info/* /usr/share/linda/* \
                 /usr/share/lintian/* /usr/share/locale/* /usr/share/man/*
 
-RUN docker-php-ext-install zip pdo pdo_mysql;
+RUN docker-php-ext-install \
+    intl \
+    bcmath \
+    pdo \
+    pdo_mysql \
+    zip
 
-RUN docker-php-ext-configure zip pdo pdo_mysql; \
-    docker-php-ext-enable zip pdo pdo_mysql
+RUN docker-php-ext-enable \
+    intl \
+    bcmath \
+    pdo \
+    pdo_mysql \
+    zip
 
 RUN pecl install pcov && docker-php-ext-enable pcov
 
@@ -30,11 +42,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
-RUN wget https://get.symfony.com/cli/installer -O - | bash; \
-    mv /root/.symfony/bin/symfony /usr/local/bin/symfony; \
-    chmod +x /usr/local/bin/symfony;
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash; \
+    apt update; \
+    apt install symfony-cli
 
-WORKDIR /srv/app
+WORKDIR /srv/bundle
 
 COPY . .
 
