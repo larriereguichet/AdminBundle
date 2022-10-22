@@ -149,7 +149,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
 
     public function hasFilters(): bool
     {
-        return $this->filters !== null && count($this->filters) > 0;
+        return $this->filters !== null && \count($this->filters) > 0;
     }
 
     public function withFilters(array $filters): CollectionOperationInterface

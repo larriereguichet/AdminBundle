@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\EventListener\Property;
 
 use LAG\AdminBundle\Event\Events\PropertyCreateEvent;
+
 use function Symfony\Component\String\u;
 
 class CreateListener

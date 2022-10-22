@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Request\Uri;
 
 use LAG\AdminBundle\Metadata\OperationInterface;

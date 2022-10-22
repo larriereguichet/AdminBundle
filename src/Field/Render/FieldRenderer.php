@@ -9,8 +9,10 @@ use LAG\AdminBundle\Exception\View\FieldRenderingException;
 use LAG\AdminBundle\Field\View\TextView;
 use LAG\AdminBundle\Field\View\View;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Twig\Environment;
+
 use function Symfony\Component\String\u;
+
+use Twig\Environment;
 
 class FieldRenderer implements FieldRendererInterface
 {

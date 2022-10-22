@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata\Locator;
 
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\AttributesHelper;
+
 use function Symfony\Component\String\u;
 
 class AttributeLocator implements MetadataLocatorInterface

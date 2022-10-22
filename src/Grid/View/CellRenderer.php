@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Grid\View;
 
 use LAG\AdminBundle\Grid\Cell;
@@ -9,8 +11,7 @@ class CellRenderer implements CellRendererInterface
 {
     public function __construct(
         private Environment $environment,
-    )
-    {
+    ) {
     }
 
     public function render(Cell $cell): string

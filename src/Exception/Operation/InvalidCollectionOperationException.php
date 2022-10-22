@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Exception\Operation;
 
 use LAG\AdminBundle\Controller\Index;

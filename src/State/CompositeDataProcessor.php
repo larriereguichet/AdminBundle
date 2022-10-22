@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\State;
 
 use LAG\AdminBundle\Exception\Exception;
@@ -24,10 +26,6 @@ class CompositeDataProcessor implements DataProcessorInterface
             }
         }
 
-        throw new Exception(sprintf(
-            'The admin resource "%s" and operation "%s" is not supported by any processor',
-            $operation->getResource()->getName(),
-            $operation->getName(),
-        ));
+        throw new Exception(sprintf('The admin resource "%s" and operation "%s" is not supported by any processor', $operation->getResource()->getName(), $operation->getName()));
     }
 }

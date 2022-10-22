@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata\Filter;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -108,6 +110,4 @@ class Filter implements FilterInterface
 
         return $self;
     }
-
-
 }

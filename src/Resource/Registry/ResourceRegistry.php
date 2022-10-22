@@ -70,6 +70,6 @@ class ResourceRegistry implements ResourceRegistryInterface
 
     public function getResourceNames(): array
     {
-        return \array_keys($this->resources);
+        return array_keys($this->resources);
     }
 }

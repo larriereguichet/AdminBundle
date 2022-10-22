@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Form\Type\Security;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Translation\Helper\TranslationHelperInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

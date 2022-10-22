@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Utils;
 
 use LAG\AdminBundle\Form\Type\DateRangeType;

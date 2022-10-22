@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Debug\Collector;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;

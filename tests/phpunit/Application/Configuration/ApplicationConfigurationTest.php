@@ -1,22 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Application\Configuration;
 
-use JK\Configuration\Exception\InvalidConfigurationException;
-use LAG\AdminBundle\Admin\Admin;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Field\ActionCollectionField;
-use LAG\AdminBundle\Field\ActionField;
-use LAG\AdminBundle\Field\ArrayField;
-use LAG\AdminBundle\Field\AutoField;
-use LAG\AdminBundle\Field\BooleanField;
-use LAG\AdminBundle\Field\CountField;
-use LAG\AdminBundle\Field\DateField;
-use LAG\AdminBundle\Field\LinkField;
-use LAG\AdminBundle\Field\MappedField;
-use LAG\AdminBundle\Field\StringField;
-use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Tests\TestCase;
 
 class ApplicationConfigurationTest extends TestCase

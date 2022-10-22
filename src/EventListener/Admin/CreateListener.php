@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\EventListener\Admin;
 
 use LAG\AdminBundle\Event\Events\ResourceCreateEvent;
@@ -10,6 +12,7 @@ use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
+
 use function Symfony\Component\String\u;
 
 class CreateListener
@@ -51,7 +54,7 @@ class CreateListener
     {
         if (!$operation->getName()) {
             $operation = $operation->withName(
-                u(get_class($operation))
+                u(\get_class($operation))
                     ->afterLast('\\')
                     ->snake()
                     ->lower()
