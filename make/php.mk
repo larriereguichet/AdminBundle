@@ -1,8 +1,8 @@
 .PHONY: tests
 
-tests: phpunit.run php-cs-fixer.fix phpstan.analyse bc.check var-dump-checker.run
+tests: phpunit.run php-cs-fixer.fix phpstan.analyse var-dump-checker.run
 
-tests.stop-on-failure: phpunit.stop-on-failure php-cs-fixer.fix phpstan.analyse bc.check var-dump-checker.run
+tests.stop-on-failure: phpunit.stop-on-failure php-cs-fixer.fix phpstan.analyse var-dump-checker.run
 
 # PHPUnit
 phpunit.run:
