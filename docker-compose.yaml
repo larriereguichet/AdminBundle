@@ -23,10 +23,10 @@ services:
             - ./docker/mysql/data:/var/lib/mysql
 
     js:
-        image: node:stretch-slim
+        image: node:16
         volumes:
             - .:/srv/admin-bundle
-        working_dir: /home/docker/www/app
+        working_dir: /srv/admin-bundle
         command: bash -c "yarn encore dev --watch"
 
 #    db:
