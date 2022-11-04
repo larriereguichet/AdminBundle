@@ -35,7 +35,6 @@ class LeftMenuBuilder
         $this->eventDispatcher->dispatch($event = new MenuCreateEvent($event->getMenu()), sprintf(
             MenuEvents::NAMED_EVENT_PATTERN,
             'left',
-            'create',
         ));
         $menu = $event->getMenu();
 
@@ -55,10 +54,9 @@ class LeftMenuBuilder
             }
         }
         $this->eventDispatcher->dispatch(new MenuCreatedEvent($menu), MenuEvents::MENU_CREATED);
-        $this->eventDispatcher->dispatch(new MenuCreateEvent($menu), sprintf(
+        $this->eventDispatcher->dispatch(new MenuCreatedEvent($menu), sprintf(
             MenuEvents::NAMED_EVENT_PATTERN,
             'left',
-            'created',
         ));
 
         return $menu;

@@ -33,7 +33,7 @@ class QueryBuilderHelper
                 $joinRootAlias = $this->rootAlias;
 
                 foreach ($propertyPath->split('.') as $path) {
-                    $this->leftJoin($path, $joinRootAlias);
+                    $this->leftJoin($path->toString(), $joinRootAlias);
                 }
             } else {
                 if ($this->metadata->hasField($propertyPath->toString())) {
@@ -60,6 +60,7 @@ class QueryBuilderHelper
             }
 
             if ($propertyPath->containsAny('.')) {
+                // TODO
             } elseif ($this->metadata->hasField($propertyPath->toString())) {
                 $method = $filter->getOperator() === 'and' ? 'andWhere' : 'orWhere';
 
@@ -121,7 +122,7 @@ class QueryBuilderHelper
                 ->append($joinAlias)
                 ->toString()
             ;
-            $this->queryBuilder->leftJoin($dql, u($joinAlias)->append('_resource'));
+            $this->queryBuilder->leftJoin($dql, u($joinAlias)->append('_resource')->toString());
         }
 
         return $this;

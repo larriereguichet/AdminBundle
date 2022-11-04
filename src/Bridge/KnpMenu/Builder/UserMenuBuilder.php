@@ -26,7 +26,6 @@ class UserMenuBuilder
         $this->eventDispatcher->dispatch($event = new MenuCreateEvent($event->getMenu()), sprintf(
             MenuEvents::NAMED_EVENT_PATTERN,
             'user',
-            'create',
         ));
         $menu = $event->getMenu();
         $menu->addChild('lag_admin.security.logout', [
@@ -34,10 +33,9 @@ class UserMenuBuilder
             'extras' => ['icon' => 'sign-out-alt'],
         ]);
         $this->eventDispatcher->dispatch(new MenuCreatedEvent($menu), MenuEvents::MENU_CREATED);
-        $this->eventDispatcher->dispatch(new MenuCreateEvent($menu), sprintf(
+        $this->eventDispatcher->dispatch(new MenuCreatedEvent($menu), sprintf(
             MenuEvents::NAMED_EVENT_PATTERN,
             'user',
-            'created',
         ));
 
         return $menu;

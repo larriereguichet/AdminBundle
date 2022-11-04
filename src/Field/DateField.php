@@ -13,7 +13,7 @@ class DateField extends AbstractField implements ApplicationAwareInterface
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'format' => $this->applicationConfiguration->getDateFormat(),
+            'format' => '$this->applicationConfiguration->getDateFormat()',
             'template' => '@LAGAdmin/fields/date.html.twig',
         ]);
     }
