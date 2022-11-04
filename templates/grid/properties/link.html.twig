@@ -1,0 +1,10 @@
+{% import '@LAGAdmin/grid/macro/attributes.html.twig' as helper %}
+
+<a{{ helper.attributes(cell.attr) }}>
+    {% if cell.icon %}
+        <span class="text">
+            <i class="{{ cell.icon }}"></i>&nbsp;
+        </span>
+    {% endif %}
+    {{ text|u.truncate(cell.length, cell.replace) }}
+</a>

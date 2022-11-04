@@ -6,8 +6,6 @@ services:
         tags:
             - { name: routing.loader }
 
-    LAG\AdminBundle\Routing\Redirection\RedirectionUtils: ~
-
     lag_admin.routing.route_name_generator: '@LAG\AdminBundle\Routing\Route\RouteNameGenerator'
     LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface: '@LAG\AdminBundle\Routing\Route\RouteNameGenerator'
     LAG\AdminBundle\Routing\Route\RouteNameGenerator:
@@ -18,11 +16,3 @@ services:
         arguments:
             $router: '@router'
             $resourceRegistry: '@lag_admin.resource.registry'
-
-    LAG\AdminBundle\Routing\Resolver\RoutingUrlResolverInterface: '@LAG\AdminBundle\Routing\Resolver\RoutingUrlResolver'
-    LAG\AdminBundle\Routing\Resolver\RoutingUrlResolver:
-        arguments:
-            $router: '@router'
-            $urlGenerator: '@LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface'
-            $routeNameGenerator: '@LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface'
-    lag_admin.routing.url_resolver: '@LAG\AdminBundle\Routing\Resolver\RoutingUrlResolver'

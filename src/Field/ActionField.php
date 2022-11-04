@@ -12,10 +12,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ActionField extends AbstractField
 {
-    public function getParent(): ?string
-    {
-        return LinkField::class;
-    }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
