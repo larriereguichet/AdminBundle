@@ -120,7 +120,7 @@ class AdminResource
         return false;
     }
 
-    public function getOperation(string $operationName): Operation
+    public function getOperation(string $operationName): OperationInterface
     {
         foreach ($this->operations as $operation) {
             if ($operation->getName() === $operationName) {

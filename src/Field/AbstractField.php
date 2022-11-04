@@ -156,4 +156,10 @@ abstract class AbstractField implements Field
     {
         return $this->type;
     }
+
+    // TODO remove
+    public function isSortable(): bool
+    {
+        return true;
+    }
 }

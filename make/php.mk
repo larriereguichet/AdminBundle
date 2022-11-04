@@ -1,8 +1,8 @@
 .PHONY: tests
 
-tests: phpunit.run php-cs-fixer.fix phpstan.analyse var-dump-checker.run
+tests: phpunit.run php-cs-fixer.fix phpstan.run var-dump-checker.run
 
-tests.stop-on-failure: phpunit.stop-on-failure php-cs-fixer.fix phpstan.analyse var-dump-checker.run
+tests.stop-on-failure: phpunit.stop-on-failure php-cs-fixer.fix phpstan.run var-dump-checker.run
 
 # PHPUnit
 phpunit.run:
@@ -18,7 +18,7 @@ php-cs-fixer.fix:
 	$(PHP) bin/php-cs-fixer fix --using-cache=no --diff --allow-risky=yes --config .php-cs-fixer.dist.php
 
 # phpstan
-phpstan.analyse:
+phpstan.run:
 	$(PHP) bin/phpstan analyse --level=5 src
 
 # Misc

@@ -8,7 +8,6 @@ use LAG\AdminBundle\Event\Events\ResourceCreateEvent;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
@@ -50,7 +49,7 @@ class CreateListener
         return $resource;
     }
 
-    private function addOperationDefault(AdminResource $resource, OperationInterface $operation): Operation
+    private function addOperationDefault(AdminResource $resource, OperationInterface $operation): OperationInterface
     {
         if (!$operation->getName()) {
             $operation = $operation->withName(
@@ -80,10 +79,7 @@ class CreateListener
 
         if (!$operation->getRouteParameters()) {
             if (!$operation instanceof CollectionOperationInterface && !$operation instanceof Create) {
-                // TODO identifiers
-                $operation = $operation->withRouteParameters([
-                    'id' => null,
-                ]);
+                $operation = $operation->withRouteParameters(array_keys($operation->getIdentifiers()));
             } else {
                 $operation = $operation->withRouteParameters([]);
             }

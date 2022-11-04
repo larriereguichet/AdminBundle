@@ -19,7 +19,7 @@ class CreateListener
         }
 
         if (!$property->getLabel()) {
-            $property = $property->withLabel(u($property->getName())->title());
+            $property = $property->withLabel(u($property->getName())->title()->toString());
         }
 
         $event->setProperty($property);

@@ -18,7 +18,7 @@ class OperationCreateListener
 
     public function __invoke(OperationCreateEvent $event): void
     {
-        /** @var CollectionOperationInterface|OperationInterface $operation */
+        /** @var CollectionOperationInterface $operation */
         $operation = $event->getOperation();
 
         if (!$this->supports($operation)) {
@@ -26,7 +26,7 @@ class OperationCreateListener
         }
         $filters = [];
 
-        foreach ($operation->getProperties() ?? [] as $property) {
+        foreach ($operation->getProperties() as $property) {
             $filter = $this
                 ->filterFactory
                 ->createFromProperty($property)

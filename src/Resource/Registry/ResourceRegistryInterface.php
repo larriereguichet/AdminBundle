@@ -9,6 +9,11 @@ use LAG\AdminBundle\Metadata\AdminResource;
 interface ResourceRegistryInterface
 {
     /**
+     * Load all resources from locators into memory.
+     */
+    public function load(): void;
+
+    /**
      * Return true if the registry contains a resource with the given name.
      */
     public function has(string $resourceName): bool;
