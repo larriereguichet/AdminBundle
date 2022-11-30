@@ -3,7 +3,7 @@
         "@symfony/webpack-encore": "^1.1.2",
         "core-js": "^3.6.5",
         "file-loader": "^6.0.0",
-        "postcss-loader": "^5.2.0",
+        "postcss-loader": "^7.0.2",
         "regenerator-runtime": "^0.13.7",
         "webpack-notifier": "^1.6.0"
     },
