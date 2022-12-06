@@ -15,24 +15,42 @@
 - batch actions
 
 # AdminBundle
-The AdminBundle let you create a **flexible** and **robust backoffice** on any Symfony application, with simple `yaml` configuration.
+The AdminBundle helps you to create **flexible** and **robust** administration application.
 
-It eases the handling of CRUD views by configuring `Admin` objects on top of your Doctrine entities. Each `Admin` has one or many `Action`.
-By default, the four actions of a classical CRUD are available (`create`, `edit`, `delete` and `list`) and the creation of custom actions is easy.
+It provides PHP attributes or yaml configuration to build views to show, create; update and delete resources. It comes
+with a native Doctrine ORM integration, and can also be used with any architecture.
 
-If you require more flexibility, you can easily override any part of the process (data providers, controllers, views...).
-The purpose of the bundle is to provide an Admin interface with default configuration, and allows the user to add his
-specific need where he wants, and allow to implement any specific needs without any hassles.
+The AdminBundle is highly customizable using configuration or with events to allow you tu build dynamic administration 
+interfaces.
 
 ## Features
-* Dynamic CRUD for your entities (no code generation)
-* Simple yaml configuration
-* List with pagination, sorting and filters
-* Menus integrations
-* Fully customizable (use your own controllers, data providers or templates)
-* Bootstrap 4 integration (can be disabled or override)
+* Easy to use PHP attributes or yaml configuration
+* Highly customizable
+* Doctrine ORM integration
+* Views with pagination, sorting and filtering
+* Dynamic menus
+* Bootstrap 5 integration
 
-## Installation
+## Install the Bundle
+
+```bash
+composer require lag/adminbundle
+```
+
+If you do not use Symfony Flex, follow [those extra steps](docs/install/install-without-flex.md).
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Step 1: Install the Bundle
 Open a command console, execute the
 following command in your project directory to install the latest stable version of the bundle:
