@@ -49,7 +49,7 @@
     "require-dev": {
         "dg/bypass-finals": "^1.1",
         "friendsofphp/php-cs-fixer": "^3.0",
-        "nyholm/symfony-bundle-test": "^1.6",
+        "nyholm/symfony-bundle-test": "^2.0",
         "php-parallel-lint/php-var-dump-check": "^0.5",
         "phpstan/phpstan": "^1.8",
         "phpunit/phpunit": "^9.5",
