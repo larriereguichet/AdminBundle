@@ -12,7 +12,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ActionField extends AbstractField
 {
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver

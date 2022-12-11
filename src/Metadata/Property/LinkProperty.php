@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata\Property;
 
 class LinkProperty extends AbstractProperty
@@ -57,6 +59,4 @@ class LinkProperty extends AbstractProperty
 
         return $self;
     }
-
-
 }
