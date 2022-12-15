@@ -32,7 +32,7 @@
                         {% if admin_action_allowed(admin.name, 'index') %}
                             <a href="{{ admin_url(admin.name, 'index') }}"
                                class="btn btn-light"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
-                                {{ 'cancel'|admin_trans_key }}</a>
+                                {{ 'cancel'|trans_key }}</a>
                         {% endif %}
 
                         {% block submit_action %}
@@ -41,7 +41,7 @@
                                     name="submit"
                                     class="btn btn-success">
                                 <i class="fa fa-save"></i>
-                                {{ 'save'|admin_trans_key }}
+                                {{ 'save'|trans_key }}
                             </button>
                         {% endblock %}
                     </div>
