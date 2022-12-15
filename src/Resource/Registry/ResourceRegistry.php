@@ -12,10 +12,12 @@ use LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface;
 
 class ResourceRegistry implements ResourceRegistryInterface
 {
+    /** @var AdminResource[] */
     private array $resources = [];
     private bool $loaded = false;
 
     public function __construct(
+        /** @var array<int, string> $resourcePaths */
         private array $resourcePaths,
         private MetadataLocatorInterface $locator,
         private AdminFactoryInterface $adminFactory,

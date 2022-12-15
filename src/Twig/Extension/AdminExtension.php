@@ -43,6 +43,9 @@ class AdminExtension extends AbstractExtension
         return $this->security->isOperationAllowed($resourceName, $operationName);
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function renderAction(Action $action, mixed $data = null, array $options = []): string
     {
         return $this->actionRenderer->render($action, $data, $options);

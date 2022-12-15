@@ -24,6 +24,7 @@ class AdminValueResolver implements ValueResolverInterface
         return $argument->getType() === AdminResource::class && $this->extractor->supports($request);
     }
 
+    /** @return iterable<AdminResource> */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         $resourceName = $this->extractor->getResourceName($request);

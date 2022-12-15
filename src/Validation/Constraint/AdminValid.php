@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraint;
 
 class AdminValid extends Constraint
 {
+    /** @return string[] */
     public function getTargets(): array
     {
         return [self::CLASS_CONSTRAINT];
