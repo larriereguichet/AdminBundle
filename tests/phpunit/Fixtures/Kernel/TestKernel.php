@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Fixtures\Kernel;
 
-use Generator;
 use LAG\AdminBundle\Tests\Fixtures\DependencyInjection\CompilerPass\PublicServiceCompilerPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -23,7 +22,7 @@ class TestKernel extends Kernel
     private string $projectDir;
     private string $cacheDir;
 
-    public function registerBundles(): Generator
+    public function registerBundles(): \Generator
     {
         foreach ($this->bundlesToRegister as $bundle) {
             yield new $bundle();

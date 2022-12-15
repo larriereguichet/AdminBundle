@@ -13,7 +13,6 @@ use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Metadata\Operation;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -100,7 +99,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     protected function setPrivateProperty($object, $property, $value)
     {
-        $reflection = new ReflectionClass($object);
+        $reflection = new \ReflectionClass($object);
 
         $property = $reflection->getProperty($property);
         $property->setValue($object, $value);
@@ -108,7 +107,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     protected function getPrivateProperty($object, $property)
     {
-        $reflection = new ReflectionClass($object);
+        $reflection = new \ReflectionClass($object);
         $property = $reflection->getProperty($property);
 
         return $property->getValue($object);
