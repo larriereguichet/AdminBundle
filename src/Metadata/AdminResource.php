@@ -32,7 +32,7 @@ class AdminResource
         /** @var string[] $identifiers */
         private array $identifiers = ['id'],
         private string $routePattern = 'lag_admin.{resource}.{operation}',
-        private ?string $prefix = '/{resourceName}',
+        private string $prefix = '/{resourceName}',
     ) {
     }
 
@@ -204,12 +204,12 @@ class AdminResource
         return $self;
     }
 
-    public function getPrefix(): ?string
+    public function getPrefix(): string
     {
         return $this->prefix;
     }
 
-    public function withPrefix(?string $prefix): self
+    public function withPrefix(string $prefix): self
     {
         $self = clone $this;
         $self->prefix = $prefix;

@@ -29,7 +29,7 @@ class CreateListener
 
         foreach ($resource->getOperations() as $operation) {
             $operation = $this->addOperationDefault($resource, $operation)->withResource($resource);
-            $operations[$operation->getName()] = $operation;
+            $operations[] = $operation;
         }
         $resource = $resource->withOperations($operations);
         $event->setResource($resource);
@@ -38,12 +38,8 @@ class CreateListener
     private function addResourceDefault(AdminResource $resource): AdminResource
     {
         if (!$resource->getTitle()) {
-            $inflector = new EnglishInflector();
-            $resource = $resource->withTitle($inflector->pluralize($resource->getName())[0]);
-        }
-
-        if ($resource->getPrefix() === null) {
-            $resource = $resource->withPrefix($resource->getName());
+            $title = u($resource->getName())->camel()->title()->toString();
+            $resource = $resource->withTitle($title);
         }
 
         return $resource;
@@ -66,10 +62,21 @@ class CreateListener
         }
 
         if (!$operation->getTitle()) {
-            $operation = $operation->withTitle(match ($operation->getName()) {
-                'index' => 'List',
-                default => u($operation->getName())->title(true)->toString(),
-            });
+            if ($operation instanceof CollectionOperationInterface) {
+                $inflector = new EnglishInflector();
+                $title = u($inflector->pluralize($resource->getTitle())[0])
+                    ->title(true)
+                    ->toString()
+                ;
+            } else {
+                $title = u($resource->getTitle())
+                    ->append(' ')
+                    ->append($operation->getName())
+                    ->title(true)
+                    ->toString()
+                ;
+            }
+            $operation = $operation->withTitle($title);
         }
 
         if (!$operation->getRoute()) {
