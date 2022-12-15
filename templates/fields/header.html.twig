@@ -1,6 +1,6 @@
 {% if data %}
     {% if admin_is_translation_enabled() %}
-        {{ data|admin_trans }}
+        {{ data|trans }}
     {% else %}
         {{ data }}
     {% endif %}
