@@ -1,5 +1,5 @@
 services:
-    LAG\AdminBundle\Request\Resolver\AdminArgumentValueResolver:
+    LAG\AdminBundle\Request\Resolver\AdminValueResolver:
         arguments:
             $extractor: '@lag_admin.request.parameters_extractor'
             $resourceRegistry: '@lag_admin.resource.registry'

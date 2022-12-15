@@ -9,5 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface UriVariablesExtractorInterface
 {
+    /**
+     * @return array<string, string>
+     */
     public function extractVariables(OperationInterface $operation, Request $request): array;
 }

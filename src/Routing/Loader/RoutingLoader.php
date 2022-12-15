@@ -22,7 +22,7 @@ class RoutingLoader extends Loader
         parent::__construct();
     }
 
-    public function load($resource, string $type = null): RouteCollection
+    public function load(mixed $resource, string $type = null): RouteCollection
     {
         if ($this->loaded) {
             throw new \RuntimeException('Do not add the Admin routing loader "lag_admin" twice');

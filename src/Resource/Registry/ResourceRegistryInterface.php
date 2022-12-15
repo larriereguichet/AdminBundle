@@ -32,6 +32,8 @@ interface ResourceRegistryInterface
 
     /**
      * Return an array of the registry resources names.
+     *
+     * @return string[]
      */
     public function getResourceNames(): array;
 }

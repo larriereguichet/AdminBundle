@@ -20,6 +20,10 @@ interface UrlGeneratorInterface
 
     /**
      * Generate an url for a route name. Route parameters will be mapped to the property of the given data object.
+     *
+     * @param string $routeName The route to generate url
+     * @param array<int, string> $routeParameters Optional parameters for url
+     * @param mixed $data Data to provided the url parameters
      */
     public function generateFromRouteName(
         string $routeName,
