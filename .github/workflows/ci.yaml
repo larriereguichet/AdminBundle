@@ -51,7 +51,7 @@ jobs:
             -   name: Run phpstan
                 run: bin/phpstan analyse --level=5 src
 
-            -   name: Upload code coverage to Scrutinizer CI
-                run: |
-                    wget https://scrutinizer-ci.com/ocular.phar
-                    php ocular.phar code-coverage:upload --format=php-clover var/phpunit/logs/clover.xml
+#            -   name: Upload code coverage to Scrutinizer CI
+#                run: |
+#                    wget https://scrutinizer-ci.com/ocular.phar
+#                    php ocular.phar code-coverage:upload --format=php-clover var/phpunit/logs/clover.xml
