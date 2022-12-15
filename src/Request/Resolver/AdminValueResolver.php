@@ -8,10 +8,10 @@ use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class AdminArgumentValueResolver implements ArgumentValueResolverInterface
+class AdminValueResolver implements ValueResolverInterface
 {
     public function __construct(
         private ParametersExtractorInterface $extractor,
