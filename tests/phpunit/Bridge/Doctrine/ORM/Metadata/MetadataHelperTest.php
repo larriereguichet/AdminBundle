@@ -6,7 +6,6 @@ namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\Metadata;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Mapping\ClassMetadataFactory;
-use Exception;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -24,7 +23,7 @@ class MetadataHelperTest extends TestCase
             ->willReturnCallback(function (string $class) {
                 $this->assertEquals('MyLittleClass', $class);
 
-                throw new Exception();
+                throw new \Exception();
             })
         ;
 

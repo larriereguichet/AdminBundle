@@ -10,14 +10,13 @@ use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\Warning;
-use Throwable;
 
 class FinalClassListener implements TestListener
 {
     /**
      * {@inheritdoc}
      */
-    public function addError(Test $test, Throwable $e, $time): void
+    public function addError(Test $test, \Throwable $e, $time): void
     {
     }
 
@@ -38,21 +37,21 @@ class FinalClassListener implements TestListener
     /**
      * {@inheritdoc}
      */
-    public function addIncompleteTest(Test $test, Throwable $e, $time): void
+    public function addIncompleteTest(Test $test, \Throwable $e, $time): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addRiskyTest(Test $test, Throwable $e, $time): void
+    public function addRiskyTest(Test $test, \Throwable $e, $time): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addSkippedTest(Test $test, Throwable $e, $time): void
+    public function addSkippedTest(Test $test, \Throwable $e, $time): void
     {
     }
 
