@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Field;
 
-use Closure;
-use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -22,7 +20,7 @@ class AutoField extends AbstractField
         ;
     }
 
-    public function getDataTransformer(): ?Closure
+    public function getDataTransformer(): ?\Closure
     {
         return function ($data) {
             if ($data === null) {
@@ -41,7 +39,7 @@ class AutoField extends AbstractField
                 return implode(',', $data);
             }
 
-            if ($data instanceof DateTimeInterface) {
+            if ($data instanceof \DateTimeInterface) {
                 return $data->format($this->getOption('date_format'));
             }
 

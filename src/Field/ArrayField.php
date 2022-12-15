@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Field;
 
-use Closure;
 use Doctrine\Common\Collections\Collection;
-use Iterator;
 use LAG\AdminBundle\Field\View\TextView;
 use LAG\AdminBundle\Field\View\View;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,7 +27,7 @@ class ArrayField extends AbstractField
         return new TextView($this->getName(), $this->getOptions(), $this->getDataTransformer());
     }
 
-    public function getDataTransformer(): ?Closure
+    public function getDataTransformer(): ?\Closure
     {
         return function ($data) {
             if ($data === null) {
@@ -40,7 +38,7 @@ class ArrayField extends AbstractField
                 $data = $data->toArray();
             }
 
-            if ($data instanceof Iterator) {
+            if ($data instanceof \Iterator) {
                 $data = iterator_to_array($data);
             }
 

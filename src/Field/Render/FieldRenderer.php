@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Field\Render;
 
-use Exception;
 use LAG\AdminBundle\Exception\View\FieldRenderingException;
 use LAG\AdminBundle\Field\View\TextView;
 use LAG\AdminBundle\Field\View\View;
@@ -52,7 +51,7 @@ class FieldRenderer implements FieldRendererInterface
             }
 
             return trim($render);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $message = sprintf(
                 'An exception has been thrown when rendering the field "%s" : "%s", template: "%s"',
                 $field->getName(),
@@ -90,7 +89,7 @@ class FieldRenderer implements FieldRendererInterface
                 'name' => $field->getName(),
                 'options' => $field->getOptions(),
             ]);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $message = sprintf(
                 'An exception has been thrown when rendering the header for the field "%s" : "%s"',
                 $field->getName(),

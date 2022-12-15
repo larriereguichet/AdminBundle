@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use RegexIterator;
-
 class AttributesHelper
 {
     public static function getReflectionClassesFromDirectories(string $path): \Iterator
     {
-        $iterator = new RegexIterator(
+        $iterator = new \RegexIterator(
             new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS),
                 \RecursiveIteratorIterator::LEAVES_ONLY
             ),
             '/^.+\.php$/i',
-            RegexIterator::GET_MATCH
+            \RegexIterator::GET_MATCH
         );
 
         foreach ($iterator as $file) {
