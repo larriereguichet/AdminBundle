@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Exception\Field;
 
-use Throwable;
-
 class FieldConfigurationException extends FieldException
 {
-    public function __construct(string $fieldName, string $error = '', Throwable $previous = null)
+    public function __construct(string $fieldName, string $error = '', \Throwable $previous = null)
     {
         $message = sprintf(
             'An error occurred when configuring the field "%s" : "%s".',

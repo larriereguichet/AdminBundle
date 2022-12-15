@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Exception;
 
-use Throwable;
-
 /**
  * This exception is thrown when the configuration given to the AdminBundle is invalid. this can be when creating the
  * application, an admin, an action or a menu.
@@ -17,7 +15,7 @@ class ConfigurationException extends Exception
     public function __construct(
         string $resourceType = null,
         string $resourceName = '',
-        Throwable $previous = null,
+        \Throwable $previous = null,
         array $configuration = []
     ) {
         $typeMessage = 'An error has occurred when resolving a configuration';

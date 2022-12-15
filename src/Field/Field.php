@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Field;
 
-use Closure;
 use LAG\AdminBundle\Field\View\View;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -75,5 +74,5 @@ interface Field
     /**
      * Transform the data to be passed to the view.
      */
-    public function getDataTransformer(): ?Closure;
+    public function getDataTransformer(): ?\Closure;
 }

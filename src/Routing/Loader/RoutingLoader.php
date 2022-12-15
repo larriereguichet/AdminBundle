@@ -7,7 +7,6 @@ namespace LAG\AdminBundle\Routing\Loader;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
-use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -26,7 +25,7 @@ class RoutingLoader extends Loader
     public function load($resource, string $type = null): RouteCollection
     {
         if ($this->loaded) {
-            throw new RuntimeException('Do not add the Admin routing loader "lag_admin" twice');
+            throw new \RuntimeException('Do not add the Admin routing loader "lag_admin" twice');
         }
         $routes = new RouteCollection();
         $resources = $this->resourceRegistry->all();

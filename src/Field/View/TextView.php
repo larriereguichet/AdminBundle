@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Field\View;
 
-use Closure;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\Field\ViewException;
 
@@ -12,9 +11,9 @@ class TextView implements View
 {
     private string $name;
     private array $options;
-    private ?Closure $dataTransformer;
+    private ?\Closure $dataTransformer;
 
-    public function __construct(string $name, array $options = [], ?Closure $dataTransformer = null)
+    public function __construct(string $name, array $options = [], ?\Closure $dataTransformer = null)
     {
         $this->name = $name;
         $this->options = $options;
@@ -45,7 +44,7 @@ class TextView implements View
         throw new ViewException('The getTemplate() method does not exists for TextView');
     }
 
-    public function getDataTransformer(): ?Closure
+    public function getDataTransformer(): ?\Closure
     {
         return $this->dataTransformer;
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Field;
 
-use Closure;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CountField extends AbstractField
@@ -18,7 +17,7 @@ class CountField extends AbstractField
         ]);
     }
 
-    public function getDataTransformer(): ?Closure
+    public function getDataTransformer(): ?\Closure
     {
         return function ($data) {
             return is_countable($data) ? \count($data) : 0;

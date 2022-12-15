@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Field\View;
 
-use Closure;
 use LAG\AdminBundle\Exception\Exception;
 
 class FieldView implements View
@@ -12,13 +11,13 @@ class FieldView implements View
     private string $fieldName;
     private string $template;
     private array $options;
-    private ?Closure $dataTransformer;
+    private ?\Closure $dataTransformer;
 
     public function __construct(
         string $fieldName,
         string $template,
         array $options = [],
-        ?Closure $dataTransformer = null
+        ?\Closure $dataTransformer = null
     ) {
         $this->fieldName = $fieldName;
         $this->template = $template;
@@ -50,7 +49,7 @@ class FieldView implements View
         return $this->template;
     }
 
-    public function getDataTransformer(): ?Closure
+    public function getDataTransformer(): ?\Closure
     {
         return $this->dataTransformer;
     }

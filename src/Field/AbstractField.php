@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Field;
 
-use Closure;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Field\View\FieldView;
 use LAG\AdminBundle\Field\View\View;
@@ -123,7 +122,7 @@ abstract class AbstractField implements Field
         return null;
     }
 
-    public function getDataTransformer(): ?Closure
+    public function getDataTransformer(): ?\Closure
     {
         return null;
     }
