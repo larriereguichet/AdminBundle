@@ -13,16 +13,5 @@ services:
             $cellRenderer: '@lag_admin.grid.cell_renderer'
         tags: ['twig.extension']
 
-    LAG\AdminBundle\Twig\Extension\MessageExtension:
-        arguments:
-            $registry: '@LAG\AdminBundle\Message\Registry\NotificationRegistryInterface'
-        tags: ['twig.extension']
-
-    LAG\AdminBundle\Twig\Extension\TranslationExtension:
-        arguments:
-            $translator: '@translator'
-            $configuration: '@lag_admin.application'
-        tags: ['twig.extension']
-
     LAG\AdminBundle\Twig\Extension\StringExtension:
         tags: ['twig.extension']
