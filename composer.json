@@ -52,7 +52,7 @@
         "nyholm/symfony-bundle-test": "^2.0",
         "php-parallel-lint/php-var-dump-check": "^0.5",
         "phpstan/phpstan": "^1.8",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^10.0",
         "symfony/browser-kit": "^6.0",
         "symfony/css-selector": "^6.0",
         "symfony/debug-bundle": "^6.0",
