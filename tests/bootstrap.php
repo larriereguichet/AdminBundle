@@ -1,11 +1,5 @@
 <?php
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
+use Symfony\Component\Dotenv\Dotenv;
 
-date_default_timezone_set('UTC');
-
-$loader = require __DIR__.'/../vendor/autoload.php';
-
-AnnotationRegistry::registerLoader([$loader, 'loadClass']);
-
-return $loader;
+require dirname(__DIR__).'/vendor/autoload.php';
