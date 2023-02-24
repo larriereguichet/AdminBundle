@@ -9,5 +9,5 @@ use LAG\AdminBundle\Metadata\OperationInterface;
 
 interface OperationFactoryInterface
 {
-    public function create(AdminResource $resource, OperationInterface $operation): OperationInterface;
+    public function create(AdminResource $resource, OperationInterface $operationDefinition): OperationInterface;
 }
