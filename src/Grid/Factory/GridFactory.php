@@ -9,10 +9,9 @@ use LAG\AdminBundle\Grid\Grid;
 use LAG\AdminBundle\Grid\Header;
 use LAG\AdminBundle\Grid\Row;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 use function Symfony\Component\String\u;
-
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class GridFactory implements GridFactoryInterface
 {
@@ -44,7 +43,7 @@ class GridFactory implements GridFactoryInterface
             $rows[] = new Row($index, $fields, $item);
         }
         $grid = new Grid(
-            $operation->getResourceName().'_'.$operation->getName(),
+            $operation->getResource()->getName().'_'.$operation->getName(),
             $operation->getGridTemplate(),
             $headers,
             $rows
