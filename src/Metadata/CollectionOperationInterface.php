@@ -37,11 +37,6 @@ interface CollectionOperationInterface extends OperationInterface
 
     public function withFilters(array $filters): self;
 
-    /** @return Action[] */
-    public function getListActions(): ?array;
-
-    public function withListActions(array $listActions): self;
-
     public function getGridTemplate(): ?string;
 
     public function withGridTemplate(?string $gridTemplate): self;

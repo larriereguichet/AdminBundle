@@ -11,7 +11,6 @@ class Index extends CollectionOperation
 {
     public function __construct(
         ?string $name = 'index',
-        ?string $resourceName = null,
         ?string $title = null,
         ?string $description = null,
         ?string $icon = null,
@@ -30,6 +29,7 @@ class Index extends CollectionOperation
         string $processor = ORMDataProcessor::class,
         string $provider = ORMDataProvider::class,
         array $identifiers = ['id'],
+        ?array $contextualActions = null,
         ?array $itemActions = null,
         bool $pagination = true,
         int $itemPerPage = 25,
@@ -37,12 +37,10 @@ class Index extends CollectionOperation
         array $criteria = [],
         array $orderBy = [],
         ?array $filters = null,
-        ?array $listActions = null,
         ?string $gridTemplate = '@LAGAdmin/grid/table_grid.html.twig',
     ) {
         parent::__construct(
             $name,
-            $resourceName,
             $title,
             $description,
             $icon,
@@ -61,6 +59,7 @@ class Index extends CollectionOperation
             $processor,
             $provider,
             $identifiers,
+            $contextualActions,
             $itemActions,
             $pagination,
             $itemPerPage,
@@ -68,7 +67,6 @@ class Index extends CollectionOperation
             $criteria,
             $orderBy,
             $filters,
-            $listActions,
             $gridTemplate,
         );
     }

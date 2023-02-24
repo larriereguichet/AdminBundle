@@ -12,10 +12,6 @@ interface OperationInterface
 
     public function withName(?string $name): self;
 
-    public function getResourceName(): ?string;
-
-    public function withResourceName(?string $resourceName): self;
-
     public function getTitle(): ?string;
 
     public function withTitle(?string $title): self;
@@ -95,7 +91,14 @@ interface OperationInterface
 
     public function withResource(AdminResource $resource): self;
 
+    /** @return Link[]|null */
+    public function getContextualActions(): ?array;
+
+    public function withContextualActions(array $contextualActions): self;
+
+    /** @return Link[]|null */
     public function getItemActions(): ?array;
 
+    /** @param array $itemActions Link[]|null */
     public function withItemActions(array $itemActions): self;
 }

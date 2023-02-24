@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-class Action
+class Link
 {
     public function __construct(
-        private ?string $routeName = null,
+        private ?string $route = null,
         private array $routeParameters = [],
         private ?string $resourceName = null,
         private ?string $operationName = null,
         private ?string $template = '@LAGAdmin/grid/actions/button.html.twig',
         private ?string $label = null,
         private ?string $type = null,
+        private ?string $url = null,
+        private ?string $icon = null,
     ) {
     }
 
@@ -30,15 +32,15 @@ class Action
         return $self;
     }
 
-    public function getRouteName(): ?string
+    public function getRoute(): ?string
     {
-        return $this->routeName;
+        return $this->route;
     }
 
-    public function withRouteName(?string $routeName): self
+    public function withName(?string $routeName): self
     {
         $self = clone $this;
-        $self->routeName = $routeName;
+        $self->route = $routeName;
 
         return $self;
     }
@@ -104,6 +106,32 @@ class Action
     {
         $self = clone $this;
         $self->type = $type;
+
+        return $self;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function withUrl(?string $url): self
+    {
+        $self = clone $this;
+        $self->url = $url;
+
+        return $self;
+    }
+
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    public function withIcon(?string $icon): self
+    {
+        $self = clone $this;
+        $self->icon = $icon;
 
         return $self;
     }

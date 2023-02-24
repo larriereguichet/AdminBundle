@@ -15,8 +15,6 @@ abstract class Operation implements OperationInterface
     public function __construct(
         #[Assert\NotBlank(message: 'The operation name should not be empty')]
         private ?string $name = null,
-        #[Assert\NotBlank(message: 'The resource name should not be empty')]
-        private ?string $resourceName = null,
         #[Assert\Length(max: 255, maxMessage: 'The operation title should be shorter than 255 characters')]
         private ?string $title = null,
         private ?string $description = null,
@@ -40,6 +38,7 @@ abstract class Operation implements OperationInterface
         private string $processor = ORMDataProcessor::class,
         private string $provider = ORMDataProvider::class,
         private array $identifiers = ['id'],
+        private ?array $contextualActions = null,
         private ?array $itemActions = null,
     ) {
     }
@@ -53,19 +52,6 @@ abstract class Operation implements OperationInterface
     {
         $self = clone $this;
         $self->name = $name;
-
-        return $self;
-    }
-
-    public function getResourceName(): ?string
-    {
-        return $this->resourceName;
-    }
-
-    public function withResourceName(?string $resourceName): self
-    {
-        $self = clone $this;
-        $self->resourceName = $resourceName;
 
         return $self;
     }
@@ -313,6 +299,19 @@ abstract class Operation implements OperationInterface
     {
         $self = clone $this;
         $self->resource = $resource;
+
+        return $self;
+    }
+
+    public function getContextualActions(): ?array
+    {
+        return $this->contextualActions;
+    }
+
+    public function withContextualActions(array $contextualActions): self
+    {
+        $self = clone $this;
+        $self->contextualActions = $contextualActions;
 
         return $self;
     }
