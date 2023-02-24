@@ -20,13 +20,15 @@ lag_admin:
 
     security:
         login: Se connecter
-        login_label: Email
-        password_label: Mot de passe
+        email: Email
+        password: Mot de passe
+        welcome: Bienvenue !
 
     ui:
         cancel: Annuler
         create: Créer
         filter: Filtrer
+        no_record: Aucun élément n'a été trouvé
         reset: Réinitialiser
         return: Retour
         save: Sauvegarder
