@@ -27,6 +27,7 @@
     "require": {
         "php": "^8.1",
         "cuyz/valinor": "^1.0.0",
+        "doctrine/annotations": "^2.0",
         "friendsofsymfony/ckeditor-bundle": "^2.4",
         "johnkrovitch/configuration": "^2.2",
         "johnkrovitch/orm-pack": "^3.1",
@@ -48,14 +49,15 @@
     },
     "require-dev": {
         "dg/bypass-finals": "^1.1",
-        "friendsofphp/php-cs-fixer": "^3.0",
+        "friendsofphp/php-cs-fixer": "^3.13",
         "nyholm/symfony-bundle-test": "^2.0",
         "php-parallel-lint/php-var-dump-check": "^0.5",
         "phpstan/phpstan": "^1.8",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^10.0",
         "symfony/browser-kit": "^6.0",
         "symfony/css-selector": "^6.0",
         "symfony/debug-bundle": "^6.0",
+        "symfony/dotenv": "^6.2",
         "symfony/monolog-bundle": "^3.5",
         "symfony/var-dumper": "^6.0",
         "symfony/webpack-encore-bundle": "^1.7"
