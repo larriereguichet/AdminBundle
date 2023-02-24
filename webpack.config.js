@@ -10,11 +10,11 @@ Encore
     .setPublicPath('/bundles/lagadmin')
 
     .addEntry('admin', './assets/js/admin.js')
-    
-    .addStyleEntry('fa', './node_modules/@fortawesome/fontawesome-free/css/all.css')
-    .addStyleEntry('bootstrap', './node_modules/bootstrap/dist/css/bootstrap.css')
-    
-    .enableSingleRuntimeChunk()
+    .addEntry('bootstrap', './assets/js/bootstrap.js')
+
+    .addStyleEntry('choice-js', './node_modules/choices.js/public/assets/styles/choices.css')
+
+    .disableSingleRuntimeChunk()
     .enableSassLoader()
     .enableVersioning(false)
     .enableSourceMaps(!Encore.isProduction())
@@ -24,7 +24,7 @@ Encore
         useBuiltIns: 'usage',
         corejs: 3
     })
-    
+
     // Copy the files required by tinymce
     .copyFiles({
         from: 'vendor/tinymce/tinymce/icons',
