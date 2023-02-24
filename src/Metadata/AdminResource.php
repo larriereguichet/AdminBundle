@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
+use Attribute;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
 use LAG\AdminBundle\Exception\Operation\OperationMissingException;
@@ -32,7 +33,8 @@ class AdminResource
         /** @var string[] $identifiers */
         private array $identifiers = ['id'],
         private string $routePattern = 'lag_admin.{resource}.{operation}',
-        private ?string $prefix = '/{resourceName}',
+        private ?string $routePrefix = '/{resourceName}',
+        private ?string $translationPattern = null,
     ) {
     }
 
@@ -204,15 +206,28 @@ class AdminResource
         return $self;
     }
 
-    public function getPrefix(): ?string
+    public function getRoutePrefix(): ?string
     {
-        return $this->prefix;
+        return $this->routePrefix;
     }
 
-    public function withPrefix(?string $prefix): self
+    public function withRoutePrefix(?string $prefix): self
     {
         $self = clone $this;
-        $self->prefix = $prefix;
+        $self->routePrefix = $prefix;
+
+        return $self;
+    }
+
+    public function getTranslationPattern(): ?string
+    {
+        return $this->translationPattern;
+    }
+
+    public function withTranslationPattern(?string $translationPattern): self
+    {
+        $self = clone $this;
+        $self->translationPattern = $translationPattern;
 
         return $self;
     }
