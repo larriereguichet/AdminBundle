@@ -11,7 +11,6 @@ class Delete extends Operation
 {
     public function __construct(
         ?string $name = 'delete',
-        ?string $resourceName = null,
         ?string $title = null,
         ?string $description = null,
         ?string $icon = null,
@@ -30,11 +29,11 @@ class Delete extends Operation
         string $processor = ORMDataProcessor::class,
         string $provider = ORMDataProvider::class,
         array $identifiers = [],
+        ?array $contextualActions = null,
         ?array $itemActions = null
     ) {
         parent::__construct(
             $name,
-            $resourceName,
             $title,
             $description,
             $icon,
@@ -53,6 +52,7 @@ class Delete extends Operation
             $processor,
             $provider,
             $identifiers,
+            $contextualActions,
             $itemActions,
         );
     }

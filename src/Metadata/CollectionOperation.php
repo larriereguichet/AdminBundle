@@ -12,7 +12,6 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
 {
     public function __construct(
         ?string $name = null,
-        ?string $resourceName = null,
         ?string $title = null,
         ?string $description = null,
         ?string $icon = null,
@@ -31,6 +30,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         string $processor = ORMDataProcessor::class,
         string $provider = ORMDataProvider::class,
         array $identifiers = ['id'],
+        ?array $contextualActions = null,
         ?array $itemActions = null,
         private bool $pagination = true,
         private int $itemPerPage = 25,
@@ -38,12 +38,10 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         private array $criteria = [],
         private array $orderBy = [],
         private ?array $filters = null,
-        private ?array $listActions = null,
         private ?string $gridTemplate = '@LAGAdmin/grid/table_grid.html.twig',
     ) {
         parent::__construct(
             $name,
-            $resourceName,
             $title,
             $description,
             $icon,
@@ -62,6 +60,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             $processor,
             $provider,
             $identifiers,
+            $contextualActions,
             $itemActions,
         );
     }
@@ -152,23 +151,10 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->filters !== null && \count($this->filters) > 0;
     }
 
-    public function withFilters(array $filters): CollectionOperationInterface
+    public function withFilters(array $filters): self
     {
         $self = clone $this;
         $self->filters = $filters;
-
-        return $self;
-    }
-
-    public function getListActions(): ?array
-    {
-        return $this->listActions;
-    }
-
-    public function withListActions(array $listActions): self
-    {
-        $self = clone $this;
-        $self->listActions = $listActions;
 
         return $self;
     }

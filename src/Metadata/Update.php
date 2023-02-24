@@ -11,7 +11,6 @@ class Update extends Operation
 {
     public function __construct(
         ?string $name = 'update',
-        ?string $resourceName = null,
         ?string $title = null,
         ?string $description = null,
         ?string $icon = null,
@@ -30,11 +29,11 @@ class Update extends Operation
         string $processor = ORMDataProcessor::class,
         string $provider = ORMDataProvider::class,
         array $identifiers = [],
-        ?array $itemActions = null
+        ?array $contextualActions = null,
+        ?array $itemActions = null,
     ) {
         parent::__construct(
             $name,
-            $resourceName,
             $title,
             $description,
             $icon,
@@ -53,6 +52,7 @@ class Update extends Operation
             $processor,
             $provider,
             $identifiers,
+            $contextualActions,
             $itemActions,
         );
     }
