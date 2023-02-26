@@ -7,20 +7,20 @@ namespace LAG\AdminBundle\Resource\Registry;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\UnexpectedTypeException;
 use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Factory\AdminFactoryInterface;
+use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface;
 
 class ResourceRegistry implements ResourceRegistryInterface
 {
     /** @var AdminResource[] */
-    private array $resources = [];
+    private array $definitions = [];
     private bool $loaded = false;
 
     public function __construct(
         /** @var array<int, string> $resourcePaths */
         private array $resourcePaths,
         private MetadataLocatorInterface $locator,
-        private AdminFactoryInterface $adminFactory,
+        private ResourceFactoryInterface $resourceFactory,
     ) {
     }
 
@@ -41,7 +41,7 @@ class ResourceRegistry implements ResourceRegistryInterface
                 if (!$resource->getName()) {
                     throw new Exception('The admin resource has no name');
                 }
-                $this->resources[$resource->getName()] = $this->adminFactory->create($resource);
+                $this->definitions[$resource->getName()] = $resource;
             }
         }
         $this->loaded = true;
@@ -49,7 +49,7 @@ class ResourceRegistry implements ResourceRegistryInterface
 
     public function has(string $resourceName): bool
     {
-        return \array_key_exists($resourceName, $this->resources);
+        return \array_key_exists($resourceName, $this->definitions);
     }
 
     public function get(string $resourceName): AdminResource
@@ -60,18 +60,15 @@ class ResourceRegistry implements ResourceRegistryInterface
             throw new Exception('Resource with name "'.$resourceName.'" not found');
         }
 
-        return $this->resources[$resourceName];
+        return $this->resourceFactory->create($this->definitions[$resourceName]);
     }
 
-    public function all(): array
+    public function all(): iterable
     {
         $this->load();
 
-        return $this->resources;
-    }
-
-    public function getResourceNames(): array
-    {
-        return array_keys($this->resources);
+        foreach ($this->definitions as $definition) {
+            yield $this->resourceFactory->create($definition);
+        }
     }
 }
