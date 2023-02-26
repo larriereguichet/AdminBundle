@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class AdminValueResolver implements ValueResolverInterface
+class ResourceValueResolver implements ValueResolverInterface
 {
     public function __construct(
         private ParametersExtractorInterface $extractor,
@@ -19,14 +19,12 @@ class AdminValueResolver implements ValueResolverInterface
     ) {
     }
 
-    public function supports(Request $request, ArgumentMetadata $argument): bool
-    {
-        return $argument->getType() === AdminResource::class && $this->extractor->supports($request);
-    }
-
     /** @return iterable<AdminResource> */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
+        if (!$this->supports($request, $argument)) {
+            return [];
+        }
         $resourceName = $this->extractor->getResourceName($request);
         $operationName = $this->extractor->getOperationName($request);
 
@@ -35,5 +33,10 @@ class AdminValueResolver implements ValueResolverInterface
         $operation = $resource->getOperation($operationName);
 
         yield $resource->withCurrentOperation($operation);
+    }
+
+    private function supports(Request $request, ArgumentMetadata $argument): bool
+    {
+        return $argument->getType() === AdminResource::class && $this->extractor->supports($request);
     }
 }
