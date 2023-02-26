@@ -10,9 +10,16 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class InvalidOperationException extends Exception
 {
-    public function __construct(?string $propertyName, ConstraintViolationListInterface $errors)
-    {
-        $message = sprintf('The configuration of the operation "%s" is not valid :', $propertyName);
+    public function __construct(
+        string $resourceName,
+        string $operationName,
+        ConstraintViolationListInterface $errors
+    ) {
+        $message = sprintf(
+            'The configuration of the operation "%s" of the resource "%s" is not valid.',
+            $operationName,
+            $resourceName,
+        );
 
         /** @var ConstraintViolationInterface $error */
         foreach ($errors as $error) {

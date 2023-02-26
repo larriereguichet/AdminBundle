@@ -1,5 +1,5 @@
 services:
-    LAG\AdminBundle\Bridge\KnpMenu\Builder\TopMenuBuilder:
+    LAG\AdminBundle\Bridge\KnpMenu\Builder\ContextualMenuBuilder:
         arguments:
             $parametersExtractor: '@lag_admin.request.parameters_extractor'
             $requestStack: '@request_stack'
@@ -8,20 +8,20 @@ services:
             $routeNameGenerator: '@lag_admin.routing.route_name_generator'
             $eventDispatcher: '@event_dispatcher'
         tags:
-            - { name: knp_menu.menu_builder, method: createMenu, alias: top }
+            - { name: knp_menu.menu_builder, method: build, alias: contextual }
 
     LAG\AdminBundle\Bridge\KnpMenu\Builder\UserMenuBuilder:
         arguments:
             $factory: '@knp_menu.factory'
             $eventDispatcher: '@event_dispatcher'
         tags:
-            - { name: knp_menu.menu_builder, method: createMenu, alias: user }
+            - { name: knp_menu.menu_builder, method: build, alias: user }
 
-    LAG\AdminBundle\Bridge\KnpMenu\Builder\LeftMenuBuilder:
+    LAG\AdminBundle\Bridge\KnpMenu\Builder\ResourceMenuBuilder:
         arguments:
             $factory: '@knp_menu.factory'
             $resourceRegistry: '@lag_admin.resource.registry'
             $routeNameGenerator: '@lag_admin.routing.route_name_generator'
             $eventDispatcher: '@event_dispatcher'
         tags:
-            - { name: knp_menu.menu_builder, method: createMenu, alias: left }
+            - { name: knp_menu.menu_builder, method: build, alias: resource }

@@ -16,7 +16,7 @@ class InvalidCollectionOperationException extends Exception
         parent::__construct(sprintf(
             'The operation "%s" of the resource "%s" is configured to use the "%s" controller but is not an instance of "%s"',
             $operation->getName(),
-            $operation->getResourceName(),
+            $operation->getResource()->getName(),
             Index::class,
             CollectionOperationInterface::class,
         ));

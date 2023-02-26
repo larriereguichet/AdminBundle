@@ -1,6 +1,7 @@
 services:
     LAG\AdminBundle\Twig\Extension\AdminExtension:
         arguments:
+            $mediaBundleEnabled: '%lag_admin.media_bundle_enabled%'
             $applicationConfiguration: '@lag_admin.application'
             $security: '@lag_admin.security.helper'
             $actionRenderer: '@lag_admin.action.renderer'
@@ -14,4 +15,7 @@ services:
         tags: ['twig.extension']
 
     LAG\AdminBundle\Twig\Extension\StringExtension:
+        arguments:
+            $configuration: '@lag_admin.application'
+            $translator: '@translator'
         tags: ['twig.extension']

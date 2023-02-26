@@ -1,12 +1,9 @@
 lag_admin.login:
     path: /login
-    controller: LAG\AdminBundle\Controller\LoginAction
-    defaults:
-        template: '@LAGAdmin/security/login.html.twig'
+    controller: LAG\AdminBundle\Controller\Security\Login
 
 lag_admin.login_check:
     path: /login-check
-    controller: LAG\AdminBundle\Controller\LoginAction
 
 lag_admin.logout:
     path: /logout

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
-use LAG\AdminBundle\Event\Events\ResourceCreateEvent;
+use LAG\AdminBundle\Event\Events\ResourceEvent;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\OperationInterface;
 
@@ -16,7 +16,7 @@ class ResourceCreateListener
     ) {
     }
 
-    public function __invoke(ResourceCreateEvent $event): void
+    public function __invoke(ResourceEvent $event): void
     {
         $resource = $event->getResource();
         $operations = [];

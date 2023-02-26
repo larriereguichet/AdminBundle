@@ -30,6 +30,11 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('lag_admin.date_format', $config['date_format']);
         $container->setParameter('lag_admin.time_format', $config['time_format']);
         $container->setParameter('lag_admin.date_localization', $config['date_localization']);
+        $container->setParameter('lag_admin.filter_events', $config['filter_events']);
+
+        $bundles = $container->getParameter('kernel.bundles');
+
+        $container->setParameter('lag_admin.media_bundle_enabled', \array_key_exists('JKMediaBundle', $bundles));
     }
 
     public function getAlias(): string
@@ -39,23 +44,8 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container): void
     {
-        $configs = $container->getExtensionConfig($this->getAlias());
-        $resolvingBag = $container->getParameterBag();
-        $configs = $resolvingBag->resolveValue($configs);
-        $config = $this->processConfiguration(new Configuration(), $configs);
-
-//        // TODO remove this and pass when calling template instead
-//        $container->prependExtensionConfig('knp_menu', [
-//            'twig' => [
-//                'template' => '@LAGAdmin/menu/menu-base.html.twig',
-//            ],
-//        ]);
-
         $container->prependExtensionConfig('twig', [
             'form_themes' => ['@LAGAdmin/form/theme.html.twig'],
-            'globals' => [
-                'lag_admin_translation_catalog' => $config['translation_domain'],
-            ],
         ]);
     }
 }

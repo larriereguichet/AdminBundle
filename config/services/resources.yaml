@@ -5,7 +5,7 @@ services:
         arguments:
             $resourcePaths: '%lag_admin.resource_paths%'
             $locator: '@lag_admin.metadata.locator'
-            $adminFactory: '@lag_admin.admin.factory'
+            $resourceFactory: '@lag_admin.resource.factory'
 
     lag_admin.metadata.locator: '@LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface'
     LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface:

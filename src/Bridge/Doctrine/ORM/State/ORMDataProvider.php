@@ -37,7 +37,7 @@ class ORMDataProvider implements DataProviderInterface
         /** @var EntityRepository $repository */
         $repository = $manager->getRepository($operation->getResource()->getDataClass());
         // Add a suffix to avoid error if the resource is named with a reserved keyword
-        $rootAlias = $operation->getResourceName().'_entity';
+        $rootAlias = $operation->getResource()->getName().'_entity';
 
         $queryBuilder = $repository->createQueryBuilder($rootAlias);
         $helper = new QueryBuilderHelper(
@@ -54,7 +54,7 @@ class ORMDataProvider implements DataProviderInterface
             $helper->addOrderBy($orderBy);
             $filters = [];
 
-            foreach ($operation->getFilters() as $filter) {
+            foreach ($operation->getFilters() ?? [] as $filter) {
                 $data = $context['filters'][$filter->getName()] ?? null;
 
                 if ($data) {

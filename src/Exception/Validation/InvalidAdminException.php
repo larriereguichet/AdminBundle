@@ -10,9 +10,9 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class InvalidAdminException extends Exception
 {
-    public function __construct(?string $propertyName, ConstraintViolationListInterface $errors)
+    public function __construct(?string $operationName, ConstraintViolationListInterface $errors)
     {
-        $message = sprintf('The configuration of the admin "%s" is not valid :', $propertyName);
+        $message = sprintf('The configuration of the admin "%s" is not valid :', $operationName);
 
         /** @var ConstraintViolationInterface $error */
         foreach ($errors as $error) {

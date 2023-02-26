@@ -1,6 +1,5 @@
 imports:
     - {resource: 'services/*'}
-    - {resource: 'services/bridge/*'}
 
 
 

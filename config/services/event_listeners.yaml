@@ -1,13 +1,19 @@
 services:
-    LAG\AdminBundle\EventListener\Admin\CreateListener:
+    # Resource listeners
+    LAG\AdminBundle\EventListener\Resource\ResourceCreateListener:
         arguments:
             $routeNameGenerator: '@lag_admin.routing.route_name_generator'
         tags:
-            - { name: kernel.event_listener, event: lag_admin.admin.create, priority: 255 }
+            - { name: kernel.event_listener, event: lag_admin.resource.create, priority: 255 }
 
-    LAG\AdminBundle\EventListener\Operation\CreateListener:
+    LAG\AdminBundle\EventListener\Resource\ResourceCreatedListener:
         arguments:
             $routeNameGenerator: '@lag_admin.routing.route_name_generator'
+        tags:
+            - { name: kernel.event_listener, event: lag_admin.resource.created, priority: 255 }
+
+    # Operation listeners
+    LAG\AdminBundle\EventListener\Operation\OperationCreateListener:
         tags:
             - { name: kernel.event_listener, event: lag_admin.operation.create, priority: 255 }
 
@@ -15,137 +21,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: lag_admin.property.create, priority: 255 }
 
+    # Security listeners
     LAG\AdminBundle\EventListener\Security\RequestListener:
         arguments:
             $security: '@security.helper'
         tags:
             - { name: kernel.event_listener, event: kernel.controller_arguments, priority: 0 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#    # TODO to remove
-    #    _defaults:
-    #        autowire: true
-    #        autoconfigure: true
-    #
-    #    # TODO to remove
-    #    #    LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber:
-    #    #        class: LAG\AdminBundle\Event\Subscriber\ExtraConfigurationSubscriber
-    #
-    #    # Kernel events
-    #    LAG\AdminBundle\EventListener\Kernel\RequestListener:
-    #        tags:
-    #            - { name: kernel.event_listener, event: kernel.request, priority: 255 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#    LAG\AdminBundle\Event\Listener\Request\SecurityListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.request, priority: 200 }
-
-
-
-    # Data event
-#    LAG\AdminBundle\Event\Listener\Data\CreateDataFilterListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.data, priority: 255 }
-#
-#    LAG\AdminBundle\Event\Listener\Data\OrderRequestDataListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.data, priority: 255 }
-#
-#    LAG\AdminBundle\Event\Listener\Data\LoadListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.data, priority: -255 }
-#
-#    # Form event
-#    LAG\AdminBundle\Event\Listener\Form\AddEntityFormListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.form, priority: 255 }
-#
-#    LAG\AdminBundle\Event\Listener\Form\CreateDeleteFormListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.form, priority: 255 }
-#
-#    # HandleForm event
-#    LAG\AdminBundle\Event\Listener\Form\PersistDataListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.handle_form, priority: 0 }
-#
-#    LAG\AdminBundle\Event\Listener\Form\DeleteDataListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.handle_form, priority: 0 }
-#
-#    # View event
-#    LAG\AdminBundle\Event\Listener\View\ViewListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.view, priority: 255 }
-#
-#    # Field event
-#    LAG\AdminBundle\Event\Listener\Theme\FieldThemeListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.field_configuration, priority: 255 }
-#
-#    # Configuration event
-#    LAG\AdminBundle\Event\Listener\Action\Configuration\DefaultRouteListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.action_configuration, priority: 255 }
-#
-#    LAG\AdminBundle\Event\Listener\Admin\Configuration\DefaultRouteListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.admin_configuration, priority: 255 }
-#
-#    LAG\AdminBundle\Event\Listener\Admin\Configuration\ConfigurationListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.admin_configuration, priority: 255 }
-
-#    LAG\AdminBundle\Event\Listener\Admin\Configuration\DefaultLinkedActionsListener:
-#        tags:
-#            - { name: kernel.event_listener, event: lag.admin.admin_configuration, priority: 255 }
+    # Data listeners
+    LAG\AdminBundle\EventListener\Data\TimestampableListener:
+        tags:
+            - { name: kernel.event_listener, event: lag_admin.data.process, priority: 255 }

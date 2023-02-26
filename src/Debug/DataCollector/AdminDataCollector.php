@@ -56,7 +56,7 @@ class AdminDataCollector extends DataCollector
         return self::class;
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->data = [];
     }
