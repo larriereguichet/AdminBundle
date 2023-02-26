@@ -3,8 +3,7 @@ services:
         arguments:
             $urlGenerator: '@lag_admin.routing.url_generator'
             $resourceRegistry: '@lag_admin.resource.registry'
-        tags:
-            - { name: routing.loader }
+        tags: ['routing.loader']
 
     lag_admin.routing.route_name_generator: '@LAG\AdminBundle\Routing\Route\RouteNameGenerator'
     LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface: '@LAG\AdminBundle\Routing\Route\RouteNameGenerator'

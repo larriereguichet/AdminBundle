@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventListener\Property;
 
-use LAG\AdminBundle\Event\Events\PropertyCreateEvent;
+use LAG\AdminBundle\Event\Events\PropertyEvent;
 
 use function Symfony\Component\String\u;
 
 class CreateListener
 {
-    public function __invoke(PropertyCreateEvent $event): void
+    public function __invoke(PropertyEvent $event): void
     {
         $property = $event->getProperty();
 

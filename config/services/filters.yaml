@@ -4,4 +4,9 @@ services:
         class: LAG\AdminBundle\Filter\Factory\FilterFactory
         arguments:
             $validator: '@validator'
+
+    LAG\AdminBundle\Filter\Factory\EventFilterFactory:
+        decorates: 'lag_admin.filter.factory'
+        arguments:
             $eventDispatcher: '@event_dispatcher'
+            $decorated: '@.inner'

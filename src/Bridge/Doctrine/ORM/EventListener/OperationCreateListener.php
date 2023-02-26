@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener;
 
-use LAG\AdminBundle\Event\Events\OperationCreateEvent;
+use LAG\AdminBundle\Event\Events\OperationEvent;
 use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
@@ -16,7 +16,7 @@ class OperationCreateListener
     ) {
     }
 
-    public function __invoke(OperationCreateEvent $event): void
+    public function __invoke(OperationEvent $event): void
     {
         /** @var CollectionOperationInterface $operation */
         $operation = $event->getOperation();

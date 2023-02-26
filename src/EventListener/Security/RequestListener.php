@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventListener\Security;
 
 use LAG\AdminBundle\Metadata\AdminResource;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Security;
 
 class RequestListener
 {

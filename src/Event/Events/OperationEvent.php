@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Event\Events;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class OperationCreateEvent extends Event
+class OperationEvent extends Event
 {
     public function __construct(
         private OperationInterface $operation,

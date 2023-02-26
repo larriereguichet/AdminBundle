@@ -31,6 +31,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('date_format')->defaultValue('medium')->end()
                 ->scalarNode('time_format')->defaultValue('short')->end()
                 ->booleanNode('date_localization')->defaultValue(true)->end()
+                ->booleanNode('filter_events')->defaultValue(true)->end()
             ->end()
         ->end();
 

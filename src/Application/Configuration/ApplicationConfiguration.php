@@ -35,6 +35,12 @@ class ApplicationConfiguration extends ServiceConfiguration
 
             ->setDefault('date_localization', true)
             ->setAllowedTypes('date_localization', 'boolean')
+
+            ->setDefault('resource_events', true)
+            ->setAllowedTypes('resource_events', 'boolean')
+
+            ->setDefault('filter_events', true)
+            ->setAllowedTypes('filter_events', 'boolean')
         ;
     }
 }

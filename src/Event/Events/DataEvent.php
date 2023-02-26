@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Events;
 
-use Knp\Menu\ItemInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class MenuCreatedEvent extends Event
+class DataEvent extends Event
 {
     public function __construct(
-        private ItemInterface $menu
+        private readonly mixed $data,
     ) {
     }
 
-    public function getMenu(): ItemInterface
+    public function getData(): mixed
     {
-        return $this->menu;
+        return $this->data;
     }
 }
