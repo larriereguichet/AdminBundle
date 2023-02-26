@@ -73,5 +73,12 @@
 
 {% block spanElement %}
     {% import _self as knp_menu %}
-    <span{{ knp_menu.attributes(item.labelAttributes|merge({'class': 'nav-link text-white'})) }}>{{ block('label') }}</span>
+
+    {% set defaultAttributes = {
+        'class': 'nav-link text-white',
+        'data-controller': 'collapse',
+        'data-target': ''
+    } %}
+
+    <span{{ knp_menu.attributes(item.labelAttributes|merge(defaultAttributes)) }}>{{ block('label') }}</span>
 {% endblock %}

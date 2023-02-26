@@ -1,20 +1,22 @@
 {% extends '@LAGAdmin/base.html.twig' %}
 
-{% block page_title %}{{ parent() }} - {{ resource.title|trans }} - {{ operation.title|trans }}{% endblock %}
+{% block page_title %}{{ operation.title|admin_trans }}{% endblock %}
 
-{% block title %}{{ resource.title|title }} - {{ operation.title|title }}{% endblock %}
+{% block title %}{{ operation.title|admin_trans }}{% endblock %}
 
 {% block content %}
     <div class="admin-index admin-{{ resource.name }} admin-{{ operation.name }}">
         {% block form %}
             {{ form_start(form, {method: 'POST' in operation.methods ? 'POST': 'PUT'}) }}
-                <div class="row">
-                    {% for child in form %}
-                        <div class="col-6">
-                            {{ form_row(child) }}
-                        </div>
-                    {% endfor %}
-                </div>
+                {% block form_content %}
+                    <div class="row">
+                        {% for child in form %}
+                            <div class="col-6">
+                                {{ form_row(child) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endblock %}
 
                 {% block form_buttons %}
                     <div class="row mt-3 justify-content-end">

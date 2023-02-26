@@ -15,6 +15,6 @@
 
 {% block linkElement %}
     {% import _self as knp_menu %}
-    {% set attributes = item.linkAttributes|merge({'class': 'nav-link text-white'}) %}
+    {% set attributes = item.linkAttributes|merge({'class': 'nav-link'}) %}
     <a href="{{ item.uri }}"{{ knp_menu.attributes(attributes) }}>{{ block('label') }}</a>
 {% endblock %}
