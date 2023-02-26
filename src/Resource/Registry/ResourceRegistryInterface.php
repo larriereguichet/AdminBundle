@@ -26,14 +26,7 @@ interface ResourceRegistryInterface
     /**
      * Return an array of the registry resources.
      *
-     * @return AdminResource[]
+     * @return iterable<AdminResource>
      */
-    public function all(): array;
-
-    /**
-     * Return an array of the registry resources names.
-     *
-     * @return string[]
-     */
-    public function getResourceNames(): array;
+    public function all(): iterable;
 }
