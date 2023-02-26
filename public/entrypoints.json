@@ -1,28 +1,24 @@
 {
   "entrypoints": {
     "admin": {
-      "js": [
-        "/bundles/lagadmin/runtime.js",
-        "/bundles/lagadmin/admin.js"
-      ],
       "css": [
         "/bundles/lagadmin/admin.css"
-      ]
-    },
-    "fa": {
-      "js": [
-        "/bundles/lagadmin/runtime.js"
       ],
-      "css": [
-        "/bundles/lagadmin/fa.css"
+      "js": [
+        "/bundles/lagadmin/admin.js"
       ]
     },
     "bootstrap": {
-      "js": [
-        "/bundles/lagadmin/runtime.js"
-      ],
       "css": [
         "/bundles/lagadmin/bootstrap.css"
+      ],
+      "js": [
+        "/bundles/lagadmin/bootstrap.js"
+      ]
+    },
+    "choice-js": {
+      "css": [
+        "/bundles/lagadmin/choice-js.css"
       ]
     }
   }
