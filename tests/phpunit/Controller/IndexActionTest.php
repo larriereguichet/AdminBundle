@@ -40,6 +40,7 @@ class IndexActionTest extends TestCase
             ->withTemplate('my_template.html.twig')
             ->withFormType('FormClass')
             ->withFormOptions(['label' => 'my_form'])
+            ->withResource($resource)
         ;
 
         $resource = $resource->withCurrentOperation($operation);
@@ -127,11 +128,11 @@ class IndexActionTest extends TestCase
 
     public function testInvokeWithWrongOperationType(): void
     {
-        $admin = new AdminResource();
-        $admin = $admin->withCurrentOperation(new Create());
+        $resource = new AdminResource();
+        $resource = $resource->withCurrentOperation((new Create())->withResource($resource));
 
         $this->expectException(InvalidCollectionOperationException::class);
-        $this->controller->__invoke(new Request(), $admin);
+        $this->controller->__invoke(new Request(), $resource);
     }
 
     protected function setUp(): void

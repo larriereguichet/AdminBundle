@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class FormUtilsTest extends TestCase
 {
-    public function testConvertShortFormType()
+    public function testConvertShortFormType(): void
     {
         $this->assertEquals(Select2Type::class, FormUtils::convertShortFormType('choice'));
         $this->assertEquals(TextareaType::class, FormUtils::convertShortFormType('array'));

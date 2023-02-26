@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\EventListener;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\ResourceCreateListener;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
-use LAG\AdminBundle\Event\Events\ResourceCreateEvent;
+use LAG\AdminBundle\Event\Events\ResourceEvent;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\Property\StringProperty;
@@ -35,7 +35,7 @@ class ResourceCreateListenerTest extends TestCase
             ->willReturn([$property])
         ;
 
-        $this->listener->__invoke($event = new ResourceCreateEvent($resource));
+        $this->listener->__invoke($event = new ResourceEvent($resource));
         $resource = $event->getResource();
 
         $this->assertCount(1, $resource->getOperations());

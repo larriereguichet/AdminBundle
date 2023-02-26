@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests;
 
 use LAG\AdminBundle\LAGAdminBundle;
-use LAG\AdminBundle\Tests\Fixtures\Kernel\TestKernel;
+use legacy\Fixtures\Kernel\TestKernel;
 
 abstract class KernelTestBase extends TestCase
 {

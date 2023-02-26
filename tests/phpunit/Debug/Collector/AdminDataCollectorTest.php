@@ -105,7 +105,8 @@ class AdminDataCollectorTest extends TestCase
                     'provider' => ORMDataProvider::class,
                     'identifiers' => ['id'],
                     'routePattern' => 'lag_admin.{resource}.{operation}',
-                    'prefix' => '/{resourceName}',
+                    'routePrefix' => '/{resourceName}',
+                    'translationPattern' => null,
                 ],
             ],
             'application' => [

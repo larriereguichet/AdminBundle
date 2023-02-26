@@ -21,7 +21,7 @@ class ParametersExtractorTest extends TestCase
         $this->assertEquals($supports, $this->extractor->supports($request));
     }
 
-    public function supportsDataProvider(): array
+    public static function supportsDataProvider(): array
     {
         return [
             [new Request([], [], ['_route_params' => [

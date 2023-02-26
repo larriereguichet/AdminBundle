@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Twig\Extension;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
 use LAG\AdminBundle\Tests\TestCase;
@@ -35,6 +36,7 @@ class AdminExtensionTest extends TestCase
                 'lag_admin_operation_allowed',
                 'lag_admin_action',
                 'lag_admin_operation_url',
+                'lag_admin_media_bundle_enabled',
             ]);
             $this->assertTrue(method_exists($this->adminExtension, $function->getCallable()[1]));
         }
@@ -66,7 +68,7 @@ class AdminExtensionTest extends TestCase
 
     public function testRenderAction(): void
     {
-        $action = new Action();
+        $action = new Link();
         $data = new \stdClass();
         $options = ['an_option' => 'a_value'];
 
@@ -87,7 +89,7 @@ class AdminExtensionTest extends TestCase
     {
         $operation = (new Index())
             ->withName('my_operation')
-            ->withResourceName('my_resource')
+            ->withResource(new AdminResource(name: 'my_resource'))
         ;
         $data = new \stdClass();
 
@@ -111,6 +113,7 @@ class AdminExtensionTest extends TestCase
         $this->actionRenderer = $this->createMock(ActionRendererInterface::class);
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $this->adminExtension = new AdminExtension(
+            true,
             $this->configuration,
             $this->security,
             $this->actionRenderer,
