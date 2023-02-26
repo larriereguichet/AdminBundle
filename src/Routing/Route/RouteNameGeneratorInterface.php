@@ -13,5 +13,5 @@ interface RouteNameGeneratorInterface
      * Return a route name according to the given admin and action names, using the routing pattern configured in the
      * application.
      */
-    public function generateRouteName(AdminResource $admin, OperationInterface $operation): string;
+    public function generateRouteName(AdminResource $resource, OperationInterface $operation): string;
 }

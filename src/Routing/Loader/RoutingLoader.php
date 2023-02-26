@@ -51,19 +51,15 @@ class RoutingLoader extends Loader
         }
 
         foreach ($resource->getOperations() as $operation) {
-            $routes->add($operation->getRoute(), new Route(
-                $this->urlGenerator->generatePath($resource, $operation),
-                [
-                    '_controller' => $operation->getController(),
-                    '_admin' => $operation->getResourceName(),
-                    '_action' => $operation->getName(),
-                ],
-                [],
-                $identifiers,
-                null,
-                [],
-                $operation->getMethods(),
-            ));
+            $path = $this->urlGenerator->generatePath($resource, $operation);
+            $defaults = [
+                '_controller' => $operation->getController(),
+                '_admin' => $operation->getResource()->getName(),
+                '_action' => $operation->getName(),
+            ];
+
+            $route = new Route($path, $defaults, [], $identifiers, null, [], $operation->getMethods());
+            $routes->add($operation->getRoute(), $route);
         }
     }
 }

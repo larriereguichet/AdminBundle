@@ -28,7 +28,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $resource = $operation->getResource();
         $resourceName = (new EnglishInflector())->pluralize($resource->getName())[0];
 
-        $path = u($resource->getPrefix())
+        $path = u($resource->getRoutePrefix())
             ->replace('{resourceName}', $resourceName)
         ;
 

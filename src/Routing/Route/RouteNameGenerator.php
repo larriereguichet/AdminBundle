@@ -11,10 +11,10 @@ use function Symfony\Component\String\u;
 
 class RouteNameGenerator implements RouteNameGeneratorInterface
 {
-    public function generateRouteName(AdminResource $admin, OperationInterface $operation): string
+    public function generateRouteName(AdminResource $resource, OperationInterface $operation): string
     {
-        return u($admin->getRoutePattern())
-            ->replace('{resource}', $admin->getName())
+        return u($resource->getRoutePattern())
+            ->replace('{resource}', $resource->getName())
             ->replace('{operation}', $operation->getName())
             ->lower()
             ->toString()
