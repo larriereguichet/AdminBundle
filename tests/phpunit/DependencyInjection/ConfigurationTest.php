@@ -13,7 +13,7 @@ class ConfigurationTest extends TestCase
      * GetConfigTreeBuilder method should a return valid array nodes. The configuration is more tested in
      * LagAdminExtensionTest.
      */
-    public function testGetConfigTreeBuilder()
+    public function testGetConfigTreeBuilder(): void
     {
         $configuration = new Configuration();
         $tree = $configuration->getConfigTreeBuilder();
@@ -30,6 +30,7 @@ class ConfigurationTest extends TestCase
             'date_format' => 'medium',
             'time_format' => 'short',
             'date_localization' => true,
+            'filter_events' => true,
         ], $data);
     }
 }

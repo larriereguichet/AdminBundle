@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\EventListener;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\OperationCreateListener;
-use LAG\AdminBundle\Event\Events\OperationCreateEvent;
+use LAG\AdminBundle\Event\Events\OperationEvent;
 use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Filter\Filter;
@@ -38,7 +38,7 @@ class OperationCreateListenerTest extends TestCase
             ->willReturn($filter)
         ;
 
-        $this->listener->__invoke($event = new OperationCreateEvent($operation));
+        $this->listener->__invoke($event = new OperationEvent($operation));
         /** @var CollectionOperationInterface $operation */
         $operation = $event->getOperation();
         $this->assertCount(1, $operation->getFilters());
@@ -56,7 +56,7 @@ class OperationCreateListenerTest extends TestCase
             ->method('getProperties')
         ;
 
-        $this->listener->__invoke(new OperationCreateEvent($operation));
+        $this->listener->__invoke(new OperationEvent($operation));
     }
 
     public function testInvokeWithoutProperties(): void
@@ -68,7 +68,7 @@ class OperationCreateListenerTest extends TestCase
             ->method('createFromProperty')
         ;
 
-        $this->listener->__invoke(new OperationCreateEvent($operation));
+        $this->listener->__invoke(new OperationEvent($operation));
     }
 
     public function testInvokeWithFilters(): void
@@ -84,7 +84,7 @@ class OperationCreateListenerTest extends TestCase
             ->method('createFromProperty')
         ;
 
-        $this->listener->__invoke(new OperationCreateEvent($operation));
+        $this->listener->__invoke(new OperationEvent($operation));
     }
 
     public function testService(): void

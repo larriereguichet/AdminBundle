@@ -32,6 +32,8 @@ class LAGExtensionTest extends TestCase
                     'lag_admin.date_format',
                     'lag_admin.time_format',
                     'lag_admin.date_localization',
+                    'lag_admin.filter_events',
+                    'lag_admin.media_bundle_enabled',
                 ]);
             })
         ;

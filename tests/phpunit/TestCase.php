@@ -4,13 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests;
 
-use LAG\AdminBundle\Action\ActionInterface;
-use LAG\AdminBundle\Action\Configuration\ActionConfiguration;
-use LAG\AdminBundle\Admin\Admin;
-use LAG\AdminBundle\Admin\AdminInterface;
-use LAG\AdminBundle\Admin\Configuration\AdminConfiguration;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Controller\AdminAction;
 use LAG\AdminBundle\Metadata\Operation;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;

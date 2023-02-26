@@ -29,6 +29,8 @@ class ApplicationConfigurationTest extends TestCase
             'date_format' => 'medium',
             'time_format' => 'short',
             'date_localization' => true,
+            'resource_events' => true,
+            'filter_events' => true,
         ], $configuration->toArray());
     }
 }

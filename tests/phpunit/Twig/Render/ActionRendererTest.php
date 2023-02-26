@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Twig\Render;
 
 use LAG\AdminBundle\Exception\Validation\InvalidActionException;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\Twig\Render\ActionRenderer;
@@ -23,7 +23,7 @@ class ActionRendererTest extends TestCase
     private MockObject $validator;
     private MockObject $environment;
 
-    public function testService()
+    public function testService(): void
     {
         $this->assertServiceExists(ActionRenderer::class);
         $this->assertServiceExists(ActionRendererInterface::class);
@@ -31,8 +31,8 @@ class ActionRendererTest extends TestCase
 
     public function testRenderWithRouteName(): void
     {
-        $action = new Action(
-            routeName: 'my_route',
+        $action = new Link(
+            route: 'my_route',
             routeParameters: ['id' => []],
             template: 'my_template.html.twig',
             resourceName: 'my_resource', // should not be used if route is provided
@@ -70,7 +70,7 @@ class ActionRendererTest extends TestCase
 
     public function testRenderWithResourceName(): void
     {
-        $action = new Action(
+        $action = new Link(
             template: 'my_template.html.twig',
             resourceName: 'my_resource',
             operationName: 'my_operation',
@@ -108,7 +108,7 @@ class ActionRendererTest extends TestCase
 
     public function testInvalidAction(): void
     {
-        $action = new Action();
+        $action = new Link();
         $data = new \stdClass();
 
         $violations = $this->createMock(ConstraintViolationListInterface::class);
