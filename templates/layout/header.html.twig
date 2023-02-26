@@ -6,10 +6,10 @@
         </a>
     {% endblock %}
     <div class="container-fluid">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <div class="contextual-menu d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             {% block top_menu %}
-                {{ knp_menu_render('top', {
-                    template: '@LAGAdmin/menu/top.html.twig',
+                {{ knp_menu_render('contextual', {
+                    template: '@LAGAdmin/menu/contextual.html.twig',
                 }) }}
             {% endblock %}
 

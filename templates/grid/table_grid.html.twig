@@ -1,16 +1,18 @@
 {% block table %}
     <table class="admin-table table table-responsive align-middle mb-0">
         {% block table_head %}
-            <thead>
-            <tr>
-                {% for header in grid.headers %}
-                    <th class="text-dark">
-                        {% include '@LAGAdmin/grid/table_grid_header.html.twig' with {'header': header} %}
-                    </th>
-                {% endfor %}
-                <th>{# Empty columns labels for actions buttons #}</th>
-            </tr>
-            </thead>
+            {% if grid.rows|length > 0 %}
+                <thead>
+                <tr>
+                    {% for header in grid.headers %}
+                        <th class="text-dark">
+                            {% include '@LAGAdmin/grid/table_grid_header.html.twig' with {'header': header} %}
+                        </th>
+                    {% endfor %}
+                    <th>{# Empty columns labels for actions buttons #}</th>
+                </tr>
+                </thead>
+            {% endif %}
         {% endblock %}
 
         {% block table_body %}
@@ -47,7 +49,7 @@
                 <tfoot>
                 <tr>
                     <td colspan="{{ grid.headers|length + 1 }}">
-                        {{ 'lag_admin.index.no_record'|trans }}
+                        {{ 'lag_admin.ui.no_record'|admin_trans }}
                     </td>
                 </tr>
                 </tfoot>

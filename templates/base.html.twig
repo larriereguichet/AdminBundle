@@ -20,30 +20,27 @@
               type="image/x-icon">
     {% endblock %}
 
-    {% block admin_stylesheets %}
-{#        {% if admin_media_enabled() %}#}
-{#            <link rel="stylesheet"#}
-{#                  href="{{ asset('/bundles/jkmedia/assets/media.css') }}"/>#}
-{#        {% endif %}#}
-    {% endblock %}
-
     <title>{% block page_title %}{{ lag_admin_config('title') }}{% endblock %}</title>
 
     {% block stylesheets %}
         <link rel="stylesheet"
-              href="{{ asset('/bundles/lagadmin/fa.css') }}"/>
-        <link rel="stylesheet"
               href="{{ asset('/bundles/lagadmin/admin.css') }}"/>
         <link rel="stylesheet"
               href="{{ asset('/bundles/lagadmin/bootstrap.css') }}"/>
+        <link rel="stylesheet"
+              href="{{ asset('/bundles/lagadmin/choice-js.css') }}"/>
+
+        {% if lag_admin_media_bundle_enabled() %}
+            <link rel="stylesheet"
+                  href="{{ asset('/bundles/jkmedia/media.css') }}"/>
+        {% endif %}
     {% endblock %}
 
     {% block javascripts %}
-        <script src="{{ asset('/bundles/lagadmin/runtime.js') }}"
-                defer="defer"></script>
         <script src="{{ asset('/bundles/lagadmin/admin.js') }}"
                 defer="defer"></script>
-
+        <script src="{{ asset('/bundles/lagadmin/bootstrap.js') }}"
+                defer="defer"></script>
     {% endblock %}
 
     {% block head %}{% endblock %}
@@ -68,7 +65,7 @@
                     <div class="card-body">
                         <div class="card_title">
                             {% block title_container %}
-                                <h1 class="h3 mb-3 text-gray-800">
+                                <h1 class="h3 mb-4 text-gray-800">
                                     {% block title %}{% endblock %}
                                 </h1>
                             {% endblock %}

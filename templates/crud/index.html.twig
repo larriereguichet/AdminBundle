@@ -1,8 +1,8 @@
 {% extends '@LAGAdmin/base.html.twig' %}
 
-{% block page_title %}{{ parent() }} - {{ resource.title|trans }} - {{ operation.title|trans }}{% endblock %}
+{% block page_title %}{{ parent() }} - {{ operation.title|admin_trans }}{% endblock %}
 
-{% block title %}{{ resource.title|title }} - {{ operation.title|title }}{% endblock %}
+{% block title %}{{ operation.title|admin_trans }}{% endblock %}
 
 {% block content %}
     <div class="admin-index admin-{{ resource.name }}">
