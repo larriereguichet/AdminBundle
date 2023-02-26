@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Twig\Render;
 
 use LAG\AdminBundle\Exception\Validation\InvalidActionException;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,7 +21,7 @@ class ActionRenderer implements ActionRendererInterface
     }
 
     public function render(
-        Action $action,
+        Link $action,
         mixed $data = null,
         array $options = []
     ): string {
@@ -31,9 +31,9 @@ class ActionRenderer implements ActionRendererInterface
             throw new InvalidActionException($errors);
         }
 
-        if ($action->getRouteName()) {
+        if ($action->getRoute()) {
             $url = $this->urlGenerator->generateFromRouteName(
-                $action->getRouteName(),
+                $action->getRoute(),
                 $action->getRouteParameters(),
                 $data,
             );

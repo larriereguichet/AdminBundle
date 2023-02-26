@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Render;
 
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Link;
 
 interface ActionRendererInterface
 {
@@ -14,5 +14,5 @@ interface ActionRendererInterface
      *
      * @param array<string, mixed> $options
      */
-    public function render(Action $action, mixed $data = null, array $options = []): string;
+    public function render(Link $action, mixed $data = null, array $options = []): string;
 }
