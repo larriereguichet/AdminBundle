@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Twig\Extension;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
@@ -16,6 +16,7 @@ use Twig\TwigFunction;
 class AdminExtension extends AbstractExtension
 {
     public function __construct(
+        private bool $mediaBundleEnabled,
         private ApplicationConfiguration $applicationConfiguration,
         private SecurityHelper $security,
         private ActionRendererInterface $actionRenderer,
@@ -30,6 +31,7 @@ class AdminExtension extends AbstractExtension
             new TwigFunction('lag_admin_operation_allowed', [$this, 'isOperationAllowed']),
             new TwigFunction('lag_admin_action', [$this, 'renderAction'], ['is_safe' => ['html']]),
             new TwigFunction('lag_admin_operation_url', [$this, 'getOperationUrl'], ['is_safe' => ['html']]),
+            new TwigFunction('lag_admin_media_bundle_enabled', [$this, 'isMediaBundleEnabled']),
         ];
     }
 
@@ -46,7 +48,7 @@ class AdminExtension extends AbstractExtension
     /**
      * @param array<string, mixed> $options
      */
-    public function renderAction(Action $action, mixed $data = null, array $options = []): string
+    public function renderAction(Link $action, mixed $data = null, array $options = []): string
     {
         return $this->actionRenderer->render($action, $data, $options);
     }
@@ -54,9 +56,14 @@ class AdminExtension extends AbstractExtension
     public function getOperationUrl(OperationInterface $operation, mixed $data = null): string
     {
         return $this->urlGenerator->generateFromOperationName(
-            $operation->getResourceName(),
+            $operation->getResource()->getName(),
             $operation->getName(),
             $data,
         );
+    }
+
+    public function isMediaBundleEnabled(): bool
+    {
+        return $this->mediaBundleEnabled;
     }
 }
