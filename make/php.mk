@@ -1,6 +1,6 @@
 .PHONY: tests
 
-tests: php-cs-fixer.run phpstan.run var-dump-checker.run phpunit.run
+tests: phpunit.run phpstan.run var-dump-checker.run php-cs-fixer.run
 
 # PHPUnit
 phpunit.run:
