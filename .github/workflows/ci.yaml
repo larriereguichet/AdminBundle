@@ -13,9 +13,9 @@ jobs:
         strategy:
             matrix:
                 php_version:
-                    - '8.1'
+                    - '8.2'
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
 
             -   name: Cache vendors
                 uses: actions/cache@v2
@@ -46,7 +46,7 @@ jobs:
                 run: bin/phpunit
 
             -   name: Run php-cs-fixer
-                run: php-cs-fixer fix --dry-run --using-cache=no --verbose --diff --allow-risky=yes --config .php-cs-fixer.dist.php
+                run: PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --dry-run --using-cache=no --verbose --diff --allow-risky=yes --config .php-cs-fixer.dist.php
 
             -   name: Run phpstan
                 run: bin/phpstan analyse --level=5 src
