@@ -21,8 +21,8 @@ class ResourceFactory implements ResourceFactoryInterface
     public function create(AdminResource $definition): AdminResource
     {
         $event = new ResourceEvent($definition);
-        $this->eventDispatcher->dispatch($event, ResourceEvents::ADMIN_CREATE);
-        $this->eventDispatcher->dispatch($event, sprintf(ResourceEvents::ADMIN_CREATE_PATTERN, $definition->getName()));
+        $this->eventDispatcher->dispatch($event, ResourceEvents::RESOURCE_CREATE);
+        $this->eventDispatcher->dispatch($event, sprintf(ResourceEvents::RESOURCE_CREATE_PATTERN, $definition->getName()));
         $resource = $event->getResource();
         $operations = [];
 
@@ -31,8 +31,8 @@ class ResourceFactory implements ResourceFactoryInterface
         }
         $resource = $resource->withOperations($operations);
         $event = new ResourceEvent($resource);
-        $this->eventDispatcher->dispatch($event, ResourceEvents::ADMIN_CREATED);
-        $this->eventDispatcher->dispatch($event, sprintf(ResourceEvents::ADMIN_CREATED_PATTERN, $resource->getName()));
+        $this->eventDispatcher->dispatch($event, ResourceEvents::RESOURCE_CREATED);
+        $this->eventDispatcher->dispatch($event, sprintf(ResourceEvents::RESOURCE_CREATED_PATTERN, $resource->getName()));
 
         if ($event->getResource()->getName() !== $definition->getName()) {
             throw new Exception(sprintf('The resource name "%s" to "%s" change is not allowed', $definition->getName(), $resource->getName()));
