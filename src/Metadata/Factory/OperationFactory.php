@@ -26,15 +26,8 @@ class OperationFactory implements OperationFactoryInterface
         $operationDefinition = $operationDefinition
             ->withResource($resource)
         ;
-        $event = new OperationEvent($operationDefinition);
-        $this->eventDispatcher->dispatch($event, OperationEvents::OPERATION_CREATE);
-        $this->eventDispatcher->dispatch($event, sprintf(
-            OperationEvents::OPERATION_CREATE_PATTERN,
-            $resource->getName(),
-            $operationDefinition->getName(),
-        ));
+        $operation = $this->dispatchPreEvents($resource, $operationDefinition);
         $properties = [];
-        $operation = $event->getOperation();
 
         foreach ($operation->getProperties() as $property) {
             $properties[] = $this->propertyFactory->create($property);
@@ -50,18 +43,43 @@ class OperationFactory implements OperationFactoryInterface
             $operation = $operation->withFilters($filters);
         }
 
+        $operation = $this->dispatchPostEvents($resource, $operation);
+
+        // Ensure the operation belongs to the right resource
+        return $operation->withResource($resource);
+    }
+
+    private function dispatchPreEvents(AdminResource $resource, OperationInterface $operationDefinition): OperationInterface
+    {
+        $event = new OperationEvent($operationDefinition);
+        $this->eventDispatcher->dispatch($event, OperationEvents::OPERATION_CREATE);
+        $this->eventDispatcher->dispatch($event, sprintf(
+            OperationEvents::OPERATION_CREATE_PATTERN,
+            $resource->getName(),
+        ));
+        $this->eventDispatcher->dispatch($event, sprintf(
+            OperationEvents::OPERATION_CREATE_RESOURCE_PATTERN,
+            $resource->getName(),
+            $operationDefinition->getName(),
+        ));
+
+        return $event->getOperation();
+    }
+
+    private function dispatchPostEvents(AdminResource $resource, OperationInterface $operation): OperationInterface
+    {
         $event = new OperationEvent($operation);
         $this->eventDispatcher->dispatch($event, OperationEvents::OPERATION_CREATED);
         $this->eventDispatcher->dispatch($event, sprintf(
             OperationEvents::OPERATION_CREATED_PATTERN,
             $resource->getName(),
+        ));
+        $this->eventDispatcher->dispatch($event, sprintf(
+            OperationEvents::OPERATION_CREATED_RESOURCE_PATTERN,
+            $resource->getName(),
             $operation->getName(),
         ));
 
-        // Ensure the operation belongs to the right resource
-        return $event
-            ->getOperation()
-            ->withResource($resource)
-        ;
+        return $event->getOperation();
     }
 }

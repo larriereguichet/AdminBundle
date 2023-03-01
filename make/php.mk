@@ -12,6 +12,8 @@ phpunit.stop-on-failure:
 	@echo "Results file generated file://$(current_dir)/var/phpunit/coverage/index.html"
 
 # PHPCSFixer
+cs.fix: php-cs-fixer.fix
+
 php-cs-fixer.fix:
 	PHP_CS_FIXER_IGNORE_ENV=1 $(PHP) bin/php-cs-fixer fix --using-cache=no --diff --allow-risky=yes --config .php-cs-fixer.dist.php
 
