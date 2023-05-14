@@ -35,6 +35,7 @@ class AdminResource
         private string $routePattern = 'lag_admin.{resource}.{operation}',
         private ?string $routePrefix = '/{resourceName}',
         private ?string $translationPattern = null,
+        private ?string $translationDomain = null,
     ) {
     }
 
@@ -228,6 +229,19 @@ class AdminResource
     {
         $self = clone $this;
         $self->translationPattern = $translationPattern;
+
+        return $self;
+    }
+
+    public function getTranslationDomain(): ?string
+    {
+        return $this->translationDomain;
+    }
+
+    public function withTranslationDomain(?string $translationDomain): self
+    {
+        $self = clone $this;
+        $self->translationDomain = $translationDomain;
 
         return $self;
     }
