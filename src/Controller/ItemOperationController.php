@@ -37,7 +37,7 @@ class ItemOperationController
         $data = $this->dataProvider->provide($operation, $uriVariables, $context);
         $form = null;
 
-        if ($operation->getFormType()) {
+        if ($operation->getFormType() != null) {
             $form = $this->formFactory->create($operation->getFormType(), $data, $operation->getFormOptions());
             $form->handleRequest($request);
 
