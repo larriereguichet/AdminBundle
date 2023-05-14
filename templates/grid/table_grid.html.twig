@@ -28,9 +28,9 @@
                         <td>
                             <div class="btn-group"
                                  role="group"
-                                 aria-label="{{ 'lag_admin.list.available_actions_for_item'|trans }}">
-                                {% for action in operation.itemActions %}
-                                    {{ lag_admin_action(action, row.data, {
+                                 aria-label="{{ 'lag_admin.list.available_actions_for_item'|trans({}, 'admin') }}">
+                                {% for link in operation.itemActions %}
+                                    {{ lag_admin_action(link, row.data, {
                                         class: 'btn-sm btn-ouline'
                                     }) }}
                                 {% endfor %}

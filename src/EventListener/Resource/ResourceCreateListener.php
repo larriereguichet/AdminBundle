@@ -58,10 +58,14 @@ class ResourceCreateListener
         }
 
         if (!$operation->getTitle()) {
-            $operation = $operation->withTitle(match ($operation->getName()) {
-                'index' => 'List',
-                default => u($operation->getName())->title(true)->toString(),
-            });
+            $inflector = new EnglishInflector();
+
+            if ($operation instanceof CollectionOperationInterface) {
+                $title = u($inflector->pluralize($resource->getName())[0]);
+            } else {
+                $title = u($operation->getName())->append(' ')->append($resource->getName());
+            }
+            $operation = $operation->withTitle($title->title(true)->toString());
         }
 
         if (!$operation->getRoute()) {
@@ -70,10 +74,15 @@ class ResourceCreateListener
         }
 
         if (!$operation->getRouteParameters()) {
+            $operation = $operation->withRouteParameters([]);
+
             if (!$operation instanceof CollectionOperationInterface && !$operation instanceof Create) {
-                $operation = $operation->withRouteParameters(array_keys($operation->getIdentifiers()));
-            } else {
-                $operation = $operation->withRouteParameters([]);
+                $routeParameters = [];
+
+                foreach ($operation->getIdentifiers() as $identifier) {
+                    $routeParameters[$identifier] = null;
+                }
+                $operation = $operation->withRouteParameters($routeParameters);
             }
         }
 

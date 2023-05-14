@@ -29,7 +29,6 @@ class ResourceCreatedListener
                         operationName: 'create',
                         label: $resource->getOperation('create')->getTitle(),
                         type: 'primary',
-                        icon: 'plus-lg',
                     )]);
                 }
 
