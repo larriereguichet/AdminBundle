@@ -16,6 +16,12 @@ export default class extends Controller {
             event.preventDefault()
             target.classList.add('collapse')
             target.classList.toggle('show')
+
+            if (target.classList.contains('show')) {
+                target.textContent = target.dataset.collapsedMessage
+            } else {
+                target.textContent = target.dataset.collapseMessage
+            }
         })
     }
 };
