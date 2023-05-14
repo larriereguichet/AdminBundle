@@ -11,7 +11,7 @@ class Link
         private array $routeParameters = [],
         private ?string $resourceName = null,
         private ?string $operationName = null,
-        private ?string $template = '@LAGAdmin/grid/actions/button.html.twig',
+        private ?string $template = '@LAGAdmin/grid/actions/link.html.twig',
         private ?string $label = null,
         private ?string $type = null,
         private ?string $url = null,

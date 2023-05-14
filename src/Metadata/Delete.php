@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Form\Type\Resource\DeleteType;
 
 class Delete extends Operation
 {
@@ -20,15 +21,15 @@ class Delete extends Operation
         ?string $route = null,
         ?array $routeParameters = null,
         array $methods = ['POST', 'GET'],
-        string $path = '/delete',
+        ?string $path = null,
         ?string $targetRoute = null,
         ?array $targetRouteParameters = null,
         array $properties = [],
-        ?string $formType = null,
+        ?string $formType = DeleteType::class,
         array $formOptions = [],
         string $processor = ORMDataProcessor::class,
         string $provider = ORMDataProvider::class,
-        array $identifiers = [],
+        array $identifiers = ['id'],
         ?array $contextualActions = null,
         ?array $itemActions = null
     ) {

@@ -44,9 +44,9 @@ interface OperationInterface
 
     public function withRouteParameters(?array $routeParameters): self;
 
-    public function getPath(): string;
+    public function getPath(): ?string;
 
-    public function withPath(string $path): self;
+    public function withPath(?string $path): self;
 
     public function getTargetRoute(): ?string;
 
@@ -83,6 +83,7 @@ interface OperationInterface
 
     public function withMethods(array $methods): self;
 
+    /** @return string[] */
     public function getIdentifiers(): array;
 
     public function withIdentifiers(array $identifiers): self;
