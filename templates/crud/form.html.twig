@@ -1,53 +1,38 @@
-{% extends admin.base %}
-
-{% block page_title %}
-    {{ action.title }}
-{% endblock %}
-
-{% block title %}
-    {{ action.title }}
-{% endblock %}
+{% extends '@LAGAdmin/crud/operation.base.html.twig' %}
 
 {% block content %}
-    {% set form = admin.forms.entity %}
+    <div class="admin-index admin-{{ resource.name }} admin-{{ operation.name }}">
+        {% block form %}
+            {{ form_start(form) }}
 
-    {% block form %}
-        <div class="card">
-            {{ form_start(form, {attr: {class: 'card-body'}}) }}
-            {{ form_errors(form) }}
-
-            {% block form_widgets %}
-                {{ form_row(form) }}
-            {% endblock %}
-
-            {% block form_rest %}
-                {{ form_rest(form) }}
-            {% endblock %}
-
-            {% block form_actions %}
-                <div class="text-end">
-                    <div class="text-right btn-group"
-                         role="group">
-
-                        {% if admin_action_allowed(admin.name, 'index') %}
-                            <a href="{{ admin_url(admin.name, 'index') }}"
-                               class="btn btn-light"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;
-                                {{ 'cancel'|trans_key }}</a>
-                        {% endif %}
-
-                        {% block submit_action %}
-                            <button type="submit"
-                                    value="save"
-                                    name="submit"
-                                    class="btn btn-success">
-                                <i class="fa fa-save"></i>
-                                {{ 'save'|trans_key }}
-                            </button>
-                        {% endblock %}
-                    </div>
+            {% block form_content %}
+                <div class="row">
+                    {% for child in form %}
+                        <div class="col-6">
+                            {{ form_row(child) }}
+                        </div>
+                    {% endfor %}
                 </div>
             {% endblock %}
+
+            {% block form_buttons %}
+                <div class="row mt-3 justify-content-end">
+                    <div class="col-5 text-end">
+                        <div class="btn-group">
+                            {% for action in operation.itemActions %}
+                                {{ lag_admin_action(action, data) }}
+                            {% endfor %}
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                {{ 'lag_admin.ui.save'|trans({}, operation.resource.translationDomain) }}
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            {% endblock %}
+
             {{ form_end(form) }}
-        </div>
-    {% endblock %}
+        {% endblock %}
+    </div>
 {% endblock %}

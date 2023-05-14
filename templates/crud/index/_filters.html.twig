@@ -1,8 +1,10 @@
 <div class="dropdown mb-4 mt-3">
     <a href="#"
        data-controller="show"
-       data-target=".admin-filters">
-        {{ 'lag_admin.ui.show_filters'|trans({}, 'admin') }}
+       data-target=".admin-filters"
+       data-show-message="{{ 'lag_admin.ui.show_filters'|trans({}, resource.translationDomain) }}"
+       data-hide-message="{{ 'lag_admin.ui.hide_filters'|trans({}, resource.translationDomain) }}">
+        {{ 'lag_admin.ui.show_filters'|trans({}, resource.translationDomain) }}
     </a>
     <div class="admin-filters animated--fade-in d-none">
         <div id="admin-filters" class="card">
