@@ -20,7 +20,7 @@ class Create extends Operation
         ?string $route = null,
         ?array $routeParameters = null,
         array $methods = ['POST', 'GET'],
-        string $path = '/create',
+        ?string $path = null,
         ?string $targetRoute = null,
         ?array $targetRouteParameters = null,
         array $properties = [],

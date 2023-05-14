@@ -29,7 +29,7 @@ abstract class Operation implements OperationInterface
         private ?string $route = null,
         private ?array $routeParameters = null,
         private array $methods = [],
-        private string $path = '/{resourceName}/{operationName}',
+        private ?string $path = null,
         private ?string $targetRoute = null,
         private ?array $targetRouteParameters = null,
         private array $properties = [],
@@ -160,12 +160,12 @@ abstract class Operation implements OperationInterface
         return $self;
     }
 
-    public function getPath(): string
+    public function getPath(): ?string
     {
         return $this->path;
     }
 
-    public function withPath(string $path): self
+    public function withPath(?string $path): self
     {
         $self = clone $this;
         $self->path = $path;

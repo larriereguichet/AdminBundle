@@ -19,8 +19,8 @@ class Show extends Operation
         ?string $controller = \LAG\AdminBundle\Controller\Show::class,
         ?string $route = null,
         ?array $routeParameters = null,
-        array $methods = ['POST', 'GET'],
-        string $path = '/show',
+        array $methods = ['GET'],
+        ?string $path = null,
         ?string $targetRoute = null,
         ?array $targetRouteParameters = null,
         array $properties = [],
@@ -28,7 +28,7 @@ class Show extends Operation
         array $formOptions = [],
         string $processor = ORMDataProcessor::class,
         string $provider = ORMDataProvider::class,
-        array $identifiers = [],
+        array $identifiers = ['id'],
         ?array $contextualActions = null,
         ?array $itemActions = null
     ) {
