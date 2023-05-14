@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\Routing\Loader;
 
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\PathGeneratorInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
@@ -17,7 +18,7 @@ class RoutingLoader extends Loader
 
     public function __construct(
         private ResourceRegistryInterface $resourceRegistry,
-        private UrlGeneratorInterface $urlGenerator,
+        private PathGeneratorInterface $pathGenerator,
     ) {
         parent::__construct();
     }
@@ -51,7 +52,7 @@ class RoutingLoader extends Loader
         }
 
         foreach ($resource->getOperations() as $operation) {
-            $path = $this->urlGenerator->generatePath($resource, $operation);
+            $path = $this->pathGenerator->generatePath($operation);
             $defaults = [
                 '_controller' => $operation->getController(),
                 '_admin' => $operation->getResource()->getName(),

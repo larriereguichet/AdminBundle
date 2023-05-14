@@ -1,7 +1,7 @@
 services:
     LAG\AdminBundle\Routing\Loader\RoutingLoader:
         arguments:
-            $urlGenerator: '@lag_admin.routing.url_generator'
+            $pathGenerator: '@lag_admin.routing.path_generator'
             $resourceRegistry: '@lag_admin.resource.registry'
         tags: ['routing.loader']
 
@@ -15,3 +15,7 @@ services:
         arguments:
             $router: '@router'
             $resourceRegistry: '@lag_admin.resource.registry'
+
+    lag_admin.routing.path_generator: '@LAG\AdminBundle\Routing\UrlGenerator\PathGeneratorInterface'
+    LAG\AdminBundle\Routing\UrlGenerator\PathGeneratorInterface: '@LAG\AdminBundle\Routing\UrlGenerator\PathGenerator'
+    LAG\AdminBundle\Routing\UrlGenerator\PathGenerator: ~
