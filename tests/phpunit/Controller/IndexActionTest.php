@@ -46,7 +46,12 @@ class IndexActionTest extends TestCase
         $resource = $resource->withCurrentOperation($operation);
         $form = $this->createMock(FormInterface::class);
         $formView = $this->createMock(FormView::class);
-        $grid = $this->createMock(Grid::class);
+        $grid = new Grid(
+            name: '',
+            template: '',
+            headers: [],
+            rows: [],
+        );
 
         $data = new ArrayCollection([new \stdClass()]);
 
