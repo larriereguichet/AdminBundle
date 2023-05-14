@@ -1,40 +1,31 @@
-{% extends admin.base %}
+{% extends '@LAGAdmin/crud/operation.base.html.twig' %}
 
 {% block content %}
-    {% set form = admin.forms.delete %}
-
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-danger">
-                <div class="card-header border-danger bg-danger text-white">
-                    {{ 'lag.admin.delete_confirmation_title' | trans }}
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">
-                        {{ 'lag.admin.deleting' | trans({
-                            '%id%': admin.data.id
-                        }) }}
-                    </h4>
-
-                    <form action="{{ admin_url(admin.name, 'delete', admin.data) }}"
-                          method="post">
-                        <p class="card-text">{{ 'lag.admin.delete_confirmation_warning' | trans }}</p>
-
-                        {{ form_row(form) }}
-
-                        <div class="text-right button-list">
-                            <a href="{{ admin_url(admin.name, 'list') }}"
-                               class="btn cancel-link"
-                               data-dismiss="modal">
-                                <i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;{{ 'lag.admin.cancel' | trans }}</a>
-                            <button type="submit"
-                                    class="btn btn-danger">
-                                <i class="fa fa-remove"></i>&nbsp;{{ 'lag.admin.delete' | trans }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+    <div class="card">
+        <div class="card-header text-white bg-danger">
+            {{ 'lag_admin.ui.warning'|trans({}, resource.translationDomain) }}
+        </div>
+        <div class="card-body">
+            {{ form_start(form) }}
+            {{ form_row(form) }}
+            <h5 class="card-title">
+                {{ operation.title|default('lag_admin.delete.title')|trans({}, resource.translationDomain) }}
+            </h5>
+            <p class="card-text">
+                {{ 'lag_admin.delete.message'|trans({}, resource.translationDomain) }}
+            </p>
+            <div class="btn-group"
+                 role="group"
+                 aria-label="{{ 'lag_admin.list.available_actions_for_item'|trans({}, 'admin') }}">
+                {% for link in operation.itemActions %}
+                    {{ lag_admin_action(link, data) }}
+                {% endfor %}
+                <button href="#"
+                        class="btn btn-primary">
+                    {{ 'lag_admin.delete.confirmation'|trans({}, resource.translationDomain) }}
+                </button>
             </div>
+            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}

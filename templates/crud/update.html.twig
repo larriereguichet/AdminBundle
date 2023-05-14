@@ -1,38 +1,3 @@
-{% extends '@LAGAdmin/base.html.twig' %}
+{% extends '@LAGAdmin/crud/form.html.twig' %}
 
-{% block page_title %}{{ operation.title|admin_trans }}{% endblock %}
 
-{% block title %}{{ operation.title|admin_trans }}{% endblock %}
-
-{% block content %}
-    <div class="admin-index admin-{{ resource.name }} admin-{{ operation.name }}">
-        {% block form %}
-            {{ form_start(form, {method: 'POST' in operation.methods ? 'POST': 'PUT'}) }}
-                {% block form_content %}
-                    <div class="row">
-                        {% for child in form %}
-                            <div class="col-6">
-                                {{ form_row(child) }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endblock %}
-
-                {% block form_buttons %}
-                    <div class="row mt-3 justify-content-end">
-                        <div class="col-3 text-end">
-                            {% for action in operation.itemActions %}
-                                {{ lag_admin_action(action, data) }}
-                            {% endfor %}
-                            <input type="submit"
-                                   class="btn btn-primary"
-                                   value="{{ 'lag_admin.ui.save'|trans({}, 'admin') }}"/>
-                        </div>
-
-                    </div>
-                {% endblock %}
-
-            {{ form_end(form) }}
-        {% endblock %}
-    </div>
-{% endblock %}
