@@ -17,9 +17,9 @@ services:
         tags:
             - { name: kernel.event_listener, event: lag_admin.operation.create, priority: 255 }
 
-    LAG\AdminBundle\EventListener\Property\CreateListener:
+    LAG\AdminBundle\EventListener\Operation\OperationPathListener:
         tags:
-            - { name: kernel.event_listener, event: lag_admin.property.create, priority: 255 }
+            - { name: kernel.event_listener, event: lag_admin.operation.create, priority: -255 }
 
     # Security listeners
     LAG\AdminBundle\EventListener\Security\RequestListener:
@@ -30,5 +30,9 @@ services:
 
     # Data listeners
     LAG\AdminBundle\EventListener\Data\TimestampableListener:
+        tags:
+            - { name: kernel.event_listener, event: lag_admin.data.process, priority: 255 }
+
+    LAG\AdminBundle\EventListener\Data\SlugListener:
         tags:
             - { name: kernel.event_listener, event: lag_admin.data.process, priority: 255 }
