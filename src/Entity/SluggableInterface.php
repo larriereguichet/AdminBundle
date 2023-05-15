@@ -8,5 +8,7 @@ interface SluggableInterface
 {
     public function getSlug(): ?string;
 
+    public function getSlugSource(): ?string;
+
     public function generateSlug(string $source): void;
 }
