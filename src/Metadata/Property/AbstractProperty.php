@@ -4,19 +4,27 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
+use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+
 abstract class AbstractProperty implements PropertyInterface
 {
     public function __construct(
+        #[NotBlank]
+        #[Length(min: 1, max: 255)]
         private string $name,
+        #[NotBlank]
         private ?string $propertyPath,
         private ?string $label = null,
         private ?string $template = null,
         private bool $mapped = true,
         private bool $sortable = true,
         private bool $translation = false,
-        private ?string $translationDomain = 'admin',
+        private ?string $translationDomain = null,
         private array $attr = [],
         private array $headerAttr = [],
+        private ?DataTransformerInterface $dataTransformer = null,
     ) {
     }
 
@@ -98,7 +106,7 @@ abstract class AbstractProperty implements PropertyInterface
         return $self;
     }
 
-    public function isTranslation(): bool
+    public function hasTranslation(): bool
     {
         return $this->translation;
     }
@@ -146,6 +154,19 @@ abstract class AbstractProperty implements PropertyInterface
     {
         $self = clone $this;
         $self->headerAttr = $headerAttr;
+
+        return $self;
+    }
+
+    public function getDataTransformer(): ?DataTransformerInterface
+    {
+        return $this->dataTransformer;
+    }
+
+    public function withDataTransformer(?DataTransformerInterface $dataTransformer): self
+    {
+        $self = clone $this;
+        $self->dataTransformer = $dataTransformer;
 
         return $self;
     }
