@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Routing\UrlGenerator;
 
 use LAG\AdminBundle\Metadata\AdminResource;
@@ -40,7 +42,7 @@ class PathGeneratorTest extends TestCase
             ['category', '/cms/{resourceName}', '/get', '/cms/categories/get'],
             ['articles', '/prefix/{resourceName}', '/list', '/prefix/articles/list'],
             ['articles', '/{resourceName}', '/list', '/articles/list'],
-            //['articles', '/{resourceName}', null, '/articles'],
+            // ['articles', '/{resourceName}', null, '/articles'],
             ['articles', '/{resourceName}', null, '/articles/{id}/{slug}', ['id' => null, 'slug' => null]],
             ['articles', '/{resourceName}', '/test/', '/articles/test', ['id' => null, 'slug' => null]],
         ];

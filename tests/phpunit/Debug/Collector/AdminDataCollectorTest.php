@@ -7,13 +7,12 @@ namespace LAG\AdminBundle\Tests\Debug\Collector;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Controller\Create;
+use LAG\AdminBundle\Controller\Delete;
+use LAG\AdminBundle\Controller\Index;
 use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
+use LAG\AdminBundle\Form\Type\Resource\DeleteType;
 use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Show;
-use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\TestCase;
@@ -95,11 +94,101 @@ class AdminDataCollectorTest extends TestCase
                     'group' => null,
                     'icon' => null,
                     'operations' => [
-                        new Index(),
-                        new Create(),
-                        new Update(),
-                        new Delete(),
-                        new Show(),
+                        'index' => [
+                            'name' => 'index',
+                            'title' => null,
+                            'description' => null,
+                            'icon' => null,
+                            'template' => '@LAGAdmin/crud/index.html.twig',
+                            'permissions' => [],
+                            'controller' => Index::class,
+                            'route' => null,
+                            'routeParameters' => [],
+                            'methods' => [],
+                            'path' => null,
+                            'targetRoute' => null,
+                            'targetRouteParameters' => [],
+                            'formType' => null,
+                            'processor' => ORMDataProcessor::class,
+                            'provider' => ORMDataProvider::class,
+                            'identifiers' => [],
+                        ],
+                        'create' => [
+                            'name' => 'create',
+                            'title' => null,
+                            'description' => null,
+                            'icon' => null,
+                            'template' => '@LAGAdmin/crud/create.html.twig',
+                            'permissions' => [],
+                            'controller' => Create::class,
+                            'route' => null,
+                            'routeParameters' => null,
+                            'methods' => ['POST', 'GET'],
+                            'path' => null,
+                            'targetRoute' => null,
+                            'targetRouteParameters' => null,
+                            'formType' => null,
+                            'processor' => ORMDataProcessor::class,
+                            'provider' => ORMDataProvider::class,
+                            'identifiers' => [],
+                        ],
+                        'update' => [
+                            'name' => 'update',
+                            'title' => null,
+                            'description' => null,
+                            'icon' => null,
+                            'template' => '@LAGAdmin/crud/update.html.twig',
+                            'permissions' => [],
+                            'controller' => \LAG\AdminBundle\Controller\Update::class,
+                            'route' => null,
+                            'routeParameters' => null,
+                            'methods' => ['POST', 'GET'],
+                            'path' => null,
+                            'targetRoute' => null,
+                            'targetRouteParameters' => null,
+                            'formType' => null,
+                            'processor' => ORMDataProcessor::class,
+                            'provider' => ORMDataProvider::class,
+                            'identifiers' => ['id'],
+                        ],
+                        'delete' => [
+                            'name' => 'delete',
+                            'title' => null,
+                            'description' => null,
+                            'icon' => null,
+                            'template' => '@LAGAdmin/crud/delete.html.twig',
+                            'permissions' => [],
+                            'controller' => Delete::class,
+                            'route' => null,
+                            'routeParameters' => null,
+                            'methods' => ['POST', 'GET'],
+                            'path' => null,
+                            'targetRoute' => null,
+                            'targetRouteParameters' => null,
+                            'formType' => DeleteType::class,
+                            'processor' => ORMDataProcessor::class,
+                            'provider' => ORMDataProvider::class,
+                            'identifiers' => ['id'],
+                        ],
+                        'show' => [
+                            'name' => 'show',
+                            'title' => null,
+                            'description' => null,
+                            'icon' => null,
+                            'template' => '@LAGAdmin/crud/show.html.twig',
+                            'permissions' => [],
+                            'controller' => \LAG\AdminBundle\Controller\Show::class,
+                            'route' => null,
+                            'routeParameters' => null,
+                            'methods' => ['GET'],
+                            'path' => null,
+                            'targetRoute' => null,
+                            'targetRouteParameters' => null,
+                            'formType' => null,
+                            'processor' => ORMDataProcessor::class,
+                            'provider' => ORMDataProvider::class,
+                            'identifiers' => ['id'],
+                        ],
                     ],
                     'processor' => ORMDataProcessor::class,
                     'provider' => ORMDataProvider::class,
@@ -107,6 +196,7 @@ class AdminDataCollectorTest extends TestCase
                     'routePattern' => 'lag_admin.{resource}.{operation}',
                     'routePrefix' => '/{resourceName}',
                     'translationPattern' => null,
+                    'translationDomain' => null,
                 ],
             ],
             'application' => [
