@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid;
 
-class Grid
+readonly class Grid
 {
     public function __construct(
-        public readonly string $name,
-        public readonly string $template,
-        public readonly array $headers,
-        public readonly array $rows,
+        public string $name,
+        public string $template,
+        public array $headers,
+        public array $rows,
     ) {
     }
 

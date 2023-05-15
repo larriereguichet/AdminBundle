@@ -25,11 +25,28 @@ class GridFactory implements GridFactoryInterface
     {
         $headers = [];
         $rows = [];
+        $resource = $operation->getResource();
 
         foreach ($operation->getProperties() as $property) {
+            $label = $property->getLabel();
+
+            if (!$label && $resource->getTranslationPattern()) {
+                $label = u($operation->getResource()->getTranslationPattern())
+                    ->replace('resource', $resource->getName())
+                    ->replace('operation', $operation->getName())
+                    ->append('.', $property->getName())
+                    ->lower()
+                    ->toString()
+                ;
+            }
+
+            if (!$label) {
+                $label = u($property->getName())->title()->toString();
+            }
+
             $headers[] = new Header(
                 $property->getName(),
-                $property->getLabel() ?? u($property->getName())->title()->toString(),
+                $label,
                 $property->isSortable(),
             );
         }
