@@ -4,64 +4,46 @@
     {% set icon %}
         <div class="sf-toolbar-icon">
             {{ include('@LAGAdmin/debug/icon.svg') }}
-            <span class="sf-toolbar-value">
-                Admin
-            </span>
+            <span class="sf-toolbar-value">Admin</span>
         </div>
     {% endset %}
 
     {% set text %}
         <b>Application</b>
 
-{#        {% if collector.data.error is defined %}#}
-{#            <b>{{ collector.data.error }}</b>#}
-{#            The invalid configuration is : {{ dump(collector.data.configuration) }}#}
-{#        {% endif %}#}
+        {% if collector.data.error is defined %}
+            <b>{{ collector.data.error }}</b>
+            The invalid configuration is : {{ dump(collector.data.configuration) }}
+        {% endif %}
 
-{#        <div class="sf-toolbar-info-piece">#}
-{#            <b>Locale</b>#}
-{#            <span class="sf-toolbar-status">#}
-{#                {{ collector.data.application.locale|default('~') }}#}
-{#            </span>#}
-{#        </div>#}
-{#        <div class="sf-toolbar-info-piece">#}
-{#            <b>Pagination</b>#}
-{#            <span class="sf-toolbar-status">#}
-{#                {{ collector.data.application.pager ?: 'false' }}#}
-{#            </span>#}
-{#        </div>#}
-{#        <div class="sf-toolbar-info-piece">#}
-{#            <b>Translation</b>#}
-{#            {% for key, value in collector.data.application.translation %}#}
-{#                <span class="sf-toolbar-status">#}
-{#                    {{ key }}: {{ value }}#}
-{#                </span>#}
-{#                <br/>#}
-{#            {% endfor %}#}
-{#        </div>#}
-{#        <div class="sf-toolbar-info-piece">#}
-{#            <b>Admin</b>#}
-{#            <span>#}
-{#                {{ collector.data.application.admin }}<br>#}
-{#            </span>#}
-{#        </div>#}
-{#        <div class="sf-toolbar-info-piece">#}
-{#            <b>Action</b>#}
-{#            <span>#}
-{#                {{ collector.data.application.action }}<br>#}
-{#            </span>#}
-{#        </div>#}
-{#        <hr>#}
-{#        <b>Admins</b>#}
+        <div class="sf-toolbar-info-piece">
+            <b>Locale</b>
+            <span class="sf-toolbar-status">{{ collector.data.application.locale|default('~') }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Translation Domain</b>
+            <span class="sf-toolbar-status">{{ collector.data.application.translation_domain }}</span>
+        </div>
 
-{#        {% for name, admin in collector.data.admins %}#}
-{#            <div class="sf-toolbar-info-piece">#}
-{#                <b>{{ name | capitalize }}</b>#}
-{#                <span class="sf-toolbar-status ">#}
-{#                    {{ admin.entity_class }}#}
-{#                </span>#}
-{#            </div>#}
-{#        {% endfor %}#}
+        <div class="sf-toolbar-info-piece">
+            <b>Admin</b>
+            <span>{{ collector.data.application.resource|default('~')|title }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Action</b>
+            <span>
+                {{ collector.data.application.operation|default('~')|title }}
+            </span>
+        </div>
+        <hr>
+        <b>Admins</b>
+
+        {% for name, admin in collector.data.application.resource %}
+            <div class="sf-toolbar-info-piece">
+                <b>{{ name | capitalize }}</b>
+                <span class="sf-toolbar-status">{{ admin.data_class }}</span>
+            </div>
+        {% endfor %}
 
     {% endset %}
 
@@ -79,9 +61,9 @@
 
 {% block panel %}
     <script
-        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
-        crossorigin="anonymous"></script>
+            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+            crossorigin="anonymous"></script>
     <script>
         $(document).ready(function () {
             $('.tab-navigation li a').on('click', function () {
@@ -138,57 +120,68 @@
 
     <div class="tabs">
         <div id="tab-admins"
-             class="tab">
+             class="active tab">
             <h1>Admins</h1>
 
-            {% for name, admin in collector.data.admins %}
-                <h3>{{ name | capitalize }} ({{ name }})</h3>
+            {% for resource in collector.data.resources %}
+                <h3>{{ resource.name | capitalize }} ({{ resource.name }})</h3>
                 <table>
-                    <thead>
-                    <tr>
-                        <th class="key">Key</th>
-                        <th scope="col">Value</th>
-                    </tr>
-                    </thead>
                     <tbody>
-                    <tr>
-                        <td>{{ name }}</td>
-                        <td>{{ admin.entity_class }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                {% for actionName, action in admin.configuration.actions %}
-                    <h4>{{ actionName }}</h4>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th class="key">Key</th>
-                            <th scope="col">Value</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for key, value in action %}
+                    {% for key, value in resource %}
+                        {% if key != 'operations' %}
                             <tr>
-
                                 <td>{{ key }}</td>
                                 <td>
                                     {% if value is iterable %}
-                                        {{ dump(value) }}
+                                        {{ value|join }}
                                     {% else %}
                                         {{ value }}
                                     {% endif %}
                                 </td>
-
                             </tr>
+                        {% endif %}
+                        <tr>
+                            <td colspan="2">Operations</td>
+                        </tr>
+                        {% for operation in resource.operations %}
+                            <tr>
+                                <td colspan="2"><strong>{{ operation.name }}</strong></td>
+                            </tr>
+                            {% for key, value in operation %}
+                                <tr>
+                                    <td>{{ key }}</td>
+                                    <td>{{ dump(value) }}</td>
+                                </tr>
+                            {% endfor %}
                         {% endfor %}
-                        </tbody>
-                    </table>
-                {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
             {% endfor %}
         </div>
 
-        {% include '@LAGAdmin/debug/_applications.html.twig' %}
-    </div>
+        <div id="tab-application"
+             class="tab">
+            <h1>Application</h1>
 
+            <table>
+                <thead>
+                <tr>
+                    <th class="key">Key</th>
+                    <th class="value">Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key, value in collector.data.application %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}
