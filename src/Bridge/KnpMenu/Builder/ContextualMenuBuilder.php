@@ -43,19 +43,19 @@ class ContextualMenuBuilder extends AbstractMenuBuilder
         $resource = $this->getResource($request);
         $operation = $this->getOperation($resource, $request);
 
-        foreach ($operation->getContextualActions() as $action) {
+        foreach ($operation->getContextualActions() as $link) {
             $contextualResource = $resource;
 
-            if ($action->getResourceName() !== $resource->getName()) {
-                $contextualResource = $this->registry->get($action->getResourceName());
+            if ($link->getResourceName() !== $resource->getName()) {
+                $contextualResource = $this->registry->get($link->getResourceName());
             }
-            $contextualOperation = $contextualResource->getOperation($action->getOperationName());
+            $contextualOperation = $contextualResource->getOperation($link->getOperationName());
             $options = [];
 
-            if ($action->getUrl()) {
-                $options['url'] = $action->getUrl();
-            } elseif ($action->getRoute()) {
-                $options['route'] = $action->getRoute();
+            if ($link->getUrl()) {
+                $options['url'] = $link->getUrl();
+            } elseif ($link->getRoute()) {
+                $options['route'] = $link->getRoute();
             } else {
                 $options['route'] = $this
                     ->routeNameGenerator
@@ -63,10 +63,21 @@ class ContextualMenuBuilder extends AbstractMenuBuilder
                 ;
             }
 
-            if ($action->getIcon()) {
-                $options['extras']['icon'] = $action->getIcon();
+            if ($link->getIcon()) {
+                $options['extras']['icon'] = $link->getIcon();
+            } else {
+                $icon = match ($link->getOperationName()) {
+                    'create' => 'plus-lg',
+                    'update' => 'pencil-lg',
+                    'delete' => 'cross-lg',
+                    default => null,
+                };
+
+                if ($icon) {
+                    $options['extras']['icon'] = $icon;
+                }
             }
-            $menu->addChild($action->getLabel(), $options);
+            $menu->addChild($link->getLabel(), $options);
         }
     }
 

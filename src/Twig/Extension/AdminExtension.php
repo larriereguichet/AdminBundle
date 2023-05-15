@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Twig\Extension;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Grid\View\LinkRendererInterface;
 use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
-use LAG\AdminBundle\Twig\Render\ActionRendererInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -19,7 +19,7 @@ class AdminExtension extends AbstractExtension
         private bool $mediaBundleEnabled,
         private ApplicationConfiguration $applicationConfiguration,
         private SecurityHelper $security,
-        private ActionRendererInterface $actionRenderer,
+        private LinkRendererInterface $actionRenderer,
         private UrlGeneratorInterface $urlGenerator,
     ) {
     }
