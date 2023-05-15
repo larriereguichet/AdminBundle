@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Twig\Extension;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
+use LAG\AdminBundle\Grid\View\LinkRendererInterface;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\Link;
@@ -12,7 +13,6 @@ use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
 use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\Twig\Extension\AdminExtension;
-use LAG\AdminBundle\Twig\Render\ActionRendererInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class AdminExtensionTest extends TestCase
@@ -110,7 +110,7 @@ class AdminExtensionTest extends TestCase
     {
         $this->configuration = $this->createMock(ApplicationConfiguration::class);
         $this->security = $this->createMock(SecurityHelper::class);
-        $this->actionRenderer = $this->createMock(ActionRendererInterface::class);
+        $this->actionRenderer = $this->createMock(LinkRendererInterface::class);
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $this->adminExtension = new AdminExtension(
             true,

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Twig\Render;
 
 use LAG\AdminBundle\Exception\Validation\InvalidActionException;
+use LAG\AdminBundle\Grid\View\LinkRenderer;
+use LAG\AdminBundle\Grid\View\LinkRendererInterface;
 use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Tests\TestCase;
-use LAG\AdminBundle\Twig\Render\ActionRenderer;
-use LAG\AdminBundle\Twig\Render\ActionRendererInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -18,15 +18,15 @@ use Twig\Environment;
 
 class ActionRendererTest extends TestCase
 {
-    private ActionRendererInterface $actionRenderer;
+    private LinkRendererInterface $actionRenderer;
     private MockObject $urlGenerator;
     private MockObject $validator;
     private MockObject $environment;
 
     public function testService(): void
     {
-        $this->assertServiceExists(ActionRenderer::class);
-        $this->assertServiceExists(ActionRendererInterface::class);
+        $this->assertServiceExists(LinkRenderer::class);
+        $this->assertServiceExists(LinkRendererInterface::class);
     }
 
     public function testRenderWithRouteName(): void
@@ -135,7 +135,7 @@ class ActionRendererTest extends TestCase
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $this->validator = $this->createMock(ValidatorInterface::class);
         $this->environment = $this->createMock(Environment::class);
-        $this->actionRenderer = new ActionRenderer(
+        $this->actionRenderer = new LinkRenderer(
             $this->urlGenerator,
             $this->validator,
             $this->environment,

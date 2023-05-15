@@ -57,7 +57,7 @@ class OperationFactoryTest extends TestCase
         $this
             ->propertyFactory
             ->expects($this->once())
-            ->method('create')
+            ->method('createCollection')
         ;
 
         $this
