@@ -8,19 +8,7 @@ services:
 
     lag_admin.grid.cell_factory: '@LAG\AdminBundle\Grid\Factory\CellFactory'
     LAG\AdminBundle\Grid\Factory\CellFactoryInterface: '@LAG\AdminBundle\Grid\Factory\CellFactory'
-    LAG\AdminBundle\Grid\Factory\CellFactory:
-        arguments:
-            $dataTransformer: '@lag_admin.grid.data_transformer'
-
-    lag_admin.grid.data_transformer: '@LAG\AdminBundle\Grid\DataTransformer\DataTransformer'
-    LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface: '@LAG\AdminBundle\Grid\DataTransformer\DataTransformer'
-    LAG\AdminBundle\Grid\DataTransformer\DataTransformer:
-        arguments:
-            $transformers: !tagged_iterator lag_admin.grid.data_transformer
-
-    LAG\AdminBundle\Grid\DataTransformer\CountDataTransformer:
-        tags:
-            - { name: 'lag_admin.grid.data_transformer', priority: -255 }
+    LAG\AdminBundle\Grid\Factory\CellFactory: ~
 
     lag_admin.grid.renderer: '@LAG\AdminBundle\Grid\View\GridRenderer'
     LAG\AdminBundle\Grid\View\GridRendererInterface: '@LAG\AdminBundle\Grid\View\GridRenderer'

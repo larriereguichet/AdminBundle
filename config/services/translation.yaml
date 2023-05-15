@@ -1,0 +1,5 @@
+services:
+    LAG\AdminBundle\Translation\FallbackTranslator:
+        decorates: 'translator'
+        arguments:
+            $decorated: '@.inner'
