@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Twig\Render;
+namespace LAG\AdminBundle\Grid\View;
 
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\Validation\InvalidActionException;
 use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
@@ -11,7 +12,7 @@ use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 
-class ActionRenderer implements ActionRendererInterface
+class LinkRenderer implements LinkRendererInterface
 {
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
@@ -21,33 +22,36 @@ class ActionRenderer implements ActionRendererInterface
     }
 
     public function render(
-        Link $action,
+        Link $link,
         mixed $data = null,
         array $options = []
     ): string {
-        $errors = $this->validator->validate($action, [new Valid()]);
+        $errors = $this->validator->validate($link, [new Valid()]);
 
         if ($errors->count() > 0) {
             throw new InvalidActionException($errors);
         }
 
-        if ($action->getRoute()) {
+        if ($link->getRoute()) {
             $url = $this->urlGenerator->generateFromRouteName(
-                $action->getRoute(),
-                $action->getRouteParameters(),
+                $link->getRoute(),
+                $link->getRouteParameters(),
                 $data,
             );
-        } else {
+        } elseif ($link->getResourceName() && $link->getOperationName()) {
             $url = $this->urlGenerator->generateFromOperationName(
-                $action->getResourceName(),
-                $action->getOperationName(),
+                $link->getResourceName(),
+                $link->getOperationName(),
                 $data,
             );
+        } elseif ($link->getUrl()) {
+            $url = $link->getUrl();
+        } else {
+            throw new Exception('Unable to generate a route for the given link');
         }
 
-        return $this->environment->render($action->getTemplate(), [
-            'action' => $action,
-            'url' => $url,
+        return $this->environment->render($link->getTemplate(), [
+            'link' => $link->withUrl($url),
             'options' => $options,
         ]);
     }
