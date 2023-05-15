@@ -7,7 +7,7 @@
 
     <a href="?sort={{ header.name }}&order={{ order }}"
        class="text-dark">
-        {{ header.label|trans }}
+        {{ header.label|trans({}, operation.resource.translationDomain) }}
 
         {% if app.request.query.get('sort') == header.name %}
             {% if order == 'asc' %}
