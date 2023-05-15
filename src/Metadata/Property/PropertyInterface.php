@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
+use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
+
 interface PropertyInterface
 {
     public function getName(): string;
@@ -30,7 +32,7 @@ interface PropertyInterface
 
     public function withSortable(bool $sortable): self;
 
-    public function isTranslation(): bool;
+    public function hasTranslation(): bool;
 
     public function withTranslation(bool $translation): self;
 
@@ -45,4 +47,8 @@ interface PropertyInterface
     public function getHeaderAttr(): array;
 
     public function withHeaderAttr(array $headerAttr): self;
+
+    public function getDataTransformer(): ?DataTransformerInterface;
+
+    public function withDataTransformer(?DataTransformerInterface $dataTransformer): self;
 }

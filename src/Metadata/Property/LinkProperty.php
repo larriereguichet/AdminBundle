@@ -14,7 +14,7 @@ class LinkProperty extends AbstractProperty
         bool $mapped = true,
         bool $sortable = true,
         bool $translation = false,
-        ?string $translationDomain = 'admin',
+        ?string $translationDomain = null,
         array $attr = [],
         array $headerAttr = [],
         private ?string $routeName = null,

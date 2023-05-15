@@ -27,12 +27,7 @@ class OperationFactory implements OperationFactoryInterface
             ->withResource($resource)
         ;
         $operation = $this->dispatchPreEvents($resource, $operationDefinition);
-        $properties = [];
-
-        foreach ($operation->getProperties() as $property) {
-            $properties[] = $this->propertyFactory->create($property);
-        }
-        $operation = $operation->withProperties($properties);
+        $operation = $operation->withProperties($this->propertyFactory->createCollection($operation));
 
         if ($operation instanceof CollectionOperationInterface) {
             $filters = [];

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
+use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
+
 #[\Attribute]
 class StringProperty extends AbstractProperty
 {
@@ -15,9 +17,10 @@ class StringProperty extends AbstractProperty
         bool $mapped = true,
         bool $sortable = true,
         bool $translation = false,
-        ?string $translationDomain = 'admin',
+        ?string $translationDomain = null,
         array $attr = [],
         array $headerAttr = [],
+        ?DataTransformerInterface $dataTransformer = null,
         private int $length = 100,
         private string $replace = '...',
         private string $emptyString = '~',
@@ -33,6 +36,7 @@ class StringProperty extends AbstractProperty
             $translationDomain,
             $attr,
             $headerAttr,
+            $dataTransformer,
         );
     }
 
