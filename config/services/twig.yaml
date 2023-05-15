@@ -4,7 +4,7 @@ services:
             $mediaBundleEnabled: '%lag_admin.media_bundle_enabled%'
             $applicationConfiguration: '@lag_admin.application'
             $security: '@lag_admin.security.helper'
-            $actionRenderer: '@lag_admin.action.renderer'
+            $actionRenderer: '@lag_admin.link.renderer'
             $urlGenerator: '@lag_admin.routing.url_generator'
         tags: ['twig.extension']
 

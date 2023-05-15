@@ -1,7 +1,7 @@
 services:
-    lag_admin.action.renderer: '@LAG\AdminBundle\Twig\Render\ActionRendererInterface'
-    LAG\AdminBundle\Twig\Render\ActionRendererInterface:
-        class: LAG\AdminBundle\Twig\Render\ActionRenderer
+    lag_admin.link.renderer: '@LAG\AdminBundle\Grid\View\LinkRendererInterface'
+    LAG\AdminBundle\Grid\View\LinkRendererInterface:
+        class: LAG\AdminBundle\Grid\View\LinkRenderer
         arguments:
             $urlGenerator: '@lag_admin.routing.url_generator'
             $validator: '@validator'
