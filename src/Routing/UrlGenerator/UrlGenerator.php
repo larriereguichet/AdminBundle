@@ -16,15 +16,12 @@ class UrlGenerator implements UrlGeneratorInterface
     ) {
     }
 
-
-
     public function generateFromRouteName(string $routeName, array $routeParameters = [], mixed $data = null): string
     {
         $mappedRouteParameters = $routeParameters;
 
         if ($data !== null) {
-            $mapper = new ParametersMapper();
-            $mappedRouteParameters = $mapper->map($data, $routeParameters);
+            $mappedRouteParameters = (new ParametersMapper())->map($data, $routeParameters);
         }
 
         return $this->router->generate($routeName, $mappedRouteParameters);

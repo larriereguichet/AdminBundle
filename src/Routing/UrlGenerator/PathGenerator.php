@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
-use LAG\AdminBundle\Metadata\Assertion\Assert;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
+
 use function Symfony\Component\String\u;
 
 class PathGenerator implements PathGeneratorInterface
 {
     public function generatePath(OperationInterface $operation): string
     {
-        Assert::operationHasResource($operation);
         $resource = $operation->getResource();
 
         if (!u($resource->getName())->endsWith('s')) {
@@ -35,7 +36,6 @@ class PathGenerator implements PathGeneratorInterface
                     ->append('{'.$parameter.'}')
                 ;
             }
-
         }
         $operationPath = u($operation->getPath() ?? '');
 

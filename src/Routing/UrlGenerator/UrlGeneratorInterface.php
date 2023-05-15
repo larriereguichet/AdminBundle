@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\OperationInterface;
-
 interface UrlGeneratorInterface
 {
     /**
