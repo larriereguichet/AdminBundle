@@ -7,6 +7,8 @@ namespace LAG\AdminBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
+use function Symfony\Component\String\u;
+
 trait SluggableTrait
 {
     #[ORM\Column(type: 'string')]
@@ -19,6 +21,6 @@ trait SluggableTrait
 
     public function generateSlug(string $source): void
     {
-        $this->slug = (new AsciiSlugger())->slug($source)->toString();
+        $this->slug = (new AsciiSlugger())->slug(u($source)->lower()->toString())->toString();
     }
 }
