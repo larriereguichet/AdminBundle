@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata;
 
-use LAG\AdminBundle\Metadata\Property\BooleanProperty;
-use LAG\AdminBundle\Metadata\Property\CountProperty;
-use LAG\AdminBundle\Metadata\Property\DateProperty;
-use LAG\AdminBundle\Metadata\Property\StringProperty;
+use LAG\AdminBundle\Metadata\Property\Boolean;
+use LAG\AdminBundle\Metadata\Property\Collection;
+use LAG\AdminBundle\Metadata\Property\Count;
+use LAG\AdminBundle\Metadata\Property\Date;
+use LAG\AdminBundle\Metadata\Property\Text;
+use function Symfony\Component\String\u;
 
 class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
 {
@@ -29,11 +31,13 @@ class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
             $fieldType = $metadata->getTypeOfField($fieldName);
 
             if (str_contains($fieldType, 'datetime')) {
-                $properties[$fieldName] = new DateProperty($fieldName);
+                $properties[$fieldName] = new Date($fieldName);
             } elseif ($fieldType === 'boolean') {
-                $properties[$fieldName] = new BooleanProperty($fieldName);
+                $properties[$fieldName] = new Boolean($fieldName);
+            } elseif (u($fieldType)->containsAny(['array', 'json'])) {
+                $properties[$fieldName] = new Collection($fieldName);
             } else {
-                $properties[$fieldName] = new StringProperty($fieldName);
+                $properties[$fieldName] = new Text($fieldName);
             }
 
             if (\count($properties) > 10) {
@@ -42,7 +46,10 @@ class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
         }
 
         foreach ($metadata->getAssociationNames() as $associationName) {
-            $properties[$associationName] = new CountProperty($associationName);
+            if (!$metadata->isCollectionValuedAssociation($associationName)) {
+                continue;
+            }
+            $properties[$associationName] = new Count($associationName);
 
             if (\count($properties) > 10) {
                 return $properties;

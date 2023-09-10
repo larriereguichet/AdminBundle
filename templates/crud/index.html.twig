@@ -15,10 +15,12 @@
         </div>
 
         {% block pagination %}
-            <div class="admin-pagination mt-2">
-                {% if data|length > 0 and operation.pagination %}
-                    {{ pagerfanta(data, 'twitter_bootstrap5', {page: data.currentPage}) }}
-                {% endif %}
+            <div class="admin-pagination mt-4">
+                <div class="pagination justify-content-center">
+                    {% if data|length > 0 and operation.pagination %}
+                        {{ pagerfanta(data, 'twitter_bootstrap5', {page: data.currentPage}) }}
+                    {% endif %}
+                </div>
             </div>
         {% endblock %}
 

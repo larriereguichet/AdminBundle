@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Controller\Resource\ResourceController;
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
 
 class Delete extends Operation
@@ -17,13 +18,13 @@ class Delete extends Operation
         ?string $icon = null,
         ?string $template = '@LAGAdmin/crud/delete.html.twig',
         ?array $permissions = [],
-        ?string $controller = \LAG\AdminBundle\Controller\Delete::class,
+        ?string $controller = ResourceController::class,
         ?string $route = null,
         ?array $routeParameters = null,
         array $methods = ['POST', 'GET'],
         ?string $path = null,
-        ?string $targetRoute = null,
-        ?array $targetRouteParameters = null,
+        ?string $redirectRoute = null,
+        ?array $redirectRouteParameters = null,
         array $properties = [],
         ?string $formType = DeleteType::class,
         array $formOptions = [],
@@ -31,7 +32,9 @@ class Delete extends Operation
         string $provider = ORMDataProvider::class,
         array $identifiers = ['id'],
         ?array $contextualActions = null,
-        ?array $itemActions = null
+        ?array $itemActions = null,
+        ?string $redirectResource = null,
+        ?string $redirectOperation = null,
     ) {
         parent::__construct(
             $name,
@@ -45,8 +48,8 @@ class Delete extends Operation
             $routeParameters,
             $methods,
             $path,
-            $targetRoute,
-            $targetRouteParameters,
+            $redirectRoute,
+            $redirectRouteParameters,
             $properties,
             $formType,
             $formOptions,
@@ -55,6 +58,8 @@ class Delete extends Operation
             $identifiers,
             $contextualActions,
             $itemActions,
+            $redirectResource,
+            $redirectOperation,
         );
     }
 }

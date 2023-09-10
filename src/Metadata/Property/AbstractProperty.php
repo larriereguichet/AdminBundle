@@ -4,27 +4,25 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use LAG\AdminBundle\Validation\Constraint\TemplateValid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractProperty implements PropertyInterface
 {
     public function __construct(
-        #[NotBlank]
-        #[Length(min: 1, max: 255)]
+        #[Assert\NotBlank]
+        #[Assert\Length(min: 1, max: 255)]
         private string $name,
-        #[NotBlank]
+        #[Assert\NotBlank]
         private ?string $propertyPath,
         private ?string $label = null,
+        #[TemplateValid]
         private ?string $template = null,
-        private bool $mapped = true,
         private bool $sortable = true,
-        private bool $translation = false,
+        private bool $translatable = false,
         private ?string $translationDomain = null,
         private array $attr = [],
         private array $headerAttr = [],
-        private ?DataTransformerInterface $dataTransformer = null,
     ) {
     }
 
@@ -80,19 +78,6 @@ abstract class AbstractProperty implements PropertyInterface
         return $self;
     }
 
-    public function isMapped(): bool
-    {
-        return $this->mapped;
-    }
-
-    public function withMapped(bool $mapped): self
-    {
-        $self = clone $this;
-        $self->mapped = $mapped;
-
-        return $self;
-    }
-
     public function isSortable(): bool
     {
         return $this->sortable;
@@ -106,28 +91,15 @@ abstract class AbstractProperty implements PropertyInterface
         return $self;
     }
 
-    public function hasTranslation(): bool
+    public function isTranslatable(): bool
     {
-        return $this->translation;
+        return $this->translatable;
     }
 
-    public function withTranslation(bool $translation): self
+    public function withTranslatable(bool $translatable): self
     {
         $self = clone $this;
-        $self->translation = $translation;
-
-        return $self;
-    }
-
-    public function getTranslationDomain(): ?string
-    {
-        return $this->translationDomain;
-    }
-
-    public function withTranslationDomain(?string $translationDomain): self
-    {
-        $self = clone $this;
-        $self->translationDomain = $translationDomain;
+        $self->translatable = $translatable;
 
         return $self;
     }
@@ -158,15 +130,15 @@ abstract class AbstractProperty implements PropertyInterface
         return $self;
     }
 
-    public function getDataTransformer(): ?DataTransformerInterface
+    public function getTranslationDomain(): ?string
     {
-        return $this->dataTransformer;
+        return $this->translationDomain;
     }
 
-    public function withDataTransformer(?DataTransformerInterface $dataTransformer): self
+    public function withTranslationDomain(?string $translationDomain): self
     {
         $self = clone $this;
-        $self->dataTransformer = $dataTransformer;
+        $self->translationDomain = $translationDomain;
 
         return $self;
     }

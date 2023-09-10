@@ -6,17 +6,29 @@ namespace LAG\AdminBundle\Metadata\Locator;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\AdminResource;
+use Symfony\Component\HttpKernel\KernelInterface;
+use function Symfony\Component\String\u;
 
 class CompositeLocator implements MetadataLocatorInterface
 {
     public function __construct(
         private iterable $locators,
+        private KernelInterface $kernel,
     ) {
     }
 
     public function locateCollection(string $resourceDirectory): array
     {
         $resources = [];
+
+        if (str_starts_with($resourceDirectory, '@')) {
+            $bundleName = u($resourceDirectory)->before('/')->after('@')->toString();
+            $resourceDirectory = u($this->kernel->getBundle($bundleName)->getPath())
+                ->ensureEnd('/')
+                ->append(u($resourceDirectory)->after('/')->toString())
+                ->toString()
+            ;
+        }
 
         /** @var MetadataLocatorInterface $locator */
         foreach ($this->locators as $locator) {

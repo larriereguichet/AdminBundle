@@ -1,0 +1,5 @@
+{% include '@LAGAdmin/grids/properties/link.html.twig' with {
+    data: data,
+    options: options,
+    url: lag_admin_operation_url(options.resource, options.operation, data)
+} %}

@@ -1,12 +1,16 @@
 services:
-    LAG\AdminBundle\Controller\Security\Login:
+    LAG\AdminBundle\Controller\Resource\ResourceController:
         arguments:
+            $uriVariablesExtractor: '@lag_admin.request_uri_variables_extractor'
+            $contextProvider: '@lag_admin.request.context_provider'
+            $dataProvider: '@lag_admin.state.data_provider'
+            $dataProcessor: '@lag_admin.state.data_processor'
             $formFactory: '@form.factory'
             $environment: '@twig'
-            $authenticationUtils: '@security.authentication_utils'
+            $responseHandler: '@RedirectionHandler'
         tags: ['controller.service_arguments']
 
-    LAG\AdminBundle\Controller\Index:
+    LAG\AdminBundle\Controller\Resource\ResourceCollectionController:
         arguments:
             $uriVariablesExtractor: '@lag_admin.request_uri_variables_extractor'
             $contextProvider: '@lag_admin.request.context_provider'
@@ -15,36 +19,3 @@ services:
             $gridFactory: '@lag_admin.grid.factory'
             $environment: '@twig'
         tags: ['controller.service_arguments']
-
-    LAG\AdminBundle\Controller\Create:
-        arguments:
-            $uriVariablesExtractor: '@lag_admin.request_uri_variables_extractor'
-            $contextProvider: '@lag_admin.request.context_provider'
-            $dataProvider: '@lag_admin.state.data_provider'
-            $dataProcessor: '@lag_admin.state.data_processor'
-            $formFactory: '@form.factory'
-            $environment: '@twig'
-            $urlGenerator: '@lag_admin.routing.url_generator'
-        tags: [ 'controller.service_arguments' ]
-
-    LAG\AdminBundle\Controller\Update:
-        arguments:
-            $uriVariablesExtractor: '@lag_admin.request_uri_variables_extractor'
-            $contextProvider: '@lag_admin.request.context_provider'
-            $dataProvider: '@lag_admin.state.data_provider'
-            $dataProcessor: '@lag_admin.state.data_processor'
-            $formFactory: '@form.factory'
-            $environment: '@twig'
-            $urlGenerator: '@lag_admin.routing.url_generator'
-        tags: ['controller.service_arguments']
-
-    LAG\AdminBundle\Controller\Delete:
-        arguments:
-            $uriVariablesExtractor: '@lag_admin.request_uri_variables_extractor'
-            $contextProvider: '@lag_admin.request.context_provider'
-            $dataProvider: '@lag_admin.state.data_provider'
-            $dataProcessor: '@lag_admin.state.data_processor'
-            $formFactory: '@form.factory'
-            $environment: '@twig'
-            $urlGenerator: '@lag_admin.routing.url_generator'
-        tags: [ 'controller.service_arguments' ]

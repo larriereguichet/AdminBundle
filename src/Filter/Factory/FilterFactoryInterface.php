@@ -9,7 +9,7 @@ use LAG\AdminBundle\Metadata\Property\PropertyInterface;
 
 interface FilterFactoryInterface
 {
-    public function create(FilterInterface $filter): FilterInterface;
+    public function create(FilterInterface $filterDefinition): FilterInterface;
 
     public function createFromProperty(PropertyInterface $property): FilterInterface;
 }

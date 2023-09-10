@@ -10,6 +10,7 @@ readonly class Header
         public string $name,
         public string $label,
         public bool $sortable,
+        public ?string $translationDomain = null,
     ) {
     }
 }

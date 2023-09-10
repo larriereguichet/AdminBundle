@@ -48,13 +48,13 @@ interface OperationInterface
 
     public function withPath(?string $path): self;
 
-    public function getTargetRoute(): ?string;
+    public function getRedirectRoute(): ?string;
 
-    public function withTargetRoute(?string $targetRoute): self;
+    public function withRedirectRoute(?string $targetRoute): self;
 
-    public function getTargetRouteParameters(): ?array;
+    public function getRedirectRouteParameters(): ?array;
 
-    public function withTargetRouteParameters(?array $targetRouteParameters): self;
+    public function withRedirectRouteParameters(?array $targetRouteParameters): self;
 
     /**
      * @return PropertyInterface[]
@@ -62,6 +62,8 @@ interface OperationInterface
     public function getProperties(): array;
 
     public function withProperties(array $properties): self;
+
+    public function withProperty(PropertyInterface $newProperty): self;
 
     public function getFormType(): ?string;
 
@@ -102,4 +104,32 @@ interface OperationInterface
 
     /** @param array $itemActions Link[]|null */
     public function withItemActions(array $itemActions): self;
+
+    public function getRedirectResource(): ?string;
+
+    public function withRedirectResource(?string $redirectResource): self;
+
+    public function getRedirectOperation(): ?string;
+
+    public function withRedirectOperation(?string $redirectOperation): self;
+
+    public function isValidationEnabled(): ?bool;
+
+    public function withValidation(bool $validation): self;
+
+    public function getValidationContext(): ?array;
+
+    public function withValidationContext(array $context): self;
+
+    public function useAjax(): bool;
+
+    public function withAjax(bool $ajax): self;
+
+    public function getNormalizationContext(): ?array;
+
+    public function withNormalizationContext(array $context): self;
+
+    public function getDenormalizationContext(): ?array;
+
+    public function withDenormalizationContext(array $context): self;
 }

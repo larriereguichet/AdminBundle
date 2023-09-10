@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use LAG\AdminBundle\Controller\Index;
+use LAG\AdminBundle\Controller\Resource\Index;
 use LAG\AdminBundle\Exception\Operation\InvalidCollectionOperationException;
 use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
-use LAG\AdminBundle\Grid\Grid;
+use LAG\AdminBundle\Grid\GridView;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
-use LAG\AdminBundle\State\DataProviderInterface;
+use LAG\AdminBundle\State\Provider\DataProviderInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -36,7 +36,7 @@ class IndexActionTest extends TestCase
     {
         $resource = new AdminResource();
         $request = new Request();
-        $operation = (new \LAG\AdminBundle\Metadata\Index())
+        $operation = (new \LAG\AdminBundle\Metadata\GetCollection())
             ->withTemplate('my_template.html.twig')
             ->withFormType('FormClass')
             ->withFormOptions(['label' => 'my_form'])
@@ -46,7 +46,7 @@ class IndexActionTest extends TestCase
         $resource = $resource->withCurrentOperation($operation);
         $form = $this->createMock(FormInterface::class);
         $formView = $this->createMock(FormView::class);
-        $grid = new Grid(
+        $grid = new GridView(
             name: '',
             template: '',
             headers: [],

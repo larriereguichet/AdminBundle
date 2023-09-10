@@ -17,9 +17,9 @@ class InvalidPropertyCollectionException extends Exception
         ?string $operationName,
     ) {
         $message = sprintf(
-            'Some properties of the resource "%s" and operation "%s" is not valid :',
+            'The configuration of the operation "%s.%s" is not valid. The following properties are invalid :',
             $resourceName,
-            $operationName
+            $operationName,
         );
 
         /** @var ConstraintViolationInterface|iterable $propertyErrors */
@@ -27,7 +27,7 @@ class InvalidPropertyCollectionException extends Exception
             $messages = [];
 
             foreach ($propertyErrors as $propertyError) {
-                $messages[] = $propertyError->getPropertyPath().' '.$propertyError->getMessage()->__toString();
+                $messages[] = $propertyError->getPropertyPath().' '.$propertyError->getMessage();
             }
 
             $message .= \PHP_EOL.$propertyName.': '.implode(', ', $messages);

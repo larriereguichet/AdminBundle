@@ -11,8 +11,8 @@ use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Factory\OperationFactory;
 use LAG\AdminBundle\Metadata\Factory\PropertyFactoryInterface;
 use LAG\AdminBundle\Metadata\Filter\Filter;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Property\StringProperty;
+use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Property\Text;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -26,8 +26,8 @@ class OperationFactoryTest extends TestCase
 
     public function testCreate(): void
     {
-        $definition = new Index(
-            properties: [new StringProperty('my_property')],
+        $definition = new GetCollection(
+            properties: [new Text('my_property')],
             filters: [new Filter('my_filter')],
         );
         $resource = new AdminResource(

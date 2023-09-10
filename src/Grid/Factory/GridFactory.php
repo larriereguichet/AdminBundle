@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\Factory;
 
 use LAG\AdminBundle\Event\GridEvent;
-use LAG\AdminBundle\Grid\Grid;
+use LAG\AdminBundle\Grid\GridView;
 use LAG\AdminBundle\Grid\Header;
+use LAG\AdminBundle\Grid\Registry\GridRegistryInterface;
 use LAG\AdminBundle\Grid\Row;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -16,38 +17,24 @@ use function Symfony\Component\String\u;
 class GridFactory implements GridFactoryInterface
 {
     public function __construct(
+        private GridRegistryInterface $registry,
         private CellFactoryInterface $cellFactory,
         private EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
-    public function create(CollectionOperationInterface $operation, iterable $data): Grid
+    public function create(CollectionOperationInterface $operation, iterable $data): GridView
     {
         $headers = [];
         $rows = [];
-        $resource = $operation->getResource();
+        $grid = $this->registry->get($operation->getGrid());
 
         foreach ($operation->getProperties() as $property) {
-            $label = $property->getLabel();
-
-            if (!$label && $resource->getTranslationPattern()) {
-                $label = u($operation->getResource()->getTranslationPattern())
-                    ->replace('resource', $resource->getName())
-                    ->replace('operation', $operation->getName())
-                    ->append('.', $property->getName())
-                    ->lower()
-                    ->toString()
-                ;
-            }
-
-            if (!$label) {
-                $label = u($property->getName())->title()->toString();
-            }
-
             $headers[] = new Header(
-                $property->getName(),
-                $label,
-                $property->isSortable(),
+                name: $property->getName(),
+                label: $property->getLabel(),
+                sortable: $property->isSortable(),
+                translationDomain: $operation->getResource()->getTranslationDomain(),
             );
         }
 
@@ -55,13 +42,16 @@ class GridFactory implements GridFactoryInterface
             $fields = [];
 
             foreach ($operation->getProperties() as $property) {
+                if (array_key_exists($property::class, $grid->getTemplateMapping())) {
+                    $property = $property->withTemplate($grid->getTemplateMapping()[$property::class]);
+                }
                 $fields[$property->getName()] = $this->cellFactory->create($property, $item);
             }
             $rows[] = new Row($index, $fields, $item);
         }
-        $grid = new Grid(
-            $operation->getResource()->getName().'_'.$operation->getName(),
-            $operation->getGridTemplate(),
+        $grid = new GridView(
+            $operation->getResource()->getName().'_'.$operation->getName().'_'.$grid->getName(),
+            $grid->getTemplate(),
             $headers,
             $rows
         );

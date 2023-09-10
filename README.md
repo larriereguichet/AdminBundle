@@ -7,6 +7,13 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0/mini.png)](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0)
 [![Total Downloads](https://poser.pugx.org/lag/adminbundle/downloads)](https://packagist.org/packages/lag/adminbundle)
 
+# TODO
+- validation groups
+- serialization
+- set nullable resource arrays to add difference between empty set array and not set array
+- check validation php attributes of metadata
+- batch actions
+
 # AdminBundle
 The AdminBundle let you create a **flexible** and **robust backoffice** on any Symfony application, with simple `yaml` configuration.
 

@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\Metadata\Factory;
 
 use LAG\AdminBundle\Exception\Validation\InvalidPropertyCollectionException;
 use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Property\Link;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -35,7 +36,11 @@ class PropertyFactory implements PropertyFactoryInterface
         }
 
         if (\count($operationErrors) > 0) {
-            throw new InvalidPropertyCollectionException($operationErrors, $operation->getResource()->getName(), $operation->getName());
+            throw new InvalidPropertyCollectionException(
+                $operationErrors,
+                $operation->getResource()->getName(),
+                $operation->getName())
+            ;
         }
 
         return $properties;
@@ -48,17 +53,15 @@ class PropertyFactory implements PropertyFactoryInterface
         }
 
         if (!$property->getLabel()) {
-            $label = null;
-
             if ($operation->getResource()->getTranslationPattern()) {
                 $label = u($operation->getResource()->getTranslationPattern())
+                    ->replace('{application}', $operation->getResource()->getApplicationName())
                     ->replace('{resource}', $operation->getResource()->getName())
-                    ->replace('{property}', u($property->getName())->snake()->toString())
+                    ->replace('{message}', u($property->getName())->snake()->toString())
                     ->lower()
                     ->toString()
                 ;
-            }
-            if (!$label) {
+            } else {
                 $label = u($property->getName())
                     ->replace('_', ' ')
                     ->title()

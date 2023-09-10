@@ -38,10 +38,10 @@
         <hr>
         <b>Admins</b>
 
-        {% for name, admin in collector.data.application.resource %}
+        {% for name, admin in collector.data.resources %}
             <div class="sf-toolbar-info-piece">
                 <b>{{ name | capitalize }}</b>
-                <span class="sf-toolbar-status">{{ admin.data_class }}</span>
+                <span class="sf-toolbar-status">{{ admin.dataClass }}</span>
             </div>
         {% endfor %}
 

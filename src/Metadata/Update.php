@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Controller\Resource\ResourceController;
 
 class Update extends Operation
 {
@@ -16,13 +17,13 @@ class Update extends Operation
         ?string $icon = null,
         ?string $template = '@LAGAdmin/crud/update.html.twig',
         ?array $permissions = [],
-        ?string $controller = \LAG\AdminBundle\Controller\Update::class,
+        ?string $controller = ResourceController::class,
         ?string $route = null,
         ?array $routeParameters = null,
         array $methods = ['POST', 'GET'],
         ?string $path = null,
-        ?string $targetRoute = null,
-        ?array $targetRouteParameters = null,
+        ?string $redirectRoute = null,
+        ?array $redirectRouteParameters = null,
         array $properties = [],
         ?string $formType = null,
         array $formOptions = [],
@@ -31,6 +32,8 @@ class Update extends Operation
         array $identifiers = ['id'],
         ?array $contextualActions = null,
         ?array $itemActions = null,
+        ?string $redirectResource = null,
+        ?string $redirectOperation = null,
     ) {
         parent::__construct(
             $name,
@@ -44,8 +47,8 @@ class Update extends Operation
             $routeParameters,
             $methods,
             $path,
-            $targetRoute,
-            $targetRouteParameters,
+            $redirectRoute,
+            $redirectRouteParameters,
             $properties,
             $formType,
             $formOptions,
@@ -54,6 +57,8 @@ class Update extends Operation
             $identifiers,
             $contextualActions,
             $itemActions,
+            $redirectResource,
+            $redirectOperation,
         );
     }
 }

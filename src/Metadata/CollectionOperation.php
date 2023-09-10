@@ -6,7 +6,10 @@ namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
+use LAG\AdminBundle\Validation\Constraint\GridExist;
+use LAG\AdminBundle\Validation\Constraint\TemplateValid;
 
 abstract class CollectionOperation extends Operation implements CollectionOperationInterface
 {
@@ -22,8 +25,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         array $routeParameters = [],
         array $methods = [],
         string $path = null,
-        ?string $targetRoute = null,
-        array $targetRouteParameters = [],
+        ?string $redirectRoute = null,
+        array $redirectRouteParameters = [],
         array $properties = [],
         ?string $formType = null,
         array $formOptions = [],
@@ -32,36 +35,43 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         array $identifiers = ['id'],
         ?array $contextualActions = null,
         ?array $itemActions = null,
+        ?string $redirectResource = null,
+        ?string $redirectOperation = null,
         private bool $pagination = true,
         private int $itemPerPage = 25,
         private string $pageParameter = 'page',
         private array $criteria = [],
         private array $orderBy = [],
         private ?array $filters = null,
-        private ?string $gridTemplate = '@LAGAdmin/grid/table_grid.html.twig',
+        #[GridExist]
+        private ?string $grid = 'table',
+        private ?string $filterFormType = FilterType::class,
+        private array $filterFormOptions = [],
     ) {
         parent::__construct(
-            $name,
-            $title,
-            $description,
-            $icon,
-            $template,
-            $permissions,
-            $controller,
-            $route,
-            $routeParameters,
-            $methods,
-            $path,
-            $targetRoute,
-            $targetRouteParameters,
-            $properties,
-            $formType,
-            $formOptions,
-            $processor,
-            $provider,
-            $identifiers,
-            $contextualActions,
-            $itemActions,
+            name: $name,
+            title: $title,
+            description: $description,
+            icon: $icon,
+            template: $template,
+            permissions: $permissions,
+            controller: $controller,
+            route: $route,
+            routeParameters: $routeParameters,
+            methods: $methods,
+            path: $path,
+            redirectRoute: $redirectRoute,
+            redirectRouteParameters: $redirectRouteParameters,
+            properties: $properties,
+            formType: $formType,
+            formOptions: $formOptions,
+            processor: $processor,
+            provider: $provider,
+            identifiers: $identifiers,
+            contextualActions: $contextualActions,
+            itemActions: $itemActions,
+            redirectResource: $redirectResource,
+            redirectOperation: $redirectOperation,
         );
     }
 
@@ -159,15 +169,41 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $self;
     }
 
-    public function getGridTemplate(): ?string
+    public function getGrid(): ?string
     {
-        return $this->gridTemplate;
+        return $this->grid;
     }
 
     public function withGridTemplate(?string $gridTemplate): self
     {
         $self = clone $this;
-        $self->gridTemplate = $gridTemplate;
+        $self->grid = $gridTemplate;
+
+        return $self;
+    }
+
+    public function getFilterFormType(): ?string
+    {
+        return $this->filterFormType;
+    }
+
+    public function withFilterFormType(?string $filterForm): self
+    {
+        $self = clone $this;
+        $self->filterFormType = $filterForm;
+
+        return $self;
+    }
+
+    public function getFilterFormOptions(): array
+    {
+        return $this->filterFormOptions;
+    }
+
+    public function withFilterFormOptions(array $filterFormOptions): self
+    {
+        $self = clone $this;
+        $self->filterFormOptions = $filterFormOptions;
 
         return $self;
     }

@@ -24,20 +24,26 @@ class ChoiceTypeExtension extends AbstractTypeExtension
         if (!$options['select2']) {
             return;
         }
-        $dataController = u($view->vars['attr']['data-controller'] ?? '');
+        $attr = $view->vars['attr']['data-controller'] ?? '';
+        $attr .= ' lag-admin-select2';
 
-        if (!$dataController->containsAny('select2')) {
-            $view->vars['attr']['data-controller'] = $dataController->append(' select2')->trim()->toString();
-        }
+        $view->vars['attr']['data-controller'] = trim($attr);
+        $view->vars['attr']['data-allow-add'] = $options['allow_add'] ?? false;
+        $view->vars['attr']['data-allow-empty'] = $options['allow_empty'] ?? false;
+        $view->vars['attr']['data-multiple'] = $options['multiple'] ?? false;
+        $view->vars['multiple'] = false;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults([
-                'select2' => true,
-            ])
-            ->setAllowedTypes('select2', 'boolean')
+            ->define('select2')
+            ->default(false)
+            ->allowedTypes('boolean')
+
+            ->define('allow_add')
+            ->default(false)
+            ->allowedTypes('boolean')
         ;
     }
 }

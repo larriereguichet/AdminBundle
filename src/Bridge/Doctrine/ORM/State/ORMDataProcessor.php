@@ -9,7 +9,7 @@ use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Update;
-use LAG\AdminBundle\State\DataProcessorInterface;
+use LAG\AdminBundle\State\Processor\DataProcessorInterface;
 
 class ORMDataProcessor implements DataProcessorInterface
 {

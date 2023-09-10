@@ -1,6 +1,6 @@
 services:
-    lag_admin.security.helper: '@LAG\AdminBundle\Security\Helper\SecurityHelper'
-    LAG\AdminBundle\Security\Helper\SecurityHelper:
+    # Voters
+    LAG\AdminBundle\Security\Voter\OperationPermissionVoter:
         arguments:
             $security: '@security.helper'
-            $registry: '@lag_admin.resource.registry'
+        tags: ['security.voter']

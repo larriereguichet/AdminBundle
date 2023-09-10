@@ -7,9 +7,9 @@ namespace LAG\AdminBundle\Tests\Metadata\Factory;
 use LAG\AdminBundle\Exception\Validation\InvalidPropertyCollectionException;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Factory\PropertyFactory;
-use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
-use LAG\AdminBundle\Metadata\Property\StringProperty;
+use LAG\AdminBundle\Metadata\Property\Text;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Validator\Constraints\Valid;
@@ -23,9 +23,9 @@ class PropertyFactoryTest extends TestCase
 
     public function testCreate(): void
     {
-        $definition = new StringProperty(name: 'my_property');
+        $definition = new Text(name: 'my_property');
         $resource = new AdminResource(name: 'a_resource', translationDomain: 'my_domain');
-        $operation = (new Index(properties: [$definition]))->withResource($resource);
+        $operation = (new GetCollection(properties: [$definition]))->withResource($resource);
 
         $this
             ->validator
@@ -50,13 +50,13 @@ class PropertyFactoryTest extends TestCase
 
     public function testCreateWithTranslationPattern(): void
     {
-        $definition = new StringProperty(name: 'my_property');
+        $definition = new Text(name: 'my_property');
         $resource = new AdminResource(
             name: 'a_resource',
             translationDomain: 'my_domain',
             translationPattern: 'test.{resource}.{property}',
         );
-        $operation = (new Index(properties: [$definition]))->withResource($resource);
+        $operation = (new GetCollection(properties: [$definition]))->withResource($resource);
 
         $this
             ->validator
@@ -81,9 +81,9 @@ class PropertyFactoryTest extends TestCase
 
     public function testCreateInvalid(): void
     {
-        $definition = new StringProperty(name: 'my_property');
+        $definition = new Text(name: 'my_property');
         $resource = new AdminResource(name: 'a_resource', translationDomain: 'my_domain');
-        $operation = (new Index(properties: [$definition]))->withResource($resource);
+        $operation = (new GetCollection(properties: [$definition]))->withResource($resource);
         $violations = $this->createMock(ConstraintViolationList::class);
 
         $this

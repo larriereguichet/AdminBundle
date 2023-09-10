@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventListener\Resource;
 
+use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Event\Events\ResourceEvent;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
@@ -18,6 +19,7 @@ class ResourceCreateListener
 {
     public function __construct(
         private RouteNameGeneratorInterface $routeNameGenerator,
+        private ApplicationConfiguration $applicationConfiguration,
     ) {
     }
 
@@ -40,6 +42,14 @@ class ResourceCreateListener
         if (!$resource->getTitle()) {
             $inflector = new EnglishInflector();
             $resource = $resource->withTitle($inflector->pluralize($resource->getName())[0]);
+        }
+
+        if (!$resource->getApplicationName()) {
+            $resource = $resource->withApplicationName($this->applicationConfiguration->getString('name'));
+        }
+
+        if (!$resource->getTranslationDomain()) {
+            $resource = $resource->withTranslationDomain($this->applicationConfiguration->getString('translation_domain'));
         }
 
         return $resource;

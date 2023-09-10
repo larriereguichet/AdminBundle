@@ -4,14 +4,18 @@
        data-target=".admin-filters"
        data-show-message="{{ 'lag_admin.ui.show_filters'|trans({}, resource.translationDomain) }}"
        data-hide-message="{{ 'lag_admin.ui.hide_filters'|trans({}, resource.translationDomain) }}">
-        {{ 'lag_admin.ui.show_filters'|trans({}, resource.translationDomain) }}
+        {% if not form.vars.submitted%}
+            {{ 'lag_admin.ui.show_filters'|trans({}, resource.translationDomain) }}
+        {% else %}
+            {{ 'lag_admin.ui.hide_filters'|trans({}, resource.translationDomain) }}
+        {% endif %}
     </a>
-    <div class="admin-filters animated--fade-in d-none">
+    <div class="admin-filters animated--fade-in{% if not form.vars.submitted%} d-none{% endif %}">
         <div id="admin-filters" class="card">
             <div class="card-body">
                 {{ form_start(form) }}
 
-                <h2>{{ 'lag_admin.ui.filter'|trans({}, 'admin') }}</h2>
+                <h4>{{ 'lag_admin.ui.filter'|trans({}, 'admin') }}</h4>
 
                 {{ form_errors(form) }}
 
@@ -25,13 +29,11 @@
 
                 <div class="text-right btn-group"
                      role="group">
-                    {% if resource.hasOperation('index') %}
-                        <a href="{{ lag_admin_operation_url(resource.operation('index')) }}"
-                           class="btn btn-secondary">
-                            <i class="fas fa-eraser"></i>
-                            {{ 'lag_admin.ui.reset'|trans({}, 'admin') }}
-                        </a>
-                    {% endif %}
+                    <a href="{{ app.request.pathInfo }}"
+                       class="btn btn-secondary">
+                        <i class="fas fa-eraser"></i>
+                        {{ 'lag_admin.ui.reset'|trans({}, 'admin') }}
+                    </a>
 
                     <button type="submit"
                             class="btn btn-success">

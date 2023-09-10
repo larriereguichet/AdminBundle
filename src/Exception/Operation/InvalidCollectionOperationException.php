@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Exception\Operation;
 
-use LAG\AdminBundle\Controller\Index;
+use LAG\AdminBundle\Controller\Resource\Index;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;

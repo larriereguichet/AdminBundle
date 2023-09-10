@@ -1,0 +1,29 @@
+{% set type = link.type %}
+{% set icon = link.icon %}
+
+{% if not type %}
+    {% if link.operationName|u.containsAny('update') %}
+        {% set type = 'primary' %}
+    {% elseif link.operationName|u.containsAny('delete') %}
+        {% set type = 'danger' %}
+    {% else %}
+        {% set type = 'secondary' %}
+    {% endif %}
+{% endif %}
+
+{% if not icon %}
+    {% if link.operationName|u.containsAny('update') %}
+        {% set icon = 'pencil' %}
+    {% elseif link.operationName|u.containsAny('delete') %}
+        {% set icon = 'x-lg' %}
+    {% endif %}
+{% endif %}
+
+<a href="{{ link.url }}"
+   class="btn btn-{{ type }} {{ options.class|default('') }}"
+   role="button">
+    {% if icon %}
+        <i class="bi bi-{{ icon }}"></i>
+    {% endif %}
+    {{ link.label|trans({}, 'admin') }}
+</a>

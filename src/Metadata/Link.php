@@ -7,11 +7,12 @@ namespace LAG\AdminBundle\Metadata;
 class Link
 {
     public function __construct(
+        // TODO validation
         private ?string $route = null,
         private array $routeParameters = [],
         private ?string $resourceName = null,
         private ?string $operationName = null,
-        private ?string $template = '@LAGAdmin/grid/actions/link.html.twig',
+        private ?string $template = '@LAGAdmin/grids/actions/link.html.twig',
         private ?string $label = null,
         private ?string $type = null,
         private ?string $url = null,

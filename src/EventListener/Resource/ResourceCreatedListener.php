@@ -37,9 +37,9 @@ class ResourceCreatedListener
                 }
             }
 
-            if (!$operation->getTargetRoute()) {
+            if (!$operation->getRedirectRoute()) {
                 if ($resource->hasOperation('index')) {
-                    $operation = $operation->withTargetRoute(
+                    $operation = $operation->withRedirectRoute(
                         $this->routeNameGenerator->generateRouteName($resource, $resource->getOperation('index')),
                     );
                 }

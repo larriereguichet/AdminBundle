@@ -7,14 +7,14 @@ namespace LAG\AdminBundle\Tests\Debug\Collector;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
-use LAG\AdminBundle\Controller\Create;
-use LAG\AdminBundle\Controller\Delete;
-use LAG\AdminBundle\Controller\Index;
+use LAG\AdminBundle\Controller\Resource\Create;
+use LAG\AdminBundle\Controller\Resource\Delete;
+use LAG\AdminBundle\Controller\Resource\Index;
 use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
 use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -139,7 +139,7 @@ class AdminDataCollectorTest extends TestCase
                             'icon' => null,
                             'template' => '@LAGAdmin/crud/update.html.twig',
                             'permissions' => [],
-                            'controller' => \LAG\AdminBundle\Controller\Update::class,
+                            'controller' => \LAG\AdminBundle\Controller\Resource\Update::class,
                             'route' => null,
                             'routeParameters' => null,
                             'methods' => ['POST', 'GET'],
@@ -177,7 +177,7 @@ class AdminDataCollectorTest extends TestCase
                             'icon' => null,
                             'template' => '@LAGAdmin/crud/show.html.twig',
                             'permissions' => [],
-                            'controller' => \LAG\AdminBundle\Controller\Show::class,
+                            'controller' => \LAG\AdminBundle\Controller\Resource\Show::class,
                             'route' => null,
                             'routeParameters' => null,
                             'methods' => ['GET'],

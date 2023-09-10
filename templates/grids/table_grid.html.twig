@@ -1,0 +1,59 @@
+<table class="admin-table table table-responsive align-middle mb-0">
+    {% block table_head %}
+        {% if grid.rows|length > 0 %}
+            <thead>
+            <tr>
+                {% for header in grid.headers %}
+                    <th class="text-dark">
+                        {% include '@LAGAdmin/grids/table_grid_header.html.twig' with {'header': header} %}
+                    </th>
+                {% endfor %}
+
+                {% if operation.itemActions|length > 0 %}
+                    <th class="column-button-{{ operation.itemActions|length }}">{# Empty columns labels for actions buttons #}</th>
+                {% endif %}
+            </tr>
+            </thead>
+        {% endif %}
+    {% endblock %}
+
+    {% block table_body %}
+        {% if grid.rows|length > 0 %}
+            <tbody>
+            {% for row in grid.rows %}
+                <tr>
+                    {% for cell in row.cells %}
+                        <td>
+                            {{ lag_admin_grid_cell(cell) }}
+                        </td>
+                    {% endfor %}
+
+                    {% if operation.itemActions|length > 0 %}
+                        <td class="text-end">
+                            <div class="btn-group"
+                                 role="group"
+                                 aria-label="{{ 'lag_admin.list.available_actions_for_item'|trans({}, 'admin') }}">
+                                {% for link in operation.itemActions %}
+                                    {{ lag_admin_action(link, row.data) }}
+                                {% endfor %}
+                            </div>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        {% endif %}
+    {% endblock %}
+
+    {% block table_footer %}
+        {% if grid.empty %}
+            <tfoot>
+            <tr>
+                <td colspan="{{ grid.headers|length + 1 }}">
+                    {{ 'lag_admin.ui.no_record'|admin_trans }}
+                </td>
+            </tr>
+            </tfoot>
+        {% endif %}
+    {% endblock %}
+</table>
