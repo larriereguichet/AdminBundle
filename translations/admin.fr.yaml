@@ -13,6 +13,13 @@ lag_admin:
     home:
         title: Accueil - AdminBundle
 
+    image:
+        add_image: Ajouter une image
+        choose_in_gallery: Choisir dans la galerie d'image
+        no_image_in_gallery: Vous n'avez pas encore d'image dans votre galerie
+        upload_from_computer: Téléchargez depuis mon ordinateur
+        remove_image: Supprimer l'image
+
     index:
         no_record: Aucun élément n'a encore été créé
 
@@ -30,11 +37,14 @@ lag_admin:
         create: Créer
         delete: Supprimer
         filter: Filtrer
+        hide_filters: Cacher les filtres
+        no: Non
         no_record: Aucun élément n'a été trouvé
-        update: Mettre à jour
+        update: Modifier
         reset: Réinitialiser
         return: Retour
         save: Sauvegarder
         show: Voir
         show_filters: Voir les filtres
+        yes: Oui
         warning: Attention
