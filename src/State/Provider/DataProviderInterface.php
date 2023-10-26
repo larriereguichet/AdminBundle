@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\State;
+namespace LAG\AdminBundle\State\Provider;
 
 use LAG\AdminBundle\Metadata\OperationInterface;
 
