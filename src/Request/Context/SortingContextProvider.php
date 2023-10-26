@@ -8,7 +8,7 @@ use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class ContextProvider implements ContextProviderInterface
+class SortingContextProvider implements ContextProviderInterface
 {
     public function getContext(OperationInterface $operation, Request $request): array
     {
@@ -26,7 +26,7 @@ class ContextProvider implements ContextProviderInterface
             }
 
             if ($request->query->has('order')) {
-                $context['order'] = $request->query->get('order');
+                $context['order'] = strtoupper($request->query->get('order'));
             }
         }
 
