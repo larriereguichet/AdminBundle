@@ -39,12 +39,14 @@
         "symfony/serializer": "^6.0",
         "symfony/translation": "^6.0",
         "symfony/twig-bundle": "^6.0",
+        "symfony/uid": "^6.3",
         "symfony/validator": "^6.1",
         "tinymce/tinymce": "^6.2",
         "twig/extra-bundle": "^3.0",
         "twig/intl-extra": "^3.3",
         "twig/string-extra": "^3.4",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "vich/uploader-bundle": "^2.1"
     },
     "require-dev": {
         "dg/bypass-finals": "^1.1",
