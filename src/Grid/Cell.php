@@ -9,7 +9,6 @@ readonly class Cell
     public function __construct(
         public string $template,
         public array $context = [],
-        public mixed $data = null,
     ) {
     }
 }
