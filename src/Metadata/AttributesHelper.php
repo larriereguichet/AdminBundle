@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
+use LAG\AdminBundle\Entity\Mapping\Sluggable;
+
 class AttributesHelper
 {
     public static function getReflectionClassesFromDirectories(string $path): \Iterator
@@ -43,5 +45,17 @@ class AttributesHelper
                 yield $className => $reflectionClass;
             }
         }
+    }
+
+    public static function getAttributes(string $sourceClass, string $attributeClass): array
+    {
+        $reflectionClass = new \ReflectionClass($sourceClass);
+        $attributes = [];
+
+        foreach ($reflectionClass->getAttributes($attributeClass) as $attribute) {
+            $attributes[] = $attribute->newInstance();
+        }
+
+        return $attributes;
     }
 }

@@ -4,34 +4,27 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-class DateProperty extends AbstractProperty
+class Date extends AbstractProperty
 {
     public function __construct(
         string $name,
         ?string $propertyPath = null,
         ?string $label = null,
-        ?string $template = '@LAGAdmin/fields/date.html.twig',
-        bool $mapped = true,
+        ?string $template = '@LAGAdmin/grids/properties/date.html.twig',
         bool $sortable = true,
-        bool $translation = false,
-        ?string $translationDomain = null,
         array $attr = [],
         array $headerAttr = [],
         private string $dateFormat = 'medium',
-        private string $timeFormat = 'short',
-        private bool $localization = true,
+        private string $timeFormat = 'none',
     ) {
         parent::__construct(
-            $name,
-            $propertyPath,
-            $label,
-            $template,
-            $mapped,
-            $sortable,
-            $translation,
-            $translationDomain,
-            $attr,
-            $headerAttr,
+            name: $name,
+            propertyPath: $propertyPath,
+            label: $label,
+            template: $template,
+            sortable: $sortable,
+            attr: $attr,
+            headerAttr: $headerAttr,
         );
     }
 
@@ -57,19 +50,6 @@ class DateProperty extends AbstractProperty
     {
         $self = clone $this;
         $self->timeFormat = $timeFormat;
-
-        return $self;
-    }
-
-    public function isLocalization(): bool
-    {
-        return $this->localization;
-    }
-
-    public function withLocalization(bool $localization): self
-    {
-        $self = clone $this;
-        $self->localization = $localization;
 
         return $self;
     }

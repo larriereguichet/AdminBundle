@@ -6,7 +6,12 @@ namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Controller\Resource\ResourceController;
 
+/**
+ * The create operation use a form to create a new resource. The provider should retrieve the resource and the processor
+ * should persist it
+ */
 class Create extends Operation
 {
     public function __construct(
@@ -16,13 +21,13 @@ class Create extends Operation
         ?string $icon = null,
         ?string $template = '@LAGAdmin/crud/create.html.twig',
         ?array $permissions = [],
-        ?string $controller = \LAG\AdminBundle\Controller\Create::class,
+        ?string $controller = ResourceController::class,
         ?string $route = null,
         ?array $routeParameters = null,
         array $methods = ['POST', 'GET'],
         ?string $path = null,
-        ?string $targetRoute = null,
-        ?array $targetRouteParameters = null,
+        ?string $redirectRoute = null,
+        ?array $redirectRouteParameters = null,
         array $properties = [],
         ?string $formType = null,
         array $formOptions = [],
@@ -30,7 +35,9 @@ class Create extends Operation
         string $provider = ORMDataProvider::class,
         array $identifiers = [],
         ?array $contextualActions = null,
-        ?array $itemActions = null
+        ?array $itemActions = null,
+        ?string $redirectResource = null,
+        ?string $redirectOperation = null,
     ) {
         parent::__construct(
             $name,
@@ -44,8 +51,8 @@ class Create extends Operation
             $routeParameters,
             $methods,
             $path,
-            $targetRoute,
-            $targetRouteParameters,
+            $redirectRoute,
+            $redirectRouteParameters,
             $properties,
             $formType,
             $formOptions,
@@ -54,6 +61,8 @@ class Create extends Operation
             $identifiers,
             $contextualActions,
             $itemActions,
+            $redirectResource,
+            $redirectOperation,
         );
     }
 }

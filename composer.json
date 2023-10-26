@@ -26,7 +26,6 @@
     ],
     "require": {
         "php": "^8.2",
-        "cuyz/valinor": "^1.0.0",
         "doctrine/annotations": "^2.0",
         "friendsofsymfony/ckeditor-bundle": "^2.4",
         "johnkrovitch/configuration": "^2.2",

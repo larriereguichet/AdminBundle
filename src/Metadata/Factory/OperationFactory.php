@@ -53,7 +53,7 @@ class OperationFactory implements OperationFactoryInterface
             $resource->getName(),
         ));
         $this->eventDispatcher->dispatch($event, sprintf(
-            OperationEvents::OPERATION_CREATE_RESOURCE_PATTERN,
+            OperationEvents::RESOURCE_OPERATION_CREATE_PATTERN,
             $resource->getName(),
             $operationDefinition->getName(),
         ));
@@ -70,7 +70,7 @@ class OperationFactory implements OperationFactoryInterface
             $resource->getName(),
         ));
         $this->eventDispatcher->dispatch($event, sprintf(
-            OperationEvents::OPERATION_CREATED_RESOURCE_PATTERN,
+            OperationEvents::RESOURCE_OPERATION_CREATED_PATTERN,
             $resource->getName(),
             $operation->getName(),
         ));

@@ -5,16 +5,22 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Metadata\Filter;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[\Attribute]
 class Filter implements FilterInterface
 {
     public function __construct(
+        #[Assert\NotBlank]
         private string $name,
+        #[Assert\NotBlank]
         private ?string $propertyPath = null,
+        #[Assert\NotBlank]
         private string $comparator = '=',
+        #[Assert\NotBlank]
         private string $operator = 'and',
         private mixed $data = null,
+        #[Assert\NotBlank]
         private string $formType = TextType::class,
         private array $formOptions = [],
     ) {
