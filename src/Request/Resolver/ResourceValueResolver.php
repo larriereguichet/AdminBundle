@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Request\Resolver;
 
 use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -14,8 +13,7 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 class ResourceValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        private ParametersExtractorInterface $extractor,
-        private ResourceRegistryInterface $resourceRegistry,
+        private ResourceContextInterface $resourceContext,
     ) {
     }
 
@@ -25,18 +23,12 @@ class ResourceValueResolver implements ValueResolverInterface
         if (!$this->supports($request, $argument)) {
             return [];
         }
-        $resourceName = $this->extractor->getResourceName($request);
-        $operationName = $this->extractor->getOperationName($request);
 
-        $this->resourceRegistry->load();
-        $resource = $this->resourceRegistry->get($resourceName);
-        $operation = $resource->getOperation($operationName);
-
-        yield $resource->withCurrentOperation($operation);
+        yield $this->resourceContext->getResource($request);
     }
 
     private function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        return $argument->getType() === AdminResource::class && $this->extractor->supports($request);
+        return $argument->getType() === AdminResource::class && $this->resourceContext->supports($request);
     }
 }
