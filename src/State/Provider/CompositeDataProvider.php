@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\State;
+namespace LAG\AdminBundle\State\Provider;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\OperationInterface;
@@ -24,6 +24,10 @@ class CompositeDataProvider implements DataProviderInterface
             }
         }
 
-        throw new Exception(sprintf('The admin resource "%s" and operation "%s" is not supported by any provider', $operation->getResource()->getName(), $operation->getName()));
+        throw new Exception(sprintf(
+            'The admin resource "%s" and operation "%s" is not supported by any provider',
+            $operation->getResource()->getName(),
+            $operation->getName())
+        );
     }
 }
