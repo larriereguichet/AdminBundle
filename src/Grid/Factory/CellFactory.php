@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\Factory;
 
 use LAG\AdminBundle\Grid\Cell;
+use LAG\AdminBundle\Metadata\Property\ConfigurablePropertyInterface;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
+use LAG\AdminBundle\Metadata\Property\TransformablePropertyInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -20,12 +22,18 @@ class CellFactory implements CellFactoryInterface
 
     public function create(PropertyInterface $property, mixed $data): Cell
     {
-        $data = $this->accessor->getValue($data, $property->getPropertyPath());
-
-        if ($property->getDataTransformer()) {
-            $data = $property->getDataTransformer()->transform($data);
+        if ($property instanceof ConfigurablePropertyInterface) {
+            $property->configure($data);
         }
 
-        return new Cell($property->getTemplate(), ['cell' => $property, 'data' => $data], $data);
+        if ($property->getPropertyPath() !== null && $property->getPropertyPath() !== '.' && $this->accessor->isReadable($data, $property->getPropertyPath())) {
+            $data = $this->accessor->getValue($data, $property->getPropertyPath());
+        }
+
+        if ($property instanceof TransformablePropertyInterface) {
+            $data = $property->transform($data);
+        }
+
+        return new Cell($property->getTemplate(), ['options' => $property, 'data' => $data]);
     }
 }
