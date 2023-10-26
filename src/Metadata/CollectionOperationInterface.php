@@ -6,6 +6,10 @@ namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
 
+/**
+ * Interface for collection operations. It adds the required attributes for collection handling to the item operation
+ * interface
+ */
 interface CollectionOperationInterface extends OperationInterface
 {
     public function hasPagination(): bool;
@@ -28,16 +32,25 @@ interface CollectionOperationInterface extends OperationInterface
 
     public function withOrderBy(array $orderBy): self;
 
-    /** @return FilterInterface[]|null */
+    /** @return array<int, FilterInterface>|null */
     public function getFilters(): ?array;
 
     public function getFilter(string $name): ?FilterInterface;
 
     public function hasFilters(): bool;
 
+    /** @param array<int, FilterInterface> $filters */
     public function withFilters(array $filters): self;
 
-    public function getGridTemplate(): ?string;
+    public function getGrid(): ?string;
 
     public function withGridTemplate(?string $gridTemplate): self;
+
+    public function getFilterFormType(): ?string;
+
+    public function withFilterFormType(?string $filterForm): self;
+
+    public function getFilterFormOptions(): array;
+
+    public function withFilterFormOptions(array $filterFormOptions): self;
 }

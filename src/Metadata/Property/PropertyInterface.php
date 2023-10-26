@@ -24,21 +24,13 @@ interface PropertyInterface
 
     public function withTemplate(?string $template): self;
 
-    public function isMapped(): bool;
-
-    public function withMapped(bool $mapped): self;
-
     public function isSortable(): bool;
 
     public function withSortable(bool $sortable): self;
 
-    public function hasTranslation(): bool;
+    public function isTranslatable(): bool;
 
-    public function withTranslation(bool $translation): self;
-
-    public function getTranslationDomain(): ?string;
-
-    public function withTranslationDomain(?string $translationDomain): self;
+    public function withTranslatable(bool $translatable): self;
 
     public function getAttr(): array;
 
@@ -48,7 +40,7 @@ interface PropertyInterface
 
     public function withHeaderAttr(array $headerAttr): self;
 
-    public function getDataTransformer(): ?DataTransformerInterface;
+    public function getTranslationDomain(): ?string;
 
-    public function withDataTransformer(?DataTransformerInterface $dataTransformer): self;
+    public function withTranslationDomain(?string $translationDomain): self;
 }

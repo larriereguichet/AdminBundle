@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Metadata\Property\PropertyInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class Operation implements OperationInterface
@@ -15,31 +16,67 @@ abstract class Operation implements OperationInterface
     public function __construct(
         #[Assert\NotBlank(message: 'The operation name should not be empty')]
         private ?string $name = null,
+
         #[Assert\Length(max: 255, maxMessage: 'The operation title should be shorter than 255 characters')]
         private ?string $title = null,
+
         private ?string $description = null,
+
         #[Assert\Length(max: 255, maxMessage: 'The operation icon should be shorter than 255 characters')]
         private ?string $icon = null,
+
         #[Assert\NotBlank(message: 'The operation template should not be empty')]
         private ?string $template = null,
+
         private ?array $permissions = [],
+
         #[Assert\NotBlank(message: 'The operation controller should not be empty')]
         private ?string $controller = null,
+
         #[Assert\NotBlank(message: 'The operation has an empty route')]
         private ?string $route = null,
+
         private ?array $routeParameters = null,
+
         private array $methods = [],
+
         private ?string $path = null,
-        private ?string $targetRoute = null,
-        private ?array $targetRouteParameters = null,
+
+        private ?string $redirectRoute = null,
+
+        #[Assert\NotNull]
+        private ?array $redirectRouteParameters = null,
+
+        /** @var PropertyInterface[] */
         private array $properties = [],
+
         private ?string $formType = null,
+
         private array $formOptions = [],
+
         private string $processor = ORMDataProcessor::class,
+
         private string $provider = ORMDataProvider::class,
+
         private array $identifiers = ['id'],
+
         private ?array $contextualActions = null,
+
         private ?array $itemActions = null,
+
+        private ?string $redirectResource = null,
+
+        private ?string $redirectOperation = null,
+
+        private ?bool $validation = true,
+
+        private ?array $validationContext = null,
+
+        private bool $ajax = true,
+
+        private ?array $normalizationContext = null,
+
+        private ?array $denormalizationContext = null,
     ) {
     }
 
@@ -173,28 +210,28 @@ abstract class Operation implements OperationInterface
         return $self;
     }
 
-    public function getTargetRoute(): ?string
+    public function getRedirectRoute(): ?string
     {
-        return $this->targetRoute;
+        return $this->redirectRoute;
     }
 
-    public function withTargetRoute(?string $targetRoute): self
+    public function withRedirectRoute(?string $targetRoute): self
     {
         $self = clone $this;
-        $self->targetRoute = $targetRoute;
+        $self->redirectRoute = $targetRoute;
 
         return $self;
     }
 
-    public function getTargetRouteParameters(): ?array
+    public function getRedirectRouteParameters(): ?array
     {
-        return $this->targetRouteParameters;
+        return $this->redirectRouteParameters;
     }
 
-    public function withTargetRouteParameters(?array $targetRouteParameters): self
+    public function withRedirectRouteParameters(?array $targetRouteParameters): self
     {
         $self = clone $this;
-        $self->targetRouteParameters = $targetRouteParameters;
+        $self->redirectRouteParameters = $targetRouteParameters;
 
         return $self;
     }
@@ -208,6 +245,21 @@ abstract class Operation implements OperationInterface
     {
         $self = clone $this;
         $self->properties = $properties;
+
+        return $self;
+    }
+
+    public function withProperty(PropertyInterface $newProperty): OperationInterface
+    {
+        $self = clone $this;
+        $found = false;
+
+        foreach ($self->properties as $index => $property) {
+            if ($property->getName() === $newProperty->getName()) {
+                $self->properties[$index] = $newProperty;
+                $found = true;
+            }
+        }
 
         return $self;
     }
@@ -325,6 +377,97 @@ abstract class Operation implements OperationInterface
     {
         $self = clone $this;
         $self->itemActions = $itemActions;
+
+        return $self;
+    }
+
+    public function getRedirectResource(): ?string
+    {
+        return $this->redirectResource;
+    }
+
+    public function withRedirectResource(?string $redirectResource): self
+    {
+        $self = clone $this;
+        $self->redirectResource = $redirectResource;
+
+        return $self;
+    }
+
+    public function getRedirectOperation(): ?string
+    {
+        return $this->redirectOperation;
+    }
+
+    public function withRedirectOperation(?string $redirectOperation): self
+    {
+        $self = clone $this;
+        $self->redirectOperation = $redirectOperation;
+
+        return $self;
+    }
+
+    public function isValidationEnabled(): ?bool
+    {
+        return $this->validation;
+    }
+
+    public function withValidation(bool $validation): self
+    {
+        $self = clone $this;
+        $self->validation = $validation;
+
+        return $self;
+    }
+
+    public function getValidationContext(): ?array
+    {
+        return $this->validationContext;
+    }
+
+    public function withValidationContext(array $context): self
+    {
+        $self = clone $this;
+        $self->validationContext = $context;
+
+        return $self;
+    }
+
+    public function useAjax(): bool
+    {
+        return $this->ajax;
+    }
+
+    public function withAjax(bool $ajax): self
+    {
+        $self = clone $this;
+        $self->ajax = $ajax;
+
+        return $self;
+    }
+
+    public function getNormalizationContext(): ?array
+    {
+        return $this->normalizationContext;
+    }
+
+    public function withNormalizationContext(array $context): self
+    {
+        $self = clone $this;
+        $self->normalizationContext = $context;
+
+        return $self;
+    }
+
+    public function getDenormalizationContext(): ?array
+    {
+        return $this->denormalizationContext;
+    }
+
+    public function withDenormalizationContext(array $context): self
+    {
+        $self = clone $this;
+        $self->denormalizationContext = $context;
 
         return $self;
     }

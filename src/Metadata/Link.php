@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[Assert\Expression(
+    expression: 'this.route or (this.resourceName and this.operationName) or this.url',
+    message: 'The link should contains a route or an url or an resource and operation name'
+)]
 class Link
 {
     public function __construct(
@@ -11,7 +17,7 @@ class Link
         private array $routeParameters = [],
         private ?string $resourceName = null,
         private ?string $operationName = null,
-        private ?string $template = '@LAGAdmin/grid/actions/link.html.twig',
+        private ?string $template = '@LAGAdmin/grids/actions/link.html.twig',
         private ?string $label = null,
         private ?string $type = null,
         private ?string $url = null,

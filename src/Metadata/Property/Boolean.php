@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-use LAG\AdminBundle\Grid\DataTransformer\CallbackTransformer;
-
-class CountProperty extends StringProperty
+class Boolean extends AbstractProperty
 {
     public function __construct(
         string $name,
         ?string $propertyPath = null,
         ?string $label = null,
-        ?string $template = '@LAGAdmin/grid/properties/count.html.twig',
-        bool $mapped = true,
+        ?string $template = '@LAGAdmin/grids/properties/boolean.html.twig',
         bool $sortable = true,
-        bool $translation = false,
+        bool $translatable = false,
         ?string $translationDomain = null,
         array $attr = [],
         array $headerAttr = [],
@@ -25,15 +22,11 @@ class CountProperty extends StringProperty
             propertyPath: $propertyPath,
             label: $label,
             template: $template,
-            mapped: $mapped,
             sortable: $sortable,
-            translation: $translation,
+            translatable: $translatable,
             translationDomain: $translationDomain,
             attr: $attr,
             headerAttr: $headerAttr,
-            dataTransformer: new CallbackTransformer(function ($data) {
-                return \count($data);
-            }),
         );
     }
 }

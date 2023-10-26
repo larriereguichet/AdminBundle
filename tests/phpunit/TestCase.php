@@ -69,10 +69,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         return $containerBuilder;
     }
 
-    /**
-     * Assert that methods declared in the getSubscribedEvents() really exists.
-     */
-    protected function assertSubscribedMethodsExists(EventSubscriberInterface $subscriber)
+    protected function assertSubscribedMethodsExists(EventSubscriberInterface $subscriber): void
     {
         $methods = forward_static_call([
             \get_class($subscriber),
@@ -91,7 +88,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         }
     }
 
-    protected function setPrivateProperty($object, $property, $value)
+    protected function setPrivateProperty(object $object, string $property, mixed $value): void
     {
         $reflection = new \ReflectionClass($object);
 
@@ -99,7 +96,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $property->setValue($object, $value);
     }
 
-    protected function getPrivateProperty($object, $property)
+    protected function getPrivateProperty(object $object, string $property): mixed
     {
         $reflection = new \ReflectionClass($object);
         $property = $reflection->getProperty($property);

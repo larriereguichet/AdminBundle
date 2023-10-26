@@ -1,20 +1,30 @@
 services:
-    lag_admin.resource.registry: '@LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface'
-    LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface:
-        class: LAG\AdminBundle\Resource\Registry\ResourceRegistry
+    lag_admin.resource.registry: '@LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface'
+    LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface:
+        class: LAG\AdminBundle\Metadata\Registry\ResourceRegistry
         arguments:
             $resourcePaths: '%lag_admin.resource_paths%'
             $locator: '@lag_admin.metadata.locator'
             $resourceFactory: '@lag_admin.resource.factory'
+
+    LAG\AdminBundle\Metadata\Registry\CacheRegistryDecorator:
+        decorates: 'lag_admin.resource.registry'
+        arguments:
+            $decorated: '@.inner'
 
     lag_admin.metadata.locator: '@LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface'
     LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface:
         class: LAG\AdminBundle\Metadata\Locator\CompositeLocator
         arguments:
             $locators: !tagged_iterator lag_admin.resource.locator
+            $kernel: '@kernel'
 
     LAG\AdminBundle\Metadata\Locator\AttributeLocator:
         tags: ['lag_admin.resource.locator']
 
-    LAG\AdminBundle\Metadata\Locator\YamlLocator:
-        tags: ['lag_admin.resource.locator']
+    lag_admin.resource.context: '@LAG\AdminBundle\Metadata\Context\ResourceContextInterface'
+    LAG\AdminBundle\Metadata\Context\ResourceContextInterface:
+        class: LAG\AdminBundle\Metadata\Context\ResourceContext
+        arguments:
+            $parametersExtractor: '@lag_admin.request.parameters_extractor'
+            $resourceRegistry: '@lag_admin.resource.registry'

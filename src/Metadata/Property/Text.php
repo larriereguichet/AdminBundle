@@ -4,39 +4,32 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
-
-#[\Attribute]
-class StringProperty extends AbstractProperty
+class Text extends AbstractProperty
 {
     public function __construct(
         string $name,
         ?string $propertyPath = null,
         ?string $label = null,
-        ?string $template = '@LAGAdmin/grid/properties/string.html.twig',
-        bool $mapped = true,
+        ?string $template = '@LAGAdmin/grids/properties/text.html.twig',
         bool $sortable = true,
-        bool $translation = false,
+        bool $translatable = false,
         ?string $translationDomain = null,
         array $attr = [],
         array $headerAttr = [],
-        ?DataTransformerInterface $dataTransformer = null,
         private int $length = 100,
         private string $replace = '...',
         private string $emptyString = '~',
     ) {
         parent::__construct(
-            $name,
-            $propertyPath,
-            $label,
-            $template,
-            $mapped,
-            $sortable,
-            $translation,
-            $translationDomain,
-            $attr,
-            $headerAttr,
-            $dataTransformer,
+            name: $name,
+            propertyPath: $propertyPath,
+            label: $label,
+            template: $template,
+            sortable: $sortable,
+            translatable: $translatable,
+            translationDomain: $translationDomain,
+            attr: $attr,
+            headerAttr: $headerAttr,
         );
     }
 
