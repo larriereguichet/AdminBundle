@@ -12,8 +12,7 @@ class OperationValueResolver implements ValueResolverInterface
 {
     public function __construct(
         private ResourceContextInterface $resourceContext,
-    )
-    {
+    ) {
     }
 
     public function resolve(Request $request, ArgumentMetadata $argument): iterable

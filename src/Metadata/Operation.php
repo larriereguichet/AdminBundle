@@ -28,6 +28,7 @@ abstract class Operation implements OperationInterface
         #[Assert\NotBlank(message: 'The operation template should not be empty')]
         private ?string $template = null,
 
+        #[Assert\NotNull(message: 'The operation permission should not be null')]
         private ?array $permissions = [],
 
         #[Assert\NotBlank(message: 'The operation controller should not be empty')]
