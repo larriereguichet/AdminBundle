@@ -36,7 +36,6 @@ class AdminExtensionTest extends TestCase
                 'lag_admin_operation_allowed',
                 'lag_admin_action',
                 'lag_admin_operation_url',
-                'lag_admin_media_bundle_enabled',
             ]);
             $this->assertTrue(method_exists($this->adminExtension, $function->getCallable()[1]));
         }
