@@ -11,9 +11,9 @@
 
         {% if app.request.query.get('sort') == header.name %}
             {% if order == 'asc' %}
-                <i class="fa fa-caret-down sort-icon sort-asc"></i>
+                <i class="bi bi-arrow-down sort-icon sort-asc"></i>
             {% else %}
-                <i class="fa fa-caret-up sort-icon sort-desc"></i>
+                <i class="bi bi-arrow-up sort-icon sort-desc"></i>
             {% endif %}
         {% endif %}
     </a>

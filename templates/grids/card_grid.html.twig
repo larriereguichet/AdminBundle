@@ -1,0 +1,13 @@
+<div class="card-group">
+    {% for row in grid.rows %}
+        <div class="card">
+            <div class="card-body" style="width: 18rem;">
+                {% for cell in row.cells %}
+                    <p class="card-text">
+                        {{ lag_admin_grid_cell(cell) }}
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
