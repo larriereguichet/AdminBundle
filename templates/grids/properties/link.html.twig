@@ -1,0 +1,14 @@
+{% import '@LAGAdmin/grids/macro/attributes.html.twig' as helper %}
+
+{% if not url|default(true) %}
+    {% set url = path(options.route, options.routeParameters) %}
+{% endif %}
+
+<a href="{{ url|default('') }}" {{ helper.attributes(options.attr) }}>
+    {% if options.icon|default(false) %}
+        <span class="text">
+            <i class="{{ options.icon }}"></i>&nbsp;
+        </span>
+    {% endif %}
+    {{ data|default('')|u.truncate(options.length, options.replace) }}
+</a>

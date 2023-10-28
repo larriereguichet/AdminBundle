@@ -1,0 +1,7 @@
+{% if data %}
+    <i class="fa fa-check text-success"
+       title="{{ 'lag_admin.ui.yes'|trans({}, options.translationDomain) }}"></i>
+{% else %}
+    <i class="fa fa-times text-danger"
+       title="{{ 'lag_admin.ui.no'|trans({}, options.translationDomain) }}"></i>
+{% endif %}
