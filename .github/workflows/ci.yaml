@@ -52,6 +52,4 @@ jobs:
                 run: bin/phpstan analyse --level=5 src
 
             -   name: Run var_dump checker
-                run:
-                    - bin/var-dump-check --symfony src
-                    - bin/var-dump-check --symfony tests
+                run: bin/var-dump-check --symfony src tests
