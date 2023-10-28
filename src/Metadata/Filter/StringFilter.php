@@ -8,7 +8,7 @@ class StringFilter extends Filter
 {
     public function __construct(
         string $name,
-        ?string $propertyPath = null,
+        string $propertyPath = null,
         string $comparator = 'like',
         string $operator = 'and',
     ) {

@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Slug\Generator;
 
-use LAG\AdminBundle\Entity\Mapping\Sluggable;
 use LAG\AdminBundle\Exception\Exception;
 
 class CompositeSlugGenerator implements SlugGeneratorInterface
@@ -10,8 +11,7 @@ class CompositeSlugGenerator implements SlugGeneratorInterface
     public function __construct(
         /** @var array<string, SlugGeneratorInterface> */
         private array $generators,
-    )
-    {
+    ) {
     }
 
     public function generateSlug(string $source, string $generatorName = 'default'): string

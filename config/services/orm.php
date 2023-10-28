@@ -43,7 +43,7 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     $services->set(OperationCreateListener::class)
-        ->arg('$filterFactory', service(FilterFactoryInterface::class   ))
+        ->arg('$filterFactory', service(FilterFactoryInterface::class))
         ->tag('kernel.event_listener', [
             'event' => 'lag_admin.operation.create',
             'priority' => 256,

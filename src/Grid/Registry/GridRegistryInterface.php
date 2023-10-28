@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Grid\Registry;
 
-use LAG\AdminBundle\Grid\GridView;
 use LAG\AdminBundle\Grid\GridInterface;
 
 interface GridRegistryInterface

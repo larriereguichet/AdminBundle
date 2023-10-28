@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Slug\Mapping;
 
 use LAG\AdminBundle\Entity\Mapping\Sluggable;
@@ -24,7 +26,7 @@ class SlugMapping implements SlugMappingInterface
 
     public function hasMapping(string $resourceClass): bool
     {
-        return array_key_exists($resourceClass, $this->mapping);
+        return \array_key_exists($resourceClass, $this->mapping);
     }
 
     public function getMapping(string $resourceClass): array

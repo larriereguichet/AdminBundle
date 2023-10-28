@@ -19,10 +19,9 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $locator = new FileLocator(__DIR__ . '/../../config');
+        $locator = new FileLocator(__DIR__.'/../../config');
         $loader = new Loader\PhpFileLoader($container, $locator);
         $loader->load('services.php');
-
 
         if ($container->getParameter('kernel.environment') === 'dev') {
             $loader->load('services_dev.php');

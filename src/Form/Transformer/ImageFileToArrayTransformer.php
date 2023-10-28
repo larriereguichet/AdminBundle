@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Form\Transformer;
 
 use LAG\AdminBundle\Entity\Image;
@@ -11,12 +13,13 @@ class ImageFileToArrayTransformer implements DataTransformerInterface
     public function transform(mixed $value): array
     {
         if ($value === null) {
-            //return new Image();
+            // return new Image();
         }
 
-        //return $value;
+        // return $value;
         if ($value === null) {
         }
+
         return [
             'upload' => $value,
             'gallery' => $value,

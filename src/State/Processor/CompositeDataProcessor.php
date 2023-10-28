@@ -32,11 +32,7 @@ class CompositeDataProcessor implements DataProcessorInterface
             }
         }
 
-        throw new Exception(sprintf(
-            'The resource "%s" and operation "%s" is not supported by any processor',
-            $operation->getResource()->getName(),
-            $operation->getName()
-        ));
+        throw new Exception(sprintf('The resource "%s" and operation "%s" is not supported by any processor', $operation->getResource()->getName(), $operation->getName()));
     }
 
     private function dispatchPreEvent(mixed $data, OperationInterface $operation): void

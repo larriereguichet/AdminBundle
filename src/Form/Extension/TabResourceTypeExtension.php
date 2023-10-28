@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;

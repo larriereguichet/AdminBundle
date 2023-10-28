@@ -1,8 +1,8 @@
 <?php
 
-namespace LAG\AdminBundle\Slug\Generator;
+declare(strict_types=1);
 
-use LAG\AdminBundle\Entity\Mapping\Sluggable;
+namespace LAG\AdminBundle\Slug\Generator;
 
 interface SlugGeneratorInterface
 {

@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata\Property;
 
 class Image extends AbstractProperty
 {
     public function __construct(
         string $name,
-        ?string $propertyPath = null,
-        ?string $label = null,
+        string $propertyPath = null,
+        string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/image.html.twig',
         bool $sortable = true,
         bool $translatable = false,
-        ?string $translationDomain = null,
+        string $translationDomain = null,
         array $attr = [],
         array $headerAttr = [],
     ) {
@@ -23,7 +25,7 @@ class Image extends AbstractProperty
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
-            attr:  $attr,
+            attr: $attr,
             headerAttr: $headerAttr,
         );
     }

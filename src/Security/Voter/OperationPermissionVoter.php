@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Security\Voter;
 
 use LAG\AdminBundle\Metadata\OperationInterface;
@@ -23,9 +25,9 @@ class OperationPermissionVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        assert($subject instanceof OperationInterface);
+        \assert($subject instanceof OperationInterface);
 
-        if (count($subject->getPermissions()) > 0 && $token->getUser() === null) {
+        if (\count($subject->getPermissions()) > 0 && $token->getUser() === null) {
             return false;
         }
 

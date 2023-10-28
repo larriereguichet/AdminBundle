@@ -20,7 +20,7 @@ class MetadataHelper implements MetadataHelperInterface
             // We could not use the hasMetadataFor() method as it is not working if the entity is not loaded. But
             // the getMetadataFor() method could throw an exception if the class is not found
             return $this->entityManager->getMetadataFactory()->getMetadataFor($class);
-        } catch (Exception) {
+        } catch (\Exception) {
             // If an exception is raised, nothing to do. Extra data from metadata will be not used.
         }
 

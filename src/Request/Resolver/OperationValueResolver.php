@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Request\Resolver;
 
 use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
@@ -12,8 +14,7 @@ class OperationValueResolver implements ValueResolverInterface
 {
     public function __construct(
         private ResourceContextInterface $resourceContext,
-    )
-    {
+    ) {
     }
 
     public function resolve(Request $request, ArgumentMetadata $argument): iterable

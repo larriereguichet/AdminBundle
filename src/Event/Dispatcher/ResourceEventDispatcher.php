@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Event\Dispatcher;
 
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 use function Symfony\Component\String\u;
 
 class ResourceEventDispatcher implements ResourceEventDispatcherInterface

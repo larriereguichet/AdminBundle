@@ -21,12 +21,12 @@ class SlugListener
     {
         $data = $event->getData();
 
-        if (!$this->mapping->hasMapping(get_class($data))) {
+        if (!$this->mapping->hasMapping($data::class)) {
             return;
         }
         $accessor = PropertyAccess::createPropertyAccessor();
 
-        foreach ($this->mapping->getMapping(get_class($data)) as $mapping) {
+        foreach ($this->mapping->getMapping($data::class) as $mapping) {
             $source = $accessor->getValue($data, $mapping->sourceProperty);
             $slug = $this->generator->generateSlug($source, $mapping->generator);
             $accessor->setValue($data, $mapping->targetProperty, $slug);

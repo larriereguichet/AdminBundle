@@ -6,8 +6,6 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
 use LAG\AdminBundle\Event\Events\ResourceEvent;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\OperationInterface;
 
 readonly class ResourceCreateListener
 {
@@ -22,7 +20,7 @@ readonly class ResourceCreateListener
         $operations = [];
 
         foreach ($resource->getOperations() as $operation) {
-            if (count($operation->getProperties()) === 0) {
+            if (\count($operation->getProperties()) === 0) {
                 $operation = $operation->withProperties($this->propertyFactory->createProperties($resource->getDataClass()));
             }
             $operations[$operation->getName()] = $operation;

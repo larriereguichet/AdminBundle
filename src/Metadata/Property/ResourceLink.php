@@ -10,12 +10,12 @@ class ResourceLink extends Text
 {
     public function __construct(
         string $name,
-        ?string $propertyPath = null,
-        ?string $label = null,
+        string $propertyPath = null,
+        string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/resource_link.html.twig',
         bool $sortable = true,
         bool $translatable = false,
-        ?string $translationDomain = null,
+        string $translationDomain = null,
         array $attr = [],
         array $headerAttr = [],
         int $length = 100,

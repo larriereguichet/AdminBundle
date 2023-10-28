@@ -16,7 +16,7 @@ class ResponseNotSupportedException extends Exception
         parent::__construct(sprintf(
             'The operation "%s" with data type "%s"s is not supported by any response handler',
             $operation->getName(),
-            \is_object($data) ? \get_class($data) : \gettype($data),
+            \is_object($data) ? $data::class : \gettype($data),
         ));
     }
 }

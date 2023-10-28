@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests;
 
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Metadata\Operation;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -13,9 +12,6 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\Request;
-
-use function Symfony\Component\String\u;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -72,7 +68,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function assertSubscribedMethodsExists(EventSubscriberInterface $subscriber): void
     {
         $methods = forward_static_call([
-            \get_class($subscriber),
+            $subscriber::class,
             'getSubscribedEvents',
         ]);
         $this->assertIsArray($methods);
@@ -104,107 +100,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
         return $property->getValue($object);
     }
 
-    protected function getAdminDefaultConfiguration(
-        string $adminName = 'an_admin_name',
-        string $entityClass = 'AnEntityClass',
-    ): array {
-        return [
-            'name' => $adminName,
-            'entity' => $entityClass,
-            'group' => null,
-            'actions' => [
-                'create' => [
-                    'admin_name' => $adminName,
-                ],
-                'update' => [
-                    'admin_name' => $adminName,
-                    'route_parameters' => ['id' => null],
-                ],
-                'index' => [
-                    'admin_name' => $adminName,
-                ],
-                'delete' => [
-                    'admin_name' => $adminName,
-                    'route_parameters' => ['id' => null],
-                ],
-            ],
-            'controller' => AdminAction::class,
-            'admin_class' => Admin::class,
-            'action_class' => Operation::class,
-            'routes_pattern' => 'lag_admin.{admin}.{action}',
-            'pager' => 'pagerfanta',
-            'max_per_page' => 25,
-            'page_parameter' => 'page',
-            'permissions' => 'ROLE_ADMIN',
-            'date_format' => 'Y-m-d',
-            'data_provider' => 'doctrine',
-            'data_persister' => 'doctrine',
-            'create_template' => '@LAGAdmin/crud/create.html.twig',
-            'update_template' => '@LAGAdmin/crud/update.html.twig',
-            'list_template' => '@LAGAdmin/crud/list.html.twig',
-            'delete_template' => '@LAGAdmin/crud/delete.html.twig',
-            'title' => u($adminName)->camel()->title()->toString(),
-            'index_actions' => [
-                'create' => [
-                    'route' => null,
-                    'route_parameters' => [],
-                    'admin' => $adminName,
-                    'url' => null,
-                    'action' => 'create',
-                    'text' => 'lag_admin.actions.create',
-                    'attr' => [],
-                ],
-            ],
-            'item_actions' => [
-                'update' => [
-                    'route' => null,
-                    'route_parameters' => [],
-                    'admin' => $adminName,
-                    'url' => null,
-                    'action' => 'update',
-                    'text' => 'lag_admin.actions.update',
-                    'attr' => [],
-                ],
-                'delete' => [
-                    'route' => null,
-                    'route_parameters' => [],
-                    'admin' => $adminName,
-                    'url' => null,
-                    'action' => 'delete',
-                    'text' => 'lag_admin.actions.delete',
-                    'attr' => [],
-                ],
-            ],
-        ];
-    }
-
-    protected function createActionConfigurationMock(array $map)
-    {
-        $actionConfiguration = $this->createMock(ActionConfiguration::class);
-        $actionConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('get')
-            ->willReturnMap($map)
-        ;
-
-        return $actionConfiguration;
-    }
-
-    /**
-     * @return MockObject|AdminConfiguration
-     */
-    protected function createAdminConfigurationMock(array $map): MockObject
-    {
-        $adminConfiguration = $this->createMock(AdminConfiguration::class);
-        $adminConfiguration
-            ->expects($this->atLeastOnce())
-            ->method('get')
-            ->willReturnMap($map)
-        ;
-
-        return $adminConfiguration;
-    }
-
     protected function createApplicationConfigurationMock(array $map): MockObject
     {
         $applicationConfiguration = $this->createMock(ApplicationConfiguration::class);
@@ -214,57 +109,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
         ;
 
         return $applicationConfiguration;
-    }
-
-    /**
-     * @param int   $expectedCalls
-     * @param int   $configurationExpectedCalls
-     *
-     * @return MockObject|ActionInterface
-     */
-    protected function createActionWithConfigurationMock(
-        array $map
-    ): MockObject {
-        $configuration = $this->createActionConfigurationMock($map);
-
-        $action = $this->createMock(ActionInterface::class);
-        $action
-            ->expects($this->atLeastOnce())
-            ->method('getConfiguration')
-            ->willReturn($configuration)
-        ;
-
-        return $action;
-    }
-
-    /**
-     * @param int   $expectedCalls
-     * @param int   $configurationExpectedCalls
-     *
-     * @return MockObject|AdminInterface
-     */
-    protected function createAdminWithConfigurationMock(
-        array $map = [],
-        Request $request = null
-    ): MockObject {
-        $configuration = $this->createAdminConfigurationMock($map);
-
-        $admin = $this->createMock(AdminInterface::class);
-        $admin
-            ->expects($this->atLeastOnce())
-            ->method('getConfiguration')
-            ->willReturn($configuration)
-        ;
-
-        if (null !== $request) {
-            $admin
-                ->expects($this->atLeastOnce())
-                ->method('getRequest')
-                ->willReturn($request)
-            ;
-        }
-
-        return $admin;
     }
 
     protected function createContainerDefinition(string $class): Definition

@@ -17,12 +17,11 @@ class ApplicationConfiguration extends ServiceConfiguration
         $resolver
             ->define('name')
             ->default('lag_admin')
-            ->allowedTypes('string')    
+            ->allowedTypes('string')
 
             ->define('title')
             ->default('Admin Bundle')
             ->allowedTypes('string')
-
 
             ->define('resource_paths')
             ->allowedTypes('array')

@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventListener\Security;
 
-use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 

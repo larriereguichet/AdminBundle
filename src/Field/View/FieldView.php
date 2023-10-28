@@ -17,7 +17,7 @@ class FieldView implements View
         string $fieldName,
         string $template,
         array $options = [],
-        ?\Closure $dataTransformer = null
+        \Closure $dataTransformer = null
     ) {
         $this->fieldName = $fieldName;
         $this->template = $template;

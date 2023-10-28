@@ -8,8 +8,8 @@ class Count extends AbstractProperty implements TransformablePropertyInterface
 {
     public function __construct(
         string $name,
-        ?string $propertyPath = null,
-        ?string $label = null,
+        string $propertyPath = null,
+        string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/count.html.twig',
         bool $sortable = true,
         array $attr = [],
@@ -28,6 +28,6 @@ class Count extends AbstractProperty implements TransformablePropertyInterface
 
     public function transform(mixed $data): int
     {
-        return count($data);
+        return \count($data);
     }
 }

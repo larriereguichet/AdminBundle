@@ -7,6 +7,7 @@ namespace LAG\AdminBundle\Metadata\Locator;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\AdminResource;
 use Symfony\Component\HttpKernel\KernelInterface;
+
 use function Symfony\Component\String\u;
 
 class CompositeLocator implements MetadataLocatorInterface
@@ -34,7 +35,7 @@ class CompositeLocator implements MetadataLocatorInterface
         foreach ($this->locators as $locator) {
             foreach ($locator->locateCollection($resourceDirectory) as $resource) {
                 if (!$resource instanceof AdminResource) {
-                    throw new Exception(sprintf('The locator "%s" returns an instance of "%s", expected an instance of "%s"', \get_class($locator), \get_class($resource), AdminResource::class));
+                    throw new Exception(sprintf('The locator "%s" returns an instance of "%s", expected an instance of "%s"', $locator::class, $resource::class, AdminResource::class));
                 }
                 $resources[] = $resource;
             }

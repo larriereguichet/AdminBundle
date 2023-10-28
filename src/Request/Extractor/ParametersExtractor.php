@@ -37,8 +37,8 @@ class ParametersExtractor implements ParametersExtractorInterface
         }
 
         if (
-            !isset($routeParameters[LAGAdminBundle::REQUEST_PARAMETER_ADMIN]) ||
-            !isset($routeParameters[LAGAdminBundle::REQUEST_PARAMETER_ACTION])
+            !isset($routeParameters[LAGAdminBundle::REQUEST_PARAMETER_ADMIN])
+            || !isset($routeParameters[LAGAdminBundle::REQUEST_PARAMETER_ACTION])
         ) {
             return false;
         }

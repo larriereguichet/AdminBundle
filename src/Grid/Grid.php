@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Grid;
 
 use LAG\AdminBundle\Validation\Constraint\TemplateValid;
@@ -17,8 +19,7 @@ class Grid implements GridInterface
         private array $templateMapping = [],
         /** @var array<string, string> $templateMapping */
         private array $options = [],
-    )
-    {
+    ) {
     }
 
     public function getName(): string

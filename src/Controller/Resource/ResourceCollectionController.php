@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Controller\Resource;
 
 use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;

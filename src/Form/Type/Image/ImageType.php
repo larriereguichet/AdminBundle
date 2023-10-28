@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Form\Type\Image;
 
 use LAG\AdminBundle\Entity\Image;
@@ -47,7 +49,6 @@ class ImageType extends AbstractType
             ->default('imageFile')
             ->allowedTypes('string')
         ;
-
     }
 
     public function getBlockPrefix(): string

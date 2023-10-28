@@ -13,7 +13,7 @@ class TextView implements View
     private array $options;
     private ?\Closure $dataTransformer;
 
-    public function __construct(string $name, array $options = [], ?\Closure $dataTransformer = null)
+    public function __construct(string $name, array $options = [], \Closure $dataTransformer = null)
     {
         $this->name = $name;
         $this->options = $options;
