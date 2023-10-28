@@ -1,9 +1,0 @@
-services:
-    LAG\AdminBundle\Debug\DataCollector\AdminDataCollector:
-        arguments:
-            $registry: '@lag_admin.resource.registry'
-            $applicationConfiguration: '@lag_admin.application'
-            $parametersExtractor: '@lag_admin.request.parameters_extractor'
-        tags:
-            - { name: data_collector, template: '@LAGAdmin/debug/template.html.twig', id: 'LAG\AdminBundle\Debug\DataCollector\AdminDataCollector' }
-        public: false

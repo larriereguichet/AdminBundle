@@ -1,5 +1,0 @@
-services:
-    LAG\AdminBundle\Validation\Validator\TemplateValidator:
-        arguments:
-            $environment: '@twig'
-        tags: ['validator.constraint_validator']
