@@ -14,6 +14,7 @@ class RouteNameGenerator implements RouteNameGeneratorInterface
     public function generateRouteName(AdminResource $resource, OperationInterface $operation): string
     {
         return u($resource->getRoutePattern())
+            ->replace('{application}', $resource->getApplicationName())
             ->replace('{resource}', $resource->getName())
             ->replace('{operation}', $operation->getName())
             ->lower()

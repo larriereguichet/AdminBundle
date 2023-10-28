@@ -22,7 +22,7 @@ class ParametersMapper
         $mappedRouteParameters = [];
 
         foreach ($routeParameters as $parameter) {
-            $mappedRouteParameters[$parameter] = $accessor->getValue($data, (string) $parameter);
+            $mappedRouteParameters[$parameter] = $accessor->getValue($data, $parameter);
         }
 
         return $mappedRouteParameters;

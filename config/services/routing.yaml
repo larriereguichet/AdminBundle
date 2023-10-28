@@ -1,5 +1,5 @@
 services:
-    LAG\AdminBundle\Routing\Loader\RoutingLoader:
+    LAG\AdminBundle\Routing\Loader\ResourceRoutingLoader:
         arguments:
             $pathGenerator: '@lag_admin.routing.path_generator'
             $resourceRegistry: '@lag_admin.resource.registry'
