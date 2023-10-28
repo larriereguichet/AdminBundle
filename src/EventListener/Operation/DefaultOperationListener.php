@@ -89,13 +89,19 @@ class DefaultOperationListener
             }
         }
 
-        if ($resource->hasAjax() !== null) {
-            if ($operation->isSerializationEnabled() === null) {
-                $operation = $operation->withSerialization($resource->hasAjax());
+        if ($resource->useAjax() !== null) {
+            if ($operation->useAjax() === null) {
+                $operation = $operation->withAjax($resource->useAjax());
             }
 
-            if ($resource->getNormalizationContext() !== null) {
-                $operation = $operation->withSerializerContext($resource->getNormalizationContext());
+            if ($operation->useAjax()) {
+                if ($resource->getNormalizationContext() !== null && $operation->getNormalizationContext() === null) {
+                    $operation = $operation->withNormalizationContext($resource->getNormalizationContext());
+                }
+
+                if ($resource->getDenormalizationContext() !== null && $operation->getDenormalizationContext() === null) {
+                    $operation = $operation->withDenormalizationContext($resource->getDenormalizationContext());
+                }
             }
         }
 

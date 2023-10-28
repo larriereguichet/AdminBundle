@@ -19,7 +19,15 @@ class OperationValueResolver implements ValueResolverInterface
 
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        if (!$this->resourceContext->supports($request) || !is_a($argument->getType(), OperationInterface::class)) {
+        if (!$this->resourceContext->supports($request)
+            || $argument->getType() === null
+            || !class_exists($argument->getType())
+        ) {
+            return [];
+        }
+        $interfaces = class_implements($argument->getType(), false);
+
+        if ($interfaces === false || !in_array(OperationInterface::class, $interfaces)) {
             return [];
         }
 

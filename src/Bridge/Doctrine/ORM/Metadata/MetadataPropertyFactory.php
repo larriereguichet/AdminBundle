@@ -36,7 +36,10 @@ class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
             } elseif ($fieldType === 'boolean') {
                 $properties[$fieldName] = new Boolean($fieldName);
             } elseif (u($fieldType)->containsAny(['array', 'json'])) {
-                $properties[$fieldName] = new Collection($fieldName);
+                $properties[$fieldName] = new Collection(
+                    entryType: Text::class,
+                    name: $fieldName,
+                );
             } else {
                 $properties[$fieldName] = new Text($fieldName);
             }

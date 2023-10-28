@@ -35,8 +35,11 @@ class PropertyFactory implements PropertyFactoryInterface
         }
 
         if (\count($operationErrors) > 0) {
-            throw new InvalidPropertyCollectionException($operationErrors, $operation->getResource()->getName(), $operation->getName())
-            ;
+            throw new InvalidPropertyCollectionException(
+                $operationErrors,
+                $operation->getResource()->getName(),
+                $operation->getName()
+            );
         }
 
         return $properties;

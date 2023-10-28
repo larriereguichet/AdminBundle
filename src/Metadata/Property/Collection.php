@@ -7,9 +7,9 @@ namespace LAG\AdminBundle\Metadata\Property;
 class Collection extends AbstractProperty
 {
     public function __construct(
+        private string $entryType,
         string $name,
         string $propertyPath = null,
-        ?string $propertyType = Text::class,
         string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/collection.html.twig',
         bool $sortable = true,
@@ -29,5 +29,10 @@ class Collection extends AbstractProperty
             attr: $attr,
             headerAttr: $headerAttr,
         );
+    }
+
+    public function getEntryType(): string
+    {
+        return $this->entryType;
     }
 }
