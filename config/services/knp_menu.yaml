@@ -8,14 +8,14 @@ services:
             $routeNameGenerator: '@lag_admin.routing.route_name_generator'
             $eventDispatcher: '@event_dispatcher'
         tags:
-            - { name: knp_menu.menu_builder, method: build, alias: contextual }
+            - {name: knp_menu.menu_builder, method: build, alias: contextual}
 
     LAG\AdminBundle\Bridge\KnpMenu\Builder\UserMenuBuilder:
         arguments:
             $factory: '@knp_menu.factory'
             $eventDispatcher: '@event_dispatcher'
         tags:
-            - { name: knp_menu.menu_builder, method: build, alias: user }
+            - {name: knp_menu.menu_builder, method: build, alias: user}
 
     LAG\AdminBundle\Bridge\KnpMenu\Builder\ResourceMenuBuilder:
         arguments:
@@ -24,4 +24,4 @@ services:
             $routeNameGenerator: '@lag_admin.routing.route_name_generator'
             $eventDispatcher: '@event_dispatcher'
         tags:
-            - { name: knp_menu.menu_builder, method: build, alias: resource }
+            - {name: knp_menu.menu_builder, method: build, alias: resource}
