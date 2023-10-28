@@ -1,8 +1,10 @@
 services:
+    # Factories
     lag_admin.grid.factory: '@LAG\AdminBundle\Grid\Factory\GridFactory'
     LAG\AdminBundle\Grid\Factory\GridFactoryInterface: '@LAG\AdminBundle\Grid\Factory\GridFactory'
     LAG\AdminBundle\Grid\Factory\GridFactory:
         arguments:
+            $registry: '@lag_admin.grid.registry'
             $cellFactory: '@lag_admin.grid.cell_factory'
             $eventDispatcher: '@event_dispatcher'
 
@@ -24,10 +26,19 @@ services:
             $environment: '@twig'
 
 
+    lag_admin.grid.registry: '@LAG\AdminBundle\Grid\Registry\GridRegistryInterface'
+    LAG\AdminBundle\Grid\Registry\GridRegistryInterface:
+        class: LAG\AdminBundle\Grid\Registry\GridRegistry
+        arguments:
+            $validator: '@validator'
+            $gridsConfiguration: '%lag_admin.grids%'
 
 
-
-
+    # Validation
+    LAG\AdminBundle\Validation\Validator\GridExistValidator:
+        arguments:
+            $registry: '@lag_admin.grid.registry'
+        tags: ['validator.constraint_validator']
 
 
 
