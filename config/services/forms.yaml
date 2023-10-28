@@ -6,6 +6,17 @@ services:
 #    LAG\AdminBundle\Form\Type\Select2\Select2EntityType:
 #        tags: ['form.type']
 
+    LAG\AdminBundle\Form\Type\Resource\ResourceType:
+        tags: ['form.type']
+        arguments:
+            $context: '@lag_admin.resource.context'
+            $requestStack: '@request_stack'
+
+    LAG\AdminBundle\Form\Type\Resource\FilterType:
+        tags: [ 'form.type' ]
+        arguments:
+            $registry: '@lag_admin.resource.registry'
+
     LAG\AdminBundle\Form\Type\DateRangeType:
         tags: ['form.type']
 
@@ -14,9 +25,28 @@ services:
             $configuration: '@lag_admin.application'
         tags: ['form.type']
 
+    LAG\AdminBundle\Form\Type\Image\ImageType:
+        tags: [ 'form.type' ]
+
+    LAG\AdminBundle\Form\Type\Image\ImageChoiceType:
+        arguments:
+            $transformer: '@LAG\AdminBundle\Form\Transformer\ImageFileToArrayTransformer'
+        tags: [ 'form.type' ]
+
+    LAG\AdminBundle\Form\Type\Resource\ResourceChoiceType:
+        arguments:
+            $registry: '@lag_admin.resource.registry'
+            $dataProvider: '@lag_admin.state.data_provider'
+
     ### Form Extensions ###
     LAG\AdminBundle\Form\Extension\CollectionTypeExtension:
         tags: ['form.type_extension']
 
     LAG\AdminBundle\Form\Extension\ChoiceTypeExtension:
         tags: ['form.type_extension']
+
+    LAG\AdminBundle\Form\Extension\TabResourceTypeExtension:
+        tags: ['form.type_extension']
+
+    ### Data transformers ###
+    LAG\AdminBundle\Form\Transformer\ImageFileToArrayTransformer: ~

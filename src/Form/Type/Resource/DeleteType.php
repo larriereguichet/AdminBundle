@@ -15,7 +15,9 @@ class DeleteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         foreach ($options['resource']->getIdentifiers() as $identifier) {
-            $builder->add($identifier, HiddenType::class);
+            $builder->add($identifier, HiddenType::class, [
+                'mapped' => false,
+            ]);
         }
     }
 
