@@ -9,6 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface ContextProviderInterface
 {
-    /** @return array<string, string> */
+    /** @return array<string, mixed> */
     public function getContext(OperationInterface $operation, Request $request): array;
 }

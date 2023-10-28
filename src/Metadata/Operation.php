@@ -72,7 +72,7 @@ abstract class Operation implements OperationInterface
 
         private ?array $validationContext = null,
 
-        private bool $ajax = true,
+        private ?bool $ajax = true,
 
         private ?array $normalizationContext = null,
 
@@ -433,12 +433,12 @@ abstract class Operation implements OperationInterface
         return $self;
     }
 
-    public function useAjax(): bool
+    public function useAjax(): ?bool
     {
         return $this->ajax;
     }
 
-    public function withAjax(bool $ajax): self
+    public function withAjax(?bool $ajax): self
     {
         $self = clone $this;
         $self->ajax = $ajax;

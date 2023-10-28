@@ -121,9 +121,9 @@ interface OperationInterface
 
     public function withValidationContext(array $context): self;
 
-    public function useAjax(): bool;
+    public function useAjax(): ?bool;
 
-    public function withAjax(bool $ajax): self;
+    public function withAjax(?bool $ajax): self;
 
     public function getNormalizationContext(): ?array;
 

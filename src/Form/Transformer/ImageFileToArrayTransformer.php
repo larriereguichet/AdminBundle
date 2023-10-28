@@ -12,18 +12,13 @@ class ImageFileToArrayTransformer implements DataTransformerInterface
 {
     public function transform(mixed $value): array
     {
-        if ($value === null) {
-            // return new Image();
-        }
-
-        // return $value;
-        if ($value === null) {
-        }
-
-        return [
-            'upload' => $value,
-            'gallery' => $value,
-        ];
+//        if ($value === null) {
+//            // return new Image();
+//        }
+//
+//        // return $value;
+//        if ($value === null) {
+//        }
 
         return [
             'upload' => $value,

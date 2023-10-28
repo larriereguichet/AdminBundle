@@ -334,7 +334,7 @@ class AdminResource
         return $self;
     }
 
-    public function hasAjax(): bool
+    public function useAjax(): bool
     {
         return $this->ajax;
     }
