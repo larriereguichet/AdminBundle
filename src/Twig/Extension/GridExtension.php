@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Twig\Extension;
 
 use LAG\AdminBundle\Grid\Cell;
-use LAG\AdminBundle\Grid\Grid;
+use LAG\AdminBundle\Grid\GridView;
 use LAG\AdminBundle\Grid\View\CellRendererInterface;
 use LAG\AdminBundle\Grid\View\GridRendererInterface;
 use LAG\AdminBundle\Metadata\Operation;
@@ -28,7 +28,7 @@ class GridExtension extends AbstractExtension
         ];
     }
 
-    public function renderGrid(Grid $grid, Operation $operation): string
+    public function renderGrid(GridView $grid, Operation $operation): string
     {
         return $this->gridRenderer->render($grid, $operation);
     }

@@ -7,9 +7,11 @@ namespace LAG\AdminBundle\Twig\Extension;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Grid\View\LinkRendererInterface;
 use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
+use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
+use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -18,9 +20,10 @@ class AdminExtension extends AbstractExtension
     public function __construct(
         private bool $mediaBundleEnabled,
         private ApplicationConfiguration $applicationConfiguration,
-        private SecurityHelper $security,
+        private Security $security,
         private LinkRendererInterface $actionRenderer,
         private UrlGeneratorInterface $urlGenerator,
+        private ResourceRegistryInterface $registry,
     ) {
     }
 
@@ -42,7 +45,9 @@ class AdminExtension extends AbstractExtension
 
     public function isOperationAllowed(string $resourceName, string $operationName): bool
     {
-        return $this->security->isOperationAllowed($resourceName, $operationName);
+        $operation = $this->registry->get($resourceName)->getOperation($operationName);
+
+        return $this->security->isGranted(OperationPermissionVoter::RESOURCE_ACCESS, $operation);
     }
 
     /**
@@ -53,11 +58,15 @@ class AdminExtension extends AbstractExtension
         return $this->actionRenderer->render($action, $data, $options);
     }
 
-    public function getOperationUrl(OperationInterface $operation, mixed $data = null): string
+    public function getOperationUrl(
+        string $resource,
+        string $operation,
+        mixed $data = null
+    ): string
     {
         return $this->urlGenerator->generateFromOperationName(
-            $operation->getResource()->getName(),
-            $operation->getName(),
+            $resource,
+            $operation,
             $data,
         );
     }
