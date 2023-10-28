@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Tests\Twig\Extension;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Grid\View\LinkRendererInterface;
 use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Helper\SecurityHelper;
@@ -87,7 +87,7 @@ class AdminExtensionTest extends TestCase
 
     public function testGetOperationUrl(): void
     {
-        $operation = (new Index())
+        $operation = (new GetCollection())
             ->withName('my_operation')
             ->withResource(new AdminResource(name: 'my_resource'))
         ;
