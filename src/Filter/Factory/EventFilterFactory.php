@@ -17,19 +17,19 @@ class EventFilterFactory implements FilterFactoryInterface
     ) {
     }
 
-    public function create(FilterInterface $filter): FilterInterface
+    public function create(FilterInterface $filterDefinition): FilterInterface
     {
-        $event = new FilterEvent($filter);
+        $event = new FilterEvent($filterDefinition);
         $this->eventDispatcher->dispatch($event, FilterEvent::FILTER_CREATE);
-        $this->eventDispatcher->dispatch($event, sprintf(FilterEvent::FILTER_CREATE_PATTERN, $filter->getName()));
+        $this->eventDispatcher->dispatch($event, sprintf(FilterEvent::FILTER_CREATE_PATTERN, $filterDefinition->getName()));
 
-        $filter = $this->decorated->create($filter);
+        $filterDefinition = $this->decorated->create($filterDefinition);
 
-        $event = new FilterEvent($filter);
+        $event = new FilterEvent($filterDefinition);
         $this->eventDispatcher->dispatch($event, FilterEvent::FILTER_CREATED);
-        $this->eventDispatcher->dispatch($event, sprintf(FilterEvent::FILTER_CREATED_PATTERN, $filter->getName()));
+        $this->eventDispatcher->dispatch($event, sprintf(FilterEvent::FILTER_CREATED_PATTERN, $filterDefinition->getName()));
 
-        return $filter;
+        return $filterDefinition;
     }
 
     public function createFromProperty(PropertyInterface $property): FilterInterface
