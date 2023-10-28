@@ -15,32 +15,48 @@ class ApplicationConfiguration extends ServiceConfiguration
     protected function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setRequired('resource_paths')
-            ->setAllowedTypes('resource_paths', 'array')
+            ->define('name')
+            ->default('lag_admin')
+            ->allowedTypes('string')    
 
-            ->setDefault('translation_domain', 'admin')
-            ->setAllowedTypes('translation_domain', 'string')
+            ->define('title')
+            ->default('Admin Bundle')
+            ->allowedTypes('string')
 
-            ->setDefault('title', 'Admin Bundle')
-            ->setAllowedTypes('title', 'string')
 
-            ->setDefault('description', 'Admin Bundle')
-            ->setAllowedTypes('description', 'string')
+            ->define('resource_paths')
+            ->allowedTypes('array')
 
-            ->setDefault('date_format', 'medium')
-            ->setAllowedTypes('date_format', 'string')
+            ->define('translation_domain')
+            ->default('admin')
+            ->allowedTypes('string')
 
-            ->setDefault('time_format', 'short')
-            ->setAllowedTypes('time_format', 'string')
+            ->define('description')
+            ->default('Admin Bundle')
+            ->allowedTypes('string')
 
-            ->setDefault('date_localization', true)
-            ->setAllowedTypes('date_localization', 'boolean')
+            ->define('date_format')
+            ->default('medium')
+            ->allowedTypes('string')
 
-            ->setDefault('resource_events', true)
-            ->setAllowedTypes('resource_events', 'boolean')
+            ->define('time_format')
+            ->default('short')
+            ->allowedTypes('string')
 
-            ->setDefault('filter_events', true)
-            ->setAllowedTypes('filter_events', 'boolean')
+            ->define('date_localization')
+            ->default(true)
+            ->allowedTypes('boolean')
+
+            ->define('resource_events')
+            ->default(true)
+            ->allowedTypes('boolean')
+
+            ->define('filter_events')
+            ->default(true)
+            ->allowedTypes('boolean')
+
+            ->define('grids')
+            ->default([])
         ;
     }
 }
