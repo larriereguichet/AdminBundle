@@ -99,6 +99,10 @@ class DefaultOperationListener
             }
         }
 
+        if ($operation->getPermissions() === null) {
+            $operation = $operation->withPermissions($resource->getPermissions());
+        }
+
         $event->setOperation($operation);
     }
 

@@ -15,7 +15,7 @@ use Symfony\Component\String\Inflector\EnglishInflector;
 
 use function Symfony\Component\String\u;
 
-class ResourceCreateListener
+class DefaultResourceListener
 {
     public function __construct(
         private RouteNameGeneratorInterface $routeNameGenerator,
@@ -39,17 +39,21 @@ class ResourceCreateListener
 
     private function addResourceDefault(AdminResource $resource): AdminResource
     {
-        if (!$resource->getTitle()) {
+        if ($resource->getTitle() === null) {
             $inflector = new EnglishInflector();
             $resource = $resource->withTitle($inflector->pluralize($resource->getName())[0]);
         }
 
-        if (!$resource->getApplicationName()) {
+        if ($resource->getApplicationName() === null) {
             $resource = $resource->withApplicationName($this->applicationConfiguration->getString('name'));
         }
 
-        if (!$resource->getTranslationDomain()) {
+        if ($resource->getTranslationDomain() === null) {
             $resource = $resource->withTranslationDomain($this->applicationConfiguration->getString('translation_domain'));
+        }
+
+        if ($resource->getPermissions() === null) {
+            $resource = $resource->withPermissions([]);
         }
 
         return $resource;

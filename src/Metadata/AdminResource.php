@@ -8,30 +8,29 @@ use Attribute;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
 use LAG\AdminBundle\Exception\Operation\OperationMissingException;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AdminResource
 {
     public function __construct(
-        #[NotBlank]
+        #[Assert\NotBlank]
         private ?string $name = null,
 
-        #[NotBlank]
+        #[Assert\NotBlank]
         private ?string $dataClass = null,
 
-        #[NotBlank(allowNull: true)]
+        #[Assert\NotBlank(allowNull: true)]
         private ?string $title = null,
 
-        #[NotBlank(allowNull: true)]
+        #[Assert\NotBlank(allowNull: true)]
         private ?string $group = null,
 
-        #[NotBlank(allowNull: true)]
+        #[Assert\NotBlank(allowNull: true)]
         private ?string $icon = null,
 
         /** @var OperationInterface[] $operations */
-        #[Length(min: 1)]
+        #[Assert\Length(min: 1)]
         private array $operations = [
             new GetCollection(),
             new Get(),
@@ -40,10 +39,10 @@ class AdminResource
             new Delete(),
         ],
 
-        #[NotBlank]
+        #[Assert\NotBlank]
         private ?string $processor = ORMDataProcessor::class,
 
-        #[NotBlank]
+        #[Assert\NotBlank]
         private string $provider = ORMDataProvider::class,
 
         /** @var string[] $identifiers */
@@ -57,7 +56,7 @@ class AdminResource
 
         private ?string $translationDomain = null,
 
-        #[NotBlank]
+        #[Assert\NotBlank]
         private ?string $applicationName = null,
 
         private ?string $formType = null,
@@ -73,6 +72,9 @@ class AdminResource
         private ?array $normalizationContext = null,
 
         private ?array $denormalizationContext = null,
+
+        #[Assert\NotNull(message: 'The operation permission should not be null')]
+        private ?array $permissions = [],
     ) {
     }
 
@@ -370,6 +372,19 @@ class AdminResource
     {
         $self = clone $this;
         $self->denormalizationContext = $context;
+
+        return $self;
+    }
+
+    public function getPermissions(): ?array
+    {
+        return $this->permissions;
+    }
+
+    public function withPermissions(?array $permissions): self
+    {
+        $self = clone $this;
+        $self->permissions = $permissions;
 
         return $self;
     }
