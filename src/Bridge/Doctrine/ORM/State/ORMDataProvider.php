@@ -11,7 +11,7 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\QueryBuilder\QueryBuilderHelper;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\State\DataProviderInterface;
+use LAG\AdminBundle\State\Provider\DataProviderInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -36,20 +36,18 @@ class ORMDataProvider implements DataProviderInterface
         }
         /** @var EntityRepository $repository */
         $repository = $manager->getRepository($operation->getResource()->getDataClass());
-        // Add a suffix to avoid error if the resource is named with a reserved keyword
+        // Add a suffix to avoid error if the resource is named with a reserved keyword (like group)
         $rootAlias = $operation->getResource()->getName().'_entity';
 
         $queryBuilder = $repository->createQueryBuilder($rootAlias);
-        $helper = new QueryBuilderHelper(
-            $queryBuilder,
-            $manager->getClassMetadata($operation->getResource()->getDataClass()),
-        );
+        $classMetadata = $manager->getClassMetadata($operation->getResource()->getDataClass());
+        $helper = new QueryBuilderHelper($queryBuilder, $classMetadata);
 
         if ($operation instanceof CollectionOperationInterface) {
             $orderBy = $operation->getOrderBy();
 
             if (($context['sort'] ?? false) && ($context['order'] ?? false)) {
-                $orderBy[$context['sort']] = $context['order'];
+                $orderBy = [$context['sort'] => $context['order']];
             }
             $helper->addOrderBy($orderBy);
             $filters = [];
@@ -70,7 +68,7 @@ class ORMDataProvider implements DataProviderInterface
                     ->getResult()
                 ;
             }
-            $pager = new Pagerfanta(new QueryAdapter($helper->getQueryBuilder(), true));
+            $pager = new Pagerfanta(new QueryAdapter($helper->getQueryBuilder(), true, true));
             $pager->setMaxPerPage($operation->getItemPerPage());
             $pager->setCurrentPage($context['page'] ?? 1);
 
