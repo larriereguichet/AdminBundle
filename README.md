@@ -13,6 +13,7 @@
 - set nullable resource arrays to add difference between empty set array and not set array
 - check validation php attributes of metadata
 - batch actions
+- dynamic resource/operation request parameters
 
 # AdminBundle
 The AdminBundle helps you to create **flexible** and **robust** administration application.
