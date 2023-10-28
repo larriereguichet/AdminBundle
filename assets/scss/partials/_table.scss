@@ -1,0 +1,7 @@
+.admin-table.table {
+    @for $i from 1 through 3 {
+        .column-button-#{$i} {
+            min-width: $i * 130px;
+        }
+    }
+}
