@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Form\Type\Resource;
 
 use Symfony\Component\Form\AbstractType;
@@ -20,7 +22,7 @@ class TabResourceType extends AbstractType
         foreach ($form as $name => $child) {
             $tabName = $child->getConfig()->getOption('tab') ?? null;
 
-            if ($tabName === null || !array_key_exists($tabName, $view->vars['tabs'])) {
+            if ($tabName === null || !\array_key_exists($tabName, $view->vars['tabs'])) {
                 continue; // Will be rendered by form form_end()
             }
             $view->vars['tabs'][$tabName][$name] = $child;

@@ -12,8 +12,6 @@ use LAG\AdminBundle\Grid\Row;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-use function Symfony\Component\String\u;
-
 class GridFactory implements GridFactoryInterface
 {
     public function __construct(
@@ -42,7 +40,7 @@ class GridFactory implements GridFactoryInterface
             $fields = [];
 
             foreach ($operation->getProperties() as $property) {
-                if (array_key_exists($property::class, $grid->getTemplateMapping())) {
+                if (\array_key_exists($property::class, $grid->getTemplateMapping())) {
                     $property = $property->withTemplate($grid->getTemplateMapping()[$property::class]);
                 }
                 $fields[$property->getName()] = $this->cellFactory->create($property, $item);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Form\Type\Resource;
 
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
@@ -21,7 +23,7 @@ class ResourceChoiceType extends AbstractType
     {
         $resolver
             ->addNormalizer('choices', function (Options $options, $value) {
-                if (count($value) > 0) {
+                if (\count($value) > 0) {
                     return $value;
                 }
                 $resource = $this->registry->get($options->offsetGet('resource'));

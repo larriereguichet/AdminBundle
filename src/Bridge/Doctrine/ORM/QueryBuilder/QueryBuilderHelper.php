@@ -38,7 +38,7 @@ class QueryBuilderHelper
             } else {
                 if ($this->metadata->hasField($propertyPath->toString())) {
                     $this->queryBuilder->addOrderBy(
-                        $propertyPath->prepend($this->rootAlias . '.')->toString(),
+                        $propertyPath->prepend($this->rootAlias.'.')->toString(),
                         $order
                     );
                 }
@@ -103,9 +103,8 @@ class QueryBuilderHelper
                     $this->queryBuilder->setParameter($parameterName2, $filter->getData()[1]);
 
                     continue;
-                }
-                elseif ($filter->getComparator() === 'like') {
-                    if (is_string($data)) {
+                } elseif ($filter->getComparator() === 'like') {
+                    if (\is_string($data)) {
                         $data = '%'.$data.'%';
                     } else {
                         $data = '%'.$data->__toString().'%';

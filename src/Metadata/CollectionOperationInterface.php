@@ -8,7 +8,7 @@ use LAG\AdminBundle\Metadata\Filter\FilterInterface;
 
 /**
  * Interface for collection operations. It adds the required attributes for collection handling to the item operation
- * interface
+ * interface.
  */
 interface CollectionOperationInterface extends OperationInterface
 {

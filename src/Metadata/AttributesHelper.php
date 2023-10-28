@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Entity\Mapping\Sluggable;
-
 class AttributesHelper
 {
     public static function getReflectionClassesFromDirectories(string $path): \Iterator

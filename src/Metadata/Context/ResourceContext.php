@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata\Context;
 
 use LAG\AdminBundle\Exception\Exception;

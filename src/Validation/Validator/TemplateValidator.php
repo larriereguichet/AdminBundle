@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Validation\Validator;
 
 use Symfony\Component\Validator\Constraint;
@@ -11,13 +13,12 @@ class TemplateValidator extends ConstraintValidator
 {
     public function __construct(
         private Environment $environment,
-    )
-    {
+    ) {
     }
 
     public function validate(mixed $value, Constraint $constraint): void
     {
-        if (!is_string($value)) {
+        if (!\is_string($value)) {
             throw new UnexpectedTypeException($value, 'string');
         }
 

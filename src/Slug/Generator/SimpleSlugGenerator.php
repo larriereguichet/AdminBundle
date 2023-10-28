@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Slug\Generator;
 
 use Symfony\Component\String\Slugger\AsciiSlugger;
+
 use function Symfony\Component\String\u;
 
 class SimpleSlugGenerator implements SlugGeneratorInterface

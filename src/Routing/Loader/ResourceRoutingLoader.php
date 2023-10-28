@@ -59,7 +59,6 @@ class ResourceRoutingLoader extends Loader
                 LAGAdminBundle::REQUEST_PARAMETER_ACTION => $operation->getName(),
             ];
 
-
             $route = new Route($path, $defaults, [], $identifiers, null, [], $operation->getMethods());
             $routes->add($operation->getRoute(), $route);
         }

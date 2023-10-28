@@ -11,6 +11,7 @@ use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 use function Symfony\Component\String\u;
 
 class ResourceMenuBuilder extends AbstractMenuBuilder

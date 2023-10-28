@@ -10,8 +10,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-use function Symfony\Component\String\u;
-
 class ChoiceTypeExtension extends AbstractTypeExtension
 {
     public static function getExtendedTypes(): iterable

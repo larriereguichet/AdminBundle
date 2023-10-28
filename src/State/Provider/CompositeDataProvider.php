@@ -24,10 +24,6 @@ class CompositeDataProvider implements DataProviderInterface
             }
         }
 
-        throw new Exception(sprintf(
-            'The admin resource "%s" and operation "%s" is not supported by any provider',
-            $operation->getResource()->getName(),
-            $operation->getName())
-        );
+        throw new Exception(sprintf('The admin resource "%s" and operation "%s" is not supported by any provider', $operation->getResource()->getName(), $operation->getName()));
     }
 }

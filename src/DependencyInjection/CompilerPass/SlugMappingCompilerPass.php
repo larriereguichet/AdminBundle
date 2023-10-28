@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\DependencyInjection\CompilerPass;
 
 use LAG\AdminBundle\Slug\Generator\CompositeSlugGenerator;
@@ -9,7 +11,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class SlugMappingCompilerPass implements CompilerPassInterface
 {
-
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition(CompositeSlugGenerator::class)) {

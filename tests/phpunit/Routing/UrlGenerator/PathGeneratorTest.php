@@ -19,7 +19,7 @@ class PathGeneratorTest extends TestCase
         string $resourcePrefix,
         ?string $operationPath,
         string $expectedPath,
-        ?array $routeParameters = null,
+        array $routeParameters = null,
     ): void {
         $resource = (new AdminResource())
             ->withName($resourceName)

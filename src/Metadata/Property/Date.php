@@ -8,8 +8,8 @@ class Date extends AbstractProperty
 {
     public function __construct(
         string $name,
-        ?string $propertyPath = null,
-        ?string $label = null,
+        string $propertyPath = null,
+        string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/date.html.twig',
         bool $sortable = true,
         array $attr = [],

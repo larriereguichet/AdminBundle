@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Grid\Registry;
 
-use CuyZ\Valinor\Mapper\Source\Source;
-use CuyZ\Valinor\MapperBuilder;
 use LAG\AdminBundle\Exception\Grid\InvalidGridConfigurationException;
 use LAG\AdminBundle\Grid\Grid;
 use LAG\AdminBundle\Grid\GridInterface;
@@ -29,7 +29,7 @@ class GridRegistry implements GridRegistryInterface
 
     public function has(string $name): bool
     {
-        return array_key_exists($name, $this->grids);
+        return \array_key_exists($name, $this->grids);
     }
 
     public function all(): iterable
@@ -41,10 +41,7 @@ class GridRegistry implements GridRegistryInterface
     {
         foreach ($gridsConfiguration as $gridName => $gridConfiguration) {
             $gridConfiguration['name'] = $gridName;
-            $grid = (new MapperBuilder())
-                ->mapper()
-                ->map(Grid::class, Source::array($gridConfiguration ?? [])->camelCaseKeys())
-            ;
+            $grid = new Grid(...$gridConfiguration);
             $errors = $this->validator->validate($grid, [new Valid()]);
 
             if ($errors->count() > 0) {

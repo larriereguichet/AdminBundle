@@ -16,7 +16,6 @@ use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceChoiceType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceType;
 use LAG\AdminBundle\Form\Type\Security\LoginType;
-use LAG\AdminBundle\Form\Type\TinyMce\TinyMceType;
 use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\State\Provider\DataProviderInterface;
@@ -25,10 +24,6 @@ return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     // Form types
-    $services->set(TinyMceType::class)
-        ->tag('form.type')
-    ;
-
     $services->set(ResourceType::class)
         ->arg('$context', service(ResourceContextInterface::class))
         ->arg('$requestStack', service('request_stack'))

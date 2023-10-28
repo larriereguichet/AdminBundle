@@ -1,7 +1,8 @@
 <?php
 
-namespace LAG\AdminBundle\Validation\Constraint;
+declare(strict_types=1);
 
+namespace LAG\AdminBundle\Validation\Constraint;
 
 use LAG\AdminBundle\Validation\Validator\GridExistValidator;
 use Symfony\Component\Validator\Constraint;

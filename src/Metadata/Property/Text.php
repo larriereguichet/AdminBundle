@@ -8,12 +8,12 @@ class Text extends AbstractProperty
 {
     public function __construct(
         string $name,
-        ?string $propertyPath = null,
-        ?string $label = null,
+        string $propertyPath = null,
+        string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/text.html.twig',
         bool $sortable = true,
         bool $translatable = false,
-        ?string $translationDomain = null,
+        string $translationDomain = null,
         array $attr = [],
         array $headerAttr = [],
         private int $length = 100,

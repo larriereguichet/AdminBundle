@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
-
 interface PropertyInterface
 {
     public function getName(): string;

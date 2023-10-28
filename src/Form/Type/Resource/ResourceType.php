@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Form\Type\Resource;
 
 use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ResourceType extends AbstractType

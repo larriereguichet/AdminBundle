@@ -9,6 +9,7 @@ use LAG\AdminBundle\Metadata\Property\Collection;
 use LAG\AdminBundle\Metadata\Property\Count;
 use LAG\AdminBundle\Metadata\Property\Date;
 use LAG\AdminBundle\Metadata\Property\Text;
+
 use function Symfony\Component\String\u;
 
 class MetadataPropertyFactory implements MetadataPropertyFactoryInterface

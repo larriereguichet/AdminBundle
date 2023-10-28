@@ -59,7 +59,7 @@ class ResourceCreateListener
     {
         if (!$operation->getName()) {
             $operation = $operation->withName(
-                u(\get_class($operation))
+                u($operation::class)
                     ->afterLast('\\')
                     ->snake()
                     ->lower()

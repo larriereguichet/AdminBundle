@@ -59,17 +59,11 @@ class AdminExtension extends AbstractExtension
         string $resource,
         string $operation,
         mixed $data = null
-    ): string
-    {
+    ): string {
         return $this->urlGenerator->generateFromOperationName(
             $resource,
             $operation,
             $data,
         );
-    }
-
-    public function isMediaBundleEnabled(): bool
-    {
-        return $this->mediaBundleEnabled;
     }
 }

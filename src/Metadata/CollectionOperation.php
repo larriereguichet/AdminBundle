@@ -9,34 +9,33 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
 use LAG\AdminBundle\Validation\Constraint\GridExist;
-use LAG\AdminBundle\Validation\Constraint\TemplateValid;
 
 abstract class CollectionOperation extends Operation implements CollectionOperationInterface
 {
     public function __construct(
-        ?string $name = null,
-        ?string $title = null,
-        ?string $description = null,
-        ?string $icon = null,
-        ?string $template = null,
+        string $name = null,
+        string $title = null,
+        string $description = null,
+        string $icon = null,
+        string $template = null,
         array $permissions = [],
-        ?string $controller = null,
-        ?string $route = null,
+        string $controller = null,
+        string $route = null,
         array $routeParameters = [],
         array $methods = [],
         string $path = null,
-        ?string $redirectRoute = null,
+        string $redirectRoute = null,
         array $redirectRouteParameters = [],
         array $properties = [],
-        ?string $formType = null,
+        string $formType = null,
         array $formOptions = [],
         ?string $processor = ORMDataProcessor::class,
         string $provider = ORMDataProvider::class,
         array $identifiers = ['id'],
-        ?array $contextualActions = null,
-        ?array $itemActions = null,
-        ?string $redirectResource = null,
-        ?string $redirectOperation = null,
+        array $contextualActions = null,
+        array $itemActions = null,
+        string $redirectResource = null,
+        string $redirectOperation = null,
         private bool $pagination = true,
         private int $itemPerPage = 25,
         private string $pageParameter = 'page',

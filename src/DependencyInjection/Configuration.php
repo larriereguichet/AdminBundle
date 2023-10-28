@@ -43,7 +43,7 @@ class Configuration implements ConfigurationInterface
                         'card' => [
                             'template' => '@LAGAdmin/grids/card_grid.html.twig',
                             'template_mapping' => [
-                                Image::class => '@LAGAdmin/grids/cards/card_image.html.twig'
+                                Image::class => '@LAGAdmin/grids/cards/card_image.html.twig',
                             ],
                         ],
                     ])
