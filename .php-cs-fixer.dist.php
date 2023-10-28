@@ -1,6 +1,7 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
+    ->in('config/')
     ->in('src/')
     ->in('tests/phpunit/')
     ->exclude([
