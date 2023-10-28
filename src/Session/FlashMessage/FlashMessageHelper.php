@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Session\FlashMessage;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
-
+// TODO remove ?
 class FlashMessageHelper
 {
     public function __construct(
