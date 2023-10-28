@@ -7,8 +7,8 @@ namespace LAG\AdminBundle\Debug\DataCollector;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -101,7 +101,7 @@ class AdminDataCollector extends DataCollector
             'routeParameters' => $operation->getRouteParameters(),
             'methods' => $operation->getMethods(),
             'path' => $operation->getPath(),
-            'targetRoute' => $operation->getTargetRoute(),
+            'targetRoute' => $operation->getRedirectRoute(),
             'targetRouteParameters' => $operation->getRouteParameters(),
             // 'properties' => $operation->getProperties(),
             'formType' => $operation->getFormType(),
