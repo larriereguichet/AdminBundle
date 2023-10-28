@@ -6,12 +6,11 @@ namespace LAG\AdminBundle\Bridge\KnpMenu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-
 use function Symfony\Component\String\u;
 
 class ResourceMenuBuilder extends AbstractMenuBuilder
@@ -40,7 +39,7 @@ class ResourceMenuBuilder extends AbstractMenuBuilder
 
         foreach ($this->resourceRegistry->all() as $resource) {
             foreach ($resource->getOperations() as $operation) {
-                if (!$operation instanceof Index) {
+                if (!$operation instanceof GetCollection) {
                     continue;
                 }
                 $label = $inflector->pluralize(u($resource->getName())->snake()->toString())[0];
