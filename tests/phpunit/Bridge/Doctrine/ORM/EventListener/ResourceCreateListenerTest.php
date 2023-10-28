@@ -8,8 +8,8 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\ResourceCreateListener;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
 use LAG\AdminBundle\Event\Events\ResourceEvent;
 use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Property\StringProperty;
+use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Property\Text;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -20,10 +20,10 @@ class ResourceCreateListenerTest extends TestCase
 
     public function testInvoke(): void
     {
-        $property = new StringProperty('a_property');
+        $property = new Text('a_property');
         $resource = new AdminResource();
         $resource = $resource
-            ->withOperations([new Index()])
+            ->withOperations([new GetCollection()])
             ->withDataClass('TestClass')
         ;
 

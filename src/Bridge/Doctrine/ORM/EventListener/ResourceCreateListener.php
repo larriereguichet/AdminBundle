@@ -9,7 +9,7 @@ use LAG\AdminBundle\Event\Events\ResourceEvent;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\OperationInterface;
 
-class ResourceCreateListener
+readonly class ResourceCreateListener
 {
     public function __construct(
         private MetadataPropertyFactoryInterface $propertyFactory,
@@ -22,19 +22,12 @@ class ResourceCreateListener
         $operations = [];
 
         foreach ($resource->getOperations() as $operation) {
-            $operation = $this->addOperationDefault($resource, $operation);
+            if (count($operation->getProperties()) === 0) {
+                $operation = $operation->withProperties($this->propertyFactory->createProperties($resource->getDataClass()));
+            }
             $operations[$operation->getName()] = $operation;
         }
         $resource = $resource->withOperations($operations);
         $event->setResource($resource);
-    }
-
-    private function addOperationDefault(AdminResource $resource, OperationInterface $operation): OperationInterface
-    {
-        if (\count($operation->getProperties()) === 0) {
-            $operation = $operation->withProperties($this->propertyFactory->createProperties($resource->getDataClass()));
-        }
-
-        return $operation;
     }
 }
