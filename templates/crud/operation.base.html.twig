@@ -3,3 +3,35 @@
 {% block page_title %}{{ operation.title|admin_trans }} - {{ parent() }}{% endblock %}
 
 {% block title %}{{ operation.title|admin_trans }}{% endblock %}
+
+{% block content %}
+    <div class="admin-index admin-{{ resource.name }} admin-{{ operation.name }}">
+
+        {% block form %}
+            {{ form_start(form) }}
+
+            {% block form_content %}
+                {% include form.vars.options.formTemplate|default('@LAGAdmin/forms/form.html.twig') %}
+            {% endblock %}
+
+            {% block form_buttons %}
+                <div class="row mt-3 justify-content-end">
+                    <div class="col-5 text-end">
+                        <div class="btn-group">
+                            {% for action in operation.itemActions %}
+                                {{ lag_admin_action(action, data) }}
+                            {% endfor %}
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                {{ 'lag_admin.ui.save'|trans({}, operation.resource.translationDomain) }}
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            {% endblock %}
+
+            {{ form_end(form) }}
+        {% endblock %}
+    </div>
+{% endblock %}
