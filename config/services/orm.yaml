@@ -4,27 +4,27 @@ services:
         arguments:
             $registry: '@doctrine'
         tags:
-            - { name: lag_admin.data_provider, identifier: doctrine }
+            - {name: lag_admin.data_provider, identifier: doctrine, priority: 0}
 
     # Data providers
     LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor:
         arguments:
             $registry: '@doctrine'
         tags:
-            - { name: lag_admin.data_processor, identifier: doctrine }
+            - {name: lag_admin.data_processor, identifier: doctrine, priority: 0}
 
     # Event listeners
     LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\ResourceCreateListener:
         arguments:
             $propertyFactory: '@lag_admin.orm.property_factory'
         tags:
-            - { name: kernel.event_listener, event: lag_admin.admin.create, priority: 200 }
+            - {name: kernel.event_listener, event: lag_admin.resource.create, priority: 200}
 
     LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\OperationCreateListener:
         arguments:
             $filterFactory: '@lag_admin.filter.factory'
         tags:
-            - { name: kernel.event_listener, event: lag_admin.operation.create, priority: 256 }
+            - {name: kernel.event_listener, event: lag_admin.operation.create, priority: 256}
 
     # Property provider
     lag_admin.orm.property_factory: '@LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface'
