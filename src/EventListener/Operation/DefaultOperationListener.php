@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventListener\Operation;
 
 use LAG\AdminBundle\Event\Events\OperationEvent;
-use LAG\AdminBundle\Form\Type\OperationDataType;
+use LAG\AdminBundle\Form\Type\DataType;
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
+use LAG\AdminBundle\Form\Type\Resource\ResourceType;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
-use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Update;
 
-class OperationCreateListener
+class DefaultOperationListener
 {
     public function __invoke(OperationEvent $event): void
     {
@@ -26,19 +27,36 @@ class OperationCreateListener
 
         if (!$operation->getFormType()) {
             if ($operation instanceof Create || $operation instanceof Update) {
-                $operation = $operation
-                    ->withFormType(OperationDataType::class)
-                    ->withFormOptions(['exclude' => $resource->getIdentifiers()])
-                ;
+                if ($resource->getFormType()) {
+                    $operation = $operation
+                        ->withFormType($resource->getFormType())
+                        ->withFormOptions($resource->getFormOptions())
+                    ;
+                } else {
+                    $operation = $operation
+                        ->withFormType(DataType::class)
+                        ->withFormOptions([
+                            'exclude' => $resource->getIdentifiers(),
+                            'data_class' => $resource->getDataClass(),
+                        ])
+                    ;
+                }
             }
 
-            if ($operation instanceof Index && \count($operation->getFilters() ?? []) > 0) {
+            if ($operation instanceof GetCollection && \count($operation->getFilters() ?? []) > 0) {
                 $operation = $operation->withFormType(FilterType::class);
             }
         }
 
         if (is_a($operation->getFormType(), FilterType::class, true) && !\array_key_exists('operation', $operation->getFormOptions())) {
-            $operation = $operation->withFormOptions(['operation' => $operation]);
+            $operation = $operation->withFormOptions([
+                'resource' => $resource->getName(),
+                'operation' => $operation->getName(),
+            ]);
+        }
+
+        if (is_a($operation->getFormType(), ResourceType::class, true) && !\array_key_exists('resource', $operation->getFormOptions())) {
+            $operation = $operation->withFormOptions(['resource' => $resource->getName()]);
         }
 
         if ($operation instanceof Delete && $operation->getFormType() === DeleteType::class) {
@@ -53,6 +71,32 @@ class OperationCreateListener
 
         if (!$operation->getItemActions()) {
             $operation = $this->withDefaultItemActions($resource, $operation);
+        }
+
+        if (!$operation->getRedirectRouteParameters()) {
+            $operation = $operation->withRedirectRouteParameters([]);
+        }
+
+        if ($resource->isValidationEnabled() !== null) {
+            if ($operation->isValidationEnabled() === null) {
+                $operation = $operation->withValidation($resource->isValidationEnabled());
+            }
+
+            if ($resource->getValidationContext() !== null) {
+                if ($operation->getValidationContext() === null) {
+                    $operation = $operation->withValidationContext($resource->getValidationContext());
+                }
+            }
+        }
+
+        if ($resource->hasAjax() !== null) {
+            if ($operation->isSerializationEnabled() === null) {
+                $operation = $operation->withSerialization($resource->hasAjax());
+            }
+
+            if ($resource->getNormalizationContext() !== null) {
+                $operation = $operation->withSerializerContext($resource->getNormalizationContext());
+            }
         }
 
         $event->setOperation($operation);
