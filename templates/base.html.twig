@@ -29,11 +29,6 @@
               href="{{ asset('/bundles/lagadmin/bootstrap.css') }}"/>
         <link rel="stylesheet"
               href="{{ asset('/bundles/lagadmin/choice-js.css') }}"/>
-
-        {% if lag_admin_media_bundle_enabled() %}
-            <link rel="stylesheet"
-                  href="{{ asset('/bundles/jkmedia/media.css') }}"/>
-        {% endif %}
     {% endblock %}
 
     {% block javascripts %}

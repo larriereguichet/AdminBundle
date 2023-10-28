@@ -9,7 +9,6 @@ use LAG\AdminBundle\Grid\View\LinkRendererInterface;
 use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
-use LAG\AdminBundle\Security\Helper\SecurityHelper;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
 use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
@@ -18,7 +17,6 @@ use Twig\TwigFunction;
 class AdminExtension extends AbstractExtension
 {
     public function __construct(
-        private bool $mediaBundleEnabled,
         private ApplicationConfiguration $applicationConfiguration,
         private Security $security,
         private LinkRendererInterface $actionRenderer,
@@ -34,7 +32,6 @@ class AdminExtension extends AbstractExtension
             new TwigFunction('lag_admin_operation_allowed', [$this, 'isOperationAllowed']),
             new TwigFunction('lag_admin_action', [$this, 'renderAction'], ['is_safe' => ['html']]),
             new TwigFunction('lag_admin_operation_url', [$this, 'getOperationUrl'], ['is_safe' => ['html']]),
-            new TwigFunction('lag_admin_media_bundle_enabled', [$this, 'isMediaBundleEnabled']),
         ];
     }
 
