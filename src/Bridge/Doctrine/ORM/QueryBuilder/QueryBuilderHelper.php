@@ -37,7 +37,19 @@ class QueryBuilderHelper
                 }
             } else {
                 if ($this->metadata->hasField($propertyPath->toString())) {
-                    $this->queryBuilder->addOrderBy($propertyPath->prepend($this->rootAlias.'.')->toString(), $order);
+                    $this->queryBuilder->addOrderBy(
+                        $propertyPath->prepend($this->rootAlias . '.')->toString(),
+                        $order
+                    );
+                }
+
+                if ($this->metadata->isSingleValuedAssociation($propertyPath->toString())) {
+                    $joinProperty = $propertyPath->prepend('.')->prepend($this->rootAlias)->toString();
+
+                    if (!$this->hasJoin($propertyPath->toString())) {
+                        $this->queryBuilder->innerJoin($joinProperty, $propertyPath->toString());
+                    }
+                    // TODO wip order by join
                 }
             }
         }
@@ -59,12 +71,10 @@ class QueryBuilderHelper
                 continue;
             }
 
-            if ($propertyPath->containsAny('.')) {
-                // TODO
-            } elseif ($this->metadata->hasField($propertyPath->toString())) {
+            if ($this->metadata->hasField($propertyPath->toString())) {
                 $method = $filter->getOperator() === 'and' ? 'andWhere' : 'orWhere';
 
-                if ('between' === $filter->getComparator()) {
+                if ($filter->getComparator() === 'between') {
                     if (!\is_array($data) || \count($data) === 2) {
                         throw new Exception('Parameters for a between comparison filter are invalid');
                     }
@@ -94,14 +104,18 @@ class QueryBuilderHelper
 
                     continue;
                 }
-                if ($filter->getComparator() === 'like') {
-                    $data = '%'.$filter->getData().'%';
+                elseif ($filter->getComparator() === 'like') {
+                    if (is_string($data)) {
+                        $data = '%'.$data.'%';
+                    } else {
+                        $data = '%'.$data->__toString().'%';
+                    }
                 }
                 $parameterName = u($filter->getName())->prepend('filter_')->snake()->toString();
 
                 $dql = sprintf(
                     '%s.%s %s :%s',
-                    'entity',
+                    $this->rootAlias,
                     $filter->getName(),
                     $filter->getComparator(),
                     $parameterName
@@ -137,7 +151,7 @@ class QueryBuilderHelper
     {
         $dqlPart = $this->queryBuilder->getDQLPart('join');
 
-        foreach ($dqlPart as $rootAlias => $joins) {
+        foreach ($dqlPart as $joins) {
             /** @var Join $join */
             foreach ($joins as $join) {
                 if ($join->getAlias() === $joinAlias.'_resource') {
