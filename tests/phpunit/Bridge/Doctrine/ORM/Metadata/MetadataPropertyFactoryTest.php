@@ -8,11 +8,11 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactory;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
-use LAG\AdminBundle\Metadata\Property\BooleanProperty;
-use LAG\AdminBundle\Metadata\Property\CountProperty;
-use LAG\AdminBundle\Metadata\Property\DateProperty;
+use LAG\AdminBundle\Metadata\Property\Boolean;
+use LAG\AdminBundle\Metadata\Property\Count;
+use LAG\AdminBundle\Metadata\Property\Date;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
-use LAG\AdminBundle\Metadata\Property\StringProperty;
+use LAG\AdminBundle\Metadata\Property\Text;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -64,13 +64,13 @@ class MetadataPropertyFactoryTest extends TestCase
             $this->assertInstanceOf(PropertyInterface::class, $property);
 
             if ($property->getName() === 'my_string') {
-                $this->assertInstanceOf(StringProperty::class, $property);
+                $this->assertInstanceOf(Text::class, $property);
             } elseif ($property->getName() === 'my_boolean') {
-                $this->assertInstanceOf(BooleanProperty::class, $property);
+                $this->assertInstanceOf(Boolean::class, $property);
             } elseif ($property->getName() === 'my_date') {
-                $this->assertInstanceOf(DateProperty::class, $property);
+                $this->assertInstanceOf(Date::class, $property);
             } elseif ($property->getName() === 'my_association') {
-                $this->assertInstanceOf(CountProperty::class, $property);
+                $this->assertInstanceOf(Count::class, $property);
             } else {
                 $this->fail();
             }
@@ -123,13 +123,13 @@ class MetadataPropertyFactoryTest extends TestCase
             $this->assertInstanceOf(PropertyInterface::class, $property);
 
             if (u($property->getName())->startsWith('my_string')) {
-                $this->assertInstanceOf(StringProperty::class, $property);
+                $this->assertInstanceOf(Text::class, $property);
             } elseif ($property->getName() === 'my_boolean') {
-                $this->assertInstanceOf(BooleanProperty::class, $property);
+                $this->assertInstanceOf(Boolean::class, $property);
             } elseif ($property->getName() === 'my_date') {
-                $this->assertInstanceOf(DateProperty::class, $property);
+                $this->assertInstanceOf(Date::class, $property);
             } elseif ($property->getName() === 'my_association') {
-                $this->assertInstanceOf(CountProperty::class, $property);
+                $this->assertInstanceOf(Count::class, $property);
             } else {
                 $this->fail();
             }
@@ -175,7 +175,7 @@ class MetadataPropertyFactoryTest extends TestCase
         $this->assertCount(\count($types), $properties);
 
         foreach ($properties as $property) {
-            $this->assertInstanceOf(CountProperty::class, $property);
+            $this->assertInstanceOf(Count::class, $property);
         }
     }
 
