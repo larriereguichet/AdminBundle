@@ -1,0 +1,178 @@
+{% extends 'bootstrap_5_layout.html.twig' %}
+
+{% block form_errors -%}
+    {% if errors|length > 0 -%}
+        {% if form.parent %}<span class="form-text">{% else %}<div class="alert alert-danger">{% endif %}
+
+        <ul class="list-unstyled">
+            {%- for error in errors -%}
+                <li><span class="fa fa-exclamation-triangle"></span> {{ error.message }}</li>
+            {%- endfor -%}
+        </ul>
+
+        {% if form.parent %}</span>{% else %}</div>{% endif %}
+    {%- endif %}
+{%- endblock form_errors %}
+
+{% block collection_widget %}
+    <div class="collection-widget">
+        {% if prototype is defined and not prototype.rendered %}
+            {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
+        {% endif %}
+        {{- block('form_widget') -}}
+
+        {% if form.vars.allow_add %}
+            <div class="button-container">
+                <button type="button"
+                        class="btn btn-primary add-button">{{ 'lag.admin.add' | trans }}</button>
+            </div>
+        {% endif %}
+    </div>
+{% endblock collection_widget %}
+
+{% block select2_entity_widget %}
+    <div class="">
+        {{ block('choice_widget_collapsed') }}
+    </div>
+{% endblock %}
+
+{%- block datetime_row -%}
+    <div class="mb-3">
+        {{ form_row(form) }}
+    </div>
+{%- endblock datetime_row -%}
+
+{%- block datetime_widget -%}
+    {%- if widget == 'single_text' -%}
+        {{- block('form_widget_simple') -}}
+    {%- else -%}
+        {% if not valid %}
+            {% set attr = attr|merge({class: (attr.class|default('') ~ ' is-invalid')|trim}) -%}
+            {% set valid = true %}
+        {% endif %}
+
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' is-invalid')|trim}) -%}
+
+        <div {{ block('widget_container_attributes') }}>
+            <div class="col-8">
+                {{- form_widget(form.date, { datetime: true } ) -}}
+                {{- form_errors(form.date) -}}
+            </div>
+            <div class="col">
+                {{- form_widget(form.time, { datetime: true } ) -}}
+                {{- form_errors(form.time) -}}
+            </div>
+        </div>
+    {%- endif -%}
+{%- endblock datetime_widget %}
+
+{% block lag_admin_image_row %}
+    <div data-controller="lag-admin-image-form">
+        {{ form_row(form) }}
+    </div>
+{% endblock %}
+
+{% block lag_admin_image_widget %}
+    {% if data %}
+        <div class="image-card">
+            <div class="card"
+                 style="width: 100px">
+                <img src="{{ vich_uploader_asset(data, form.vars.image_property) }}"
+                     alt="">
+            </div>
+            <a href=""
+               data-action="lag-admin-image-form#hideImage:prevent">{{ 'lag_admin.image.remove_image'|trans({}, 'admin') }}</a>
+        </div>
+    {% endif %}
+
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block lag_admin_image_choice_widget %}
+    {% set data = form.vars.data %}
+
+    <a href="#"
+       data-controller="lag-admin-modal"
+       data-action="lag-admin-modal#openModal:prevent"
+       data-target="#{{ form.vars.id }}-modal">
+        {{ 'lag_admin.image.add_image'|trans({}, 'admin') }}
+    </a>
+
+    <div id="{{ form.vars.id }}-modal"
+         class="modal fade"
+         tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="min-height: 325px">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ 'lag_admin.image.add_image'|trans({}, 'admin') }}</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs"
+                        role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active"
+                               data-bs-toggle="tab"
+                               data-bs-target="#upload-tab"
+                               href="#">{{ 'lag_admin.image.upload_from_computer'|trans({}, 'admin') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               data-bs-toggle="tab"
+                               data-bs-target="#gallery-tab"
+                               href="#">{{ 'lag_admin.image.choose_in_gallery'|trans({}, 'admin') }}</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="upload-tab"
+                             class="tab-pane show"
+                             role="tabpanel"
+                             tabindex="0">
+                            {{ form_row(form.upload) }}
+                        </div>
+                        <div id="gallery-tab"
+                             class="tab-pane"
+                             role="tabpanel"
+                             tabindex="1">
+                            {{ form_row(form.gallery) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-primary"
+                            data-bs-dismiss="modal">
+                        {{ 'lag_admin.ui.save'|trans({}, 'admin') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock lag_admin_image_choice_widget %}
+
+{% block lag_admin_gallery_widget %}
+    {% set images = form.vars.choices %}
+
+    {% if images|length > 0 %}
+        <div class="row row-cols-3 g-4">
+            {% for image in images %}
+                <div class="col">
+                    <div class="card">
+                        <img src="..."
+                             class="card-img-top"
+                             alt="...">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info"
+             role="alert">
+            {{ 'lag_admin.image.no_image_in_gallery'|trans({}, 'admin') }}
+        </div>
+    {% endif %}
+{% endblock lag_admin_gallery_widget %}
