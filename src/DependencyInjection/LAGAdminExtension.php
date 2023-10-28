@@ -19,11 +19,13 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
-        $loader->load('services.yaml');
+        $locator = new FileLocator(__DIR__ . '/../../config');
+        $loader = new Loader\PhpFileLoader($container, $locator);
+        $loader->load('services.php');
+
 
         if ($container->getParameter('kernel.environment') === 'dev') {
-            $loader->load('services_dev.yaml');
+            $loader->load('services_dev.php');
         }
         $container->setParameter('lag_admin.application.configuration', $config);
         $container->setParameter('lag_admin.resource_paths', $config['resource_paths']);

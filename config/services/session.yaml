@@ -1,4 +1,0 @@
-services:
-    LAG\AdminBundle\Session\FlashMessage\FlashMessageHelper:
-        arguments:
-            $requestStack: '@request_stack'

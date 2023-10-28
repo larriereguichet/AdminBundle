@@ -1,8 +1,0 @@
-services:
-    lag_admin.link.renderer: '@LAG\AdminBundle\Grid\View\LinkRendererInterface'
-    LAG\AdminBundle\Grid\View\LinkRendererInterface:
-        class: LAG\AdminBundle\Grid\View\LinkRenderer
-        arguments:
-            $urlGenerator: '@lag_admin.routing.url_generator'
-            $validator: '@validator'
-            $environment: '@twig'

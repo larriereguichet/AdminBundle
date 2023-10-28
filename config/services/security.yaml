@@ -1,6 +1,0 @@
-services:
-    # Voters
-    LAG\AdminBundle\Security\Voter\OperationPermissionVoter:
-        arguments:
-            $security: '@security.helper'
-        tags: ['security.voter']
