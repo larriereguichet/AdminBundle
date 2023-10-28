@@ -14,12 +14,6 @@ services:
             $validator: '@validator'
             $decorated: '@.inner'
 
-    LAG\AdminBundle\Metadata\Factory\ResourceFactoryCacheDecorator:
-        decorates: 'lag_admin.resource.factory'
-        decoration_priority: -10
-        arguments:
-            $decorated: '@.inner'
-
     # Operations factories
     lag_admin.operation.factory: '@LAG\AdminBundle\Metadata\Factory\OperationFactoryInterface'
     LAG\AdminBundle\Metadata\Factory\OperationFactoryInterface:
