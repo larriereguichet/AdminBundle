@@ -16,7 +16,7 @@ class RedirectHandler implements RedirectHandlerInterface
     ) {
     }
 
-    public function createRedirectResponse(OperationInterface $operation, mixed $data): Response
+    public function createRedirectResponse(OperationInterface $operation, mixed $data, array $context = []): Response
     {
         if ($operation->getRedirectResource() && $operation->getRedirectOperation()) {
             $redirectUrl = $this->urlGenerator->generateFromOperationName(

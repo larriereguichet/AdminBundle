@@ -9,5 +9,5 @@ use Symfony\Component\HttpFoundation\Response;
 
 interface RedirectHandlerInterface
 {
-    public function createRedirectResponse(OperationInterface $operation, mixed $data): Response;
+    public function createRedirectResponse(OperationInterface $operation, mixed $data, array $context = []): Response;
 }
