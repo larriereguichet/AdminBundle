@@ -39,9 +39,8 @@ class ResourceCreateListenerTest extends TestCase
         $resource = $event->getResource();
 
         $this->assertCount(1, $resource->getOperations());
-        $this->assertArrayHasKey('index', $resource->getOperations());
-
-        $operation = $resource->getOperations()['index'];
+        $this->assertArrayHasKey('get_collection', $resource->getOperations());
+        $operation = $resource->getOperations()['get_collection'];
         $this->assertEquals($property, $operation->getProperties()[0]);
     }
 

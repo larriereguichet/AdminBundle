@@ -22,6 +22,7 @@ class ApplicationConfigurationTest extends TestCase
         ]);
 
         $this->assertEquals([
+            'name' => 'lag_admin',
             'resource_paths' => ['test/'],
             'title' => 'Admin Bundle',
             'description' => 'Admin Bundle',
@@ -31,6 +32,7 @@ class ApplicationConfigurationTest extends TestCase
             'date_localization' => true,
             'resource_events' => true,
             'filter_events' => true,
+            'grids' => [],
         ], $configuration->toArray());
     }
 }

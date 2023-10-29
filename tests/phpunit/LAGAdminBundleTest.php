@@ -25,7 +25,7 @@ class LAGAdminBundleTest extends TestCase
         }
         $this->assertTrue($contains);
 
-        $this->assertEquals(realpath(__DIR__.'/../../src').'/..', $this->bundle->getPath());
+        $this->assertEquals(realpath(__DIR__.'/../..'), $this->bundle->getPath());
     }
 
     protected function setUp(): void

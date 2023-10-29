@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Controller;
+namespace LAG\AdminBundle\Tests\Controller\Resource;
 
 use LAG\AdminBundle\Controller\Resource\ResourceController;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
+use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
 use LAG\AdminBundle\State\Processor\DataProcessorInterface;
 use LAG\AdminBundle\State\Provider\DataProviderInterface;
 use LAG\AdminBundle\Tests\Entity\FakeEntity;
@@ -20,9 +20,10 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
-class ItemOperationControllerTest extends TestCase
+class ResourceControllerTest extends TestCase
 {
     private ResourceController $controller;
     private UriVariablesExtractorInterface $uriVariablesExtractor;
@@ -31,13 +32,31 @@ class ItemOperationControllerTest extends TestCase
     private MockObject $dataProcessor;
     private MockObject $formFactory;
     private MockObject $environment;
-    private MockObject $urlGenerator;
+    private MockObject $redirectHandler;
+    private MockObject $serializer;
 
-    public function testHandleRequest(): void
+    public static function headersProviders(): array
     {
-        $operation = new GetCollection(name: 'my_operation', template: 'my.html.twig');
-        $resource = (new AdminResource())->withCurrentOperation($operation);
-        $request = new Request();
+        return [
+            [['CONTENT_TYPE' => 'text/html'], true],
+            [['CONTENT_TYPE' => 'application/json'], false],
+        ];
+    }
+
+    /** @dataProvider headersProviders */
+    public function testHandleRequest(array $headers, bool $useTwig): void
+    {
+        $operation = new GetCollection(
+            name: 'my_operation',
+            template: 'my.html.twig',
+            normalizationContext: ['groups' => ['my_group']]
+        );
+        $resource = new AdminResource(
+            name: 'my_resource',
+            operations: [$operation],
+        );
+        $operation = $operation->withResource($resource);
+        $request = new Request(server: $headers);
         $data = new FakeEntity();
         $data->id = 666;
 
@@ -62,23 +81,46 @@ class ItemOperationControllerTest extends TestCase
             ->with($operation, ['id' => 666, 'slug' => 'test'], ['page' => 1])
             ->willReturn($data)
         ;
+        $expected = 'some html';
 
-        $this
-            ->environment
-            ->expects($this->once())
-            ->method('render')
-            ->with('my.html.twig', [
-                'resource' => $resource,
-                'operation' => $operation,
-                'data' => $data,
-                'form' => null,
-            ])
-            ->willReturn('some html')
-        ;
+        if ($useTwig) {
+            $this
+                ->environment
+                ->expects($this->once())
+                ->method('render')
+                ->with('my.html.twig', [
+                    'resource' => $resource,
+                    'operation' => $operation,
+                    'data' => $data,
+                    'form' => null,
+                ])
+                ->willReturn('some html')
+            ;
 
-        $response = $this->controller->__invoke($request, $resource);
+            $this
+                ->serializer
+                ->expects($this->never())
+                ->method('serialize')
+            ;
+        } else {
+            $this
+                ->environment
+                ->expects($this->never())
+                ->method('render')
+            ;
 
-        $this->assertEquals('some html', $response->getContent());
+            $this
+                ->serializer
+                ->expects($this->once())
+                ->method('serialize')
+                ->with($data, 'json', ['groups' => ['my_group']])
+                ->willReturn('{"some": "json"}')
+            ;
+            $expected = '{"some": "json"}';
+        }
+
+        $response = $this->controller->__invoke($request, $operation);
+        $this->assertEquals($expected, $response->getContent());
     }
 
     public function testHandleRequestWithSubmittedForm(): void
@@ -90,7 +132,6 @@ class ItemOperationControllerTest extends TestCase
             formOptions: ['an_option' => 'a_value'],
             route: 'my_route',
         );
-        $resource = (new AdminResource())->withCurrentOperation($operation);
         $request = new Request();
         $data = new FakeEntity();
         $data->id = 666;
@@ -149,11 +190,11 @@ class ItemOperationControllerTest extends TestCase
         ;
 
         $this
-            ->urlGenerator
+            ->redirectHandler
             ->expects($this->once())
-            ->method('generateFromRouteName')
-            ->with('my_route')
-            ->willReturn('/url')
+            ->method('createRedirectResponse')
+            ->with($operation, $data, ['page' => 1])
+            ->willReturn(new RedirectResponse('/url'))
         ;
 
         $this
@@ -162,7 +203,7 @@ class ItemOperationControllerTest extends TestCase
             ->method('render')
         ;
 
-        $response = $this->controller->__invoke($request, $resource);
+        $response = $this->controller->__invoke($request, $operation);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals('/url', $response->getTargetUrl());
@@ -176,7 +217,8 @@ class ItemOperationControllerTest extends TestCase
         $this->dataProcessor = $this->createMock(DataProcessorInterface::class);
         $this->formFactory = $this->createMock(FormFactoryInterface::class);
         $this->environment = $this->createMock(Environment::class);
-        $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $this->redirectHandler = $this->createMock(RedirectHandlerInterface::class);
+        $this->serializer = $this->createMock(SerializerInterface::class);
         $this->controller = new ResourceController(
             $this->uriVariablesExtractor,
             $this->contextProvider,
@@ -184,7 +226,8 @@ class ItemOperationControllerTest extends TestCase
             $this->dataProcessor,
             $this->formFactory,
             $this->environment,
-            $this->urlGenerator,
+            $this->redirectHandler,
+            $this->serializer,
         );
     }
 }

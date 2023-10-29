@@ -7,21 +7,24 @@ namespace LAG\AdminBundle\Tests\Twig\Extension;
 use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Grid\View\LinkRendererInterface;
 use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Get;
 use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
-use LAG\AdminBundle\Security\Helper\SecurityHelper;
+use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
 use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\Twig\Extension\AdminExtension;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class AdminExtensionTest extends TestCase
 {
     private AdminExtension $adminExtension;
     private MockObject $configuration;
     private MockObject $security;
-    private MockObject $actionRenderer;
+    private MockObject $linkRenderer;
     private MockObject $urlGenerator;
+    private MockObject $registry;
 
     public function testServiceExists(): void
     {
@@ -41,7 +44,7 @@ class AdminExtensionTest extends TestCase
         }
     }
 
-    public function testGetParameter(): void
+    public function testGetConfigurationValue(): void
     {
         $this
             ->configuration
@@ -54,15 +57,27 @@ class AdminExtensionTest extends TestCase
         $this->assertEquals('my_value', $this->adminExtension->getConfigurationValue('my_parameter'));
     }
 
-    public function testIsAdminActionAllowed(): void
+    public function testIsOperationAllowed(): void
     {
+        $operation = new Get(name: 'my_operation');
+        $resource = new AdminResource(name: 'my_resource', operations: [$operation]);
+
+        $this
+            ->registry
+            ->expects($this->once())
+            ->method('get')
+            ->with('my_resource')
+            ->willReturn($resource)
+        ;
+
         $this
             ->security
             ->expects($this->once())
-            ->method('isOperationAllowed')
-            ->with('my_admin', 'my_action')
+            ->method('isGranted')
+            ->with(OperationPermissionVoter::RESOURCE_ACCESS, $operation)
         ;
-        $this->adminExtension->isOperationAllowed('my_admin', 'my_action');
+
+        $this->adminExtension->isOperationAllowed('my_resource', 'my_operation');
     }
 
     public function testRenderAction(): void
@@ -72,7 +87,7 @@ class AdminExtensionTest extends TestCase
         $options = ['an_option' => 'a_value'];
 
         $this
-            ->actionRenderer
+            ->linkRenderer
             ->expects($this->once())
             ->method('render')
             ->with($action)
@@ -86,10 +101,6 @@ class AdminExtensionTest extends TestCase
 
     public function testGetOperationUrl(): void
     {
-        $operation = (new GetCollection())
-            ->withName('my_operation')
-            ->withResource(new AdminResource(name: 'my_resource'))
-        ;
         $data = new \stdClass();
 
         $this
@@ -100,7 +111,7 @@ class AdminExtensionTest extends TestCase
             ->willReturn('/url')
         ;
 
-        $url = $this->adminExtension->getOperationUrl($operation, $data);
+        $url = $this->adminExtension->getOperationUrl('my_resource', 'my_operation', $data);
 
         $this->assertEquals('/url', $url);
     }
@@ -108,15 +119,16 @@ class AdminExtensionTest extends TestCase
     protected function setUp(): void
     {
         $this->configuration = $this->createMock(ApplicationConfiguration::class);
-        $this->security = $this->createMock(SecurityHelper::class);
-        $this->actionRenderer = $this->createMock(LinkRendererInterface::class);
+        $this->security = $this->createMock(Security::class);
+        $this->linkRenderer = $this->createMock(LinkRendererInterface::class);
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $this->registry = $this->createMock(ResourceRegistryInterface::class);
         $this->adminExtension = new AdminExtension(
-            true,
             $this->configuration,
             $this->security,
-            $this->actionRenderer,
+            $this->linkRenderer,
             $this->urlGenerator,
+            $this->registry,
         );
     }
 }
