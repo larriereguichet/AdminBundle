@@ -36,6 +36,11 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         array $itemActions = null,
         string $redirectResource = null,
         string $redirectOperation = null,
+        ?bool $validation = true,
+        array $validationContext = null,
+        ?bool $ajax = true,
+        array $normalizationContext = null,
+        array $denormalizationContext = null,
         private bool $pagination = true,
         private int $itemPerPage = 25,
         private string $pageParameter = 'page',
@@ -71,6 +76,11 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             itemActions: $itemActions,
             redirectResource: $redirectResource,
             redirectOperation: $redirectOperation,
+            validation: $validation,
+            validationContext: $validationContext,
+            ajax: $ajax,
+            normalizationContext: $normalizationContext,
+            denormalizationContext: $denormalizationContext,
         );
     }
 

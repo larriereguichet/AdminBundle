@@ -37,6 +37,11 @@ class Get extends Operation
         array $itemActions = null,
         string $redirectResource = null,
         string $redirectOperation = null,
+        ?bool $validation = true,
+        array $validationContext = null,
+        ?bool $ajax = true,
+        array $normalizationContext = null,
+        array $denormalizationContext = null,
     ) {
         parent::__construct(
             name: $name,
@@ -62,6 +67,11 @@ class Get extends Operation
             itemActions: $itemActions,
             redirectResource: $redirectResource,
             redirectOperation: $redirectOperation,
+            validation: $validation,
+            validationContext: $validationContext,
+            ajax: $ajax,
+            normalizationContext: $normalizationContext,
+            denormalizationContext: $denormalizationContext,
         );
     }
 }

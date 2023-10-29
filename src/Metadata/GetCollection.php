@@ -16,7 +16,7 @@ use LAG\AdminBundle\Form\Type\Resource\FilterType;
 class GetCollection extends CollectionOperation
 {
     public function __construct(
-        string $name = null,
+        string $name = 'get_collection',
         string $title = null,
         string $description = null,
         string $icon = null,
@@ -39,6 +39,11 @@ class GetCollection extends CollectionOperation
         array $itemActions = null,
         string $redirectResource = null,
         string $redirectOperation = null,
+        ?bool $validation = true,
+        array $validationContext = null,
+        ?bool $ajax = true,
+        array $normalizationContext = null,
+        array $denormalizationContext = null,
         bool $pagination = true,
         int $itemPerPage = 25,
         string $pageParameter = 'page',
@@ -82,6 +87,11 @@ class GetCollection extends CollectionOperation
             redirectOperation: $redirectOperation,
             filterFormType: $filterFormType,
             filterFormOptions: $filterFormOptions,
+            validation: $validation,
+            validationContext: $validationContext,
+            ajax: $ajax,
+            normalizationContext: $normalizationContext,
+            denormalizationContext: $denormalizationContext,
         );
     }
 }
