@@ -20,7 +20,7 @@ use function Symfony\Component\String\u;
 
 class MetadataPropertyFactoryTest extends TestCase
 {
-    private MetadataPropertyFactoryInterface $factory;
+    private MetadataPropertyFactory $factory;
     private MockObject $metadataHelper;
 
     public function testCreateProperties(): void
@@ -47,6 +47,13 @@ class MetadataPropertyFactoryTest extends TestCase
             ->expects($this->exactly(\count($types)))
             ->method('getTypeOfField')
             ->willReturnCallback(fn ($type) => $types[$type])
+        ;
+        $metadata
+            ->expects($this->once())
+            ->method('isCollectionValuedAssociation')
+            ->willReturnCallback(function () {
+                return true;
+            })
         ;
 
         $this
@@ -162,6 +169,13 @@ class MetadataPropertyFactoryTest extends TestCase
             ->method('getAssociationNames')
             ->willReturn(array_keys($types))
         ;
+        $metadata
+            ->expects($this->exactly(\count($types)))
+            ->method('isCollectionValuedAssociation')
+            ->willReturnCallback(function () {
+                return true;
+            })
+        ;
 
         $this
             ->metadataHelper
@@ -193,7 +207,7 @@ class MetadataPropertyFactoryTest extends TestCase
         $this->assertCount(0, $properties);
     }
 
-    public function testService()
+    public function testService(): void
     {
         $this->assertServiceExists(MetadataPropertyFactoryInterface::class);
     }

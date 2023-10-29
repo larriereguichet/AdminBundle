@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Twig\Render;
+namespace LAG\AdminBundle\Tests\Grid\View;
 
 use LAG\AdminBundle\Exception\Validation\InvalidActionException;
 use LAG\AdminBundle\Grid\View\LinkRenderer;
@@ -16,7 +16,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 
-class ActionRendererTest extends TestCase
+class LinkRendererTest extends TestCase
 {
     private LinkRendererInterface $actionRenderer;
     private MockObject $urlGenerator;

@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Controller;
+namespace LAG\AdminBundle\Tests\Controller\Resource;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use LAG\AdminBundle\Controller\Resource\Index;
-use LAG\AdminBundle\Exception\Operation\InvalidCollectionOperationException;
+use LAG\AdminBundle\Controller\Resource\ResourceCollectionController;
 use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
 use LAG\AdminBundle\Grid\GridView;
 use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\State\Provider\DataProviderInterface;
@@ -20,11 +19,12 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
-class IndexActionTest extends TestCase
+class ResourceCollectionControllerTest extends TestCase
 {
-    private Index $controller;
+    private ResourceCollectionController $controller;
     private MockObject $uriVariablesExtractor;
     private MockObject $contextProvider;
     private MockObject $dataProvider;
@@ -36,14 +36,13 @@ class IndexActionTest extends TestCase
     {
         $resource = new AdminResource();
         $request = new Request();
-        $operation = (new \LAG\AdminBundle\Metadata\GetCollection())
+        $operation = (new GetCollection())
             ->withTemplate('my_template.html.twig')
-            ->withFormType('FormClass')
-            ->withFormOptions(['label' => 'my_form'])
+            ->withFilterFormType('FormClass')
+            ->withFilterFormOptions(['label' => 'my_form'])
             ->withResource($resource)
         ;
 
-        $resource = $resource->withCurrentOperation($operation);
         $form = $this->createMock(FormInterface::class);
         $formView = $this->createMock(FormView::class);
         $grid = new GridView(
@@ -84,11 +83,6 @@ class IndexActionTest extends TestCase
             ->method('handleRequest')
             ->with($request)
         ;
-        $form
-            ->expects($this->once())
-            ->method('isSubmitted')
-            ->willReturn(false)
-        ;
 
         $this
             ->dataProvider
@@ -126,18 +120,9 @@ class IndexActionTest extends TestCase
             ->willReturn('<p>content</p>')
         ;
 
-        $response = $this->controller->__invoke($request, $resource);
+        $response = $this->controller->__invoke($request, $operation);
 
         $this->assertEquals('<p>content</p>', $response->getContent());
-    }
-
-    public function testInvokeWithWrongOperationType(): void
-    {
-        $resource = new AdminResource();
-        $resource = $resource->withCurrentOperation((new Create())->withResource($resource));
-
-        $this->expectException(InvalidCollectionOperationException::class);
-        $this->controller->__invoke(new Request(), $resource);
     }
 
     protected function setUp(): void
@@ -145,15 +130,17 @@ class IndexActionTest extends TestCase
         $this->uriVariablesExtractor = $this->createMock(UriVariablesExtractorInterface::class);
         $this->contextProvider = $this->createMock(ContextProviderInterface::class);
         $this->dataProvider = $this->createMock(DataProviderInterface::class);
-        $this->formFactory = $this->createMock(FormFactoryInterface::class);
         $this->gridFactory = $this->createMock(GridFactoryInterface::class);
+        $this->formFactory = $this->createMock(FormFactoryInterface::class);
+        $this->serializer = $this->createMock(SerializerInterface::class);
         $this->environment = $this->createMock(Environment::class);
-        $this->controller = new Index(
+        $this->controller = new ResourceCollectionController(
             $this->uriVariablesExtractor,
             $this->contextProvider,
             $this->dataProvider,
-            $this->formFactory,
             $this->gridFactory,
+            $this->formFactory,
+            $this->serializer,
             $this->environment,
         );
     }

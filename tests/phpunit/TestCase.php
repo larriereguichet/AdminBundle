@@ -9,9 +9,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Finder\Finder;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -48,21 +47,15 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     protected function buildContainer(): ContainerBuilder
     {
-        $containerBuilder = new ContainerBuilder();
+        $container = new ContainerBuilder();
         $testResourcesDirectory = __DIR__.'/../../config';
         $locator = new FileLocator([
             $testResourcesDirectory,
         ]);
-        $loader = new YamlFileLoader($containerBuilder, $locator);
-        $finder = new Finder();
-        $finder
-            ->in($testResourcesDirectory.'/services')
-            ->name('*.yaml')
-            ->files()
-        ;
-        $loader->load('services.yaml');
+        $loader = new PhpFileLoader($container, $locator);
+        $loader->load('services.php');
 
-        return $containerBuilder;
+        return $container;
     }
 
     protected function assertSubscribedMethodsExists(EventSubscriberInterface $subscriber): void
