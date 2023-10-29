@@ -19,7 +19,7 @@ class AdminExtension extends AbstractExtension
     public function __construct(
         private ApplicationConfiguration $applicationConfiguration,
         private Security $security,
-        private LinkRendererInterface $actionRenderer,
+        private LinkRendererInterface $linkRenderer,
         private UrlGeneratorInterface $urlGenerator,
         private ResourceRegistryInterface $registry,
     ) {
@@ -52,7 +52,7 @@ class AdminExtension extends AbstractExtension
      */
     public function renderAction(Link $action, mixed $data = null, array $options = []): string
     {
-        return $this->actionRenderer->render($action, $data, $options);
+        return $this->linkRenderer->render($action, $data, $options);
     }
 
     public function getOperationUrl(
