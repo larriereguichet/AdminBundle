@@ -11,7 +11,7 @@ class AjaxContextProvider implements ContextProviderInterface
 {
     public function getContext(OperationInterface $operation, Request $request): array
     {
-        if ($request->getContentTypeFormat() === 'application/json' && $operation->useAjax()) {
+        if ($request->getContentTypeFormat() === 'json' && $operation->useAjax()) {
             return ['ajax' => true];
         }
 

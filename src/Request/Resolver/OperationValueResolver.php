@@ -27,7 +27,7 @@ class OperationValueResolver implements ValueResolverInterface
         }
         $interfaces = class_implements($argument->getType(), false);
 
-        if ($interfaces === false || !in_array(OperationInterface::class, $interfaces)) {
+        if ($interfaces === false || !\in_array(OperationInterface::class, $interfaces)) {
             return [];
         }
 
