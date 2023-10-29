@@ -13,10 +13,10 @@ phpunit.stop-on-failure:
 
 # PHPCSFixer
 cs.fix:
-	PHP_CS_FIXER_IGNORE_ENV=1 $(PHP) bin/php-cs-fixer fix --using-cache=no --diff --allow-risky=yes --config .php-cs-fixer.dist.php
+	PHP_CS_FIXER_IGNORE_ENV=1 $(PHP) bin/php-cs-fixer fix --diff --allow-risky=yes --config .php-cs-fixer.dist.php
 
 cs:
-	PHP_CS_FIXER_IGNORE_ENV=1 $(PHP) bin/php-cs-fixer fix --using-cache=no --diff --allow-risky=yes --config .php-cs-fixer.dist.php --dry-run
+	PHP_CS_FIXER_IGNORE_ENV=1 $(PHP) bin/php-cs-fixer fix --diff --allow-risky=yes --config .php-cs-fixer.dist.php --dry-run
 
 # phpstan
 phpstan:
