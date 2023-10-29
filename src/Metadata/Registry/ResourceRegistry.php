@@ -46,6 +46,8 @@ class ResourceRegistry implements ResourceRegistryInterface
 
     public function has(string $resourceName): bool
     {
+        $this->load();
+
         return \array_key_exists($resourceName, $this->definitions);
     }
 
@@ -63,6 +65,7 @@ class ResourceRegistry implements ResourceRegistryInterface
                     throw new UnexpectedTypeException($resource, AdminResource::class);
                 }
 
+                // The name is mandatory here
                 if (!$resource->getName()) {
                     throw new Exception('The admin resource has no name');
                 }
