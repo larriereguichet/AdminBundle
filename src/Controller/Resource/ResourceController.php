@@ -42,7 +42,7 @@ readonly class ResourceController
             $form = $this->formFactory->create($operation->getFormType(), $data, $operation->getFormOptions());
             $form->handleRequest($request);
 
-            if ($context['json']) {
+            if ($context['json'] ?? false) {
                 $form->submit($request->toArray());
             }
 
@@ -50,11 +50,11 @@ readonly class ResourceController
                 $data = $form->getData();
                 $this->dataProcessor->process($data, $operation, $uriVariables, $context);
 
-                return $this->redirectionHandler->createRedirectResponse($operation, $data);
+                return $this->redirectionHandler->createRedirectResponse($operation, $data, $context);
             }
         }
 
-        if ($request->getContentTypeFormat() === 'application/json') {
+        if ($request->getContentTypeFormat() === 'json') {
             $content = $this->serializer->serialize($data, 'json', $operation->getNormalizationContext());
 
             return new JsonResponse($content, Response::HTTP_OK, [], true);
@@ -65,6 +65,6 @@ readonly class ResourceController
             'operation' => $operation,
             'data' => $data,
             'form' => $form?->createView(),
-        ]), $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK);
+        ]), $form?->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK);
     }
 }

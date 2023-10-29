@@ -42,7 +42,7 @@ readonly class ResourceCollectionController
         $data = $this->dataProvider->provide($operation, $uriVariables, $context);
         $grid = $this->gridFactory->create($operation, $data);
 
-        if ($context['json']) {
+        if ($context['json'] ?? false) {
             $content = $this->serializer->serialize($data, 'json', $operation->getNormalizationContext());
 
             return new JsonResponse($content, Response::HTTP_OK, [], true);
