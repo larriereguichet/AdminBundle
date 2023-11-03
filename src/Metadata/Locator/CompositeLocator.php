@@ -22,6 +22,7 @@ class CompositeLocator implements MetadataLocatorInterface
     {
         $resources = [];
 
+        // Allow loading metadata from another bundle, with directory like @SomeBundle/config/resources
         if (str_starts_with($resourceDirectory, '@')) {
             $bundleName = u($resourceDirectory)->before('/')->after('@')->toString();
             $resourceDirectory = u($this->kernel->getBundle($bundleName)->getPath())

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\View;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Exception\Validation\InvalidActionException;
+use LAG\AdminBundle\Exception\InvalidLinkException;
 use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Valid;
@@ -29,7 +29,7 @@ class LinkRenderer implements LinkRendererInterface
         $errors = $this->validator->validate($link, [new Valid()]);
 
         if ($errors->count() > 0) {
-            throw new InvalidActionException($errors);
+            throw new InvalidLinkException($errors);
         }
 
         if ($link->getRoute()) {

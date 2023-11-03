@@ -12,66 +12,42 @@ use LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface;
 
 class ResourceRegistry implements ResourceRegistryInterface
 {
-    /** @var AdminResource[] */
-    private array $definitions = [];
-    private bool $loaded = false;
+    private array $resources = [];
 
     public function __construct(
-        /** @var array<int, string> $resourcePaths */
-        private array $resourcePaths,
-        private MetadataLocatorInterface $locator,
-        private ResourceFactoryInterface $resourceFactory,
+        /** @var iterable<AdminResource> $resources */
+        iterable $resources,
+        private string $defaultApplicationName,
     ) {
+        foreach ($resources as $resource) {
+            $this->resources[$resource->getApplicationName()][$resource->getName()] = $resource;
+        }
     }
 
-    public function get(string $resourceName): AdminResource
+    public function get(string $resourceName, ?string $applicationName = null): AdminResource
     {
-        $this->load();
+        $applicationName = $applicationName ?? $this->defaultApplicationName;
 
-        if (!$this->has($resourceName)) {
+        if (!$this->has($resourceName, $applicationName)) {
             throw new Exception('Resource with name "'.$resourceName.'" not found');
         }
 
-        return $this->resourceFactory->create($this->definitions[$resourceName]);
+        return $this->resources[$applicationName][$resourceName];
     }
 
     public function all(): iterable
     {
-        $this->load();
-
-        foreach ($this->definitions as $definition) {
-            yield $this->resourceFactory->create($definition);
-        }
-    }
-
-    public function has(string $resourceName): bool
-    {
-        $this->load();
-
-        return \array_key_exists($resourceName, $this->definitions);
-    }
-
-    private function load(): void
-    {
-        if ($this->loaded) {
-            return;
-        }
-
-        foreach ($this->resourcePaths as $path) {
-            $resources = $this->locator->locateCollection($path);
-
+        foreach ($this->resources as $resources) {
             foreach ($resources as $resource) {
-                if (!$resource instanceof AdminResource) {
-                    throw new UnexpectedTypeException($resource, AdminResource::class);
-                }
-
-                // The name is mandatory here
-                if (!$resource->getName()) {
-                    throw new Exception('The admin resource has no name');
-                }
-                $this->definitions[$resource->getName()] = $resource;
+                yield $resource;
             }
         }
-        $this->loaded = true;
+    }
+
+    public function has(string $resourceName, ?string $applicationName = null): bool
+    {
+        $applicationName = $applicationName ?? $this->defaultApplicationName;
+
+        return \array_key_exists($resourceName, $this->resources[$applicationName][$resourceName]);
     }
 }

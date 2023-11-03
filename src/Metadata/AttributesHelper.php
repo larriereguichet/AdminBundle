@@ -8,6 +8,9 @@ class AttributesHelper
 {
     public static function getReflectionClassesFromDirectories(string $path): \Iterator
     {
+        if (!file_exists($path)) {
+            return [];
+        }
         $iterator = new \RegexIterator(
             new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS),

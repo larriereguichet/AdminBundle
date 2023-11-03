@@ -21,13 +21,13 @@ class OperationValueResolver implements ValueResolverInterface
     {
         if (!$this->resourceContext->supports($request)
             || $argument->getType() === null
-            || !class_exists($argument->getType())
+            || !(class_exists($argument->getType()) || interface_exists($argument->getType()))
         ) {
             return [];
         }
         $interfaces = class_implements($argument->getType(), false);
 
-        if ($interfaces === false || !\in_array(OperationInterface::class, $interfaces)) {
+        if ($argument->getType() !== OperationInterface::class && ($interfaces === false || !\in_array(OperationInterface::class, $interfaces))) {
             return [];
         }
 

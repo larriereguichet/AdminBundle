@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\DependencyInjection;
 
+use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -24,8 +25,20 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         $loader->load('services.php');
 
         if ($container->getParameter('kernel.environment') === 'dev') {
-            $loader->load('services_dev.php');
+            if ($container->hasDefinition(AdminDataCollector::class)) {
+                $definition = $container->getDefinition(AdminDataCollector::class);
+                $definition
+                    ->setArgument('$applicationConfiguration', $config)
+                    ->clearTag('lag_admin.request_context_provider')
+                ;
+            }
         }
+        $container->setParameter('lag_admin.application_name', $config['default_application']);
+        $container->setParameter('lag_admin.application_parameter', $config['request']['application_parameter']);
+        $container->setParameter('lag_admin.resource_parameter', $config['request']['resource_parameter']);
+        $container->setParameter('lag_admin.operation_parameter', $config['request']['operation_parameter']);
+        $container->setParameter('lag_admin.translation_domain', $config['translation_domain']);
+
         $container->setParameter('lag_admin.application.configuration', $config);
         $container->setParameter('lag_admin.resource_paths', $config['resource_paths']);
         $container->setParameter('lag_admin.translation_domain', $config['translation_domain']);
@@ -36,11 +49,9 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('lag_admin.filter_events', $config['filter_events']);
         $container->setParameter('lag_admin.grids', $config['grids']);
 
-        $bundles = $container->getParameter('kernel.bundles');
-
-        $container->setParameter('lag_admin.media_bundle_enabled', \array_key_exists('JKMediaBundle', $bundles));
-
-        $container->registerForAutoconfiguration(ContextProviderInterface::class);
+        $container->registerForAutoconfiguration(ContextProviderInterface::class)
+            ->addTag('lag_admin.request_context_provider')
+        ;
     }
 
     public function getAlias(): string
@@ -50,6 +61,12 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
 
     public function prepend(ContainerBuilder $container): void
     {
+        $container->prependExtensionConfig('validation', [
+            'enabled' => true,
+            'enable_annotations' => true,
+            'auto_mapping' => ['paths' => ['@LAGAdmin/src/Metadata']],
+        ]);
+
         $container->prependExtensionConfig('twig', [
             'form_themes' => ['@LAGAdmin/forms/theme.html.twig'],
         ]);

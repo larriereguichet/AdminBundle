@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class TestCase extends \PHPUnit\Framework\TestCase
@@ -52,7 +50,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $locator = new FileLocator([
             $testResourcesDirectory,
         ]);
-        $loader = new PhpFileLoader($container, $locator);
+        $loader = new Loader\PhpFileLoader($container, $locator);
         $loader->load('services.php');
 
         return $container;
@@ -93,24 +91,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
         return $property->getValue($object);
     }
 
-    protected function createApplicationConfigurationMock(array $map): MockObject
-    {
-        $applicationConfiguration = $this->createMock(ApplicationConfiguration::class);
-        $applicationConfiguration
-            ->method('get')
-            ->willReturnMap($map)
-        ;
-
-        return $applicationConfiguration;
-    }
-
     protected function createContainerDefinition(string $class): Definition
     {
         return new Definition($class);
-    }
-
-    protected function createApplicationConfiguration(array $applicationConfiguration): ApplicationConfiguration
-    {
-        return new ApplicationConfiguration($applicationConfiguration);
     }
 }

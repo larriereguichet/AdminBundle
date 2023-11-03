@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Request\Extractor;
 
-use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractor;
 use LAG\AdminBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,42 +12,11 @@ class ParametersExtractorTest extends TestCase
 {
     private ParametersExtractor $extractor;
 
-    /**
-     * @dataProvider supportsDataProvider
-     */
-    public function testSupports(Request $request, bool $supports): void
-    {
-        $this->assertEquals($supports, $this->extractor->supports($request));
-    }
-
-    public static function supportsDataProvider(): array
-    {
-        return [
-            [new Request([], [], ['_route_params' => [
-                '_admin' => 'my_admin,',
-                '_action' => 'my_action,',
-            ]]), true],
-            [new Request([], [], ['_route_params' => [
-                '_admin' => 'my_admin,',
-            ]]), false],
-            [new Request([], [], ['_route_params' => [
-                '_action' => 'my_action,',
-            ]]), false],
-            [new Request([], [], ['_route_params' => [
-                '_admin' => null,
-                '_action' => 'my_action,',
-            ]]), false],
-            [new Request([], [], ['_route_params' => null]), false],
-        ];
-    }
-
     public function testGetAdminName(): void
     {
         $adminName = $this->extractor->getResourceName(new Request([], [], [
-            '_route_params' => [
-                '_admin' => 'my_admin',
-                '_action' => 'my_action',
-            ],
+            '_resource' => 'my_admin',
+            '_operation' => 'my_action',
         ]));
 
         $this->assertEquals('my_admin', $adminName);
@@ -56,19 +24,17 @@ class ParametersExtractorTest extends TestCase
 
     public function testGetAdminNameWithException(): void
     {
-        $this->expectException(Exception::class);
-        $this->extractor->getResourceName(new Request([], [], [
+        $resource = $this->extractor->getResourceName(new Request([], [], [
             '_route_params' => [],
         ]));
+        $this->assertNull($resource);
     }
 
     public function testGetActionName(): void
     {
         $actionName = $this->extractor->getOperationName(new Request([], [], [
-            '_route_params' => [
-                '_admin' => 'my_admin',
-                '_action' => 'my_action',
-            ],
+            '_resource' => 'my_admin',
+            '_operation' => 'my_action',
         ]));
 
         $this->assertEquals('my_action', $actionName);
@@ -76,14 +42,16 @@ class ParametersExtractorTest extends TestCase
 
     public function testGetActionNameWithException(): void
     {
-        $this->expectException(Exception::class);
-        $this->extractor->getOperationName(new Request([], [], [
-            '_route_params' => [],
-        ]));
+        $operation = $this->extractor->getOperationName(new Request([], [], []));
+        $this->assertNull($operation);
     }
 
     protected function setUp(): void
     {
-        $this->extractor = new ParametersExtractor();
+        $this->extractor = new ParametersExtractor(
+            '_application',
+            '_resource',
+            '_operation',
+        );
     }
 }

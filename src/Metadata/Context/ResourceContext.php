@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Context;
 
-use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Exception\ResourceNotFoundException;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
@@ -21,8 +21,8 @@ class ResourceContext implements ResourceContextInterface
 
     public function getOperation(Request $request): OperationInterface
     {
-        if (!$this->parametersExtractor->supports($request)) {
-            throw new Exception('The current request is not supported by any admin resource');
+        if (!$this->supports($request)) {
+            throw new ResourceNotFoundException('The current request is not supported by any admin resource');
         }
         $resourceName = $this->parametersExtractor->getResourceName($request);
         $operationName = $this->parametersExtractor->getOperationName($request);
@@ -38,6 +38,18 @@ class ResourceContext implements ResourceContextInterface
 
     public function supports(Request $request): bool
     {
-        return $this->parametersExtractor->supports($request);
+        if ($this->parametersExtractor->getApplicationName($request) === null) {
+            return false;
+        }
+
+        if ($this->parametersExtractor->getResourceName($request) === null) {
+            return false;
+        }
+
+        if ($this->parametersExtractor->getOperationName($request) === null) {
+            return false;
+        }
+
+        return true;
     }
 }

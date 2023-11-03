@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
 use LAG\AdminBundle\Validation\Constraint\GridExist;
@@ -29,8 +29,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         array $properties = [],
         string $formType = null,
         array $formOptions = [],
-        ?string $processor = ORMDataProcessor::class,
-        string $provider = ORMDataProvider::class,
+        ?string $processor = ORMProcessor::class,
+        string $provider = ORMProvider::class,
         array $identifiers = ['id'],
         array $contextualActions = null,
         array $itemActions = null,
@@ -41,6 +41,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         ?bool $ajax = true,
         array $normalizationContext = null,
         array $denormalizationContext = null,
+        ?string $inputClass = null,
+        ?string $outputClass = null,
         private bool $pagination = true,
         private int $itemPerPage = 25,
         private string $pageParameter = 'page',
@@ -76,11 +78,13 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             itemActions: $itemActions,
             redirectResource: $redirectResource,
             redirectOperation: $redirectOperation,
+            normalizationContext: $normalizationContext,
+            denormalizationContext: $denormalizationContext,
+            inputClass: $inputClass,
+            outputClass: $outputClass,
             validation: $validation,
             validationContext: $validationContext,
             ajax: $ajax,
-            normalizationContext: $normalizationContext,
-            denormalizationContext: $denormalizationContext,
         );
     }
 

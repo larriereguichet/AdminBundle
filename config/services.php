@@ -4,6 +4,21 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import(__DIR__.'/services/*.php');
+use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
+use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+
+return static function (ContainerConfigurator $container): void {
+    $container->import(__DIR__.'/services/*.php');
+    $services = $container->services();
+
+    $services->set(AdminDataCollector::class)
+        ->arg('$registry', service(ResourceRegistryInterface::class))
+        ->arg('$parametersExtractor', service(ParametersExtractorInterface::class))
+        ->tag('data_collector', [
+            'template' => '@LAGAdmin/debug/template.html.twig',
+            'id' => AdminDataCollector::class,
+        ])
+        ->private()
+    ;
 };

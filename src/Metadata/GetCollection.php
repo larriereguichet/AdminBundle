@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Controller\Resource\ResourceCollectionController;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 
@@ -32,8 +32,8 @@ class GetCollection extends CollectionOperation
         array $properties = [],
         string $formType = null,
         array $formOptions = [],
-        string $processor = ORMDataProcessor::class,
-        string $provider = ORMDataProvider::class,
+        string $processor = ORMProcessor::class,
+        string $provider = ORMProvider::class,
         array $identifiers = ['id'],
         array $contextualActions = null,
         array $itemActions = null,
@@ -44,6 +44,8 @@ class GetCollection extends CollectionOperation
         ?bool $ajax = true,
         array $normalizationContext = null,
         array $denormalizationContext = null,
+        ?string $inputClass = null,
+        ?string $outputClass = null,
         bool $pagination = true,
         int $itemPerPage = 25,
         string $pageParameter = 'page',
@@ -76,6 +78,10 @@ class GetCollection extends CollectionOperation
             identifiers: $identifiers,
             contextualActions: $contextualActions,
             itemActions: $itemActions,
+            normalizationContext: $normalizationContext,
+            denormalizationContext: $denormalizationContext,
+            inputClass: $inputClass,
+            outputClass: $outputClass,
             pagination: $pagination,
             itemPerPage: $itemPerPage,
             pageParameter: $pageParameter,
@@ -90,8 +96,6 @@ class GetCollection extends CollectionOperation
             validation: $validation,
             validationContext: $validationContext,
             ajax: $ajax,
-            normalizationContext: $normalizationContext,
-            denormalizationContext: $denormalizationContext,
         );
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Grid\View\CellRendererInterface;
 use LAG\AdminBundle\Grid\View\GridRendererInterface;
 use LAG\AdminBundle\Grid\View\LinkRenderer;
@@ -19,9 +18,8 @@ return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     $services->set(AdminExtension::class)
-        ->arg('$applicationConfiguration', service(ApplicationConfiguration::class))
         ->arg('$security', service('security.helper'))
-        ->arg('$actionRenderer', service(LinkRendererInterface::class))
+        ->arg('$linkRenderer', service(LinkRendererInterface::class))
         ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
         ->arg('$registry', service(ResourceRegistryInterface::class))
         ->tag('twig.extension')
@@ -34,7 +32,7 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     $services->set(StringExtension::class)
-        ->arg('$configuration', service(ApplicationConfiguration::class))
+        ->arg('$translationDomain', param('lag_admin.translation_domain'))
         ->arg('$translator', service('translator'))
         ->tag('twig.extension')
     ;

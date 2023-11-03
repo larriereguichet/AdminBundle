@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Controller\Resource\ResourceController;
 
 /**
@@ -31,8 +31,8 @@ class Create extends Operation
         array $properties = [],
         string $formType = null,
         array $formOptions = [],
-        string $processor = ORMDataProcessor::class,
-        string $provider = ORMDataProvider::class,
+        string $processor = ORMProcessor::class,
+        string $provider = ORMProvider::class,
         array $identifiers = [],
         array $contextualActions = null,
         array $itemActions = null,
@@ -43,6 +43,8 @@ class Create extends Operation
         ?bool $ajax = true,
         array $normalizationContext = null,
         array $denormalizationContext = null,
+        ?string $inputClass = null,
+        ?string $outputClass = null,
     ) {
         parent::__construct(
             name: $name,
@@ -73,6 +75,8 @@ class Create extends Operation
             ajax: $ajax,
             normalizationContext: $normalizationContext,
             denormalizationContext: $denormalizationContext,
+            inputClass: $inputClass,
+            outputClass: $outputClass,
         );
     }
 }

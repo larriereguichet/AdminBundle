@@ -4,33 +4,38 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
-use LAG\AdminBundle\Exception\Operation\OperationMissingException;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
+use LAG\AdminBundle\Exception\OperationMissingException;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AdminResource
 {
     public function __construct(
-        #[NotBlank]
+        #[Assert\NotBlank(message: 'The resource name should not be null or empty')]
         private ?string $name = null,
 
-        #[NotBlank]
+        #[Assert\NotBlank(message: 'The data class should not be null or empty')]
         private ?string $dataClass = null,
 
-        #[NotBlank(allowNull: true)]
+        #[Assert\NotBlank(allowNull: true, message: 'The resource title should not be an empty string. Use null instead')]
         private ?string $title = null,
 
-        #[NotBlank(allowNull: true)]
+        #[Assert\NotBlank(allowNull: true, message: 'The resource group should not be an empty string. Use null instead')]
         private ?string $group = null,
 
-        #[NotBlank(allowNull: true)]
+        #[Assert\NotBlank(allowNull: true, message: 'The resource icon should not be an empty string. Use null instead')]
         private ?string $icon = null,
 
+        private ?array $permissions = null,
+
         /** @var OperationInterface[] $operations */
-        #[Length(min: 1)]
+        #[Assert\Count(min: 1, minMessage: 'The must be at least one operation in the resource')]
+        #[Assert\All(constraints: [
+            new Assert\Type(type: OperationInterface::class),
+        ])]
+        #[Assert\Valid]
         private array $operations = [
             new GetCollection(),
             new Get(),
@@ -39,11 +44,11 @@ class AdminResource
             new Delete(),
         ],
 
-        #[NotBlank]
-        private ?string $processor = ORMDataProcessor::class,
+        #[Assert\NotBlank]
+        private ?string $processor = ORMProcessor::class,
 
-        #[NotBlank]
-        private string $provider = ORMDataProvider::class,
+        #[Assert\NotBlank]
+        private string $provider = ORMProvider::class,
 
         /** @var string[] $identifiers */
         private array $identifiers = ['id'],
@@ -56,7 +61,7 @@ class AdminResource
 
         private ?string $translationDomain = null,
 
-        #[NotBlank]
+        #[Assert\NotBlank(message: 'The application name should not be empty')]
         private ?string $applicationName = null,
 
         private ?string $formType = null,
@@ -69,9 +74,15 @@ class AdminResource
 
         private bool $ajax = true,
 
+        #[Assert\NotNull(message: 'The normalization context should not be null. Use an empty array instead')]
         private ?array $normalizationContext = null,
 
+        #[Assert\NotNull(message: 'The denormalization context should not be null. Use an empty array instead')]
         private ?array $denormalizationContext = null,
+
+        private ?string $inputClass = null,
+
+        private ?string $outputClass = null,
     ) {
     }
 
@@ -369,6 +380,45 @@ class AdminResource
     {
         $self = clone $this;
         $self->denormalizationContext = $context;
+
+        return $self;
+    }
+
+    public function getPermissions(): ?array
+    {
+        return $this->permissions;
+    }
+
+    public function withPermissions(array $permissions): self
+    {
+        $self = clone $this;
+        $self->permissions = $permissions;
+
+        return $self;
+    }
+
+    public function getInputClass(): ?string
+    {
+        return $this->inputClass;
+    }
+
+    public function withInputClass(?string $inputClass): self
+    {
+        $self = clone $this;
+        $self->inputClass = $inputClass;
+
+        return $self;
+    }
+
+    public function getOutputClass(): ?string
+    {
+        return $this->outputClass;
+    }
+
+    public function withOutputClass(?string $outputClass): self
+    {
+        $self = clone $this;
+        $self->outputClass = $outputClass;
 
         return $self;
     }

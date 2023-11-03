@@ -113,7 +113,7 @@ interface OperationInterface
 
     public function withRedirectOperation(?string $redirectOperation): self;
 
-    public function isValidationEnabled(): ?bool;
+    public function useValidation(): ?bool;
 
     public function withValidation(bool $validation): self;
 
@@ -132,4 +132,12 @@ interface OperationInterface
     public function getDenormalizationContext(): ?array;
 
     public function withDenormalizationContext(array $context): self;
+
+    public function getInputClass(): ?string;
+
+    public function withInputClass(?string $inputClass): self;
+
+    public function getOutputClass(): ?string;
+
+    public function withOutputClass(?string $outputClass): self;
 }

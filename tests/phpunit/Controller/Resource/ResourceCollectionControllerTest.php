@@ -12,7 +12,7 @@ use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
-use LAG\AdminBundle\State\Provider\DataProviderInterface;
+use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -129,7 +129,7 @@ class ResourceCollectionControllerTest extends TestCase
     {
         $this->uriVariablesExtractor = $this->createMock(UriVariablesExtractorInterface::class);
         $this->contextProvider = $this->createMock(ContextProviderInterface::class);
-        $this->dataProvider = $this->createMock(DataProviderInterface::class);
+        $this->dataProvider = $this->createMock(ProviderInterface::class);
         $this->gridFactory = $this->createMock(GridFactoryInterface::class);
         $this->formFactory = $this->createMock(FormFactoryInterface::class);
         $this->serializer = $this->createMock(SerializerInterface::class);

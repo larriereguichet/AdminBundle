@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\Factory;
 
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Grid\Cell;
 use LAG\AdminBundle\Metadata\Property\ConfigurablePropertyInterface;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
@@ -26,7 +27,10 @@ class CellFactory implements CellFactoryInterface
             $property->configure($data);
         }
 
-        if ($property->getPropertyPath() !== null && $property->getPropertyPath() !== '.' && $this->accessor->isReadable($data, $property->getPropertyPath())) {
+        if ($property->getPropertyPath() !== null && $property->getPropertyPath() !== '.') {
+            if (!$this->accessor->isReadable($data, $property->getPropertyPath())) {
+                throw new Exception(sprintf('The property path "%s" is not readable', $property->getPropertyPath()));
+            }
             $data = $this->accessor->getValue($data, $property->getPropertyPath());
         }
 

@@ -7,8 +7,6 @@
               content="IE=edge"/>
         <meta name="viewport"
               content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-        <meta name="description"
-              content="{{ lag_admin_config('description') }}"/>
     {% endblock %}
 
     {% block favicon %}
@@ -20,9 +18,9 @@
               type="image/x-icon">
     {% endblock %}
 
-    <title>{% block page_title %}{{ lag_admin_config('title') }}{% endblock %}</title>
+    <title>{% block page_title %}Admin{% endblock %}</title>
 
-    {% block stylesheets %}
+    {% block admin_stylesheets %}
         <link rel="stylesheet"
               href="{{ asset('/bundles/lagadmin/admin.css') }}"/>
         <link rel="stylesheet"
@@ -30,13 +28,15 @@
         <link rel="stylesheet"
               href="{{ asset('/bundles/lagadmin/choice-js.css') }}"/>
     {% endblock %}
+    {% block stylesheets %}{% endblock %}
 
-    {% block javascripts %}
+    {% block admin_javascripts %}
         <script src="{{ asset('/bundles/lagadmin/admin.js') }}"
                 defer="defer"></script>
         <script src="{{ asset('/bundles/lagadmin/bootstrap.js') }}"
                 defer="defer"></script>
     {% endblock %}
+    {% block javascripts %}{% endblock %}
 
     {% block head %}{% endblock %}
 </head>
@@ -78,10 +78,6 @@
     {% block modal %}
         {% include '@LAGAdmin/modal/modal.html.twig' %}
     {% endblock %}
-
-{#    {% if admin_media_enabled() %}#}
-{#        {% include '@JKMedia/Modal/modal.html.twig' %}#}
-{#    {% endif %}#}
     </body>
 {% endblock %}
 </html>

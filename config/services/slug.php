@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Slug\Generator\CompositeSlugGenerator;
 use LAG\AdminBundle\Slug\Generator\SimpleSlugGenerator;
 use LAG\AdminBundle\Slug\Generator\SlugGeneratorInterface;
@@ -21,6 +22,6 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     $services->set(SlugMappingInterface::class, SlugMapping::class)
-        ->arg('$registry', service('lag_admin.resource.registry'))
+        ->arg('$registry', service(ResourceRegistryInterface::class))
     ;
 };

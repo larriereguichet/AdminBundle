@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Validation\Validator\TemplateValidator;
+use LAG\AdminBundle\Validation\Constraint\TemplateValidator;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();

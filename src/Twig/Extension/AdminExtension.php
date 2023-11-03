@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Extension;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Grid\View\LinkRendererInterface;
 use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
@@ -17,7 +16,6 @@ use Twig\TwigFunction;
 class AdminExtension extends AbstractExtension
 {
     public function __construct(
-        private ApplicationConfiguration $applicationConfiguration,
         private Security $security,
         private LinkRendererInterface $linkRenderer,
         private UrlGeneratorInterface $urlGenerator,
@@ -28,16 +26,10 @@ class AdminExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('lag_admin_config', [$this, 'getConfigurationValue']),
             new TwigFunction('lag_admin_operation_allowed', [$this, 'isOperationAllowed']),
-            new TwigFunction('lag_admin_action', [$this, 'renderAction'], ['is_safe' => ['html']]),
+            new TwigFunction('lag_admin_link', [$this, 'renderLink'], ['is_safe' => ['html']]),
             new TwigFunction('lag_admin_operation_url', [$this, 'getOperationUrl'], ['is_safe' => ['html']]),
         ];
-    }
-
-    public function getConfigurationValue(string $name): mixed
-    {
-        return $this->applicationConfiguration->get($name);
     }
 
     public function isOperationAllowed(string $resourceName, string $operationName): bool
@@ -50,9 +42,9 @@ class AdminExtension extends AbstractExtension
     /**
      * @param array<string, mixed> $options
      */
-    public function renderAction(Link $action, mixed $data = null, array $options = []): string
+    public function renderLink(Link $link, mixed $data = null, array $options = []): string
     {
-        return $this->linkRenderer->render($action, $data, $options);
+        return $this->linkRenderer->render($link, $data, $options);
     }
 
     public function getOperationUrl(

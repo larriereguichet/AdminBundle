@@ -34,7 +34,7 @@
                                  role="group"
                                  aria-label="{{ 'lag_admin.list.available_actions_for_item'|trans({}, 'admin') }}">
                                 {% for link in operation.itemActions %}
-                                    {{ lag_admin_action(link, row.data) }}
+                                    {{ lag_admin_link(link, row.data) }}
                                 {% endfor %}
                             </div>
                         </td>

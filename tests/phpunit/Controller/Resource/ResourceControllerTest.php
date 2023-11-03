@@ -10,8 +10,8 @@ use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
-use LAG\AdminBundle\State\Processor\DataProcessorInterface;
-use LAG\AdminBundle\State\Provider\DataProviderInterface;
+use LAG\AdminBundle\State\Processor\ProcessorInterface;
+use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\Tests\Entity\FakeEntity;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -213,8 +213,8 @@ class ResourceControllerTest extends TestCase
     {
         $this->uriVariablesExtractor = $this->createMock(UriVariablesExtractorInterface::class);
         $this->contextProvider = $this->createMock(ContextProviderInterface::class);
-        $this->dataProvider = $this->createMock(DataProviderInterface::class);
-        $this->dataProcessor = $this->createMock(DataProcessorInterface::class);
+        $this->dataProvider = $this->createMock(ProviderInterface::class);
+        $this->dataProcessor = $this->createMock(ProcessorInterface::class);
         $this->formFactory = $this->createMock(FormFactoryInterface::class);
         $this->environment = $this->createMock(Environment::class);
         $this->redirectHandler = $this->createMock(RedirectHandlerInterface::class);

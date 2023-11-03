@@ -9,15 +9,10 @@ use LAG\AdminBundle\DependencyInjection\CompilerPass\SlugMappingCompilerPass;
 use LAG\AdminBundle\DependencyInjection\LAGAdminExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class LAGAdminBundle extends AbstractBundle
+class LAGAdminBundle extends Bundle
 {
-    // Request Admin parameters
-    // TODO from configuration
-    public const REQUEST_PARAMETER_ADMIN = '_admin';
-    public const REQUEST_PARAMETER_ACTION = '_action';
-
     public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new EventCompilerPass());

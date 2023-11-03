@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\Loader;
 
-use LAG\AdminBundle\LAGAdminBundle;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGeneratorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use function Symfony\Component\Translation\t;
 
 class ResourceRoutingLoader extends Loader
 {
     private bool $loaded = false;
 
     public function __construct(
+        private string $applicationParameter,
+        private string $resourceParameter,
+        private string $operationParameter,
         private ResourceRegistryInterface $resourceRegistry,
         private PathGeneratorInterface $pathGenerator,
     ) {
@@ -34,6 +37,7 @@ class ResourceRoutingLoader extends Loader
         foreach ($resources as $resource) {
             $this->loadResource($resource, $routes);
         }
+        $this->loaded = true;
 
         return $routes;
     }
@@ -55,8 +59,9 @@ class ResourceRoutingLoader extends Loader
             $path = $this->pathGenerator->generatePath($operation);
             $defaults = [
                 '_controller' => $operation->getController(),
-                LAGAdminBundle::REQUEST_PARAMETER_ADMIN => $operation->getResource()->getName(),
-                LAGAdminBundle::REQUEST_PARAMETER_ACTION => $operation->getName(),
+                $this->applicationParameter => $operation->getResource()->getApplicationName(),
+                $this->resourceParameter => $operation->getResource()->getName(),
+                $this->operationParameter => $operation->getName(),
             ];
 
             $route = new Route($path, $defaults, [], $identifiers, null, [], $operation->getMethods());

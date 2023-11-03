@@ -35,8 +35,9 @@ class GridFactory implements GridFactoryInterface
                 translationDomain: $operation->getResource()->getTranslationDomain(),
             );
         }
+        $index = 0;
 
-        foreach ($data as $index => $item) {
+        foreach ($data as $item) {
             $fields = [];
 
             foreach ($operation->getProperties() as $property) {
@@ -46,6 +47,7 @@ class GridFactory implements GridFactoryInterface
                 $fields[$property->getName()] = $this->cellFactory->create($property, $item);
             }
             $rows[] = new Row($index, $fields, $item);
+            $index++;
         }
         $grid = new GridView(
             $operation->getResource()->getName().'_'.$operation->getName().'_'.$grid->getName(),

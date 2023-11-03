@@ -8,8 +8,8 @@ use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
-use LAG\AdminBundle\State\Processor\DataProcessorInterface;
-use LAG\AdminBundle\State\Provider\DataProviderInterface;
+use LAG\AdminBundle\State\Processor\ProcessorInterface;
+use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,8 +22,8 @@ readonly class ResourceController
     public function __construct(
         private UriVariablesExtractorInterface $uriVariablesExtractor,
         private ContextProviderInterface $contextProvider,
-        private DataProviderInterface $dataProvider,
-        private DataProcessorInterface $dataProcessor,
+        private ProviderInterface $dataProvider,
+        private ProcessorInterface $dataProcessor,
         private FormFactoryInterface $formFactory,
         private Environment $environment,
         private RedirectHandlerInterface $redirectionHandler,

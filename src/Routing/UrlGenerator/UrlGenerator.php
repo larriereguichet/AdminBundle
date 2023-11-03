@@ -4,16 +4,24 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
+use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Routing\Parameter\ParametersMapper;
 use Symfony\Component\Routing\RouterInterface;
 
 class UrlGenerator implements UrlGeneratorInterface
 {
     public function __construct(
         private RouterInterface $router,
+        private ParametersMapperInterface $mapper,
         private ResourceRegistryInterface $resourceRegistry,
     ) {
+    }
+
+    public function generate(OperationInterface $operation, mixed $data = null): string
+    {
+        $parameters = $this->mapper->map($data, $operation->getRouteParameters());
+
+        return $this->router->generate($operation->getRoute(), $parameters);
     }
 
     public function generateFromRouteName(string $routeName, array $routeParameters = [], mixed $data = null): string

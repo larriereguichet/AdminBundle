@@ -12,5 +12,5 @@ interface ResourceFactoryInterface
      * Create a new Admin resource instance. The resource will be validated then returned. An event is dispatched before
      * the validation and another after.
      */
-    public function create(AdminResource $definition): AdminResource;
+    public function create(AdminResource $resource): AdminResource;
 }

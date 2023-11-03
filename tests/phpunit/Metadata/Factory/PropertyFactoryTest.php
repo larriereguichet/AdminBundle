@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
-use LAG\AdminBundle\Exception\Validation\InvalidPropertyCollectionException;
+use LAG\AdminBundle\Exception\InvalidPropertyCollectionException;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Factory\PropertyFactory;
 use LAG\AdminBundle\Metadata\GetCollection;

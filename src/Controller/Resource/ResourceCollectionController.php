@@ -8,7 +8,7 @@ use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
-use LAG\AdminBundle\State\Provider\DataProviderInterface;
+use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +21,7 @@ readonly class ResourceCollectionController
     public function __construct(
         private UriVariablesExtractorInterface $uriVariablesExtractor,
         private ContextProviderInterface $contextProvider,
-        private DataProviderInterface $dataProvider,
+        private ProviderInterface $dataProvider,
         private GridFactoryInterface $gridFactory,
         private FormFactoryInterface $formFactory,
         private SerializerInterface $serializer,

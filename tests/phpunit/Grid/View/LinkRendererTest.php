@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Grid\View;
 
-use LAG\AdminBundle\Exception\Validation\InvalidActionException;
+use LAG\AdminBundle\Exception\InvalidLinkException;
 use LAG\AdminBundle\Grid\View\LinkRenderer;
 use LAG\AdminBundle\Grid\View\LinkRendererInterface;
 use LAG\AdminBundle\Metadata\Link;
@@ -126,7 +126,7 @@ class LinkRendererTest extends TestCase
             ->willReturn(1)
         ;
 
-        $this->expectException(InvalidActionException::class);
+        $this->expectException(InvalidLinkException::class);
         $this->actionRenderer->render($action, $data);
     }
 

@@ -10,7 +10,7 @@ use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Metadata\Locator\AttributeLocator;
 use LAG\AdminBundle\Metadata\Locator\CompositeLocator;
 use LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface;
-use LAG\AdminBundle\Metadata\Registry\CacheRegistryDecorator;
+use LAG\AdminBundle\Metadata\Registry\CacheRegistry;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistry;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
@@ -20,16 +20,16 @@ return static function (ContainerConfigurator $container): void {
 
     // Resource registries
     $services->set(ResourceRegistryInterface::class, ResourceRegistry::class)
-        ->arg('$resourcePaths', param('lag_admin.resource_paths'))
-        ->arg('$locator', service(MetadataLocatorInterface::class))
-        ->arg('$resourceFactory', service(ResourceFactoryInterface::class))
+        ->arg('$resources', expr('service("lag_admin.resource.resolver").resolveResourceCollectionFromLocators()'))
+        ->arg('$defaultApplicationName', param('lag_admin.application_name'))
     ;
-    $services->set(CacheRegistryDecorator::class)
+    $services->set(CacheRegistry::class)
         ->decorate(ResourceRegistryInterface::class)
-        ->arg('$decorated', service('.inner'))
+        ->arg('$registry', service('.inner'))
+        ->arg('$defaultApplicationName', param('lag_admin.application_name'))
     ;
 
-    // Metadata attributes locators
+    // Metadata locators
     $services->set(MetadataLocatorInterface::class, CompositeLocator::class)
         ->arg('$locators', tagged_iterator('lag_admin.resource.locator'))
         ->arg('$kernel', service('kernel'))
@@ -38,7 +38,7 @@ return static function (ContainerConfigurator $container): void {
         ->tag('lag_admin.resource.locator')
     ;
 
-    // Resource request context
+    // Request context
     $services->set(ResourceContextInterface::class, ResourceContext::class)
         ->arg('$parametersExtractor', service(ParametersExtractorInterface::class))
         ->arg('$resourceRegistry', service(ResourceRegistryInterface::class))

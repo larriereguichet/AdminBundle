@@ -14,8 +14,7 @@ use LAG\AdminBundle\Grid\View\CellRenderer;
 use LAG\AdminBundle\Grid\View\CellRendererInterface;
 use LAG\AdminBundle\Grid\View\GridRenderer;
 use LAG\AdminBundle\Grid\View\GridRendererInterface;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Validation\Validator\GridExistValidator;
+use LAG\AdminBundle\Validation\Constraint\GridExistValidator;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -42,7 +41,7 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     $services->set(GridExistValidator::class)
-        ->arg('$registry', service(ResourceRegistryInterface::class))
+        ->arg('$registry', service(GridRegistryInterface::class))
         ->tag('validator.constraint_validator')
     ;
 };

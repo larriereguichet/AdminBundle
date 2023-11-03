@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Metadata\Factory\ResourceFactoryValidationDecorator;
+use LAG\AdminBundle\Metadata\Factory\EventResourceFactory;
 use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Tests\TestCase;
@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ResourceFactoryValidationDecoratorTest extends TestCase
 {
-    private ResourceFactoryValidationDecorator $decorator;
+    private EventResourceFactory $decorator;
     private MockObject $decorated;
     private MockObject $validator;
 
@@ -70,7 +70,7 @@ class ResourceFactoryValidationDecoratorTest extends TestCase
     {
         $this->decorated = $this->createMock(ResourceFactoryInterface::class);
         $this->validator = $this->createMock(ValidatorInterface::class);
-        $this->decorator = new ResourceFactoryValidationDecorator(
+        $this->decorator = new EventResourceFactory(
             $this->validator,
             $this->decorated,
         );

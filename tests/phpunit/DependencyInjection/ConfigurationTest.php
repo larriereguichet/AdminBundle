@@ -21,10 +21,15 @@ class ConfigurationTest extends TestCase
         $data = $tree->buildTree()->finalize([]);
 
         $this->assertEquals([
-            'name' => 'lag_admin',
+            'default_application' => 'admin',
             'title' => 'Admin',
             'description' => 'Admin',
             'translation_domain' => 'admin',
+            'request' => [
+                'application_parameter' => '_application',
+                'resource_parameter' => '_resource',
+                'operation_parameter' => '_operation',
+            ],
             'resource_paths' => [
                 '%kernel.project_dir%/config/admin/resources',
                 '%kernel.project_dir%/src/Entity',

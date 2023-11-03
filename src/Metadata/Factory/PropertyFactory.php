@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Factory;
 
-use LAG\AdminBundle\Exception\Validation\InvalidPropertyCollectionException;
+use LAG\AdminBundle\Exception\InvalidPropertyCollectionException;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-
 use function Symfony\Component\String\u;
 
 class PropertyFactory implements PropertyFactoryInterface

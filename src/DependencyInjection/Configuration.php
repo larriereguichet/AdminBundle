@@ -17,7 +17,16 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('name')->defaultValue('lag_admin')->end()
+                ->arrayNode('request')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('application_parameter')->defaultValue('_application')->end()
+                        ->scalarNode('resource_parameter')->defaultValue('_resource')->end()
+                        ->scalarNode('operation_parameter')->defaultValue('_operation')->end()
+                    ->end()
+                ->end()
+
+                ->scalarNode('default_application')->defaultValue('admin')->end()
                 ->scalarNode('title')->defaultValue('Admin')->end()
                 ->scalarNode('description')->defaultValue('Admin')->end()
                 ->scalarNode('translation_domain')->defaultValue('admin')->end()

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Metadata\Context;
 
-use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Exception\ResourceNotFoundException;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Context\ResourceContext;
 use LAG\AdminBundle\Metadata\Get;
@@ -31,21 +31,21 @@ class ResourceContextTest extends TestCase
 
         $this
             ->parametersExtractor
-            ->expects($this->once())
-            ->method('supports')
+            ->expects($this->atLeastOnce())
+            ->method('getApplicationName')
             ->with($request)
-            ->willReturn(true)
+            ->willReturn('my_application')
         ;
         $this
             ->parametersExtractor
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getResourceName')
             ->with($request)
             ->willReturn('my_resource')
         ;
         $this
             ->parametersExtractor
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getOperationName')
             ->with($request)
             ->willReturn('my_operation')
@@ -63,19 +63,45 @@ class ResourceContextTest extends TestCase
         $this->assertEquals($resource->getName(), $contextResource->getName());
     }
 
-    public function testSupports(): void
+    /** @dataProvider supportsProvider */
+    public function testSupports(?string $application, ?string $resource, ?string $operation, bool $expectedSupport): void
     {
         $request = new Request(['test']);
-
         $this
             ->parametersExtractor
-            ->expects($this->once())
-            ->method('supports')
+            ->method('getApplicationName')
             ->with($request)
-            ->willReturn(true)
+            ->willReturn($application)
+        ;
+        $this
+            ->parametersExtractor
+            ->method('getResourceName')
+            ->with($request)
+            ->willReturn($resource)
+        ;
+        $this
+            ->parametersExtractor
+            ->method('getOperationName')
+            ->with($request)
+            ->willReturn($operation)
         ;
 
-        $this->resourceContext->supports($request);
+        $support = $this->resourceContext->supports($request);
+        $this->assertEquals($expectedSupport, $support);
+    }
+
+    public static function supportsProvider(): array
+    {
+        return [
+            ['admin', null, null, false],
+            ['my_application', 'resource', null, false],
+            ['my_application', null, 'my_operation', false],
+            [null, 'my_operation', 'my_operation', false],
+            [null, null, 'my_operation', false],
+            [null, null, null, false],
+            ['my_application', 'my_resource', 'my_operation', true],
+            ['_application', 'resource', '_operation', true],
+        ];
     }
 
     public function testGetWithoutSupport(): void
@@ -85,12 +111,12 @@ class ResourceContextTest extends TestCase
         $this
             ->parametersExtractor
             ->expects($this->once())
-            ->method('supports')
+            ->method('getApplicationName')
             ->with($request)
-            ->willReturn(false)
+            ->willReturn(null)
         ;
 
-        $this->expectException(Exception::class);
+        $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('The current request is not supported by any admin resource');
         $this->resourceContext->getOperation($request);
     }

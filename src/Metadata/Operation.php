@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -54,12 +54,15 @@ abstract class Operation implements OperationInterface
 
         private array $formOptions = [],
 
-        private string $processor = ORMDataProcessor::class,
+        private string $processor = ORMProcessor::class,
 
-        private string $provider = ORMDataProvider::class,
+        private string $provider = ORMProvider::class,
 
         private array $identifiers = ['id'],
 
+        #[Assert\NotNull(message: 'The contextual links should not be null. Use an empty array instead')]
+        #[Assert\All(constraints: [new Assert\Type(type: Link::class)])]
+        #[Assert\Valid]
         private ?array $contextualActions = null,
 
         private ?array $itemActions = null,
@@ -74,9 +77,15 @@ abstract class Operation implements OperationInterface
 
         private ?bool $ajax = true,
 
+        #[Assert\NotNull(message: 'The normalization context should not be null. Use an empty array instead')]
         private ?array $normalizationContext = null,
 
+        #[Assert\NotNull(message: 'The denormalization context should not be null. Use an empty array instead')]
         private ?array $denormalizationContext = null,
+
+        private ?string $inputClass = null,
+
+        private ?string $outputClass = null,
     ) {
     }
 
@@ -407,7 +416,7 @@ abstract class Operation implements OperationInterface
         return $self;
     }
 
-    public function isValidationEnabled(): ?bool
+    public function useValidation(): ?bool
     {
         return $this->validation;
     }
@@ -468,6 +477,32 @@ abstract class Operation implements OperationInterface
     {
         $self = clone $this;
         $self->denormalizationContext = $context;
+
+        return $self;
+    }
+
+    public function getInputClass(): ?string
+    {
+        return $this->inputClass;
+    }
+
+    public function withInputClass(?string $inputClass): self
+    {
+        $self = clone $this;
+        $self->inputClass = $inputClass;
+
+        return $self;
+    }
+
+    public function getOutputClass(): ?string
+    {
+        return $this->outputClass;
+    }
+
+    public function withOutputClass(?string $outputClass): self
+    {
+        $self = clone $this;
+        $self->outputClass = $outputClass;
 
         return $self;
     }

@@ -17,6 +17,8 @@
 - check extension parameters useful
 - add sf routing params to resource
 - remove load method from the registry
+- replace hasOperation by hasOperationOfType
+- set coherent names to twig extensions
 
 # AdminBundle
 The AdminBundle helps you to create **flexible** and **robust** administration application.

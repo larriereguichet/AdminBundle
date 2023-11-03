@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Filter\Factory;
 
-use LAG\AdminBundle\Exception\Validation\InvalidFilterException;
+use LAG\AdminBundle\Exception\InvalidFilterException;
 use LAG\AdminBundle\Metadata\Filter\Filter;
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
 use LAG\AdminBundle\Metadata\Filter\StringFilter;

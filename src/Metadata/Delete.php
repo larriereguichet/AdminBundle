@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\ORMDataProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Controller\Resource\ResourceController;
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
 
@@ -32,8 +32,8 @@ class Delete extends Operation
         array $properties = [],
         ?string $formType = DeleteType::class,
         array $formOptions = [],
-        string $processor = ORMDataProcessor::class,
-        string $provider = ORMDataProvider::class,
+        string $processor = ORMProcessor::class,
+        string $provider = ORMProvider::class,
         array $identifiers = ['id'],
         array $contextualActions = null,
         array $itemActions = null,
@@ -44,6 +44,8 @@ class Delete extends Operation
         ?bool $ajax = true,
         array $normalizationContext = null,
         array $denormalizationContext = null,
+        ?string $inputClass = null,
+        ?string $outputClass = null,
     ) {
         parent::__construct(
             name: $name,
@@ -74,6 +76,8 @@ class Delete extends Operation
             ajax: $ajax,
             normalizationContext: $normalizationContext,
             denormalizationContext: $denormalizationContext,
+            inputClass: $inputClass,
+            outputClass: $outputClass,
         );
     }
 }

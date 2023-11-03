@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Metadata;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Assert\Expression(
-    expression: 'this.route or (this.resourceName and this.operationName) or this.url',
+    expression: 'this.getRoute() or (this.getResourceName() and this.getOperationName()) or this.url',
     message: 'The link should contains a route or an url or an resource and operation name'
 )]
 class Link
@@ -18,6 +18,7 @@ class Link
         private ?string $resourceName = null,
         private ?string $operationName = null,
         private ?string $template = '@LAGAdmin/grids/actions/link.html.twig',
+        #[Assert\NotNull(message: 'The link label should should not be null')]
         private ?string $label = null,
         private ?string $type = null,
         private ?string $url = null,

@@ -35,14 +35,18 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     // Resource request parameters extractors
-    $services->set(ParametersExtractorInterface::class, ParametersExtractor::class);
+    $services->set(ParametersExtractorInterface::class, ParametersExtractor::class)
+        ->arg('$applicationParameter', param('lag_admin.application_parameter'))
+        ->arg('$resourceParameter', param('lag_admin.resource_parameter'))
+        ->arg('$operationParameter', param('lag_admin.operation_parameter'))
+    ;
     $services->set(UriVariablesExtractorInterface::class, UriVariablesExtractor::class);
 
-    $services->set(ContextProviderInterface::class, CompositeContextProvider::class)
-        ->arg('$contextProviders', tagged_iterator(ContextProviderInterface::class))
-    ;
 
     // Request context providers
+    $services->set(ContextProviderInterface::class, CompositeContextProvider::class)
+        ->arg('$contextProviders', tagged_iterator('lag_admin.request_context_provider'))
+    ;
     $services->set(SortingContextProvider::class)
         ->tag('lag_admin.request_context_provider', ['priority' => 255])
     ;

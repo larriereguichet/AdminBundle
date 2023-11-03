@@ -4,46 +4,52 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Bridge\KnpMenu\Builder\ContextualMenuBuilder;
-use LAG\AdminBundle\Bridge\KnpMenu\Builder\ResourceMenuBuilder;
-use LAG\AdminBundle\Bridge\KnpMenu\Builder\UserMenuBuilder;
+use LAG\AdminBundle\Bridge\KnpMenu\Builder\EventChainProvider;
+use LAG\AdminBundle\Bridge\KnpMenu\Extension\ResourceExtension;
+use LAG\AdminBundle\Menu\Builder\ContextualMenuBuilder;
+use LAG\AdminBundle\Menu\Builder\ResourceMenuBuilder;
+use LAG\AdminBundle\Menu\Builder\UserMenuBuilder;
+use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
+    // Menu builders
     $services->set(ContextualMenuBuilder::class)
-        ->arg('$parametersExtractor', service(ParametersExtractorInterface::class))
-        ->arg('$requestStack', service('request_stack'))
+        ->arg('$resourceContext', service(ResourceContextInterface::class))
         ->arg('$registry', service(ResourceRegistryInterface::class))
-        ->arg('$factory', service('knp_menu.factory'))
+        ->arg('$requestStack', service('request_stack'))
         ->arg('$routeNameGenerator', service(RouteNameGeneratorInterface::class))
-        ->arg('$eventDispatcher', service('event_dispatcher'))
-        ->tag('knp_menu.menu_builder', [
-            'method' => 'build',
-            'alias' => 'contextual',
-        ])
+        ->arg('$factory', service('knp_menu.factory'))
+        ->tag('knp_menu.menu_builder', ['method' => 'build', 'alias' => 'contextual'])
     ;
-
     $services->set(UserMenuBuilder::class)
         ->arg('$factory', service('knp_menu.factory'))
-        ->arg('$eventDispatcher', service('event_dispatcher'))
         ->tag('knp_menu.menu_builder', [
             'method' => 'build',
             'alias' => 'user',
         ])
     ;
-
     $services->set(ResourceMenuBuilder::class)
         ->arg('$factory', service('knp_menu.factory'))
         ->arg('$resourceRegistry', service(ResourceRegistryInterface::class))
         ->arg('$routeNameGenerator', service(RouteNameGeneratorInterface::class))
+        ->tag('knp_menu.menu_builder', ['method' => 'build', 'alias' => 'resource'])
+    ;
+
+    // KnpMenu bridge
+    $services->set(EventChainProvider::class)
+        ->decorate('knp_menu.menu_provider.chain')
+        ->arg('$decorated', service('.inner'))
         ->arg('$eventDispatcher', service('event_dispatcher'))
-        ->tag('knp_menu.menu_builder', [
-            'method' => 'build',
-            'alias' => 'resource',
-        ])
+    ;
+    $services->set(ResourceExtension::class)
+        ->arg('$registry', service(ResourceRegistryInterface::class))
+        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
+        ->tag('knp_menu.factory_extension')
     ;
 };

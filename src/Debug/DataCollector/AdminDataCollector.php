@@ -4,42 +4,38 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Debug\DataCollector;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use Symfony\Bundle\FrameworkBundle\DataCollector\AbstractDataCollector;
+use Symfony\Component\DependencyInjection\Attribute\When;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
-class AdminDataCollector extends DataCollector
+#[When('dev')]
+class AdminDataCollector extends AbstractDataCollector
 {
     public function __construct(
+        private array $applicationConfiguration,
         private ResourceRegistryInterface $registry,
-        private ApplicationConfiguration $applicationConfiguration,
         private ParametersExtractorInterface $parametersExtractor,
     ) {
     }
 
-    public function collect(Request $request, Response $response, \Throwable $exception = null): void
+    public static function getTemplate(): ?string
     {
-        $data = [];
-        $data['resources'] = $this->registry->all();
-
-        if ($this->applicationConfiguration->isFrozen()) {
-            $data['application'] = $this->applicationConfiguration->toArray();
-        }
-
-        if ($this->parametersExtractor->supports($request)) {
-            $data['request']['resource'] = $this->parametersExtractor->getResourceName($request);
-            $data['request']['operation'] = $this->parametersExtractor->getOperationName($request);
-        }
-
-        $this->data = $data;
+        return '@LAGAdmin/debug/template.html.twig';
     }
 
-    public function getName(): string
+    public function collect(Request $request, Response $response, \Throwable $exception = null): void
     {
-        return self::class;
+        $data['resources'] = [];
+        $data['application'] = $this->applicationConfiguration;
+
+        $data['request']['application'] = $this->parametersExtractor->getApplicationName($request);
+        $data['request']['resource'] = $this->parametersExtractor->getResourceName($request);
+        $data['request']['operation'] = $this->parametersExtractor->getOperationName($request);
+
+        $this->data = $data;
     }
 
     public function reset(): void

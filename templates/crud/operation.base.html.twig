@@ -19,7 +19,7 @@
                     <div class="col-5 text-end">
                         <div class="btn-group">
                             {% for action in operation.itemActions %}
-                                {{ lag_admin_action(action, data) }}
+                                {{ lag_admin_link(action, data) }}
                             {% endfor %}
                             <button type="submit"
                                     class="btn btn-primary">

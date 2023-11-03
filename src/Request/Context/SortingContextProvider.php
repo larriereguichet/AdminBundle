@@ -12,22 +12,22 @@ class SortingContextProvider implements ContextProviderInterface
 {
     public function getContext(OperationInterface $operation, Request $request): array
     {
+        if (!$operation instanceof CollectionOperationInterface) {
+            return [];
+        }
         $context = [];
+        $pageParameter = $operation->getPageParameter();
 
-        if ($operation instanceof CollectionOperationInterface) {
-            $pageParameter = $operation->getPageParameter();
+        if ($request->query->has($pageParameter)) {
+            $context[$pageParameter] = $request->query->get($pageParameter);
+        }
 
-            if ($request->query->has($pageParameter)) {
-                $context[$pageParameter] = $request->query->get($pageParameter);
-            }
+        if ($request->query->has('sort')) {
+            $context['sort'] = $request->query->get('sort');
+        }
 
-            if ($request->query->has('sort')) {
-                $context['sort'] = $request->query->get('sort');
-            }
-
-            if ($request->query->has('order')) {
-                $context['order'] = strtoupper($request->query->get('order'));
-            }
+        if ($request->query->has('order')) {
+            $context['order'] = strtoupper($request->query->get('order'));
         }
 
         return $context;

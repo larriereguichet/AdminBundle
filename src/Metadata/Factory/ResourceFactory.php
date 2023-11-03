@@ -4,40 +4,42 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Factory;
 
-use LAG\AdminBundle\Event\Events\ResourceEvent;
-use LAG\AdminBundle\Event\ResourceEvents;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Exception\InvalidResourceException;
 use LAG\AdminBundle\Metadata\AdminResource;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Validator\Constraints\Valid;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ResourceFactory implements ResourceFactoryInterface
 {
     public function __construct(
-        private EventDispatcherInterface $eventDispatcher,
         private OperationFactoryInterface $operationFactory,
+        private ValidatorInterface $validator,
     ) {
     }
 
-    public function create(AdminResource $definition): AdminResource
+    public function create(AdminResource $resource): AdminResource
     {
-        $event = new ResourceEvent($definition);
-        $this->eventDispatcher->dispatch($event, ResourceEvents::RESOURCE_CREATE);
-        $this->eventDispatcher->dispatch($event, sprintf(ResourceEvents::RESOURCE_CREATE_PATTERN, $definition->getName()));
-        $resource = $event->getResource();
         $operations = [];
+        $originalName = $resource->getName();
 
-        foreach ($resource->getOperations() as $operationDefinition) {
-            $operations[] = $this->operationFactory->create($resource, $operationDefinition->withResource($resource));
+        foreach ($resource->getOperations() as $operation) {
+            // Ensure the operation belongs to the right resource
+            $operations[] = $this->operationFactory->create($operation->withResource($resource));
         }
         $resource = $resource->withOperations($operations);
-        $event = new ResourceEvent($resource);
-        $this->eventDispatcher->dispatch($event, ResourceEvents::RESOURCE_CREATED);
-        $this->eventDispatcher->dispatch($event, sprintf(ResourceEvents::RESOURCE_CREATED_PATTERN, $resource->getName()));
 
-        if ($event->getResource()->getName() !== $definition->getName()) {
-            throw new Exception(sprintf('The resource name "%s" to "%s" change is not allowed', $definition->getName(), $resource->getName()));
+        $errors = $this->validator->validate($resource, [new Valid()]);
+
+        if ($errors->count() > 0) {
+            throw new InvalidResourceException($resource->getName(), $errors);
         }
 
-        return $event->getResource();
+        // Dynamic change of the resource name is not allowed as it can cause issues in the core resource system
+        if ($resource->getName() !== $originalName) {
+            throw new Exception(sprintf('The resource name "%s" to "%s" change is not allowed', $resource->getName(), $resource->getName()));
+        }
+
+        return $resource;
     }
 }
