@@ -11,7 +11,6 @@ use LAG\AdminBundle\Menu\Builder\ResourceMenuBuilder;
 use LAG\AdminBundle\Menu\Builder\UserMenuBuilder;
 use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 
