@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventListener\Operation;
 
-use LAG\AdminBundle\Event\Events\OperationEvent;
+use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\GetCollection;
-
 use function Symfony\Component\String\u;
 
 class OperationPathListener

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Metadata\Context;
 
 use LAG\AdminBundle\Exception\ResourceNotFoundException;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Context\ResourceContext;
 use LAG\AdminBundle\Metadata\Get;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use LAG\AdminBundle\Resource\Context\ResourceContext;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ class ResourceContextTest extends TestCase
     {
         $request = new Request(['test']);
 
-        $resource = new AdminResource(name: 'my_resource');
+        $resource = new Resource(name: 'my_resource');
         $operation = new Get(name: 'my_operation');
         $operation = $operation->withResource($resource);
         $resource = $resource->withOperations([$operation]);

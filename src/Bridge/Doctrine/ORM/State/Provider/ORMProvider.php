@@ -41,9 +41,9 @@ class ORMProvider implements ProviderInterface
 
         $queryBuilder = $repository->createQueryBuilder($rootAlias);
         $classMetadata = $manager->getClassMetadata($operation->getResource()->getDataClass());
-        $helper = new QueryBuilderHelper($queryBuilder, $classMetadata);
 
         if ($operation instanceof CollectionOperationInterface) {
+            $helper = new QueryBuilderHelper($queryBuilder, $classMetadata);
             $orderBy = $operation->getOrderBy();
 
             if (($context['sort'] ?? false) && ($context['order'] ?? false)) {
@@ -64,10 +64,16 @@ class ORMProvider implements ProviderInterface
             return $helper->getQueryBuilder();
         }
         $queryBuilder = $repository->createQueryBuilder('entity');
+        $index = 0;
 
         foreach ($operation->getIdentifiers() as $identifier) {
             if ($uriVariables[$identifier] ?? false) {
-                $queryBuilder->andWhere(sprintf('entity.%s = %s', $identifier, $uriVariables[$identifier]));
+                $parameterName = 'identifier_'.$index;
+                $queryBuilder
+                    ->andWhere(sprintf('entity.%s = :%s', $identifier, $parameterName))
+                    ->setParameter($parameterName, $uriVariables[$identifier])
+                ;
+                $index++;
             }
         }
 

@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\State\Provider;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\OperationInterface;
 
-class CompositeProvider implements ProviderInterface
+readonly class CompositeProvider implements ProviderInterface
 {
     public function __construct(
         /** @var ProviderInterface[] $providers */

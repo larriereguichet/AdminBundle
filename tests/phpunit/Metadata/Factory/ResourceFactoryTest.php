@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
-use LAG\AdminBundle\Event\Events\ResourceEvent;
+use LAG\AdminBundle\Event\ResourceEvent;
 use LAG\AdminBundle\Event\ResourceEvents;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Factory\OperationFactoryInterface;
-use LAG\AdminBundle\Metadata\Factory\ResourceFactory;
-use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
+use LAG\AdminBundle\Resource\Factory\ResourceFactory;
+use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -24,7 +24,7 @@ class ResourceFactoryTest extends TestCase
 
     public function testCreate(): void
     {
-        $definition = new AdminResource(
+        $definition = new Resource(
             name: 'my_resource',
         );
 
@@ -64,7 +64,7 @@ class ResourceFactoryTest extends TestCase
             ->operationFactory
             ->expects($this->exactly(5))
             ->method('create')
-            ->willReturnCallback(function (AdminResource $resource, OperationInterface $operation) use ($definition) {
+            ->willReturnCallback(function (Resource $resource, OperationInterface $operation) use ($definition) {
                 $this->assertEquals($resource, $definition);
                 $this->assertEquals($resource, $operation->getResource());
 
@@ -76,7 +76,7 @@ class ResourceFactoryTest extends TestCase
 
     public function testCreateWithNameChange(): void
     {
-        $definition = new AdminResource(
+        $definition = new Resource(
             name: 'my_resource',
         );
 

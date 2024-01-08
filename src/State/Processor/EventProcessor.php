@@ -2,9 +2,9 @@
 
 namespace LAG\AdminBundle\State\Processor;
 
+use LAG\AdminBundle\Event\DataEvent;
 use LAG\AdminBundle\Event\DataEvents;
-use LAG\AdminBundle\Event\Dispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Event\Events\DataEvent;
+use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 
 class EventProcessor implements ProcessorInterface
@@ -19,7 +19,7 @@ class EventProcessor implements ProcessorInterface
     {
         $this->eventDispatcher->dispatchNamedEvents(
             new DataEvent($data),
-            [DataEvents::DATA_PROCESS, DataEvents::DATA_RESOURCE_PROCESS, DataEvents::DATA_OPERATION_PROCESS],
+            [DataEvents::DATA_PROCESS, DataEvents::RESOURCE_DATA_PROCESS, DataEvents::OPERATION_DATA_PROCESS],
             $operation->getResource()->getName(),
             $operation->getName(),
         );
@@ -28,7 +28,7 @@ class EventProcessor implements ProcessorInterface
 
         $this->eventDispatcher->dispatchNamedEvents(
             new DataEvent($data),
-            [DataEvents::DATA_PROCESSED, DataEvents::DATA_RESOURCE_PROCESSED, DataEvents::DATA_OPERATION_PROCESSED],
+            [DataEvents::DATA_PROCESSED, DataEvents::RESOURCE_DATA_PROCESSED, DataEvents::OPERATION_DATA_PROCESSED],
             $operation->getResource()->getName(),
             $operation->getName(),
         );

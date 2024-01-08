@@ -4,17 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventListener\Resource;
 
-use LAG\AdminBundle\Event\Events\ResourceEvent;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
+use LAG\AdminBundle\Event\ResourceEvent;
 use Symfony\Component\String\Inflector\EnglishInflector;
-
 use function Symfony\Component\String\u;
 
-class InitializeResourceListener
+readonly class InitializeResourceListener
 {
     public function __construct(
         private ?string $applicationName,
@@ -25,6 +19,7 @@ class InitializeResourceListener
     public function __invoke(ResourceEvent $event): void
     {
         $resource = $event->getResource();
+
         if ($resource->getTitle() === null) {
             $inflector = new EnglishInflector();
             $title = u($inflector->pluralize($resource->getName())[0])

@@ -4,27 +4,41 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-class Date extends AbstractProperty
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[\Attribute]
+class Date extends Property
 {
     public function __construct(
-        string $name,
-        string $propertyPath = null,
-        string $label = null,
-        ?string $template = '@LAGAdmin/grids/properties/date.html.twig',
+        ?string $name = null,
+        ?string $propertyPath = null,
+        ?string $label = null,
         bool $sortable = true,
-        array $attr = [],
-        array $headerAttr = [],
+        bool $translatable = false,
+        ?string $translationDomain = null,
+        array $attributes = [],
+        array $headerAttributes = [],
+        ?string $allowedDataType = null,
+        array $grids = [],
+
+        #[Assert\NotBlank(message: 'The date format should not be empty. Use "none" instead')]
         private string $dateFormat = 'medium',
+
+        #[Assert\NotBlank(message: 'The time format should not be empty. Use "none" instead')]
         private string $timeFormat = 'none',
     ) {
         parent::__construct(
             name: $name,
             propertyPath: $propertyPath,
             label: $label,
-            template: $template,
+            template: '@LAGAdmin/grids/properties/date.html.twig',
             sortable: $sortable,
-            attr: $attr,
-            headerAttr: $headerAttr,
+            translatable: $translatable,
+            translationDomain: $translationDomain,
+            attributes: $attributes,
+            headerAttributes: $headerAttributes,
+            allowedDataType: $allowedDataType,
+            grids: $grids,
         );
     }
 

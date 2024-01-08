@@ -1,8 +1,6 @@
 {
   "admin.css": "/bundles/lagadmin/admin.css",
   "admin.js": "/bundles/lagadmin/admin.js",
-  "bootstrap.css": "/bundles/lagadmin/bootstrap.css",
-  "bootstrap.js": "/bundles/lagadmin/bootstrap.js",
   "choice-js.css": "/bundles/lagadmin/choice-js.css",
   "themes/silver/theme.js": "/bundles/lagadmin/themes/silver/theme.js",
   "plugins/emoticons/js/emojiimages.min.js": "/bundles/lagadmin/plugins/emoticons/js/emojiimages.min.js",
@@ -10,8 +8,6 @@
   "themes/silver/theme.min.js": "/bundles/lagadmin/themes/silver/theme.min.js",
   "plugins/emoticons/js/emojis.min.js": "/bundles/lagadmin/plugins/emoticons/js/emojis.min.js",
   "plugins/emoticons/js/emojis.js": "/bundles/lagadmin/plugins/emoticons/js/emojis.js",
-  "fonts/bootstrap-icons.woff?": "/bundles/lagadmin/fonts/bootstrap-icons.449ad8ad.woff",
-  "fonts/bootstrap-icons.woff2?": "/bundles/lagadmin/fonts/bootstrap-icons.dea24bf5.woff2",
   "skins/ui/tinymce-5/skin.css": "/bundles/lagadmin/skins/ui/tinymce-5/skin.css",
   "skins/ui/tinymce-5-dark/skin.css": "/bundles/lagadmin/skins/ui/tinymce-5-dark/skin.css",
   "skins/ui/oxide/skin.css": "/bundles/lagadmin/skins/ui/oxide/skin.css",

@@ -6,7 +6,8 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Controller\Resource\ResourceCollectionController;
 use LAG\AdminBundle\Controller\Resource\ResourceController;
-use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
+use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
+use LAG\AdminBundle\Grid\Builder\GridViewBuilderInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
@@ -24,17 +25,19 @@ return static function (ContainerConfigurator $container) {
         ->arg('$dataProcessor', service(ProcessorInterface::class))
         ->arg('$formFactory', service('form.factory'))
         ->arg('$redirectionHandler', service(RedirectHandlerInterface::class))
-        ->arg('$redirectionHandler', service(RedirectHandlerInterface::class))
         ->arg('$environment', service('twig'))
         ->arg('$serializer', service(SerializerInterface::class))
+        ->arg('$eventDispatcher', service(ResourceEventDispatcherInterface::class))
         ->tag('controller.service_arguments')
     ;
 
     $services->set(ResourceCollectionController::class)
         ->arg('$uriVariablesExtractor', service(UriVariablesExtractorInterface::class))
         ->arg('$contextProvider', service(ContextProviderInterface::class))
-        ->arg('$dataProvider', service(ProviderInterface::class))
-        ->arg('$gridFactory', service(GridFactoryInterface::class))
+        ->arg('$provider', service(ProviderInterface::class))
+        ->arg('$processor', service(ProcessorInterface::class))
+        ->arg('$gridBuilder', service(GridViewBuilderInterface::class))
+        ->arg('$redirectionHandler', service(RedirectHandlerInterface::class))
         ->arg('$serializer', service('serializer'))
         ->arg('$formFactory', service('form.factory'))
         ->arg('$environment', service('twig'))

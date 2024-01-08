@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\EventListener\Operation;
 
-use LAG\AdminBundle\Event\Events\OperationEvent;
+use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\GetCollection;
@@ -18,16 +18,20 @@ class InitializeCollectionOperationListener
             return;
         }
 
+        if ($operation->getFilters() === null) {
+            $operation = $operation->withFilters([]);
+        }
+
         if ($operation->getFilterFormType() === null && $operation instanceof GetCollection && \count($operation->getFilters() ?? []) > 0) {
             $operation = $operation->withFilterFormType(FilterType::class);
         }
 
         if (is_a($operation->getFilterFormType(), FilterType::class, true)) {
-            $operation = $operation->withFilterFormOptions($operation->getFilterFormOptions() ?? [])
-                ->withFilterFormOptions([
+            $operation = $operation->withFilterFormOptions(array_merge([
+                'application' => $resource->getApplicationName(),
                 'resource' => $resource->getName(),
                 'operation' => $operation->getName(),
-            ]);
+            ], $operation->getFilterFormOptions()));
         }
 
         $event->setOperation($operation);

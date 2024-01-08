@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\Loader;
 
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGeneratorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use function Symfony\Component\Translation\t;
 
 class ResourceRoutingLoader extends Loader
 {
     private bool $loaded = false;
 
     public function __construct(
-        private string $applicationParameter,
-        private string $resourceParameter,
-        private string $operationParameter,
-        private ResourceRegistryInterface $resourceRegistry,
-        private PathGeneratorInterface $pathGenerator,
+        private readonly string $applicationParameter,
+        private readonly string $resourceParameter,
+        private readonly string $operationParameter,
+        private readonly ResourceRegistryInterface $resourceRegistry,
+        private readonly PathGeneratorInterface $pathGenerator,
     ) {
         parent::__construct();
     }
@@ -47,7 +46,7 @@ class ResourceRoutingLoader extends Loader
         return 'lag_admin' === $type;
     }
 
-    private function loadResource(AdminResource $resource, RouteCollection $routes): void
+    private function loadResource(Resource $resource, RouteCollection $routes): void
     {
         $identifiers = [];
 

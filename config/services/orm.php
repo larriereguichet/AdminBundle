@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\InitializeResourceListener;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\InitializeResourcePropertiesListener;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\OperationCreateListener;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
@@ -15,6 +15,7 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\DoctrineCollectionTransfo
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\PaginationProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\QueryBuilderProvider;
+use LAG\AdminBundle\Event\ResourceEvents;
 use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 
@@ -24,7 +25,7 @@ return static function (ContainerConfigurator $container): void {
     // State providers
     $services->set(ORMProvider::class)
         ->arg('$registry', service('doctrine'))
-        ->tag('lag_admin.data_provider', ['identifier' => 'doctrine', 'priority' => 0])
+        ->tag('lag_admin.state_provider', ['identifier' => 'doctrine', 'priority' => 0])
     ;
     $services->set(PaginationProvider::class)
         ->decorate(ProviderInterface::class, priority: 255)
@@ -43,16 +44,13 @@ return static function (ContainerConfigurator $container): void {
     // State processors
     $services->set(ORMProcessor::class)
         ->arg('$registry', service('doctrine'))
-        ->tag('lag_admin.data_processor', ['identifier' => 'doctrine', 'priority' => 0])
+        ->tag('lag_admin.state_processor', ['identifier' => 'doctrine', 'priority' => 0])
     ;
 
     // Event listeners
-    $services->set(InitializeResourceListener::class)
+    $services->set(InitializeResourcePropertiesListener::class)
         ->arg('$propertyFactory', service(MetadataPropertyFactoryInterface::class))
-        ->tag('kernel.event_listener', [
-            'event' => 'lag_admin.resource.create',
-            'priority' => 200,
-        ])
+        ->tag('kernel.event_listener', ['event' => ResourceEvents::RESOURCE_CREATE, 'priority' => 200])
     ;
     $services->set(OperationCreateListener::class)
         ->arg('$filterFactory', service(FilterFactoryInterface::class))

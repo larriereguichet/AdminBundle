@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
 use LAG\AdminBundle\Request\Context\AjaxContextProvider;
 use LAG\AdminBundle\Request\Context\CompositeContextProvider;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
@@ -16,6 +15,7 @@ use LAG\AdminBundle\Request\Resolver\OperationValueResolver;
 use LAG\AdminBundle\Request\Resolver\ResourceValueResolver;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractor;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Response\Handler\RedirectHandler;
 use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;

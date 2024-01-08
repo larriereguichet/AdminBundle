@@ -16,8 +16,15 @@ class ParametersMapper implements ParametersMapperInterface
         $accessor = PropertyAccess::createPropertyAccessor();
         $mappedRouteParameters = [];
 
-        foreach ($routeParameters as $parameter) {
-            $mappedRouteParameters[$parameter] = $accessor->getValue($data, $parameter);
+        foreach ($routeParameters as $parameter => $propertyPath) {
+            if ($propertyPath === null) {
+                $propertyPath = $parameter;
+            }
+
+            if (is_int($parameter)) {
+                $parameter = $propertyPath;
+            }
+            $mappedRouteParameters[$parameter] = $accessor->getValue($data, $propertyPath);
         }
 
         return $mappedRouteParameters;

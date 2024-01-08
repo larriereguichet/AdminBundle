@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Controller\Resource;
 
+use LAG\AdminBundle\Event\ResourceControllerEvent;
+use LAG\AdminBundle\Event\ResourceControllerEvents;
+use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
@@ -28,6 +31,7 @@ readonly class ResourceController
         private Environment $environment,
         private RedirectHandlerInterface $redirectionHandler,
         private SerializerInterface $serializer,
+        private ResourceEventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -52,6 +56,22 @@ readonly class ResourceController
 
                 return $this->redirectionHandler->createRedirectResponse($operation, $data, $context);
             }
+        }
+        $event = new ResourceControllerEvent($operation, $request, $data);
+        $eventNames = [
+            ResourceControllerEvents::RESOURCE_CONTROLLER,
+            ResourceControllerEvents::RESOURCE_CONTROLLER_NAMED_EVENT,
+            ResourceControllerEvents::OPERATION_CONTROLLER_NAMED_EVENT,
+        ];
+        $this->eventDispatcher->dispatchNamedEvents(
+            $event,
+            $eventNames,
+            $operation->getResource()->getName(),
+            $operation->getName(),
+        );
+
+        if ($event->getResponse() !== null) {
+            return $event->getResponse();
         }
 
         if ($request->getContentTypeFormat() === 'json') {

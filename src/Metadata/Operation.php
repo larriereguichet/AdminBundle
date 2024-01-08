@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class Operation implements OperationInterface
 {
-    private AdminResource $resource;
+    private Resource $resource;
 
     public function __construct(
         #[Assert\NotBlank(message: 'The operation name should not be empty')]
@@ -47,9 +47,6 @@ abstract class Operation implements OperationInterface
         #[Assert\NotNull]
         private ?array $redirectRouteParameters = null,
 
-        /** @var PropertyInterface[] */
-        private array $properties = [],
-
         private ?string $formType = null,
 
         private array $formOptions = [],
@@ -66,6 +63,8 @@ abstract class Operation implements OperationInterface
         private ?array $contextualActions = null,
 
         private ?array $itemActions = null,
+
+        private ?string $redirectApplication = null,
 
         private ?string $redirectResource = null,
 
@@ -86,6 +85,10 @@ abstract class Operation implements OperationInterface
         private ?string $inputClass = null,
 
         private ?string $outputClass = null,
+
+        private ?string $workflow = null,
+
+        private ?string $workflowTransition = null,
     ) {
     }
 
@@ -245,34 +248,6 @@ abstract class Operation implements OperationInterface
         return $self;
     }
 
-    public function getProperties(): array
-    {
-        return $this->properties;
-    }
-
-    public function withProperties(array $properties): self
-    {
-        $self = clone $this;
-        $self->properties = $properties;
-
-        return $self;
-    }
-
-    public function withProperty(PropertyInterface $newProperty): OperationInterface
-    {
-        $self = clone $this;
-        $found = false;
-
-        foreach ($self->properties as $index => $property) {
-            if ($property->getName() === $newProperty->getName()) {
-                $self->properties[$index] = $newProperty;
-                $found = true;
-            }
-        }
-
-        return $self;
-    }
-
     public function getFormType(): ?string
     {
         return $this->formType;
@@ -351,12 +326,12 @@ abstract class Operation implements OperationInterface
         return $self;
     }
 
-    public function getResource(): AdminResource
+    public function getResource(): Resource
     {
         return $this->resource;
     }
 
-    public function withResource(AdminResource $resource): self
+    public function withResource(Resource $resource): self
     {
         $self = clone $this;
         $self->resource = $resource;
@@ -399,6 +374,19 @@ abstract class Operation implements OperationInterface
     {
         $self = clone $this;
         $self->redirectResource = $redirectResource;
+
+        return $self;
+    }
+
+    public function getRedirectApplication(): ?string
+    {
+        return $this->redirectApplication;
+    }
+
+    public function withRedirectApplication(?string $redirectApplication): self
+    {
+        $self = clone $this;
+        $self->redirectApplication = $redirectApplication;
 
         return $self;
     }
@@ -503,6 +491,32 @@ abstract class Operation implements OperationInterface
     {
         $self = clone $this;
         $self->outputClass = $outputClass;
+
+        return $self;
+    }
+
+    public function getWorkflow(): ?string
+    {
+        return $this->workflow;
+    }
+
+    public function setWorkflow(?string $workflow): self
+    {
+        $self = clone $this;
+        $self->workflow = $workflow;
+
+        return $self;
+    }
+
+    public function getWorkflowTransition(): ?string
+    {
+        return $this->workflowTransition;
+    }
+
+    public function setWorkflowTransition(?string $workflowTransition): self
+    {
+        $self = clone $this;
+        $self->workflowTransition = $workflowTransition;
 
         return $self;
     }

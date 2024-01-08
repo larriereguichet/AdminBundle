@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-class Boolean extends AbstractProperty
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
+class Boolean extends Property
 {
     public function __construct(
-        string $name,
+        ?string $name = null,
         string $propertyPath = null,
         string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/boolean.html.twig',
         bool $sortable = true,
         bool $translatable = false,
         string $translationDomain = null,
-        array $attr = [],
-        array $headerAttr = [],
+        array $attributes = [],
+        array $headerAttributes = [],
     ) {
         parent::__construct(
             name: $name,
@@ -25,8 +26,8 @@ class Boolean extends AbstractProperty
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
-            attr: $attr,
-            headerAttr: $headerAttr,
+            attributes: $attributes,
+            headerAttributes: $headerAttributes,
         );
     }
 }

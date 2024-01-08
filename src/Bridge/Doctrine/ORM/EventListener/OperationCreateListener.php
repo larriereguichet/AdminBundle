@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener;
 
-use LAG\AdminBundle\Event\Events\OperationEvent;
+use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 
-class OperationCreateListener
+readonly class OperationCreateListener
 {
     public function __construct(
         private FilterFactoryInterface $filterFactory,
@@ -18,26 +18,26 @@ class OperationCreateListener
 
     public function __invoke(OperationEvent $event): void
     {
-        /** @var CollectionOperationInterface $operation */
-        $operation = $event->getOperation();
-
-        if (!$this->supports($operation)) {
-            return;
-        }
+//        /** @var CollectionOperationInterface $operation */
+//        $operation = $event->getOperation();
+//
+//        if (!$this->supports($operation)) {
+//            return;
+//        }
         $filters = [];
 
-        foreach ($operation->getProperties() as $property) {
-            $filter = $this
-                ->filterFactory
-                ->createFromProperty($property)
-            ;
-
-            if (\in_array($filter->getName(), $operation->getIdentifiers())) {
-                $filter = $filter->withComparator('=');
-            }
-            $filters[] = $filter;
-        }
-        $event->setOperation($operation->withFilters($filters));
+//        foreach ($operation->getProperties() as $property) {
+//            $filter = $this
+//                ->filterFactory
+//                ->createFromProperty($property)
+//            ;
+//
+//            if (\in_array($filter->getName(), $operation->getIdentifiers())) {
+//                $filter = $filter->withComparator('=');
+//            }
+//            $filters[] = $filter;
+//        }
+//        $event->setOperation($operation->withFilters($filters));
     }
 
     private function supports(OperationInterface $operation): bool

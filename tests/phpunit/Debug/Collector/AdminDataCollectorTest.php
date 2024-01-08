@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Debug\Collector;
 
 use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,8 +24,8 @@ class AdminDataCollectorTest extends TestCase
         $request = new Request();
         $response = new Response();
 
-        $resource1 = new AdminResource(name: 'my_resource');
-        $resource2 = new AdminResource(name: 'my_other_resource');
+        $resource1 = new Resource(name: 'my_resource');
+        $resource2 = new Resource(name: 'my_other_resource');
 
         $this
             ->registry

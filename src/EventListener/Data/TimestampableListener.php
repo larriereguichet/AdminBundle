@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventListener\Data;
 
 use LAG\AdminBundle\Entity\TimestampableInterface;
-use LAG\AdminBundle\Event\Events\DataEvent;
+use LAG\AdminBundle\Event\DataEvent;
 
 class TimestampableListener
 {

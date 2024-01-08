@@ -1,0 +1,38 @@
+{% import '@LAGAdmin/grids/macro/attributes.html.twig' as lag_admin %}
+
+{% if header.sortable %}
+    <a{{ lag_admin.attributes(header.labelAttributes|merge({'class': 'text-dark'})) }}>
+        {{ header.label|trans({}, header.translationDomain) }}
+
+        {% if header.icon %}
+            <i class="{{ header.icon }}"></i>
+        {% end %}
+    </a>
+{% else %}
+    <p{{ lag_admin.attributes(header.labelAttributes) }}>{{ header.label|trans({}, header.translationDomain) }}</p>
+{% endif %}
+
+remove !!!
+{% if header.sortable %}
+    {% set order = 'asc' %}
+
+    {% if app.request.query.get('order') == 'asc' %}
+        {% set order = 'desc' %}
+    {% endif %}
+
+    <a href="?sort={{ header.name }}&order={{ order }}"
+       class="text-dark">
+        {{ header.label|trans({}, operation.resource.translationDomain) }}
+
+        {% if app.request.query.get('sort') == header.name %}
+            {% if order == 'asc' %}
+                <i class="bi bi-arrow-down sort-icon sort-asc"></i>
+            {% else %}
+                <i class="bi bi-arrow-up sort-icon sort-desc"></i>
+            {% endif %}
+        {% endif %}
+    </a>
+{% else %}
+    {{ header.label|trans }}
+{% endif %}
+

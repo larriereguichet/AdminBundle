@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Metadata\Factory\EventResourceFactory;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Metadata\Operation;
+use LAG\AdminBundle\Resource\Factory\EventResourceFactory;
+use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\Validation\Constraint\AdminValid;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -24,7 +24,7 @@ class ResourceFactoryValidationDecoratorTest extends TestCase
 
     public function testCreate(): void
     {
-        $resource = new AdminResource(name: 'my_resource', operations: [
+        $resource = new Resource(name: 'my_resource', operations: [
             new GetCollection(),
         ]);
 
@@ -47,7 +47,7 @@ class ResourceFactoryValidationDecoratorTest extends TestCase
             ->expects($this->exactly(2))
             ->method('validate')
             ->willReturnCallback(function (mixed $value, array $constraints) use ($constrainViolations) {
-                if ($value instanceof AdminResource) {
+                if ($value instanceof Resource) {
                     $this->assertEquals([new AdminValid(), new Valid()], $constraints);
 
                     return $constrainViolations;

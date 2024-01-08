@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\State\Provider;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\Get;
@@ -94,17 +94,17 @@ class NormalizationProviderTest extends TestCase
         yield [new GetCollection(outputClass: null), new ArrayCollection(), false];
         yield [new GetCollection(outputClass: 'TestClass'), $fake, false];
         yield [
-            (new Get(outputClass: 'TestClass'))->withResource(new AdminResource(dataClass: 'OtherClass')),
+            (new Get(outputClass: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
             new ArrayCollection(),
             false,
         ];
         yield [
-            (new Get(outputClass: 'TestClass'))->withResource(new AdminResource(dataClass: 'OtherClass')),
+            (new Get(outputClass: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
             new ArrayCollection(),
             false
         ];
         yield [
-            (new Get(outputClass: 'TestClass'))->withResource(new AdminResource(dataClass: 'OtherClass')),
+            (new Get(outputClass: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
             new ArrayCollection(),
             false,
         ];
@@ -115,7 +115,7 @@ class NormalizationProviderTest extends TestCase
                 outputClass: 'OutputClass',
                 normalizationContext: ['groups' => ['normalization']],
                 denormalizationContext: ['groups' => ['denormalization']],
-            ))->withResource(new AdminResource(dataClass: \stdClass::class)),
+            ))->withResource(new Resource(dataClass: \stdClass::class)),
             $fake,
             true,
             'OutputClass',
@@ -125,7 +125,7 @@ class NormalizationProviderTest extends TestCase
                 outputClass: 'OutputClass',
                 normalizationContext: ['groups' => ['normalization']],
                 denormalizationContext: ['groups' => ['denormalization']],
-            ))->withResource(new AdminResource(dataClass: \stdClass::class)),
+            ))->withResource(new Resource(dataClass: \stdClass::class)),
             [$fake],
             true,
             'OutputClass[]',

@@ -4,30 +4,24 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-class Count extends AbstractProperty implements TransformablePropertyInterface
+class Count extends Property
 {
     public function __construct(
-        string $name,
+        ?string $name = null,
         string $propertyPath = null,
         string $label = null,
-        ?string $template = '@LAGAdmin/grids/properties/count.html.twig',
         bool $sortable = true,
-        array $attr = [],
-        array $headerAttr = [],
+        array $attributes = [],
+        array $headerAttributes = [],
     ) {
         parent::__construct(
             name: $name,
             propertyPath: $propertyPath,
             label: $label,
-            template: $template,
+            template: '@LAGAdmin/grids/properties/count.html.twig',
             sortable: $sortable,
-            attr: $attr,
-            headerAttr: $headerAttr,
+            attributes: $attributes,
+            headerAttributes: $headerAttributes,
         );
-    }
-
-    public function transform(mixed $data): int
-    {
-        return \count($data);
     }
 }

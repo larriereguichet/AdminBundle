@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
+use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-class UrlGenerator implements UrlGeneratorInterface
+readonly class UrlGenerator implements UrlGeneratorInterface
 {
     public function __construct(
         private RouterInterface $router,
@@ -24,6 +26,31 @@ class UrlGenerator implements UrlGeneratorInterface
         return $this->router->generate($operation->getRoute(), $parameters);
     }
 
+    public function generateLink(Link $link, mixed $data = null): string
+    {
+        if ($link->getUrl()) {
+            return $link->getUrl();
+        }
+
+        if ($link->getResourceName() && $link->getOperationName()) {
+            return $this->generateFromOperationName(
+                $link->getResourceName(),
+                $link->getOperationName(),
+                $data,
+            );
+        }
+
+        if ($link->getRoute()) {
+            return $this->generateFromRouteName(
+                $link->getRoute(),
+                $link->getRouteParameters(),
+                $data,
+            );
+        }
+
+        throw new Exception('Unable to generate a route for the given link');
+    }
+
     public function generateFromRouteName(string $routeName, array $routeParameters = [], mixed $data = null): string
     {
         $mappedRouteParameters = $routeParameters;
@@ -35,15 +62,15 @@ class UrlGenerator implements UrlGeneratorInterface
         return $this->router->generate($routeName, $mappedRouteParameters);
     }
 
-    public function generateFromOperationName(string $resourceName, string $operationName, mixed $data = null): string
-    {
-        $resource = $this->resourceRegistry->get($resourceName);
+    public function generateFromOperationName(
+        string $resourceName,
+        string $operationName,
+        mixed $data = null,
+        ?string $applicationName = null,
+    ): string {
+        $resource = $this->resourceRegistry->get($resourceName, $applicationName);
         $operation = $resource->getOperation($operationName);
 
-        return $this->generateFromRouteName(
-            $operation->getRoute(),
-            array_keys($operation->getRouteParameters()),
-            $data,
-        );
+        return $this->generate($operation, $data);
     }
 }

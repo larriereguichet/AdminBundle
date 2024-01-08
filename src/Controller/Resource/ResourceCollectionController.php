@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Controller\Resource;
 
-use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
+use LAG\AdminBundle\Grid\Builder\GridViewBuilderInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
+use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
+use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,8 +24,10 @@ readonly class ResourceCollectionController
     public function __construct(
         private UriVariablesExtractorInterface $uriVariablesExtractor,
         private ContextProviderInterface $contextProvider,
-        private ProviderInterface $dataProvider,
-        private GridFactoryInterface $gridFactory,
+        private ProviderInterface $provider,
+        private ProcessorInterface $processor,
+        private RedirectHandlerInterface $redirectionHandler,
+        private GridViewBuilderInterface $gridBuilder,
         private FormFactoryInterface $formFactory,
         private SerializerInterface $serializer,
         private Environment $environment,
@@ -33,14 +38,43 @@ readonly class ResourceCollectionController
     {
         $uriVariables = $this->uriVariablesExtractor->extractVariables($operation, $request);
         $context = $this->contextProvider->getContext($operation, $request);
-        $form = null;
+        $filterForm = null;
 
         if ($operation->getFilterFormType() !== null) {
-            $form = $this->formFactory->create($operation->getFilterFormType(), [], $operation->getFilterFormOptions());
-            $form->handleRequest($request);
+            $filterForm = $this->formFactory->create($operation->getFilterFormType(), [], $operation->getFilterFormOptions());
+            $filterForm->handleRequest($request);
         }
-        $data = $this->dataProvider->provide($operation, $uriVariables, $context);
-        $grid = $this->gridFactory->create($operation, $data);
+        $data = $this->provider->provide($operation, $uriVariables, $context);
+        $form = null;
+
+        if ($operation->getFormType() !== null) {
+            $form = $this->formFactory->create(CollectionType::class, $data->getCurrentPageResults(), [
+                'entry_type' => $operation->getFormType(),
+                'entry_options' => $operation->getFormOptions(),
+            ]);
+            $form->handleRequest($request);
+
+            if ($context['json'] ?? false) {
+                $form->submit($request->toArray());
+            }
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $data = $form->getData();
+                $this->processor->process($data, $operation, $uriVariables, $context);
+
+                return $this->redirectionHandler->createRedirectResponse($operation, $data, $context);
+            }
+        }
+
+        if ($operation->getGrid() !== null) {
+            $grid = $this->gridBuilder->build(
+                $operation->getGrid(),
+                $operation,
+                $data,
+                $form?->createView(),
+                $context
+            );
+        }
 
         if ($context['json'] ?? false) {
             $content = $this->serializer->serialize($data, 'json', $operation->getNormalizationContext());
@@ -49,10 +83,11 @@ readonly class ResourceCollectionController
         }
 
         return new Response($this->environment->render($operation->getTemplate(), [
-            'grid' => $grid,
+            'grid' => $grid ?? null,
             'resource' => $operation->getResource(),
             'operation' => $operation,
             'data' => $data,
+            'filterForm' => $filterForm?->createView(),
             'form' => $form?->createView(),
         ]));
     }

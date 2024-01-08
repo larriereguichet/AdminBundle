@@ -56,15 +56,6 @@ interface OperationInterface
 
     public function withRedirectRouteParameters(?array $targetRouteParameters): self;
 
-    /**
-     * @return PropertyInterface[]
-     */
-    public function getProperties(): array;
-
-    public function withProperties(array $properties): self;
-
-    public function withProperty(PropertyInterface $newProperty): self;
-
     public function getFormType(): ?string;
 
     public function withFormType(?string $formType): self;
@@ -90,9 +81,9 @@ interface OperationInterface
 
     public function withIdentifiers(array $identifiers): self;
 
-    public function getResource(): AdminResource;
+    public function getResource(): Resource;
 
-    public function withResource(AdminResource $resource): self;
+    public function withResource(Resource $resource): self;
 
     /** @return Link[]|null */
     public function getContextualActions(): ?array;
@@ -104,6 +95,10 @@ interface OperationInterface
 
     /** @param array $itemActions Link[]|null */
     public function withItemActions(array $itemActions): self;
+
+    public function getRedirectApplication(): ?string;
+
+    public function withRedirectApplication(?string $redirectApplication): self;
 
     public function getRedirectResource(): ?string;
 
@@ -140,4 +135,12 @@ interface OperationInterface
     public function getOutputClass(): ?string;
 
     public function withOutputClass(?string $outputClass): self;
+
+    public function getWorkflow(): ?string;
+
+    public function setWorkflow(?string $workflow): self;
+
+    public function getWorkflowTransition(): ?string;
+
+    public function setWorkflowTransition(?string $workflowTransition): self;
 }

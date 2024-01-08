@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Twig\Extension;
 
-use LAG\AdminBundle\Grid\View\LinkRendererInterface;
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Grid\Render\LinkRendererInterface;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\Get;
 use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
 use LAG\AdminBundle\Tests\TestCase;
@@ -44,7 +44,7 @@ class AdminExtensionTest extends TestCase
     public function testIsOperationAllowed(): void
     {
         $operation = new Get(name: 'my_operation');
-        $resource = new AdminResource(name: 'my_resource', operations: [$operation]);
+        $resource = new Resource(name: 'my_resource', operations: [$operation]);
 
         $this
             ->registry
@@ -95,7 +95,7 @@ class AdminExtensionTest extends TestCase
             ->willReturn('/url')
         ;
 
-        $url = $this->adminExtension->getOperationUrl('my_resource', 'my_operation', $data);
+        $url = $this->adminExtension->generateUrl('my_resource', 'my_operation', $data);
 
         $this->assertEquals('/url', $url);
     }

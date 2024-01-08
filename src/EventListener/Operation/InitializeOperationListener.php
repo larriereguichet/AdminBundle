@@ -4,25 +4,22 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventListener\Operation;
 
-use LAG\AdminBundle\Event\Events\OperationEvent;
+use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Form\Type\DataType;
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
-use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceType;
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
-use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Update;
-
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
 use function Symfony\Component\String\u;
 
-class InitializeOperationListener
+readonly class InitializeOperationListener
 {
     public function __construct(
         private RouteNameGeneratorInterface $routeNameGenerator,
@@ -90,23 +87,12 @@ class InitializeOperationListener
             $operation = $operation->withRouteParameters([]);
 
             if (!$operation instanceof CollectionOperationInterface && !$operation instanceof Create) {
-                $routeParameters = [];
-
-                foreach ($operation->getIdentifiers() as $identifier) {
-                    $routeParameters[$identifier] = null;
-                }
-                $operation = $operation->withRouteParameters($routeParameters);
+                $operation = $operation->withRouteParameters(array_values($operation->getIdentifiers()));
             }
         }
 
         if ($operation instanceof Delete && $operation->getFormType() === DeleteType::class) {
             $operation = $operation->withFormOptions(array_merge($operation->getFormOptions(), ['resource' => $resource]));
-        }
-
-        if ($operation instanceof CollectionOperationInterface) {
-            if ($operation->getFilters() === null) {
-                $operation = $operation->withFilters([]);
-            }
         }
 
         if ($operation->getContextualActions() === null) {
@@ -164,7 +150,7 @@ class InitializeOperationListener
         $event->setOperation($operation);
     }
 
-    private function withDefaultItemActions(AdminResource $resource, OperationInterface $operation): OperationInterface
+    private function withDefaultItemActions(Resource $resource, OperationInterface $operation): OperationInterface
     {
         $actions = [];
 

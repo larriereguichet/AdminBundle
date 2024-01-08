@@ -4,32 +4,41 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-class Text extends AbstractProperty
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[\Attribute]
+class Text extends Property
 {
     public function __construct(
-        string $name,
-        string $propertyPath = null,
-        string $label = null,
-        ?string $template = '@LAGAdmin/grids/properties/text.html.twig',
+        ?string $name = null,
+        ?string $propertyPath = null,
+        ?string $label = null,
+        ?string $template = null,
         bool $sortable = true,
         bool $translatable = false,
-        string $translationDomain = null,
-        array $attr = [],
-        array $headerAttr = [],
+        ?string $translationDomain = null,
+        array $attributes = [],
+        array $headerAttributes = [],
+        ?string $allowedDataType = null,
+        array $grids = [],
+
+        #[Assert\Length(min: 1)]
         private int $length = 100,
         private string $replace = '...',
-        private string $emptyString = '~',
+        private string $empty = '~',
+        private string $suffix = '',
+        private string $prefix = '',
     ) {
         parent::__construct(
             name: $name,
             propertyPath: $propertyPath,
             label: $label,
-            template: $template,
+            template: '@LAGAdmin/grids/properties/text.html.twig',
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
-            attr: $attr,
-            headerAttr: $headerAttr,
+            attributes: $attributes,
+            headerAttributes: $headerAttributes,
         );
     }
 
@@ -59,16 +68,43 @@ class Text extends AbstractProperty
         return $self;
     }
 
-    public function getEmptyString(): string
+    public function getEmpty(): string
     {
-        return $this->emptyString;
+        return $this->empty;
     }
 
-    public function setEmptyString(string $emptyString): self
+    public function withEmpty(string $empty): self
     {
         $self = clone $this;
-        $self->emptyString = $emptyString;
+        $self->empty = $empty;
 
         return $self;
     }
+
+    public function getSuffix(): string
+    {
+        return $this->suffix;
+    }
+
+    public function setSuffix(string $suffix): Text
+    {
+        $self = clone $this;
+        $self->suffix = $suffix;
+
+        return $self;
+    }
+
+    public function getPrefix(): string
+    {
+        return $this->prefix;
+    }
+
+    public function setPrefix(string $prefix): Text
+    {
+        $self = clone $this;
+        $self->prefix = $prefix;
+
+        return $self;
+    }
+
 }

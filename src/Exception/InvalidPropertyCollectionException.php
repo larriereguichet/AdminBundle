@@ -13,12 +13,10 @@ class InvalidPropertyCollectionException extends Exception
         /* @var ConstraintViolationListInterface[] $errors */
         array $errors,
         ?string $resourceName,
-        ?string $operationName,
     ) {
         $message = sprintf(
-            'The configuration of the operation "%s.%s" is not valid. The following properties are invalid :',
+            'The configuration of the resource "%s" is not valid. The following properties are invalid :',
             $resourceName,
-            $operationName,
         );
 
         /** @var ConstraintViolationInterface|iterable $propertyErrors */

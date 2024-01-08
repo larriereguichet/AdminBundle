@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Loader\ResourceRoutingLoader;
 use LAG\AdminBundle\Routing\Route\RouteNameGenerator;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;

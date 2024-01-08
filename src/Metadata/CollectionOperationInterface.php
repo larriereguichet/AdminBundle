@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
+use LAG\AdminBundle\Metadata\Grid\GridInterface;
 
 /**
  * Interface for collection operations. It adds the required attributes for collection handling to the item operation
@@ -44,7 +45,7 @@ interface CollectionOperationInterface extends OperationInterface
 
     public function getGrid(): ?string;
 
-    public function withGridTemplate(?string $gridTemplate): self;
+    public function withGrid(string $grid): self;
 
     public function getFilterFormType(): ?string;
 
@@ -53,4 +54,8 @@ interface CollectionOperationInterface extends OperationInterface
     public function getFilterFormOptions(): array;
 
     public function withFilterFormOptions(array $filterFormOptions): self;
+
+    public function withGridOptions(array $gridOptions): self;
+
+    public function getGridOptions(): array;
 }

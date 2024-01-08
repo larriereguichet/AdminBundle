@@ -75,7 +75,7 @@ article:
             name:
                 type: link
                 options:
-                    template: '@LAGAdmin/Field/link.html.twig'
+                    template: '@LAGAdmin/Field/action.html.twig'
                     title: ''
                     icon: ''
                     target: '_self'

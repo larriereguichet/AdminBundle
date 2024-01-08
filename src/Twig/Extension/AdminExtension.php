@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Extension;
 
-use LAG\AdminBundle\Grid\View\LinkRendererInterface;
+use LAG\AdminBundle\Grid\Render\LinkRendererInterface;
 use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -16,10 +16,10 @@ use Twig\TwigFunction;
 class AdminExtension extends AbstractExtension
 {
     public function __construct(
-        private Security $security,
-        private LinkRendererInterface $linkRenderer,
-        private UrlGeneratorInterface $urlGenerator,
-        private ResourceRegistryInterface $registry,
+        private readonly Security $security,
+        private readonly LinkRendererInterface $linkRenderer,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly ResourceRegistryInterface $registry,
     ) {
     }
 
@@ -28,15 +28,21 @@ class AdminExtension extends AbstractExtension
         return [
             new TwigFunction('lag_admin_operation_allowed', [$this, 'isOperationAllowed']),
             new TwigFunction('lag_admin_link', [$this, 'renderLink'], ['is_safe' => ['html']]),
-            new TwigFunction('lag_admin_operation_url', [$this, 'getOperationUrl'], ['is_safe' => ['html']]),
+            new TwigFunction('lag_admin_link_url', [$this, 'generateLinkUrl']),
+            new TwigFunction('lag_admin_url', [$this, 'generateUrl'], ['is_safe' => ['html']]),
         ];
     }
 
-    public function isOperationAllowed(string $resourceName, string $operationName): bool
+    public function isOperationAllowed(string $resourceName, string $operationName, ?string $applicationName = null): bool
     {
-        $operation = $this->registry->get($resourceName)->getOperation($operationName);
+        $operation = $this->registry->get($resourceName, $applicationName)->getOperation($operationName);
 
         return $this->security->isGranted(OperationPermissionVoter::RESOURCE_ACCESS, $operation);
+    }
+
+    public function generateLinkUrl(Link $link, mixed $data = null): string
+    {
+        return $this->urlGenerator->generateLink($link, $data);
     }
 
     /**
@@ -47,15 +53,17 @@ class AdminExtension extends AbstractExtension
         return $this->linkRenderer->render($link, $data, $options);
     }
 
-    public function getOperationUrl(
+    public function generateUrl(
         string $resource,
         string $operation,
-        mixed $data = null
+        mixed $data = null,
+        string $applicationName = null,
     ): string {
         return $this->urlGenerator->generateFromOperationName(
             $resource,
             $operation,
             $data,
+            $applicationName,
         );
     }
 }

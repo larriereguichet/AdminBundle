@@ -1,1 +1,5 @@
-{{ data|default('')|u.truncate(options.length, options.replace)|striptags }}
+{% import '@LAGAdmin/grids/macro/attributes.html.twig' as lag_admin %}
+
+<p{{ lag_admin.attributes(attributes) }}>
+    {{ options.prefix|default('') }}{{ data|default(options.empty)|u.truncate(options.length, options.replace)|striptags }}{{ options.suffix|default('') }}
+</p>

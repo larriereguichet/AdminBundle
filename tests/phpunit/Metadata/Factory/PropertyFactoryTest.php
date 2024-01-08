@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
 use LAG\AdminBundle\Exception\InvalidPropertyCollectionException;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Factory\PropertyFactory;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
 use LAG\AdminBundle\Metadata\Property\Text;
+use LAG\AdminBundle\Resource\Factory\PropertyFactory;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Validator\Constraints\Valid;
@@ -24,7 +24,7 @@ class PropertyFactoryTest extends TestCase
     public function testCreate(): void
     {
         $definition = new Text(name: 'my_property');
-        $resource = new AdminResource(name: 'a_resource', translationDomain: 'my_domain', applicationName: 'app');
+        $resource = new Resource(name: 'a_resource', translationDomain: 'my_domain', applicationName: 'app');
         $operation = (new GetCollection(properties: [$definition]))->withResource($resource);
 
         $this
@@ -51,7 +51,7 @@ class PropertyFactoryTest extends TestCase
     public function testCreateWithTranslationPattern(): void
     {
         $definition = new Text(name: 'my_property');
-        $resource = new AdminResource(
+        $resource = new Resource(
             name: 'a_resource',
             applicationName: 'app',
             translationDomain: 'my_domain',
@@ -83,7 +83,7 @@ class PropertyFactoryTest extends TestCase
     public function testCreateInvalid(): void
     {
         $definition = new Text(name: 'my_property');
-        $resource = new AdminResource(applicationName: 'app', name: 'a_resource', translationDomain: 'my_domain');
+        $resource = new Resource(applicationName: 'app', name: 'a_resource', translationDomain: 'my_domain');
         $operation = (new GetCollection(properties: [$definition]))->withResource($resource);
         $violations = $this->createMock(ConstraintViolationList::class);
 

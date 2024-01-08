@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\EventListener\Resource;
 
-use LAG\AdminBundle\Event\Events\ResourceEvent;
+use LAG\AdminBundle\Event\ResourceEvent;
 use LAG\AdminBundle\EventListener\Resource\InitializeResourceListener;
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use LAG\AdminBundle\Tests\TestCase;
@@ -16,7 +16,7 @@ class ResourceCreateListenerTest extends TestCase
 {
     public static function configurationProvider(): iterable
     {
-        $resource = new AdminResource('my_resource');
+        $resource = new Resource('my_resource');
 
         // Default application configuration
         yield [$resource, [], [
@@ -48,13 +48,13 @@ class ResourceCreateListenerTest extends TestCase
     }
 
     /** @dataProvider configurationProvider */
-    public function testDefaultConfiguration(AdminResource $resource, array $configuration, array $expectedValues): void
+    public function testDefaultConfiguration(Resource $resource, array $configuration, array $expectedValues): void
     {
         $routeNameGenerator = $this->createMock(RouteNameGeneratorInterface::class);
         $routeNameGenerator
             ->expects($this->atLeastOnce())
             ->method('generateRouteName')
-            ->willReturnCallback(function (AdminResource $resource, OperationInterface $operation) {
+            ->willReturnCallback(function (Resource $resource, OperationInterface $operation) {
                 return $resource->getName().'_'.$operation->getName();
             })
         ;

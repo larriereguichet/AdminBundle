@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Request\Resolver;
 
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -17,7 +17,7 @@ class ResourceValueResolver implements ValueResolverInterface
     ) {
     }
 
-    /** @return iterable<AdminResource> */
+    /** @return iterable<Resource> */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         if (!$this->supports($request, $argument)) {
@@ -29,6 +29,6 @@ class ResourceValueResolver implements ValueResolverInterface
 
     private function supports(Request $request, ArgumentMetadata $argument): bool
     {
-        return $argument->getType() === AdminResource::class && $this->resourceContext->supports($request);
+        return $argument->getType() === Resource::class && $this->resourceContext->supports($request);
     }
 }

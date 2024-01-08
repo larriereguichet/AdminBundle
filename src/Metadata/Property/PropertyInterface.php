@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Metadata\Property;
 
 interface PropertyInterface
 {
-    public function getName(): string;
+    public function getName(): ?string;
 
     public function withName(string $property): self;
 
@@ -30,15 +30,19 @@ interface PropertyInterface
 
     public function withTranslatable(bool $translatable): self;
 
-    public function getAttr(): array;
+    public function getAttributes(): array;
 
     public function withAttr(array $attr): self;
 
-    public function getHeaderAttr(): array;
+    public function getHeaderAttributes(): array;
 
-    public function withHeaderAttr(array $headerAttr): self;
+    public function withHeaderAttributes(array $headerAttributes): self;
 
     public function getTranslationDomain(): ?string;
 
     public function withTranslationDomain(?string $translationDomain): self;
+
+    public function getAllowedDataType(): ?string;
+
+    public function withAllowedDataType(?string $allowedDataType): self;
 }

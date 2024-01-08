@@ -18,6 +18,10 @@ class TemplateValidator extends ConstraintValidator
 
     public function validate(mixed $value, Constraint $constraint): void
     {
+        if ($value === null) {
+            return;
+        }
+
         if (!\is_string($value)) {
             throw new UnexpectedTypeException($value, 'string');
         }

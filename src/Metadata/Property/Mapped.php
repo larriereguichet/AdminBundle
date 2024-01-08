@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-class Mapped extends AbstractProperty
+class Mapped extends Property
 {
     public function __construct(
-        string $name,
+        ?string $name = null,
         string $propertyPath = null,
         string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/mapped.html.twig',
         bool $sortable = true,
         bool $translatable = true,
         string $translationDomain = null,
-        array $attr = [],
-        array $headerAttr = [],
+        array $attributes = [],
+        array $headerAttributes = [],
         private array $map = [],
     ) {
         parent::__construct(
@@ -26,8 +26,8 @@ class Mapped extends AbstractProperty
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
-            attr: $attr,
-            headerAttr: $headerAttr,
+            attributes: $attributes,
+            headerAttributes: $headerAttributes,
         );
     }
 

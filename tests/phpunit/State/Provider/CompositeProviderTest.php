@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\State\Provider;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\Get;
@@ -36,7 +36,7 @@ class CompositeProviderTest extends TestCase
     /** @dataProvider operationsProvider */
     public function testProvideWithoutProvider(OperationInterface $operation): void
     {
-        $resource = new AdminResource(name: 'my_resource');
+        $resource = new Resource(name: 'my_resource');
         $operation = $operation->withResource($resource);
 
         $this->expectExceptionMessage(sprintf(

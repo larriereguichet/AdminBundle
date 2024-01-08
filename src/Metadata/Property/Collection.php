@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-class Collection extends AbstractProperty
+#[\Attribute]
+class Collection extends Property implements CollectionPropertyInterface
 {
     public function __construct(
-        private string $entryType,
-        string $name,
+        private PropertyInterface $propertyType,
+        ?string $name = null,
         string $propertyPath = null,
         string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/collection.html.twig',
         bool $sortable = true,
         bool $translatable = false,
         string $translationDomain = null,
-        array $attr = [],
-        array $headerAttr = [],
+        array $attributes = [],
+        array $headerAttributes = [],
     ) {
         parent::__construct(
             name: $name,
@@ -26,13 +27,21 @@ class Collection extends AbstractProperty
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
-            attr: $attr,
-            headerAttr: $headerAttr,
+            attributes: $attributes,
+            headerAttributes: $headerAttributes,
         );
     }
 
-    public function getEntryType(): string
+    public function getPropertyType(): PropertyInterface
     {
-        return $this->entryType;
+        return $this->propertyType;
+    }
+
+    public function withPropertyType(PropertyInterface $property): self
+    {
+        $self = clone $this;
+        $self->propertyType = $property;
+
+        return $self;
     }
 }

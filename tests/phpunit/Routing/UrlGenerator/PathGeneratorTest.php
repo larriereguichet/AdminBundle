@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Routing\UrlGenerator;
 
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGenerator;
 use LAG\AdminBundle\Tests\TestCase;
@@ -21,7 +21,7 @@ class PathGeneratorTest extends TestCase
         string $expectedPath,
         array $routeParameters = null,
     ): void {
-        $resource = (new AdminResource())
+        $resource = (new Resource())
             ->withName($resourceName)
             ->withRoutePrefix($resourcePrefix)
         ;

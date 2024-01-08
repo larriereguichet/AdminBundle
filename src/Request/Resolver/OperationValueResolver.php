@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Request\Resolver;
 
-use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -27,7 +27,10 @@ class OperationValueResolver implements ValueResolverInterface
         }
         $interfaces = class_implements($argument->getType(), false);
 
-        if ($argument->getType() !== OperationInterface::class && ($interfaces === false || !\in_array(OperationInterface::class, $interfaces))) {
+        if (
+            $argument->getType() !== OperationInterface::class &&
+            ($interfaces === false || !\in_array(OperationInterface::class, $interfaces))
+        ) {
             return [];
         }
 

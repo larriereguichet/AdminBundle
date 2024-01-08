@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\State\Processor;
 
-use LAG\AdminBundle\Event\DataEvents;
-use LAG\AdminBundle\Event\Dispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Event\Events\DataEvent;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\OperationInterface;
 

@@ -1,0 +1,45 @@
+{% import '@LAGAdmin/grids/macro/attributes.html.twig' as lag_admin %}
+
+<table{{ lag_admin.attributes(grid.attributes|merge({'class': 'table-responsive align-middle mb-0'}), {'class': 'admin-table table'}) }}>
+    {% block table_head %}
+        {% if grid.headers|length > 0 %}
+            <thead>
+            <tr{{ lag_admin.attributes(grid.headers.attributes) }}>
+                {%- for header in grid.headers -%}
+                    <th{{ lag_admin.attributes(header.attributes|merge({'class': 'text-dark'})) }}>
+                        {{ lag_admin_grid_header(header) }}
+                    </th>
+                {%- endfor -%}
+            </tr>
+            </thead>
+        {% endif %}
+    {% endblock %}
+
+    {% block table_body %}
+        {% if grid.rows|length > 0 %}
+            <tbody>
+            {% for row in grid.rows %}
+                <tr{{ lag_admin.attributes(row.attributes) }}>
+                    {% for cell in row.cells %}
+                        <td{{ lag_admin.attributes(cell.attributes) }}>
+                            {{ lag_admin_grid_cell(cell) }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        {% endif %}
+    {% endblock %}
+
+    {% block table_footer %}
+        {% if grid.rows|length > 0 %}
+            <tfoot>
+            <tr>
+                <td colspan="{{ grid.headers|length + 1 }}">
+                    {{ 'lag_admin.ui.no_record'|trans({}, 'admin') }}
+                </td>
+            </tr>
+            </tfoot>
+        {% endif %}
+    {% endblock %}
+</table>

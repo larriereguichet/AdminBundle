@@ -8,7 +8,9 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
-use LAG\AdminBundle\Validation\Constraint\GridExist;
+use LAG\AdminBundle\Metadata\Grid\GridInterface;
+use LAG\AdminBundle\Metadata\Property\PropertyInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class CollectionOperation extends Operation implements CollectionOperationInterface
 {
@@ -26,7 +28,6 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         string $path = null,
         string $redirectRoute = null,
         array $redirectRouteParameters = [],
-        array $properties = [],
         string $formType = null,
         array $formOptions = [],
         ?string $processor = ORMProcessor::class,
@@ -34,6 +35,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         array $identifiers = ['id'],
         array $contextualActions = null,
         array $itemActions = null,
+        string $redirectApplication = null,
         string $redirectResource = null,
         string $redirectOperation = null,
         ?bool $validation = true,
@@ -43,14 +45,21 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         array $denormalizationContext = null,
         ?string $inputClass = null,
         ?string $outputClass = null,
+
+        ?string $workflow = null,
+
+        ?string $workflowTransition = null,
+
         private bool $pagination = true,
         private int $itemPerPage = 25,
         private string $pageParameter = 'page',
         private array $criteria = [],
         private array $orderBy = [],
         private ?array $filters = null,
-        #[GridExist]
-        private ?string $grid = 'table',
+
+        private ?string $grid = null,
+
+        private array $gridOptions = [],
         private ?string $filterFormType = FilterType::class,
         private array $filterFormOptions = [],
     ) {
@@ -68,7 +77,6 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             path: $path,
             redirectRoute: $redirectRoute,
             redirectRouteParameters: $redirectRouteParameters,
-            properties: $properties,
             formType: $formType,
             formOptions: $formOptions,
             processor: $processor,
@@ -76,6 +84,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             identifiers: $identifiers,
             contextualActions: $contextualActions,
             itemActions: $itemActions,
+            redirectApplication: $redirectApplication,
             redirectResource: $redirectResource,
             redirectOperation: $redirectOperation,
             normalizationContext: $normalizationContext,
@@ -85,6 +94,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             validation: $validation,
             validationContext: $validationContext,
             ajax: $ajax,
+            workflow: $workflow,
+            workflowTransition: $workflowTransition,
         );
     }
 
@@ -187,12 +198,26 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->grid;
     }
 
-    public function withGridTemplate(?string $gridTemplate): self
+    public function withGrid(string $grid): self
     {
         $self = clone $this;
-        $self->grid = $gridTemplate;
+        $self->grid = $grid;
 
         return $self;
+    }
+
+
+    public function withGridOptions(array $gridOptions): self
+    {
+        $self = clone $this;
+        $self->gridOptions = $gridOptions;
+
+        return $self;
+    }
+
+    public function getGridOptions(): array
+    {
+        return $this->gridOptions;
     }
 
     public function getFilterFormType(): ?string
@@ -212,7 +237,6 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
     {
         return $this->filterFormOptions;
     }
-
     public function withFilterFormOptions(array $filterFormOptions): self
     {
         $self = clone $this;

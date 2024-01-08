@@ -15,8 +15,8 @@ use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceChoiceType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceType;
 use LAG\AdminBundle\Form\Type\Security\LoginType;
-use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 
 return static function (ContainerConfigurator $container): void {

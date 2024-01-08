@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Slug\Mapping;
 
 use LAG\AdminBundle\Entity\Mapping\Sluggable;
 use LAG\AdminBundle\Metadata\AttributesHelper;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 
 class SlugMapping implements SlugMappingInterface
 {

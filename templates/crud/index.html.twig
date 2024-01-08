@@ -3,16 +3,18 @@
 {% block content %}
     <div class="admin-index admin-{{ resource.name }}">
         {% block filter_form %}
-            {% if form %}
-                {% include '@LAGAdmin/crud/index/_filters.html.twig' with {form: form} %}
+            {% if filterForm and filterForm|length > 0 %}
+                {% include '@LAGAdmin/crud/index/_filters.html.twig' with {form: filterForm} %}
             {% endif %}
         {% endblock %}
 
-        <div class="card">
-            {% block grid %}
-                {{ lag_admin_grid(grid, operation) }}
-            {% endblock %}
-        </div>
+        {% if grid %}
+            <div class="admin-grid-container">
+                {% block grid %}
+                    {{ lag_admin_grid(grid, operation) }}
+                {% endblock %}
+            </div>
+        {% endif %}
 
         {% block pagination %}
             <div class="admin-pagination mt-4">

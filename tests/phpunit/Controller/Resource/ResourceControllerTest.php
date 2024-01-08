@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Controller\Resource;
 
 use LAG\AdminBundle\Controller\Resource\ResourceController;
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
@@ -51,7 +51,7 @@ class ResourceControllerTest extends TestCase
             template: 'my.html.twig',
             normalizationContext: ['groups' => ['my_group']]
         );
-        $resource = new AdminResource(
+        $resource = new Resource(
             name: 'my_resource',
             operations: [$operation],
         );

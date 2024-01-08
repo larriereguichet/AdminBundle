@@ -4,29 +4,30 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-class Image extends AbstractProperty
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
+class Image extends Property
 {
     public function __construct(
-        string $name,
+        ?string $name = null,
         string $propertyPath = null,
         string $label = null,
-        ?string $template = '@LAGAdmin/grids/properties/image.html.twig',
         bool $sortable = true,
         bool $translatable = false,
         string $translationDomain = null,
-        array $attr = [],
-        array $headerAttr = [],
+        array $attributes = [],
+        array $headerAttributes = [],
     ) {
         parent::__construct(
             name: $name,
             propertyPath: $propertyPath,
             label: $label,
-            template: $template,
+            template: '@LAGAdmin/grids/properties/image.html.twig',
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
-            attr: $attr,
-            headerAttr: $headerAttr,
+            attributes: $attributes,
+            headerAttributes: $headerAttributes,
+            allowedDataType: 'string',
         );
     }
 }

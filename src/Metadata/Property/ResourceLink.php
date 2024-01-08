@@ -6,21 +6,26 @@ namespace LAG\AdminBundle\Metadata\Property;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 class ResourceLink extends Text
 {
     public function __construct(
-        string $name,
+        ?string $name = null,
         string $propertyPath = null,
         string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/resource_link.html.twig',
         bool $sortable = true,
         bool $translatable = false,
         string $translationDomain = null,
-        array $attr = [],
-        array $headerAttr = [],
+        array $attributes = [],
+        array $headerAttributes = [],
         int $length = 100,
         string $replace = '...',
         string $emptyString = '~',
+
+        #[NotBlank]
+        private ?string $application = null,
+
         #[NotBlank]
         private ?string $resource = null,
         #[NotBlank]
@@ -34,12 +39,25 @@ class ResourceLink extends Text
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
-            attr: $attr,
-            headerAttr: $headerAttr,
+            attributes: $attributes,
+            headerAttributes: $headerAttributes,
             length: $length,
             replace: $replace,
-            emptyString: $emptyString,
+            empty: $emptyString,
         );
+    }
+
+    public function getApplication(): ?string
+    {
+        return $this->application;
+    }
+
+    public function withApplication(?string $application): self
+    {
+        $self = clone $this;
+        $self->application = $application;
+
+        return $self;
     }
 
     public function getResource(): ?string

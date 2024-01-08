@@ -2,21 +2,17 @@
 
 namespace LAG\AdminBundle\Tests\State\Processor;
 
+use LAG\AdminBundle\Event\DataEvent;
 use LAG\AdminBundle\Event\DataEvents;
-use LAG\AdminBundle\Event\Dispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Event\Events\DataEvent;
-use LAG\AdminBundle\Event\Events\ResourceEvent;
-use LAG\AdminBundle\Event\ResourceEvents;
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\Get;
 use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Update;
-use LAG\AdminBundle\State\Processor\CompositeProcessor;
 use LAG\AdminBundle\State\Processor\EventProcessor;
-use LAG\AdminBundle\State\Processor\NormalizationProcessor;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\Tests\TestCase;
 
@@ -31,7 +27,7 @@ class EventProcessorTest extends TestCase
     {
         $data = new \stdClass();
         $data->myProperty = 'test';
-        $resource = new AdminResource(name: 'my_resource');
+        $resource = new Resource(name: 'my_resource');
         $operation = $operation->withResource($resource);
 
         $this->eventDispatcher
@@ -42,11 +38,11 @@ class EventProcessorTest extends TestCase
                 $operation
             ) {
                 $assert = false;
-                if ($eventNames === [DataEvents::DATA_PROCESS, DataEvents::DATA_RESOURCE_PROCESS, DataEvents::DATA_OPERATION_PROCESS]) {
+                if ($eventNames === [DataEvents::DATA_PROCESS, DataEvents::RESOURCE_DATA_PROCESS, DataEvents::OPERATION_DATA_PROCESS]) {
                     $assert = true;
                 }
 
-                if ($eventNames === [DataEvents::DATA_PROCESSED, DataEvents::DATA_RESOURCE_PROCESSED, DataEvents::DATA_OPERATION_PROCESSED]) {
+                if ($eventNames === [DataEvents::DATA_PROCESSED, DataEvents::RESOURCE_DATA_PROCESSED, DataEvents::OPERATION_DATA_PROCESSED]) {
                     $assert = true;
                 }
                 $this->assertTrue($assert);

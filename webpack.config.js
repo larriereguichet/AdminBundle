@@ -10,8 +10,6 @@ Encore
     .setPublicPath('/bundles/lagadmin')
 
     .addEntry('admin', './assets/js/admin.js')
-    .addEntry('bootstrap', './assets/js/bootstrap.js')
-
     .addStyleEntry('choice-js', './node_modules/choices.js/public/assets/styles/choices.css')
 
     .disableSingleRuntimeChunk()

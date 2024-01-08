@@ -21,7 +21,7 @@ class PathGenerator implements PathGeneratorInterface
             $resourceName = $resource->getName();
         }
         $path = u($resource->getRoutePrefix())
-            ->replace('{resourceName}', $resourceName)
+            ->replace('{resource}', $resourceName)
         ;
 
         if ($operation->getPath()) {

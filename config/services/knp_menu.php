@@ -9,8 +9,8 @@ use LAG\AdminBundle\Bridge\KnpMenu\Extension\ResourceExtension;
 use LAG\AdminBundle\Menu\Builder\ContextualMenuBuilder;
 use LAG\AdminBundle\Menu\Builder\ResourceMenuBuilder;
 use LAG\AdminBundle\Menu\Builder\UserMenuBuilder;
-use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 

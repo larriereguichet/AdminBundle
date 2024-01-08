@@ -2,7 +2,7 @@
 
 namespace LAG\AdminBundle\Tests\State\Provider;
 
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
@@ -35,7 +35,7 @@ class SerializationProviderTest extends TestCase
             $expectedType .= '[]';
         }
 
-        $resource = new AdminResource(name: 'my_resource', dataClass: \stdClass::class);
+        $resource = new Resource(name: 'my_resource', dataClass: \stdClass::class);
         $operation = $operation->withAjax(true)
             ->withResource($resource)
             ->withNormalizationContext(['groups' => ['my_group']])

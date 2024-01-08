@@ -6,6 +6,10 @@ namespace LAG\AdminBundle\DependencyInjection;
 
 use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
+use LAG\AdminBundle\Resource\Locator\MetadataLocatorInterface;
+use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
+use LAG\AdminBundle\State\Processor\ProcessorInterface;
+use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -49,8 +53,20 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('lag_admin.filter_events', $config['filter_events']);
         $container->setParameter('lag_admin.grids', $config['grids']);
 
+        $container->registerForAutoconfiguration(ProviderInterface::class)
+            ->addTag('lag_admin.state_provider')
+        ;
+        $container->registerForAutoconfiguration(ProcessorInterface::class)
+            ->addTag('lag_admin.state_processor')
+        ;
         $container->registerForAutoconfiguration(ContextProviderInterface::class)
             ->addTag('lag_admin.request_context_provider')
+        ;
+        $container->registerForAutoconfiguration(MetadataLocatorInterface::class)
+            ->addTag('lag_admin.metadata_locator')
+        ;
+        $container->registerForAutoconfiguration(ResourceLocatorInterface::class)
+            ->addTag('lag_admin.resource_locator')
         ;
     }
 
@@ -69,6 +85,10 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
 
         $container->prependExtensionConfig('twig', [
             'form_themes' => ['@LAGAdmin/forms/theme.html.twig'],
+        ]);
+
+        $container->prependExtensionConfig('twig_component', [
+            'defaults' => ['LAG\\AdminBundle\\View\\' => '@LAGAdmin/components']
         ]);
 
         $container->prependExtensionConfig('flysystem', [

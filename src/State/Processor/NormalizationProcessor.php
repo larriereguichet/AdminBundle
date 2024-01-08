@@ -2,13 +2,11 @@
 
 namespace LAG\AdminBundle\State\Processor;
 
-use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
-class NormalizationProcessor implements ProcessorInterface
+readonly class NormalizationProcessor implements ProcessorInterface
 {
     public function __construct(
         private ProcessorInterface $processor,

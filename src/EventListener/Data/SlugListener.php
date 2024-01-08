@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventListener\Data;
 
-use LAG\AdminBundle\Event\Events\DataEvent;
+use LAG\AdminBundle\Event\DataEvent;
 use LAG\AdminBundle\Slug\Generator\SlugGeneratorInterface;
 use LAG\AdminBundle\Slug\Mapping\SlugMappingInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;

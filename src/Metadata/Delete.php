@@ -29,7 +29,6 @@ class Delete extends Operation
         string $path = null,
         string $redirectRoute = null,
         array $redirectRouteParameters = null,
-        array $properties = [],
         ?string $formType = DeleteType::class,
         array $formOptions = [],
         string $processor = ORMProcessor::class,
@@ -37,6 +36,7 @@ class Delete extends Operation
         array $identifiers = ['id'],
         array $contextualActions = null,
         array $itemActions = null,
+        string $redirectApplication = null,
         string $redirectResource = null,
         string $redirectOperation = null,
         ?bool $validation = true,
@@ -46,6 +46,8 @@ class Delete extends Operation
         array $denormalizationContext = null,
         ?string $inputClass = null,
         ?string $outputClass = null,
+        ?string $workflow = null,
+        ?string $workflowTransition = null,
     ) {
         parent::__construct(
             name: $name,
@@ -61,7 +63,6 @@ class Delete extends Operation
             path: $path,
             redirectRoute: $redirectRoute,
             redirectRouteParameters: $redirectRouteParameters,
-            properties: $properties,
             formType: $formType,
             formOptions: $formOptions,
             processor: $processor,
@@ -69,6 +70,7 @@ class Delete extends Operation
             identifiers: $identifiers,
             contextualActions: $contextualActions,
             itemActions: $itemActions,
+            redirectApplication: $redirectApplication,
             redirectResource: $redirectResource,
             redirectOperation: $redirectOperation,
             validation: $validation,
@@ -78,6 +80,8 @@ class Delete extends Operation
             denormalizationContext: $denormalizationContext,
             inputClass: $inputClass,
             outputClass: $outputClass,
+            workflow: $workflow,
+            workflowTransition: $workflowTransition,
         );
     }
 }

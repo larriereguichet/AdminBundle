@@ -6,10 +6,10 @@ namespace LAG\AdminBundle\Tests\Metadata\Registry;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\UnexpectedTypeException;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistry;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
+use LAG\AdminBundle\Resource\Locator\MetadataLocatorInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistry;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -21,8 +21,8 @@ class ResourceRegistryTest extends TestCase
 
     public function testGet(): void
     {
-        $resource1 = new AdminResource('my_resource');
-        $resource2 = new AdminResource('my_other_resource');
+        $resource1 = new Resource('my_resource');
+        $resource2 = new Resource('my_other_resource');
 
         $this->locator
             ->expects($this->exactly(2))
@@ -51,8 +51,8 @@ class ResourceRegistryTest extends TestCase
 
     public function testGetTwice(): void
     {
-        $resource1 = new AdminResource('my_resource');
-        $resource2 = new AdminResource('my_other_resource');
+        $resource1 = new Resource('my_resource');
+        $resource2 = new Resource('my_other_resource');
 
         $this->locator
             ->expects($this->exactly(2))
@@ -79,7 +79,7 @@ class ResourceRegistryTest extends TestCase
         $this->locator
             ->expects($this->exactly(2))
             ->method('locateCollection')
-            ->willReturn([new AdminResource('my_resource')])
+            ->willReturn([new Resource('my_resource')])
         ;
         $this->resourceFactory
             ->expects($this->never())
@@ -111,7 +111,7 @@ class ResourceRegistryTest extends TestCase
         $this->locator
             ->expects($this->exactly(2))
             ->method('locateCollection')
-            ->willReturn([new AdminResource(name: 'my_resource'), new AdminResource(name: 'my_other_resource')])
+            ->willReturn([new Resource(name: 'my_resource'), new Resource(name: 'my_other_resource')])
         ;
 
         $this->assertTrue($this->registry->has('my_resource'));
@@ -123,8 +123,8 @@ class ResourceRegistryTest extends TestCase
 
     public function testAll(): void
     {
-        $resource1 = new AdminResource('my_resource');
-        $resource2 = new AdminResource('my_other_resource');
+        $resource1 = new Resource('my_resource');
+        $resource2 = new Resource('my_other_resource');
 
         $this->locator
             ->expects($this->exactly(2))
@@ -138,7 +138,7 @@ class ResourceRegistryTest extends TestCase
         $this->resourceFactory
             ->expects($this->exactly(2))
             ->method('create')
-            ->willReturnCallback(function (AdminResource $resource) use ($resource1, $resource2) {
+            ->willReturnCallback(function (Resource $resource) use ($resource1, $resource2) {
                 if ($resource->getName() === $resource1->getName()) {
                     return $resource1;
                 }

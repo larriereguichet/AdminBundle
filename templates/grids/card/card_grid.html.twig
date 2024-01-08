@@ -1,0 +1,25 @@
+{% import '@LAGAdmin/grids/macro/attributes.html.twig' as lag_admin %}
+
+{% set column_class = 'row-cols-' ~ grid.options.columns %}
+
+<div{{ lag_admin.attributes(grid.attributes, {'class': 'row g-4 ' ~ column_class}) }}>
+    {% for row in grid.rows %}
+        <div class="col">
+            <div{{ lag_admin.attributes(row.attributes, {'class': 'card'}) }}>
+
+                {% for cell in row.cells %}
+                    {% set options = [] %}
+
+                    {% if cell.name == grid.options.thumbnail %}
+                        {% set options = {attributes: {class: 'card-img-top'}} %}
+                        {{ lag_admin_grid_cell(cell, options) }}
+                    {% else %}
+                        <div{{ lag_admin.attributes(cell.attributes, {'class': 'card-body'}) }}>
+                            {{ lag_admin_grid_cell(cell, options) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

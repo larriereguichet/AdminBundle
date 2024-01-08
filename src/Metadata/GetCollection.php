@@ -8,6 +8,7 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Controller\Resource\ResourceCollectionController;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
+use LAG\AdminBundle\Metadata\Grid\GridInterface;
 
 /**
  * The get collection operation is used to show a collection of resources, usually in a grid. The provider should return
@@ -29,7 +30,6 @@ class GetCollection extends CollectionOperation
         string $path = null,
         string $redirectRoute = null,
         array $redirectRouteParameters = [],
-        array $properties = [],
         string $formType = null,
         array $formOptions = [],
         string $processor = ORMProcessor::class,
@@ -37,6 +37,7 @@ class GetCollection extends CollectionOperation
         array $identifiers = ['id'],
         array $contextualActions = null,
         array $itemActions = null,
+        string $redirectApplication = null,
         string $redirectResource = null,
         string $redirectOperation = null,
         ?bool $validation = true,
@@ -52,7 +53,7 @@ class GetCollection extends CollectionOperation
         array $criteria = [],
         array $orderBy = [],
         array $filters = null,
-        ?string $grid = 'table',
+        ?string $grid = null,
         ?string $filterFormType = FilterType::class,
         array $filterFormOptions = [],
     ) {
@@ -70,7 +71,6 @@ class GetCollection extends CollectionOperation
             path: $path,
             redirectRoute: $redirectRoute,
             redirectRouteParameters: $redirectRouteParameters,
-            properties: $properties,
             formType: $formType,
             formOptions: $formOptions,
             processor: $processor,
@@ -89,6 +89,7 @@ class GetCollection extends CollectionOperation
             orderBy: $orderBy,
             filters: $filters,
             grid: $grid,
+            redirectApplication: $redirectApplication,
             redirectResource: $redirectResource,
             redirectOperation: $redirectOperation,
             filterFormType: $filterFormType,

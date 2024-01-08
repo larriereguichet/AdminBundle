@@ -19,6 +19,10 @@ class DataType extends AbstractType
             $data = $event->getData();
             $form = $event->getForm();
             $accessor = PropertyAccess::createPropertyAccessor();
+
+            if ($data === null) {
+                return;
+            }
             $reflection = new \ReflectionClass($data);
 
             foreach ($reflection->getProperties() as $property) {

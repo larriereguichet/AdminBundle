@@ -1,5 +1,6 @@
-{% import '@LAGAdmin/grid/macro/attributes.html.twig' as helper %}
+{% import '@LAGAdmin/grids/macro/attributes.html.twig' as lag_admin %}
 
-<img src="{{ data }}"
-     {{ helper.attributes(options.attr) }}
-     alt="{{ options.label }}">
+<img src="{{ data }}"{{ lag_admin.attributes(attributes, {
+    'src': data,
+    'alt': options.label
+}) }}>

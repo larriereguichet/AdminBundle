@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\State\Processor;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\Get;
@@ -23,7 +23,7 @@ class CompositeProcessorTest extends TestCase
         $processor1 = $this->createMock(NormalizationProcessor::class);
         $processor2 = new FakeProcessor();
         $operation = $operation->withProcessor(FakeProcessor::class)
-            ->withResource(new AdminResource(name: 'my_resource'))
+            ->withResource(new Resource(name: 'my_resource'))
         ;
 
         $processor1->expects($this->never())
@@ -37,7 +37,7 @@ class CompositeProcessorTest extends TestCase
     /** @dataProvider operationsProvider */
     public function testProcessWithoutProcessors(OperationInterface $operation): void
     {
-        $operation = $operation->withResource(new AdminResource(name: 'my_resource'));
+        $operation = $operation->withResource(new Resource(name: 'my_resource'));
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(sprintf(
             'The resource "my_resource" and operation "%s" is not supported by any processor',

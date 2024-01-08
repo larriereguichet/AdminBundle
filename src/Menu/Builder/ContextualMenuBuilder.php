@@ -6,10 +6,10 @@ namespace LAG\AdminBundle\Menu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
 use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -42,7 +42,7 @@ class ContextualMenuBuilder
         return $menu;
     }
 
-    private function buildItemOptions(AdminResource $resource, Link $link): array
+    private function buildItemOptions(Resource $resource, Link $link): array
     {
         $contextualResource = $resource;
 

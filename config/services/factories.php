@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Event\Dispatcher\ResourceEventDispatcherInterface;
+use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
-use LAG\AdminBundle\Metadata\Factory\EventOperationFactory;
-use LAG\AdminBundle\Metadata\Factory\OperationFactory;
-use LAG\AdminBundle\Metadata\Factory\OperationFactoryInterface;
-use LAG\AdminBundle\Metadata\Factory\PropertyFactory;
-use LAG\AdminBundle\Metadata\Factory\PropertyFactoryInterface;
-use LAG\AdminBundle\Metadata\Factory\ResourceFactory;
-use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Metadata\Factory\EventResourceFactory;
-use LAG\AdminBundle\Metadata\Factory\ResourceResolver;
-use LAG\AdminBundle\Metadata\Factory\ResourceResolverInterface;
-use LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface;
+use LAG\AdminBundle\Resource\Factory\EventOperationFactory;
+use LAG\AdminBundle\Resource\Factory\EventResourceFactory;
+use LAG\AdminBundle\Resource\Factory\OperationFactory;
+use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
+use LAG\AdminBundle\Resource\Factory\PropertyFactory;
+use LAG\AdminBundle\Resource\Factory\PropertyFactoryInterface;
+use LAG\AdminBundle\Resource\Factory\ResourceFactory;
+use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
+use LAG\AdminBundle\Resource\Locator\MetadataLocatorInterface;
+use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
+use LAG\AdminBundle\Resource\Resolver\ResourceResolver;
+use LAG\AdminBundle\Resource\Resolver\ResourceResolverInterface;
 
 return static function (ContainerConfigurator $container) {
     $services = $container->services();
@@ -24,6 +25,7 @@ return static function (ContainerConfigurator $container) {
     // Resources factories
     $services->set(ResourceFactoryInterface::class, ResourceFactory::class)
         ->arg('$validator', service('validator'))
+        ->arg('$propertyFactory', service(PropertyFactoryInterface::class))
         ->arg('$operationFactory', service(OperationFactoryInterface::class))
     ;
     $services->set(EventResourceFactory::class)
@@ -38,7 +40,6 @@ return static function (ContainerConfigurator $container) {
 
     // Operations factories
     $services->set(OperationFactoryInterface::class, OperationFactory::class)
-        ->arg('$propertyFactory', service(PropertyFactoryInterface::class))
         ->arg('$filterFactory', service(FilterFactoryInterface::class))
     ;
     $services->set(EventOperationFactory::class)
@@ -50,14 +51,5 @@ return static function (ContainerConfigurator $container) {
     // Properties factories
     $services->set(PropertyFactoryInterface::class, PropertyFactory::class)
         ->arg('$validator', service('validator'))
-    ;
-
-    // Resolvers
-    $services->set(ResourceResolverInterface::class, ResourceResolver::class)
-        ->arg('$resourcePaths', param('lag_admin.resource_paths'))
-        ->arg('$locator', service(MetadataLocatorInterface::class))
-        ->arg('$resourceFactory', service(ResourceFactoryInterface::class))
-        ->alias('lag_admin.resource.resolver', ResourceResolverInterface::class)
-        ->public()
     ;
 };

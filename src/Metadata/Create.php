@@ -28,7 +28,6 @@ class Create extends Operation
         string $path = null,
         string $redirectRoute = null,
         array $redirectRouteParameters = null,
-        array $properties = [],
         string $formType = null,
         array $formOptions = [],
         string $processor = ORMProcessor::class,
@@ -36,6 +35,7 @@ class Create extends Operation
         array $identifiers = [],
         array $contextualActions = null,
         array $itemActions = null,
+        string $redirectApplication = null,
         string $redirectResource = null,
         string $redirectOperation = null,
         ?bool $validation = true,
@@ -45,6 +45,8 @@ class Create extends Operation
         array $denormalizationContext = null,
         ?string $inputClass = null,
         ?string $outputClass = null,
+        ?string $workflow = null,
+        ?string $workflowTransition = null,
     ) {
         parent::__construct(
             name: $name,
@@ -60,7 +62,6 @@ class Create extends Operation
             path: $path,
             redirectRoute: $redirectRoute,
             redirectRouteParameters: $redirectRouteParameters,
-            properties: $properties,
             formType: $formType,
             formOptions: $formOptions,
             processor: $processor,
@@ -68,6 +69,7 @@ class Create extends Operation
             identifiers: $identifiers,
             contextualActions: $contextualActions,
             itemActions: $itemActions,
+            redirectApplication: $redirectApplication,
             redirectResource: $redirectResource,
             redirectOperation: $redirectOperation,
             validation: $validation,
@@ -77,6 +79,8 @@ class Create extends Operation
             denormalizationContext: $denormalizationContext,
             inputClass: $inputClass,
             outputClass: $outputClass,
+            workflow: $workflow,
+            workflowTransition: $workflowTransition,
         );
     }
 }

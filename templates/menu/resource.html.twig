@@ -40,6 +40,7 @@
         {%- if classes is not empty %}
             {%- set attributes = attributes|merge({'class': classes|join(' ')}) %}
         {%- endif %}
+
         {# displaying the item #}
         {% import _self as knp_menu %}
         <li{{ knp_menu.attributes(attributes) }}>
