@@ -42,8 +42,8 @@ readonly class ResourceController
         $data = $this->dataProvider->provide($operation, $uriVariables, $context);
         $form = null;
 
-        if ($operation->getFormType() !== null) {
-            $form = $this->formFactory->create($operation->getFormType(), $data, $operation->getFormOptions());
+        if ($operation->getForm() !== null) {
+            $form = $this->formFactory->create($operation->getForm(), $data, $operation->getFormOptions());
             $form->handleRequest($request);
 
             if ($context['json'] ?? false) {
@@ -58,14 +58,9 @@ readonly class ResourceController
             }
         }
         $event = new ResourceControllerEvent($operation, $request, $data);
-        $eventNames = [
-            ResourceControllerEvents::RESOURCE_CONTROLLER,
-            ResourceControllerEvents::RESOURCE_CONTROLLER_NAMED_EVENT,
-            ResourceControllerEvents::OPERATION_CONTROLLER_NAMED_EVENT,
-        ];
-        $this->eventDispatcher->dispatchNamedEvents(
+        $this->eventDispatcher->dispatchResourceEvents(
             $event,
-            $eventNames,
+            ResourceControllerEvents::RESOURCE_CONTROLLER,
             $operation->getResource()->getName(),
             $operation->getName(),
         );

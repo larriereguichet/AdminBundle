@@ -1,6 +1,6 @@
 {% import '@LAGAdmin/grids/macro/attributes.html.twig' as lag_admin %}
 
-<table{{ lag_admin.attributes(grid.attributes|merge({'class': 'table-responsive align-middle mb-0'}), {'class': 'admin-table table'}) }}>
+<table {{ lag_admin.attributes(grid.attributes|merge({'class': 'table-responsive align-middle mb-0'}), {'class': 'admin-table table'}) }}>
     {% block table_head %}
         {% if grid.headers|length > 0 %}
             <thead>
@@ -19,6 +19,10 @@
         {% if grid.rows|length > 0 %}
             <tbody>
             {% for row in grid.rows %}
+                {% if row.form %}
+                    {{ form_start(row.form) }}
+                {% endif %}
+
                 <tr{{ lag_admin.attributes(row.attributes) }}>
                     {% for cell in row.cells %}
                         <td{{ lag_admin.attributes(cell.attributes) }}>
@@ -26,6 +30,10 @@
                         </td>
                     {% endfor %}
                 </tr>
+
+                {% if row.form %}
+                    {{ form_end(row.form) }}
+                {% endif %}
             {% endfor %}
             </tbody>
         {% endif %}

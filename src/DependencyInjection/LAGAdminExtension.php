@@ -87,10 +87,6 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
             'form_themes' => ['@LAGAdmin/forms/theme.html.twig'],
         ]);
 
-        $container->prependExtensionConfig('twig_component', [
-            'defaults' => ['LAG\\AdminBundle\\View\\' => '@LAGAdmin/components']
-        ]);
-
         $container->prependExtensionConfig('flysystem', [
             'storages' => [
                 'lag_admin_image.storage' => [

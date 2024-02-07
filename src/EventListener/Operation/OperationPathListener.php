@@ -6,10 +6,11 @@ namespace LAG\AdminBundle\EventListener\Operation;
 
 use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Index;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use function Symfony\Component\String\u;
 
-class OperationPathListener
+readonly class OperationPathListener
 {
     public function __invoke(OperationEvent $event): void
     {
@@ -18,7 +19,7 @@ class OperationPathListener
         if (!$operation->getPath()) {
             $path = u('/');
 
-            if ($operation instanceof CollectionOperationInterface && !$operation instanceof GetCollection) {
+            if ($operation instanceof CollectionOperationInterface && !$operation instanceof Index) {
                 $path = $path->append($operation->getName());
             }
 

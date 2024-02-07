@@ -11,7 +11,8 @@ readonly class Cell
 {
     public function __construct(
         public string $name,
-        public string $template,
+        public ?string $template = null,
+        public ?string $component = null,
         public mixed $data = null,
         public array $attributes = [],
         public ?PropertyInterface $property = null,

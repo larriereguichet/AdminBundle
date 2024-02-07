@@ -6,12 +6,12 @@ namespace LAG\AdminBundle\Metadata\Property;
 
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-#[\Attribute(\Attribute::TARGET_PROPERTY)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class ResourceLink extends Text
 {
     public function __construct(
         ?string $name = null,
-        string $propertyPath = null,
+        string|bool $propertyPath = null,
         string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/resource_link.html.twig',
         bool $sortable = true,
@@ -28,6 +28,7 @@ class ResourceLink extends Text
 
         #[NotBlank]
         private ?string $resource = null,
+
         #[NotBlank]
         private ?string $operation = null,
     ) {
@@ -35,7 +36,6 @@ class ResourceLink extends Text
             name: $name,
             propertyPath: $propertyPath,
             label: $label,
-            template: $template,
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,

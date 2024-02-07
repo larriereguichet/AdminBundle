@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Controller\Resource;
 
-use LAG\AdminBundle\Grid\Builder\GridViewBuilderInterface;
+use LAG\AdminBundle\Grid\Builder\GridBuilderInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
+use Pagerfanta\PagerfantaInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,7 +28,7 @@ readonly class ResourceCollectionController
         private ProviderInterface $provider,
         private ProcessorInterface $processor,
         private RedirectHandlerInterface $redirectionHandler,
-        private GridViewBuilderInterface $gridBuilder,
+        private GridBuilderInterface $gridBuilder,
         private FormFactoryInterface $formFactory,
         private SerializerInterface $serializer,
         private Environment $environment,
@@ -46,10 +47,16 @@ readonly class ResourceCollectionController
         }
         $data = $this->provider->provide($operation, $uriVariables, $context);
         $form = null;
+        $pager = null;
 
-        if ($operation->getFormType() !== null) {
-            $form = $this->formFactory->create(CollectionType::class, $data->getCurrentPageResults(), [
-                'entry_type' => $operation->getFormType(),
+        if ($data instanceof PagerfantaInterface) {
+            $pager = $data;
+            $data = $data->getCurrentPageResults();
+        }
+
+        if ($operation->getForm() !== null) {
+            $form = $this->formFactory->create(CollectionType::class, $data, [
+                'entry_type' => $operation->getForm(),
                 'entry_options' => $operation->getFormOptions(),
             ]);
             $form->handleRequest($request);
@@ -67,11 +74,10 @@ readonly class ResourceCollectionController
         }
 
         if ($operation->getGrid() !== null) {
-            $grid = $this->gridBuilder->build(
+            $grid = $this->gridBuilder->buildView(
                 $operation->getGrid(),
                 $operation,
                 $data,
-                $form?->createView(),
                 $context
             );
         }
@@ -87,6 +93,7 @@ readonly class ResourceCollectionController
             'resource' => $operation->getResource(),
             'operation' => $operation,
             'data' => $data,
+            'pager' => $pager,
             'filterForm' => $filterForm?->createView(),
             'form' => $form?->createView(),
         ]));

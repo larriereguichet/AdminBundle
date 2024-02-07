@@ -18,6 +18,7 @@ use LAG\AdminBundle\EventListener\Operation\InitializeOperationListener;
 use LAG\AdminBundle\EventListener\Operation\OperationPathListener;
 use LAG\AdminBundle\EventListener\Resource\InitializeResourceListener;
 use LAG\AdminBundle\EventListener\Resource\InitializeResourceOperationsListener;
+use LAG\AdminBundle\EventListener\Resource\InitializeResourcePropertiesListener;
 use LAG\AdminBundle\EventListener\Security\PermissionListener;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
@@ -32,26 +33,29 @@ return static function (ContainerConfigurator $container) {
     $services->set(InitializeResourceListener::class)
         ->arg('$applicationName', param('lag_admin.application_name'))
         ->arg('$translationDomain', param('lag_admin.translation_domain'))
-        ->tag('kernel.event_listener', ['event' => ResourceEvents::RESOURCE_CREATE, 'priority' => 255])
+        ->tag('kernel.event_listener', ['event' => 'lag_admin.resource.create', 'priority' => 255])
     ;
     $services->set(InitializeResourceOperationsListener::class)
         ->arg('$routeNameGenerator', service(RouteNameGeneratorInterface::class))
-        ->tag('kernel.event_listener', ['event' => ResourceEvents::RESOURCE_CREATE, 'priority' => 254])
+        ->tag('kernel.event_listener', ['event' => 'lag_admin.resource.create', 'priority' => 254])
+    ;
+    $services->set(InitializeResourcePropertiesListener::class)
+        ->tag('kernel.event_listener', ['event' => 'lag_admin.resource.create', 'priority' => 253])
     ;
 
     // Operations listeners
     $services->set(InitializeOperationListener::class)
         ->arg('$routeNameGenerator', service(RouteNameGeneratorInterface::class))
-        ->tag('kernel.event_listener', ['event' => OperationEvents::OPERATION_CREATE, 'priority' => 255])
+        ->tag('kernel.event_listener', ['event' => 'lag_admin.operation.create', 'priority' => 255])
     ;
     $services->set(InitializeCollectionOperationListener::class)
-        ->tag('kernel.event_listener', ['event' => OperationEvents::OPERATION_CREATE, 'priority' => 254])
+        ->tag('kernel.event_listener', ['event' => 'lag_admin.operation.create', 'priority' => 254])
     ;
     $services->set(OperationPathListener::class)
-        ->tag('kernel.event_listener', ['event' => OperationEvents::OPERATION_CREATE, 'priority' => -255])
+        ->tag('kernel.event_listener', ['event' => 'lag_admin.operation.create', 'priority' => -255])
     ;
     $services->set(InitializeGridListener::class)
-        ->tag('kernel.event_listener', ['event' => GridEvents::GRID_CREATE, 'priority' => -255])
+        ->tag('kernel.event_listener', ['event' => 'lag_admin.grid.create', 'priority' => -255])
     ;
 
 

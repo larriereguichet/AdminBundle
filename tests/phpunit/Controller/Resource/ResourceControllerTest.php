@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Tests\Controller\Resource;
 
 use LAG\AdminBundle\Controller\Resource\ResourceController;
 use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
@@ -46,7 +46,7 @@ class ResourceControllerTest extends TestCase
     /** @dataProvider headersProviders */
     public function testHandleRequest(array $headers, bool $useTwig): void
     {
-        $operation = new GetCollection(
+        $operation = new Index(
             name: 'my_operation',
             template: 'my.html.twig',
             normalizationContext: ['groups' => ['my_group']]
@@ -125,10 +125,10 @@ class ResourceControllerTest extends TestCase
 
     public function testHandleRequestWithSubmittedForm(): void
     {
-        $operation = new GetCollection(
+        $operation = new Index(
             name: 'my_operation',
             template: 'my.html.twig',
-            formType: FormType::class,
+            form: FormType::class,
             formOptions: ['an_option' => 'a_value'],
             route: 'my_route',
         );

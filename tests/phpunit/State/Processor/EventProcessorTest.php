@@ -9,7 +9,7 @@ use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\Get;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Processor\EventProcessor;
@@ -32,7 +32,7 @@ class EventProcessorTest extends TestCase
 
         $this->eventDispatcher
             ->expects($this->exactly(2))
-            ->method('dispatchNamedEvents')
+            ->method('dispatchResourceEvents')
             ->willReturnCallback(function (DataEvent $event, array $eventNames, $resourceName, $operationName) use (
                 $resource,
                 $operation
@@ -63,7 +63,7 @@ class EventProcessorTest extends TestCase
     public static function operationsProvider(): array
     {
         return [
-            [new GetCollection()],
+            [new Index()],
             [new Get()],
             [new Create()],
             [new Update()],

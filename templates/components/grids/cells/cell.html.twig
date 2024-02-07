@@ -1,0 +1,5 @@
+{% if template %}
+    {% include template with context %}
+{% else %}
+    {{ component(component, context) }}
+{% endif %}

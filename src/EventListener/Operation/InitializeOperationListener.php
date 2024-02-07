@@ -7,13 +7,13 @@ namespace LAG\AdminBundle\EventListener\Operation;
 use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Form\Type\DataType;
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
-use LAG\AdminBundle\Form\Type\Resource\ResourceType;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Form\Type\Resource\LegacyResourceType;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
-use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Property\Link;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
@@ -55,16 +55,16 @@ readonly class InitializeOperationListener
             $operation = $operation->withTitle($title->replace('_', ' ')->title()->trim()->toString());
         }
 
-        if (!$operation->getFormType()) {
+        if (!$operation->getForm()) {
             if ($operation instanceof Create || $operation instanceof Update) {
                 if ($resource->getFormType()) {
                     $operation = $operation
-                        ->withFormType($resource->getFormType())
+                        ->withForm($resource->getFormType())
                         ->withFormOptions($resource->getFormOptions())
                     ;
                 } else {
                     $operation = $operation
-                        ->withFormType(DataType::class)
+                        ->withForm(DataType::class)
                         ->withFormOptions([
                             'exclude' => $resource->getIdentifiers(),
                             'data_class' => $resource->getDataClass(),
@@ -74,7 +74,7 @@ readonly class InitializeOperationListener
             }
         }
 
-        if (is_a($operation->getFormType(), ResourceType::class, true) && !\array_key_exists('resource', $operation->getFormOptions())) {
+        if (is_a($operation->getForm(), LegacyResourceType::class, true) && !\array_key_exists('resource', $operation->getFormOptions())) {
             $operation = $operation->withFormOptions(['resource' => $resource->getName()]);
         }
 
@@ -91,7 +91,7 @@ readonly class InitializeOperationListener
             }
         }
 
-        if ($operation instanceof Delete && $operation->getFormType() === DeleteType::class) {
+        if ($operation instanceof Delete && $operation->getForm() === DeleteType::class) {
             $operation = $operation->withFormOptions(array_merge($operation->getFormOptions(), ['resource' => $resource]));
         }
 
@@ -171,10 +171,10 @@ readonly class InitializeOperationListener
                 );
             }
         } else {
-            if ($resource->hasOperation('get_collection')) {
+            if ($resource->hasOperation('index')) {
                 $actions[] = new Link(
                     resourceName: $resource->getName(),
-                    operationName: 'get_collection',
+                    operationName: 'index',
                     label: 'lag_admin.ui.cancel',
                 );
             }

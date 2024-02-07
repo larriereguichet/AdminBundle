@@ -18,20 +18,20 @@ readonly class EventOperationFactory implements OperationFactoryInterface
     public function create(OperationInterface $operation): OperationInterface
     {
         $event = new OperationEvent($operation);
-        $this->eventDispatcher->dispatchNamedEvents(
+        $this->eventDispatcher->dispatchResourceEvents(
             $event,
             OperationEvents::OPERATION_CREATE,
-            $operation->getResource()->getApplicationName(),
+            $operation->getResource()->getApplication(),
             $operation->getResource()->getName(),
             $operation->getName(),
         );
 
         $operation = $this->operationFactory->create($event->getOperation());
 
-        $this->eventDispatcher->dispatchNamedEvents(
+        $this->eventDispatcher->dispatchResourceEvents(
             $event,
             OperationEvents::OPERATION_CREATED,
-            $operation->getResource()->getApplicationName(),
+            $operation->getResource()->getApplication(),
             $operation->getResource()->getName(),
             $operation->getName()
         );

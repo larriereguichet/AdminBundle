@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Metadata\Property;
 
-class Group extends Property implements CompositePropertyInterface
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
+class Group extends Property
 {
     public function __construct(
         ?string $name = null,
         ?string $label = null,
-        private array $children = [],
+        private array $properties = [],
     ) {
         parent::__construct(
             name: $name,
@@ -18,15 +21,15 @@ class Group extends Property implements CompositePropertyInterface
         );
     }
 
-    public function getChildren(): array
+    public function getProperties(): array
     {
-        return $this->children;
+        return $this->properties;
     }
 
-    public function withChildren(array $children): self
+    public function withProperties(array $properties): self
     {
         $self = clone $this;
-        $self->children = $children;
+        $self->properties = $properties;
 
         return $self;
     }

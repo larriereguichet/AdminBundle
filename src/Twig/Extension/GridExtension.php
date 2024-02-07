@@ -41,7 +41,7 @@ class GridExtension extends AbstractExtension
         // TODO
     }
 
-    public function renderCell(Cell $cell, array $options): string
+    public function renderCell(Cell $cell, array $options = []): string
     {
         return $this->cellRenderer->render($cell, $options);
     }

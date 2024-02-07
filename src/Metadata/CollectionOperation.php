@@ -8,8 +8,6 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
-use LAG\AdminBundle\Metadata\Grid\GridInterface;
-use LAG\AdminBundle\Metadata\Property\PropertyInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class CollectionOperation extends Operation implements CollectionOperationInterface
@@ -28,7 +26,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         string $path = null,
         string $redirectRoute = null,
         array $redirectRouteParameters = [],
-        string $formType = null,
+        string $form = null,
         array $formOptions = [],
         ?string $processor = ORMProcessor::class,
         string $provider = ORMProvider::class,
@@ -60,8 +58,21 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         private ?string $grid = null,
 
         private array $gridOptions = [],
+
         private ?string $filterFormType = FilterType::class,
         private array $filterFormOptions = [],
+
+        #[Assert\NotBlank(allowNull: true, message: 'The item form type should not be blank. Use null instead')]
+        private ?string $itemForm = null,
+
+        #[Assert\NotNull]
+        private ?array $itemFormOptions = null,
+
+        #[Assert\NotBlank(allowNull: true, message: 'The collection form type should not be blank. Use null instead')]
+        private ?string $collectionForm = null,
+
+        #[Assert\NotNull]
+        private ?array $collectionFormOptions = null,
     ) {
         parent::__construct(
             name: $name,
@@ -77,7 +88,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             path: $path,
             redirectRoute: $redirectRoute,
             redirectRouteParameters: $redirectRouteParameters,
-            formType: $formType,
+            form: $form,
             formOptions: $formOptions,
             processor: $processor,
             provider: $provider,
@@ -237,10 +248,63 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
     {
         return $this->filterFormOptions;
     }
+
     public function withFilterFormOptions(array $filterFormOptions): self
     {
         $self = clone $this;
         $self->filterFormOptions = $filterFormOptions;
+
+        return $self;
+    }
+
+    public function getItemForm(): ?string
+    {
+        return $this->itemForm;
+    }
+
+    public function withItemForm(?string $itemForm): self
+    {
+        $self = clone $this;
+        $self->itemForm = $itemForm;
+
+        return $self;
+    }
+
+    public function getItemFormOptions(): ?array
+    {
+        return $this->itemFormOptions;
+    }
+
+    public function withItemFormOptions(?array $itemFormOptions): self
+    {
+        $self = clone $this;
+        $self->itemFormOptions = $itemFormOptions;
+
+        return $self;
+    }
+
+    public function getCollectionForm(): ?string
+    {
+        return $this->collectionForm;
+    }
+
+    public function withCollectionForm(?string $collectionForm): self
+    {
+        $self = clone $this;
+        $self->collectionForm = $collectionForm;
+
+        return $self;
+    }
+
+    public function getCollectionFormOptions(): ?array
+    {
+        return $this->collectionFormOptions;
+    }
+
+    public function withCollectionFormOptions(?array $collectionFormOptions): self
+    {
+        $self = clone $this;
+        $self->collectionFormOptions = $collectionFormOptions;
 
         return $self;
     }

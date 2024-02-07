@@ -10,14 +10,8 @@ use LAG\AdminBundle\Resource\Factory\EventOperationFactory;
 use LAG\AdminBundle\Resource\Factory\EventResourceFactory;
 use LAG\AdminBundle\Resource\Factory\OperationFactory;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
-use LAG\AdminBundle\Resource\Factory\PropertyFactory;
-use LAG\AdminBundle\Resource\Factory\PropertyFactoryInterface;
 use LAG\AdminBundle\Resource\Factory\ResourceFactory;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Resource\Locator\MetadataLocatorInterface;
-use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
-use LAG\AdminBundle\Resource\Resolver\ResourceResolver;
-use LAG\AdminBundle\Resource\Resolver\ResourceResolverInterface;
 
 return static function (ContainerConfigurator $container) {
     $services = $container->services();
@@ -25,7 +19,6 @@ return static function (ContainerConfigurator $container) {
     // Resources factories
     $services->set(ResourceFactoryInterface::class, ResourceFactory::class)
         ->arg('$validator', service('validator'))
-        ->arg('$propertyFactory', service(PropertyFactoryInterface::class))
         ->arg('$operationFactory', service(OperationFactoryInterface::class))
     ;
     $services->set(EventResourceFactory::class)
@@ -46,10 +39,5 @@ return static function (ContainerConfigurator $container) {
         ->decorate(OperationFactoryInterface::class)
         ->arg('$eventDispatcher', service(ResourceEventDispatcherInterface::class))
         ->arg('$operationFactory', service('.inner'))
-    ;
-
-    // Properties factories
-    $services->set(PropertyFactoryInterface::class, PropertyFactory::class)
-        ->arg('$validator', service('validator'))
     ;
 };

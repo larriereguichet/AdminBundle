@@ -6,6 +6,9 @@
     {% for row in grid.rows %}
         <div class="col">
             <div{{ lag_admin.attributes(row.attributes, {'class': 'card'}) }}>
+                {% if row.form %}
+                    {{ form_start(row.form) }}
+                {% endif %}
 
                 {% for cell in row.cells %}
                     {% set options = [] %}
@@ -19,6 +22,10 @@
                         </div>
                     {% endif %}
                 {% endfor %}
+
+                {% if row.form %}
+                    {{ form_end(row.form, {render_rest: false}) }}
+                {% endif %}
             </div>
         </div>
     {% endfor %}

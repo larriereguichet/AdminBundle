@@ -6,8 +6,8 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Grid\Builder\CellBuilder;
 use LAG\AdminBundle\Grid\Builder\CellBuilderInterface;
-use LAG\AdminBundle\Grid\Builder\GridViewBuilder;
-use LAG\AdminBundle\Grid\Builder\GridViewBuilderInterface;
+use LAG\AdminBundle\Grid\Builder\GridBuilder;
+use LAG\AdminBundle\Grid\Builder\GridBuilderInterface;
 use LAG\AdminBundle\Grid\DataTransformer\CompositeDataTransformer;
 use LAG\AdminBundle\Grid\DataTransformer\CountableDataTransformer;
 use LAG\AdminBundle\Grid\DataTransformer\FormDataTransformer;
@@ -28,15 +28,17 @@ return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     // Builders
-    $services->set(GridViewBuilderInterface::class, GridViewBuilder::class)
+    $services->set(GridBuilderInterface::class, GridBuilder::class)
         ->arg('$registry', service(GridRegistryInterface::class))
-        ->arg('$cellFactory', service(CellBuilderInterface::class))
+        ->arg('$cellBuilder', service(CellBuilderInterface::class))
         ->arg('$eventDispatcher', service('lag_admin.event_dispatcher'))
         ->arg('$validator', service('validator'))
+        ->arg('$formFactory', service('form.factory'))
     ;
     $services->set(CellBuilderInterface::class, CellBuilder::class)
         ->arg('$dataTransformer', service(PropertyDataTransformerInterface::class))
         ->arg('$validator', service('validator'))
+        ->arg('$formFactory', service('form.factory'))
     ;
 
     // Renderers

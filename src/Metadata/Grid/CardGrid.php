@@ -46,7 +46,7 @@ class CardGrid extends Grid
 
     public function getTemplate(): string
     {
-        return '@LAGAdmin/grids/card/card_grid.html.twig';
+        return '@LAGAdmin/grids/card/card.html.twig';
     }
 
     public function getLayout(): string

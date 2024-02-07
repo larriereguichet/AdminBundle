@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\Render;
 
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Property\Link;
 
 interface LinkRendererInterface
 {

@@ -19,7 +19,7 @@ class ResourceRegistry implements ResourceRegistryInterface
         private readonly ResourceFactoryInterface $factory,
     ) {
         foreach ($resources as $resource) {
-            $this->resources[$resource->getApplicationName() ?? $this->defaultApplication][$resource->getName()] = $resource;
+            $this->resources[$resource->getApplication() ?? $this->defaultApplication][$resource->getName()] = $resource;
         }
     }
 

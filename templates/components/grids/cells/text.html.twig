@@ -1,0 +1,5 @@
+{% if displayHtmlElement %}<p {{ attributes }}>{% endif %}
+
+{% if translation %}{{ text|trans(translationParameters, translationDomain) }}{% else %}{{ text }}{% endif %}
+
+{% if displayHtmlElement %}</p>{% endif %}

@@ -22,10 +22,10 @@ readonly class EventResourceFactory implements ResourceFactoryInterface
     {
         $event = new ResourceEvent($resource);
 
-        $applicationName = $resource->getApplicationName();
+        $applicationName = $resource->getApplication();
         $resourceName = $resource->getName();
 
-        $this->eventDispatcher->dispatchNamedEvents(
+        $this->eventDispatcher->dispatchResourceEvents(
             $event,
             ResourceEvents::RESOURCE_CREATE,
             $applicationName,
@@ -36,9 +36,9 @@ readonly class EventResourceFactory implements ResourceFactoryInterface
 
         $resource = $this->resourceFactory->create($event->getResource());
 
-        $this->eventDispatcher->dispatchNamedEvents(new ResourceEvent($resource),
+        $this->eventDispatcher->dispatchResourceEvents(new ResourceEvent($resource),
             ResourceEvents::RESOURCE_CREATED,
-            $resource->getApplicationName(),
+            $resource->getApplication(),
             $resource->getName()
         );
 
@@ -50,12 +50,12 @@ readonly class EventResourceFactory implements ResourceFactoryInterface
         string $applicationName,
         string $resourceName
     ): void {
-        if ($resource->getApplicationName() !== $applicationName) {
+        if ($resource->getApplication() !== $applicationName) {
             throw new Exception(sprintf(
                 'The resource "%s" application change from "%s" to "%s" is not allowed',
                 $resourceName,
                 $applicationName,
-                $resource->getApplicationName(),
+                $resource->getApplication(),
             ));
         }
 

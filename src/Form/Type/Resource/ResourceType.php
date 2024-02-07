@@ -1,30 +1,39 @@
 <?php
 
-declare(strict_types=1);
-
 namespace LAG\AdminBundle\Form\Type\Resource;
 
-use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ResourceType extends AbstractType
 {
     public function __construct(
-        private ResourceContextInterface $context,
-        private RequestStack $requestStack,
+        private readonly string $defaultApplication,
+        private readonly ResourceRegistryInterface $registry,
     ) {
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $resource = $this->registry->get($options['resource'], $options['application']);
+
+        foreach ($resource->getIdentifiers() as $identifier) {
+            $builder->add($identifier, HiddenType::class);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resource = $this->context->getResource($this->requestStack->getCurrentRequest());
         $resolver
-            ->setDefaults([
-                'form_template' => '@LAGAdmin/forms/form.html.twig',
-                'translation_domain' => $resource->getTranslationDomain(),
-            ])
+            ->define('application')
+            ->allowedTypes('string')
+            ->default($this->defaultApplication)
+
+            ->define('resource')
+            ->allowedTypes('string')
         ;
     }
 }

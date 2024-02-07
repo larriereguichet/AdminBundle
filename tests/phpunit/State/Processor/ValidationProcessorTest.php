@@ -5,7 +5,7 @@ namespace LAG\AdminBundle\Tests\State\Processor;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\Get;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
@@ -67,7 +67,7 @@ class ValidationProcessorTest extends TestCase
     public static function operationsProvider(): array
     {
         return [
-            [new GetCollection()],
+            [new Index()],
             [new Get()],
             [new Create()],
             [new Update()],

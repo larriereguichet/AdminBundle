@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Metadata;
+namespace LAG\AdminBundle\Metadata\Property;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -10,20 +10,50 @@ use Symfony\Component\Validator\Constraints as Assert;
     expression: 'this.getRoute() or (this.getResourceName() and this.getOperationName()) or this.getUrl()',
     message: 'The link should contains a route or an url or an resource and operation name'
 )]
-class Link
+#[\Attribute(\Attribute::IS_REPEATABLE)]
+class Link extends Text
 {
     public function __construct(
+        ?string $name = null,
+        string|bool $propertyPath = null,
+        ?string $label = null,
+        ?string $template = null,
+        bool $sortable = true,
+        bool $translatable = false,
+        ?string $translationDomain = null,
+        array $attributes = [],
+        array $headerAttributes = [],
+        ?string $allowedDataType = null,
+        int $length = 100,
+        string $replace = '...',
+        string $empty = '~',
+        string $suffix = '',
+        string $prefix = '',
+
         private ?string $route = null,
         private array $routeParameters = [],
         private ?string $resourceName = null,
         private ?string $operationName = null,
-        private ?string $template = '@LAGAdmin/grids/actions/action.html.twig',
-        #[Assert\NotNull(message: 'The link label should should not be null')]
-        private ?string $label = null,
         private ?string $type = null,
         private ?string $url = null,
         private ?string $icon = null,
     ) {
+        parent::__construct(
+            name: $name,
+            propertyPath: true,
+            label: $label,
+            sortable: $sortable,
+            translatable: $translatable,
+            translationDomain: $translationDomain,
+            attributes: $attributes,
+            headerAttributes: $headerAttributes,
+            allowedDataType: $allowedDataType,
+            length: $length,
+            replace: $replace,
+            empty: $empty,
+            suffix: $suffix,
+            prefix: $prefix,
+        );
     }
 
     public function getResourceName(): ?string
@@ -44,7 +74,7 @@ class Link
         return $this->route;
     }
 
-    public function withName(?string $routeName): self
+    public function withRouteName(?string $routeName): self
     {
         $self = clone $this;
         $self->route = $routeName;
@@ -74,32 +104,6 @@ class Link
     {
         $self = clone $this;
         $self->operationName = $operationName;
-
-        return $self;
-    }
-
-    public function getTemplate(): ?string
-    {
-        return $this->template;
-    }
-
-    public function withTemplate(?string $template): self
-    {
-        $self = clone $this;
-        $self->template = $template;
-
-        return $self;
-    }
-
-    public function getLabel(): ?string
-    {
-        return $this->label;
-    }
-
-    public function withLabel(?string $label): self
-    {
-        $self = clone $this;
-        $self->label = $label;
 
         return $self;
     }

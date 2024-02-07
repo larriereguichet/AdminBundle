@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Twig\Extension;
 
 use LAG\AdminBundle\Grid\Render\LinkRendererInterface;
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Property\Link;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;

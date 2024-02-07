@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Metadata\Property;
 use LAG\AdminBundle\Validation\Constraint\TemplateValid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[\Attribute]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Property implements PropertyInterface
 {
     public function __construct(
@@ -20,13 +20,15 @@ class Property implements PropertyInterface
         )]
         private ?string $name = null,
 
-        #[Assert\NotBlank(message: 'The property path should not be empty')]
-        private ?string $propertyPath = null,
+        #[Assert\NotNull(message: 'The property path should not be null. Use false instead')]
+        private string|null|bool $propertyPath = null,
 
         private ?string $label = null,
 
         #[TemplateValid(message: 'The template should be a valid Twig template')]
         private ?string $template = null,
+
+        private ?string $component = null,
 
         private bool $sortable = true,
 
@@ -41,9 +43,6 @@ class Property implements PropertyInterface
 
         #[Assert\NotBlank(allowNull: true, message: 'The allowed data types should not be empty. Use null instead')]
         private ?string $allowedDataType = null,
-
-        #[Assert\All(constraints: [new Assert\Type('string')])]
-        private array $grids = [],
     ) {
     }
 
@@ -60,12 +59,12 @@ class Property implements PropertyInterface
         return $self;
     }
 
-    public function getPropertyPath(): ?string
+    public function getPropertyPath(): string|null|bool
     {
         return $this->propertyPath;
     }
 
-    public function withPropertyPath(?string $propertyPath): self
+    public function withPropertyPath(string|bool $propertyPath): self
     {
         $self = clone $this;
         $self->propertyPath = $propertyPath;
@@ -177,15 +176,15 @@ class Property implements PropertyInterface
         return $self;
     }
 
-    public function getGrids(): array
+    public function getComponent(): ?string
     {
-        return $this->grids;
+        return $this->component;
     }
 
-    public function withGrids(array $grids): self
+    public function withComponent(?string $component): self
     {
         $self = clone $this;
-        $self->grids = $grids;
+        $self->component = $component;
 
         return $self;
     }

@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Menu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Property\Link;
 use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
@@ -36,7 +36,7 @@ class ContextualMenuBuilder
         $resource = $operation->getResource();
 
         foreach ($operation->getContextualActions() as $link) {
-            $menu->addChild($link->getLabel(), $this->buildItemOptions($resource, $link));
+            $menu->addChild($link->getText(), $this->buildItemOptions($resource, $link));
         }
 
         return $menu;

@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Menu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
@@ -28,7 +28,7 @@ class ResourceMenuBuilder
 
         foreach ($this->resourceRegistry->all() as $resource) {
             foreach ($resource->getOperations() as $operation) {
-                if (!$operation instanceof GetCollection) {
+                if (!$operation instanceof Index) {
                     continue;
                 }
                 $label = $inflector->pluralize(u($resource->getName())->snake()->toString())[0];

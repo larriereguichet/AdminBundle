@@ -11,19 +11,24 @@
         {% if grid %}
             <div class="admin-grid-container">
                 {% block grid %}
-                    {{ lag_admin_grid(grid, operation) }}
+                    {{ component(grid.component, {
+                        data: data,
+                        rows: grid.rows,
+                        headers: grid.headers,
+                        ...grid.attributes,
+                    }) }}
                 {% endblock %}
             </div>
         {% endif %}
 
         {% block pagination %}
-            <div class="admin-pagination mt-4">
-                <div class="pagination justify-content-center">
-                    {% if data|length > 0 and operation.pagination %}
-                        {{ pagerfanta(data, 'twitter_bootstrap5', {page: data.currentPage}) }}
-                    {% endif %}
+            {% if pager %}
+                <div class="admin-pagination mt-4">
+                    <div class="pagination justify-content-center">
+                        {{ pagerfanta(pager, 'twitter_bootstrap5', {page: pager.currentPage}) }}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         {% endblock %}
 
         {% block bottom_extra_content %}{% endblock %}

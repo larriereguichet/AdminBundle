@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
-use LAG\AdminBundle\Metadata\Property\PropertyInterface;
+use LAG\AdminBundle\Metadata\Property\Link;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class Operation implements OperationInterface
@@ -47,7 +47,7 @@ abstract class Operation implements OperationInterface
         #[Assert\NotNull]
         private ?array $redirectRouteParameters = null,
 
-        private ?string $formType = null,
+        private ?string $form = null,
 
         private array $formOptions = [],
 
@@ -248,15 +248,15 @@ abstract class Operation implements OperationInterface
         return $self;
     }
 
-    public function getFormType(): ?string
+    public function getForm(): ?string
     {
-        return $this->formType;
+        return $this->form;
     }
 
-    public function withFormType(?string $formType): self
+    public function withForm(?string $formType): self
     {
         $self = clone $this;
-        $self->formType = $formType;
+        $self->form = $formType;
 
         return $self;
     }

@@ -1,0 +1,14 @@
+<a href="{{ url }}" {{ attributes }}>
+    {% if icon %}<i {{ iconAttributes.default('bi') }}></i>{% endif %}
+    {{ component('lag_admin:cell:text', {
+        text: text,
+        translation: translation,
+        translationDomain: translationDomain,
+        translationParameters: translationParameters,
+        prefix: prefix,
+        suffix: suffix,
+        length: length,
+        replace: replace,
+        displayHtmlElement: false
+    }) }}
+</a>

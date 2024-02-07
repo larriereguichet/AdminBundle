@@ -1,0 +1,9 @@
+{% if sortable %}
+{#    {{ component('lag_admin:cell:link') }}#}
+{% else %}
+{% endif %}
+    {{ component('lag_admin:cell:text', {
+        data: text,
+        translationDomain: translationDomain,
+        ...attributes.all
+    }) }}

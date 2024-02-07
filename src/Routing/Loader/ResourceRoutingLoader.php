@@ -58,7 +58,7 @@ class ResourceRoutingLoader extends Loader
             $path = $this->pathGenerator->generatePath($operation);
             $defaults = [
                 '_controller' => $operation->getController(),
-                $this->applicationParameter => $operation->getResource()->getApplicationName(),
+                $this->applicationParameter => $operation->getResource()->getApplication(),
                 $this->resourceParameter => $operation->getResource()->getName(),
                 $this->operationParameter => $operation->getName(),
             ];

@@ -13,7 +13,7 @@ use LAG\AdminBundle\Form\Type\Image\ImageChoiceType;
 use LAG\AdminBundle\Form\Type\Image\ImageType;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceChoiceType;
-use LAG\AdminBundle\Form\Type\Resource\ResourceType;
+use LAG\AdminBundle\Form\Type\Resource\LegacyResourceType;
 use LAG\AdminBundle\Form\Type\Security\LoginType;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
@@ -23,7 +23,7 @@ return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     // Form types
-    $services->set(ResourceType::class)
+    $services->set(LegacyResourceType::class)
         ->arg('$context', service(ResourceContextInterface::class))
         ->arg('$requestStack', service('request_stack'))
         ->tag('form.type')

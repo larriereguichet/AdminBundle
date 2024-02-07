@@ -21,8 +21,9 @@ class FormDataTransformer implements PropertyDataTransformerInterface
 
     public function transform(PropertyInterface $property, mixed $data): mixed
     {
+        return $data;
         assert($property instanceof Form);
-        $form = $this->formFactory->create($property->getFormType(), $data, $property->getFormOptions());
+        $form = $this->formFactory->create($property->getForm(), $data, $property->getFormOptions());
 
         return $form->createView();
     }

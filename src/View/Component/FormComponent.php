@@ -22,7 +22,7 @@ class FormComponent
 
     public function mount(Form $property, mixed $data): void
     {
-        $form = $this->formFactory->create($property->getFormType(), $data, $property->getFormOptions());
+        $form = $this->formFactory->create($property->getForm(), $data, $property->getFormOptions());
         $this->formView = $form->createView();
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
-use LAG\AdminBundle\Exception\InvalidPropertyCollectionException;
+use LAG\AdminBundle\Exception\InvalidPropertyException;
 use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
 use LAG\AdminBundle\Metadata\Property\Text;
 use LAG\AdminBundle\Resource\Factory\PropertyFactory;
@@ -25,7 +25,7 @@ class PropertyFactoryTest extends TestCase
     {
         $definition = new Text(name: 'my_property');
         $resource = new Resource(name: 'a_resource', translationDomain: 'my_domain', applicationName: 'app');
-        $operation = (new GetCollection(properties: [$definition]))->withResource($resource);
+        $operation = (new Index(properties: [$definition]))->withResource($resource);
 
         $this
             ->validator
@@ -57,7 +57,7 @@ class PropertyFactoryTest extends TestCase
             translationDomain: 'my_domain',
             translationPattern: 'test.{resource}.{message}',
         );
-        $operation = (new GetCollection(properties: [$definition]))->withResource($resource);
+        $operation = (new Index(properties: [$definition]))->withResource($resource);
 
         $this
             ->validator
@@ -84,7 +84,7 @@ class PropertyFactoryTest extends TestCase
     {
         $definition = new Text(name: 'my_property');
         $resource = new Resource(applicationName: 'app', name: 'a_resource', translationDomain: 'my_domain');
-        $operation = (new GetCollection(properties: [$definition]))->withResource($resource);
+        $operation = (new Index(properties: [$definition]))->withResource($resource);
         $violations = $this->createMock(ConstraintViolationList::class);
 
         $this
@@ -106,7 +106,7 @@ class PropertyFactoryTest extends TestCase
             ->willReturn(1)
         ;
 
-        $this->expectException(InvalidPropertyCollectionException::class);
+        $this->expectException(InvalidPropertyException::class);
         $this->factory->createCollection($operation);
     }
 

@@ -7,7 +7,7 @@ use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\Get;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
@@ -84,15 +84,15 @@ class NormalizationProviderTest extends TestCase
         $denormalizedData = new \stdClass();
         $denormalizedData->myOtherProperty = 'otherTest';
 
-        yield [new GetCollection(outputClass: null), null, false];
+        yield [new Index(outputClass: null), null, false];
         yield [new Get(outputClass: null), null, false];
         yield [new Get(outputClass: 'OutputClass'), ['value'], false];
         yield [new Create(outputClass: null), null, false];
         yield [new Update(outputClass: null), null, false];
         yield [new Delete(outputClass: null), null, false];
-        yield [new GetCollection(outputClass: null), $fake, false];
-        yield [new GetCollection(outputClass: null), new ArrayCollection(), false];
-        yield [new GetCollection(outputClass: 'TestClass'), $fake, false];
+        yield [new Index(outputClass: null), $fake, false];
+        yield [new Index(outputClass: null), new ArrayCollection(), false];
+        yield [new Index(outputClass: 'TestClass'), $fake, false];
         yield [
             (new Get(outputClass: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
             new ArrayCollection(),
@@ -121,7 +121,7 @@ class NormalizationProviderTest extends TestCase
             'OutputClass',
         ];
         yield [
-            (new GetCollection(
+            (new Index(
                 outputClass: 'OutputClass',
                 normalizationContext: ['groups' => ['normalization']],
                 denormalizationContext: ['groups' => ['denormalization']],

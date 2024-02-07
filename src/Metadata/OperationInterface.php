@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Metadata\Property\PropertyInterface;
+use LAG\AdminBundle\Metadata\Property\Link;
 
 interface OperationInterface
 {
@@ -56,9 +56,9 @@ interface OperationInterface
 
     public function withRedirectRouteParameters(?array $targetRouteParameters): self;
 
-    public function getFormType(): ?string;
+    public function getForm(): ?string;
 
-    public function withFormType(?string $formType): self;
+    public function withForm(?string $formType): self;
 
     public function getFormOptions(): array;
 

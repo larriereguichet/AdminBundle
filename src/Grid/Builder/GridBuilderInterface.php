@@ -10,13 +10,12 @@ use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Resource;
 use Symfony\Component\Form\FormView;
 
-interface GridViewBuilderInterface
+interface GridBuilderInterface
 {
-    public function build(
+    public function buildView(
         string $gridName,
         OperationInterface $operation,
         iterable $data,
-        ?FormView $form = null,
         array $options = [],
     ): GridView;
 }

@@ -11,6 +11,15 @@ class PropertyLocator implements PropertyLocatorInterface
     {
         $properties = [];
 
+        foreach ($resourceClass->getAttributes() as $reflectionAttribute) {
+            $attribute = $reflectionAttribute->newInstance();
+
+            if (!$attribute instanceof PropertyInterface) {
+                continue;
+            }
+            $properties[] = $attribute;
+        }
+
         foreach ($resourceClass->getProperties() as $reflectionProperty) {
             foreach ($reflectionProperty->getAttributes() as $reflectionAttribute) {
                 $property = $reflectionAttribute->newInstance();

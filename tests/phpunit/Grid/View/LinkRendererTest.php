@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Tests\Grid\View;
 use LAG\AdminBundle\Exception\InvalidLinkException;
 use LAG\AdminBundle\Grid\Render\LinkRenderer;
 use LAG\AdminBundle\Grid\Render\LinkRendererInterface;
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Property\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;

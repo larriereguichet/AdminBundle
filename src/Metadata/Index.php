@@ -8,16 +8,15 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Controller\Resource\ResourceCollectionController;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
-use LAG\AdminBundle\Metadata\Grid\GridInterface;
 
 /**
  * The get collection operation is used to show a collection of resources, usually in a grid. The provider should return
  * a collection or a pager. The processor could handle the form filtering processing for instance.
  */
-class GetCollection extends CollectionOperation
+class Index extends CollectionOperation
 {
     public function __construct(
-        string $name = 'get_collection',
+        string $name = 'index',
         string $title = null,
         string $description = null,
         string $icon = null,
@@ -30,7 +29,7 @@ class GetCollection extends CollectionOperation
         string $path = null,
         string $redirectRoute = null,
         array $redirectRouteParameters = [],
-        string $formType = null,
+        string $form = null,
         array $formOptions = [],
         string $processor = ORMProcessor::class,
         string $provider = ORMProvider::class,
@@ -47,15 +46,22 @@ class GetCollection extends CollectionOperation
         array $denormalizationContext = null,
         ?string $inputClass = null,
         ?string $outputClass = null,
+        ?string $workflow = null,
+        ?string $workflowTransition = null,
         bool $pagination = true,
         int $itemPerPage = 25,
         string $pageParameter = 'page',
         array $criteria = [],
         array $orderBy = [],
-        array $filters = null,
+        array $filters = [],
         ?string $grid = null,
+        array $gridOptions = [],
         ?string $filterFormType = FilterType::class,
         array $filterFormOptions = [],
+        ?string $itemForm = null,
+        ?array $itemFormOptions = null,
+        ?string $collectionForm = null,
+        ?array $collectionFormOptions = null,
     ) {
         parent::__construct(
             name: $name,
@@ -71,17 +77,25 @@ class GetCollection extends CollectionOperation
             path: $path,
             redirectRoute: $redirectRoute,
             redirectRouteParameters: $redirectRouteParameters,
-            formType: $formType,
+            form: $form,
             formOptions: $formOptions,
             processor: $processor,
             provider: $provider,
             identifiers: $identifiers,
             contextualActions: $contextualActions,
             itemActions: $itemActions,
+            redirectApplication: $redirectApplication,
+            redirectResource: $redirectResource,
+            redirectOperation: $redirectOperation,
             normalizationContext: $normalizationContext,
             denormalizationContext: $denormalizationContext,
             inputClass: $inputClass,
             outputClass: $outputClass,
+            validation: $validation,
+            validationContext: $validationContext,
+            ajax: $ajax,
+            workflow: $workflow,
+            workflowTransition: $workflowTransition,
             pagination: $pagination,
             itemPerPage: $itemPerPage,
             pageParameter: $pageParameter,
@@ -89,14 +103,14 @@ class GetCollection extends CollectionOperation
             orderBy: $orderBy,
             filters: $filters,
             grid: $grid,
-            redirectApplication: $redirectApplication,
-            redirectResource: $redirectResource,
-            redirectOperation: $redirectOperation,
+            gridOptions: $gridOptions,
             filterFormType: $filterFormType,
             filterFormOptions: $filterFormOptions,
-            validation: $validation,
-            validationContext: $validationContext,
-            ajax: $ajax,
+            itemForm: $itemForm,
+            itemFormOptions: $itemFormOptions,
+            collectionForm: $collectionForm,
+            collectionFormOptions: $collectionFormOptions,
         );
+
     }
 }

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\Builder;
 
-use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\ValidationException;
 use LAG\AdminBundle\Grid\DataTransformer\PropertyDataTransformerInterface;
 use LAG\AdminBundle\Grid\View\Cell;
 use LAG\AdminBundle\Metadata\Property\CollectionPropertyInterface;
 use LAG\AdminBundle\Metadata\Property\CompositePropertyInterface;
 use LAG\AdminBundle\Metadata\Property\ConfigurableProperty;
+use LAG\AdminBundle\Metadata\Property\Form;
 use LAG\AdminBundle\Metadata\Property\PropertyInterface;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\PropertyAccess\PropertyAccess;
+use LAG\AdminBundle\Resource\DataMapper\ResourceDataMapper;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -22,22 +22,20 @@ readonly class CellBuilder implements CellBuilderInterface
     public function __construct(
         private ValidatorInterface $validator,
         private PropertyDataTransformerInterface $dataTransformer,
+        private FormFactoryInterface $formFactory,
     ) {
     }
 
-    public function build(PropertyInterface $property, mixed $data, ?FormView $form = null, array $attributes = []): Cell
-    {
-        if ($property instanceof ConfigurableProperty) {
-            $property->configure($data);
-        }
+    public function build(
+        PropertyInterface $property,
+        mixed $data,
+        array $attributes = [],
+    ): Cell {
+        $data = ResourceDataMapper::mapData($data, $property->getPropertyPath());
+        $form = null;
 
-        if ($property->getPropertyPath() !== null && $property->getPropertyPath() !== '.') {
-            $accessor = PropertyAccess::createPropertyAccessor();
-
-            if (!$accessor->isReadable($data, $property->getPropertyPath())) {
-                throw new Exception(sprintf('The property path "%s" is not readable', $property->getPropertyPath()));
-            }
-            $data = $accessor->getValue($data, $property->getPropertyPath());
+        if ($property instanceof Form) {
+            $form = $this->formFactory->create($property->getForm(), $data, $property->getFormOptions());
         }
 
         if ($this->dataTransformer->supports($property, $data)) {
@@ -51,33 +49,26 @@ readonly class CellBuilder implements CellBuilderInterface
                 throw new ValidationException('Data passed to the "'.$property->getName().'" cell are not valid :', $errors);
             }
         }
+        $children = [];
 
-        if ($property instanceof CompositePropertyInterface) {
-            $children = [];
-
-            foreach ($property->getChildren() as $child) {
-                $childCell = $this->build($child, $data, $form, $attributes);
-                $children[$childCell->name] = $childCell;
-            }
-        }
 
         if ($property instanceof CollectionPropertyInterface) {
-            $children = [];
-
             foreach ($data as $item) {
-                $childCell = $this->build($property->getPropertyType(), $item, $form, $attributes);
+                $childCell = $this->build($property->getPropertyType(), $item, $attributes);
                 $children[$childCell->name] = $childCell;
             }
         }
+        $attributes = array_merge($property->getAttributes(), $attributes);
 
         return new Cell(
             name: $property->getName(),
             data: $data,
             template: $property->getTemplate(),
+            component: $property->getComponent(),
             attributes: $attributes,
             property: $property,
-            form: $form,
-            children: $children ?? [],
+            form: $form?->createView(),
+            children: $children,
         );
     }
 }

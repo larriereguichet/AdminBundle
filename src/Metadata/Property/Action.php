@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-use Symfony\Component\PropertyAccess\PropertyAccess;
-
-#[\Attribute]
-class Action extends Text implements ConfigurableProperty
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
+class Action extends Link
 {
     public function __construct(
         ?string $name = null,
@@ -36,18 +34,6 @@ class Action extends Text implements ConfigurableProperty
             replace: $replace,
             empty: $emptyString,
         );
-    }
-
-    public function configure(mixed $data): void
-    {
-        $accessor = PropertyAccess::createPropertyAccessor();
-
-        foreach ($this->routeParameters as $name => $value) {
-            if ($value !== null || !$accessor->isReadable($data, $name)) {
-                continue;
-            }
-            $this->routeParameters[$name] = $accessor->getValue($data, $name);
-        }
     }
 
     public function getRoute(): ?string

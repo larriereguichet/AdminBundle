@@ -10,5 +10,9 @@ use Symfony\Component\Form\FormView;
 
 interface CellBuilderInterface
 {
-    public function build(PropertyInterface $property, mixed $data, ?FormView $form = null, array $attributes = []): Cell;
+    public function build(
+        PropertyInterface $property,
+        mixed $data,
+        array $attributes = []
+    ): Cell;
 }

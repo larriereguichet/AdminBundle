@@ -6,21 +6,19 @@ namespace LAG\AdminBundle\Metadata\Property;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[\Attribute]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Text extends Property
 {
     public function __construct(
         ?string $name = null,
-        ?string $propertyPath = null,
+        string|bool $propertyPath = null,
         ?string $label = null,
-        ?string $template = null,
         bool $sortable = true,
         bool $translatable = false,
         ?string $translationDomain = null,
         array $attributes = [],
         array $headerAttributes = [],
         ?string $allowedDataType = null,
-        array $grids = [],
 
         #[Assert\Length(min: 1)]
         private int $length = 100,
@@ -33,7 +31,7 @@ class Text extends Property
             name: $name,
             propertyPath: $propertyPath,
             label: $label,
-            template: '@LAGAdmin/grids/properties/text.html.twig',
+            component: 'lag_admin:cell:text',
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,

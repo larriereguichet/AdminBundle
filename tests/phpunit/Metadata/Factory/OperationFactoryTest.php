@@ -9,7 +9,7 @@ use LAG\AdminBundle\Event\OperationEvents;
 use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
 use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Metadata\Filter\Filter;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\Property\Text;
 use LAG\AdminBundle\Resource\Factory\OperationFactory;
 use LAG\AdminBundle\Resource\Factory\PropertyFactoryInterface;
@@ -26,8 +26,8 @@ class OperationFactoryTest extends TestCase
 
     public function testCreate(): void
     {
-        $definition = new GetCollection(
-            name: 'get_collection',
+        $definition = new Index(
+            name: 'index',
             properties: [new Text('my_property')],
             filters: [new Filter('my_filter')],
         );
@@ -47,8 +47,8 @@ class OperationFactoryTest extends TestCase
                     OperationEvents::OPERATION_CREATED,
                     'lag_admin.my_resource.operation.create',
                     'lag_admin.my_resource.operation.created',
-                    'lag_admin.my_resource.operation.get_collection.create',
-                    'lag_admin.my_resource.operation.get_collection.created',
+                    'lag_admin.my_resource.operation.index.create',
+                    'lag_admin.my_resource.operation.index.created',
                 ]);
 
                 return $event;

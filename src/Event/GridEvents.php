@@ -4,5 +4,5 @@ namespace LAG\AdminBundle\Event;
 
 class GridEvents
 {
-    public const GRID_CREATE = 'resource.grid.create';
+    public const GRID_CREATE = 'grid.create';
 }

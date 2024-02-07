@@ -6,10 +6,10 @@ namespace LAG\AdminBundle\EventListener\Resource;
 
 use LAG\AdminBundle\Event\ResourceEvent;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Property\Link;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 
-readonly class InitializeResourceOperationsListener
+final readonly class InitializeResourceOperationsListener
 {
     public function __construct(
         private RouteNameGeneratorInterface $routeNameGenerator,
@@ -24,12 +24,7 @@ readonly class InitializeResourceOperationsListener
         foreach ($resource->getOperations() as $operation) {
             if ($operation instanceof CollectionOperationInterface) {
                 if ($operation->getContextualActions() === null && $resource->hasOperation('create')) {
-                    $operation = $operation->withContextualActions([new Link(
-                        resourceName: $resource->getName(),
-                        operationName: 'create',
-                        label: $resource->getOperation('create')->getTitle() ?? 'Create',
-                        type: 'primary',
-                    )]);
+                    $operation = $operation->withContextualActions([]);
                 }
 
                 if ($operation->getItemActions() === null) {
@@ -38,9 +33,9 @@ readonly class InitializeResourceOperationsListener
             }
 
             if (!$operation->getRedirectRoute()) {
-                if ($resource->hasOperation('get_collection')) {
+                if ($resource->hasOperation('index')) {
                     $operation = $operation->withRedirectRoute(
-                        $this->routeNameGenerator->generateRouteName($resource, $resource->getOperation('get_collection')),
+                        $this->routeNameGenerator->generateRouteName($resource, $resource->getOperation('index')),
                     );
                 } elseif ($resource->hasOperation('update')) {
                     $operation = $operation->withRedirectRoute(

@@ -7,7 +7,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use LAG\AdminBundle\Controller\Resource\ResourceCollectionController;
 use LAG\AdminBundle\Controller\Resource\ResourceController;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Grid\Builder\GridViewBuilderInterface;
+use LAG\AdminBundle\Grid\Builder\GridBuilderInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
@@ -36,7 +36,7 @@ return static function (ContainerConfigurator $container) {
         ->arg('$contextProvider', service(ContextProviderInterface::class))
         ->arg('$provider', service(ProviderInterface::class))
         ->arg('$processor', service(ProcessorInterface::class))
-        ->arg('$gridBuilder', service(GridViewBuilderInterface::class))
+        ->arg('$gridBuilder', service(GridBuilderInterface::class))
         ->arg('$redirectionHandler', service(RedirectHandlerInterface::class))
         ->arg('$serializer', service('serializer'))
         ->arg('$formFactory', service('form.factory'))

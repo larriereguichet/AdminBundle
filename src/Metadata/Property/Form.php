@@ -2,15 +2,14 @@
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Form extends Property
 {
     public function __construct(
-        ?string $name = null,
-        private string $formType,
-        private \LAG\AdminBundle\Metadata\Link $targetUrl,
+        private string $form,
         private array $formOptions = [],
-        ?string $propertyPath = '.',
+        ?string $name = null,
+        string|bool|null $propertyPath = true,
         ?string $template = '@LAGAdmin/grids/properties/form.html.twig',
     ) {
         parent::__construct(
@@ -20,15 +19,15 @@ class Form extends Property
         );
     }
 
-    public function getFormType(): string
+    public function getForm(): string
     {
-        return $this->formType;
+        return $this->form;
     }
 
-    public function setFormType(string $formType): self
+    public function setForm(string $form): self
     {
         $self = clone $this;
-        $self->formType = $formType;
+        $self->form = $form;
 
         return $self;
     }
@@ -42,19 +41,6 @@ class Form extends Property
     {
         $self = clone $this;
         $self->formOptions = $formOptions;
-
-        return $self;
-    }
-
-    public function getTargetUrl(): \LAG\AdminBundle\Metadata\Link
-    {
-        return $this->targetUrl;
-    }
-
-    public function setTargetUrl(\LAG\AdminBundle\Metadata\Link $targetUrl): self
-    {
-        $self = clone $this;
-        $self->targetUrl = $targetUrl;
 
         return $self;
     }

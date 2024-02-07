@@ -12,6 +12,7 @@ class GridView
         public readonly string $name,
         public readonly string $type,
         public readonly string $template,
+        public readonly string $component,
         public readonly Row $headers,
         public readonly iterable $rows,
         public readonly iterable $attributes = [],

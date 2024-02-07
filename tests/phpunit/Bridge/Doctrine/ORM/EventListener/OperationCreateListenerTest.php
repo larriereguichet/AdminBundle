@@ -10,7 +10,7 @@ use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Filter\Filter;
 use LAG\AdminBundle\Metadata\Filter\StringFilter;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\Property\Text;
 use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\Tests\TestCase;
@@ -23,7 +23,7 @@ class OperationCreateListenerTest extends TestCase
 
     public function testInvoke(): void
     {
-        $operation = new GetCollection();
+        $operation = new Index();
         $operation = $operation
             ->withProperties([new Text('a_property')])
             ->withIdentifiers(['a_property'])
@@ -61,7 +61,7 @@ class OperationCreateListenerTest extends TestCase
 
     public function testInvokeWithoutProperties(): void
     {
-        $operation = new GetCollection();
+        $operation = new Index();
         $this
             ->filterFactory
             ->expects($this->never())
@@ -73,7 +73,7 @@ class OperationCreateListenerTest extends TestCase
 
     public function testInvokeWithFilters(): void
     {
-        $operation = new GetCollection();
+        $operation = new Index();
         $operation = $operation
             ->withFilters([new StringFilter('a_property')])
             ->withProperties([new Text('a_property')])

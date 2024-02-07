@@ -11,7 +11,8 @@ use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class ResourceContext implements ResourceContextInterface
+// TODO add request cache management
+readonly class ResourceContext implements ResourceContextInterface
 {
     public function __construct(
         private ParametersExtractorInterface $parametersExtractor,

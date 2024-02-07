@@ -2,6 +2,7 @@
 
 namespace LAG\AdminBundle\Metadata;
 
+use LAG\AdminBundle\Form\Type\Resource\ResourceType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
@@ -26,6 +27,10 @@ class Grid
         private array $headerRowAttributes = [],
         private array $headerAttributes = [],
         private array $options = [],
+
+        private ?string $form = ResourceType::class,
+
+        private array $formOptions = [],
     ) {
     }
 
@@ -150,6 +155,32 @@ class Grid
     {
         $self = clone $this;
         $self->options = $options;
+
+        return $self;
+    }
+
+    public function getForm(): ?string
+    {
+        return $this->form;
+    }
+
+    public function withForm(?string $form): Grid
+    {
+        $self = clone $this;
+        $self->form = $form;
+
+        return $self;
+    }
+
+    public function getFormOptions(): array
+    {
+        return $this->formOptions;
+    }
+
+    public function withFormOptions(array $formOptions): self
+    {
+        $self = clone $this;
+        $self->formOptions = $formOptions;
 
         return $self;
     }

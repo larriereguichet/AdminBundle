@@ -33,7 +33,6 @@ readonly class GridRenderer implements GridRendererInterface
                 ->default(null)
             ;
         }
-        dump($grid->options);
         $grid->options = $resolver->resolve(array_merge_recursive($grid->options, $options));
 
         return $this->environment->render($grid->template, [

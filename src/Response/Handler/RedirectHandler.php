@@ -23,7 +23,7 @@ readonly class RedirectHandler implements RedirectHandlerInterface
                 $operation->getRedirectResource() ?? $operation->getResource()->getName(),
                 $operation->getRedirectOperation(),
                 $data,
-                $operation->getRedirectApplication() ?? $operation->getResource()->getApplicationName(),
+                $operation->getRedirectApplication() ?? $operation->getResource()->getApplication(),
             );
         } elseif ($operation->getRedirectRoute()) {
             $redirectUrl = $this->urlGenerator->generateFromRouteName(

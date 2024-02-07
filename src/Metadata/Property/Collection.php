@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Property;
 
-#[\Attribute]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Collection extends Property implements CollectionPropertyInterface
 {
     public function __construct(

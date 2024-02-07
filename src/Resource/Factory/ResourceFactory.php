@@ -14,7 +14,6 @@ readonly class ResourceFactory implements ResourceFactoryInterface
 {
     public function __construct(
         private OperationFactoryInterface $operationFactory,
-        private PropertyFactoryInterface $propertyFactory,
         private ValidatorInterface $validator,
     ) {
     }
@@ -45,6 +44,6 @@ readonly class ResourceFactory implements ResourceFactoryInterface
             ));
         }
 
-        return $resource->withProperties($this->propertyFactory->createCollection($resource));
+        return $resource;
     }
 }

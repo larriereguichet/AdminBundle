@@ -50,7 +50,7 @@ class Configuration implements ConfigurationInterface
                             'template' => '@LAGAdmin/grids/table_grid.html.twig',
                         ],
                         'card' => [
-                            'template' => '@LAGAdmin/grids/card_grid.html.twig',
+                            'template' => '@LAGAdmin/grids/card.html.twig',
                             'template_mapping' => [
                                 Image::class => '@LAGAdmin/grids/cards/card_image.html.twig',
                             ],

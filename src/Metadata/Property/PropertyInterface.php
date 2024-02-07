@@ -10,9 +10,9 @@ interface PropertyInterface
 
     public function withName(string $property): self;
 
-    public function getPropertyPath(): ?string;
+    public function getPropertyPath(): string|null|bool;
 
-    public function withPropertyPath(?string $propertyPath): self;
+    public function withPropertyPath(string|false $propertyPath): self;
 
     public function getLabel(): ?string;
 
@@ -45,4 +45,8 @@ interface PropertyInterface
     public function getAllowedDataType(): ?string;
 
     public function withAllowedDataType(?string $allowedDataType): self;
+
+    public function getComponent(): ?string;
+
+    public function withComponent(?string $component): self;
 }

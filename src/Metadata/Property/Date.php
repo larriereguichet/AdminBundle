@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Metadata\Property;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[\Attribute]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Date extends Property
 {
     public function __construct(
@@ -19,7 +19,6 @@ class Date extends Property
         array $attributes = [],
         array $headerAttributes = [],
         ?string $allowedDataType = null,
-        array $grids = [],
 
         #[Assert\NotBlank(message: 'The date format should not be empty. Use "none" instead')]
         private string $dateFormat = 'medium',
@@ -38,7 +37,6 @@ class Date extends Property
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             allowedDataType: $allowedDataType,
-            grids: $grids,
         );
     }
 

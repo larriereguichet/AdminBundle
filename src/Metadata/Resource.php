@@ -34,12 +34,10 @@ class Resource
 
         /** @var OperationInterface[] $operations */
         #[Assert\Count(min: 1, minMessage: 'The must be at least one operation in the resource')]
-        #[Assert\All(constraints: [
-            new Assert\Type(type: OperationInterface::class),
-        ])]
+        #[Assert\All(constraints: [new Assert\Type(type: OperationInterface::class)])]
         #[Assert\Valid]
         private array $operations = [
-            new GetCollection(),
+            new Index(),
             new Get(),
             new Create(),
             new Update(),
@@ -47,6 +45,8 @@ class Resource
         ],
 
         /** @var PropertyInterface[] */
+        #[Assert\All(constraints: [new Assert\Type(type: PropertyInterface::class)])]
+        #[Assert\Valid]
         private array $properties = [],
 
         #[Assert\NotBlank]
@@ -208,7 +208,10 @@ class Resource
     public function withProperties(array $properties): self
     {
         $self = clone $this;
-        $self->properties = $properties;
+
+        foreach ($properties as $property) {
+            $self->properties[$property->getName()] = $property;
+        }
 
         return $self;
     }
@@ -326,7 +329,7 @@ class Resource
         return $self;
     }
 
-    public function getApplicationName(): ?string
+    public function getApplication(): ?string
     {
         return $this->applicationName;
     }

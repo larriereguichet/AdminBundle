@@ -1,0 +1,29 @@
+<div {{ attributes.defaults({class: 'admin row g-4 row-cols-' ~ columns}) }}>
+    {% for row in rows %}
+        <div class="col">
+            {{ component('lag_admin:card:row') }}
+            <div{{ attributes.defaults({class: 'card'}) }}>
+                {% if row.form %}
+                    {{ form_start(row.form) }}
+                {% endif %}
+
+                {% for cell in row.cells %}
+                    {% set options = [] %}
+
+                    {% if cell.name == grid.options.thumbnail %}
+                        {% set options = {attributes: {class: 'card-img-top'}} %}
+                        {{ lag_admin_grid_cell(cell, options) }}
+                    {% else %}
+                        <div{{ lag_admin.attributes(cell.attributes, {'class': 'card-body'}) }}>
+                            {{ lag_admin_grid_cell(cell, options) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                {% if row.form %}
+                    {{ form_end(row.form, {render_rest: false}) }}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

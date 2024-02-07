@@ -30,7 +30,7 @@ readonly class ResourceLocator implements ResourceLocatorInterface
                 );
             }
 
-            if (!$resource->getApplicationName()) {
+            if (!$resource->getApplication()) {
                 $resource = $resource->withApplicationName($this->defaultApplication);
             }
 

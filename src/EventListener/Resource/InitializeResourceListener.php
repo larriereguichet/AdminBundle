@@ -8,7 +8,7 @@ use LAG\AdminBundle\Event\ResourceEvent;
 use Symfony\Component\String\Inflector\EnglishInflector;
 use function Symfony\Component\String\u;
 
-readonly class InitializeResourceListener
+final readonly class InitializeResourceListener
 {
     public function __construct(
         private ?string $applicationName,
@@ -31,7 +31,7 @@ readonly class InitializeResourceListener
             $resource = $resource->withTitle($title);
         }
 
-        if ($resource->getApplicationName() === null) {
+        if ($resource->getApplication() === null) {
             $resource = $resource->withApplicationName($this->applicationName);
         }
 

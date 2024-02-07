@@ -7,7 +7,7 @@ use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\Get;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
@@ -86,7 +86,7 @@ class SerializationProviderTest extends TestCase
         $this->decoratedProvider
             ->expects($this->once())
             ->method('provide')
-            ->with(new GetCollection(), [], $context)
+            ->with(new Index(), [], $context)
             ->willReturn($data)
         ;
         $this->serializer
@@ -94,7 +94,7 @@ class SerializationProviderTest extends TestCase
             ->method('serialize')
         ;
 
-        $returnedData = $this->provider->provide(new GetCollection(), [], $context);
+        $returnedData = $this->provider->provide(new Index(), [], $context);
         $this->assertEquals($data, $returnedData);
     }
 
@@ -113,7 +113,7 @@ class SerializationProviderTest extends TestCase
     public static function operationsProvider(): array
     {
         return [
-            [new GetCollection()],
+            [new Index()],
             [new Get()],
             [new Create()],
             [new Update()],

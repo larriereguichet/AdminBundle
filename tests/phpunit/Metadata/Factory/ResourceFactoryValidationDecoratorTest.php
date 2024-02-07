@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
 use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\Operation;
 use LAG\AdminBundle\Resource\Factory\EventResourceFactory;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
@@ -25,7 +25,7 @@ class ResourceFactoryValidationDecoratorTest extends TestCase
     public function testCreate(): void
     {
         $resource = new Resource(name: 'my_resource', operations: [
-            new GetCollection(),
+            new Index(),
         ]);
 
         $this

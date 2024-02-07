@@ -6,6 +6,6 @@ namespace LAG\AdminBundle\Event;
 
 enum OperationEvents: string
 {
-    public const OPERATION_CREATE = 'lag_admin.operation.create';
-    public const OPERATION_CREATED = 'lag_admin.operation.created';
+    public const OPERATION_CREATE = 'operation.create';
+    public const OPERATION_CREATED = 'operation.created';
 }

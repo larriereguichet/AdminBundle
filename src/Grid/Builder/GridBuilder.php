@@ -15,39 +15,40 @@ use LAG\AdminBundle\Grid\View\Header;
 use LAG\AdminBundle\Grid\View\Row;
 use LAG\AdminBundle\Metadata\Grid;
 use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\DataMapper\ResourceDataMapper;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use function PHPUnit\Framework\matches;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-readonly class GridViewBuilder implements GridViewBuilderInterface
+readonly class GridBuilder implements GridBuilderInterface
 {
     public function __construct(
         private GridRegistryInterface $registry,
-        private CellBuilderInterface $cellFactory,
+        private CellBuilderInterface $cellBuilder,
+        private FormFactoryInterface $formFactory,
         private ResourceEventDispatcherInterface $eventDispatcher,
         private ValidatorInterface $validator,
     ) {
     }
 
-    public function build(
+    public function buildView(
         string $gridName,
         OperationInterface $operation,
         iterable $data,
-        ?FormView $form = null,
         array $options = []
     ): GridView {
         $resource = $operation->getResource();
         $grid = $this->registry->get($gridName);
         $event = new GridEvent($grid, $operation);
 
-        $this->eventDispatcher->dispatchNamedEvents(
+        $this->eventDispatcher->dispatchResourceEvents(
             $event,
             GridEvents::GRID_CREATE,
-            $resource->getApplicationName(),
+            $resource->getApplication(),
             $resource->getName(),
-            $operation->getName(),
+            $grid->getName(),
         );
         $grid = $event->getGrid();
         $errors = $this->validator->validate($grid, [new Valid()]);
@@ -61,21 +62,31 @@ readonly class GridViewBuilder implements GridViewBuilderInterface
         }
 
         $headers = $this->generateHeadersRow($grid, $resource->getProperties());
-        $rows = $this->generateRows($grid, $resource->getProperties(), $data, $form);
+        $rows = $this->generateRows($grid, $resource->getProperties(), $data, $operation->getForm(), $operation->getFormOptions());
 
         return new GridView(
             name: $grid->getName(),
             type: $grid->getType(),
             template: $grid->getTemplate(),
+            component: $this->resolveGridType($grid->getType()),
             headers: $headers,
             rows: $rows,
             attributes: $grid->getAttributes(),
             options: array_merge_recursive($grid->getOptions(), $options),
-            form: $form,
+            form: null,
         );
     }
 
-    private function generateHeadersRow(Grid $grid, iterable $properties): Row
+    private function resolveGridType(string $gridType): string
+    {
+        return match ($gridType) {
+            'card' => 'lag_admin:grid:card',
+            'table' => 'lag_admin:grid:table',
+            default => $gridType,
+        };
+    }
+
+    private function generateHeadersRow(Grid $grid, array $properties): Row
     {
         return new Row(
             index: 0,
@@ -99,7 +110,7 @@ readonly class GridViewBuilder implements GridViewBuilderInterface
             $property = $properties[$propertyName];
             $headers[$property->getName()] = new Header(
                 name: $property->getName(),
-                label: $property->getLabel(),
+                text: $property->getLabel() ?? '',
                 sortable: $property->isSortable(),
                 translationDomain: $grid->getTranslationDomain(),
                 attributes: $grid->getHeaderAttributes(),
@@ -109,27 +120,39 @@ readonly class GridViewBuilder implements GridViewBuilderInterface
         return $headers;
     }
 
-    private function generateRows(Grid $grid, array $properties, iterable $data, ?FormView $form = null): array
-    {
+    private function generateRows(
+        Grid $grid,
+        array $properties,
+        iterable $data,
+        ?string $formType,
+        array $formOptions,
+    ): array {
         $index = 0;
         $rows = [];
 
         foreach ($data as $value) {
+            $form = null;
+
+            if ($formType) {
+                $form = $this->formFactory->create($formType, $value, $formOptions);
+            }
             $cells = $this->generateCells($grid, $properties, $value);
-            $rows[$index] = new Row($index, $cells, $grid->getRowAttributes(), $form);
+
+            $rows[$index] = new Row($index, $cells, $grid->getRowAttributes(), $form?->createView());
+
             $index++;
         }
 
         return $rows;
     }
 
-    private function generateCells(Grid $grid, array $properties, mixed $data, ?FormView $form = null): array
+    private function generateCells(Grid $grid, array $properties, mixed $data): array
     {
         $cells = [];
 
         foreach ($grid->getProperties() as $propertyName) {
             $property = $properties[$propertyName];
-            $cells[$property->getName()] = $this->cellFactory->build($property, $data, $form);
+            $cells[$property->getName()] = $this->cellBuilder->build($property, $data);
         }
 
         return $cells;
