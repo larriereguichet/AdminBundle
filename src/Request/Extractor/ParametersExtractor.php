@@ -4,45 +4,29 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Request\Extractor;
 
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\LAGAdminBundle;
 use Symfony\Component\HttpFoundation\Request;
 
-class ParametersExtractor implements ParametersExtractorInterface
+final readonly class ParametersExtractor implements ParametersExtractorInterface
 {
-    public function getResourceName(Request $request): string
-    {
-        if (!$this->supports($request)) {
-            throw new Exception('No admin resource was found in the request. The route is wrongly configured');
-        }
-
-        return $request->get('_route_params')[LAGAdminBundle::REQUEST_PARAMETER_ADMIN];
+    public function __construct(
+        private string $applicationParameter,
+        private string $resourceParameter,
+        private string $operationParameter,
+    ) {
     }
 
-    public function getOperationName(Request $request): string
+    public function getApplicationName(Request $request): ?string
     {
-        if (!$this->supports($request)) {
-            throw new Exception('No action resource was found in the request. The route is wrongly configured');
-        }
-
-        return $request->get('_route_params')[LAGAdminBundle::REQUEST_PARAMETER_ACTION];
+        return $request->attributes->get($this->applicationParameter);
     }
 
-    public function supports(Request $request): bool
+    public function getResourceName(Request $request): ?string
     {
-        $routeParameters = $request->get('_route_params');
+        return $request->attributes->get($this->resourceParameter);
+    }
 
-        if (!\is_array($routeParameters)) {
-            return false;
-        }
-
-        if (
-            !isset($routeParameters[LAGAdminBundle::REQUEST_PARAMETER_ADMIN])
-            || !isset($routeParameters[LAGAdminBundle::REQUEST_PARAMETER_ACTION])
-        ) {
-            return false;
-        }
-
-        return true;
+    public function getOperationName(Request $request): ?string
+    {
+        return $request->attributes->get($this->operationParameter);
     }
 }
