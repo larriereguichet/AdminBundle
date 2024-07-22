@@ -18,7 +18,7 @@ interface CollectionOperationInterface extends OperationInterface
 
     public function getItemsPerPage(): int;
 
-    public function withItemsPerPage(int $itemPerPage): self;
+    public function withItemsPerPage(int $itemsPerPage): self;
 
     public function getPageParameter(): string;
 

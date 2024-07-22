@@ -19,6 +19,7 @@ class Compound extends Property implements CompoundPropertyInterface
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
+        private array $properties = [],
     ) {
         parent::__construct(
             name: $name,
@@ -32,6 +33,19 @@ class Compound extends Property implements CompoundPropertyInterface
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
         );
+    }
+
+    public function getProperties(): array
+    {
+        return $this->properties;
+    }
+
+    public function withProperties(array $properties): self
+    {
+        $self = clone $this;
+        $self->properties = $properties;
+
+        return $self;
     }
 
     public function getPropertyType(): PropertyInterface
