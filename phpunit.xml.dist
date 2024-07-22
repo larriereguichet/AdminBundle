@@ -3,6 +3,7 @@
          colors="true"
          bootstrap="tests/bootstrap.php"
          displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.4/phpunit.xsd"
          cacheDirectory="var/phpunit/cache">
     <coverage>
@@ -15,6 +16,9 @@
     <testsuites>
         <testsuite name="AdminBundle Test Suite">
             <directory>tests/phpunit</directory>
+        </testsuite>
+        <testsuite name="AdminBundle Functional Test Suite">
+            <directory>tests/functional</directory>
         </testsuite>
     </testsuites>
 
