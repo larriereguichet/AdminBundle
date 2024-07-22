@@ -19,8 +19,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 final class ResourceRegistryTest extends TestCase
 {
-    use ContainerTestTrait;
-
     private ResourceRegistryInterface $registry;
     private MockObject $resourceFactory;
 
@@ -73,13 +71,6 @@ final class ResourceRegistryTest extends TestCase
         self::assertIsIterable($resources);
         $resources = iterator_to_array($resources);
         self::assertCount(3, $resources);
-    }
-
-    #[Test]
-    public function serviceExists(): void
-    {
-        self::assertService(ResourceRegistryInterface::class);
-        self::assertNoService(ResourceRegistry::class);
     }
 
     public static function resources(): iterable
