@@ -4,28 +4,26 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Request\Extractor;
 
-use LAG\AdminBundle\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Extract parameters from the given request to return the current resource and operation name. It should use the
+ * container bundle parameter to allow to change the parameters names.
+ */
 interface ParametersExtractorInterface
 {
     /**
-     * Return the admin name contained in the request parameters (_route_params).
-     *
-     * @throws Exception If no admin name can be found
+     * Return the resource operation name from the request attributes.
      */
-    public function getResourceName(Request $request): string;
+    public function getApplicationName(Request $request): ?string;
 
     /**
-     * Return the admin name contained in the request parameters (_route_params).
-     *
-     * @throws Exception If no action name can be found
+     * Return the resource name from the request attributes.
      */
-    public function getOperationName(Request $request): string;
+    public function getResourceName(Request $request): ?string;
 
     /**
-     * Return true if the current Request is supported. Supported means that the Request has the required valid
-     * parameters to get an admin from the registry.
+     * Return the resource operation name from the request attributes.
      */
-    public function supports(Request $request): bool;
+    public function getOperationName(Request $request): ?string;
 }
