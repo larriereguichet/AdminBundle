@@ -1,0 +1,52 @@
+<?php
+
+namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
+
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\State\Provider\ProviderInterface;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
+
+final readonly class PaginationProvider implements ProviderInterface
+{
+    public function __construct(
+        private ProviderInterface $provider,
+    ) {
+    }
+
+    public function provide(OperationInterface $operation, array $uriVariables = [], array $context = []): mixed
+    {
+        $data = $this->provider->provide($operation, $uriVariables, $context);
+
+        if (!$operation instanceof CollectionOperationInterface || !$this->shouldPaginate($operation, $data)) {
+            return $data;
+        }
+
+        if (!$operation->usePagination()) {
+            $data->setMaxResults($operation->getItemsPerPage());
+
+            return $data;
+        }
+        $pager = new Pagerfanta(new QueryAdapter($data, true, true));
+        $pager->setMaxPerPage($operation->getItemsPerPage());
+        $pager->setCurrentPage($context['page'] ?? 1);
+
+        return $pager;
+    }
+
+    private function shouldPaginate(OperationInterface $operation, mixed $data): bool
+    {
+        if (!$operation instanceof CollectionOperationInterface) {
+            return false;
+        }
+
+        if (!$data instanceof QueryBuilder && !$data instanceof Query) {
+            return false;
+        }
+
+        return true;
+    }
+}

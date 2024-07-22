@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Grid\View;
 
-use LAG\AdminBundle\Exception\Validation\InvalidActionException;
-use LAG\AdminBundle\Grid\View\LinkRenderer;
-use LAG\AdminBundle\Grid\View\LinkRendererInterface;
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Exception\InvalidLinkException;
+use LAG\AdminBundle\Resource\Metadata\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\View\Render\LinkRenderer;
+use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -35,7 +35,7 @@ class LinkRendererTest extends TestCase
             route: 'my_route',
             routeParameters: ['id' => []],
             template: 'my_template.html.twig',
-            resourceName: 'my_resource', // should not be used if route is provided
+            resource: 'my_resource', // should not be used if route is provided
         );
         $data = new \stdClass();
 
@@ -72,8 +72,8 @@ class LinkRendererTest extends TestCase
     {
         $action = new Link(
             template: 'my_template.html.twig',
-            resourceName: 'my_resource',
-            operationName: 'my_operation',
+            resource: 'my_resource',
+            operation: 'my_operation',
         );
         $data = new \stdClass();
 
@@ -126,7 +126,7 @@ class LinkRendererTest extends TestCase
             ->willReturn(1)
         ;
 
-        $this->expectException(InvalidActionException::class);
+        $this->expectException(InvalidLinkException::class);
         $this->actionRenderer->render($action, $data);
     }
 

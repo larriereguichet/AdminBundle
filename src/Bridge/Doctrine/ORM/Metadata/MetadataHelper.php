@@ -8,10 +8,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Exception;
 
-class MetadataHelper implements MetadataHelperInterface
+final readonly class MetadataHelper implements MetadataHelperInterface
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager
+    ) {
     }
 
     public function findMetadata(string $class): ?ClassMetadata

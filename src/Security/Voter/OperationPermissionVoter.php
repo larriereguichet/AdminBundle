@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Security\Voter;
 
-use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;

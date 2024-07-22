@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Metadata\Locator;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Locator\CompositeLocator;
-use LAG\AdminBundle\Metadata\Locator\MetadataLocatorInterface;
+use LAG\AdminBundle\Resource\Locator\CompositeLocator;
+use LAG\AdminBundle\Resource\Locator\MetadataLocatorInterface;
+use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Tests\TestCase;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -22,7 +22,7 @@ class CompositeLocatorTest extends TestCase
             ->method('locateCollection')
             ->with('/a/directory')
             ->willReturn([
-                new AdminResource('an_admin'),
+                new Resource('an_admin'),
             ])
         ;
         $locator2 = $this->createMock(MetadataLocatorInterface::class);
@@ -31,7 +31,7 @@ class CompositeLocatorTest extends TestCase
             ->method('locateCollection')
             ->with('/a/directory')
             ->willReturn([
-                new AdminResource('an_other_admin'),
+                new Resource('an_other_admin'),
             ])
         ;
 
@@ -39,8 +39,8 @@ class CompositeLocatorTest extends TestCase
 
         $compositeLocator = $this->createLocator([$locator1, $locator2], $this->createMock(KernelInterface::class));
         $this->assertEquals([
-            new AdminResource('an_admin'),
-            new AdminResource('an_other_admin'),
+            new Resource('an_admin'),
+            new Resource('an_other_admin'),
         ], $compositeLocator->locateCollection('/a/directory'));
     }
 
@@ -52,7 +52,7 @@ class CompositeLocatorTest extends TestCase
             ->method('locateCollection')
             ->with('/a/path/to/bundle/Entity')
             ->willReturn([
-                new AdminResource('an_admin'),
+                new Resource('an_admin'),
             ])
         ;
 

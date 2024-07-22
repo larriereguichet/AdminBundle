@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Form\Type\Resource;
 
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Resource\Metadata\Resource;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,7 +28,7 @@ class DeleteType extends AbstractType
                 'label' => false,
             ])
             ->setRequired('resource')
-            ->setAllowedTypes('resource', AdminResource::class)
+            ->setAllowedTypes('resource', Resource::class)
         ;
     }
 }

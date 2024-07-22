@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
-use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 
 interface PathGeneratorInterface
 {

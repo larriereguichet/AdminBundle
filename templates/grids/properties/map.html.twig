@@ -1,0 +1,5 @@
+{% set data = options.map[data]|default('') %}
+
+<span {{ attributes.defaults({class: 'badge bg-secondary'}) }}>
+    {% if options.translatable %}{{ data|trans({}, options.translationDomain) }}{% else %}{{ data }}{% endif %}
+</span>

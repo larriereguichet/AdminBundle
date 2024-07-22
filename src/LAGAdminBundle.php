@@ -11,13 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-class LAGAdminBundle extends AbstractBundle
+final class LAGAdminBundle extends AbstractBundle
 {
-    // Request Admin parameters
-    // TODO from configuration
-    public const REQUEST_PARAMETER_ADMIN = '_admin';
-    public const REQUEST_PARAMETER_ACTION = '_action';
-
     public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new EventCompilerPass());

@@ -6,13 +6,13 @@ namespace LAG\AdminBundle\Tests\Controller\Resource;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Controller\Resource\ResourceCollectionController;
-use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
-use LAG\AdminBundle\Grid\GridView;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Grid\View\GridView;
+use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
-use LAG\AdminBundle\State\Provider\DataProviderInterface;
+use LAG\AdminBundle\Resource\Metadata\Index;
+use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -34,9 +34,9 @@ class ResourceCollectionControllerTest extends TestCase
 
     public function testInvoke(): void
     {
-        $resource = new AdminResource();
+        $resource = new Resource();
         $request = new Request();
-        $operation = (new GetCollection())
+        $operation = (new Index())
             ->withTemplate('my_template.html.twig')
             ->withFilterFormType('FormClass')
             ->withFilterFormOptions(['label' => 'my_form'])
@@ -95,7 +95,7 @@ class ResourceCollectionControllerTest extends TestCase
         $this
             ->gridFactory
             ->expects($this->once())
-            ->method('create')
+            ->method('leagacybuildView')
             ->with($operation, $data)
             ->willReturn($grid)
         ;
@@ -129,8 +129,8 @@ class ResourceCollectionControllerTest extends TestCase
     {
         $this->uriVariablesExtractor = $this->createMock(UriVariablesExtractorInterface::class);
         $this->contextProvider = $this->createMock(ContextProviderInterface::class);
-        $this->dataProvider = $this->createMock(DataProviderInterface::class);
-        $this->gridFactory = $this->createMock(GridFactoryInterface::class);
+        $this->dataProvider = $this->createMock(ProviderInterface::class);
+        $this->gridFactory = $this->createMock(GridViewBuilderInterface::class);
         $this->formFactory = $this->createMock(FormFactoryInterface::class);
         $this->serializer = $this->createMock(SerializerInterface::class);
         $this->environment = $this->createMock(Environment::class);

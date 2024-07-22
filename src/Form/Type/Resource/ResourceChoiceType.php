@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Form\Type\Resource;
 
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\State\Provider\DataProviderInterface;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\Options;
@@ -15,7 +15,7 @@ class ResourceChoiceType extends AbstractType
 {
     public function __construct(
         private ResourceRegistryInterface $registry,
-        private DataProviderInterface $dataProvider,
+        private ProviderInterface $dataProvider,
     ) {
     }
 

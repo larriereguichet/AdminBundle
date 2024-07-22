@@ -1,0 +1,40 @@
+{% extends operation.partial|default(false) ? '@LAGAdmin/partial.html.twig' : '@LAGAdmin/base.html.twig' %}
+
+{% block content %}
+    <div class="admin-index admin-{{ resource.name }}">
+        {% include '@LAGAdmin/resources/index/collection_operations.html.twig' %}
+
+        {% block filter_form %}
+            {% if filterForm and filterForm.children|length > 0 %}
+                {% include '@LAGAdmin/resources/index/_filters.html.twig' with {form: filterForm} %}
+            {% endif %}
+        {% endblock %}
+
+        {% block grid %}
+            <div class="admin-grid-container">
+                {% if grid %}
+                    {{ component('lag_admin:grid', {
+                        data: data,
+                        grid: grid,
+                        operation: operation,
+                    }) }}
+                {% endif %}
+            </div>
+        {% endblock %}
+
+        {% block pagination %}
+            {% if lag_admin_is_pager(data) and data.haveToPaginate %}
+                <div class="admin-pagination mt-4">
+                    <div class="pagination justify-content-center">
+                        {{ pagerfanta(data, {
+                            page: data.currentPage,
+                        }) }}
+                    </div>
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {% block bottom_extra_content %}{% endblock %}
+    </div>
+{% endblock %}
+

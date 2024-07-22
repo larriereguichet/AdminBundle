@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests;
 
 use LAG\AdminBundle\LAGAdminBundle;
-use legacy\Fixtures\Kernel\TestKernel;
+use Nyholm\BundleTest\TestKernel;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 abstract class KernelTestBase extends TestCase
 {
@@ -14,16 +15,15 @@ abstract class KernelTestBase extends TestCase
         return LAGAdminBundle::class;
     }
 
-    protected function createKernel(): TestKernel
+    protected function createKernel(): KernelInterface
     {
         $kernel = new TestKernel('test', true);
-        $kernel->setProjectDir(__DIR__.'/../app');
-        $kernel->setCacheDir(__DIR__.'/../app/var/cache');
+        $kernel->setTestProjectDir(__DIR__.'/../app');
 
         $bundles = include __DIR__.'/../app/config/bundles.php';
 
         foreach (array_keys($bundles) as $bundle) {
-            $kernel->addBundle($bundle);
+            $kernel->addTestBundle($bundle);
         }
 
         $kernel->boot();

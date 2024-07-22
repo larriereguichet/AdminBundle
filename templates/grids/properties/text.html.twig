@@ -1,1 +1,5 @@
-{{ data|default('')|u.truncate(options.length, options.replace)|striptags }}
+<p {{ attributes }}>
+    {% if options.prefix %}{{ options.prefix }}{% endif %}
+    {{ data|default(options.empty)|u.truncate(options.length, options.replace)|striptags }}
+    {% if options.suffix %}{{ options.suffix }}{% endif %}
+</p>

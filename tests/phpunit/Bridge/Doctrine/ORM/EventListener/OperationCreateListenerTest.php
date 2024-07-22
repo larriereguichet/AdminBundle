@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\EventListener;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\OperationCreateListener;
-use LAG\AdminBundle\Event\Events\OperationEvent;
+use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
-use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\Filter\Filter;
-use LAG\AdminBundle\Metadata\Filter\StringFilter;
-use LAG\AdminBundle\Metadata\GetCollection;
-use LAG\AdminBundle\Metadata\Property\Text;
-use LAG\AdminBundle\Metadata\Update;
+use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Resource\Metadata\Filter;
+use LAG\AdminBundle\Resource\Metadata\Index;
+use LAG\AdminBundle\Resource\Metadata\Text;
+use LAG\AdminBundle\Resource\Metadata\TextFilter;
+use LAG\AdminBundle\Resource\Metadata\Update;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -23,7 +23,7 @@ class OperationCreateListenerTest extends TestCase
 
     public function testInvoke(): void
     {
-        $operation = new GetCollection();
+        $operation = new Index();
         $operation = $operation
             ->withProperties([new Text('a_property')])
             ->withIdentifiers(['a_property'])
@@ -61,7 +61,7 @@ class OperationCreateListenerTest extends TestCase
 
     public function testInvokeWithoutProperties(): void
     {
-        $operation = new GetCollection();
+        $operation = new Index();
         $this
             ->filterFactory
             ->expects($this->never())
@@ -73,9 +73,9 @@ class OperationCreateListenerTest extends TestCase
 
     public function testInvokeWithFilters(): void
     {
-        $operation = new GetCollection();
+        $operation = new Index();
         $operation = $operation
-            ->withFilters([new StringFilter('a_property')])
+            ->withFilters([new TextFilter('a_property')])
             ->withProperties([new Text('a_property')])
         ;
         $this

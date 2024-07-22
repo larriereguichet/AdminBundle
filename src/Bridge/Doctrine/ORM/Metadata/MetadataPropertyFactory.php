@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata;
 
-use LAG\AdminBundle\Metadata\Property\Boolean;
-use LAG\AdminBundle\Metadata\Property\Collection;
-use LAG\AdminBundle\Metadata\Property\Count;
-use LAG\AdminBundle\Metadata\Property\Date;
-use LAG\AdminBundle\Metadata\Property\Text;
-
+use LAG\AdminBundle\Resource\Metadata\Boolean;
+use LAG\AdminBundle\Resource\Metadata\Count;
+use LAG\AdminBundle\Resource\Metadata\Date;
+use LAG\AdminBundle\Resource\Metadata\Text;
 use function Symfony\Component\String\u;
 
 class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
@@ -36,10 +34,10 @@ class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
             } elseif ($fieldType === 'boolean') {
                 $properties[$fieldName] = new Boolean($fieldName);
             } elseif (u($fieldType)->containsAny(['array', 'json'])) {
-                $properties[$fieldName] = new Collection(
-                    entryType: Text::class,
-                    name: $fieldName,
-                );
+//                $properties[$fieldName] = new CollectionOL(
+//                    entryType: Text::class,
+//                    name: $fieldName,
+//                );
             } else {
                 $properties[$fieldName] = new Text($fieldName);
             }

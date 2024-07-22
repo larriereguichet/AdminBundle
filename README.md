@@ -17,6 +17,15 @@
 - check extension parameters useful
 - add sf routing params to resource
 - remove load method from the registry
+- replace hasOperation by hasOperationOfType
+- set coherent names to twig extensions
+- remove form_template in forms
+- remove tab in forms
+- create an orm form builder
+- tests
+- base template by application
+- add request cache management for resources
+
 
 # AdminBundle
 The AdminBundle helps you to create **flexible** and **robust** administration application.

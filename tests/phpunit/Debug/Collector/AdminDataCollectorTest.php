@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Debug\Collector;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
 use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +17,6 @@ class AdminDataCollectorTest extends TestCase
 {
     private AdminDataCollector $collector;
     private MockObject $registry;
-    private MockObject $applicationConfiguration;
     private MockObject $parametersExtractor;
 
     public function testCollect(): void
@@ -26,8 +24,8 @@ class AdminDataCollectorTest extends TestCase
         $request = new Request();
         $response = new Response();
 
-        $resource1 = new AdminResource(name: 'my_resource');
-        $resource2 = new AdminResource(name: 'my_other_resource');
+        $resource1 = new Resource(name: 'my_resource');
+        $resource2 = new Resource(name: 'my_other_resource');
 
         $this
             ->registry
@@ -37,29 +35,10 @@ class AdminDataCollectorTest extends TestCase
         ;
 
         $this
-            ->applicationConfiguration
-            ->expects($this->once())
-            ->method('isFrozen')
-            ->willReturn(true)
-        ;
-        $this
-            ->applicationConfiguration
-            ->expects($this->once())
-            ->method('toArray')
-            ->willReturn([
-                'resource_paths' => '/path',
-                'title' => 'A Title',
-                'date_format' => 'd/m/Y',
-                'time_format' => null,
-                'date_localization' => false,
-            ])
-        ;
-
-        $this
             ->parametersExtractor
             ->expects($this->once())
-            ->method('supports')
-            ->willReturn(true)
+            ->method('getApplicationName')
+            ->willReturn('admin')
         ;
         $this
             ->parametersExtractor
@@ -81,15 +60,12 @@ class AdminDataCollectorTest extends TestCase
         $this->assertEquals([
             'resources' => [$resource1, $resource2],
             'request' => [
+                'application' => 'admin',
                 'resource' => 'my_resource',
                 'operation' => 'my_operation',
             ],
             'application' => [
-                'resource_paths' => '/path',
-                'title' => 'A Title',
-                'date_format' => 'd/m/Y',
-                'time_format' => null,
-                'date_localization' => false,
+                'param' => 'a value',
             ],
         ], $this->collector->getData());
 
@@ -105,11 +81,10 @@ class AdminDataCollectorTest extends TestCase
     protected function setUp(): void
     {
         $this->registry = $this->createMock(ResourceRegistryInterface::class);
-        $this->applicationConfiguration = $this->createMock(ApplicationConfiguration::class);
         $this->parametersExtractor = $this->createMock(ParametersExtractorInterface::class);
         $this->collector = new AdminDataCollector(
+            ['param' => 'a value'],
             $this->registry,
-            $this->applicationConfiguration,
             $this->parametersExtractor,
         );
     }

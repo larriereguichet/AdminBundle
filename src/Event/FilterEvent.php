@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Metadata\Filter\FilterInterface;
+use LAG\AdminBundle\Filter\FilterInterface;
 
 class FilterEvent
 {

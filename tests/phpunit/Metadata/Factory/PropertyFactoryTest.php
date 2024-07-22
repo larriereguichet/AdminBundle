@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
-use LAG\AdminBundle\Exception\Validation\InvalidPropertyCollectionException;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Factory\PropertyFactory;
-use LAG\AdminBundle\Metadata\GetCollection;
-use LAG\AdminBundle\Metadata\Property\PropertyInterface;
-use LAG\AdminBundle\Metadata\Property\Text;
+use LAG\AdminBundle\Exception\InvalidPropertyException;
+use LAG\AdminBundle\Resource\Factory\PropertyFactory;
+use LAG\AdminBundle\Resource\Metadata\Index;
+use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
+use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Resource\Metadata\Text;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Validator\Constraints\Valid;
@@ -24,8 +24,8 @@ class PropertyFactoryTest extends TestCase
     public function testCreate(): void
     {
         $definition = new Text(name: 'my_property');
-        $resource = new AdminResource(name: 'a_resource', translationDomain: 'my_domain', applicationName: 'app');
-        $operation = (new GetCollection(properties: [$definition]))->withResource($resource);
+        $resource = new Resource(name: 'a_resource', translationDomain: 'my_domain', application: 'app');
+        $operation = (new Index(properties: [$definition]))->withResource($resource);
 
         $this
             ->validator
@@ -51,13 +51,13 @@ class PropertyFactoryTest extends TestCase
     public function testCreateWithTranslationPattern(): void
     {
         $definition = new Text(name: 'my_property');
-        $resource = new AdminResource(
+        $resource = new Resource(
             name: 'a_resource',
-            applicationName: 'app',
+            application: 'app',
             translationDomain: 'my_domain',
             translationPattern: 'test.{resource}.{message}',
         );
-        $operation = (new GetCollection(properties: [$definition]))->withResource($resource);
+        $operation = (new Index(properties: [$definition]))->withResource($resource);
 
         $this
             ->validator
@@ -83,8 +83,8 @@ class PropertyFactoryTest extends TestCase
     public function testCreateInvalid(): void
     {
         $definition = new Text(name: 'my_property');
-        $resource = new AdminResource(applicationName: 'app', name: 'a_resource', translationDomain: 'my_domain');
-        $operation = (new GetCollection(properties: [$definition]))->withResource($resource);
+        $resource = new Resource(application: 'app', name: 'a_resource', translationDomain: 'my_domain');
+        $operation = (new Index(properties: [$definition]))->withResource($resource);
         $violations = $this->createMock(ConstraintViolationList::class);
 
         $this
@@ -106,7 +106,7 @@ class PropertyFactoryTest extends TestCase
             ->willReturn(1)
         ;
 
-        $this->expectException(InvalidPropertyCollectionException::class);
+        $this->expectException(InvalidPropertyException::class);
         $this->factory->createCollection($operation);
     }
 

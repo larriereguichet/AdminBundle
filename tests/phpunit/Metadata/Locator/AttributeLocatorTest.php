@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Metadata\Locator;
 
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Locator\AttributeLocator;
+use LAG\AdminBundle\Resource\Locator\AttributeLocator;
+use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Tests\TestCase;
 
 class AttributeLocatorTest extends TestCase
@@ -16,7 +16,7 @@ class AttributeLocatorTest extends TestCase
         $resources = $locator->locateCollection(__DIR__.'/../../Entity');
 
         foreach ($resources as $resource) {
-            $this->assertInstanceOf(AdminResource::class, $resource);
+            $this->assertInstanceOf(Resource::class, $resource);
         }
         $this->assertCount(1, $resources);
     }

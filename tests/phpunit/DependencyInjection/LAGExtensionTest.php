@@ -24,6 +24,9 @@ class LAGExtensionTest extends TestCase
             ->method('setParameter')
             ->willReturnCallback(function ($parameter, $value) {
                 $this->assertContains($parameter, [
+                    'lag_admin.application_parameter',
+                    'lag_admin.resource_parameter',
+                    'lag_admin.operation_parameter',
                     'lag_admin.application.configuration',
                     'lag_admin.resource_paths',
                     'lag_admin.title',

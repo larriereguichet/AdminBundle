@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Extension;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use LAG\AdminBundle\Grid\View\LinkRendererInterface;
-use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Metadata\Link;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
+use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -17,53 +16,53 @@ use Twig\TwigFunction;
 class AdminExtension extends AbstractExtension
 {
     public function __construct(
-        private ApplicationConfiguration $applicationConfiguration,
-        private Security $security,
-        private LinkRendererInterface $linkRenderer,
-        private UrlGeneratorInterface $urlGenerator,
-        private ResourceRegistryInterface $registry,
+        private readonly Security $security,
+        private readonly LinkRendererInterface $linkRenderer,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly ResourceRegistryInterface $registry,
     ) {
     }
 
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('lag_admin_config', [$this, 'getConfigurationValue']),
             new TwigFunction('lag_admin_operation_allowed', [$this, 'isOperationAllowed']),
-            new TwigFunction('lag_admin_action', [$this, 'renderAction'], ['is_safe' => ['html']]),
-            new TwigFunction('lag_admin_operation_url', [$this, 'getOperationUrl'], ['is_safe' => ['html']]),
+            new TwigFunction('lag_admin_link', [$this, 'renderLink'], ['is_safe' => ['html']]),
+            new TwigFunction('lag_admin_link_url', [$this, 'generateLinkUrl']),
         ];
     }
 
-    public function getConfigurationValue(string $name): mixed
+    public function isOperationAllowed(string $resourceName, string $operationName, ?string $applicationName = null): bool
     {
-        return $this->applicationConfiguration->get($name);
-    }
-
-    public function isOperationAllowed(string $resourceName, string $operationName): bool
-    {
-        $operation = $this->registry->get($resourceName)->getOperation($operationName);
+        $operation = $this->registry->get($resourceName, $applicationName)->getOperation($operationName);
 
         return $this->security->isGranted(OperationPermissionVoter::RESOURCE_ACCESS, $operation);
+    }
+
+    public function generateLinkUrl(Link $link, mixed $data = null): string
+    {
+        return $this->urlGenerator->generateLink($link, $data);
     }
 
     /**
      * @param array<string, mixed> $options
      */
-    public function renderAction(Link $action, mixed $data = null, array $options = []): string
+    public function renderLink(Link $link, mixed $data = null, array $options = []): string
     {
-        return $this->linkRenderer->render($action, $data, $options);
+        return $this->linkRenderer->render($link, $data, $options);
     }
 
-    public function getOperationUrl(
+    public function generateUrl(
         string $resource,
         string $operation,
-        mixed $data = null
+        mixed $data = null,
+        string $applicationName = null,
     ): string {
         return $this->urlGenerator->generateFromOperationName(
             $resource,
             $operation,
             $data,
+            $applicationName,
         );
     }
 }

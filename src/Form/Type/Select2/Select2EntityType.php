@@ -31,7 +31,7 @@ class Select2EntityType extends AbstractType
         return EntityType::class;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -59,7 +59,7 @@ class Select2EntityType extends AbstractType
         ;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($options) {
@@ -89,7 +89,7 @@ class Select2EntityType extends AbstractType
         ;
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['attr']['data-controller'] = 'select2';
         $view->vars['attr']['data-options'] = json_encode($options['select2_options']);

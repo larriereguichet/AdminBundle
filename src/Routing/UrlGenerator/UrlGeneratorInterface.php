@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\Url;
+
 interface UrlGeneratorInterface
 {
+    public function generateOperationUrl(OperationInterface $operation, mixed $data = null): string;
+
+    public function generateUrl(Url $url, mixed $data = null): string;
+
     /**
      * Generate an url for a route name. Route parameters will be mapped to the property of the given data object.
      *
@@ -22,6 +29,7 @@ interface UrlGeneratorInterface
     public function generateFromOperationName(
         string $resourceName,
         string $operationName,
-        mixed $data = null
+        mixed $data = null,
+        ?string $applicationName = null,
     ): string;
 }

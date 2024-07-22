@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\DependencyInjection\CompilerPass;
 
 use LAG\AdminBundle\Slug\Generator\CompositeSlugGenerator;
+use LAG\AdminBundle\Slug\Generator\SlugGeneratorInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -13,7 +14,7 @@ class SlugMappingCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition(CompositeSlugGenerator::class)) {
+        if (!$container->hasDefinition(SlugGeneratorInterface::class)) {
             return;
         }
         $generators = [];
@@ -23,7 +24,7 @@ class SlugMappingCompilerPass implements CompilerPassInterface
                 $generators[$tag['generator']] = new Reference($id);
             }
         }
-        $definition = $container->getDefinition(CompositeSlugGenerator::class);
+        $definition = $container->getDefinition(SlugGeneratorInterface::class);
         $definition->setLazy(true);
         $definition->setArgument('$generators', $generators);
     }

@@ -4,6 +4,7 @@ lag_admin:
         create: Créer
         delete: Supprimer
         update: Modifier
+        collection_action: Gérer
 
     delete:
         confirmation: Oui, je veux supprimer cette donnée
@@ -33,6 +34,7 @@ lag_admin:
         welcome: Bienvenue !
 
     ui:
+        add: Ajouter
         cancel: Annuler
         create: Créer
         delete: Supprimer

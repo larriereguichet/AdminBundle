@@ -4,38 +4,23 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests;
 
-use LAG\AdminBundle\Application\Configuration\ApplicationConfiguration;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
-     * Assert that the given service class is configured in the services.yaml.
+     * Assert that the given service class is configured in the service configuration
      */
-    protected function assertServiceExists(string $serviceClass): void
+    protected function assertServiceExists(string $serviceId): void
     {
-        $containerBuilder = $this->buildContainer();
-        $exists = false;
+        $container = $this->buildContainer();
+        $container->compile();
 
-        foreach ($containerBuilder->getDefinitions() as $id => $definition) {
-            if ($serviceClass === $definition->getClass()) {
-                $exists = true;
-            }
-
-            if ($serviceClass === $id) {
-                $exists = true;
-            }
-        }
-        if ($containerBuilder->hasAlias($serviceClass)) {
-            $exists = true;
-        }
-
-        $this->assertTrue($exists, 'Failed asserting that the service "'.$serviceClass.'" exists');
+        self::assertTrue($container->has($serviceId));
     }
 
     protected function assertServiceHasTag(string $serviceId, string $tag): void
@@ -49,10 +34,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
     {
         $container = new ContainerBuilder();
         $testResourcesDirectory = __DIR__.'/../../config';
-        $locator = new FileLocator([
-            $testResourcesDirectory,
-        ]);
-        $loader = new PhpFileLoader($container, $locator);
+        $locator = new FileLocator([$testResourcesDirectory]);
+        $loader = new Loader\PhpFileLoader($container, $locator);
         $loader->load('services.php');
 
         return $container;
@@ -93,24 +76,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
         return $property->getValue($object);
     }
 
-    protected function createApplicationConfigurationMock(array $map): MockObject
-    {
-        $applicationConfiguration = $this->createMock(ApplicationConfiguration::class);
-        $applicationConfiguration
-            ->method('get')
-            ->willReturnMap($map)
-        ;
-
-        return $applicationConfiguration;
-    }
-
     protected function createContainerDefinition(string $class): Definition
     {
         return new Definition($class);
-    }
-
-    protected function createApplicationConfiguration(array $applicationConfiguration): ApplicationConfiguration
-    {
-        return new ApplicationConfiguration($applicationConfiguration);
     }
 }

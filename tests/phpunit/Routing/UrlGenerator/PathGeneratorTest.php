@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Routing\UrlGenerator;
 
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Resource\Metadata\Index;
+use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGenerator;
 use LAG\AdminBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
-class PathGeneratorTest extends TestCase
+final class PathGeneratorTest extends TestCase
 {
     private PathGenerator $generator;
 
-    /** @dataProvider pathProvider */
+    #[Test]
+    #[DataProvider(methodName: 'pathProvider')]
     public function testGeneratePath(
         string $resourceName,
         string $resourcePrefix,
@@ -21,11 +24,11 @@ class PathGeneratorTest extends TestCase
         string $expectedPath,
         array $routeParameters = null,
     ): void {
-        $resource = (new AdminResource())
+        $resource = (new Resource())
             ->withName($resourceName)
-            ->withRoutePrefix($resourcePrefix)
+            ->withPathPrefix($resourcePrefix)
         ;
-        $operation = (new GetCollection())
+        $operation = (new Index())
             ->withResource($resource)
             ->withPath($operationPath)
             ->withRouteParameters($routeParameters)
@@ -36,16 +39,16 @@ class PathGeneratorTest extends TestCase
         $this->assertEquals($expectedPath, $path);
     }
 
-    public static function pathProvider(): array
+    public static function pathProvider(): iterable
     {
-        return [
-            ['category', '/cms/{resourceName}', '/get', '/cms/categories/get'],
-            ['articles', '/prefix/{resourceName}', '/list', '/prefix/articles/list'],
-            ['articles', '/{resourceName}', '/list', '/articles/list'],
-            // ['articles', '/{resourceName}', null, '/articles'],
-            ['articles', '/{resourceName}', null, '/articles/{id}/{slug}', ['id' => null, 'slug' => null]],
-            ['articles', '/{resourceName}', '/test/', '/articles/test', ['id' => null, 'slug' => null]],
-        ];
+        yield ['category', '/cms/categories', '/get', '/cms/categories/get'];
+        yield ['articles', '/prefix/articles', '/list', '/prefix/articles/list'];
+        yield ['articles', '/articles', '/', '/articles'];
+        yield ['articles', 'articles', '/', '/articles'];
+        yield ['articles', 'articles', '', '/articles'];
+        yield ['articles', 'articles', null, '/articles'];
+        yield ['articles', '/articles', null, '/articles/{id}/{slug}', ['id' => null, 'slug' => null]];
+        yield ['articles', '/articles', '/{slug}/an-operation', '/articles/{slug}/an-operation', ['slug' => null]];
     }
 
     protected function setUp(): void
