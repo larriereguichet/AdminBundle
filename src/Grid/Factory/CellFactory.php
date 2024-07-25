@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\Factory;
 
 use LAG\AdminBundle\Grid\Cell;
-use LAG\AdminBundle\Metadata\Property\ConfigurablePropertyInterface;
-use LAG\AdminBundle\Metadata\Property\PropertyInterface;
-use LAG\AdminBundle\Metadata\Property\TransformablePropertyInterface;
+use LAG\AdminBundle\Resource\Metadata\ConfigurablePropertyInterface;
+use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
+use LAG\AdminBundle\Resource\Metadata\TransformablePropertyInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 

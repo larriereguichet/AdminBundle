@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\Factory;
 
 use LAG\AdminBundle\Grid\Cell;
-use LAG\AdminBundle\Metadata\Property\PropertyInterface;
+use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 
 interface CellFactoryInterface
 {

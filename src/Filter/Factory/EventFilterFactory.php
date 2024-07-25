@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Filter\Factory;
 
 use LAG\AdminBundle\Event\FilterEvent;
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
-use LAG\AdminBundle\Metadata\Property\PropertyInterface;
+use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EventFilterFactory implements FilterFactoryInterface
