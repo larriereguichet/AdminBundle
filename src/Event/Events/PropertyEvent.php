@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event\Events;
 
-use LAG\AdminBundle\Metadata\Property\PropertyInterface;
+use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class PropertyEvent extends Event

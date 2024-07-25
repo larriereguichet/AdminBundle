@@ -8,8 +8,8 @@ use LAG\AdminBundle\Exception\Validation\InvalidFilterException;
 use LAG\AdminBundle\Metadata\Filter\Filter;
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
 use LAG\AdminBundle\Metadata\Filter\StringFilter;
-use LAG\AdminBundle\Metadata\Property\PropertyInterface;
-use LAG\AdminBundle\Metadata\Property\Text;
+use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
+use LAG\AdminBundle\Resource\Metadata\Text;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 

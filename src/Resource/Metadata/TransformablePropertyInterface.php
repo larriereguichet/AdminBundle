@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Metadata\Property;
+namespace LAG\AdminBundle\Resource\Metadata;
 
 interface TransformablePropertyInterface
 {

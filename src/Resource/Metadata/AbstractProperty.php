@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Metadata\Property;
+namespace LAG\AdminBundle\Resource\Metadata;
 
 use LAG\AdminBundle\Validation\Constraint\TemplateValid;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -39,12 +39,12 @@ abstract class AbstractProperty implements PropertyInterface
         return $self;
     }
 
-    public function getPropertyPath(): ?string
+    public function getPropertyPath(): string|null|bool
     {
         return $this->propertyPath;
     }
 
-    public function withPropertyPath(?string $propertyPath): self
+    public function withPropertyPath(string|null|bool $propertyPath): self
     {
         $self = clone $this;
         $self->propertyPath = $propertyPath;
@@ -52,12 +52,12 @@ abstract class AbstractProperty implements PropertyInterface
         return $self;
     }
 
-    public function getLabel(): ?string
+    public function getLabel(): string|null|bool
     {
         return $this->label;
     }
 
-    public function withLabel(?string $label): self
+    public function withLabel(string|null|bool $label): self
     {
         $self = clone $this;
         $self->label = $label;

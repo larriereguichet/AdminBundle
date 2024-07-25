@@ -8,11 +8,11 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactory;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
-use LAG\AdminBundle\Metadata\Property\Boolean;
-use LAG\AdminBundle\Metadata\Property\Count;
-use LAG\AdminBundle\Metadata\Property\Date;
-use LAG\AdminBundle\Metadata\Property\PropertyInterface;
-use LAG\AdminBundle\Metadata\Property\Text;
+use LAG\AdminBundle\Resource\Metadata\Boolean;
+use LAG\AdminBundle\Resource\Metadata\Count;
+use LAG\AdminBundle\Resource\Metadata\Date;
+use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
+use LAG\AdminBundle\Resource\Metadata\Text;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 

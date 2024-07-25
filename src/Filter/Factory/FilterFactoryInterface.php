@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Filter\Factory;
 
 use LAG\AdminBundle\Metadata\Filter\FilterInterface;
-use LAG\AdminBundle\Metadata\Property\PropertyInterface;
+use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 
 interface FilterFactoryInterface
 {

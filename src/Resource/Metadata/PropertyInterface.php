@@ -42,7 +42,7 @@ interface PropertyInterface
      * If the property path is true, the whole object is mapped.
      * If the property path is false, no data will be mapped.
      */
-    public function withPropertyPath(string|false $propertyPath): self;
+    public function withPropertyPath(string|null|bool $propertyPath): self;
 
     /**
      * Return the property label. The label could be rendered differently according to the current Grid.
