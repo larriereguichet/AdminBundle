@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Resource\Factory;
 
-use LAG\AdminBundle\Event\ResourceEvent;
-use LAG\AdminBundle\Event\ResourceEvents;
-use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\InvalidResourceException;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Resource\Factory\ResourceFactory;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Resource\Metadata\Get;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
