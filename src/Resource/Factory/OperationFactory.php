@@ -19,7 +19,7 @@ final readonly class OperationFactory implements OperationFactoryInterface
     public function create(OperationInterface $operation): OperationInterface
     {
         if ($operation->getResource() === null) {
-            throw new Exception('The operation should be owned by a resource');
+            throw new Exception('The operation should be owned by a resource.');
         }
 
         if ($operation instanceof CollectionOperationInterface) {
