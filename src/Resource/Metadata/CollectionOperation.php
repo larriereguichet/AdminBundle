@@ -6,10 +6,8 @@ namespace LAG\AdminBundle\Resource\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
-use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 abstract class CollectionOperation extends Operation implements CollectionOperationInterface
 {

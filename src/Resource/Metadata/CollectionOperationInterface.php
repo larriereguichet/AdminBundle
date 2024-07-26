@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Metadata;
 
-use LAG\AdminBundle\Filter\FilterInterface;
-
 /**
  * Interface for collection operations. It adds the required attributes for collection handling to the item operation
  * interface.

@@ -79,9 +79,9 @@ interface OperationInterface
 
     public function withIdentifiers(array $identifiers): self;
 
-    public function getResource(): Resource;
+    public function getResource(): ?Resource;
 
-    public function withResource(Resource $resource): self;
+    public function withResource(?Resource $resource): self;
 
     /** @return Link[]|null */
     public function getContextualActions(): ?array;
