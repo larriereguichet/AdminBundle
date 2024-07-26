@@ -8,13 +8,13 @@ use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class ResourceContext implements ResourceContextInterface
 {
     public function __construct(
-        private ParametersExtractorInterface $parametersExtractor,
+        private ResourceParametersExtractorInterface $parametersExtractor,
         private ResourceRegistryInterface $resourceRegistry,
     ) {
     }
