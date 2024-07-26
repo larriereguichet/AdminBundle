@@ -9,8 +9,8 @@ use LAG\AdminBundle\Request\Context\CompositeContextProvider;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Context\FilterContextProvider;
 use LAG\AdminBundle\Request\Context\SortingContextProvider;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractor;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractor;
+use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
 use LAG\AdminBundle\Request\Resolver\OperationValueResolver;
 use LAG\AdminBundle\Request\Resolver\ResourceValueResolver;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractor;
@@ -35,7 +35,7 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     // Resource request parameters extractors
-    $services->set(ParametersExtractorInterface::class, ParametersExtractor::class)
+    $services->set(ResourceParametersExtractorInterface::class, ResourceParametersExtractor::class)
         ->arg('$applicationParameter', param('lag_admin.application_parameter'))
         ->arg('$resourceParameter', param('lag_admin.resource_parameter'))
         ->arg('$operationParameter', param('lag_admin.operation_parameter'))

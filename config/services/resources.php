@@ -56,7 +56,7 @@ return static function (ContainerConfigurator $container): void {
 
     // Request context
     $services->set(ResourceContextInterface::class, ResourceContext::class)
-        ->arg('$parametersExtractor', service(ParametersExtractorInterface::class))
+        ->arg('$parametersExtractor', service(ResourceParametersExtractorInterface::class))
         ->arg('$resourceRegistry', service(ResourceRegistryInterface::class))
     ;
 
