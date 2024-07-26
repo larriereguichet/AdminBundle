@@ -35,7 +35,7 @@ final readonly class EventResourceFactory implements ResourceFactoryInterface
             $resourceName,
         );
         $definition = $event->getResource();
-        // The operation resource change is not allowed in the event dispatching as it could cause to bypass validation
+        // The operation resource change is not allowed in the event dispatching as it could bypass validation.
         $this->assertResourceNameNotChanged($definition, $applicationName, $resourceName);
 
         $resource = $this->resourceFactory->create($event->getResource());
