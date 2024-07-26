@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Factory;
 
-use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\InvalidResourceException;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use Symfony\Component\Validator\Constraints\Valid;
