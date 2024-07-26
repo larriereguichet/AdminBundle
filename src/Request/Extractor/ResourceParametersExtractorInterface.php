@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Extract parameters from the given request to return the current resource and operation name. It should use the
  * container bundle parameter to allow to change the parameters names.
  */
-interface ParametersExtractorInterface
+interface ResourceParametersExtractorInterface
 {
     /**
      * Return the resource operation name from the request attributes.

@@ -31,8 +31,6 @@ class Property implements PropertyInterface
         #[NotBlank(message: 'The template should not be blank')]
         private ?string $template = null,
 
-        private ?string $component = null,
-
         private bool $sortable = true,
 
         private bool $translatable = false,
@@ -45,9 +43,6 @@ class Property implements PropertyInterface
         private array $containerAttributes = [],
 
         private array $headerAttributes = [],
-
-        #[Assert\NotBlank(allowNull: true, message: 'The allowed data types should not be empty. Use null instead')]
-        private ?string $allowedDataType = null,
 
         #[Assert\NotBlank(allowNull: true, message: 'The data transformer should not be empty. Use null instead')]
         private ?string $dataTransformer = null,
@@ -193,32 +188,6 @@ class Property implements PropertyInterface
     {
         $self = clone $this;
         $self->translationDomain = $translationDomain;
-
-        return $self;
-    }
-
-    public function getAllowedDataType(): ?string
-    {
-        return $this->allowedDataType;
-    }
-
-    public function withAllowedDataType(?string $allowedDataType): self
-    {
-        $self = clone $this;
-        $self->allowedDataType = $allowedDataType;
-
-        return $self;
-    }
-
-    public function getComponent(): ?string
-    {
-        return $this->component;
-    }
-
-    public function withComponent(?string $component): self
-    {
-        $self = clone $this;
-        $self->component = $component;
 
         return $self;
     }

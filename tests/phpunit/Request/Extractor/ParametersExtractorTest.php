@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Request\Extractor;
 
-use LAG\AdminBundle\Request\Extractor\ParametersExtractor;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractor;
+use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
 use LAG\AdminBundle\Tests\ContainerTestTrait;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,7 +15,7 @@ final class ParametersExtractorTest extends TestCase
 {
     use ContainerTestTrait;
 
-    private ParametersExtractorInterface $extractor;
+    private ResourceParametersExtractorInterface $extractor;
 
     #[Test]
     public function itReturnsAResourceName(): void
@@ -58,13 +58,13 @@ final class ParametersExtractorTest extends TestCase
     #[Test]
     public function serviceExists(): void
     {
-        self::assertService(ParametersExtractorInterface::class);
-        self::assertNoService(ParametersExtractor::class);
+        self::assertService(ResourceParametersExtractorInterface::class);
+        self::assertNoService(ResourceParametersExtractor::class);
     }
 
     protected function setUp(): void
     {
-        $this->extractor = new ParametersExtractor(
+        $this->extractor = new ResourceParametersExtractor(
             '_application',
             '_resource',
             '_operation',

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Resource\Context;
 
 use LAG\AdminBundle\Exception\ResourceNotFoundException;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 final readonly class ResourceContext implements ResourceContextInterface
 {
     public function __construct(
-        private ParametersExtractorInterface $parametersExtractor,
+        private ResourceParametersExtractorInterface $parametersExtractor,
         private ResourceRegistryInterface $resourceRegistry,
     ) {
     }

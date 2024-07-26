@@ -9,7 +9,7 @@ use LAG\AdminBundle\Metadata\AdminResource;
 use LAG\AdminBundle\Metadata\Context\ResourceContext;
 use LAG\AdminBundle\Metadata\Get;
 use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -97,7 +97,7 @@ class ResourceContextTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->parametersExtractor = $this->createMock(ParametersExtractorInterface::class);
+        $this->parametersExtractor = $this->createMock(ResourceParametersExtractorInterface::class);
         $this->resourceRegistry = $this->createMock(ResourceRegistryInterface::class);
         $this->resourceContext = new ResourceContext(
             $this->parametersExtractor,

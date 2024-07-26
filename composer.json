@@ -45,7 +45,7 @@
         "symfony/ux-live-component": "^2.17",
         "symfony/ux-twig-component": "^2.13",
         "symfony/validator": "^6.1",
-        "tinymce/tinymce": "6.7",
+        "tinymce/tinymce": "7.2",
         "twig/extra-bundle": "^3.0",
         "twig/intl-extra": "^3.3",
         "twig/string-extra": "^3.4",
@@ -80,10 +80,11 @@
     "autoload-dev": {
         "psr-4": {
             "LAG\\AdminBundle\\Tests\\": "tests/phpunit/",
-            "LAG\\AdminBundle\\Tests\\Functional": "tests/functionals/"
+            "LAG\\AdminBundle\\Tests\\Functional\\": "tests/functional/"
         }
     },
     "config": {
+        "bin-dir": "bin",
         "sort-packages": true,
         "allow-plugins": {
             "symfony/flex": true

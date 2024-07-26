@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Request\Extractor;
 
 use Symfony\Component\HttpFoundation\Request;
 
-final readonly class ParametersExtractor implements ParametersExtractorInterface
+final readonly class ResourceParametersExtractor implements ResourceParametersExtractorInterface
 {
     public function __construct(
         private string $applicationParameter,
