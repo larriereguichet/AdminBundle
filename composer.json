@@ -80,7 +80,7 @@
     "autoload-dev": {
         "psr-4": {
             "LAG\\AdminBundle\\Tests\\": "tests/phpunit/",
-            "LAG\\AdminBundle\\Tests\\Functional\\": "tests/functionals/"
+            "LAG\\AdminBundle\\Tests\\Functional\\": "tests/functional/"
         }
     },
     "config": {
