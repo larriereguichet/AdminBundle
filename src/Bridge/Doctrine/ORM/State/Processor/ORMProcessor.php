@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State;
+namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
-use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Update;
-use LAG\AdminBundle\State\Processor\DataProcessorInterface;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Exception\ManagerNotFoundException;
+use LAG\AdminBundle\Resource\Metadata\Create;
+use LAG\AdminBundle\Resource\Metadata\Delete;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\State\Processor\ProcessorInterface;
 
-class ORMDataProcessor implements DataProcessorInterface
+final readonly class ORMProcessor implements ProcessorInterface
 {
     public function __construct(
         private Registry $registry,
@@ -25,6 +26,10 @@ class ORMDataProcessor implements DataProcessorInterface
         array $context = []
     ): void {
         $manager = $this->registry->getManagerForClass($operation->getResource()->getDataClass());
+
+        if ($manager === null) {
+            throw new ManagerNotFoundException($operation);
+        }
 
         if ($operation instanceof Create || $operation instanceof Update) {
             $manager->persist($data);
