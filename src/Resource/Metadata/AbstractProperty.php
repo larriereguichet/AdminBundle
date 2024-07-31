@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Resource\Metadata;
 use LAG\AdminBundle\Validation\Constraint\TemplateValid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-abstract class AbstractProperty implements \LAG\AdminBundle\Resource\Metadata\PropertyInterface
+abstract class AbstractProperty implements PropertyInterface
 {
     public function __construct(
         #[Assert\NotBlank]
