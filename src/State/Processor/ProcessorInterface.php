@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\State\Processor;
 
-use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 
-interface DataProcessorInterface
+interface ProcessorInterface
 {
     /**
      * Process given data for the current operation. Data can be persisted in database for example. Variables configured
