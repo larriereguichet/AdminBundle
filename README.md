@@ -35,27 +35,7 @@ interfaces.
 * Dynamic menus
 * Bootstrap 5 integration
 
-## Install the Bundle
-
-```bash
-composer require lag/adminbundle
-```
-
-If you do not use Symfony Flex, follow [those extra steps](docs/install/install-without-flex.md).
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Step 1: Install the Bundle
+## Installation
 Open a command console, execute the
 following command in your project directory to install the latest stable version of the bundle:
 
@@ -66,7 +46,7 @@ composer require lag/adminbundle
 > If you do not use flex, read the [extra steps to install the bundle](docs/install/install-without-flex.md) 
 
 
-### Step 2: Configure the routing
+## Configuration
 Import the routing configuration to have the admin generated routes :
 
 ```yml
@@ -103,6 +83,13 @@ Now you could visit `http://127.0.0.1:8000/admin/article/list` to see a list of 
 Yan can visit `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of your admin interface
 
 ## Documentation
+1. [Getting started]()
+2. [Resources]()
+3. [State](docs/usage/state.md)
+4. [Grids]()
+5. [Events]()
+6. [Configuration reference]()
+
 1. [How to use](docs/how-to-use/basics.md)   
     * a. [Basics](docs/how-to-use/basics.md)
     * b. [Admins](docs/how-to-use/admin.md)
