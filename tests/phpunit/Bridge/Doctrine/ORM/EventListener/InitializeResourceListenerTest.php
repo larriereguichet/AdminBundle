@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\EventListener;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\ResourceCreateListener;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\InitializeResourcePropertiesListener;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
-use LAG\AdminBundle\Event\Events\ResourceEvent;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\GetCollection;
-use LAG\AdminBundle\Metadata\Property\Text;
+use LAG\AdminBundle\Event\ResourceEvent;
+use LAG\AdminBundle\Resource\Metadata\Index;
+use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Resource\Metadata\Text;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ResourceCreateListenerTest extends TestCase
+class InitializeResourceListenerTest extends TestCase
 {
-    private ResourceCreateListener $listener;
+    private InitializeResourcePropertiesListener $listener;
     private MockObject $propertyFactory;
 
     public function testInvoke(): void
     {
         $property = new Text('a_property');
-        $resource = new AdminResource();
+        $resource = new Resource();
         $resource = $resource
-            ->withOperations([new GetCollection()])
+            ->withOperations([new Index()])
             ->withDataClass('TestClass')
         ;
 
@@ -39,19 +39,19 @@ class ResourceCreateListenerTest extends TestCase
         $resource = $event->getResource();
 
         $this->assertCount(1, $resource->getOperations());
-        $this->assertArrayHasKey('get_collection', $resource->getOperations());
-        $operation = $resource->getOperations()['get_collection'];
+        $this->assertArrayHasKey('index', $resource->getOperations());
+        $operation = $resource->getOperations()['index'];
         $this->assertEquals($property, $operation->getProperties()[0]);
     }
 
     public function testService(): void
     {
-        $this->assertServiceExists(ResourceCreateListener::class);
+        $this->assertServiceExists(InitializeResourcePropertiesListener::class);
     }
 
     protected function setUp(): void
     {
         $this->propertyFactory = $this->createMock(MetadataPropertyFactoryInterface::class);
-        $this->listener = new ResourceCreateListener($this->propertyFactory);
+        $this->listener = new InitializeResourcePropertiesListener($this->propertyFactory);
     }
 }

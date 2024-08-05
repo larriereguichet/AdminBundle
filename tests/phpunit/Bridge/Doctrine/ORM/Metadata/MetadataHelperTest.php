@@ -5,17 +5,24 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\Metadata;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\Mapping\ClassMetadataFactory;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
+use LAG\AdminBundle\Tests\ContainerTestTrait;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class MetadataHelperTest extends TestCase
+final class MetadataHelperTest extends TestCase
 {
-    public function testFindMetadata(): void
-    {
-        [$helper, $entityManager] = $this->createHelper();
+    use ContainerTestTrait;
 
+    private MetadataHelperInterface $helper;
+    private MockObject $entityManager;
+
+    #[Test]
+    public function itFindMetadata(): void
+    {
         $metadataFactory = $this->createMock(ClassMetadataFactory::class);
         $metadataFactory
             ->expects($this->once())
@@ -27,32 +34,23 @@ class MetadataHelperTest extends TestCase
             })
         ;
 
-        $entityManager
+        $this->entityManager
             ->expects($this->once())
             ->method('getMetadataFactory')
             ->willReturn($metadataFactory)
         ;
 
-        $helper->findMetadata('MyLittleClass');
+        $this->helper->findMetadata('MyLittleClass');
     }
 
     public function testService(): void
     {
-        $this->assertServiceExists(MetadataHelper::class);
+        self::assertService(MetadataHelperInterface::class);
     }
 
-    /**
-     * @return MetadataHelper[]|MockObject[]
-     */
-    private function createHelper(): array
+    protected function setUp(): void
     {
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-
-        $helper = new MetadataHelper($entityManager);
-
-        return [
-            $helper,
-            $entityManager,
-        ];
+        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->helper = new MetadataHelper($this->entityManager);
     }
 }
