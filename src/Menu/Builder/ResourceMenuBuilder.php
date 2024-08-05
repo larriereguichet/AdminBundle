@@ -2,45 +2,33 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Bridge\KnpMenu\Builder;
+namespace LAG\AdminBundle\Menu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Metadata\GetCollection;
-use LAG\AdminBundle\Metadata\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Metadata\Index;
+use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-
 use function Symfony\Component\String\u;
 
-class ResourceMenuBuilder extends AbstractMenuBuilder
+class ResourceMenuBuilder
 {
     public function __construct(
         private ResourceRegistryInterface $resourceRegistry,
         private RouteNameGeneratorInterface $routeNameGenerator,
-        FactoryInterface $factory,
-        EventDispatcherInterface $eventDispatcher,
+        private FactoryInterface $factory,
     ) {
-        parent::__construct($factory, $eventDispatcher);
     }
 
-    public function getName(): string
+    public function build(array $options = []): ItemInterface
     {
-        return 'resource';
-    }
-
-    protected function buildMenu(ItemInterface $menu): void
-    {
+        $menu = $this->factory->createItem('root', $options);
         $inflector = new EnglishInflector();
-
-        if ($menu->hasChildren()) {
-            return;
-        }
 
         foreach ($this->resourceRegistry->all() as $resource) {
             foreach ($resource->getOperations() as $operation) {
-                if (!$operation instanceof GetCollection) {
+                if (!$operation instanceof Index) {
                     continue;
                 }
                 $label = $inflector->pluralize(u($resource->getName())->snake()->toString())[0];
@@ -52,5 +40,7 @@ class ResourceMenuBuilder extends AbstractMenuBuilder
                 ;
             }
         }
+
+        return $menu;
     }
 }
