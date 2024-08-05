@@ -15,7 +15,6 @@ use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use LAG\AdminBundle\Resource\Metadata\Text;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-
 use function Symfony\Component\String\u;
 
 class MetadataPropertyFactoryTest extends TestCase

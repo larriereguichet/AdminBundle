@@ -67,7 +67,7 @@ class Property implements PropertyInterface
         return $this->propertyPath;
     }
 
-    public function withPropertyPath(string|bool $propertyPath): self
+    public function withPropertyPath(string|bool|null $propertyPath): self
     {
         $self = clone $this;
         $self->propertyPath = $propertyPath;

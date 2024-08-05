@@ -9,8 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\UnexpectedTypeException;
-use LAG\AdminBundle\Metadata\Filter\FilterInterface;
-
+use LAG\AdminBundle\Filter\FilterInterface;
 use function Symfony\Component\String\u;
 
 class QueryBuilderHelper
@@ -51,76 +50,6 @@ class QueryBuilderHelper
                     }
                     // TODO wip order by join
                 }
-            }
-        }
-
-        return $this;
-    }
-
-    public function addFilters(array $filters): self
-    {
-        foreach ($filters as $filter) {
-            if (!$filter instanceof FilterInterface) {
-                throw new UnexpectedTypeException($filter, FilterInterface::class);
-            }
-            $data = $filter->getData();
-            $propertyPath = u($filter->getPropertyPath());
-
-            // Do not filter on null values
-            if ($data === null) {
-                continue;
-            }
-
-            if ($this->metadata->hasField($propertyPath->toString())) {
-                $method = $filter->getOperator() === 'and' ? 'andWhere' : 'orWhere';
-
-                if ($filter->getComparator() === 'between') {
-                    if (!\is_array($data) || \count($data) === 2) {
-                        throw new Exception('Parameters for a between comparison filter are invalid');
-                    }
-                    $parameterName1 = u($filter->getName())
-                        ->prepend('filter_')
-                        ->append('_1')
-                        ->snake()
-                        ->toString()
-                    ;
-                    $parameterName2 = u($filter->getName())
-                        ->prepend('filter_')
-                        ->append('_2')
-                        ->snake()
-                        ->toString()
-                    ;
-
-                    $dql = sprintf(
-                        'entity.%s > :%s and entity.%s < :%s',
-                        $filter->getPropertyPath(),
-                        $parameterName1,
-                        $filter->getPropertyPath(),
-                        $parameterName2
-                    );
-                    $this->queryBuilder->$method($dql);
-                    $this->queryBuilder->setParameter($parameterName1, $filter->getData()[0]);
-                    $this->queryBuilder->setParameter($parameterName2, $filter->getData()[1]);
-
-                    continue;
-                } elseif ($filter->getComparator() === 'like') {
-                    if (\is_string($data)) {
-                        $data = '%'.$data.'%';
-                    } else {
-                        $data = '%'.$data->__toString().'%';
-                    }
-                }
-                $parameterName = u($filter->getName())->prepend('filter_')->snake()->toString();
-
-                $dql = sprintf(
-                    '%s.%s %s :%s',
-                    $this->rootAlias,
-                    $filter->getName(),
-                    $filter->getComparator(),
-                    $parameterName
-                );
-                $this->queryBuilder->$method($dql);
-                $this->queryBuilder->setParameter($parameterName, $data);
             }
         }
 
