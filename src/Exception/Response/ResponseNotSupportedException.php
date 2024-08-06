@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Exception\Response;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 
 class ResponseNotSupportedException extends Exception
 {

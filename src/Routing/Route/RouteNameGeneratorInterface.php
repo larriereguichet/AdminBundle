@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Routing\Route;
 
 use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 
 interface RouteNameGeneratorInterface
 {

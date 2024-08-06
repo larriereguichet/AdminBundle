@@ -6,13 +6,13 @@ namespace LAG\AdminBundle\Tests\Controller\Resource;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Controller\Resource\ResourceCollectionController;
-use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
-use LAG\AdminBundle\Grid\GridView;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\GetCollection;
+use LAG\AdminBundle\Grid\View\GridView;
+use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
-use LAG\AdminBundle\State\Provider\DataProviderInterface;
+use LAG\AdminBundle\Resource\Metadata\Index;
+use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -22,21 +22,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
-class ResourceCollectionControllerTest extends TestCase
+// TODO update test when grid is merged
+final class ResourceCollectionControllerTest extends TestCase
 {
     private ResourceCollectionController $controller;
     private MockObject $uriVariablesExtractor;
     private MockObject $contextProvider;
-    private MockObject $dataProvider;
+    private MockObject $provider;
+    private MockObject $processor;
+    private MockObject $redirectionHandler;
+    private MockObject $gridRegistry;
     private MockObject $formFactory;
-    private MockObject $gridFactory;
     private MockObject $environment;
 
     public function testInvoke(): void
     {
-        $resource = new AdminResource();
+        $resource = new Resource();
         $request = new Request();
-        $operation = (new GetCollection())
+        $operation = (new Index())
             ->withTemplate('my_template.html.twig')
             ->withFilterFormType('FormClass')
             ->withFilterFormOptions(['label' => 'my_form'])
@@ -95,7 +98,7 @@ class ResourceCollectionControllerTest extends TestCase
         $this
             ->gridFactory
             ->expects($this->once())
-            ->method('create')
+            ->method('leagacybuildView')
             ->with($operation, $data)
             ->willReturn($grid)
         ;
@@ -122,18 +125,18 @@ class ResourceCollectionControllerTest extends TestCase
 
         $response = $this->controller->__invoke($request, $operation);
 
-        $this->assertEquals('<p>content</p>', $response->getContent());
+        self::assertEquals('<p>content</p>', $response->getContent());
     }
 
     protected function setUp(): void
     {
-        $this->uriVariablesExtractor = $this->createMock(UriVariablesExtractorInterface::class);
-        $this->contextProvider = $this->createMock(ContextProviderInterface::class);
-        $this->dataProvider = $this->createMock(DataProviderInterface::class);
-        $this->gridFactory = $this->createMock(GridFactoryInterface::class);
-        $this->formFactory = $this->createMock(FormFactoryInterface::class);
-        $this->serializer = $this->createMock(SerializerInterface::class);
-        $this->environment = $this->createMock(Environment::class);
+        $this->uriVariablesExtractor = self::createMock(UriVariablesExtractorInterface::class);
+        $this->contextProvider = self::createMock(ContextProviderInterface::class);
+        $this->dataProvider = self::createMock(ProviderInterface::class);
+        $this->gridFactory = self::createMock(GridViewBuilderInterface::class);
+        $this->formFactory = self::createMock(FormFactoryInterface::class);
+        $this->serializer = self::createMock(SerializerInterface::class);
+        $this->environment = self::createMock(Environment::class);
         $this->controller = new ResourceCollectionController(
             $this->uriVariablesExtractor,
             $this->contextProvider,

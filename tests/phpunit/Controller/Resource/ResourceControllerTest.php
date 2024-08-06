@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Controller\Resource;
 
 use LAG\AdminBundle\Controller\Resource\ResourceController;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
+use LAG\AdminBundle\Resource\Metadata\Index;
+use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
-use LAG\AdminBundle\State\Processor\DataProcessorInterface;
-use LAG\AdminBundle\State\Provider\DataProviderInterface;
+use LAG\AdminBundle\State\Processor\ProcessorInterface;
+use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\Tests\Entity\FakeEntity;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -46,12 +46,12 @@ class ResourceControllerTest extends TestCase
     /** @dataProvider headersProviders */
     public function testHandleRequest(array $headers, bool $useTwig): void
     {
-        $operation = new GetCollection(
+        $operation = new Index(
             name: 'my_operation',
             template: 'my.html.twig',
             normalizationContext: ['groups' => ['my_group']]
         );
-        $resource = new AdminResource(
+        $resource = new Resource(
             name: 'my_resource',
             operations: [$operation],
         );
@@ -125,10 +125,10 @@ class ResourceControllerTest extends TestCase
 
     public function testHandleRequestWithSubmittedForm(): void
     {
-        $operation = new GetCollection(
+        $operation = new Index(
             name: 'my_operation',
             template: 'my.html.twig',
-            formType: FormType::class,
+            form: FormType::class,
             formOptions: ['an_option' => 'a_value'],
             route: 'my_route',
         );
@@ -213,8 +213,8 @@ class ResourceControllerTest extends TestCase
     {
         $this->uriVariablesExtractor = $this->createMock(UriVariablesExtractorInterface::class);
         $this->contextProvider = $this->createMock(ContextProviderInterface::class);
-        $this->dataProvider = $this->createMock(DataProviderInterface::class);
-        $this->dataProcessor = $this->createMock(DataProcessorInterface::class);
+        $this->dataProvider = $this->createMock(ProviderInterface::class);
+        $this->dataProcessor = $this->createMock(ProcessorInterface::class);
         $this->formFactory = $this->createMock(FormFactoryInterface::class);
         $this->environment = $this->createMock(Environment::class);
         $this->redirectHandler = $this->createMock(RedirectHandlerInterface::class);

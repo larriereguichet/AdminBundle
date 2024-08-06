@@ -15,7 +15,7 @@ use LAG\AdminBundle\Metadata\Create;
 use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\GetCollection;
 use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Update;
 
 class DefaultOperationListener

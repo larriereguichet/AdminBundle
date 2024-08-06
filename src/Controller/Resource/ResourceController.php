@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Controller\Resource;
 
-use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Event\ResourceControllerEvent;
+use LAG\AdminBundle\Event\ResourceControllerEvents;
+use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
-use LAG\AdminBundle\State\Processor\DataProcessorInterface;
-use LAG\AdminBundle\State\Provider\DataProviderInterface;
+use LAG\AdminBundle\State\Processor\ProcessorInterface;
+use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,17 +20,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
-readonly class ResourceController
+final readonly class ResourceController
 {
     public function __construct(
         private UriVariablesExtractorInterface $uriVariablesExtractor,
         private ContextProviderInterface $contextProvider,
-        private DataProviderInterface $dataProvider,
-        private DataProcessorInterface $dataProcessor,
+        private ProviderInterface $dataProvider,
+        private ProcessorInterface $dataProcessor,
         private FormFactoryInterface $formFactory,
         private Environment $environment,
         private RedirectHandlerInterface $redirectionHandler,
         private SerializerInterface $serializer,
+        private ResourceEventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -38,8 +42,8 @@ readonly class ResourceController
         $data = $this->dataProvider->provide($operation, $uriVariables, $context);
         $form = null;
 
-        if ($operation->getFormType() !== null) {
-            $form = $this->formFactory->create($operation->getFormType(), $data, $operation->getFormOptions());
+        if ($operation->getForm() !== null) {
+            $form = $this->formFactory->create($operation->getForm(), $data, $operation->getFormOptions());
             $form->handleRequest($request);
 
             if ($context['json'] ?? false) {
@@ -52,6 +56,17 @@ readonly class ResourceController
 
                 return $this->redirectionHandler->createRedirectResponse($operation, $data, $context);
             }
+        }
+        $event = new ResourceControllerEvent($operation, $request, $data);
+        $this->eventDispatcher->dispatchResourceEvents(
+            $event,
+            ResourceControllerEvents::RESOURCE_CONTROLLER,
+            $operation->getResource()->getName(),
+            $operation->getName(),
+        );
+
+        if ($event->getResponse() !== null) {
+            return $event->getResponse();
         }
 
         if ($request->getContentTypeFormat() === 'json') {
