@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Response\Handler;
 
-use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
