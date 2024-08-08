@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Exception\Validation;
+namespace LAG\AdminBundle\Exception;
 
-use LAG\AdminBundle\Exception\Exception;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class InvalidAdminException extends Exception
+class InvalidLinkException extends Exception
 {
-    public function __construct(?string $operationName, ConstraintViolationListInterface $errors)
+    public function __construct(ConstraintViolationListInterface $errors)
     {
-        $message = sprintf('The configuration of the admin "%s" is not valid :', $operationName);
+        $message = 'An action is not valid :';
 
         /** @var ConstraintViolationInterface $error */
         foreach ($errors as $error) {
