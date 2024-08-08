@@ -17,9 +17,8 @@ final readonly class CompositeProcessor implements ProcessorInterface
 
     public function process(mixed $data, OperationInterface $operation, array $uriVariables = [], array $context = []): void
     {
+        /** @var ProcessorInterface $processor */
         foreach ($this->processors as $processor) {
-            assert($processor instanceof ProcessorInterface);
-
             if ($processor::class === $operation->getProcessor()) {
                 $processor->process($data, $operation, $uriVariables, $context);
 
