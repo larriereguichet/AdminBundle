@@ -13,13 +13,10 @@ use LAG\AdminBundle\Resource\Metadata\Update;
 use LAG\AdminBundle\State\Provider\CompositeProvider;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\Tests\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 
-final class CompositeProviderTest extends TestCase
+class CompositeProviderTest extends TestCase
 {
-    #[Test]
-    #[DataProvider(methodName: 'operations')]
+    /** @dataProvider operationsProvider */
     public function testProvide(OperationInterface $operation): void
     {
         $customProvider = $this->createMock(ProviderInterface::class);
@@ -36,8 +33,7 @@ final class CompositeProviderTest extends TestCase
         $provider->provide($operation, ['code' => 'abcd'], ['groups' => 'test']);
     }
 
-    #[Test]
-    #[DataProvider(methodName: 'operations')]
+    /** @dataProvider operationsProvider */
     public function testProvideWithoutProvider(OperationInterface $operation): void
     {
         $resource = new Resource(name: 'my_resource');
@@ -54,7 +50,7 @@ final class CompositeProviderTest extends TestCase
         $provider->provide($operation, ['what-ever'], ['some', 'thing']);
     }
 
-    public static function operations(): array
+    public static function operationsProvider(): array
     {
         return [
             [new Index()],
