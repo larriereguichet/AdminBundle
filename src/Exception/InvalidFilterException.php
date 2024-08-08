@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Exception\Validation;
+namespace LAG\AdminBundle\Exception;
 
-use LAG\AdminBundle\Exception\Exception;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
