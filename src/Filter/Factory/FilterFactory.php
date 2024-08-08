@@ -4,25 +4,24 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Filter\Factory;
 
-use LAG\AdminBundle\Exception\Validation\InvalidFilterException;
-use LAG\AdminBundle\Metadata\Filter\Filter;
-use LAG\AdminBundle\Metadata\Filter\FilterInterface;
-use LAG\AdminBundle\Metadata\Filter\StringFilter;
+use LAG\AdminBundle\Exception\InvalidFilterException;
+use LAG\AdminBundle\Filter\FilterInterface;
+use LAG\AdminBundle\Resource\Metadata\Filter;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use LAG\AdminBundle\Resource\Metadata\Text;
+use LAG\AdminBundle\Resource\Metadata\TextFilter;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class FilterFactory implements FilterFactoryInterface
+final readonly class FilterFactory implements FilterFactoryInterface
 {
     public function __construct(
         private ValidatorInterface $validator,
     ) {
     }
 
-    public function create(FilterInterface $filterDefinition): FilterInterface
+    public function create(FilterInterface $filter): FilterInterface
     {
-        $filter = $this->initializeFilter($filterDefinition);
         $errors = $this->validator->validate($filter, [new Valid()]);
 
         if ($errors->count() > 0) {
@@ -38,7 +37,7 @@ class FilterFactory implements FilterFactoryInterface
         $name = $property->getName();
 
         if ($property instanceof Text) {
-            $class = StringFilter::class;
+            $class = TextFilter::class;
         }
 
         $definition = new $class(
@@ -47,14 +46,5 @@ class FilterFactory implements FilterFactoryInterface
         );
 
         return $this->create($definition);
-    }
-
-    private function initializeFilter(FilterInterface $filter): FilterInterface
-    {
-        if ($filter->getPropertyPath() === null) {
-            $filter = $filter->withPropertyPath($filter->getName());
-        }
-
-        return $filter;
     }
 }
