@@ -7,17 +7,6 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0/mini.png)](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0)
 [![Total Downloads](https://poser.pugx.org/lag/adminbundle/downloads)](https://packagist.org/packages/lag/adminbundle)
 
-# TODO
-- validation groups
-- serialization
-- set nullable resource arrays to add difference between empty set array and not set array
-- check validation php attributes of metadata
-- batch actions
-- dynamic resource/operation request parameters
-- check extension parameters useful
-- add sf routing params to resource
-- remove load method from the registry
-
 # AdminBundle
 The AdminBundle helps you to create **flexible** and **robust** administration application.
 

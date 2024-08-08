@@ -1,0 +1,11 @@
+# TODO
+- validation groups
+- serialization
+- set nullable resource arrays to add difference between empty set array and not set array
+- check validation php attributes of metadata
+- batch actions
+- dynamic resource/operation request parameters
+- check extension parameters useful
+- add sf routing params to resource
+- remove load method from the registry
+- make workflow optional ?
