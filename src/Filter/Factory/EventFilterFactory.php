@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Filter\Factory;
 
 use LAG\AdminBundle\Event\FilterEvent;
-use LAG\AdminBundle\Metadata\Filter\FilterInterface;
+use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -17,19 +17,19 @@ class EventFilterFactory implements FilterFactoryInterface
     ) {
     }
 
-    public function create(FilterInterface $filterDefinition): FilterInterface
+    public function create(FilterInterface $filter): FilterInterface
     {
-        $event = new FilterEvent($filterDefinition);
+        $event = new FilterEvent($filter);
         $this->eventDispatcher->dispatch($event, FilterEvent::FILTER_CREATE);
-        $this->eventDispatcher->dispatch($event, sprintf(FilterEvent::FILTER_CREATE_PATTERN, $filterDefinition->getName()));
+        $this->eventDispatcher->dispatch($event, sprintf(FilterEvent::FILTER_CREATE_PATTERN, $filter->getName()));
 
-        $filterDefinition = $this->decorated->create($filterDefinition);
+        $filter = $this->decorated->create($filter);
 
-        $event = new FilterEvent($filterDefinition);
+        $event = new FilterEvent($filter);
         $this->eventDispatcher->dispatch($event, FilterEvent::FILTER_CREATED);
-        $this->eventDispatcher->dispatch($event, sprintf(FilterEvent::FILTER_CREATED_PATTERN, $filterDefinition->getName()));
+        $this->eventDispatcher->dispatch($event, sprintf(FilterEvent::FILTER_CREATED_PATTERN, $filter->getName()));
 
-        return $filterDefinition;
+        return $filter;
     }
 
     public function createFromProperty(PropertyInterface $property): FilterInterface
