@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Event\Events;
+namespace LAG\AdminBundle\Event;
 
 use Knp\Menu\ItemInterface;
 use Symfony\Contracts\EventDispatcher\Event;
