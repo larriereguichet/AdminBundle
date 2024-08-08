@@ -4,27 +4,21 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Resource\Metadata\Grid;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class GridEvent extends Event
+final class DataEvent extends Event
 {
     public function __construct(
-        private Grid $grid,
-        private readonly OperationInterface $operation
+        private readonly mixed $data,
+        private readonly OperationInterface $operation,
     ) {
     }
 
-    public function getGrid(): Grid
+    public function getData(): mixed
     {
-        return $this->grid;
-    }
-
-    public function setGrid(Grid $grid): void
-    {
-        $this->grid = $grid;
+        return $this->data;
     }
 
     public function getOperation(): OperationInterface
