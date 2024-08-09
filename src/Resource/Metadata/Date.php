@@ -37,7 +37,6 @@ class Date extends Property
             translationDomain: $translationDomain,
             attributes: $attributes,
             headerAttributes: $headerAttributes,
-            allowedDataType: $allowedDataType,
             dataTransformer: $dataTransformer,
         );
     }

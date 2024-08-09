@@ -69,7 +69,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         #[Assert\NotNull]
         private ?array $collectionActions = null,
 
-        private ?string $filterFormType = FilterType::class,
+        private ?string $filterForm = FilterType::class,
+
         private array $filterFormOptions = [],
 
         #[Assert\NotBlank(allowNull: true, message: 'The item form type should not be blank. Use null instead')]
@@ -261,15 +262,15 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->gridOptions;
     }
 
-    public function getFilterFormType(): ?string
+    public function getFilterForm(): ?string
     {
-        return $this->filterFormType;
+        return $this->filterForm;
     }
 
-    public function withFilterFormType(?string $filterForm): self
+    public function withFilterForm(?string $filterForm): self
     {
         $self = clone $this;
-        $self->filterFormType = $filterForm;
+        $self->filterForm = $filterForm;
 
         return $self;
     }
