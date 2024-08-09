@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Slug\Generator\CompositeSlugGenerator;
-use LAG\AdminBundle\Slug\Generator\SimpleSlugGenerator;
-use LAG\AdminBundle\Slug\Generator\SlugGeneratorInterface;
-use LAG\AdminBundle\Slug\Mapping\SlugMapping;
-use LAG\AdminBundle\Slug\Mapping\SlugMappingInterface;
+use LAG\AdminBundle\Slug\Registry\SluggerRegistry;
+use LAG\AdminBundle\Slug\Registry\SluggerRegistryInterface;
+use LAG\AdminBundle\Slug\Slugger\DefaultSlugger;
+use LAG\AdminBundle\Slug\Slugger\DefaultSluggerInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
-    $services->set(SlugGeneratorInterface::class, CompositeSlugGenerator::class);
-    $services->set(SimpleSlugGenerator::class)
-        ->tag('lag_admin.slug_generator', [
-            'generator' => 'default',
-        ])
+    // Registry
+    $services->set(SluggerRegistryInterface::class, SluggerRegistry::class)
+        ->arg('$sluggers', tagged_iterator(tag: 'lag_admin.slugger', indexAttribute: 'name'))
     ;
 
-    $services->set(SlugMappingInterface::class, SlugMapping::class)
-        ->arg('$registry', service('lag_admin.resource.registry'))
+    // Slugger
+    $services->set(DefaultSluggerInterface::class, DefaultSlugger::class)
+        ->tag('lag_admin.slugger', ['name' => 'default'])
     ;
 };

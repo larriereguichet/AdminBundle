@@ -4,32 +4,46 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventListener\Data;
 
-use LAG\AdminBundle\Event\Events\DataEvent;
-use LAG\AdminBundle\Slug\Generator\SlugGeneratorInterface;
-use LAG\AdminBundle\Slug\Mapping\SlugMappingInterface;
+use LAG\AdminBundle\Event\DataEvent;
+use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Resource\Metadata\Slug;
+use LAG\AdminBundle\Slug\Registry\SluggerRegistryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-class SlugListener
+final readonly class SlugListener
 {
     public function __construct(
-        private SlugGeneratorInterface $generator,
-        private SlugMappingInterface $mapping,
+        private SluggerRegistryInterface $registry,
     ) {
     }
 
     public function __invoke(DataEvent $event): void
     {
         $data = $event->getData();
+        $resource = $event->getResource();
 
-        if (!$this->mapping->hasMapping($data::class)) {
+        if (!$this->supports($resource)) {
             return;
         }
         $accessor = PropertyAccess::createPropertyAccessor();
 
-        foreach ($this->mapping->getMapping($data::class) as $mapping) {
-            $source = $accessor->getValue($data, $mapping->sourceProperty);
-            $slug = $this->generator->generateSlug($source, $mapping->generator);
-            $accessor->setValue($data, $mapping->targetProperty, $slug);
+        foreach ($resource->getProperties() as $property) {
+            if ($property instanceof Slug) {
+                $source = $accessor->getValue($data, $property->getSource());
+                $slugger = $this->registry->get($property->getSlugger());
+                $accessor->setValue($data, $property->getPropertyPath(), $slugger->generateSlug($source));
+            }
         }
+    }
+
+    private function supports(Resource $resource): bool
+    {
+        foreach ($resource->getProperties() as $property) {
+            if ($property instanceof Slug) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

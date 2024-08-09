@@ -9,7 +9,7 @@ class Group extends Property implements CompoundPropertyInterface
 {
     public function __construct(
         ?string $name = null,
-        string|null|bool $label = null,
+        string|bool|null $label = null,
         ?string $dataTransformer = null,
         private array $properties = [],
     ) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\KnpMenu\Extension;
 
 use Knp\Menu\Factory\ExtensionInterface;
@@ -25,7 +27,6 @@ final readonly class ResourceExtension implements ExtensionInterface
             return $options;
         }
         $resource = $this->registry->get($options['resource'], $options['application'] ?? null);
-
 
         if (!$resource->hasOperation($options['operation'])) {
             return $options;

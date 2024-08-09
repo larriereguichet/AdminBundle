@@ -10,6 +10,7 @@ use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
+
 use function Symfony\Component\String\u;
 
 class ResourceMenuBuilder

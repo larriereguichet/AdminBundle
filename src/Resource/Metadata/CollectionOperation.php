@@ -12,34 +12,34 @@ use Symfony\Component\Validator\Constraints as Assert;
 abstract class CollectionOperation extends Operation implements CollectionOperationInterface
 {
     public function __construct(
-        string $name = null,
-        string $title = null,
-        string $description = null,
-        string $icon = null,
-        string $template = null,
+        ?string $name = null,
+        ?string $title = null,
+        ?string $description = null,
+        ?string $icon = null,
+        ?string $template = null,
         array $permissions = [],
-        string $controller = null,
-        string $route = null,
+        ?string $controller = null,
+        ?string $route = null,
         array $routeParameters = [],
         array $methods = [],
-        string $path = null,
-        string $redirectRoute = null,
+        ?string $path = null,
+        ?string $redirectRoute = null,
         array $redirectRouteParameters = [],
-        string $form = null,
+        ?string $form = null,
         array $formOptions = [],
         ?string $processor = ORMProcessor::class,
         string $provider = ORMProvider::class,
         ?array $identifiers = null,
-        array $contextualActions = null,
-        array $itemActions = null,
-        string $redirectApplication = null,
-        string $redirectResource = null,
-        string $redirectOperation = null,
+        ?array $contextualActions = null,
+        ?array $itemActions = null,
+        ?string $redirectApplication = null,
+        ?string $redirectResource = null,
+        ?string $redirectOperation = null,
         ?bool $validation = true,
-        array $validationContext = null,
+        ?array $validationContext = null,
         ?bool $ajax = true,
-        array $normalizationContext = null,
-        array $denormalizationContext = null,
+        ?array $normalizationContext = null,
+        ?array $denormalizationContext = null,
         ?string $input = null,
         ?string $output = null,
 
@@ -69,7 +69,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         #[Assert\NotNull]
         private ?array $collectionActions = null,
 
-        private ?string $filterFormType = FilterType::class,
+        private ?string $filterForm = FilterType::class,
+
         private array $filterFormOptions = [],
 
         #[Assert\NotBlank(allowNull: true, message: 'The item form type should not be blank. Use null instead')]
@@ -247,7 +248,6 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $self;
     }
 
-
     public function withGridOptions(array $gridOptions): self
     {
         $self = clone $this;
@@ -261,15 +261,15 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->gridOptions;
     }
 
-    public function getFilterFormType(): ?string
+    public function getFilterForm(): ?string
     {
-        return $this->filterFormType;
+        return $this->filterForm;
     }
 
-    public function withFilterFormType(?string $filterForm): self
+    public function withFilterForm(?string $filterForm): self
     {
         $self = clone $this;
-        $self->filterFormType = $filterForm;
+        $self->filterForm = $filterForm;
 
         return $self;
     }

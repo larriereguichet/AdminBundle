@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\KnpMenu\Builder;
 
 use Knp\Menu\ItemInterface;
@@ -22,7 +24,7 @@ final readonly class EventChainProvider implements MenuProviderInterface
         $event = new MenuEvent($menu);
 
         $this->eventDispatcher->dispatch($event, MenuEvents::MENU_CREATE);
-        $this->eventDispatcher->dispatch($event, sprintf(MenuEvents::PRE_EVENT_PATTERN, $name));
+        $this->eventDispatcher->dispatch($event, \sprintf(MenuEvents::PRE_EVENT_PATTERN, $name));
 
         return $menu;
     }

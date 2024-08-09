@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Resource\Locator;
 
 use LAG\AdminBundle\Resource\Metadata\Resource;
+
 use function Symfony\Component\String\u;
 
 final readonly class ResourceLocator implements ResourceLocatorInterface
@@ -17,7 +20,7 @@ final readonly class ResourceLocator implements ResourceLocatorInterface
         $attributes = $resourceClass->getAttributes(Resource::class);
 
         foreach ($attributes as $attribute) {
-            /** @var Resource $resource */
+            /** @var resource $resource */
             $resource = $attribute->newInstance();
 
             if (!$resource->getName()) {

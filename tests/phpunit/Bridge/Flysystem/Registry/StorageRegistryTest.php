@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Bridge\Flysystem\Registry;
 
 use LAG\AdminBundle\Bridge\Flysystem\Registry\StorageRegistry;
-use LAG\AdminBundle\Bridge\Flysystem\Registry\StorageRegistryInterface;
 use LAG\AdminBundle\Exception\Exception;
 use League\Flysystem\FilesystemOperator;
 use PHPUnit\Framework\Attributes\Test;

@@ -1,0 +1,21 @@
+<caption class="caption-top text-end">
+    {% if grid.actions|length == 1 %}
+        {{ lag_admin_cell(grid.actions|first) }}
+    {% elseif grid.actions|length > 1 %}
+        <div class="dropdown float-end">
+            <button class="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                {{ 'lag_admin.actions.collection_action'|trans({}, 'admin') }}
+            </button>
+            {# TODO #}
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+        </div>
+    {% endif %}
+
+</caption>

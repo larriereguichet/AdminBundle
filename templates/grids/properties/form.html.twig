@@ -1,0 +1,7 @@
+{% if options.formTemplate %}
+    {% include options.formTemplate %}
+{% else %}
+    {{ form_start(data) }}
+    {{ form_row(data) }}
+    {{ form_end(data) }}
+{% endif %}

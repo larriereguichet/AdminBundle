@@ -54,10 +54,10 @@ class Resource
         #[Assert\NotBlank]
         private string $provider = ORMProvider::class,
 
-        /** @var string[] $identifiers */
-        private array $identifiers = ['id'],
+        /** @var array<string|null> $identifiers */
+        private ?array $identifiers = ['id'],
 
-        private string $routePattern = '{application}.{resource}.{operation}',
+        private ?string $routePattern = '{application}.{resource}.{operation}',
 
         private ?string $pathPrefix = null,
 
@@ -196,7 +196,7 @@ class Resource
             }
         }
 
-        throw new OperationMissingException(sprintf('The operation with name "%s" does not exists in the resource "%s"', $operationName, $this->getName()));
+        throw new OperationMissingException(\sprintf('The operation with name "%s" does not exists in the resource "%s"', $operationName, $this->getName()));
     }
 
     public function getOperationOfType(string $operationClass): OperationInterface
@@ -207,7 +207,7 @@ class Resource
             }
         }
 
-        throw new OperationMissingException(sprintf('The operation of type "%s" does not exists in the resource "%s"', $operationClass, $this->getName()));
+        throw new OperationMissingException(\sprintf('The operation of type "%s" does not exists in the resource "%s"', $operationClass, $this->getName()));
     }
 
     public function withOperations(array $operations): self
@@ -226,7 +226,7 @@ class Resource
 
     public function hasProperties(): bool
     {
-        return count($this->properties) > 0;
+        return \count($this->properties) > 0;
     }
 
     public function withProperties(array $properties): self
@@ -250,7 +250,7 @@ class Resource
 
     public function hasProperty(string $name): bool
     {
-        return array_key_exists($name, $this->properties);
+        return \array_key_exists($name, $this->properties);
     }
 
     public function getProperty(string $name): PropertyInterface
@@ -288,7 +288,7 @@ class Resource
         return $self;
     }
 
-    public function getRoutePattern(): string
+    public function getRoutePattern(): ?string
     {
         return $this->routePattern;
     }
@@ -314,7 +314,7 @@ class Resource
         return $self;
     }
 
-    public function getIdentifiers(): array
+    public function getIdentifiers(): ?array
     {
         return $this->identifiers;
     }

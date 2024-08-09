@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Extension;
 
-use LAG\AdminBundle\Grid\Cell;
-use LAG\AdminBundle\Grid\GridView;
-use LAG\AdminBundle\Grid\View\CellRendererInterface;
-use LAG\AdminBundle\Grid\View\GridRendererInterface;
-use LAG\AdminBundle\Metadata\Operation;
+use LAG\AdminBundle\Grid\View\CellView;
+use LAG\AdminBundle\Grid\View\GridView;
+use LAG\AdminBundle\Resource\Metadata\Operation;
+use LAG\AdminBundle\View\Render\CellRendererInterface;
+use LAG\AdminBundle\View\Render\GridRendererInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class GridExtension extends AbstractExtension
 {
     public function __construct(
-        private GridRendererInterface $gridRenderer,
-        private CellRendererInterface $cellRenderer,
+        private readonly GridRendererInterface $gridRenderer,
+        private readonly CellRendererInterface $cellRenderer,
     ) {
     }
 
@@ -24,7 +24,8 @@ class GridExtension extends AbstractExtension
     {
         return [
             new TwigFunction('lag_admin_grid', [$this, 'renderGrid'], ['is_safe' => ['html']]),
-            new TwigFunction('lag_admin_grid_cell', [$this, 'renderCell'], ['is_safe' => ['html']]),
+            new TwigFunction('lag_admin_cell', [$this, 'renderCell'], ['is_safe' => ['html']]),
+            new TwigFunction('lag_admin_merge_attributes', [$this, 'mergeAttributes']),
         ];
     }
 
@@ -33,8 +34,24 @@ class GridExtension extends AbstractExtension
         return $this->gridRenderer->render($grid, $operation);
     }
 
-    public function renderCell(Cell $cell): string
+    public function renderCell(CellView $cell, array $options = []): string
     {
-        return $this->cellRenderer->render($cell);
+        return $this->cellRenderer->render($cell, $options);
+    }
+
+    public function mergeAttributes(array $attributes = [], array $required = [], array $defaults = []): array
+    {
+        $mergedAttributes = $required;
+        $attributes = $defaults + $attributes;
+
+        foreach ($attributes as $key => $attribute) {
+            if (!\array_key_exists($key, $mergedAttributes)) {
+                $mergedAttributes[$key] = $attribute;
+            } else {
+                $mergedAttributes[$key] .= ' '.$attribute;
+            }
+        }
+
+        return $mergedAttributes;
     }
 }

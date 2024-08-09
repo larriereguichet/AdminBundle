@@ -1,5 +1,3 @@
-{% import '@LAGAdmin/grid/macro/attributes.html.twig' as helper %}
-
 <img src="{{ data }}"
-     {{ helper.attributes(options.attr) }}
-     alt="{{ options.label }}">
+     alt="{{ options.label|default('') }}"
+    {{ attributes }} />

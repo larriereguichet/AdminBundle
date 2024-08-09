@@ -9,12 +9,12 @@ class Boolean extends Property
 {
     public function __construct(
         ?string $name = null,
-        string $propertyPath = null,
-        string $label = null,
+        ?string $propertyPath = null,
+        ?string $label = null,
         ?string $template = '@LAGAdmin/grids/properties/boolean.html.twig',
         bool $sortable = true,
         bool $translatable = false,
-        string $translationDomain = null,
+        ?string $translationDomain = null,
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,

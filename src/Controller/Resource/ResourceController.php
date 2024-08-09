@@ -25,8 +25,8 @@ final readonly class ResourceController
     public function __construct(
         private UriVariablesExtractorInterface $uriVariablesExtractor,
         private ContextProviderInterface $contextProvider,
-        private ProviderInterface $dataProvider,
-        private ProcessorInterface $dataProcessor,
+        private ProviderInterface $provider,
+        private ProcessorInterface $processor,
         private FormFactoryInterface $formFactory,
         private Environment $environment,
         private RedirectHandlerInterface $redirectionHandler,
@@ -39,7 +39,7 @@ final readonly class ResourceController
     {
         $uriVariables = $this->uriVariablesExtractor->extractVariables($operation, $request);
         $context = $this->contextProvider->getContext($operation, $request);
-        $data = $this->dataProvider->provide($operation, $uriVariables, $context);
+        $data = $this->provider->provide($operation, $uriVariables, $context);
         $form = null;
 
         if ($operation->getForm() !== null) {
@@ -52,7 +52,7 @@ final readonly class ResourceController
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $data = $form->getData();
-                $this->dataProcessor->process($data, $operation, $uriVariables, $context);
+                $this->processor->process($data, $operation, $uriVariables, $context);
 
                 return $this->redirectionHandler->createRedirectResponse($operation, $data, $context);
             }
@@ -61,6 +61,7 @@ final readonly class ResourceController
         $this->eventDispatcher->dispatchResourceEvents(
             $event,
             ResourceControllerEvents::RESOURCE_CONTROLLER,
+            $operation->getResource()->getApplication(),
             $operation->getResource()->getName(),
             $operation->getName(),
         );

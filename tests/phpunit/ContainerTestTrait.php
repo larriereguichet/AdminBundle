@@ -6,9 +6,6 @@ namespace LAG\AdminBundle\Tests;
 
 use LAG\AdminBundle\Tests\DependencyInjection\CompilerPass\PublicServiceCompilerPass;
 use Nyholm\BundleTest\TestKernel;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 trait ContainerTestTrait
@@ -40,7 +37,7 @@ trait ContainerTestTrait
     }
 
     /**
-     * Assert that the given service class is configured in the service configuration
+     * Assert that the given service class is configured in the service configuration.
      */
     protected static function assertService(string $serviceId): void
     {

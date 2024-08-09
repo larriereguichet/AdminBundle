@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Filter;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
-use LAG\AdminBundle\Filter\FilterInterface;
+use LAG\AdminBundle\Resource\Metadata\FilterInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 
 abstract readonly class AbstractApplicator implements FilterApplicatorInterface

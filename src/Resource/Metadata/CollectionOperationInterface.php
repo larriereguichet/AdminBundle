@@ -48,9 +48,9 @@ interface CollectionOperationInterface extends OperationInterface
 
     public function withGrid(string $grid): self;
 
-    public function getFilterFormType(): ?string;
+    public function getFilterForm(): ?string;
 
-    public function withFilterFormType(?string $filterForm): self;
+    public function withFilterForm(?string $filterForm): self;
 
     public function getFilterFormOptions(): array;
 

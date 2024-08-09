@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\EventDispatcher;
@@ -43,7 +44,6 @@ final class ResourceEventDispatcherTest extends TestCase
             'my_application',
             'my_resource',
         );
-
     }
 
     protected function setUp(): void

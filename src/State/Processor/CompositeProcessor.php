@@ -17,9 +17,8 @@ final readonly class CompositeProcessor implements ProcessorInterface
 
     public function process(mixed $data, OperationInterface $operation, array $uriVariables = [], array $context = []): void
     {
+        /** @var ProcessorInterface $processor */
         foreach ($this->processors as $processor) {
-            assert($processor instanceof ProcessorInterface);
-
             if ($processor::class === $operation->getProcessor()) {
                 $processor->process($data, $operation, $uriVariables, $context);
 
@@ -27,10 +26,6 @@ final readonly class CompositeProcessor implements ProcessorInterface
             }
         }
 
-        throw new Exception(sprintf(
-            'The resource "%s" and operation "%s" is not supported by any processor',
-            $operation->getResource()->getName(),
-            $operation->getName()
-        ));
+        throw new Exception(\sprintf('The resource "%s" and operation "%s" is not supported by any processor', $operation->getResource()->getName(), $operation->getName()));
     }
 }

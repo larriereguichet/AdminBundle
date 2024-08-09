@@ -8,7 +8,7 @@ class Action extends Property implements Url
 {
     public function __construct(
         ?string $name = null,
-        string|null|bool $label = null,
+        string|bool|null $label = null,
         ?string $template = '@LAGAdmin/grids/properties/action.html.twig',
         bool $translatable = true,
         ?string $translationDomain = null,

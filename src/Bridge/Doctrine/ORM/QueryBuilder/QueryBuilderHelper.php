@@ -7,9 +7,7 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\ClassMetadata;
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Exception\UnexpectedTypeException;
-use LAG\AdminBundle\Filter\FilterInterface;
+
 use function Symfony\Component\String\u;
 
 class QueryBuilderHelper

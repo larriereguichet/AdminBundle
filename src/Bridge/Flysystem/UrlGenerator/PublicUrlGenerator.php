@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Bridge\Flysystem\UrlGenerator;
 
 use League\Flysystem\Config;
+
 use function Symfony\Component\String\u;
 
 final readonly class PublicUrlGenerator implements \League\Flysystem\UrlGeneration\PublicUrlGenerator

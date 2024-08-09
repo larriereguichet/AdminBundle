@@ -17,7 +17,7 @@ class Select2Type extends AbstractType
         return ChoiceType::class;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -27,7 +27,7 @@ class Select2Type extends AbstractType
         ;
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['attr']['data-controller'] = 'select2';
         $view->vars['attr']['data-options'] = json_encode($options['select2_options']);

@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\Exception;
 
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
+
 use function Symfony\Component\String\u;
 
 class ValidationException extends Exception

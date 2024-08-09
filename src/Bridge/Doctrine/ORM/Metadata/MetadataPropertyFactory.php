@@ -8,9 +8,8 @@ use LAG\AdminBundle\Resource\Metadata\Boolean;
 use LAG\AdminBundle\Resource\Metadata\Count;
 use LAG\AdminBundle\Resource\Metadata\Date;
 use LAG\AdminBundle\Resource\Metadata\Text;
-use function Symfony\Component\String\u;
 
-class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
+final readonly class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
 {
     public function __construct(
         private MetadataHelperInterface $metadataHelper,
@@ -33,11 +32,6 @@ class MetadataPropertyFactory implements MetadataPropertyFactoryInterface
                 $properties[$fieldName] = new Date($fieldName);
             } elseif ($fieldType === 'boolean') {
                 $properties[$fieldName] = new Boolean($fieldName);
-            } elseif (u($fieldType)->containsAny(['array', 'json'])) {
-//                $properties[$fieldName] = new CollectionOL(
-//                    entryType: Text::class,
-//                    name: $fieldName,
-//                );
             } else {
                 $properties[$fieldName] = new Text($fieldName);
             }

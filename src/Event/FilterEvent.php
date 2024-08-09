@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Metadata\Filter\FilterInterface;
+use LAG\AdminBundle\Resource\Metadata\FilterInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
-class FilterEvent
+class FilterEvent extends Event
 {
     public const FILTER_CREATE = 'lag_admin.filter.create';
     public const FILTER_CREATED = 'lag_admin.filter.created';

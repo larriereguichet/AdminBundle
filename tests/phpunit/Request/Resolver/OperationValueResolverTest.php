@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Request\Resolver;
 
 use LAG\AdminBundle\LAGAdminBundle;
-use LAG\AdminBundle\Metadata\AdminResource;
-use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
 use LAG\AdminBundle\Request\Resolver\OperationValueResolver;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
+use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ class OperationValueResolverTest extends TestCase
         $request = new Request(['test']);
         $this
             ->resourceContext
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('supports')
             ->with($request)
             ->willReturn(true)
@@ -41,7 +41,7 @@ class OperationValueResolverTest extends TestCase
         $request = new Request(['test']);
         $this
             ->resourceContext
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('supports')
             ->with($request)
             ->willReturn(false)
@@ -59,14 +59,14 @@ class OperationValueResolverTest extends TestCase
             ['string'],
             ['int'],
             ['bool'],
-            [AdminResource::class],
+            [Resource::class],
             [LAGAdminBundle::class],
         ];
     }
 
     protected function setUp(): void
     {
-        $this->resourceContext = $this->createMock(ResourceContextInterface::class);
+        $this->resourceContext = self::createMock(ResourceContextInterface::class);
         $this->resolver = new OperationValueResolver($this->resourceContext);
     }
 }

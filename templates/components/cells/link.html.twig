@@ -1,0 +1,9 @@
+<a href="{{ url }}" {{ attributes }}>
+    {% if icon %}<i {{ iconAttributes.default('bi') }}></i>{% endif %}
+
+    {% if translation %}
+        {{ text|trans(translationParameters, translationDomain) }}
+    {% else %}
+        {{ text }}
+    {% endif %}
+</a>

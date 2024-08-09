@@ -14,7 +14,7 @@ final readonly class ConditionMatcher implements ConditionMatcherInterface
     ) {
     }
 
-    public function matchCondition(mixed $data, string $condition, array $context = [], string $workflow = null): bool
+    public function matchCondition(mixed $data, string $condition, array $context = [], ?string $workflow = null): bool
     {
         $context = ['this' => $data] + $context;
 
@@ -25,7 +25,7 @@ final readonly class ConditionMatcher implements ConditionMatcherInterface
         $expressionLanguage = new ExpressionLanguage();
         $result = $expressionLanguage->evaluate($condition, $context);
 
-        if (!is_bool($result)) {
+        if (!\is_bool($result)) {
             return false;
         }
 

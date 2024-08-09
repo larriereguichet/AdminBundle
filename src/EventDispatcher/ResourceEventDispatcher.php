@@ -6,9 +6,10 @@ namespace LAG\AdminBundle\EventDispatcher;
 
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 use function Symfony\Component\String\u;
 
-final readonly class ResourceEventDispatcher implements ResourceEventDispatcherInterface
+readonly class ResourceEventDispatcher implements ResourceEventDispatcherInterface
 {
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
@@ -33,7 +34,7 @@ final readonly class ResourceEventDispatcher implements ResourceEventDispatcherI
         if ($operationName) {
             $eventNames = [
                 $eventName->prepend('lag_admin.'),
-                $eventName->replace('operation', '{application}.{resource}.{operation}')
+                $eventName->replace('operation', '{application}.{resource}.{operation}'),
             ];
         }
 
@@ -46,5 +47,17 @@ final readonly class ResourceEventDispatcher implements ResourceEventDispatcherI
             ;
             $this->eventDispatcher->dispatch($event, $eventName);
         }
+    }
+
+    public function dispatchGridEvents(
+        Event $event,
+        string $eventName,
+        string $applicationName,
+        string $resourceName,
+        string $gridName,
+    ): void {
+        $eventName = u($eventName);
+        $eventNames = [
+        ];
     }
 }

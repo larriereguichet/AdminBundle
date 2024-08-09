@@ -1,0 +1,29 @@
+{% import '@LAGAdmin/grids/macro/helpers.html.twig' as lag_admin %}
+
+{% if grid.title %}
+    <h3 {{ titleAttributes.defaults({class: 'my-2'}) }}>
+        {{ lag_admin.translate(grid.title, resource.translationDomain, true) }}
+    </h3>
+{% endif %}
+
+<div {{ attributes.defaults({class: 'admin row g-2 row-cols-' ~ options.columns|default(4)}) }}>
+    {% for row in grid.rows %}
+        <div class="col">
+            <div class="card h-100">
+                {% for cell in row.cells %}
+                    {% if cell.name == options.thumbnail|default(false) %}
+                        {{ lag_admin_cell(cell, {attributes: {class: 'card-img-top'}}) }}
+                    {% elseif cell.name == options.footer|default(false) %}
+                        <div class="card-footer">
+                            {{ lag_admin_cell(cell) }}
+                        </div>
+                    {% else %}
+                        <div class="card-body">
+                            {{ lag_admin_cell(cell) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

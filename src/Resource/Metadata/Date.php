@@ -12,13 +12,12 @@ class Date extends Property
     public function __construct(
         ?string $name = null,
         ?string $propertyPath = null,
-        string|null|bool $label = null,
+        string|bool|null $label = null,
         bool $sortable = true,
         bool $translatable = false,
         ?string $translationDomain = null,
         array $attributes = [],
         array $headerAttributes = [],
-        ?string $allowedDataType = null,
         ?string $dataTransformer = null,
 
         #[Assert\NotBlank(message: 'The date format should not be empty. Use "none" instead')]
@@ -37,7 +36,6 @@ class Date extends Property
             translationDomain: $translationDomain,
             attributes: $attributes,
             headerAttributes: $headerAttributes,
-            allowedDataType: $allowedDataType,
             dataTransformer: $dataTransformer,
         );
     }

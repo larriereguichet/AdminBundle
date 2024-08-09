@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
 
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
@@ -8,7 +10,7 @@ use Pagerfanta\Adapter\CallbackAdapter;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\PagerfantaInterface;
 
-class ORMOutputProvider implements ProviderInterface
+final readonly class ORMOutputProvider implements ProviderInterface
 {
     public function __construct(
         private ProviderInterface $provider,
@@ -24,11 +26,10 @@ class ORMOutputProvider implements ProviderInterface
         }
 
         if ($data instanceof PagerfantaInterface) {
-            $pager = new Pagerfanta(new CallbackAdapter(function () use ($data) {
+            return new Pagerfanta(new CallbackAdapter(function () use ($data) {
                 return $data->getNbResults();
-            }, function () {
-
-                // TODO ??
+            }, function () use ($data) {
+                return $data->getCurrentPageResults();
             }));
         }
 

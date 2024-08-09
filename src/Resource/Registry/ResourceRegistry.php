@@ -13,7 +13,7 @@ final readonly class ResourceRegistry implements ResourceRegistryInterface
     private array $resources;
 
     public function __construct(
-        /** @var iterable<Resource> $resources */
+        /* @var iterable<Resource> $resources */
         iterable $resources,
         private string $defaultApplication,
         private ResourceFactoryInterface $factory,
@@ -32,7 +32,7 @@ final readonly class ResourceRegistry implements ResourceRegistryInterface
         $applicationName = $applicationName ?? $this->defaultApplication;
 
         if (!$this->has($resourceName, $applicationName)) {
-            throw new Exception(sprintf('Resource with name "%s" not found in the application "%s"', $resourceName, $applicationName));
+            throw new Exception(\sprintf('Resource with name "%s" not found in the application "%s"', $resourceName, $applicationName));
         }
         $definition = $this->resources[$applicationName][$resourceName];
 
