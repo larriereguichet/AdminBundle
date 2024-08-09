@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventListener\Security;
 
-use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class OperationPermissionListener
+final readonly class PermissionListener
 {
     public function __construct(
         private ResourceContextInterface $resourceContext,
@@ -28,7 +28,7 @@ class OperationPermissionListener
         $operation = $this->resourceContext->getOperation($request);
 
         if (!$this->security->isGranted(OperationPermissionVoter::RESOURCE_ACCESS, $operation)) {
-            throw new AccessDeniedException('You are not allowed to access to this admin resource');
+            throw new AccessDeniedException('You are not allowed to access to this resource');
         }
     }
 }
