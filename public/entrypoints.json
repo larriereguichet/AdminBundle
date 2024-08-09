@@ -8,14 +8,6 @@
         "/bundles/lagadmin/admin.js"
       ]
     },
-    "bootstrap": {
-      "css": [
-        "/bundles/lagadmin/bootstrap.css"
-      ],
-      "js": [
-        "/bundles/lagadmin/bootstrap.js"
-      ]
-    },
     "choice-js": {
       "css": [
         "/bundles/lagadmin/choice-js.css"
