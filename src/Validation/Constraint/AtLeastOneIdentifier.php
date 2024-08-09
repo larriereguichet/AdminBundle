@@ -1,15 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace LAG\AdminBundle\Validation\Constraint;
 
-use LAG\AdminBundle\Validation\Validator\AdminValidator;
 use Symfony\Component\Validator\Constraint;
 
-class AdminValid extends Constraint
+#[\Attribute]
+final class AtLeastOneIdentifier extends Constraint
 {
-    /** @return string[] */
     public function getTargets(): array
     {
         return [self::CLASS_CONSTRAINT];
@@ -17,6 +14,6 @@ class AdminValid extends Constraint
 
     public function validatedBy(): string
     {
-        return AdminValidator::class;
+        return AtLeastOneIdentifierValidator::class;
     }
 }
