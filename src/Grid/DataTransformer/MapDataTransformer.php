@@ -7,13 +7,14 @@ namespace LAG\AdminBundle\Grid\DataTransformer;
 use LAG\AdminBundle\Resource\Metadata\Map;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 
+// TODO keep ?
 readonly class MapDataTransformer implements DataTransformerInterface
 {
     public function supports(PropertyInterface $property, mixed $data): bool
     {
         return false;
 
-        return $property instanceof Map;
+       // return $property instanceof Map;
     }
 
     public function transform(PropertyInterface $property, mixed $data): mixed

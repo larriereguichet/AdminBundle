@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Filter\Resolver;
 
-use LAG\AdminBundle\Filter\FilterInterface;
+use LAG\AdminBundle\Resource\Metadata\FilterInterface;
 
 interface FilterValuesResolverInterface
 {

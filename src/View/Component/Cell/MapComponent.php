@@ -23,7 +23,7 @@ final class MapComponent
     public function mount(mixed $data, CellView $cell): void
     {
         /** @var Map $property */
-        $property = $cell->property;
+        $property = $cell->options;
         $this->data = $data;
         $this->map = $property->getMap();
 

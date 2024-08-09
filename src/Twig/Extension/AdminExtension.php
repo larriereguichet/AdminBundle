@@ -41,7 +41,7 @@ class AdminExtension extends AbstractExtension
 
     public function generateLinkUrl(Link $link, mixed $data = null): string
     {
-        return $this->urlGenerator->generateLink($link, $data);
+        return $this->urlGenerator->generateUrl($link, $data);
     }
 
     /**
