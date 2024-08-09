@@ -29,7 +29,7 @@ final class FormComponent
         CellView $cell,
     ): void {
         /** @var \LAG\AdminBundle\Resource\Metadata\Form $property */
-        $property = $cell->property;
+        $property = $cell->options;
         $form = $this->formFactory->create($property->getForm(), $data, $property->getFormOptions());
         $this->form = $form->createView();
         $this->template = $property->getFormTemplate();

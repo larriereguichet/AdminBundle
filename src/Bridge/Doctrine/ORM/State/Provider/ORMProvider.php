@@ -6,9 +6,9 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Exception\ORMException;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Exception\ManagerNotFoundException;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\QueryBuilder\QueryBuilderHelper;
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
@@ -54,7 +54,7 @@ final readonly class ORMProvider implements ProviderInterface
         $index = 0;
 
         if (empty($operation->getIdentifiers())) {
-            throw new ORMException(\sprintf('The operation "%s" of the resource "%s" has no identifiers', $operation->getName(), $operation->getResource()->getName()));
+            throw new Exception(\sprintf('The operation "%s" of the resource "%s" has no identifiers', $operation->getName(), $operation->getResource()->getName()));
         }
 
         foreach ($operation->getIdentifiers() as $identifier) {

@@ -30,7 +30,7 @@ class TextComponent
             $data = '';
         }
         /** @var Text $property */
-        $property = $cell->property;
+        $property = $cell->options;
         $data = u((string) $data);
 
         if ($property->getLength() && $property->getReplace() && $data->length() > $property->getLength()) {

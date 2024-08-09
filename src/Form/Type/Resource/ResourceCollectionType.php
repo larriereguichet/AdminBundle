@@ -22,9 +22,6 @@ class ResourceCollectionType extends AbstractType
             if (!is_iterable($data)) {
                 throw new UnexpectedTypeException($data, 'iterable');
             }
-
-            foreach ($data as $resource) {
-            }
         });
     }
 

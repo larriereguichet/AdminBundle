@@ -33,7 +33,7 @@ class GridExtension extends AbstractExtension
 
     public function renderGrid(GridView $grid, Operation $operation): string
     {
-        return $this->gridRenderer->render($grid, $operation, []);
+        return $this->gridRenderer->render($grid, $operation);
     }
 
     public function renderHeader(HeaderView $header): string
