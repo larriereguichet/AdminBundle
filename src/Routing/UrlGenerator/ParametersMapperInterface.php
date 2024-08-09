@@ -9,10 +9,10 @@ interface ParametersMapperInterface
     /**
      * Map a list of parameters to properties of the given object.
      *
-     * @param object $data Data use to fill parameters
-     * @param array<int, string> $routeParameters The list of the parameter names to map
+     * @param mixed $data Data use to fill parameters
+     * @param array<int, string|null> $routeParameters The list of the parameter names to map
      *
      * @return array<string, string> Mapped parameters
      */
-    public function map(object $data, array $routeParameters = []): array;
+    public function map(mixed $data, array $routeParameters = []): array;
 }

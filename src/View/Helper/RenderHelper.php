@@ -32,6 +32,7 @@ final readonly class RenderHelper implements RenderHelperInterface
 
         if ($action->getTitle() !== null && $action->getAttribute('title') === null) {
             $title = $this->translator->trans($action->getTitle(), [], $action->getTranslationDomain());
+            /** @var Action $action */
             $action = $action->withAttribute('title', $title);
         }
 

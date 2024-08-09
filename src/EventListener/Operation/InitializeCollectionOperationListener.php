@@ -43,6 +43,7 @@ final readonly class InitializeCollectionOperationListener
         }
 
         if ($operation->getForm() === ResourceHiddenType::class) {
+            /** @var CollectionOperationInterface $operation */
             $operation = $operation->withFormOptions([
                 'application' => $resource->getApplication(),
                 'resource' => $resource->getName(),
@@ -86,19 +87,23 @@ final readonly class InitializeCollectionOperationListener
         $resource = $operation->getResource();
 
         if ($action->getName() === null) {
+            /** @var Action $action */
             $action = $action->withName($action->getOperation());
         }
 
         if ($action->getResource() === null) {
+            /** @var Action $action */
             $action = $action->withResource($operation->getResource()->getName());
         }
 
         if ($action->getApplication() === null) {
+            /** @var Action $action */
             $action = $action->withApplication($operation->getResource()->getApplication());
         }
 
         if ($action->getLabel() === null) {
             if ($operation->getResource()->getTranslationDomain()) {
+                /** @var Action $action */
                 $action = $action->withLabel(
                     u('{application}.{resource}.{operation}')
                         ->replace('{application}', $resource->getApplication())
@@ -107,11 +112,13 @@ final readonly class InitializeCollectionOperationListener
                         ->toString()
                 );
             } else {
+                /** @var Action $action */
                 $action = $action->withLabel(u($operation->getName())->title()->toString());
             }
         }
 
         if ($action->getTranslationDomain() === null && $action->isTranslatable()) {
+            /** @var Action $action */
             $action = $action->withTranslationDomain($operation->getResource()->getTranslationDomain());
         }
 

@@ -62,6 +62,10 @@ interface OperationInterface
 
     public function withFormOptions(array $formOptions): self;
 
+    public function getFormTemplate(): ?string;
+
+    public function withFormTemplate(?string $formTemplate): self;
+
     public function getProcessor(): string;
 
     public function withProcessor(string $processor): self;

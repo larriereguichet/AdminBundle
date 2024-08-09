@@ -22,6 +22,8 @@ use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
 use LAG\AdminBundle\Filter\Resolver\FilterValuesResolver;
 use LAG\AdminBundle\Filter\Resolver\FilterValuesResolverInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -42,7 +44,8 @@ return static function (ContainerConfigurator $container): void {
     $services->set(DoctrineCollectionNormalizeProvider::class)
         ->decorate(ProviderInterface::class, priority: -200)
         ->arg('$provider', service('.inner'))
-        ->arg('$serializer', service('serializer'))
+        ->arg('$normalizer', service(NormalizerInterface::class))
+        ->arg('$denormalizer', service(DenormalizerInterface::class))
     ;
 
     // State processors

@@ -9,7 +9,6 @@ use LAG\AdminBundle\Form\Extension\CollectionTypeExtension;
 use LAG\AdminBundle\Form\Extension\TabResourceTypeExtension;
 use LAG\AdminBundle\Form\Transformer\ImageFileToArrayTransformer;
 use LAG\AdminBundle\Form\Type\DateRangeType;
-use LAG\AdminBundle\Form\Type\Image\ImageChoiceType;
 use LAG\AdminBundle\Form\Type\Image\ImageType;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Form\Type\Resource\LegacyResourceType;
@@ -43,10 +42,6 @@ return static function (ContainerConfigurator $container): void {
         ->tag('form.type')
     ;
     $services->set(ImageType::class)
-        ->tag('form.type')
-    ;
-    $services->set(ImageChoiceType::class)
-        ->arg('$transformer', service(ImageFileToArrayTransformer::class))
         ->tag('form.type')
     ;
     $services->set(ResourceChoiceType::class)

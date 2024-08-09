@@ -6,7 +6,6 @@ namespace LAG\AdminBundle\Twig\Extension;
 
 use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Grid\View\GridView;
-use LAG\AdminBundle\Grid\View\HeaderView;
 use LAG\AdminBundle\Resource\Metadata\Operation;
 use LAG\AdminBundle\View\Render\CellRendererInterface;
 use LAG\AdminBundle\View\Render\GridRendererInterface;
@@ -25,7 +24,6 @@ class GridExtension extends AbstractExtension
     {
         return [
             new TwigFunction('lag_admin_grid', [$this, 'renderGrid'], ['is_safe' => ['html']]),
-            new TwigFunction('lag_admin_grid_header', [$this, 'renderHeader'], ['is_safe' => ['html']]),
             new TwigFunction('lag_admin_cell', [$this, 'renderCell'], ['is_safe' => ['html']]),
             new TwigFunction('lag_admin_merge_attributes', [$this, 'mergeAttributes']),
         ];
@@ -34,11 +32,6 @@ class GridExtension extends AbstractExtension
     public function renderGrid(GridView $grid, Operation $operation): string
     {
         return $this->gridRenderer->render($grid, $operation);
-    }
-
-    public function renderHeader(HeaderView $header): string
-    {
-        // TODO
     }
 
     public function renderCell(CellView $cell, array $options = []): string

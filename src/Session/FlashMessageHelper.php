@@ -36,6 +36,6 @@ final readonly class FlashMessageHelper implements FlashMessageHelperInterface
 
     private function getFlashBag(): FlashBagInterface
     {
-        return $this->requestStack->getMainRequest()->getSession()->getFlashBag();
+        return $this->requestStack->getMainRequest()->getSession()->getFlashBag(); // @phpstan-ignore-line
     }
 }

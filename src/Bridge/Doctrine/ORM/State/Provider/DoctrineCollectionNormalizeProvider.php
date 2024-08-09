@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
 
 use Doctrine\Common\Collections\Collection;
-use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
@@ -14,13 +13,13 @@ use Pagerfanta\Pagerfanta;
 use Pagerfanta\PagerfantaInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 final readonly class DoctrineCollectionNormalizeProvider implements ProviderInterface
 {
     public function __construct(
         private ProviderInterface $provider,
-        private SerializerInterface $serializer,
+        private NormalizerInterface $normalizer,
+        private DenormalizerInterface $denormalizer,
     ) {
     }
 
@@ -32,13 +31,10 @@ final readonly class DoctrineCollectionNormalizeProvider implements ProviderInte
             return $data;
         }
 
-        if (!$this->serializer instanceof NormalizerInterface || !$this->serializer instanceof DenormalizerInterface) {
-            throw new Exception('The serializer should be an instance of '.NormalizerInterface::class.' to use input');
-        }
         $transformer = function (mixed $item) use ($operation) {
-            $normalizedData = $this->serializer->normalize($item, null, $operation->getNormalizationContext());
+            $normalizedData = $this->normalizer->normalize($item, null, $operation->getNormalizationContext());
 
-            return $this->serializer->denormalize(
+            return $this->denormalizer->denormalize(
                 $normalizedData,
                 $operation->getOutput(),
                 null,

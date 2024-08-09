@@ -14,14 +14,12 @@ class Collection extends Property
         bool|string|null $propertyPath = null,
         string|bool|null $label = null,
         ?string $template = '@LAGAdmin/grids/properties/collection.html.twig',
-        ?string $component = null,
         bool $sortable = true,
         bool $translatable = false,
         ?string $translationDomain = null,
         array $attributes = [],
         array $containerAttributes = [],
         array $headerAttributes = [],
-        ?string $allowedDataType = null,
         ?string $dataTransformer = null,
 
         #[Assert\NotNull(message: 'The collection should have an property for each entry')]
@@ -32,14 +30,12 @@ class Collection extends Property
             propertyPath: $propertyPath,
             label: $label,
             template: $template,
-            component: $component,
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
             attributes: $attributes,
             containerAttributes: $containerAttributes,
             headerAttributes: $headerAttributes,
-            allowedDataType: $allowedDataType,
             dataTransformer: $dataTransformer,
         );
     }

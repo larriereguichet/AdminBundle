@@ -18,7 +18,6 @@ class Date extends Property
         ?string $translationDomain = null,
         array $attributes = [],
         array $headerAttributes = [],
-        ?string $allowedDataType = null,
         ?string $dataTransformer = null,
 
         #[Assert\NotBlank(message: 'The date format should not be empty. Use "none" instead')]

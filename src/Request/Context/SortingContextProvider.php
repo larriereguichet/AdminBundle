@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Request\Context;
 
-use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\Request;
 

@@ -38,7 +38,6 @@ class Image extends Property
             translationDomain: $translationDomain,
             attributes: $attributes,
             headerAttributes: $headerAttributes,
-            allowedDataType: 'string',
             dataTransformer: $dataTransformer,
         );
     }

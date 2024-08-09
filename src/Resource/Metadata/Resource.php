@@ -54,10 +54,10 @@ class Resource
         #[Assert\NotBlank]
         private string $provider = ORMProvider::class,
 
-        /** @var string[] $identifiers */
-        private array $identifiers = ['id'],
+        /** @var array<string|null> $identifiers */
+        private ?array $identifiers = ['id'],
 
-        private string $routePattern = '{application}.{resource}.{operation}',
+        private ?string $routePattern = '{application}.{resource}.{operation}',
 
         private ?string $pathPrefix = null,
 
@@ -288,7 +288,7 @@ class Resource
         return $self;
     }
 
-    public function getRoutePattern(): string
+    public function getRoutePattern(): ?string
     {
         return $this->routePattern;
     }
@@ -314,7 +314,7 @@ class Resource
         return $self;
     }
 
-    public function getIdentifiers(): array
+    public function getIdentifiers(): ?array
     {
         return $this->identifiers;
     }
