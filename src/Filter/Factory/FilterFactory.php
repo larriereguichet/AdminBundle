@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Filter\Factory;
 
 use LAG\AdminBundle\Exception\InvalidFilterException;
-use LAG\AdminBundle\Filter\FilterInterface;
 use LAG\AdminBundle\Resource\Metadata\Filter;
+use LAG\AdminBundle\Resource\Metadata\FilterInterface;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use LAG\AdminBundle\Resource\Metadata\Text;
 use LAG\AdminBundle\Resource\Metadata\TextFilter;
