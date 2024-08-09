@@ -12,6 +12,7 @@ use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Metadata\Update;
 use LAG\AdminBundle\State\Processor\CompositeProcessor;
 use LAG\AdminBundle\State\Processor\NormalizationProcessor;
+use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\Tests\TestCase;
 
 class CompositeProcessorTest extends TestCase
@@ -19,7 +20,7 @@ class CompositeProcessorTest extends TestCase
     /** @dataProvider operationsProvider */
     public function testProcess(OperationInterface $operation): void
     {
-        $processor1 = $this->createMock(NormalizationProcessor::class);
+        $processor1 = self::createMock(ProcessorInterface::class);
         $processor2 = new FakeProcessor();
         $operation = $operation->withProcessor(FakeProcessor::class)
             ->withResource(new Resource(name: 'my_resource'))

@@ -20,6 +20,7 @@ final readonly class EventProcessor implements ProcessorInterface
         $this->eventDispatcher->dispatchResourceEvents(
             new DataEvent($data, $operation),
             DataEvents::DATA_PROCESS,
+            $operation->getResource()->getApplication(),
             $operation->getResource()->getName(),
             $operation->getName(),
         );
@@ -29,6 +30,7 @@ final readonly class EventProcessor implements ProcessorInterface
         $this->eventDispatcher->dispatchResourceEvents(
             new DataEvent($data, $operation),
             DataEvents::DATA_PROCESSED,
+            $operation->getResource()->getApplication(),
             $operation->getResource()->getName(),
             $operation->getName(),
         );

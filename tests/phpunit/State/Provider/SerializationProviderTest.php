@@ -42,13 +42,13 @@ class SerializationProviderTest extends TestCase
         ;
 
         $this->decoratedProvider
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('provide')
             ->with($operation, [], ['json' => true])
             ->willReturn($data)
         ;
         $this->serializer
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('deserialize')
             ->with($data, $expectedType, 'json', ['groups' => ['my_group'], AbstractNormalizer::OBJECT_TO_POPULATE => $data])
             ->willReturn('{"some": "json"}')
@@ -65,7 +65,7 @@ class SerializationProviderTest extends TestCase
         $data = new \stdClass();
 
         $this->decoratedProvider
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('provide')
             ->with($operation, [], ['json' => true])
             ->willReturn($data)
@@ -84,7 +84,7 @@ class SerializationProviderTest extends TestCase
         $data = new \stdClass();
 
         $this->decoratedProvider
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('provide')
             ->with(new Index(), [], $context)
             ->willReturn($data)
@@ -123,8 +123,8 @@ class SerializationProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decoratedProvider = $this->createMock(ProviderInterface::class);
-        $this->serializer = $this->createMock(SerializerInterface::class);
+        $this->decoratedProvider = self::createMock(ProviderInterface::class);
+        $this->serializer = self::createMock(SerializerInterface::class);
         $this->provider = new SerializationProvider(
             $this->decoratedProvider,
             $this->serializer,
