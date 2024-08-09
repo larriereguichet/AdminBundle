@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Form\Type\Media;
 
-use LAG\AdminBundle\Entity\Image;
+use LAG\AdminBundle\Entity\AbstractImage;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,7 +18,7 @@ class GalleryType extends AbstractType
                 'attr' => [
                     'class' => 'media-gallery-input',
                 ],
-                'class' => Image::class,
+                'class' => AbstractImage::class,
             ])
         ;
     }
