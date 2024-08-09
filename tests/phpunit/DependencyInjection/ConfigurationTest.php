@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\DependencyInjection;
 
 use LAG\AdminBundle\DependencyInjection\Configuration;
-use LAG\AdminBundle\Metadata\Property\Image;
+use LAG\AdminBundle\Resource\Metadata\Image;
 use LAG\AdminBundle\Tests\TestCase;
 
 class ConfigurationTest extends TestCase
@@ -21,10 +21,15 @@ class ConfigurationTest extends TestCase
         $data = $tree->buildTree()->finalize([]);
 
         $this->assertEquals([
-            'name' => 'lag_admin',
+            'default_application' => 'admin',
             'title' => 'Admin',
             'description' => 'Admin',
             'translation_domain' => 'admin',
+            'request' => [
+                'application_parameter' => '_application',
+                'resource_parameter' => '_resource',
+                'operation_parameter' => '_operation',
+            ],
             'resource_paths' => [
                 '%kernel.project_dir%/config/admin/resources',
                 '%kernel.project_dir%/src/Entity',
@@ -33,17 +38,13 @@ class ConfigurationTest extends TestCase
             'time_format' => 'short',
             'date_localization' => true,
             'filter_events' => true,
-            'grids' => [
-                'table' => [
-                    'template' => '@LAGAdmin/grids/table_grid.html.twig',
-                ],
-                'card' => [
-                    'template' => '@LAGAdmin/grids/card_grid.html.twig',
-                    'template_mapping' => [
-                        Image::class => '@LAGAdmin/grids/cards/card_image.html.twig',
-                    ],
-                ],
+            'grid_paths' => [
+                '%kernel.project_dir%/config/admin/grids',
+                '%kernel.project_dir%/src/Entity',
             ],
+            'uploads' => ['storage' => 'lag_admin_image.storage'],
+            'media_directory' => 'media/images',
+            'applications' => []
         ], $data);
     }
 }

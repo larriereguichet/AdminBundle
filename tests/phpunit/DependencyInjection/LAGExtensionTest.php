@@ -6,17 +6,16 @@ namespace LAG\AdminBundle\Tests\DependencyInjection;
 
 use LAG\AdminBundle\DependencyInjection\LAGAdminExtension;
 use LAG\AdminBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class LAGExtensionTest extends TestCase
+final class LAGExtensionTest extends TestCase
 {
     private MockObject $container;
 
-    /**
-     * The load should allow the container to compile without errors.
-     */
-    public function testLoad(): void
+    #[Test]
+    public function itLoadConfiguration(): void
     {
         $this
             ->container
@@ -24,6 +23,12 @@ class LAGExtensionTest extends TestCase
             ->method('setParameter')
             ->willReturnCallback(function ($parameter, $value) {
                 $this->assertContains($parameter, [
+                    'lag_admin.application_parameter',
+                    'lag_admin.application_name',
+                    'lag_admin.media_directory',
+                    'lag_admin.upload_storage',
+                    'lag_admin.resource_parameter',
+                    'lag_admin.operation_parameter',
                     'lag_admin.application.configuration',
                     'lag_admin.resource_paths',
                     'lag_admin.title',
@@ -35,6 +40,7 @@ class LAGExtensionTest extends TestCase
                     'lag_admin.filter_events',
                     'lag_admin.media_bundle_enabled',
                     'lag_admin.grids',
+                    'lag_admin.grid_paths',
                 ]);
             })
         ;
@@ -43,9 +49,7 @@ class LAGExtensionTest extends TestCase
         $extension->load([], $this->container);
     }
 
-    /**
-     * The load should allow the container to compile without errors.
-     */
+    #[Test]
     public function testLoadWithoutConfiguration(): void
     {
         $extension = new LAGAdminExtension();
@@ -58,9 +62,9 @@ class LAGExtensionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->container = $this->createMock(ContainerBuilder::class);
+        $this->container = self::createMock(ContainerBuilder::class);
         $this->container
-            ->expects($this->atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('getParameter')
             ->willReturnMap([
                 ['kernel.environment', 'dev'],
