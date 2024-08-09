@@ -37,6 +37,7 @@ final class ResourceCollectionControllerTest extends TestCase
     private MockObject $redirectionHandler;
     private MockObject $gridRegistry;
     private MockObject $gridViewBuilder;
+    private MockObject $serializer;
     private MockObject $formFactory;
     private MockObject $environment;
 
