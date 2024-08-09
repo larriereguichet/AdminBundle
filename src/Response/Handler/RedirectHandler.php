@@ -9,7 +9,7 @@ use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class RedirectHandler implements RedirectHandlerInterface
+final readonly class RedirectHandler implements RedirectHandlerInterface
 {
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
@@ -18,11 +18,12 @@ class RedirectHandler implements RedirectHandlerInterface
 
     public function createRedirectResponse(OperationInterface $operation, mixed $data, array $context = []): Response
     {
-        if ($operation->getRedirectResource() && $operation->getRedirectOperation()) {
+        if ($operation->getRedirectOperation()) {
             $redirectUrl = $this->urlGenerator->generateFromOperationName(
-                $operation->getRedirectResource(),
+                $operation->getRedirectResource() ?? $operation->getResource()->getName(),
                 $operation->getRedirectOperation(),
                 $data,
+                $operation->getRedirectApplication() ?? $operation->getResource()->getApplication(),
             );
         } elseif ($operation->getRedirectRoute()) {
             $redirectUrl = $this->urlGenerator->generateFromRouteName(
