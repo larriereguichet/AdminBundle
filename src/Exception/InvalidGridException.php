@@ -10,7 +10,7 @@ class InvalidGridException extends ValidationException
 {
     public function __construct(?string $gridName, ConstraintViolationListInterface $errors)
     {
-        $message = sprintf(
+        $message = \sprintf(
             'The configuration of the grid "%s" is not valid. The following errors have been encountered :',
             $gridName
         );

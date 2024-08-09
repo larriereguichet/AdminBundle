@@ -16,7 +16,6 @@ final readonly class EntityFilterApplicator extends AbstractApplicator
         return parent::supports($operation, $filter, $data, $filterValue) && $filter instanceof EntityFilter;
     }
 
-
     /**
      * @param EntityFilter $filter
      * @param QueryBuilder $data

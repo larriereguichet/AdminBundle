@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\State\Provider;
 
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
@@ -21,14 +23,13 @@ final readonly class NormalizationProvider implements ProviderInterface
      * The resource transformation is done only if the following conditions are met:
      *   - the operation has an output target type to deserialize to
      *   - the operation is collection and data is an array; other data formats should be handled by its proper provider
-     *   - the operation is not a collection and data are either an array or an object of the operation data class
+     *   - the operation is not a collection and data are either an array or an object of the operation data class.
      */
     public function provide(OperationInterface $operation, array $uriVariables = [], array $context = []): mixed
     {
         $data = $this->provider->provide($operation, $uriVariables, $context);
 
-        if (!$this->supports($operation, $data))
-        {
+        if (!$this->supports($operation, $data)) {
             return $data;
         }
         $normalizedData = $this->normalizer->normalize($data, null, $operation->getNormalizationContext());
@@ -56,7 +57,7 @@ final readonly class NormalizationProvider implements ProviderInterface
             return false;
         }
 
-        if (!$operation instanceof CollectionOperationInterface && (!is_object($data) || $data::class !== $operation->getResource()->getDataClass())) {
+        if (!$operation instanceof CollectionOperationInterface && (!\is_object($data) || $data::class !== $operation->getResource()->getDataClass())) {
             return false;
         }
 

@@ -23,6 +23,7 @@ class AdminExtensionTest extends TestCase
     private MockObject $linkRenderer;
     private MockObject $urlGenerator;
     private MockObject $registry;
+
     public function testGetFunctions(): void
     {
         foreach ($this->adminExtension->getFunctions() as $function) {

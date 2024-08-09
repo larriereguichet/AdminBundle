@@ -9,6 +9,7 @@ use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\Metadata\FilterInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\TextFilter;
+
 use function Symfony\Component\String\u;
 
 final readonly class TextFilterApplicator extends AbstractApplicator
@@ -27,14 +28,13 @@ final readonly class TextFilterApplicator extends AbstractApplicator
         $rootAlias = $data->getRootAliases()[0];
         $this->applyFilter($data, $filter, $filterValue, $rootAlias, $filter->getProperties());
 
-
         // TODO move in another filter ?
-//        if (u($filter->getPropertyPath())->containsAny('.')) {
-//            $this->applyJoinFilter($data, $filter, $filterValue, $rootAlias);
-//        }
-//
-//        if ($metadata->hasField($filter->getPropertyPath())) {
-//        }
+        //        if (u($filter->getPropertyPath())->containsAny('.')) {
+        //            $this->applyJoinFilter($data, $filter, $filterValue, $rootAlias);
+        //        }
+        //
+        //        if ($metadata->hasField($filter->getPropertyPath())) {
+        //        }
     }
 
     private function applyFilter(
@@ -48,17 +48,11 @@ final readonly class TextFilterApplicator extends AbstractApplicator
 
         if ($filter->getComparator() === 'between') {
             if (!\is_array($value)) {
-                throw new Exception(sprintf(
-                    'The parameters for a "between" comparison filter are invalid, expected an array of 2 parameters, got "%s"',
-                    is_object($value) ? get_class($value) : gettype($value),
-                ));
+                throw new Exception(\sprintf('The parameters for a "between" comparison filter are invalid, expected an array of 2 parameters, got "%s"', \is_object($value) ? $value::class : \gettype($value)));
             }
 
             if (\count($value) === 2) {
-                throw new Exception(sprintf(
-                    'The parameters for a "between" comparison filter are invalid, expected 2 parameters, got "%s"',
-                    count($value),
-                ));
+                throw new Exception(\sprintf('The parameters for a "between" comparison filter are invalid, expected 2 parameters, got "%s"', \count($value)));
             }
             $parameterName1 = u($filter->getName())
                 ->prepend('filter_')
@@ -87,7 +81,6 @@ final readonly class TextFilterApplicator extends AbstractApplicator
             $queryBuilder->$method($queryBuilder->expr()->orX(...$wheres));
             $queryBuilder->setParameter($parameterName1, $value[0]);
             $queryBuilder->setParameter($parameterName2, $value[1]);
-
         }
 
         if ($filter->getComparator() === 'like') {
@@ -128,8 +121,7 @@ final readonly class TextFilterApplicator extends AbstractApplicator
         FilterInterface $filter,
         mixed $value,
         string $alias
-    ): void
-    {
+    ): void {
         // TODO join filters
         $lastAlias = $alias;
         $joins = u($filter->getPropertyPath())->split('.');

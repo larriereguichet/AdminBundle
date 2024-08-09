@@ -34,7 +34,7 @@ interface PropertyInterface
      *
      * @see PropertyAccessorInterface
      */
-    public function getPropertyPath(): string|null|bool;
+    public function getPropertyPath(): string|bool|null;
 
     /**
      * Define the property path.
@@ -47,7 +47,7 @@ interface PropertyInterface
     /**
      * Return the property label. The label could be rendered differently according to the current Grid.
      */
-    public function getLabel(): string|null|bool;
+    public function getLabel(): string|bool|null;
 
     /**
      * Define the property label.

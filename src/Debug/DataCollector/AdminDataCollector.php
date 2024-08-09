@@ -23,7 +23,7 @@ final class AdminDataCollector extends AbstractDataCollector
         return '@LAGAdmin/debug/template.html.twig';
     }
 
-    public function collect(Request $request, Response $response, \Throwable $exception = null): void
+    public function collect(Request $request, Response $response, ?\Throwable $exception = null): void
     {
         $data['application'] = $this->parametersExtractor->getApplicationName($request);
         $data['resource'] = $this->parametersExtractor->getResourceName($request);

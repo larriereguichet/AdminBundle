@@ -26,12 +26,12 @@ abstract class AbstractMenuBuilder implements MenuBuilderInterface
         $event = new MenuEvent($menu);
 
         $this->eventDispatcher->dispatch($event, MenuEvents::MENU_CREATE);
-        $this->eventDispatcher->dispatch($event, sprintf(MenuEvents::PRE_EVENT_PATTERN, $this->getName()));
+        $this->eventDispatcher->dispatch($event, \sprintf(MenuEvents::PRE_EVENT_PATTERN, $this->getName()));
 
         $this->buildMenu($menu);
 
         $this->eventDispatcher->dispatch($event, MenuEvents::MENU_CREATED);
-        $this->eventDispatcher->dispatch($event, sprintf(MenuEvents::POST_EVENT_PATTERN, $this->getName()));
+        $this->eventDispatcher->dispatch($event, \sprintf(MenuEvents::POST_EVENT_PATTERN, $this->getName()));
 
         return $menu;
     }

@@ -6,7 +6,6 @@ namespace LAG\AdminBundle\EventListener\Operation;
 
 use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
-use LAG\AdminBundle\Form\Type\Resource\LegacyResourceType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceDataType;
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Create;
@@ -17,6 +16,7 @@ use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Metadata\Update;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
+
 use function Symfony\Component\String\u;
 
 final readonly class InitializeOperationListener

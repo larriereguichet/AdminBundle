@@ -23,7 +23,7 @@ final readonly class StorageRegistry implements StorageRegistryInterface
             }
         }
 
-        throw new Exception(sprintf('The storage "%s" does not exist.', $storageName));
+        throw new Exception(\sprintf('The storage "%s" does not exist.', $storageName));
     }
 
     public function has(string $storageName): bool

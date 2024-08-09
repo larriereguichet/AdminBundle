@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\View;
 
-use Traversable;
-
 final readonly class GridView implements \IteratorAggregate
 {
     public function __construct(
@@ -29,7 +27,7 @@ final readonly class GridView implements \IteratorAggregate
     ) {
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
         foreach ($this->rows as $row) {
             yield $row;

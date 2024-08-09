@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\View\Component\Cell;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;

@@ -31,8 +31,8 @@ final readonly class ApplicationRegistry implements ApplicationRegistryInterface
 
     public function get(string $name): Application
     {
-        if (!array_key_exists($name, $this->applications)) {
-            throw new Exception(sprintf('The application "%s" does not exist.', $name));
+        if (!\array_key_exists($name, $this->applications)) {
+            throw new Exception(\sprintf('The application "%s" does not exist.', $name));
         }
 
         return $this->applications[$name];
@@ -40,6 +40,6 @@ final readonly class ApplicationRegistry implements ApplicationRegistryInterface
 
     public function has(string $name): bool
     {
-        return array_key_exists($name, $this->applications);
+        return \array_key_exists($name, $this->applications);
     }
 }

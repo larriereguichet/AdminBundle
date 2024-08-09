@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\View\Helper;
 
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
@@ -20,9 +22,8 @@ final readonly class RoutingHelper implements RoutingHelperInterface
         string $resource,
         string $operation,
         mixed $data = null,
-        string $applicationName = null,
-    ): string
-    {
+        ?string $applicationName = null,
+    ): string {
         if ($applicationName === null) {
             $request = $this->requestStack->getCurrentRequest();
             $applicationName = $this->context->getOperation($request)->getResource()->getApplication();
@@ -40,7 +41,7 @@ final readonly class RoutingHelper implements RoutingHelperInterface
         string $resource,
         string $operation,
         mixed $data = null,
-        string $applicationName = null,
+        ?string $applicationName = null,
     ): string {
         return $this->urlGenerator->generateFromOperationName(
             $resource,

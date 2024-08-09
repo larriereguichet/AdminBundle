@@ -29,7 +29,7 @@ class TemplateValidator extends ConstraintValidator
         if (!$this->environment->getLoader()->exists($value)) {
             $this
                 ->context
-                ->addViolation(sprintf('The twig template "%s" does not exists', $value))
+                ->addViolation(\sprintf('The twig template "%s" does not exists', $value))
             ;
         }
     }

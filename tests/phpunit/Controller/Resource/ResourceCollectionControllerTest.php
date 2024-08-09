@@ -140,7 +140,6 @@ final class ResourceCollectionControllerTest extends TestCase
             ->willReturn($gridView)
         ;
 
-
         $this
             ->environment
             ->expects(self::once())

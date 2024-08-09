@@ -25,7 +25,7 @@ class ResourceRoutingLoader extends Loader
         parent::__construct();
     }
 
-    public function load(mixed $resource, string $type = null): RouteCollection
+    public function load(mixed $resource, ?string $type = null): RouteCollection
     {
         if ($this->loaded) {
             throw new \RuntimeException('Do not add the Admin routing loader "lag_admin" twice');
@@ -41,7 +41,7 @@ class ResourceRoutingLoader extends Loader
         return $routes;
     }
 
-    public function supports($resource, string $type = null): bool
+    public function supports($resource, ?string $type = null): bool
     {
         return 'lag_admin' === $type;
     }

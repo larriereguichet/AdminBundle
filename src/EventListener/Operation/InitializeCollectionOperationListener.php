@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\EventListener\Operation;
 
 use LAG\AdminBundle\Event\OperationEvent;
@@ -10,6 +12,7 @@ use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+
 use function Symfony\Component\String\u;
 
 final readonly class InitializeCollectionOperationListener
@@ -103,7 +106,6 @@ final readonly class InitializeCollectionOperationListener
                         ->replace('{operation}', $action->getOperation())
                         ->toString()
                 );
-
             } else {
                 $action = $action->withLabel(u($operation->getName())->title()->toString());
             }

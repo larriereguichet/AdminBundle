@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Twig\Extension;
 
-use LAG\AdminBundle\View\Helper\RoutingHelper;
 use LAG\AdminBundle\View\Helper\RoutingHelperInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;

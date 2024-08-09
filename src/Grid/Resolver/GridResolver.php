@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Grid\Resolver;
 
 use LAG\AdminBundle\Exception\Exception;
@@ -47,12 +49,7 @@ final readonly class GridResolver implements GridResolverInterface
                     if (is_iterable($grids)) {
                         foreach ($grids as $grid) {
                             if (!$grid instanceof Grid) {
-                                throw new Exception(sprintf(
-                                    'The file "%s" should return an iterable of "%s", got "%s"',
-                                    $fileInfo->getRealPath(),
-                                    Grid::class,
-                                    get_debug_type($grid),
-                                ));
+                                throw new Exception(\sprintf('The file "%s" should return an iterable of "%s", got "%s"', $fileInfo->getRealPath(), Grid::class, get_debug_type($grid)));
                             }
 
                             yield $grid;

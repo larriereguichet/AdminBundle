@@ -10,7 +10,7 @@ final readonly class ParametersMapper implements ParametersMapperInterface
 {
     public function map(mixed $data, array $routeParameters = []): array
     {
-        if ($data === null || count($routeParameters) === 0) {
+        if ($data === null || \count($routeParameters) === 0) {
             return [];
         }
         $accessor = PropertyAccess::createPropertyAccessor();
@@ -21,7 +21,7 @@ final readonly class ParametersMapper implements ParametersMapperInterface
                 $propertyPath = $parameter;
             }
 
-            if (is_int($parameter)) {
+            if (\is_int($parameter)) {
                 $parameter = $propertyPath;
             }
             $mappedRouteParameters[$parameter] = $accessor->getValue($data, $propertyPath);

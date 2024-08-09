@@ -11,8 +11,8 @@ class Count extends Property
 {
     public function __construct(
         ?string $name = null,
-        string $propertyPath = null,
-        string $label = null,
+        ?string $propertyPath = null,
+        ?string $label = null,
         bool $sortable = true,
         array $attributes = [],
         array $headerAttributes = [],

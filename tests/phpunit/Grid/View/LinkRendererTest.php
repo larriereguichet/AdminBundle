@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Grid\View;
 
-use LAG\AdminBundle\Exception\InvalidLinkException;
 use LAG\AdminBundle\Resource\Metadata\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Tests\TestCase;
@@ -14,7 +13,6 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 
@@ -53,7 +51,6 @@ final class LinkRendererTest extends TestCase
             ])
             ->willReturn('some content')
         ;
-
 
         $render = $this->linkRenderer->render($link);
 

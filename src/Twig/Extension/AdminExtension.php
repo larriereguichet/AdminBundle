@@ -56,7 +56,7 @@ class AdminExtension extends AbstractExtension
         string $resource,
         string $operation,
         mixed $data = null,
-        string $applicationName = null,
+        ?string $applicationName = null,
     ): string {
         return $this->urlGenerator->generateFromOperationName(
             $resource,

@@ -52,7 +52,7 @@ class GridExtension extends AbstractExtension
         $attributes = $defaults + $attributes;
 
         foreach ($attributes as $key => $attribute) {
-            if (!array_key_exists($key, $mergedAttributes)) {
+            if (!\array_key_exists($key, $mergedAttributes)) {
                 $mergedAttributes[$key] = $attribute;
             } else {
                 $mergedAttributes[$key] .= ' '.$attribute;

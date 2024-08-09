@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\Routing\Route;
 
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
+
 use function Symfony\Component\String\u;
 
 class RouteNameGenerator implements RouteNameGeneratorInterface

@@ -13,7 +13,7 @@ class Slug extends Property
 
         ?string $name = null,
         bool|string|null $propertyPath = null,
-        string|null|bool $label = null,
+        string|bool|null $label = null,
         ?string $template = '@LAGAdmin/grids/properties/slug.html.twig',
         ?string $component = null,
         bool $sortable = true,

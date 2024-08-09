@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Resource\Resolver;
 
 final readonly class ClassResolver implements ClassResolverInterface
@@ -12,7 +14,7 @@ final readonly class ClassResolver implements ClassResolverInterface
             return null;
         }
 
-       return new \ReflectionClass($class);
+        return new \ReflectionClass($class);
     }
 
     private function getClassName(string $content): ?string
@@ -28,7 +30,7 @@ final readonly class ClassResolver implements ClassResolverInterface
         $className = trim($matches[1]);
 
         if (null !== $namespace) {
-            return $namespace . '\\' . $className;
+            return $namespace.'\\'.$className;
         }
 
         return $className;

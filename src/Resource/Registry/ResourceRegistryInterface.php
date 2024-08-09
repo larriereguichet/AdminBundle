@@ -24,7 +24,7 @@ interface ResourceRegistryInterface
     /**
      * Return an array of the registry resources.
      *
-     * @return iterable<Resource>
+     * @return iterable<resource>
      */
     public function all(): iterable;
 }

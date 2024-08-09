@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Validation\Constraint;
 
 use LAG\AdminBundle\Resource\Metadata\Create;
@@ -20,13 +22,12 @@ final class AtLeastOneIdentifierValidator extends ConstraintValidator
             return;
         }
 
-        if ($value->getIdentifiers() === null || count($value->getIdentifiers()) === 0) {
+        if ($value->getIdentifiers() === null || \count($value->getIdentifiers()) === 0) {
             $this->context
                 ->buildViolation('The operation should have at least one identifier')
                 ->atPath('identifiers')
                 ->addViolation()
             ;
         }
-
     }
 }

@@ -8,7 +8,7 @@ use LAG\AdminBundle\Resource\Metadata\Resource;
 
 class CacheRegistry implements ResourceRegistryInterface
 {
-    /** @var array<string, array<string, Resource>> */
+    /** @var array<string, array<string, resource>> */
     private array $cache = [];
 
     public function __construct(

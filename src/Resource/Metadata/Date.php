@@ -12,7 +12,7 @@ class Date extends Property
     public function __construct(
         ?string $name = null,
         ?string $propertyPath = null,
-        string|null|bool $label = null,
+        string|bool|null $label = null,
         bool $sortable = true,
         bool $translatable = false,
         ?string $translationDomain = null,

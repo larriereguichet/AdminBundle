@@ -23,14 +23,8 @@ final readonly class UrlGenerator implements UrlGeneratorInterface
     {
         $parameters = $this->mapper->map($data, $operation->getRouteParameters());
 
-        if (count($parameters) !== count($operation->getRouteParameters())) {
-            throw new Exception(sprintf(
-                'Unable to generate URL for resource "%s" and operation "%s". Expected "%s" route parameters, got "%s"',
-                $operation->getResource()->getName(),
-                $operation->getName(),
-                count($operation->getRouteParameters()),
-                count($parameters),
-            ));
+        if (\count($parameters) !== \count($operation->getRouteParameters())) {
+            throw new Exception(\sprintf('Unable to generate URL for resource "%s" and operation "%s". Expected "%s" route parameters, got "%s"', $operation->getResource()->getName(), $operation->getName(), \count($operation->getRouteParameters()), \count($parameters)));
         }
 
         return $this->router->generate($operation->getRoute(), $parameters);
@@ -59,7 +53,7 @@ final readonly class UrlGenerator implements UrlGeneratorInterface
             );
         }
 
-        throw new Exception(sprintf('Unable to generate a route for the action "%s".', $url->getName()));
+        throw new Exception(\sprintf('Unable to generate a route for the action "%s".', $url->getName()));
     }
 
     public function generateFromRouteName(string $routeName, array $routeParameters = [], mixed $data = null): string

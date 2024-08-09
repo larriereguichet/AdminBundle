@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Resource\Metadata;
 
 use LAG\AdminBundle\Form\Type\Resource\ResourceHiddenType;
@@ -10,8 +12,8 @@ class Form extends Property implements PropertyInterface
 {
     public function __construct(
         ?string $name = null,
-        string|null|bool $propertyPath = null,
-        string|null|bool $label = null,
+        string|bool|null $propertyPath = null,
+        string|bool|null $label = null,
         bool $translatable = false,
         ?string $translationDomain = null,
         array $attributes = [],
@@ -31,7 +33,7 @@ class Form extends Property implements PropertyInterface
             translationDomain: $translationDomain,
             attributes: $attributes,
             headerAttributes: $headerAttributes,
-            //component: 'lag_admin:form',
+            // component: 'lag_admin:form',
             template: '@LAGAdmin/grids/properties/form.html.twig',
             sortable: false,
             dataTransformer: $dataTransformer,

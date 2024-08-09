@@ -32,15 +32,15 @@ final class ResourceDataType extends AbstractType
             $accessor = PropertyAccess::createPropertyAccessor();
 
             foreach ($resource->getProperties() as $property) {
-                if (in_array($property->getName(), $options['exclude'])) {
+                if (\in_array($property->getName(), $options['exclude'])) {
                     continue;
                 }
 
                 if (
-                    is_string($property->getPropertyPath()) &&
-                    $property->getPropertyPath() !== '.' &&
-                    $accessor->isReadable($data, $property->getPropertyPath()) &&
-                    $accessor->isWritable($data, $property->getPropertyPath())
+                    \is_string($property->getPropertyPath())
+                    && $property->getPropertyPath() !== '.'
+                    && $accessor->isReadable($data, $property->getPropertyPath())
+                    && $accessor->isWritable($data, $property->getPropertyPath())
                 ) {
                     $form->add($property->getName(), null, ['property_path' => $property->getPropertyPath()]);
                 }
@@ -52,7 +52,7 @@ final class ResourceDataType extends AbstractType
     {
         $resolver
             ->setDefaults([
-               'exclude' => [],
+                'exclude' => [],
             ])
             ->setAllowedTypes('exclude', 'array')
 

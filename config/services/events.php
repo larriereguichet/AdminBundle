@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Bridge\Flysystem\Registry\StorageRegistryInterface;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcher;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\EventListener\Data\SlugListener;
@@ -14,8 +13,8 @@ use LAG\AdminBundle\EventListener\Grid\InitializeGridListener;
 use LAG\AdminBundle\EventListener\Operation\InitializeCollectionOperationFiltersListener;
 use LAG\AdminBundle\EventListener\Operation\InitializeCollectionOperationListener;
 use LAG\AdminBundle\EventListener\Operation\InitializeOperationListener;
-use LAG\AdminBundle\EventListener\Operation\InitializeOperationRouteParametersListener;
 use LAG\AdminBundle\EventListener\Operation\InitializeOperationPathListener;
+use LAG\AdminBundle\EventListener\Operation\InitializeOperationRouteParametersListener;
 use LAG\AdminBundle\EventListener\Resource\InitializeResourceListener;
 use LAG\AdminBundle\EventListener\Resource\InitializeResourceOperationsListener;
 use LAG\AdminBundle\EventListener\Resource\InitializeResourcePropertiesListener;
@@ -68,7 +67,6 @@ return static function (ContainerConfigurator $container) {
     $services->set(InitializeGridListener::class)
         ->tag('kernel.event_listener', ['event' => 'lag_admin.grid.build', 'priority' => -255])
     ;
-
 
     // Security listeners
     $services->set(PermissionListener::class)

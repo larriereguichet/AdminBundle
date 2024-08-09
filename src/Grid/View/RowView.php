@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\View;
 
 use Symfony\UX\TwigComponent\ComponentAttributes;
-use Traversable;
 
 final readonly class RowView
 {
@@ -21,7 +20,7 @@ final readonly class RowView
         $this->attributes = new ComponentAttributes($attributes);
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
         foreach ($this->cells as $cell) {
             yield $cell;

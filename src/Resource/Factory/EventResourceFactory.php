@@ -56,20 +56,11 @@ final readonly class EventResourceFactory implements ResourceFactoryInterface
         string $resourceName
     ): void {
         if ($resource->getApplication() !== $applicationName) {
-            throw new Exception(sprintf(
-                'Changing the resource "%s" application from "%s" to "%s" is not allowed.',
-                $resourceName,
-                $applicationName,
-                $resource->getApplication(),
-            ));
+            throw new Exception(\sprintf('Changing the resource "%s" application from "%s" to "%s" is not allowed.', $resourceName, $applicationName, $resource->getApplication()));
         }
 
         if ($resource->getName() !== $resourceName) {
-            throw new Exception(sprintf(
-                'Changing the resource "%s" name to "%s" is not allowed.',
-                $resourceName,
-                $resource->getName(),
-            ));
+            throw new Exception(\sprintf('Changing the resource "%s" name to "%s" is not allowed.', $resourceName, $resource->getName()));
         }
     }
 }

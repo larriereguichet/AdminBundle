@@ -18,7 +18,7 @@ final class PaginationExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('lag_admin_is_pager', [$this->helper, 'isPager'])
+            new TwigFunction('lag_admin_is_pager', [$this->helper, 'isPager']),
         ];
     }
 }
