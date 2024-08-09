@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Filter;
 
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Filter\FilterInterface;
+use LAG\AdminBundle\Resource\Metadata\FilterInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\TextFilter;
 use function Symfony\Component\String\u;

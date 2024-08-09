@@ -7,48 +7,49 @@ namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\Metadata;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactory;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
 use LAG\AdminBundle\Resource\Metadata\Boolean;
 use LAG\AdminBundle\Resource\Metadata\Count;
 use LAG\AdminBundle\Resource\Metadata\Date;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use LAG\AdminBundle\Resource\Metadata\Text;
-use LAG\AdminBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use function Symfony\Component\String\u;
 
-class MetadataPropertyFactoryTest extends TestCase
+final class MetadataPropertyFactoryTest extends TestCase
 {
     private MetadataPropertyFactory $factory;
     private MockObject $metadataHelper;
 
-    public function testCreateProperties(): void
+    #[Test]
+    public function itCreatesProperties(): void
     {
         $types = [
             'my_date' => 'datetime',
             'my_boolean' => 'boolean',
             'my_string' => 'string',
         ];
-        $metadata = $this->createMock(ClassMetadata::class);
+        $metadata = self::createMock(ClassMetadata::class);
         $metadata
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getFieldNames')
             ->willReturn(array_keys($types))
         ;
         $metadata
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getAssociationNames')
             ->willReturn([
                 'my_association',
             ])
         ;
         $metadata
-            ->expects($this->exactly(\count($types)))
+            ->expects(self::exactly(\count($types)))
             ->method('getTypeOfField')
             ->willReturnCallback(fn ($type) => $types[$type])
         ;
         $metadata
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('isCollectionValuedAssociation')
             ->willReturnCallback(function () {
                 return true;
@@ -57,7 +58,7 @@ class MetadataPropertyFactoryTest extends TestCase
 
         $this
             ->metadataHelper
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('findMetadata')
             ->with('MyClass')
             ->willReturn($metadata)
@@ -83,7 +84,8 @@ class MetadataPropertyFactoryTest extends TestCase
         }
     }
 
-    public function testCreatePropertiesWithTooManyFields(): void
+    #[Test]
+    public function itCreatesPropertiesWithTooManyFields(): void
     {
         $types = [
             'my_date' => 'datetime',
@@ -98,9 +100,9 @@ class MetadataPropertyFactoryTest extends TestCase
             'my_string7' => 'string',
             'my_string8' => 'string',
         ];
-        $metadata = $this->createMock(ClassMetadata::class);
+        $metadata = self::createMock(ClassMetadata::class);
         $metadata
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getFieldNames')
             ->willReturn(array_keys($types))
         ;
@@ -109,14 +111,14 @@ class MetadataPropertyFactoryTest extends TestCase
             ->method('getAssociationNames')
         ;
         $metadata
-            ->expects($this->exactly(\count($types)))
+            ->expects(self::exactly(\count($types)))
             ->method('getTypeOfField')
             ->willReturnCallback(fn ($type) => $types[$type])
         ;
 
         $this
             ->metadataHelper
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('findMetadata')
             ->with('MyClass')
             ->willReturn($metadata)
@@ -142,7 +144,8 @@ class MetadataPropertyFactoryTest extends TestCase
         }
     }
 
-    public function testCreatePropertiesWithTooManyAssociationFields(): void
+    #[Test]
+    public function itCreatesPropertiesWithTooManyAssociationFields(): void
     {
         $types = [
             'my_date' => 'datetime',
@@ -157,19 +160,19 @@ class MetadataPropertyFactoryTest extends TestCase
             'my_string7' => 'string',
             'my_string8' => 'string',
         ];
-        $metadata = $this->createMock(ClassMetadata::class);
+        $metadata = self::createMock(ClassMetadata::class);
         $metadata
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getFieldNames')
             ->willReturn([])
         ;
         $metadata
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getAssociationNames')
             ->willReturn(array_keys($types))
         ;
         $metadata
-            ->expects($this->exactly(\count($types)))
+            ->expects(self::exactly(\count($types)))
             ->method('isCollectionValuedAssociation')
             ->willReturnCallback(function () {
                 return true;
@@ -178,7 +181,7 @@ class MetadataPropertyFactoryTest extends TestCase
 
         $this
             ->metadataHelper
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('findMetadata')
             ->with('MyClass')
             ->willReturn($metadata)
@@ -192,11 +195,12 @@ class MetadataPropertyFactoryTest extends TestCase
         }
     }
 
-    public function testCreatePropertiesWithoutMetadata(): void
+    #[Test]
+    public function itCreatesPropertiesWithoutMetadata(): void
     {
         $this
             ->metadataHelper
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('findMetadata')
             ->with('MyClass')
             ->willReturn(null)
@@ -206,14 +210,9 @@ class MetadataPropertyFactoryTest extends TestCase
         $this->assertCount(0, $properties);
     }
 
-    public function testService(): void
-    {
-        $this->assertServiceExists(MetadataPropertyFactoryInterface::class);
-    }
-
     protected function setUp(): void
     {
-        $this->metadataHelper = $this->createMock(MetadataHelperInterface::class);
+        $this->metadataHelper = self::createMock(MetadataHelperInterface::class);
         $this->factory = new MetadataPropertyFactory($this->metadataHelper);
     }
 }

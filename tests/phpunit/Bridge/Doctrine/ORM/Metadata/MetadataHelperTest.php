@@ -23,9 +23,9 @@ final class MetadataHelperTest extends TestCase
     #[Test]
     public function itFindMetadata(): void
     {
-        $metadataFactory = $this->createMock(ClassMetadataFactory::class);
+        $metadataFactory = self::createMock(ClassMetadataFactory::class);
         $metadataFactory
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getMetadataFor')
             ->willReturnCallback(function (string $class) {
                 $this->assertEquals('MyLittleClass', $class);
@@ -35,7 +35,7 @@ final class MetadataHelperTest extends TestCase
         ;
 
         $this->entityManager
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getMetadataFactory')
             ->willReturn($metadataFactory)
         ;
@@ -43,14 +43,9 @@ final class MetadataHelperTest extends TestCase
         $this->helper->findMetadata('MyLittleClass');
     }
 
-    public function testService(): void
-    {
-        self::assertService(MetadataHelperInterface::class);
-    }
-
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->entityManager = self::createMock(EntityManagerInterface::class);
         $this->helper = new MetadataHelper($this->entityManager);
     }
 }
