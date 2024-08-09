@@ -96,7 +96,7 @@ final class ResourceRegistryTest extends TestCase
         $resource2 = new Resource(name: 'my_other_resource', application: 'my_other_application');
         $resource3 = new Resource(name: 'my_other_resource', application: 'my_application');
 
-        $this->resourceFactory = $this->createMock(ResourceFactoryInterface::class);
+        $this->resourceFactory = self::createMock(ResourceFactoryInterface::class);
         $this->registry = new ResourceRegistry(
             [$resource1, $resource2, $resource3],
             'my_application',
