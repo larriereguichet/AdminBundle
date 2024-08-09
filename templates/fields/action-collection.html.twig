@@ -1,5 +1,4 @@
 <div class="btn-group" role="group" aria-label="Actions">
-    {{ dump(options) }}
     {% for action in options.actions %}
         {{ admin_field(action,null)|raw }}
     {% endfor %}
