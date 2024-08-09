@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Filter\Factory;
 
 use LAG\AdminBundle\Event\FilterEvent;
-use LAG\AdminBundle\Filter\FilterInterface;
+use LAG\AdminBundle\Resource\Metadata\FilterInterface;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
