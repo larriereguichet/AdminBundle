@@ -146,7 +146,7 @@ class FilterSubscriber implements EventSubscriberInterface
 Usually the filter form is built from the configuration. When the yaml configuration is not sufficient, you can add 
 your custom filter object or remove existing filters.
 
-> Filters object should implement `LAG\AdminBundle\Resource\Metadata\FilterInterface`.
+> Filters object should implement `LAG\AdminBundle\Filter\FilterInterface`.
 
 ```php
 use LAG\AdminBundle\Event\EventsOLD;
