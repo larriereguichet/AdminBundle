@@ -53,7 +53,7 @@ class ResourceContextTest extends TestCase
 
         $this
             ->resourceRegistry
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('get')
             ->with('my_resource')
             ->willReturn($resource)
@@ -110,7 +110,7 @@ class ResourceContextTest extends TestCase
 
         $this
             ->parametersExtractor
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getApplicationName')
             ->with($request)
             ->willReturn(null)
@@ -123,8 +123,8 @@ class ResourceContextTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->parametersExtractor = $this->createMock(ResourceParametersExtractorInterface::class);
-        $this->resourceRegistry = $this->createMock(ResourceRegistryInterface::class);
+        $this->parametersExtractor = self::createMock(ResourceParametersExtractorInterface::class);
+        $this->resourceRegistry = self::createMock(ResourceRegistryInterface::class);
         $this->resourceContext = new ResourceContext(
             $this->parametersExtractor,
             $this->resourceRegistry,
