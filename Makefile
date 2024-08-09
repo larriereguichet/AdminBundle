@@ -1,7 +1,7 @@
 all: install
 
 current_dir = $(shell pwd)
-DOCKER_COMPOSE=docker-compose
+DOCKER_COMPOSE=docker compose
 PHP = php
 JS = $(DOCKER_COMPOSE) run --rm js
 
