@@ -2,28 +2,35 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Validation\Validator;
+namespace LAG\AdminBundle\Validation\Constraint;
 
-use LAG\AdminBundle\Grid\Registry\GridRegistryInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Twig\Environment;
 
-class GridExistValidator extends ConstraintValidator
+class TemplateValidator extends ConstraintValidator
 {
     public function __construct(
-        private GridRegistryInterface $registry,
+        private Environment $environment,
     ) {
     }
 
     public function validate(mixed $value, Constraint $constraint): void
     {
+        if ($value === null) {
+            return;
+        }
+
         if (!\is_string($value)) {
             throw new UnexpectedTypeException($value, 'string');
         }
 
-        if (!$this->registry->has($value)) {
-            $this->context->addViolation(sprintf('The grid "%s" does not exists', $value));
+        if (!$this->environment->getLoader()->exists($value)) {
+            $this
+                ->context
+                ->addViolation(sprintf('The twig template "%s" does not exists', $value))
+            ;
         }
     }
 }
