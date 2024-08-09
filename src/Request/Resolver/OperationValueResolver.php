@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Request\Resolver;
 
-use LAG\AdminBundle\Metadata\Context\ResourceContextInterface;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-class OperationValueResolver implements ValueResolverInterface
+final readonly class OperationValueResolver implements ValueResolverInterface
 {
     public function __construct(
         private ResourceContextInterface $resourceContext,

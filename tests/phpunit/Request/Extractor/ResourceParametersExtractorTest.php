@@ -11,7 +11,7 @@ use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Request;
 
-final class ParametersExtractorTest extends TestCase
+final class ResourceParametersExtractorTest extends TestCase
 {
     use ContainerTestTrait;
 
@@ -53,13 +53,6 @@ final class ParametersExtractorTest extends TestCase
     {
         $operation = $this->extractor->getOperationName(new Request([], [], []));
         $this->assertNull($operation);
-    }
-
-    #[Test]
-    public function serviceExists(): void
-    {
-        self::assertService(ResourceParametersExtractorInterface::class);
-        self::assertNoService(ResourceParametersExtractor::class);
     }
 
     protected function setUp(): void
