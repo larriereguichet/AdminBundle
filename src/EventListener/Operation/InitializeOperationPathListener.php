@@ -8,6 +8,7 @@ use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use Symfony\Component\String\Inflector\EnglishInflector;
+
 use function Symfony\Component\String\u;
 
 final readonly class InitializeOperationPathListener

@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Resource\Registry;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Exception\UnexpectedTypeException;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Resource\Locator\MetadataLocatorInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistry;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Tests\ContainerTestTrait;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Form\Type\Resource;
 
 use Symfony\Component\Form\AbstractType;
@@ -13,7 +15,6 @@ class ResourceCollectionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
             $data = $event->getData();
@@ -23,7 +24,6 @@ class ResourceCollectionType extends AbstractType
             }
 
             foreach ($data as $resource) {
-
             }
         });
     }

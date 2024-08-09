@@ -21,13 +21,13 @@ class EventFilterFactory implements FilterFactoryInterface
     {
         $event = new FilterEvent($filter);
         $this->eventDispatcher->dispatch($event, FilterEvent::FILTER_CREATE);
-        $this->eventDispatcher->dispatch($event, sprintf(FilterEvent::FILTER_CREATE_PATTERN, $filter->getName()));
+        $this->eventDispatcher->dispatch($event, \sprintf(FilterEvent::FILTER_CREATE_PATTERN, $filter->getName()));
 
         $filter = $this->decorated->create($filter);
 
         $event = new FilterEvent($filter);
         $this->eventDispatcher->dispatch($event, FilterEvent::FILTER_CREATED);
-        $this->eventDispatcher->dispatch($event, sprintf(FilterEvent::FILTER_CREATED_PATTERN, $filter->getName()));
+        $this->eventDispatcher->dispatch($event, \sprintf(FilterEvent::FILTER_CREATED_PATTERN, $filter->getName()));
 
         return $filter;
     }
@@ -38,7 +38,7 @@ class EventFilterFactory implements FilterFactoryInterface
 
         $event = new FilterEvent($filter);
         $this->eventDispatcher->dispatch($event, FilterEvent::FILTER_CREATED);
-        $this->eventDispatcher->dispatch($event, sprintf(FilterEvent::FILTER_CREATED_PATTERN, $filter->getName()));
+        $this->eventDispatcher->dispatch($event, \sprintf(FilterEvent::FILTER_CREATED_PATTERN, $filter->getName()));
 
         return $filter;
     }

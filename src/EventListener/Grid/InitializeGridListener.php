@@ -12,6 +12,7 @@ use LAG\AdminBundle\Resource\Metadata\Get;
 use LAG\AdminBundle\Resource\Metadata\Grid;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Update;
+
 use function Symfony\Component\String\u;
 
 final readonly class InitializeGridListener
@@ -118,7 +119,6 @@ final readonly class InitializeGridListener
                         ->replace('{operation}', $action->getOperation())
                         ->toString()
                 );
-
             } else {
                 $action = $action->withLabel(u($operation->getName())->title()->toString());
             }

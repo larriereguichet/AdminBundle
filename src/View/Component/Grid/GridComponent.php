@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\View\Component\Grid;
 
 use LAG\AdminBundle\Exception\Exception;
@@ -40,7 +42,7 @@ class GridComponent
         array $titleAttributes = [],
     ): void {
         if ($grid->template === null && $grid->component === null) {
-            throw new Exception(sprintf('The grid "%s" should have a template or a component', $grid->name));
+            throw new Exception(\sprintf('The grid "%s" should have a template or a component', $grid->name));
         }
         $this->headerRowAttributes = new ComponentAttributes($grid->headerRowAttributes + $headerRowAttributes);
         $this->headerAttributes = new ComponentAttributes($grid->headerAttributes + $headerAttributes);

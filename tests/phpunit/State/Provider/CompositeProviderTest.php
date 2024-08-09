@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\State\Provider;
 
 use LAG\AdminBundle\Exception\Exception;
@@ -39,7 +41,7 @@ class CompositeProviderTest extends TestCase
         $resource = new Resource(name: 'my_resource');
         $operation = $operation->withResource($resource);
 
-        $this->expectExceptionMessage(sprintf(
+        $this->expectExceptionMessage(\sprintf(
             'The admin resource "%s" and operation "%s" is not supported by any provider',
             'my_resource',
             $operation->getName()

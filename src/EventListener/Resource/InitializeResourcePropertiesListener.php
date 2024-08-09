@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\EventListener\Resource;
 
 use LAG\AdminBundle\Event\ResourceEvent;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Metadata\ResourceLink;
+
 use function Symfony\Component\String\u;
 
 final readonly class InitializeResourcePropertiesListener

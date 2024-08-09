@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
 
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
@@ -27,7 +29,6 @@ class ORMOutputProvider implements ProviderInterface
             $pager = new Pagerfanta(new CallbackAdapter(function () use ($data) {
                 return $data->getNbResults();
             }, function () {
-
                 // TODO ??
             }));
         }

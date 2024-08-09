@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class Property implements PropertyInterface
 {
     public function __construct(
-        #[Assert\NotBlank(message: 'The name should not be empty')]
+        #[NotBlank(message: 'The name should not be empty')]
         #[Assert\Length(
             min: 1,
             max: 255,
@@ -22,10 +22,10 @@ class Property implements PropertyInterface
         private ?string $name = null,
 
         #[Assert\NotNull(message: 'The property path should not be null. Use false instead')]
-        private string|null|bool $propertyPath = null,
+        private string|bool|null $propertyPath = null,
 
         #[Assert\NotNull(message: 'The label should not be null. Use false instead to disable the label')]
-        private string|null|bool $label = null,
+        private string|bool|null $label = null,
 
         #[TemplateValid(message: 'The template should be a valid Twig template')]
         #[NotBlank(message: 'The template should not be blank')]
@@ -35,7 +35,7 @@ class Property implements PropertyInterface
 
         private bool $translatable = false,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The translation domain should not be empty. Use null instead')]
+        #[NotBlank(allowNull: true, message: 'The translation domain should not be empty. Use null instead')]
         private ?string $translationDomain = null,
 
         private array $attributes = [],
@@ -44,7 +44,7 @@ class Property implements PropertyInterface
 
         private array $headerAttributes = [],
 
-        #[Assert\NotBlank(allowNull: true, message: 'The data transformer should not be empty. Use null instead')]
+        #[NotBlank(allowNull: true, message: 'The data transformer should not be empty. Use null instead')]
         private ?string $dataTransformer = null,
     ) {
     }
@@ -62,7 +62,7 @@ class Property implements PropertyInterface
         return $self;
     }
 
-    public function getPropertyPath(): string|null|bool
+    public function getPropertyPath(): string|bool|null
     {
         return $this->propertyPath;
     }
@@ -75,7 +75,7 @@ class Property implements PropertyInterface
         return $self;
     }
 
-    public function getLabel(): string|null|bool
+    public function getLabel(): string|bool|null
     {
         return $this->label;
     }

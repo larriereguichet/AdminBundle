@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Form\Type\Resource;
 
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;

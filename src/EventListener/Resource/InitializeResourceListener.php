@@ -7,6 +7,7 @@ namespace LAG\AdminBundle\EventListener\Resource;
 use LAG\AdminBundle\Event\ResourceEvent;
 use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
+
 use function Symfony\Component\String\u;
 
 final readonly class InitializeResourceListener

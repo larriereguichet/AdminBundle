@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Resource\Resolver;
 
-use LAG\AdminBundle\Resource\Locator\MetadataLocatorInterface;
 use LAG\AdminBundle\Resource\Locator\PropertyLocatorInterface;
 use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
@@ -32,8 +33,8 @@ final class ResourceResolverTest extends TestCase
             ->expects(self::exactly(2))
             ->method('resolveClass')
             ->willReturnMap([
-                [realpath( __DIR__.'/../../../app/src/Entity/TestEntity.php'), new \ReflectionClass(TestEntity::class)],
-                [realpath( __DIR__.'/../../../app/spp/config/resources/admin/Project.php'), null],
+                [realpath(__DIR__.'/../../../app/src/Entity/TestEntity.php'), new \ReflectionClass(TestEntity::class)],
+                [realpath(__DIR__.'/../../../app/spp/config/resources/admin/Project.php'), null],
             ])
         ;
         $this->resourceLocator

@@ -6,7 +6,6 @@ namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\State;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\ManagerException;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Exception\ManagerNotFoundException;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Resource\Metadata\Create;

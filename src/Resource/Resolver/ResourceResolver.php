@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Resource\Resolver;
 
 use LAG\AdminBundle\Resource\Locator\PropertyLocatorInterface;
 use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 final readonly class ResourceResolver implements ResourceResolverInterface

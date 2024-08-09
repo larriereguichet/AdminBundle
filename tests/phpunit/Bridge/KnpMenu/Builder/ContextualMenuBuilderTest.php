@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Bridge\KnpMenu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Menu\Builder\ContextualMenuBuilder;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
-use LAG\AdminBundle\Resource\Metadata\Action;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\Link;
 use LAG\AdminBundle\Resource\Metadata\Resource;
@@ -17,7 +18,6 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class ContextualMenuBuilderTest extends TestCase
 {

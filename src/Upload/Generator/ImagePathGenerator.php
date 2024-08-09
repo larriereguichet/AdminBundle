@@ -17,6 +17,6 @@ class ImagePathGenerator implements ImagePathGeneratorInterface
         $hash = bin2hex(random_bytes(16));
         $path = $hash.'.'.$file->guessExtension();
 
-        return sprintf('%s/%s/%s', substr($path, 0, 2), substr($path, 2, 2), substr($path, 4));
+        return \sprintf('%s/%s/%s', substr($path, 0, 2), substr($path, 2, 2), substr($path, 4));
     }
 }

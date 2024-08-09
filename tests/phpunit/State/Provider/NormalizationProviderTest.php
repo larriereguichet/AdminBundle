@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\State\Provider;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,7 +27,7 @@ class NormalizationProviderTest extends TestCase
     private MockObject $denormalizer;
 
     /** @dataProvider supportsProvider */
-    public function testSupports(OperationInterface $operation, mixed $data, bool $supports, string $expectedType = null): void
+    public function testSupports(OperationInterface $operation, mixed $data, bool $supports, ?string $expectedType = null): void
     {
         $this
             ->decoratedProvider
@@ -53,8 +55,6 @@ class NormalizationProviderTest extends TestCase
                 ->with(['normalized' => 'data'], $expectedType, null, ['groups' => ['denormalization']])
                 ->willReturn($denormalizedData)
             ;
-
-
         } else {
             $this
                 ->normalizer
@@ -101,14 +101,13 @@ class NormalizationProviderTest extends TestCase
         yield [
             (new Get(output: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
             new ArrayCollection(),
-            false
+            false,
         ];
         yield [
             (new Get(output: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
             new ArrayCollection(),
             false,
         ];
-
 
         yield [
             (new Get(

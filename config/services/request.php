@@ -42,7 +42,6 @@ return static function (ContainerConfigurator $container): void {
     ;
     $services->set(UriVariablesExtractorInterface::class, UriVariablesExtractor::class);
 
-
     // Request context providers
     $services->set(ContextProviderInterface::class, CompositeContextProvider::class)
         ->arg('$contextProviders', tagged_iterator('lag_admin.request_context_provider'))

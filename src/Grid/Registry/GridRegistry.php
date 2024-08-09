@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Grid\Registry;
 
 use LAG\AdminBundle\Exception\Exception;
@@ -32,7 +34,7 @@ final class GridRegistry implements GridRegistryInterface
         }
 
         if ($this->has($grid->getName())) {
-            throw new Exception(sprintf('The grid "%s" already exists', $grid->getName()));
+            throw new Exception(\sprintf('The grid "%s" already exists', $grid->getName()));
         }
         $this->grids[$grid->getName()] = $grid;
     }
@@ -40,7 +42,7 @@ final class GridRegistry implements GridRegistryInterface
     public function get(string $gridName): Grid
     {
         if (!$this->has($gridName)) {
-            throw new Exception(sprintf('The grid "%s" does not exists', $gridName));
+            throw new Exception(\sprintf('The grid "%s" does not exists', $gridName));
         }
 
         return $this->grids[$gridName];
@@ -48,7 +50,7 @@ final class GridRegistry implements GridRegistryInterface
 
     public function has(string $gridName): bool
     {
-        return array_key_exists($gridName, $this->grids);
+        return \array_key_exists($gridName, $this->grids);
     }
 
     public function remove(string $gridName): void

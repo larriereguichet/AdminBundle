@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Resource\Metadata;
 
 use LAG\AdminBundle\Form\Type\Resource\ResourceHiddenType;
@@ -153,6 +155,7 @@ class Grid
     {
         $self = clone $this;
         $self->attributes = $attributes;
+
         return $self;
     }
 
@@ -165,6 +168,7 @@ class Grid
     {
         $self = clone $this;
         $self->rowAttributes = $rowAttributes;
+
         return $self;
     }
 
@@ -177,6 +181,7 @@ class Grid
     {
         $self = clone $this;
         $self->headerRowAttributes = $headerRowAttributes;
+
         return $self;
     }
 

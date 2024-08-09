@@ -29,11 +29,7 @@ final readonly class DataMapper implements DataMapperInterface
         }
 
         if (!$this->accessor->isReadable($data, $property->getPropertyPath())) {
-            throw new Exception(sprintf(
-                'The property path "%s" is not readable in data of type "%s"',
-                $property->getPropertyPath(),
-                get_debug_type($data),
-            ));
+            throw new Exception(\sprintf('The property path "%s" is not readable in data of type "%s"', $property->getPropertyPath(), get_debug_type($data)));
         }
 
         return $this->accessor->getValue($data, $property->getPropertyPath());

@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\EventListener\Operation;
 
 use LAG\AdminBundle\Event\OperationEvent;
+
 use function Symfony\Component\String\u;
 
 final readonly class InitializeOperationRouteParametersListener

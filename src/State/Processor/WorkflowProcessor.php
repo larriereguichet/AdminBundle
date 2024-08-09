@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\State\Processor;
 
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;

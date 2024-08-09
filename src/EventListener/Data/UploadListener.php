@@ -37,12 +37,7 @@ final readonly class UploadListener
                     }
 
                     if (!$image instanceof ImageInterface) {
-                        throw new Exception(sprintf(
-                            'The image property "%s" expects an "%s", got "%s"',
-                            $property->getName(),
-                            ImageInterface::class,
-                            is_object($image) ? get_class($image) : gettype($image),
-                        ));
+                        throw new Exception(\sprintf('The image property "%s" expects an "%s", got "%s"', $property->getName(), ImageInterface::class, \is_object($image) ? $image::class : \gettype($image)));
                     }
 
                     if ($image->hasFile()) {

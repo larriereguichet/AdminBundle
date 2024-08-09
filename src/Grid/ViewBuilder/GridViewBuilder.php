@@ -12,7 +12,6 @@ use LAG\AdminBundle\Exception\InvalidGridException;
 use LAG\AdminBundle\Grid\View\GridView;
 use LAG\AdminBundle\Grid\View\RowView;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
-use LAG\AdminBundle\Resource\DataMapper\ResourceDataMapper;
 use LAG\AdminBundle\Resource\Metadata\Collection;
 use LAG\AdminBundle\Resource\Metadata\CompoundPropertyInterface;
 use LAG\AdminBundle\Resource\Metadata\Grid;
@@ -63,7 +62,7 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
             context: $context,
             actions: $this->buildCollectionActions($grid, $data),
             options: $grid->getOptions(),
-            extraColumn: count($grid->getActions()) > 0,
+            extraColumn: \count($grid->getActions()) > 0,
         );
     }
 
@@ -118,7 +117,7 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
 
             if ($property instanceof Collection) {
                 if (!is_iterable($cellData)) {
-                    throw new Exception(sprintf('The collection property "%s" requires iterable data', $property->getName()));
+                    throw new Exception(\sprintf('The collection property "%s" requires iterable data', $property->getName()));
                 }
                 $context['children'] = [];
 

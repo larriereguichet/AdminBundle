@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\State\Processor;
 
 use LAG\AdminBundle\Resource\Metadata\Create;
@@ -45,7 +47,6 @@ class ValidationProcessorTest extends TestCase
         ;
 
         $this->processor->process($data, $operation, ['my_var' => 'value'], ['test' => 'ok']);
-
     }
 
     /** @dataProvider operations */

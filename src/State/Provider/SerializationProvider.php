@@ -22,15 +22,15 @@ class SerializationProvider implements ProviderInterface
         $data = $this->provider->provide($operation, $uriVariables, $context);
 
         if (
-            ($context['json'] ?? false) !== true ||
-            !$operation->useAjax() ||
-            ($operation instanceof CollectionOperationInterface && !is_array($data))
+            ($context['json'] ?? false) !== true
+            || !$operation->useAjax()
+            || ($operation instanceof CollectionOperationInterface && !\is_array($data))
         ) {
             return $data;
         }
         $type = $operation->getResource()->getDataClass();
 
-        if ($operation instanceof CollectionOperationInterface && is_array($data)) {
+        if ($operation instanceof CollectionOperationInterface && \is_array($data)) {
             $type .= '[]';
         }
 

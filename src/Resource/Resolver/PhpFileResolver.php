@@ -14,7 +14,7 @@ final readonly class PhpFileResolver implements PhpFileResolverInterface
 
         $callback = $loader($path);
 
-        if (!is_callable($callback)) {
+        if (!\is_callable($callback)) {
             return [];
         }
         $result = $callback();

@@ -12,34 +12,34 @@ use Symfony\Component\Validator\Constraints as Assert;
 abstract class CollectionOperation extends Operation implements CollectionOperationInterface
 {
     public function __construct(
-        string $name = null,
-        string $title = null,
-        string $description = null,
-        string $icon = null,
-        string $template = null,
+        ?string $name = null,
+        ?string $title = null,
+        ?string $description = null,
+        ?string $icon = null,
+        ?string $template = null,
         array $permissions = [],
-        string $controller = null,
-        string $route = null,
+        ?string $controller = null,
+        ?string $route = null,
         array $routeParameters = [],
         array $methods = [],
-        string $path = null,
-        string $redirectRoute = null,
+        ?string $path = null,
+        ?string $redirectRoute = null,
         array $redirectRouteParameters = [],
-        string $form = null,
+        ?string $form = null,
         array $formOptions = [],
         ?string $processor = ORMProcessor::class,
         string $provider = ORMProvider::class,
         ?array $identifiers = null,
-        array $contextualActions = null,
-        array $itemActions = null,
-        string $redirectApplication = null,
-        string $redirectResource = null,
-        string $redirectOperation = null,
+        ?array $contextualActions = null,
+        ?array $itemActions = null,
+        ?string $redirectApplication = null,
+        ?string $redirectResource = null,
+        ?string $redirectOperation = null,
         ?bool $validation = true,
-        array $validationContext = null,
+        ?array $validationContext = null,
         ?bool $ajax = true,
-        array $normalizationContext = null,
-        array $denormalizationContext = null,
+        ?array $normalizationContext = null,
+        ?array $denormalizationContext = null,
         ?string $input = null,
         ?string $output = null,
 
@@ -247,7 +247,6 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
 
         return $self;
     }
-
 
     public function withGridOptions(array $gridOptions): self
     {

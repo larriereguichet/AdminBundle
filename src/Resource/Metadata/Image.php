@@ -12,10 +12,10 @@ class Image extends Property
 {
     public function __construct(
         ?string $name = null,
-        string $propertyPath = null,
-        string $label = null,
+        ?string $propertyPath = null,
+        ?string $label = null,
         bool $translatable = false,
-        string $translationDomain = null,
+        ?string $translationDomain = null,
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = ImageDataTransformer::class,

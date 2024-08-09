@@ -11,7 +11,7 @@ class InvalidFilterException extends Exception
 {
     public function __construct(?string $filterName, ConstraintViolationListInterface $errors)
     {
-        $message = sprintf('The configuration of the filter "%s" is not valid. ', $filterName);
+        $message = \sprintf('The configuration of the filter "%s" is not valid. ', $filterName);
 
         /** @var ConstraintViolationInterface $error */
         foreach ($errors as $error) {

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\View\Component\Cell;
 
 use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Resource\Metadata\Text;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
 use function Symfony\Component\String\u;
 
 #[AsTwigComponent(
@@ -28,7 +31,7 @@ class TextComponent
         }
         /** @var Text $property */
         $property = $cell->property;
-        $data = u((string)$data);
+        $data = u((string) $data);
 
         if ($property->getLength() && $property->getReplace() && $data->length() > $property->getLength()) {
             $data = $data->truncate($property->getLength())->append($property->getReplace());

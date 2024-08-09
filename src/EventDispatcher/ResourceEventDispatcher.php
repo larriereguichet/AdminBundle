@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\EventDispatcher;
 
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 use function Symfony\Component\String\u;
 
 readonly class ResourceEventDispatcher implements ResourceEventDispatcherInterface
@@ -33,7 +34,7 @@ readonly class ResourceEventDispatcher implements ResourceEventDispatcherInterfa
         if ($operationName) {
             $eventNames = [
                 $eventName->prepend('lag_admin.'),
-                $eventName->replace('operation', '{application}.{resource}.{operation}')
+                $eventName->replace('operation', '{application}.{resource}.{operation}'),
             ];
         }
 
@@ -57,7 +58,6 @@ readonly class ResourceEventDispatcher implements ResourceEventDispatcherInterfa
     ): void {
         $eventName = u($eventName);
         $eventNames = [
-
         ];
     }
 }

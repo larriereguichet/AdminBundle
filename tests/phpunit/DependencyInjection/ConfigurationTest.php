@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\DependencyInjection;
 
 use LAG\AdminBundle\DependencyInjection\Configuration;
-use LAG\AdminBundle\Resource\Metadata\Image;
 use LAG\AdminBundle\Tests\TestCase;
 
 class ConfigurationTest extends TestCase
@@ -44,7 +43,7 @@ class ConfigurationTest extends TestCase
             ],
             'uploads' => ['storage' => 'lag_admin_image.storage'],
             'media_directory' => 'media/images',
-            'applications' => []
+            'applications' => [],
         ], $data);
     }
 }

@@ -20,7 +20,7 @@ final readonly class SluggerRegistry implements SluggerRegistryInterface
         $slugger = $sluggers[$name] ?? null;
 
         if ($slugger === null) {
-            throw new Exception(sprintf('The slugger "%s" does not exist. Did you add the "lag_admin.slugger" tag ?', $name));
+            throw new Exception(\sprintf('The slugger "%s" does not exist. Did you add the "lag_admin.slugger" tag ?', $name));
         }
 
         return $slugger;

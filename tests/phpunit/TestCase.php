@@ -13,7 +13,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
-     * Assert that the given service class is configured in the service configuration
+     * Assert that the given service class is configured in the service configuration.
      */
     protected function assertServiceExists(string $serviceId): void
     {
