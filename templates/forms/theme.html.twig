@@ -15,20 +15,62 @@
 {%- endblock form_errors %}
 
 {% block collection_widget %}
-    <div class="collection-widget">
-        {% if prototype is defined and not prototype.rendered %}
-            {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
-        {% endif %}
-        {{- block('form_widget') -}}
+    {% set data = form.vars.data %}
+
+    <div class="collection-widget"
+         {{ stimulus_controller('lag-admin-collection') }}
+         data-index-value="{{ data|length > 0 ? data|length + 1 : 0 }}"
+         data-delete-label="{{ form.vars.deleteLabel|default('')|trans({}, 'admin') }}"
+         {% if prototype is defined %}
+         data-prototype-value="{{ _self.collection_item(
+             form.vars.prototype,
+             form.vars.allow_delete,
+             form.vars.delete_label,
+             '__name__'
+         )|e }}"
+         {% endif %}>
+
+        <div {{ stimulus_target('lag-admin-collection', 'collectionContainer') }}>
+            {% for child in form %}
+                {{ _self.collection_item(child, allow_delete, delete_label, loop.index0) }}
+            {% endfor %}
+        </div>
 
         {% if form.vars.allow_add %}
-            <div class="button-container">
+            <div class="button-container mt-1">
                 <button type="button"
-                        class="btn btn-primary add-button">{{ 'lag.admin.add' | trans }}</button>
+                        class="btn btn-primary add-button"
+                        {{ stimulus_action('lag-admin-collection', 'addCollectionElement') }}>
+                    {{ form.vars.add_label|trans({}, 'admin') }}
+                </button>
             </div>
         {% endif %}
     </div>
 {% endblock collection_widget %}
+
+{% macro collection_item(form, allow_delete, delete_label, index) %}
+    {% apply spaceless %}
+        <div data-form-collection="item"
+             data-form-collection-index="{{ index }}"
+             class="collection-item">
+            <div class="collection-box{% if form|length == 1 %} unique-field{% endif %}">
+                {{ form_row(form) }}
+
+                {% if allow_delete %}
+                    <p class="text-right">
+                        <a href="#"
+                           {{ stimulus_action('lag-admin-collection', 'removeCollectionElement') }}
+                           data-form-collection-index="{{ index }}"
+                           class="btn btn-danger">
+                            <i class="glyphicon glyphicon-remove collection-button-remove"></i>
+                            {{ delete_label|trans }}
+                        </a>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    {% endapply %}
+{% endmacro %}
 
 {% block select2_entity_widget %}
     <div class="">
@@ -66,22 +108,22 @@
     {%- endif -%}
 {%- endblock datetime_widget %}
 
-{% block lag_admin_image_row %}
-    <div data-controller="lag-admin-image-form">
-        {{ form_row(form) }}
-    </div>
-{% endblock %}
+{#{% block lag_admin_image_row %}#}
+{#    <div data-controller="lag-admin-image-form">#}
+{#        lol#}
+{#        {{ form_row(form) }}#}
+{#    </div>#}
+{#{% endblock %}#}
 
 {% block lag_admin_image_widget %}
     {% if data %}
-        <div class="image-card">
-            <div class="card"
-                 style="width: 100px">
-                <img src="{{ vich_uploader_asset(data, form.vars.image_property) }}"
-                     alt="">
-            </div>
-            <a href=""
-               data-action="lag-admin-image-form#hideImage:prevent">{{ 'lag_admin.image.remove_image'|trans({}, 'admin') }}</a>
+        <div class="lag-admin image-card d-flex">
+            <a href="{{ data.path|imagine_filter(form.vars.image_full_filter) }}"
+               class="card"
+               target="_blank">
+                <img src="{{ data.path|imagine_filter(form.vars.image_filter) }}"
+                     alt="{{ data.name|default('') }}">
+            </a>
         </div>
     {% endif %}
 

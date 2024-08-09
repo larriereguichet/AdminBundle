@@ -1,5 +1,7 @@
-<span>{{ data|format_datetime(options.dateFormat, 'none') }}</span>
+<p {{ attributes }}>
+    <span class="date">{{ data|format_datetime(options.dateFormat, 'none') }}</span>
 
-{% if options.timeFormat != 'none' %}
-    <span>{{ data|format_datetime('none', options.timeFormat) }}</span>
-{% endif %}
+    {% if options.timeFormat != 'none' %}
+        <span class="time">{{ data|format_datetime('none', options.timeFormat) }}</span>
+    {% endif %}
+</p>

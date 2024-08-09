@@ -7,8 +7,6 @@
               content="IE=edge"/>
         <meta name="viewport"
               content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-        <meta name="description"
-              content="{{ lag_admin_config('description') }}"/>
     {% endblock %}
 
     {% block favicon %}
@@ -20,57 +18,60 @@
               type="image/x-icon">
     {% endblock %}
 
-    <title>{% block page_title %}{{ lag_admin_config('title') }}{% endblock %}</title>
+    <title>{% block page_title %}Admin{% endblock %}</title>
 
-    {% block stylesheets %}
-        <link rel="stylesheet"
-              href="{{ asset('/bundles/lagadmin/admin.css') }}"/>
-        <link rel="stylesheet"
-              href="{{ asset('/bundles/lagadmin/bootstrap.css') }}"/>
-        <link rel="stylesheet"
-              href="{{ asset('/bundles/lagadmin/choice-js.css') }}"/>
+    {% block admin_stylesheets %}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+              rel="stylesheet"
+              integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+              crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+              rel="stylesheet">
+        <link href="{{ asset('/bundles/lagadmin/admin.css') }}"
+              rel="stylesheet">
+        <link href="{{ asset('/bundles/lagadmin/choice-js.css') }}"
+              rel="stylesheet">
     {% endblock %}
+    {% block stylesheets %}{% endblock %}
 
-    {% block javascripts %}
+    {% block admin_javascripts %}
         <script src="{{ asset('/bundles/lagadmin/admin.js') }}"
                 defer="defer"></script>
-        <script src="{{ asset('/bundles/lagadmin/bootstrap.js') }}"
-                defer="defer"></script>
     {% endblock %}
+    {% block javascripts %}{% endblock %}
 
     {% block head %}{% endblock %}
 </head>
 
 {% block body %}
-    <body>
+    <body {% block body_attributes %}{% endblock %} data-turbo="false">
     {% block header %}
         {% include '@LAGAdmin/layout/header.html.twig' %}
     {% endblock %}
 
     {% block container %}
-    <div class="container-fluid">
-        <div class="row flex-nowrap">
-            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-                {% block sidebar %}
-                    {% include '@LAGAdmin/layout/sidebar.html.twig' %}
-                {% endblock %}
-            </div>
-            <div class="col py-3">
-                <div class="card p-2">
-                    <div class="card-body">
-                        <div class="card_title">
-                            {% block title_container %}
-                                <h1 class="h3 mb-4 text-gray-800">{% block title %}{% endblock %}</h1>
-                            {% endblock %}
-                        </div>
-                        <div class="card_text">
-                            {% block content %}{% endblock %}
-                        </div>
+        <div class="container-fluid">
+            {% include '@LAGAdmin/session/flash_messages.html.twig' %}
+
+            {% block layout %}
+                <div class="row flex-nowrap">
+                    <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                        {% block sidebar %}
+                            {% include '@LAGAdmin/layout/sidebar.html.twig' %}
+                        {% endblock %}
+                    </div>
+                    <div class="col py-3">
+                        {% block title_container %}
+                            <h1 class="h3 mb-4 text-gray-800">{% block title %}{% endblock %}</h1>
+                        {% endblock %}
+
+                        {% block pre_content %}{% endblock %}
+                        {% block content %}{% endblock %}
+                        {% block post_content %}{% endblock %}
                     </div>
                 </div>
-            </div>
+            {% endblock %}
         </div>
-    </div>
     {% endblock %}
 
     {% block footer %}{% endblock %}
@@ -78,10 +79,6 @@
     {% block modal %}
         {% include '@LAGAdmin/modal/modal.html.twig' %}
     {% endblock %}
-
-{#    {% if admin_media_enabled() %}#}
-{#        {% include '@JKMedia/Modal/modal.html.twig' %}#}
-{#    {% endif %}#}
     </body>
 {% endblock %}
 </html>

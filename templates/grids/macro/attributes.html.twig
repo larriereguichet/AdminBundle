@@ -1,3 +1,6 @@
-{% macro attributes(attr) %}
-{% for attribute, value in attr %} {{ attribute }}="{{ value|trim }}"{% endfor %}
+{% macro attributes(attribute_list, required = [], defaults = []) %}
+{%- for attribute, attribute_value in lag_admin_merge_attributes(attribute_list, required, defaults) -%}
+    {{- " " -}}
+    {{ attribute }}="{{ attribute_value|trim }}"
+{%- endfor -%}
 {% endmacro %}

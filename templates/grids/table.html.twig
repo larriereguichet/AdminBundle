@@ -1,0 +1,69 @@
+{% import '@LAGAdmin/grids/macro/helpers.html.twig' as lag_admin %}
+
+{% if grid.title %}
+    <h3 {{ titleAttributes.defaults({class: 'my-2'}) }}>
+        {{ lag_admin.translate(grid.title, resource.translationDomain, true) }}
+    </h3>
+{% endif %}
+
+<table {{ attributes.defaults({'class': 'admin-table table table-responsive align-middle'}) }}>
+    {% block table_head %}
+        {% if grid.options.displayHeaders|default(true) and grid.headers|length > 0 %}
+            {% if grid.actions|length > 0 %}
+                {% include '@LAGAdmin/grids/table/captions.html.twig' %}
+            {% endif %}
+
+            <thead>
+            <tr {{ headerRowAttributes }}>
+                {%- for header in grid.headers -%}
+                    <th{{ headerAttributes.defaults({'class': 'text-dark'}) }}>
+                        {{ lag_admin.translate(header.label, resource.translationDomain, true) }}
+                    </th>
+                {%- endfor -%}
+
+                {% if grid.extraColumn %}
+                    <th></th>
+                {% endif %}
+            </tr>
+            </thead>
+        {% endif %}
+    {% endblock %}
+
+    {% block table_body %}
+        {% if grid.rows|length > 0 %}
+            <tbody>
+            {% for row in grid.rows %}
+                <tr{{ rowAttributes.defaults(row.attributes) }}>
+                    {% for cell in row.cells %}
+                        <td{{ cellAttributes.defaults(cell.containerAttributes) }}>
+                            {{ lag_admin_cell(cell) }}
+                        </td>
+                    {% endfor %}
+
+                    {% if row.actions|length > 0 or grid.extraColumn %}
+                        <td>
+                            <div class="btn btn-group">
+                                {% for action in row.actions %}
+                                    {{ lag_admin_cell(action) }}
+                                {% endfor %}
+                            </div>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        {% endif %}
+    {% endblock %}
+
+    {% block table_footer %}
+        {% if grid.rows|length == 0 %}
+            <tfoot>
+            <tr>
+                <td colspan="{{ grid.headers|length + 1 }}">
+                    {{ 'lag_admin.ui.no_record'|trans({}, 'admin') }}
+                </td>
+            </tr>
+            </tfoot>
+        {% endif %}
+    {% endblock %}
+</table>
