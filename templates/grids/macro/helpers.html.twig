@@ -1,0 +1,3 @@
+{% macro translate(data, translation_domain, translation = true) %}
+    {% if translation %}{{ data|trans([], translation_domain) }}{% else %}{{ data }}{% endif %}
+{% endmacro %}

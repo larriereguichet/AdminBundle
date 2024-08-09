@@ -1,6 +1,0 @@
-{% set text = options.map[data]|default('') %}
-
-<span class="badge bg-secondary">
-{% if options.translatable %}{{ text|trans({}, options.translationDomain) }}{% else %}{{ text }}{% endif %}
-</span>
-

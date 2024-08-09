@@ -2,49 +2,25 @@
 
 {% block toolbar %}
     {% set icon %}
-        <div class="sf-toolbar-icon">
-            {{ include('@LAGAdmin/debug/icon.svg') }}
-            <span class="sf-toolbar-value">Admin</span>
-        </div>
+        {{ include('@LAGAdmin/debug/icon.svg') }}
+        <span class="sf-toolbar-value">LAG Admin</span>
     {% endset %}
 
     {% set text %}
-        <b>Application</b>
-
-        {% if collector.data.error is defined %}
-            <b>{{ collector.data.error }}</b>
-            The invalid configuration is : {{ dump(collector.data.configuration) }}
-        {% endif %}
+        <strong>LAG Admin</strong>
 
         <div class="sf-toolbar-info-piece">
-            <b>Locale</b>
-            <span class="sf-toolbar-status">{{ collector.data.application.locale|default('~') }}</span>
+            <b>Application</b>
+            <span class="sf-toolbar-status ">{{ collector.data.application }}</span>
         </div>
         <div class="sf-toolbar-info-piece">
-            <b>Translation Domain</b>
-            <span class="sf-toolbar-status">{{ collector.data.application.translation_domain }}</span>
-        </div>
-
-        <div class="sf-toolbar-info-piece">
-            <b>Admin</b>
-            <span>{{ collector.data.application.resource|default('~')|title }}</span>
+            <b>Resource</b>
+            <span class="sf-toolbar-status ">{{ collector.data.resource }}</span>
         </div>
         <div class="sf-toolbar-info-piece">
-            <b>Action</b>
-            <span>
-                {{ collector.data.application.operation|default('~')|title }}
-            </span>
+            <b>Operation</b>
+            <span class="sf-toolbar-status ">{{ collector.data.operation }}</span>
         </div>
-        <hr>
-        <b>Admins</b>
-
-        {% for name, admin in collector.data.resources %}
-            <div class="sf-toolbar-info-piece">
-                <b>{{ name | capitalize }}</b>
-                <span class="sf-toolbar-status">{{ admin.dataClass }}</span>
-            </div>
-        {% endfor %}
-
     {% endset %}
 
     {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {'link': true}) }}
@@ -55,133 +31,158 @@
         <span class="icon">
             {{ include('@LAGAdmin/debug/icon.svg') }}
         </span>
-        <strong>Admin</strong>
+        <strong>LAG Admin</strong>
     </span>
 {% endblock %}
 
 {% block panel %}
-    <script
-            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
-            crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function () {
-            $('.tab-navigation li a').on('click', function () {
-                let targetSelector = $(this).attr('href');
-                $('.tabs .tab').hide();
-                $(targetSelector).show();
-                $('.tab-navigation li').removeClass('active');
-                $(this).parents('li').addClass('active');
+    <h2>LAG Admin</h2>
 
-                return false;
-            });
+    <h3>Request</h3>
+    <table style="width: 50%">
+        <tbody>
+        <tr>
+            <th style="width: 150px">Application</th>
+            <td>"{{ collector.data.application }}"</td>
+        </tr>
+        <tr>
+            <th>Resource</th>
+            <td>"{{ collector.data.resource }}"</td>
+        </tr>
+        <tr>
+            <th>Operation</th>
+            <td>"{{ collector.data.operation }}"</td>
+        </tr>
+        </tbody>
+    </table>
 
-            $('.toggle-icon').on('click', function () {
-                $(this).toggleClass('closed');
 
-                $(this).parent().next('table').toggleClass('hidden');
-            });
-        });
-    </script>
-    <style>
-        .tab {
-            display: none;
-        }
 
-        .tab.active {
-            display: block;
-        }
 
-        table tbody tr td:first-child {
-            font-weight: bold;
-        }
 
-        .toggle-icon {
-            background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgBAMAAADpp+X/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QweDgwx4LcKwAAAABVQTFRFAAAA////////////////ZmZm////bvjBwAAAAAV0Uk5TABZwsuCVEUjgAAAAAWJLR0QF+G/pxwAAAE1JREFUGNNjSHMSYGBgUEljSGYAAzMGBwiDhUEBwmBiEIAwGBmwgTQgQGWgA7h2uIFwK+CWwp1BpHvYEqDuATEYkBlY3IOmBq6dCPcAAIT5Eg2IksjQAAAAAElFTkSuQmCC") no-repeat top left #5eb5e0;
-            cursor: pointer;
-            display: inline-block;
-            height: 16px;
-            width: 16px;
-        }
 
-        .closed .toggle-icon, .closed.toggle-icon {
-            background-position: bottom left;
-        }
-    </style>
+{#    <script#}
+{#            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"#}
+{#            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="#}
+{#            crossorigin="anonymous"></script>#}
+{#    <script>#}
+{#        $(document).ready(function () {#}
+{#            $('.tab-navigation li a').on('click', function () {#}
+{#                let targetSelector = $(this).attr('href');#}
+{#                $('.tabs .tab').hide();#}
+{#                $(targetSelector).show();#}
+{#                $('.tab-navigation li').removeClass('active');#}
+{#                $(this).parents('li').addClass('active');#}
 
-    <ul class="tab-navigation">
-        <li class="active">
-            <a href="#tab-admins">Admins</a>
-        </li>
-        <li>
-            <a href="#tab-application">Application</a>
-        </li>
-    </ul>
+{#                return false;#}
+{#            });#}
 
-    <div class="tabs">
-        <div id="tab-admins"
-             class="active tab">
-            <h1>Admins</h1>
+{#            $('.toggle-icon').on('click', function () {#}
+{#                $(this).toggleClass('closed');#}
 
-            {% for resource in collector.data.resources %}
-                <h3>{{ resource.name | capitalize }} ({{ resource.name }})</h3>
-                <table>
-                    <tbody>
-                    {% for key, value in resource %}
-                        {% if key != 'operations' %}
-                            <tr>
-                                <td>{{ key }}</td>
-                                <td>
-                                    {% if value is iterable %}
-                                        {{ value|join }}
-                                    {% else %}
-                                        {{ value }}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endif %}
-                        <tr>
-                            <td colspan="2">Operations</td>
-                        </tr>
-                        {% for operation in resource.operations %}
-                            <tr>
-                                <td colspan="2"><strong>{{ operation.name }}</strong></td>
-                            </tr>
-                            {% for key, value in operation %}
-                                <tr>
-                                    <td>{{ key }}</td>
-                                    <td>{{ dump(value) }}</td>
-                                </tr>
-                            {% endfor %}
-                        {% endfor %}
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% endfor %}
-        </div>
+{#                $(this).parent().next('table').toggleClass('hidden');#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#    <style>#}
+{#        .tab {#}
+{#            display: none;#}
+{#        }#}
 
-        <div id="tab-application"
-             class="tab">
-            <h1>Application</h1>
+{#        .tab.active {#}
+{#            display: block;#}
+{#        }#}
 
-            <table>
-                <thead>
-                <tr>
-                    <th class="key">Key</th>
-                    <th class="value">Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for key, value in collector.data.application %}
-                    <tr>
-                        <td>{{ key }}</td>
-                        <td>
+{#        table tbody tr td:first-child {#}
+{#            font-weight: bold;#}
+{#        }#}
 
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+{#        .toggle-icon {#}
+{#            background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgBAMAAADpp+X/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QweDgwx4LcKwAAAABVQTFRFAAAA////////////////ZmZm////bvjBwAAAAAV0Uk5TABZwsuCVEUjgAAAAAWJLR0QF+G/pxwAAAE1JREFUGNNjSHMSYGBgUEljSGYAAzMGBwiDhUEBwmBiEIAwGBmwgTQgQGWgA7h2uIFwK+CWwp1BpHvYEqDuATEYkBlY3IOmBq6dCPcAAIT5Eg2IksjQAAAAAElFTkSuQmCC") no-repeat top left #5eb5e0;#}
+{#            cursor: pointer;#}
+{#            display: inline-block;#}
+{#            height: 16px;#}
+{#            width: 16px;#}
+{#        }#}
+
+{#        .closed .toggle-icon, .closed.toggle-icon {#}
+{#            background-position: bottom left;#}
+{#        }#}
+{#    </style>#}
+
+{#    <ul class="tab-navigation">#}
+{#        <li class="active">#}
+{#            <a href="#tab-admins">Admins</a>#}
+{#        </li>#}
+{#        <li>#}
+{#            <a href="#tab-application">Application</a>#}
+{#        </li>#}
+{#    </ul>#}
+
+{#    <div class="tabs">#}
+{#        <div id="tab-admins"#}
+{#             class="active tab">#}
+{#            <h1>Admins</h1>#}
+
+{#            {% for resource in collector.data.resources %}#}
+{#                <h3>{{ resource.name | capitalize }} ({{ resource.name }})</h3>#}
+{#                <table>#}
+{#                    <tbody>#}
+{#                    {% for key, value in resource %}#}
+{#                        {% if key != 'operations' %}#}
+{#                            <tr>#}
+{#                                <td>{{ key }}</td>#}
+{#                                <td>#}
+{#                                    {% if value is iterable %}#}
+{#                                        {{ value|join }}#}
+{#                                    {% else %}#}
+{#                                        {{ value }}#}
+{#                                    {% endif %}#}
+{#                                </td>#}
+{#                            </tr>#}
+{#                        {% endif %}#}
+{#                        <tr>#}
+{#                            <td colspan="2">Operations</td>#}
+{#                        </tr>#}
+{#                        {% for operation in resource.operations %}#}
+{#                            <tr>#}
+{#                                <td colspan="2"><strong>{{ operation.name }}</strong></td>#}
+{#                            </tr>#}
+{#                            {% for key, value in operation %}#}
+{#                                <tr>#}
+{#                                    <td>{{ key }}</td>#}
+{#                                    <td>{{ dump(value) }}</td>#}
+{#                                </tr>#}
+{#                            {% endfor %}#}
+{#                        {% endfor %}#}
+{#                    {% endfor %}#}
+{#                    </tbody>#}
+{#                </table>#}
+{#            {% endfor %}#}
+{#        </div>#}
+
+{#        <div id="tab-application"#}
+{#             class="tab">#}
+{#            <h1>Application</h1>#}
+
+{#            <table>#}
+{#                <thead>#}
+{#                <tr>#}
+{#                    <th class="key">Key</th>#}
+{#                    <th class="value">Value</th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                {% for key, value in collector.data.application %}#}
+{#                    <tr>#}
+{#                        <td>{{ key }}</td>#}
+{#                        <td>#}
+
+{#                        </td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#                </tbody>#}
+{#            </table>#}
+{#        </div>#}
+{#    </div>#}
 {% endblock %}
