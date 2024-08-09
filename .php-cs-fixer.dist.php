@@ -4,10 +4,9 @@ $finder = PhpCsFixer\Finder::create()
     ->in('config/')
     ->in('src/')
     ->in('tests/phpunit/')
-    ->exclude([
-        'bin',
-        'build',
-        'vendor',
+    ->notPath([
+        // bug in php-cs-fixer @see https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues/8095
+        'Resource/Locator/',
     ])
 ;
 $config = new PhpCsFixer\Config();
