@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Entity;
 
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Resource\Metadata\Resource;
 
-#[AdminResource]
+#[Resource]
 class FakeEntity
 {
     public int $id;
