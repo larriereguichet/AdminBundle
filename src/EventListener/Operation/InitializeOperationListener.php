@@ -77,11 +77,6 @@ final readonly class InitializeOperationListener
             }
         }
 
-        // TODO remove
-        if (is_a($operation->getForm(), LegacyResourceType::class, true) && !\array_key_exists('resource', $operation->getFormOptions())) {
-            $operation = $operation->withFormOptions(['resource' => $resource->getName()]);
-        }
-
         if ($operation->getFormTemplate() === null && $resource->getFormTemplate() !== null) {
             $operation = $operation->withFormTemplate($resource->getFormTemplate());
         }
