@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventListener\Resource;
 
-use LAG\AdminBundle\Event\Events\ResourceEvent;
-use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Event\ResourceEvent;
+use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Resource\Metadata\Index;
+use LAG\AdminBundle\Resource\Metadata\Update;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 
-class ResourceCreatedListener
+final readonly class InitializeResourceOperationsListener
 {
     public function __construct(
         private RouteNameGeneratorInterface $routeNameGenerator,
@@ -24,12 +25,7 @@ class ResourceCreatedListener
         foreach ($resource->getOperations() as $operation) {
             if ($operation instanceof CollectionOperationInterface) {
                 if ($operation->getContextualActions() === null && $resource->hasOperation('create')) {
-                    $operation = $operation->withContextualActions([new Link(
-                        resourceName: $resource->getName(),
-                        operationName: 'create',
-                        label: $resource->getOperation('create')->getTitle(),
-                        type: 'primary',
-                    )]);
+                    $operation = $operation->withContextualActions([]);
                 }
 
                 if ($operation->getItemActions() === null) {
@@ -38,9 +34,13 @@ class ResourceCreatedListener
             }
 
             if (!$operation->getRedirectRoute()) {
-                if ($resource->hasOperation('index')) {
+                if ($resource->hasOperationOfType(Index::class)) {
                     $operation = $operation->withRedirectRoute(
-                        $this->routeNameGenerator->generateRouteName($resource, $resource->getOperation('index')),
+                        $this->routeNameGenerator->generateRouteName($resource, $resource->getOperationOfType(Index::class)),
+                    );
+                } elseif ($resource->hasOperationOfType(Update::class)) {
+                    $operation = $operation->withRedirectRoute(
+                        $this->routeNameGenerator->generateRouteName($resource, $resource->getOperationOfType(Update::class)),
                     );
                 }
             }
