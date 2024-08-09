@@ -3,14 +3,16 @@
 namespace LAG\AdminBundle\Tests\Fixtures;
 
 use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Resource\Metadata\Text;
 
-#[Resource]
+#[Resource(application: 'shop')]
+#[Resource(application: 'admin')]
 class FakeResource
 {
-    #[\LAG\AdminBundle\Resource\Metadata\Text]
+    #[Text]
     private int $id;
 
-    #[\LAG\AdminBundle\Resource\Metadata\Text]
+    #[Text]
     private string $name;
 
     private string $description;
