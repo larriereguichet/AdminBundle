@@ -42,8 +42,8 @@ final readonly class ResourceCollectionController
         $context = $this->contextProvider->getContext($operation, $request);
         $filterForm = null;
 
-        if ($operation->getFilterFormType() !== null) {
-            $filterForm = $this->formFactory->create($operation->getFilterFormType(), [], $operation->getFilterFormOptions());
+        if ($operation->getFilterForm() !== null) {
+            $filterForm = $this->formFactory->create($operation->getFilterForm(), [], $operation->getFilterFormOptions());
             $filterForm->handleRequest($request);
         }
         $data = $this->provider->provide($operation, $uriVariables, $context);
