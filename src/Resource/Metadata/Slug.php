@@ -15,28 +15,24 @@ class Slug extends Property
         bool|string|null $propertyPath = null,
         string|bool|null $label = null,
         ?string $template = '@LAGAdmin/grids/properties/slug.html.twig',
-        ?string $component = null,
         bool $sortable = true,
         bool $translatable = false,
         ?string $translationDomain = null,
         array $attributes = [],
         array $containerAttributes = [],
         array $headerAttributes = [],
-        ?string $allowedDataType = null,
         ?string $dataTransformer = null,
     ) {
         parent::__construct(
             name: $name,
             propertyPath: $propertyPath,
             label: $label, template: $template,
-            component: $component,
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
             attributes: $attributes,
             containerAttributes: $containerAttributes,
             headerAttributes: $headerAttributes,
-            allowedDataType: $allowedDataType,
             dataTransformer: $dataTransformer,
         );
     }

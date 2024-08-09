@@ -116,22 +116,22 @@ final readonly class TextFilterApplicator extends AbstractApplicator
         }
     }
 
-    private function applyJoinFilter(
-        QueryBuilder $queryBuilder,
-        FilterInterface $filter,
-        mixed $value,
-        string $alias
-    ): void {
-        // TODO join filters
-        $lastAlias = $alias;
-        $joins = u($filter->getPropertyPath())->split('.');
-        $field = array_pop($joins);
-
-        foreach ($joins as $join) {
-            $alias = $join;
-            $queryBuilder->innerJoin($lastAlias.'.'.$join, $alias);
-            $lastAlias = $alias;
-        }
-        $this->applyFilter($queryBuilder, $filter, $value, $alias, $field);
-    }
+    //    private function applyJoinFilter(
+    //        QueryBuilder $queryBuilder,
+    //        FilterInterface $filter,
+    //        mixed $value,
+    //        string $alias
+    //    ): void {
+    //        // TODO join filters
+    //        $lastAlias = $alias;
+    //        $joins = u($filter->getPropertyPath())->split('.');
+    //        $field = array_pop($joins);
+    //
+    //        foreach ($joins as $join) {
+    //            $alias = $join;
+    //            $queryBuilder->innerJoin($lastAlias.'.'.$join, $alias);
+    //            $lastAlias = $alias;
+    //        }
+    //        $this->applyFilter($queryBuilder, $filter, $value, $alias, $field);
+    //    }
 }

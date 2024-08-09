@@ -50,10 +50,6 @@ final readonly class InitializeGridListener
             ]);
         }
 
-        if ($grid->getFormOptions() === null) {
-            $grid = $grid->withFormOptions([]);
-        }
-
         if ($grid->getTranslationDomain() === null) {
             $grid = $grid->withTranslationDomain($resource->getTranslationDomain());
         }
@@ -99,19 +95,23 @@ final readonly class InitializeGridListener
         $resource = $operation->getResource();
 
         if ($action->getName() === null) {
+            /** @var Action $action */
             $action = $action->withName($action->getOperation());
         }
 
         if ($action->getResource() === null) {
+            /** @var Action $action */
             $action = $action->withResource($operation->getResource()->getName());
         }
 
         if ($action->getApplication() === null) {
+            /** @var Action $action */
             $action = $action->withApplication($operation->getResource()->getApplication());
         }
 
         if ($action->getLabel() === null) {
             if ($grid->getTranslationDomain()) {
+                /** @var Action $action */
                 $action = $action->withLabel(
                     u('{application}.{resource}.{operation}')
                         ->replace('{application}', $resource->getApplication())
@@ -120,11 +120,13 @@ final readonly class InitializeGridListener
                         ->toString()
                 );
             } else {
+                /** @var Action $action */
                 $action = $action->withLabel(u($operation->getName())->title()->toString());
             }
         }
 
         if ($action->getTranslationDomain() === null && $action->isTranslatable()) {
+            /** @var Action $action */
             $action = $action->withTranslationDomain($operation->getResource()->getTranslationDomain());
         }
 

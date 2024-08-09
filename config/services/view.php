@@ -15,7 +15,6 @@ use LAG\AdminBundle\Twig\Extension\RenderExtension;
 use LAG\AdminBundle\Twig\Extension\RoutingExtension;
 use LAG\AdminBundle\Twig\Extension\StringExtension;
 use LAG\AdminBundle\View\Component\Cell\Actions;
-use LAG\AdminBundle\View\Component\Cell\DateComponent;
 use LAG\AdminBundle\View\Component\Cell\FormComponent;
 use LAG\AdminBundle\View\Component\Cell\ImageComponent;
 use LAG\AdminBundle\View\Component\Cell\Link;
@@ -79,7 +78,6 @@ return static function (ContainerConfigurator $container): void {
     $services->set(Actions::class)->autoconfigure();
     $services->set(MapComponent::class)->autoconfigure();
     $services->set(ImageComponent::class)->autoconfigure();
-    $services->set(DateComponent::class)->autoconfigure();
     $services->set(FormComponent::class)
         ->autoconfigure()
         ->arg('$formFactory', service('form.factory'))

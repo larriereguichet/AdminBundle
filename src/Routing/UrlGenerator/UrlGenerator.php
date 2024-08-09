@@ -53,7 +53,7 @@ final readonly class UrlGenerator implements UrlGeneratorInterface
             );
         }
 
-        throw new Exception(\sprintf('Unable to generate a route for the action "%s".', $url->getName()));
+        throw new Exception('Unable to generate a route for an action.');
     }
 
     public function generateFromRouteName(string $routeName, array $routeParameters = [], mixed $data = null): string

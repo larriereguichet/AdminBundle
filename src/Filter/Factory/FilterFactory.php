@@ -42,7 +42,6 @@ final readonly class FilterFactory implements FilterFactoryInterface
 
         $definition = new $class(
             name: $name,
-            propertyPath: $property->getPropertyPath(),
         );
 
         return $this->create($definition);
