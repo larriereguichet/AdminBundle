@@ -8,6 +8,8 @@ use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Resolver\ClassResolverInterface;
 use LAG\AdminBundle\Resource\Resolver\ResourceResolver;
+use LAG\AdminBundle\Tests\Application\Entity\TestEntity;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -18,34 +20,42 @@ final class ResourceResolverTest extends TestCase
     private MockObject $resourceLocator;
     private MockObject $propertyLocator;
 
-    public function loltestResolveResources(): void
+    #[Test]
+    public function itResolveResources(): void
     {
-        $this->resourceLocator
+        $directories = [
+            __DIR__.'/../../../app/src',
+            __DIR__.'/../../../app/config/resources',
+        ];
+
+        $this->classResolver
             ->expects(self::exactly(2))
+            ->method('resolveClass')
+            ->willReturnMap([
+                [realpath( __DIR__.'/../../../app/src/Entity/TestEntity.php'), new \ReflectionClass(TestEntity::class)],
+                [realpath( __DIR__.'/../../../app/spp/config/resources/admin/Project.php'), null],
+            ])
+        ;
+        $this->resourceLocator
+            ->expects(self::once())
             ->method('locateResources')
-            ->willReturnCallback(function (string $path) {
-                $this->assertContains($path, ['/a/path', 'another/path']);
-
-                if ($path === '/a/path') {
-                    return [new Resource(name: 'MyResource', dataClass: 'MyResourceClass')];
-                }
-
-                return [];
-            })
+            ->with(new \ReflectionClass(TestEntity::class))
+            ->willReturn([new Resource()])
         ;
         $this->propertyLocator
             ->expects(self::once())
-            ->method('locateMetadata')
-            ->with('MyResourceClass')
+            ->method('locateProperties')
+            ->with(new \ReflectionClass(TestEntity::class))
             ->willReturn([])
         ;
 
-        // iterator must be consumed to trigger calls
-        $resources = iterator_to_array($this->resolver->resolveResources(['/a/path', 'another/path']));
+        $resources = $this->resolver->resolveResources($directories);
+        $resources = iterator_to_array($resources);
         $this->assertCount(1, $resources);
     }
 
-    public function loltestResolveWithoutPath(): void
+    #[Test]
+    public function itResolvesWithoutPath(): void
     {
         $this->resourceLocator
             ->expects($this->never())
@@ -53,7 +63,7 @@ final class ResourceResolverTest extends TestCase
         ;
         $this->propertyLocator
             ->expects($this->never())
-            ->method('locateMetadata')
+            ->method('locateProperties')
         ;
 
         $resources = iterator_to_array($this->resolver->resolveResources([]));
