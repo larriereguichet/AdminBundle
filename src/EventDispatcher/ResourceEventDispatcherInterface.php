@@ -13,7 +13,7 @@ interface ResourceEventDispatcherInterface
         string $eventName,
         string $applicationName,
         string $resourceName,
-        string $operationName,
+        ?string $operationName = null,
     ): void;
 
     public function dispatchGridEvents(
