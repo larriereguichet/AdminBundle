@@ -20,7 +20,7 @@ final readonly class ResourceLocator implements ResourceLocatorInterface
         $attributes = $resourceClass->getAttributes(Resource::class);
 
         foreach ($attributes as $attribute) {
-            /** @var resource $resource */
+            /** @var Resource $resource */
             $resource = $attribute->newInstance();
 
             if (!$resource->getName()) {
