@@ -49,6 +49,6 @@ class TabResourceType extends AbstractType
 
     public function getParent(): string
     {
-        return ResourceType::class;
+        return LegacyResourceType::class;
     }
 }

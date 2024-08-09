@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Form\Type\Resource;
 
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
-use LAG\AdminBundle\Metadata\AdminResource;
+use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Tests\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,7 +17,7 @@ class DeleteTypeTest extends TestCase
     {
         $resolver = new OptionsResolver();
         $type = new DeleteType();
-        $resource = new AdminResource(identifiers: ['id', 'slug']);
+        $resource = new Resource(identifiers: ['id', 'slug']);
 
         $type->configureOptions($resolver);
         $options = $resolver->resolve(['resource' => $resource]);
@@ -29,9 +29,9 @@ class DeleteTypeTest extends TestCase
 
     public function testBuildForm(): void
     {
-        $builder = $this->createMock(FormBuilderInterface::class);
+        $builder = self::createMock(FormBuilderInterface::class);
         $builder
-            ->expects($this->exactly(2))
+            ->expects(self::exactly(2))
             ->method('add')
             ->willReturnCallback(function (string $name, string $type) use ($builder) {
                 $this->assertContains($name, ['id', 'slug']);
@@ -42,6 +42,6 @@ class DeleteTypeTest extends TestCase
         ;
         $type = new DeleteType();
 
-        $type->buildForm($builder, ['resource' => new AdminResource(identifiers: ['id', 'slug'])]);
+        $type->buildForm($builder, ['resource' => new Resource(identifiers: ['id', 'slug'])]);
     }
 }
