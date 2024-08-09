@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 use function Symfony\Component\String\u;
 
-readonly class ResourceEventDispatcher implements ResourceEventDispatcherInterface
+final readonly class ResourceEventDispatcher implements ResourceEventDispatcherInterface
 {
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
