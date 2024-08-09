@@ -29,7 +29,7 @@ class NormalizationProviderTest extends TestCase
     {
         $this
             ->decoratedProvider
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('provide')
             ->with($operation, ['id' => 666], ['a_key' => 'a_value'])
             ->willReturn($data)
@@ -41,14 +41,14 @@ class NormalizationProviderTest extends TestCase
 
             $this
                 ->normalizer
-                ->expects($this->once())
+                ->expects(self::once())
                 ->method('normalize')
                 ->with($data, null, ['groups' => ['normalization']])
                 ->willReturn(['normalized' => 'data'])
             ;
             $this
                 ->denormalizer
-                ->expects($this->once())
+                ->expects(self::once())
                 ->method('denormalize')
                 ->with(['normalized' => 'data'], $expectedType, null, ['groups' => ['denormalization']])
                 ->willReturn($denormalizedData)
@@ -134,9 +134,9 @@ class NormalizationProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decoratedProvider = $this->createMock(ProviderInterface::class);
-        $this->normalizer = $this->createMock(NormalizerInterface::class);
-        $this->denormalizer = $this->createMock(DenormalizerInterface::class);
+        $this->decoratedProvider = self::createMock(ProviderInterface::class);
+        $this->normalizer = self::createMock(NormalizerInterface::class);
+        $this->denormalizer = self::createMock(DenormalizerInterface::class);
         $this->provider = new NormalizationProvider(
             $this->decoratedProvider,
             $this->normalizer,
