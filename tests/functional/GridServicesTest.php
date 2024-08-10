@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Functional;
 
+use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
 use LAG\AdminBundle\Tests\ContainerTestTrait;
 use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -16,6 +17,7 @@ final class GridServicesTest extends TestCase
     #[Test]
     public function servicesExists(): void
     {
-        $this->assertService(LinkRendererInterface::class);
+        self::assertService(LinkRendererInterface::class);
+        self::assertService(GridViewBuilderInterface::class);
     }
 }

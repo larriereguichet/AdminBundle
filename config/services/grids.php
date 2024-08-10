@@ -21,6 +21,7 @@ use LAG\AdminBundle\Grid\ViewBuilder\CellViewBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\CellViewBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
+use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use LAG\AdminBundle\Resource\Resolver\ClassResolverInterface;
 use LAG\AdminBundle\Resource\Resolver\PhpFileResolverInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
@@ -39,6 +40,7 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$actionBuilder', service(ActionViewBuilderInterface::class))
         ->arg('$eventDispatcher', service('lag_admin.event_dispatcher'))
         ->arg('$validator', service('validator'))
+        ->arg('$dataMapper', service(DataMapperInterface::class))
     ;
     $services->set(CellViewBuilderInterface::class, CellViewBuilder::class)
         ->arg('$dataTransformerRegistry', service(DataTransformerRegistryInterface::class))
