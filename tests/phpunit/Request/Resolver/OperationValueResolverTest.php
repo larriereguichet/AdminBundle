@@ -12,7 +12,6 @@ use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
 use LAG\AdminBundle\Resource\Metadata\Get;
 use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\Operation;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Metadata\Update;

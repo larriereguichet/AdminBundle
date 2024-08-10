@@ -9,7 +9,7 @@ final readonly class PhpFileResolver implements PhpFileResolverInterface
     public function resolveFile(string $path): iterable
     {
         $loader = \Closure::bind(static function ($file) {
-            return require $file;
+            return require_once $file;
         }, null, null);
 
         $callback = $loader($path);
