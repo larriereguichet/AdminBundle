@@ -26,7 +26,7 @@ final class ResourceResolverTest extends TestCase
     {
         $directories = [
             __DIR__.'/../../../app/src',
-            __DIR__.'/../../../app/config/resources',
+            __DIR__.'/../../../app/config/admin/resources',
         ];
 
         $this->classResolver
@@ -34,7 +34,7 @@ final class ResourceResolverTest extends TestCase
             ->method('resolveClass')
             ->willReturnMap([
                 [realpath(__DIR__.'/../../../app/src/Entity/TestEntity.php'), new \ReflectionClass(TestEntity::class)],
-                [realpath(__DIR__.'/../../../app/spp/config/resources/admin/Project.php'), null],
+                [realpath(__DIR__.'/../../../app/config/admin/resources/Project.php'), null],
             ])
         ;
         $this->resourceLocator
