@@ -14,6 +14,7 @@ use LAG\AdminBundle\Resource\Metadata\Link;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
 
@@ -23,6 +24,7 @@ final readonly class InitializeOperationListener
 {
     public function __construct(
         private RouteNameGeneratorInterface $routeNameGenerator,
+        private ApplicationRegistryInterface $applicationRegistry,
     ) {
     }
 
@@ -30,6 +32,11 @@ final readonly class InitializeOperationListener
     {
         $operation = $event->getOperation();
         $resource = $operation->getResource();
+        $application = null;
+
+        if ($resource->getApplication() && $this->applicationRegistry->has($resource->getApplication())) {
+            $application = $this->applicationRegistry->get($resource->getApplication());
+        }
 
         if (!$operation->getName()) {
             $operation = $operation->withName(
@@ -75,6 +82,15 @@ final readonly class InitializeOperationListener
                     ;
                 }
             }
+        }
+
+        if ($operation->getBaseTemplate() === null) {
+            $baseTemplate = '@LAGAdmin/base.html.twig';
+
+            if ($application?->getBaseTemplate()) {
+                $baseTemplate = $application->getBaseTemplate();
+            }
+            $operation = $operation->withBaseTemplate($operation->isPartial() ? '@LAGAdmin/partial.html.twig' : $baseTemplate);
         }
 
         if ($operation->getFormTemplate() === null && $resource->getFormTemplate() !== null) {

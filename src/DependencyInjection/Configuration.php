@@ -69,6 +69,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('translation_domain')->end()
                     ->scalarNode('translation_pattern')->defaultValue('{application}.{resource}.{message}')->end()
                     ->scalarNode('route_pattern')->defaultValue('{application}.{resource}.{operation}')->end()
+                    ->scalarNode('base_template')->defaultValue('@LAGAdmin/base.html.twig')->end()
                 ->end()
             ->end()
         ;

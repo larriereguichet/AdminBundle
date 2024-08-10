@@ -1,4 +1,4 @@
-{% extends operation.partial|default(false) ? '@LAGAdmin/partial.html.twig' : '@LAGAdmin/base.html.twig' %}
+{% extends '@LAGAdmin/resources/operation.html.twig' %}
 
 {% block content %}
     <div class="admin-index admin-{{ resource.name }}">

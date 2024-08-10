@@ -21,6 +21,7 @@ class Index extends CollectionOperation
         ?string $description = null,
         ?string $icon = null,
         ?string $template = '@LAGAdmin/resources/index.html.twig',
+        ?string $baseTemplate = null,
         array $permissions = [],
         ?string $controller = ResourceCollectionController::class,
         ?string $route = null,
@@ -62,6 +63,7 @@ class Index extends CollectionOperation
         ?array $itemFormOptions = null,
         ?string $collectionForm = null,
         ?array $collectionFormOptions = null,
+        ?array $collectionActions = null,
         bool $partial = false,
     ) {
         parent::__construct(
@@ -70,6 +72,7 @@ class Index extends CollectionOperation
             description: $description,
             icon: $icon,
             template: $template,
+            baseTemplate: $baseTemplate,
             permissions: $permissions,
             controller: $controller,
             route: $route,
@@ -109,6 +112,7 @@ class Index extends CollectionOperation
             filterFormOptions: $filterFormOptions,
             itemForm: $itemForm,
             itemFormOptions: $itemFormOptions,
+            collectionActions: $collectionActions,
             collectionForm: $collectionForm,
             collectionFormOptions: $collectionFormOptions,
             partial: $partial,

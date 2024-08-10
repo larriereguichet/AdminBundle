@@ -24,6 +24,7 @@ final readonly class ApplicationRegistry implements ApplicationRegistryInterface
                 translationDomain: $configuration['translation_domain'] ?? null,
                 translationPattern: $configuration['translation_pattern'] ?? null,
                 routePattern: $configuration['route_pattern'] ?? null,
+                baseTemplate: $configuration['base_template'] ?? null,
             );
         }
         $this->applications = $applications;

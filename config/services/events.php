@@ -48,6 +48,7 @@ return static function (ContainerConfigurator $container) {
     // Operations listeners
     $services->set(InitializeOperationListener::class)
         ->arg('$routeNameGenerator', service(RouteNameGeneratorInterface::class))
+        ->arg('$applicationRegistry', service(ApplicationRegistryInterface::class))
         ->tag('kernel.event_listener', ['event' => 'lag_admin.operation.create', 'priority' => 255])
     ;
     $services->set(InitializeCollectionOperationListener::class)

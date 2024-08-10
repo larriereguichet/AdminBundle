@@ -29,6 +29,9 @@ abstract class Operation implements OperationInterface
         #[Assert\NotBlank(message: 'The operation template should not be empty')]
         private ?string $template = null,
 
+        #[Assert\NotBlank(message: 'The operation base template should not be empty. Use "@LAGAdmin/partial.html.twig" instead if you want an empty base')]
+        private ?string $baseTemplate = null,
+
         private ?array $permissions = [],
 
         #[Assert\NotBlank(message: 'The operation controller should not be empty')]
@@ -166,6 +169,19 @@ abstract class Operation implements OperationInterface
     {
         $self = clone $this;
         $self->template = $template;
+
+        return $self;
+    }
+
+    public function getBaseTemplate(): ?string
+    {
+        return $this->baseTemplate;
+    }
+
+    public function withBaseTemplate(string $baseTemplate): self
+    {
+        $self = clone $this;
+        $self->baseTemplate = $baseTemplate;
 
         return $self;
     }
