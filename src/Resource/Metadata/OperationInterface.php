@@ -26,6 +26,10 @@ interface OperationInterface
 
     public function withTemplate(?string $template): self;
 
+    public function getBaseTemplate(): ?string;
+
+    public function withBaseTemplate(string $baseTemplate): self;
+
     public function getPermissions(): ?array;
 
     public function withPermissions(?array $permissions): self;

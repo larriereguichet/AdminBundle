@@ -13,6 +13,7 @@ class Application
         private ?string $translationDomain = null,
         private ?string $translationPattern = null,
         private ?string $routePattern = null,
+        private ?string $baseTemplate = null,
     ) {
     }
 
@@ -90,6 +91,19 @@ class Application
     {
         $self = clone $this;
         $self->routePattern = $routePattern;
+
+        return $self;
+    }
+
+    public function getBaseTemplate(): ?string
+    {
+        return $this->baseTemplate;
+    }
+
+    public function withBaseTemplate(string $baseTemplate): self
+    {
+        $self = clone $this;
+        $self->baseTemplate = $baseTemplate;
 
         return $self;
     }

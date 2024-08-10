@@ -1,4 +1,4 @@
-{% extends operation.partial|default(false) ? '@LAGAdmin/crud/partial.html.twig' : '@LAGAdmin/base.html.twig' %}
+{% extends operation.baseTemplate %}
 
 {% block page_title %}{{ operation.title|admin_trans }} - {{ parent() }}{% endblock %}
 
