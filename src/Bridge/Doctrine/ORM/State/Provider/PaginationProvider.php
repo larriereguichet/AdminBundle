@@ -34,7 +34,7 @@ final readonly class PaginationProvider implements ProviderInterface
         }
         $pager = new Pagerfanta(new QueryAdapter($data, true, true));
         $pager->setMaxPerPage($operation->getItemsPerPage());
-        $pager->setCurrentPage($context['page'] ?? 1);
+        $pager->setCurrentPage((int) ($context['page'] ?? 1));
 
         return $pager;
     }
