@@ -45,6 +45,10 @@ trait ContainerTestTrait
         $container = $kernel->getContainer();
 
         self::assertTrue($container->has($serviceId));
+
+        $service = $container->get($serviceId);
+
+        self::assertNotNull($service);
     }
 
     protected static function assertNoService(string $serviceId): void
