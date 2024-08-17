@@ -8,18 +8,22 @@ use LAG\AdminBundle\Resource\Locator\PropertyLocatorInterface;
 use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Resolver\ClassResolverInterface;
+use LAG\AdminBundle\Resource\Resolver\PhpFileResolverInterface;
 use LAG\AdminBundle\Resource\Resolver\ResourceResolver;
 use LAG\AdminBundle\Tests\Application\Entity\TestEntity;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 final class ResourceResolverTest extends TestCase
 {
     private ResourceResolver $resolver;
+    private MockObject $kernel;
     private MockObject $classResolver;
     private MockObject $resourceLocator;
     private MockObject $propertyLocator;
+    private MockObject $phpFileResolver;
 
     #[Test]
     public function itResolveResources(): void
@@ -73,13 +77,17 @@ final class ResourceResolverTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->kernel = self::createMock(KernelInterface::class);
         $this->classResolver = self::createMock(ClassResolverInterface::class);
         $this->resourceLocator = self::createMock(ResourceLocatorInterface::class);
         $this->propertyLocator = self::createMock(PropertyLocatorInterface::class);
+        $this->phpFileResolver = self::createMock(PhpFileResolverInterface::class);
         $this->resolver = new ResourceResolver(
+            $this->kernel,
             $this->classResolver,
             $this->resourceLocator,
             $this->propertyLocator,
+            $this->phpFileResolver,
         );
     }
 }
