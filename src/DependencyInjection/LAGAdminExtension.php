@@ -116,5 +116,11 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
             'default_view' => 'twig',
             'default_twig_template' => '@BabDevPagerfanta/twitter_bootstrap5.html.twig',
         ]);
+
+        $container->prependExtensionConfig('knp_menu', [
+            'twig' => [
+                'template' => '@LAGAdmin/menu/menu-base.html.twig',
+            ],
+        ]);
     }
 }
