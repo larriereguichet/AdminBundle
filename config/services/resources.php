@@ -25,6 +25,7 @@ use LAG\AdminBundle\Resource\Resolver\PhpFileResolver;
 use LAG\AdminBundle\Resource\Resolver\PhpFileResolverInterface;
 use LAG\AdminBundle\Resource\Resolver\ResourceResolver;
 use LAG\AdminBundle\Resource\Resolver\ResourceResolverInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -34,6 +35,8 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$resources', expr('service("lag_admin.resource_resolver").resolveResources(parameter("lag_admin.resource_paths"))'))
         ->arg('$defaultApplication', param('lag_admin.application_name'))
         ->arg('$factory', service(ResourceFactoryInterface::class))
+
+        ->alias('lag_admin.resource.registry', ResourceFactoryInterface::class)
     ;
     $services->set(ApplicationRegistryInterface::class, ApplicationRegistry::class);
 
@@ -62,9 +65,11 @@ return static function (ContainerConfigurator $container): void {
 
     // Resolvers
     $services->set(ResourceResolverInterface::class, ResourceResolver::class)
+        ->arg('$kernel', service(KernelInterface::class))
         ->arg('$classResolver', service(ClassResolverInterface::class))
         ->arg('$resourceLocator', service(ResourceLocatorInterface::class))
         ->arg('$propertyLocator', service(PropertyLocatorInterface::class))
+        ->arg('$fileResolver', service(PhpFileResolverInterface::class))
         ->public()
     ;
     $services->alias('lag_admin.resource_resolver', ResourceResolverInterface::class)
