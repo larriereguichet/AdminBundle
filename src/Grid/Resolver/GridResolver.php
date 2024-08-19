@@ -29,32 +29,32 @@ final readonly class GridResolver implements GridResolverInterface
             ;
 
             foreach ($finder as $fileInfo) {
-                if (!$fileInfo->isReadable()) {
+                if (!$fileInfo->isReadable() || !$fileInfo->isFile()) {
                     continue;
                 }
-                if ($fileInfo->isFile()) {
-                    $class = $this->classResolver->resolveClass($fileInfo->getRealPath());
+                $class = $this->classResolver->resolveClass($fileInfo->getRealPath());
 
-                    if ($class !== null) {
-                        $attributes = $class->getAttributes(Grid::class);
+                if ($class !== null) {
+                    $attributes = $class->getAttributes(Grid::class);
 
-                        foreach ($attributes as $attribute) {
-                            yield $attribute->newInstance();
-                        }
-
-                        continue;
+                    foreach ($attributes as $attribute) {
+                        yield $attribute->newInstance();
                     }
-                    $grids = $this->fileResolver->resolveFile($fileInfo->getRealPath());
 
-                    if (is_iterable($grids)) {
-                        foreach ($grids as $grid) {
-                            if (!$grid instanceof Grid) {
-                                throw new Exception(\sprintf('The file "%s" should return an iterable of "%s", got "%s"', $fileInfo->getRealPath(), Grid::class, get_debug_type($grid)));
-                            }
+                    continue;
+                }
+                $grids = $this->fileResolver->resolveFile($fileInfo->getRealPath());
 
-                            yield $grid;
-                        }
+                if (!is_iterable($grids)) {
+                    continue;
+                }
+
+                foreach ($grids as $grid) {
+                    if (!$grid instanceof Grid) {
+                        throw new Exception(\sprintf('The file "%s" should return an iterable of "%s", got "%s"', $fileInfo->getRealPath(), Grid::class, get_debug_type($grid)));
                     }
+
+                    yield $grid;
                 }
             }
         }
