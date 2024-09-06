@@ -38,10 +38,17 @@ final readonly class ResourceExtension implements ExtensionInterface
         } else {
             $options['uri'] = $this->urlGenerator->generateOperationUrl($operation);
         }
-        $options['extras'] = [];
+
+        if (!isset($options['extras'])) {
+            $options['extras'] = [];
+        }
 
         if (empty($options['label'])) {
             $options['label'] = $operation->getTitle();
+        }
+
+        if (!isset($options['extras']['translation_domain']) && $resource->getTranslationDomain() !== null) {
+            $options['extras']['translation_domain'] = $resource->getTranslationDomain();
         }
 
         return $options;

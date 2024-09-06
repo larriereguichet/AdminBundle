@@ -23,7 +23,11 @@ final class ResourceExtensionTest extends TestCase
     public function itBuildOptions(): void
     {
         $operation = new Get(name: 'my_operation', route: 'my_route', title: 'Some title');
-        $resource = new Resource(name: 'my_resource', operations: [$operation]);
+        $resource = new Resource(
+            name: 'my_resource',
+            operations: [$operation],
+            translationDomain: 'my_domain',
+        );
 
         $this->registry
             ->expects(self::once())
@@ -54,7 +58,7 @@ final class ResourceExtensionTest extends TestCase
         self::assertEquals($options + [
             'uri' => '/some-url',
             'label' => 'Some title',
-            'extras' => [],
+            'extras' => ['translation_domain' => 'my_domain'],
         ], $buildOptions);
     }
 
