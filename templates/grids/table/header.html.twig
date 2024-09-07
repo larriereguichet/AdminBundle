@@ -1,0 +1,5 @@
+{% import '@LAGAdmin/grids/macro/helpers.html.twig' as lag_admin %}
+
+{% if header.label %}
+    {{ lag_admin.translate(header.label, header .translationDomain, true) }}
+{% endif %}
