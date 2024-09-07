@@ -16,7 +16,7 @@ use Symfony\UX\TwigComponent\ComponentAttributes;
     template: '@LAGAdmin/components/grids/grid.html.twig',
     exposePublicProps: true,
 )]
-class GridComponent
+final class Grid
 {
     public ComponentAttributes $headerRowAttributes;
     public ComponentAttributes $headerAttributes;

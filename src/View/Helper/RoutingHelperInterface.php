@@ -12,7 +12,7 @@ interface RoutingHelperInterface
         string $resource,
         string $operation,
         mixed $data = null,
-        ?string $applicationName = null,
+        ?string $application = null,
     ): string;
 
     public function generateResourceUrl(Url $url, mixed $data = null): string;
@@ -21,6 +21,6 @@ interface RoutingHelperInterface
         string $resource,
         string $operation,
         mixed $data = null,
-        ?string $applicationName = null,
+        ?string $application = null,
     ): string;
 }

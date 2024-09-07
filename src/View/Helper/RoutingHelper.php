@@ -22,14 +22,14 @@ final readonly class RoutingHelper implements RoutingHelperInterface
         string $resource,
         string $operation,
         mixed $data = null,
-        ?string $applicationName = null,
+        ?string $application = null,
     ): string {
-        if ($applicationName === null) {
+        if ($application === null) {
             $request = $this->requestStack->getCurrentRequest();
-            $applicationName = $this->context->getOperation($request)->getResource()->getApplication();
+            $application = $this->context->getOperation($request)->getResource()->getApplication();
         }
 
-        return $this->urlGenerator->generateFromOperationName($resource, $operation, $data, $applicationName);
+        return $this->urlGenerator->generateFromOperationName($resource, $operation, $data, $application);
     }
 
     public function generateResourceUrl(Url $url, mixed $data = null): string
@@ -41,13 +41,13 @@ final readonly class RoutingHelper implements RoutingHelperInterface
         string $resource,
         string $operation,
         mixed $data = null,
-        ?string $applicationName = null,
+        ?string $application = null,
     ): string {
         return $this->urlGenerator->generateFromOperationName(
             $resource,
             $operation,
             $data,
-            $applicationName,
+            $application,
         );
     }
 }

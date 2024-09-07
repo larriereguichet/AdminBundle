@@ -9,11 +9,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-class StringExtension extends AbstractExtension
+final class StringExtension extends AbstractExtension
 {
     public function __construct(
-        private string $translationDomain,
-        private TranslatorInterface $translator,
+        private readonly string $translationDomain,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
