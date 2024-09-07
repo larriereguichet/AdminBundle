@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Condition\ConditionMatcherInterface;
+use LAG\AdminBundle\Grid\Render\CellRendererInterface;
+use LAG\AdminBundle\Grid\Render\GridRendererInterface;
+use LAG\AdminBundle\Grid\Render\HeaderRendererInterface;
+use LAG\AdminBundle\Grid\Render\LinkRendererInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
@@ -20,17 +23,15 @@ use LAG\AdminBundle\View\Component\Cell\ImageComponent;
 use LAG\AdminBundle\View\Component\Cell\Link;
 use LAG\AdminBundle\View\Component\Cell\MapComponent;
 use LAG\AdminBundle\View\Component\Cell\TextComponent;
-use LAG\AdminBundle\View\Component\Grid\GridComponent;
+use LAG\AdminBundle\View\Component\Grid\Grid;
+use LAG\AdminBundle\View\Helper\GridHelper;
+use LAG\AdminBundle\View\Helper\GridHelperInterface;
 use LAG\AdminBundle\View\Helper\PaginationHelper;
 use LAG\AdminBundle\View\Helper\PaginationHelperInterface;
 use LAG\AdminBundle\View\Helper\RenderHelper;
 use LAG\AdminBundle\View\Helper\RenderHelperInterface;
 use LAG\AdminBundle\View\Helper\RoutingHelper;
 use LAG\AdminBundle\View\Helper\RoutingHelperInterface;
-use LAG\AdminBundle\View\Render\CellRendererInterface;
-use LAG\AdminBundle\View\Render\GridRendererInterface;
-use LAG\AdminBundle\View\Render\LinkRenderer;
-use LAG\AdminBundle\View\Render\LinkRendererInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -44,8 +45,7 @@ return static function (ContainerConfigurator $container): void {
         ->tag('twig.extension')
     ;
     $services->set(GridExtension::class)
-        ->arg('$gridRenderer', service(GridRendererInterface::class))
-        ->arg('$cellRenderer', service(CellRendererInterface::class))
+        ->arg('$helper', service(GridHelperInterface::class))
         ->tag('twig.extension')
     ;
     $services->set(StringExtension::class)
@@ -67,7 +67,7 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     // Components
-    $services->set(GridComponent::class)->autoconfigure();
+    $services->set(Grid::class)->autoconfigure();
     $services->set(TextComponent::class)->autoconfigure();
     $services->set(Link::class)->autoconfigure();
     $services->set(Actions::class)->autoconfigure();
@@ -87,8 +87,12 @@ return static function (ContainerConfigurator $container): void {
     $services->set(RenderHelperInterface::class, RenderHelper::class)
         ->arg('$environment', service('twig'))
         ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
-        ->arg('$conditionMatcher', service(ConditionMatcherInterface::class))
         ->arg('$translator', service('translator'))
     ;
     $services->set(PaginationHelperInterface::class, PaginationHelper::class);
+    $services->set(GridHelperInterface::class, GridHelper::class)
+        ->arg('$gridRenderer', service(GridRendererInterface::class))
+        ->arg('$headerRenderer', service(HeaderRendererInterface::class))
+        ->arg('$cellRenderer', service(CellRendererInterface::class))
+    ;
 };

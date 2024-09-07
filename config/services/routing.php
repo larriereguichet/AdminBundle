@@ -27,12 +27,16 @@ return static function (ContainerConfigurator $container): void {
         ->tag('routing.loader')
     ;
 
-    $services->set(RouteNameGeneratorInterface::class, RouteNameGenerator::class);
+    $services->set(RouteNameGeneratorInterface::class, RouteNameGenerator::class)
+        ->alias('lag_admin.routing.route_name_generator', RouteNameGeneratorInterface::class)
+    ;
 
     $services->set(UrlGeneratorInterface::class, UrlGenerator::class)
         ->arg('$router', service('router'))
         ->arg('$mapper', service(ParametersMapperInterface::class))
         ->arg('$resourceRegistry', service(ResourceRegistryInterface::class))
+
+        ->alias('lag_admin.routing.url_generator', UrlGeneratorInterface::class)
     ;
     $services->set(ParametersMapperInterface::class, ParametersMapper::class);
 
