@@ -53,11 +53,6 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$translator', service('translator'))
         ->tag('twig.extension')
     ;
-    $services->set(LinkRendererInterface::class, LinkRenderer::class)
-        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
-        ->arg('$validator', service('validator'))
-        ->arg('$environment', service('twig'))
-    ;
     $services->set(RoutingExtension::class)
         ->arg('$helper', service(RoutingHelperInterface::class))
         ->tag('twig.extension')

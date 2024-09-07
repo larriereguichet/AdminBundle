@@ -6,12 +6,12 @@ namespace LAG\AdminBundle\Grid\View;
 
 use Symfony\UX\TwigComponent\ComponentAttributes;
 
-final readonly class RowView
+final readonly class RowView implements \IteratorAggregate
 {
     public ComponentAttributes $attributes;
 
     public function __construct(
-        /** @var iterable<CellView> $cells */
+        /** @var iterable<CellView|HeaderView> $cells */
         public iterable $cells = [],
         /** @var iterable<CellView> */
         public iterable $actions = [],

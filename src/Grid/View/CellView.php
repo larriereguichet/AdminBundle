@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Grid\View;
 
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 
-final readonly class CellView
+readonly class CellView
 {
     public function __construct(
         public string $name,

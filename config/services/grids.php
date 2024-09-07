@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Bridge\LiipImagine\DataTransformer\ImageDataTransformer;
-use LAG\AdminBundle\Condition\ConditionMatcherInterface;
+use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
 use LAG\AdminBundle\Grid\DataTransformer\CountDataTransformer;
 use LAG\AdminBundle\Grid\DataTransformer\FormDataTransformer;
 use LAG\AdminBundle\Grid\DataTransformer\MapDataTransformer;
@@ -13,22 +13,37 @@ use LAG\AdminBundle\Grid\Registry\DataTransformerRegistry;
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
 use LAG\AdminBundle\Grid\Registry\GridRegistry;
 use LAG\AdminBundle\Grid\Registry\GridRegistryInterface;
+use LAG\AdminBundle\Grid\Render\CellRenderer;
+use LAG\AdminBundle\Grid\Render\CellRendererInterface;
+use LAG\AdminBundle\Grid\Render\GridRenderer;
+use LAG\AdminBundle\Grid\Render\GridRendererInterface;
+use LAG\AdminBundle\Grid\Render\HeaderRenderer;
+use LAG\AdminBundle\Grid\Render\HeaderRendererInterface;
+use LAG\AdminBundle\Grid\Render\LinkRenderer;
+use LAG\AdminBundle\Grid\Render\LinkRendererInterface;
 use LAG\AdminBundle\Grid\Resolver\GridResolver;
 use LAG\AdminBundle\Grid\Resolver\GridResolverInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\ActionViewBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\ActionViewBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\CellViewBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\CellViewBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\CollectionCellViewBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\CompoundCellViewBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\ConditionCellViewBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\DataCellViewBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\HeaderViewBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\HeaderViewBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\RowViewBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\RowViewBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\SecurityCellViewBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\SecurityHeaderViewBuilder;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use LAG\AdminBundle\Resource\Resolver\ClassResolverInterface;
 use LAG\AdminBundle\Resource\Resolver\PhpFileResolverInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
-use LAG\AdminBundle\View\Render\CellRenderer;
-use LAG\AdminBundle\View\Render\CellRendererInterface;
-use LAG\AdminBundle\View\Render\GridRenderer;
-use LAG\AdminBundle\View\Render\GridRendererInterface;
+use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionCheckerInterface;
 use Liip\ImagineBundle\LiipImagineBundle;
 
 return static function (ContainerConfigurator $container): void {
@@ -36,15 +51,54 @@ return static function (ContainerConfigurator $container): void {
 
     // View builders
     $services->set(GridViewBuilderInterface::class, GridViewBuilder::class)
-        ->arg('$cellBuilder', service(CellViewBuilderInterface::class))
+        ->arg('$rowBuilder', service(RowViewBuilderInterface::class))
         ->arg('$actionBuilder', service(ActionViewBuilderInterface::class))
         ->arg('$eventDispatcher', service('lag_admin.event_dispatcher'))
         ->arg('$validator', service('validator'))
+    ;
+
+    $services->set(RowViewBuilderInterface::class, RowViewBuilder::class)
+        ->arg('$cellBuilder', service(CellViewBuilderInterface::class))
+        ->arg('$headerBuilder', service(HeaderViewBuilderInterface::class))
+        ->arg('$actionsBuilder', service(ActionViewBuilderInterface::class))
+    ;
+
+    $services->set(HeaderViewBuilderInterface::class, HeaderViewBuilder::class);
+    $services->set(SecurityHeaderViewBuilder::class)
+        ->decorate(id: HeaderViewBuilderInterface::class, priority: 200)
+        ->arg('$headerBuilder', service('.inner'))
+        ->arg('$permissionChecker', service(PropertyPermissionCheckerInterface::class))
+    ;
+
+    // Cell view builders
+    $services->set(CellViewBuilderInterface::class, CellViewBuilder::class);
+    $services->set(SecurityCellViewBuilder::class)
+        ->decorate(id: CellViewBuilderInterface::class, priority: 200)
+        ->arg('$cellBuilder', service('.inner'))
+        ->arg('$permissionChecker', service(PropertyPermissionCheckerInterface::class))
+    ;
+    $services->set(DataCellViewBuilder::class)
+        ->decorate(id: CellViewBuilderInterface::class, priority: 50)
+        ->arg('$cellBuilder', service('.inner'))
+        ->arg('$dataMapper', service(DataMapperInterface::class))
+        ->arg('$transformerRegistry', service(DataTransformerRegistryInterface::class))
+    ;
+    $services->set(CompoundCellViewBuilder::class)
+        ->decorate(id: CellViewBuilderInterface::class, priority: 25)
+        ->arg('$cellBuilder', service('.inner'))
+    ;
+    $services->set(CollectionCellViewBuilder::class)
+        ->decorate(id: CellViewBuilderInterface::class, priority: 150)
+        ->arg('$cellBuilder', service('.inner'))
         ->arg('$dataMapper', service(DataMapperInterface::class))
     ;
-    $services->set(CellViewBuilderInterface::class, CellViewBuilder::class)
-        ->arg('$dataTransformerRegistry', service(DataTransformerRegistryInterface::class))
+    $services->set(ConditionCellViewBuilder::class)
+        ->decorate(id: CellViewBuilderInterface::class, priority: 100)
+        ->arg('$cellBuilder', service('.inner'))
+        ->arg('$conditionMatcher', service(ConditionMatcherInterface::class))
     ;
+
+    // Action view builder
     $services->set(ActionViewBuilderInterface::class, ActionViewBuilder::class)
         ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
         ->arg('$conditionMatcher', service(ConditionMatcherInterface::class))
@@ -55,7 +109,15 @@ return static function (ContainerConfigurator $container): void {
     $services->set(GridRendererInterface::class, GridRenderer::class)
         ->arg('$environment', service('twig'))
     ;
+    $services->set(HeaderRendererInterface::class, HeaderRenderer::class)
+        ->arg('$environment', service('twig'))
+    ;
     $services->set(CellRendererInterface::class, CellRenderer::class)
+        ->arg('$environment', service('twig'))
+    ;
+    $services->set(LinkRendererInterface::class, LinkRenderer::class)
+        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
+        ->arg('$validator', service('validator'))
         ->arg('$environment', service('twig'))
     ;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Condition\ConditionMatcherInterface;
+use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
 use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Resource\Metadata\Action;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
@@ -19,13 +19,13 @@ final readonly class ActionViewBuilder implements ActionViewBuilderInterface
     ) {
     }
 
-    public function buildActions(Action $action, mixed $data, array $attributes = []): ?CellView
+    public function buildActions(Action $action, mixed $data, array $context = []): ?CellView
     {
         $actionAttributes = $action->getAttributes();
 
         if (
             $action->getCondition() !== null
-            && !$this->conditionMatcher->matchCondition($data, $action->getCondition(), [], $action->getWorkflow())
+            && !$this->conditionMatcher->matchCondition($data, $action->getCondition())
         ) {
             return null;
         }
@@ -36,9 +36,9 @@ final readonly class ActionViewBuilder implements ActionViewBuilderInterface
 
         return new CellView(
             name: $action->getName(),
+            template: $action->getTemplate(),
             label: $action->getLabel(),
             options: $action,
-            template: $action->getTemplate(),
             data: $this->urlGenerator->generateUrl($action, $data),
             attributes: $actionAttributes,
         );
