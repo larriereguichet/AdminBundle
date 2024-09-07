@@ -19,6 +19,8 @@ class Title extends Property
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null,
 
         #[Assert\Length(min: 1)]
         private int $length = 100,
@@ -38,6 +40,8 @@ class Title extends Property
             headerAttributes: $headerAttributes,
             template: '@LAGAdmin/components/cells/title.html.twig',
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 

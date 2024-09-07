@@ -18,6 +18,8 @@ class Boolean extends Property
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null
     ) {
         parent::__construct(
             name: $name,
@@ -30,6 +32,8 @@ class Boolean extends Property
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 }

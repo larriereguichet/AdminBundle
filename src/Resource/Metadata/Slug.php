@@ -22,6 +22,8 @@ class Slug extends Property
         array $containerAttributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null,
     ) {
         parent::__construct(
             name: $name,
@@ -34,6 +36,8 @@ class Slug extends Property
             containerAttributes: $containerAttributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 

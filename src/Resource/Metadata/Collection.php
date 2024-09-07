@@ -21,6 +21,8 @@ class Collection extends Property
         array $containerAttributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null,
 
         #[Assert\NotNull(message: 'The collection should have an property for each entry')]
         private ?PropertyInterface $entryProperty = null,
@@ -37,6 +39,8 @@ class Collection extends Property
             containerAttributes: $containerAttributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 

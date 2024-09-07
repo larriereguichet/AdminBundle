@@ -21,6 +21,8 @@ class ResourceLink extends Text
         int $length = 100,
         string $replace = '...',
         string $emptyString = '~',
+        ?array $permissions = null,
+        ?string $condition = null,
 
         #[NotBlank]
         private ?string $application = null,
@@ -43,6 +45,8 @@ class ResourceLink extends Text
             length: $length,
             replace: $replace,
             empty: $emptyString,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 

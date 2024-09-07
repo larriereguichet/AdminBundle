@@ -17,6 +17,8 @@ class Count extends Property
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = CountDataTransformer::class,
+        ?array $permissions = null,
+        ?string $condition = null,
     ) {
         parent::__construct(
             name: $name,
@@ -27,6 +29,8 @@ class Count extends Property
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 }

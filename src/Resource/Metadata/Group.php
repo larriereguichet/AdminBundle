@@ -11,6 +11,9 @@ class Group extends Property implements CompoundPropertyInterface
         ?string $name = null,
         string|bool|null $label = null,
         ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null,
+
         private array $properties = [],
     ) {
         parent::__construct(
@@ -20,6 +23,8 @@ class Group extends Property implements CompoundPropertyInterface
             sortable: false,
             propertyPath: '.',
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 

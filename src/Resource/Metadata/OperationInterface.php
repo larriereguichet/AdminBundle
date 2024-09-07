@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Metadata;
 
-interface OperationInterface
+use LAG\AdminBundle\Security\PermissibleInterface;
+use LAG\AdminBundle\Workflow\WorkflowSubjectInterface;
+
+interface OperationInterface extends PermissibleInterface, WorkflowSubjectInterface
 {
     public function getName(): ?string;
 
@@ -29,8 +32,6 @@ interface OperationInterface
     public function getBaseTemplate(): ?string;
 
     public function withBaseTemplate(string $baseTemplate): self;
-
-    public function getPermissions(): ?array;
 
     public function withPermissions(?array $permissions): self;
 
@@ -142,11 +143,7 @@ interface OperationInterface
 
     public function withOutput(?string $output): self;
 
-    public function getWorkflow(): ?string;
-
     public function setWorkflow(?string $workflow): self;
-
-    public function getWorkflowTransition(): ?string;
 
     public function setWorkflowTransition(?string $workflowTransition): self;
 

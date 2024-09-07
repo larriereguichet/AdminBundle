@@ -19,6 +19,8 @@ class Date extends Property
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null,
 
         #[Assert\NotBlank(message: 'The date format should not be empty. Use "none" instead')]
         private string $dateFormat = 'medium',
@@ -37,6 +39,8 @@ class Date extends Property
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 

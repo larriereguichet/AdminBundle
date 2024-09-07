@@ -15,6 +15,8 @@ class Action extends Property implements Url
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null,
 
         private ?string $route = null,
         private array $routeParameters = [],
@@ -24,7 +26,6 @@ class Action extends Property implements Url
         private ?string $url = null,
         private ?string $type = null,
         private ?string $icon = null,
-        private ?string $condition = null,
         private ?string $workflow = null,
         private ?string $title = null,
     ) {
@@ -39,6 +40,8 @@ class Action extends Property implements Url
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 
@@ -144,19 +147,6 @@ class Action extends Property implements Url
         $self->icon = $icon;
 
         return $this;
-    }
-
-    public function getCondition(): ?string
-    {
-        return $this->condition;
-    }
-
-    public function setCondition(?string $condition): self
-    {
-        $self = clone $this;
-        $self->condition = $condition;
-
-        return $self;
     }
 
     public function getWorkflow(): ?string

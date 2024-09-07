@@ -8,7 +8,6 @@ namespace LAG\AdminBundle\Resource\Metadata;
 class Compound extends Property implements CompoundPropertyInterface
 {
     public function __construct(
-        private PropertyInterface $propertyType,
         ?string $name = null,
         ?string $propertyPath = null,
         ?string $label = null,
@@ -19,6 +18,9 @@ class Compound extends Property implements CompoundPropertyInterface
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null,
+
         private array $properties = [],
     ) {
         parent::__construct(
@@ -32,6 +34,8 @@ class Compound extends Property implements CompoundPropertyInterface
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 
@@ -44,19 +48,6 @@ class Compound extends Property implements CompoundPropertyInterface
     {
         $self = clone $this;
         $self->properties = $properties;
-
-        return $self;
-    }
-
-    public function getPropertyType(): PropertyInterface
-    {
-        return $this->propertyType;
-    }
-
-    public function withPropertyType(PropertyInterface $property): self
-    {
-        $self = clone $this;
-        $self->propertyType = $property;
 
         return $self;
     }
