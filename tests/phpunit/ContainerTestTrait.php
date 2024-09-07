@@ -36,15 +36,13 @@ trait ContainerTestTrait
         return $kernel;
     }
 
-    /**
-     * Assert that the given service class is configured in the service configuration.
-     */
+    /** Assert that the given service class is configured in the service configuration */
     protected static function assertService(string $serviceId): void
     {
         $kernel = self::bootKernel();
         $container = $kernel->getContainer();
 
-        self::assertTrue($container->has($serviceId));
+        self::assertTrue($container->has($serviceId), \sprintf('The service container does not has a service "%s".', $serviceId));
 
         $service = $container->get($serviceId);
 
@@ -56,6 +54,6 @@ trait ContainerTestTrait
         $kernel = self::bootKernel();
         $container = $kernel->getContainer();
 
-        self::assertFalse($container->has($serviceId));
+        self::assertFalse($container->has($serviceId), \sprintf('The service container has a service "%s".', $serviceId));
     }
 }

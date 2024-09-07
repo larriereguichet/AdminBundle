@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Condition;
 
-use LAG\AdminBundle\Condition\ConditionMatcher;
-use LAG\AdminBundle\Condition\ConditionMatcherInterface;
+use LAG\AdminBundle\Condition\Matcher\ConditionMatcher;
+use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
+use LAG\AdminBundle\Resource\Metadata\Text;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Workflow\Registry;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 final class ConditionMatcherTest extends TestCase
 {
     private ConditionMatcherInterface $conditionMatcher;
-    private MockObject $workflowRegistry;
+    private MockObject $authorizationChecker;
 
     #[Test]
     public function itMatchesConditions(): void
@@ -24,6 +25,8 @@ final class ConditionMatcherTest extends TestCase
         $data->id = 666;
         $data->name = 'Some thing';
 
+        $property = new Text(condition: 'this.name === "Some thing" and workflow.can(this, "order") and is_granted("ROLE_TESTER")');
+
         $workflow = self::createMock(WorkflowInterface::class);
         $workflow->expects(self::once())
             ->method('can')
@@ -31,16 +34,19 @@ final class ConditionMatcherTest extends TestCase
             ->willReturn(true)
         ;
 
-        $this->workflowRegistry
+        $this->authorizationChecker
             ->expects(self::once())
-            ->method('get')
-            ->with($data, 'my_workflow')
-            ->willReturn($workflow)
+            ->method('isGranted')
+            ->with('ROLE_TESTER')
+            ->willReturn(true)
         ;
 
         $result = $this
             ->conditionMatcher
-            ->matchCondition($data, 'this.name === "Some thing" and workflow.can(this, "order")', [], 'my_workflow')
+            ->matchCondition($property, $data, [
+                'some' => 'context',
+                'workflow' => $workflow,
+            ])
         ;
 
         self::assertTrue($result);
@@ -48,7 +54,9 @@ final class ConditionMatcherTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->workflowRegistry = self::createMock(Registry::class);
-        $this->conditionMatcher = new ConditionMatcher($this->workflowRegistry);
+        $this->authorizationChecker = self::createMock(AuthorizationCheckerInterface::class);
+        $this->conditionMatcher = new ConditionMatcher(
+            $this->authorizationChecker,
+        );
     }
 }

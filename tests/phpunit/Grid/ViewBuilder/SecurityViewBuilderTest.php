@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Grid\ViewBuilder;
@@ -12,7 +13,6 @@ use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionCheckerInterfac
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 final class SecurityViewBuilderTest extends TestCase
 {
@@ -25,9 +25,9 @@ final class SecurityViewBuilderTest extends TestCase
     {
         $grid = new Grid(name: 'some grid');
         $property = new Text(name: 'some property', permissions: ['ROLE_USER']);
-        $data = new stdClass();
+        $data = new \stdClass();
         $context = ['some_context'];
-        $cellView = new  CellView(name: 'some property');
+        $cellView = new CellView(name: 'some property');
 
         $this->permissionChecker
             ->expects(self::once())
@@ -62,7 +62,7 @@ final class SecurityViewBuilderTest extends TestCase
             ->expects(self::never())
             ->method('buildCell')
         ;
-        $cellView = $this->cellBuilder->buildCell($grid, $property, new stdClass());
+        $cellView = $this->cellBuilder->buildCell($grid, $property, new \stdClass());
 
         self::assertEquals($property->getName(), $cellView->name);
         self::assertNull($cellView->template);
