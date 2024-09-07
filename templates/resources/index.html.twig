@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="admin-index admin-{{ resource.name }}">
-        {% include '@LAGAdmin/resources/index/collection_operations.html.twig' %}
+        {% include '@LAGAdmin/resources/index/_collection_operations.html.twig' %}
 
         {% block filter_form %}
             {% if filterForm and filterForm.children|length > 0 %}
