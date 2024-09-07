@@ -33,6 +33,7 @@ class Grid
 
         private array $attributes = [],
         private array $rowAttributes = [],
+        private ?string $headerTemplate = null,
         private array $headerRowAttributes = [],
         private array $headerAttributes = [],
         private array $options = [],
@@ -168,6 +169,19 @@ class Grid
     {
         $self = clone $this;
         $self->rowAttributes = $rowAttributes;
+
+        return $self;
+    }
+
+    public function getHeaderTemplate(): ?string
+    {
+        return $this->headerTemplate;
+    }
+
+    public function withHeaderTemplate(?string $template): self
+    {
+        $self = clone $this;
+        $self->headerTemplate = $template;
 
         return $self;
     }

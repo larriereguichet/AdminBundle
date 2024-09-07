@@ -23,6 +23,8 @@ class Link extends Property implements Url
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null,
 
         private ?string $route = null,
         private array $routeParameters = [],
@@ -45,6 +47,8 @@ class Link extends Property implements Url
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 

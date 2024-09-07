@@ -14,6 +14,7 @@ class Application
         private ?string $translationPattern = null,
         private ?string $routePattern = null,
         private ?string $baseTemplate = null,
+        private ?array $permissions = null,
     ) {
     }
 
@@ -104,6 +105,19 @@ class Application
     {
         $self = clone $this;
         $self->baseTemplate = $baseTemplate;
+
+        return $self;
+    }
+
+    public function getPermissions(): ?array
+    {
+        return $this->permissions;
+    }
+
+    public function withPermissions(array $permissions): self
+    {
+        $self = clone $this;
+        $self->permissions = $permissions;
 
         return $self;
     }

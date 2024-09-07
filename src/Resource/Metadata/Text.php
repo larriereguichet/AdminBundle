@@ -19,6 +19,8 @@ class Text extends Property
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null,
 
         #[Assert\Length(min: 1)]
         private int $length = 100,
@@ -38,6 +40,8 @@ class Text extends Property
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 

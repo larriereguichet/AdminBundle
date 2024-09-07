@@ -19,6 +19,8 @@ class Form extends Property implements PropertyInterface
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = FormDataTransformer::class,
+        ?array $permissions = null,
+        ?string $condition = null,
 
         private string $form = ResourceHiddenType::class,
         private ?string $formTemplate = null,
@@ -33,10 +35,11 @@ class Form extends Property implements PropertyInterface
             translationDomain: $translationDomain,
             attributes: $attributes,
             headerAttributes: $headerAttributes,
-            // component: 'lag_admin:form',
             template: '@LAGAdmin/grids/properties/form.html.twig',
             sortable: false,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 

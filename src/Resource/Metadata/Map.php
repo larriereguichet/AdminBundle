@@ -19,8 +19,10 @@ class Map extends Property
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null,
 
-        #[Assert\Count(min: 1, minMessage: 'The map should have at least elements')]
+        #[Assert\Count(min: 1, minMessage: 'The map should have at least 1 element')]
         private array $map = [],
     ) {
         parent::__construct(
@@ -34,6 +36,8 @@ class Map extends Property
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 

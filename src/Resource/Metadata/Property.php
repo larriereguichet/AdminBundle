@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Resource\Metadata;
 
 use LAG\AdminBundle\Validation\Constraint\TemplateValid;
+use LAG\AdminBundle\Validation\Constraint\WorkflowInstalled;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Property implements PropertyInterface
 {
     public function __construct(
-        #[NotBlank(message: 'The name should not be empty')]
+        #[Assert\NotBlank(message: 'The name should not be empty')]
         #[Assert\Length(
             min: 1,
             max: 255,
@@ -28,14 +28,14 @@ class Property implements PropertyInterface
         private string|bool|null $label = null,
 
         #[TemplateValid(message: 'The template should be a valid Twig template')]
-        #[NotBlank(message: 'The template should not be blank')]
+        #[Assert\NotBlank(message: 'The template should not be blank')]
         private ?string $template = null,
 
         private bool $sortable = true,
 
         private bool $translatable = false,
 
-        #[NotBlank(allowNull: true, message: 'The translation domain should not be empty. Use null instead')]
+        #[Assert\NotBlank(allowNull: true, message: 'The translation domain should not be empty. Use null instead')]
         private ?string $translationDomain = null,
 
         private array $attributes = [],
@@ -44,8 +44,13 @@ class Property implements PropertyInterface
 
         private array $headerAttributes = [],
 
-        #[NotBlank(allowNull: true, message: 'The data transformer should not be empty. Use null instead')]
+        #[Assert\NotBlank(allowNull: true, message: 'The data transformer should not be empty. Use null instead')]
         private ?string $dataTransformer = null,
+
+        private ?array $permissions = null,
+
+        #[WorkflowInstalled]
+        private ?string $condition = null,
     ) {
     }
 
@@ -201,6 +206,32 @@ class Property implements PropertyInterface
     {
         $self = clone $this;
         $self->dataTransformer = $dataTransformer;
+
+        return $self;
+    }
+
+    public function getPermissions(): ?array
+    {
+        return $this->permissions;
+    }
+
+    public function withPermissions(array $permissions): self
+    {
+        $self = clone $this;
+        $self->permissions = $permissions;
+
+        return $self;
+    }
+
+    public function getCondition(): ?string
+    {
+        return $this->condition;
+    }
+
+    public function withCondition(?string $condition): self
+    {
+        $self = clone $this;
+        $self->condition = $condition;
 
         return $self;
     }

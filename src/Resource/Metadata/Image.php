@@ -19,6 +19,8 @@ class Image extends Property
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = ImageDataTransformer::class,
+        ?array $permissions = null,
+        ?string $condition = null,
 
         #[Assert\NotBlank(allowNull: true)]
         private ?string $imageFilter = null,
@@ -39,6 +41,8 @@ class Image extends Property
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
+            permissions: $permissions,
+            condition: $condition,
         );
     }
 

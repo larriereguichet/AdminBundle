@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Metadata;
 
+use LAG\AdminBundle\Condition\ConditionalInterface;
+use LAG\AdminBundle\Security\PermissibleInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -13,7 +15,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  *
  * The properties are linked to one or several Resource.
  */
-interface PropertyInterface
+interface PropertyInterface extends PermissibleInterface, ConditionalInterface
 {
     /**
      * Return the property name. It should be unique for a resource.
@@ -144,4 +146,15 @@ interface PropertyInterface
      * "lag_admin.data_transformer" tag.
      */
     public function withDataTransformer(?string $dataTransformer): self;
+
+    /**
+     * Return the property permissions. If the permissions are matched, the property will be displayed in the grid. If
+     * the permissions do not match, the property will be skipped.
+     */
+    public function getPermissions(): ?array;
+
+    /**
+     * Define the property permissions.
+     */
+    public function withPermissions(array $permissions): self;
 }
