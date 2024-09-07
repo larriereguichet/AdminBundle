@@ -26,10 +26,7 @@ final readonly class CollectionCellViewBuilder implements CellViewBuilderInterfa
         }
 
         if (!is_iterable($data)) {
-            throw new Exception(\sprintf('The collection property "%s" requires iterable data, got "%s"',
-                $property->getName(),
-                get_debug_type($data)
-            ));
+            throw new Exception(\sprintf('The collection property "%s" requires iterable data, got "%s"', $property->getName(), get_debug_type($data)));
         }
         $context['children'] = [];
         $index = 0;
@@ -46,7 +43,7 @@ final readonly class CollectionCellViewBuilder implements CellViewBuilderInterfa
                 $child,
                 $propertyData,
             );
-            $index++;
+            ++$index;
         }
 
         return $this->cellBuilder->buildCell($grid, $property, $data, $context);
