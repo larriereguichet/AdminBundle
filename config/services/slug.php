@@ -8,6 +8,7 @@ use LAG\AdminBundle\Slug\Registry\SluggerRegistry;
 use LAG\AdminBundle\Slug\Registry\SluggerRegistryInterface;
 use LAG\AdminBundle\Slug\Slugger\DefaultSlugger;
 use LAG\AdminBundle\Slug\Slugger\DefaultSluggerInterface;
+use LAG\AdminBundle\Slug\Slugger\SluggerInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -20,5 +21,8 @@ return static function (ContainerConfigurator $container): void {
     // Slugger
     $services->set(DefaultSluggerInterface::class, DefaultSlugger::class)
         ->tag('lag_admin.slugger', ['name' => 'default'])
+
+        ->alias(SluggerInterface::class, DefaultSluggerInterface::class)
+        ->alias('lag_admin.slugger', DefaultSluggerInterface::class)
     ;
 };
