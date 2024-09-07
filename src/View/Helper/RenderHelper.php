@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Helper;
 
-use LAG\AdminBundle\Condition\ConditionMatcherInterface;
 use LAG\AdminBundle\Resource\Metadata\Action;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -16,20 +15,12 @@ final readonly class RenderHelper implements RenderHelperInterface
     public function __construct(
         private Environment $environment,
         private UrlGeneratorInterface $urlGenerator,
-        private ConditionMatcherInterface $conditionMatcher,
         private TranslatorInterface $translator,
     ) {
     }
 
     public function renderAction(Action $action, mixed $data): string
     {
-        if (
-            $action->getCondition() !== null
-            && !$this->conditionMatcher->matchCondition($data, $action->getCondition(), [], $action->getWorkflow())
-        ) {
-            return '';
-        }
-
         if ($action->getTitle() !== null && $action->getAttribute('title') === null) {
             $title = $this->translator->trans($action->getTitle(), [], $action->getTranslationDomain());
             /** @var Action $action */

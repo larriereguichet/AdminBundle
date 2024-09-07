@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Extension;
 
+use LAG\AdminBundle\Grid\Render\LinkRendererInterface;
 use LAG\AdminBundle\Resource\Metadata\Link;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
-use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
