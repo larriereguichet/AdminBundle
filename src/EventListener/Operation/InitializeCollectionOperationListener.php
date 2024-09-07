@@ -105,10 +105,11 @@ final readonly class InitializeCollectionOperationListener
             if ($operation->getResource()->getTranslationDomain()) {
                 /** @var Action $action */
                 $action = $action->withLabel(
-                    u('{application}.{resource}.{operation}')
+                    u($operation->getResource()->getTranslationPattern() ?? '{application}.{resource}.{message}')
                         ->replace('{application}', $resource->getApplication())
                         ->replace('{resource}', $resource->getName())
                         ->replace('{operation}', $action->getOperation())
+                        ->replace('{message}', $action->getOperation())
                         ->toString()
                 );
             } else {
