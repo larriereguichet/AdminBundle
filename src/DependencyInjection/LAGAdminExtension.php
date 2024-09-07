@@ -103,13 +103,13 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
                 'lag_admin_full' => [],
             ],
             'loaders' => [
-                'lag_admin_images' => [
+                'lag_admin' => [
                     'flysystem' => [
                         'filesystem_service' => 'lag_admin_image.storage',
                     ],
                 ],
             ],
-            'data_loader' => 'lag_admin_images',
+            'data_loader' => 'lag_admin',
         ]);
 
         $container->prependExtensionConfig('babdev_pagerfanta', [
