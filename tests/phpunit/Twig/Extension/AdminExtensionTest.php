@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Twig\Extension;
 
+use LAG\AdminBundle\Grid\Render\LinkRendererInterface;
 use LAG\AdminBundle\Resource\Metadata\Get;
 use LAG\AdminBundle\Resource\Metadata\Link;
 use LAG\AdminBundle\Resource\Metadata\Resource;
@@ -12,7 +13,6 @@ use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
 use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\Twig\Extension\AdminExtension;
-use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 

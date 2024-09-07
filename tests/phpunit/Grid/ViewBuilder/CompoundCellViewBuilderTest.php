@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Grid\ViewBuilder;
@@ -13,7 +14,6 @@ use LAG\AdminBundle\Resource\Metadata\Text;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 final class CompoundCellViewBuilderTest extends TestCase
 {
@@ -26,7 +26,7 @@ final class CompoundCellViewBuilderTest extends TestCase
         $grid = new Grid(name: 'some_grid');
         $child = new Text(name: 'child');
         $property = new Compound(name: 'some_property', properties: ['child']);
-        $data = new stdClass();
+        $data = new \stdClass();
         $cellView = new CellView(name: 'some_view');
         $childView = new CellView(name: 'some_child_view');
 
@@ -48,13 +48,12 @@ final class CompoundCellViewBuilderTest extends TestCase
         $this->builder->buildCell($grid, $property, $data, ['some' => 'context', 'resource' => $resource]);
     }
 
-
     #[Test]
     public function itDoesNotBuildNotCompoundProperties(): void
     {
         $grid = new Grid(name: 'some_grid');
         $property = new Text();
-        $data = new stdClass();
+        $data = new \stdClass();
         $cellView = new CellView(name: 'some_view');
 
         $this->decorated
@@ -72,7 +71,7 @@ final class CompoundCellViewBuilderTest extends TestCase
     {
         $grid = new Grid(name: 'some_grid');
         $property = new Compound(properties: []);
-        $data = new stdClass();
+        $data = new \stdClass();
         $cellView = new CellView(name: 'some_view');
 
         $this->decorated
