@@ -20,8 +20,8 @@
                     <thead>
                     <tr {{ headerRowAttributes }}>
                         {%- for header in grid.headers -%}
-                            <th{{ headerAttributes.defaults({'class': 'text-dark'}) }}>
-                                {{ lag_admin.translate(header.label, resource.translationDomain, true) }}
+                            <th{{ header.attributes.defaults({'class': 'text-dark'}) }}>
+                                {{ lag_admin_header(header) }}
                             </th>
                         {%- endfor -%}
 
@@ -46,8 +46,8 @@
                         {% endfor %}
 
                         {% if row.actions|length > 0 or grid.extraColumn %}
-                            <td>
-                                <div class="btn btn-group">
+                            <td class="text-end">
+                                <div class="btn-group">
                                     {% for action in row.actions %}
                                         {{ lag_admin_cell(action) }}
                                     {% endfor %}
