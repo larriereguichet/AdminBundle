@@ -1,5 +1,5 @@
 <a href="{{ data }}" {{ attributes.defaults({class: 'btn'}) }}>
-    {% if options.icon %}<i class="bi {{ options.icon }}"></i>{% endif %}
+    {% if options.icon %}<i class="bi bi-{{ options.icon }}"></i>{% endif %}
 
     {% if options.translatable %}
         {{ options.label|trans({}, options.translationDomain) }}
