@@ -5,7 +5,7 @@
 {% block title %}{{ operation.title|admin_trans }}{% endblock %}
 
 {% block content %}
-    <div class="admin-index admin-{{ resource.name }} admin-{{ operation.name }}">
+    <div class="admin-container admin-{{ resource.name }} admin-{{ operation.name }}">
         {% block form %}
             {% if form %}
                 {{ form_start(form) }}
@@ -15,6 +15,7 @@
                 {% endblock %}
 
                 {% block form_buttons %}
+                    <hr>
                     <div class="row mt-3 justify-content-end">
                         <div class="col-5 text-end">
                             <div class="btn-group">
