@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventListener\Resource;
 
 use LAG\AdminBundle\Event\ResourceEvent;
+use LAG\AdminBundle\Resource\Metadata\Link;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Metadata\ResourceLink;
@@ -54,13 +55,19 @@ final readonly class InitializeResourcePropertiesListener
             $property = $property->withTranslationDomain($resource->getTranslationDomain());
         }
 
-        if ($property instanceof ResourceLink) {
+        if ($property instanceof ResourceLink || $property instanceof Link) {
             if ($property->getApplication() === null) {
                 $property = $property->withApplication($resource->getApplication());
             }
 
             if ($property->getResource() === null) {
                 $property = $property->withResource($resource->getName());
+            }
+        }
+
+        if ($property instanceof Link) {
+            if ($property->getText() === null) {
+                $property = $property->withText($property->getName());
             }
         }
 
