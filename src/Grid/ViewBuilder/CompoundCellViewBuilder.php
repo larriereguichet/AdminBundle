@@ -8,7 +8,7 @@ use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Resource\Metadata\CompoundPropertyInterface;
 use LAG\AdminBundle\Resource\Metadata\Grid;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Resource\Metadata\Resource as AdminResource;
 
 /**
  * Build the cell view for the compound properties. Each child should be build separately and passed to the parent cell
@@ -26,7 +26,7 @@ final readonly class CompoundCellViewBuilder implements CellViewBuilderInterface
         if (!$property instanceof CompoundPropertyInterface || !empty($context['children'])) {
             return $this->cellBuilder->buildCell($grid, $property, $data, $context);
         }
-        /** @var Resource $resource */
+        /** @var AdminResource $resource */
         $resource = $context['resource'];
         $children = [];
 
