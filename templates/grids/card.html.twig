@@ -13,11 +13,11 @@
                 {% for cell in row.cells %}
                     {% if cell.name == options.thumbnail|default(false) %}
                         {{ lag_admin_cell(cell, {attributes: {class: 'card-img-top'}}) }}
-                    {% elseif cell.name == options.footer|default(false) %}
+                    {% elseif cell.name == options.footer|default(false) and cell.template %}
                         <div class="card-footer">
                             {{ lag_admin_cell(cell) }}
                         </div>
-                    {% else %}
+                    {% elseif cell.template %}
                         <div class="card-body">
                             {{ lag_admin_cell(cell) }}
                         </div>
