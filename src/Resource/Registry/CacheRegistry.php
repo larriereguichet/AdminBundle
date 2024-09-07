@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Resource\Registry;
 
 use LAG\AdminBundle\Resource\Metadata\Resource;
 
-class CacheRegistry implements ResourceRegistryInterface
+final class CacheRegistry implements ResourceRegistryInterface
 {
     /** @var array<string, array<string, resource>> */
     private array $cache = [];

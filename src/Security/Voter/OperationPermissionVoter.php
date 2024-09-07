@@ -9,12 +9,12 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class OperationPermissionVoter extends Voter
+final class OperationPermissionVoter extends Voter
 {
-    public const RESOURCE_ACCESS = 'resource_access';
+    public const string RESOURCE_ACCESS = 'resource_access';
 
     public function __construct(
-        private Security $security,
+        private readonly Security $security,
     ) {
     }
 
