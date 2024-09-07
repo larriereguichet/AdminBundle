@@ -16,7 +16,6 @@ final readonly class DataCellViewBuilder implements CellViewBuilderInterface
         private CellViewBuilderInterface $cellBuilder,
         private DataMapperInterface $dataMapper,
         private DataTransformerRegistryInterface $transformerRegistry,
-
     ) {
     }
 
