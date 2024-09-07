@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
@@ -41,6 +42,10 @@ final readonly class ResourceController
         $context = $this->contextProvider->getContext($operation, $request);
         $data = $this->provider->provide($operation, $uriVariables, $context);
         $form = null;
+
+        if ($data === null) {
+            throw new NotFoundHttpException();
+        }
 
         if ($operation->getForm() !== null) {
             $form = $this->formFactory->create($operation->getForm(), $data, $operation->getFormOptions());
