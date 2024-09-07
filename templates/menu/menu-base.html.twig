@@ -16,10 +16,20 @@
 
 {%- block spanElement -%}
     {% import _self as knp_menu %}
-    <span{{ knp_menu.attributes(item.labelAttributes|merge({
-        'data-bs-toggle': 'dropdown',
-        'class': 'nav-link' ~ (item.children|length > 0 ? ' dropdown-toggle' : '')
-    })) }}>{{ block('label') }}</span>
+
+    {% if item.children|length > 0 %}
+        <a {{ knp_menu.attributes(item.labelAttributes|merge({
+            'href': '#',
+            'data-bs-toggle': 'dropdown',
+            'class': 'nav-link dropdown-toggle'
+        })) }}>{{ block('label') }}</a>
+    {% else %}
+        <span{{ knp_menu.attributes(item.labelAttributes|merge({
+            'data-bs-toggle': 'dropdown',
+            'class': 'nav-link'
+        })) }}>{{ block('label') }}</span>
+    {% endif %}
+
 {%- endblock -%}
 
 {% block list %}
