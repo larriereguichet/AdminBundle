@@ -9,7 +9,7 @@ use LAG\AdminBundle\Grid\View\HeaderView;
 use LAG\AdminBundle\Resource\Metadata\Grid;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 
-interface CellViewBuilderInterface
+interface HeaderViewBuilderInterface
 {
-    public function buildCell(Grid $grid, PropertyInterface $property, mixed $data, array $context = []): CellView;
+    public function buildHeader(Grid $grid, PropertyInterface $property, array $context = []): HeaderView;
 }

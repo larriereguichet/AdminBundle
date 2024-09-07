@@ -9,5 +9,5 @@ use LAG\AdminBundle\Resource\Metadata\Action;
 
 interface ActionViewBuilderInterface
 {
-    public function buildActions(Action $action, mixed $data, array $attributes = []): ?CellView;
+    public function buildActions(Action $action, mixed $data, array $context = []): ?CellView;
 }

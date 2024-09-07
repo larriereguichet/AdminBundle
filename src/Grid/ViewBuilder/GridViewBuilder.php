@@ -23,11 +23,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final readonly class GridViewBuilder implements GridViewBuilderInterface
 {
     public function __construct(
-        private CellViewBuilderInterface $cellBuilder,
+        private RowViewBuilderInterface $rowBuilder,
         private ActionViewBuilderInterface $actionBuilder,
         private ResourceEventDispatcherInterface $eventDispatcher,
         private ValidatorInterface $validator,
-        private DataMapperInterface $dataMapper,
     ) {
     }
 
@@ -49,6 +48,9 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
         if ($errors->count() > 0) {
             throw new InvalidGridException($grid->getName() ?? '', $errors);
         }
+        $context['resource'] = $resource;
+        $context['object'] = $data;
+        $context['grid'] = $grid;
 
         return new GridView(
             name: $grid->getName(),
@@ -66,93 +68,23 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
         );
     }
 
-    private function buildHeaders(Grid $grid, Resource $resource, array $context): iterable
+    private function buildHeaders(Grid $grid, Resource $resource, array $context): RowView
     {
-        $headers = [];
-
-        foreach ($grid->getProperties() as $propertyName) {
-            $property = $resource->getProperty($propertyName);
-
-            $headers[] = $this->cellBuilder->buildHeader($grid, $property, $context);
-        }
-
-        return $headers;
+        return $this->rowBuilder->buildHeadersRow($grid, $resource, $context);
     }
 
     private function buildRows(Grid $grid, Resource $resource, mixed $data, array $context): iterable
     {
         if (!is_iterable($data)) {
-            throw new Exception('Data must be iterable.');
+            throw new Exception('Data must be iterable to build a grid.');
         }
         $rows = [];
 
         foreach ($data as $row) {
-            $rows[] = new RowView(
-                cells: $this->buildCells($grid, $resource, $row, $context),
-                actions: $this->buildActions($grid, $row),
-                attributes: $grid->getRowAttributes(),
-            );
+            $rows[] = $this->rowBuilder->buildRow($grid, $resource, $row, $context);
         }
 
         return $rows;
-    }
-
-    private function buildCells(Grid $grid, Resource $resource, mixed $data, array $context): iterable
-    {
-        $cells = [];
-
-        foreach ($grid->getProperties() as $propertyName) {
-            $property = $resource->getProperty($propertyName);
-            $cellData = $this->dataMapper->getValue($property, $data);
-
-            if ($property instanceof CompoundPropertyInterface && empty($context['children'])) {
-                $context['children'] = [];
-
-                foreach ($property->getProperties() as $childPropertyName) {
-                    $child = $resource->getProperty($childPropertyName);
-                    $childData = $this->dataMapper->getValue($child, $data);
-                    $context['children'][] = $this->cellBuilder->build($grid, $child, $childData);
-                }
-            }
-
-            if ($property instanceof Collection) {
-                if (!is_iterable($cellData)) {
-                    throw new Exception(\sprintf('The collection property "%s" requires iterable data', $property->getName()));
-                }
-                $context['children'] = [];
-
-                foreach ($cellData as $index => $childData) {
-                    $childProperty = $property->getEntryProperty()
-                        ->withName($property->getName().'_'.$index)
-                    ;
-                    $childData = $this->dataMapper->getValue($childProperty, $childData);
-
-                    $context['children'][] = $this->cellBuilder->build(
-                        $grid,
-                        $childProperty,
-                        $childData,
-                    );
-                }
-            }
-            $cells[] = $this->cellBuilder->build($grid, $property, $cellData, $context);
-        }
-
-        return $cells;
-    }
-
-    private function buildActions(Grid $grid, mixed $data): iterable
-    {
-        $actions = [];
-
-        foreach ($grid->getActions() as $action) {
-            $action = $this->actionBuilder->buildActions($action, $data);
-
-            if ($action !== null) {
-                $actions[] = $action;
-            }
-        }
-
-        return $actions;
     }
 
     private function buildCollectionActions(Grid $grid, mixed $data): array
