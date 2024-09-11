@@ -53,6 +53,8 @@ class Grid
         #[Assert\Valid]
         #[Assert\NotNull]
         private ?array $collectionActions = null,
+
+        private ?string $emptyMessage = null,
     ) {
     }
 
@@ -273,6 +275,19 @@ class Grid
     {
         $self = clone $this;
         $self->collectionActions = $collectionActions;
+
+        return $self;
+    }
+
+    public function getEmptyMessage(): ?string
+    {
+        return $this->emptyMessage;
+    }
+
+    public function withEmptyMessage(?string $emptyMessage): self
+    {
+        $self = clone $this;
+        $self->emptyMessage = $emptyMessage;
 
         return $self;
     }
