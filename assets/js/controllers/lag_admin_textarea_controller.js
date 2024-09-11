@@ -1,6 +1,5 @@
 import {Controller} from '@hotwired/stimulus'
 import Quill from 'quill'
-import { HtmlToDelta } from 'quill-delta-from-html'
 
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
@@ -9,7 +8,10 @@ export default class extends Controller {
     connect() {
         const toolbar = JSON.parse(this.element.dataset.toolbar ?? 'true')
         const textarea = this.element.querySelector('textarea')
-        let content = textarea.textContent
+        const textContent = textarea.textContent
+        const form = this.element.closest('form')
+
+        let deltas = {}
 
         const editor = new Quill(this.element, {
             modules: {
@@ -18,13 +20,10 @@ export default class extends Controller {
             theme: 'snow'
         })
 
-        if (content) {
-            content = JSON.parse(content)
-        } else {
-            content = {}
+        if (textContent) {
+            deltas = JSON.parse(textContent)
         }
-        editor.setContents(content)
-        const form = this.element.closest('form')
+        editor.setContents(deltas)
 
         if (form) {
             form.addEventListener('formdata', (event) => {
