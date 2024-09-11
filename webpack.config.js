@@ -12,10 +12,11 @@ Encore
     .addEntry('admin', './assets/js/admin.js')
     .addStyleEntry('choice-js', './node_modules/choices.js/public/assets/styles/choices.css')
 
-    .disableSingleRuntimeChunk()
     .enableSassLoader()
     .enableVersioning(false)
     .enableSourceMaps(!Encore.isProduction())
+    .disableSingleRuntimeChunk()
+
     .cleanupOutputBeforeBuild()
 
     .configureBabel(() => {}, {
@@ -23,24 +24,6 @@ Encore
         corejs: 3
     })
 
-    // Copy the files required by tinymce
-    .copyFiles({
-        from: 'vendor/tinymce/tinymce/icons',
-        to: 'icons/[path][name].[ext]'
-    })
-    .copyFiles({
-        from: 'vendor/tinymce/tinymce/skins',
-        to: 'skins/[path][name].[ext]'
-    })
-    .copyFiles({
-        from: 'vendor/tinymce/tinymce/themes',
-        to: 'themes/[path][name].[ext]'
-    })
-    .copyFiles({
-        from: 'vendor/tinymce/tinymce/plugins/emoticons/js/',
-        to: 'plugins/emoticons/js/[path][name].[ext]',
-        pattern: /\.(js)$/
-    })
     .copyFiles({
         from: './assets/favicon',
         to: '[path][name].[ext]'
