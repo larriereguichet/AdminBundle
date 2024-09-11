@@ -108,13 +108,6 @@
     {%- endif -%}
 {%- endblock datetime_widget %}
 
-{#{% block lag_admin_image_row %}#}
-{#    <div data-controller="lag-admin-image-form">#}
-{#        lol#}
-{#        {{ form_row(form) }}#}
-{#    </div>#}
-{#{% endblock %}#}
-
 {% block lag_admin_image_widget %}
     {% if data %}
         <div class="lag-admin image-card d-flex">
@@ -218,3 +211,11 @@
         </div>
     {% endif %}
 {% endblock lag_admin_gallery_widget %}
+
+{% block lag_admin_textarea_widget %}
+    <div data-controller="lag-admin-textarea"
+         data-toolbar="{{ form.vars.toolbar }}"
+         data-name="{{ form.vars.full_name }}">
+        {{ form_widget(form) }}
+    </div>
+{% endblock lag_admin_textarea_widget %}
