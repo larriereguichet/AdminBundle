@@ -30,6 +30,7 @@
         "johnkrovitch/orm-pack": "^3.1",
         "knplabs/knp-menu-bundle": "^3.2",
         "league/flysystem-bundle": "^3.2",
+        "nadar/quill-delta-parser": "^3.4",
         "symfony/dependency-injection": "^7.0",
         "symfony/error-handler": "^7.0",
         "symfony/event-dispatcher": "^7.0",
@@ -89,13 +90,6 @@
         "sort-packages": true,
         "allow-plugins": {
             "symfony/flex": true
-        }
-    },
-    "scripts": {
-        "auto-scripts": {
-            "security-checker security:check": "script",
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         }
     }
 }
