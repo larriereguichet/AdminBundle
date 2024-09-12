@@ -1,6 +1,5 @@
 {
   "admin.css": "/bundles/lagadmin/admin.css",
   "admin.js": "/bundles/lagadmin/admin.js",
-  "choice-js.css": "/bundles/lagadmin/choice-js.css",
   "favicon.ico": "/bundles/lagadmin/favicon.ico"
 }

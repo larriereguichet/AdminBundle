@@ -10,7 +10,6 @@ Encore
     .setPublicPath('/bundles/lagadmin')
 
     .addEntry('admin', './assets/js/admin.js')
-    .addStyleEntry('choice-js', './node_modules/choices.js/public/assets/styles/choices.css')
 
     .enableSassLoader()
     .enableVersioning(false)
