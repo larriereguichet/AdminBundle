@@ -7,7 +7,7 @@
         {% set order = 'desc' %}
     {% endif %}
 
-    <a href="?sort={{ header.name }}&order={{ order }}"
+    <a href="?{{ app.request.query.all|merge({sort: header.name, order: order}) }}"
        class="text-dark">
         {{ lag_admin.translate(header.label, header.translationDomain, true) }}
 
