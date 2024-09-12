@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\View\Vars;
 
 use LAG\AdminBundle\Resource\Metadata\Application;

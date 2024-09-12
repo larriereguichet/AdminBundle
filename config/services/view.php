@@ -26,8 +26,6 @@ use LAG\AdminBundle\View\Component\Cell\Link;
 use LAG\AdminBundle\View\Component\Cell\MapComponent;
 use LAG\AdminBundle\View\Component\Cell\TextComponent;
 use LAG\AdminBundle\View\Component\Grid\Grid;
-use LAG\AdminBundle\View\Vars\LAGAdminVars;
-use LAG\AdminBundle\View\Vars\LAGAdminVarsInterface;
 use LAG\AdminBundle\View\Helper\GridHelper;
 use LAG\AdminBundle\View\Helper\GridHelperInterface;
 use LAG\AdminBundle\View\Helper\PaginationHelper;
@@ -38,6 +36,8 @@ use LAG\AdminBundle\View\Helper\RoutingHelper;
 use LAG\AdminBundle\View\Helper\RoutingHelperInterface;
 use LAG\AdminBundle\View\Helper\TextHelper;
 use LAG\AdminBundle\View\Helper\TextHelperInterface;
+use LAG\AdminBundle\View\Vars\LAGAdminVars;
+use LAG\AdminBundle\View\Vars\LAGAdminVarsInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();

@@ -80,7 +80,7 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
 
         $container->prependExtensionConfig('twig', [
             'form_themes' => ['@LAGAdmin/forms/theme.html.twig'],
-            'globals' => ['lag_admin' => '@lag_admin.twig_vars']
+            'globals' => ['lag_admin' => '@lag_admin.twig_vars'],
         ]);
 
         $container->prependExtensionConfig('flysystem', [
