@@ -6,7 +6,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Form\Extension\ChoiceTypeExtension;
 use LAG\AdminBundle\Form\Extension\CollectionTypeExtension;
-use LAG\AdminBundle\Form\Extension\TabResourceTypeExtension;
 use LAG\AdminBundle\Form\Transformer\ImageFileToArrayTransformer;
 use LAG\AdminBundle\Form\Type\DateRangeType;
 use LAG\AdminBundle\Form\Type\Image\ImageType;
@@ -64,9 +63,6 @@ return static function (ContainerConfigurator $container): void {
         ->tag('form.type_extension')
     ;
     $services->set(ChoiceTypeExtension::class)
-        ->tag('form.type_extension')
-    ;
-    $services->set(TabResourceTypeExtension::class)
         ->tag('form.type_extension')
     ;
 
