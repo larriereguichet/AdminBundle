@@ -14,9 +14,11 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactory;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\DoctrineCollectionNormalizeProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\IdentifierProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\PaginationProvider;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\QueryBuilderProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ResultProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\SortingProvider;
 use LAG\AdminBundle\Event\ResourceEvents;
 use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
 use LAG\AdminBundle\Filter\Resolver\FilterValuesResolver;
@@ -33,11 +35,19 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$registry', service('doctrine'))
         ->tag('lag_admin.state_provider', ['identifier' => 'doctrine', 'priority' => 0])
     ;
+    $services->set(SortingProvider::class)
+        ->decorate(ProviderInterface::class, priority: 300)
+        ->arg('$provider', service('.inner'))
+    ;
+    $services->set(IdentifierProvider::class)
+        ->decorate(ORMProvider::class, priority: 250)
+        ->arg('$provider', service('.inner'))
+    ;
     $services->set(PaginationProvider::class)
         ->decorate(ProviderInterface::class, priority: 210)
         ->arg('$provider', service('.inner'))
     ;
-    $services->set(QueryBuilderProvider::class)
+    $services->set(ResultProvider::class)
         ->decorate(ProviderInterface::class, priority: 200)
         ->arg('$provider', service('.inner'))
     ;

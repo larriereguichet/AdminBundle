@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
 
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
-use Pagerfanta\Adapter\CallbackAdapter;
-use Pagerfanta\Pagerfanta;
-use Pagerfanta\PagerfantaInterface;
 
-final readonly class ORMOutputProvider implements ProviderInterface
+final readonly class ResultProvider implements ProviderInterface
 {
     public function __construct(
         private ProviderInterface $provider,
@@ -21,16 +21,16 @@ final readonly class ORMOutputProvider implements ProviderInterface
     {
         $data = $this->provider->provide($operation, $uriVariables, $context);
 
-        if ($operation->getOutput() === null) {
-            return $data;
+        if ($data instanceof QueryBuilder) {
+            $data = $data->getQuery();
         }
 
-        if ($data instanceof PagerfantaInterface) {
-            return new Pagerfanta(new CallbackAdapter(function () use ($data) {
-                return $data->getNbResults();
-            }, function () use ($data) {
-                return $data->getCurrentPageResults();
-            }));
+        if ($data instanceof Query) {
+            if ($operation instanceof CollectionOperationInterface) {
+                return $data->getResult();
+            }
+
+            return $data->getOneOrNullResult();
         }
 
         return $data;
