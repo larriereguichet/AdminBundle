@@ -13,51 +13,95 @@ final readonly class ResourceEventDispatcher implements ResourceEventDispatcherI
 {
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
+        private EventDispatcherInterface $buildEventDispatcher,
     ) {
     }
 
-    public function dispatchResourceEvents(
+    public function dispatchBuildEvents(
         Event $event,
-        string $eventName,
+        string $eventPattern,
+        string $applicationName,
+        string $resourceName,
+        ?string $operationName = null
+    ): void {
+        $eventNames = $this->buildEvents(
+            $eventPattern,
+            $applicationName,
+            $resourceName,
+            $operationName,
+        );
+
+        foreach ($eventNames as $eventName) {
+            $this->buildEventDispatcher->dispatch($event, $eventName);
+        }
+    }
+
+    public function dispatchEvents(
+        Event $event,
+        string $eventPattern,
         string $applicationName,
         string $resourceName,
         ?string $operationName = null,
+        ?string $gridName = null,
     ): void {
-        $eventName = u($eventName);
-        $eventNames = [
-            $eventName->prepend('lag_admin.'),
-            $eventName->replace('resource', '{application}.{resource}'),
-        ];
+        $eventNames = $this->buildEvents(
+            $eventPattern,
+            $applicationName,
+            $resourceName,
+            $operationName,
+        );
 
-        // As the application and resource names are mandatory, the operation can be optional for build resource events
-        // for instance
-        if ($operationName) {
-            $eventNames = [
-                $eventName->prepend('lag_admin.'),
-                $eventName->replace('operation', '{application}.{resource}.{operation}'),
-            ];
-        }
-
-        foreach ($eventNames as $eventNameString) {
-            $eventName = $eventNameString
-                ->replace('{application}', $applicationName)
-                ->replace('{resource}', $resourceName)
-                ->replace('{operation}', $operationName ?? '')
-                ->toString()
-            ;
+        foreach ($eventNames as $eventName) {
             $this->eventDispatcher->dispatch($event, $eventName);
         }
     }
 
-    public function dispatchGridEvents(
-        Event $event,
-        string $eventName,
+    private function buildEvents(
+        string $eventPattern,
         string $applicationName,
         string $resourceName,
-        string $gridName,
-    ): void {
-        $eventName = u($eventName);
+        ?string $operationName = null,
+        ?string $gridName = null,
+    ): array {
+        $eventPattern = u($eventPattern);
         $eventNames = [
+            // Generic event
+            $eventPattern
+                ->replace('{application}', 'lag_admin')
+                ->replace('{resource}', 'resource')
+                ->toString(),
+
+            // Application event
+            $eventPattern
+                ->replace('{application}', $applicationName)
+                ->replace('{resource}', 'resource')
+                ->toString(),
+
+            // Resource event
+            $eventPattern
+                ->replace('{application}', $applicationName)
+                ->replace('{resource}', $resourceName)
+                ->toString(),
         ];
+
+        if ($operationName !== null) {
+            // Operation event
+            $eventNames[] = $eventPattern
+                ->replace('{application}', $applicationName)
+                ->replace('{resource}', $resourceName.'.'.$operationName)
+                ->toString()
+            ;
+        }
+
+        if ($gridName !== null) {
+            $eventNames[] = $eventPattern
+                ->replace('{application}', $applicationName)
+                ->replace('{resource}', $resourceName.'.'.$operationName)
+                ->replace('{grid}', $gridName)
+                ->toString()
+            ;
+        }
+
+        return $eventNames;
     }
 }

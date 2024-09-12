@@ -35,6 +35,7 @@ final readonly class RowViewBuilder implements RowViewBuilderInterface
     public function buildRow(Grid $grid, Resource $resource, mixed $data, array $context): RowView
     {
         $cells = [];
+        $context['row_data'] = $data;
 
         foreach ($grid->getProperties() as $propertyName) {
             $property = $resource->getProperty($propertyName);

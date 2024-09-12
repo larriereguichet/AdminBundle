@@ -16,7 +16,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 final class EventResourceFactoryTest extends TestCase
 {
-    private EventResourceFactory $decorator;
+    private EventResourceFactory $eventResourceFactory;
     private MockObject $eventDispatcher;
     private MockObject $decorated;
 
@@ -30,10 +30,23 @@ final class EventResourceFactoryTest extends TestCase
 
         $this->eventDispatcher
             ->expects(self::exactly(2))
-            ->method('dispatchResourceEvents')
+            ->method('dispatchBuildEvents')
             ->willReturnMap([
-                [new ResourceEvent($resource), ResourceEvents::RESOURCE_CREATE, 'my_application', 'my_resource', null],
-                [new ResourceEvent($resource), ResourceEvents::RESOURCE_CREATED, 'my_application', 'my_resource', null],
+                [
+                    new ResourceEvent($resource),
+                    ResourceEvents::RESOURCE_CREATE_PATTERN,
+                    'my_application', 'my_resource',
+                    null,
+                    null,
+                ],
+                [
+                    new ResourceEvent($resource),
+                    ResourceEvents::RESOURCE_CREATED_PATTERN,
+                    'my_application',
+                    'my_resource',
+                    null,
+                    null,
+                ],
             ])
         ;
 
@@ -44,14 +57,14 @@ final class EventResourceFactoryTest extends TestCase
             ->willReturn($resource)
         ;
 
-        $this->decorator->create($resource);
+        $this->eventResourceFactory->create($resource);
     }
 
     protected function setUp(): void
     {
         $this->decorated = self::createMock(ResourceFactoryInterface::class);
         $this->eventDispatcher = self::createMock(ResourceEventDispatcherInterface::class);
-        $this->decorator = new EventResourceFactory(
+        $this->eventResourceFactory = new EventResourceFactory(
             $this->eventDispatcher,
             $this->decorated,
         );

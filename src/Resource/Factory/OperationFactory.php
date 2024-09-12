@@ -34,7 +34,7 @@ final readonly class OperationFactory implements OperationFactoryInterface
         $filters = [];
 
         foreach ($operation->getFilters() ?? [] as $filter) {
-            $filters[] = $this->filterFactory->create($filter);
+            $filters[] = $this->filterFactory->create($operation, $filter);
         }
 
         return $filters;

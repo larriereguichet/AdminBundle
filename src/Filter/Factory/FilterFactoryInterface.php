@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Filter\Factory;
 
+use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\FilterInterface;
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 
 interface FilterFactoryInterface
 {
-    public function create(FilterInterface $filter): FilterInterface;
-
-    public function createFromProperty(PropertyInterface $property): FilterInterface;
+    /**
+     * Create a filter for the given operation to allow filtering a collection of data.
+     */
+    public function create(CollectionOperationInterface $operation, FilterInterface $filter): FilterInterface;
 }

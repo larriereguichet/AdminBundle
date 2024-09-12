@@ -43,6 +43,11 @@ final readonly class RoutingHelper implements RoutingHelperInterface
         mixed $data = null,
         ?string $application = null,
     ): string {
+        if ($application === null) {
+            $request = $this->requestStack->getCurrentRequest();
+            $application = $this->context->getOperation($request)->getResource()->getApplication();
+        }
+
         return $this->urlGenerator->generateFromOperationName(
             $resource,
             $operation,

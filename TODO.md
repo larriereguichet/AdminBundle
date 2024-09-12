@@ -9,3 +9,5 @@
 - add sf routing params to resource
 - remove load method from the registry
 - make workflow optional ?
+- handle post/update without form
+- remove processor on get

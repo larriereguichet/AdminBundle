@@ -29,6 +29,7 @@
                     <div class="pagination justify-content-center">
                         {{ pagerfanta(data, {
                             page: data.currentPage,
+                            routeName: app.request.attributes.get('_route')
                         }) }}
                     </div>
                 </div>
