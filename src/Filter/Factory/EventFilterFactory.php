@@ -5,40 +5,40 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Filter\Factory;
 
 use LAG\AdminBundle\Event\FilterEvent;
+use LAG\AdminBundle\Event\FilterEvents;
+use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
+use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\FilterInterface;
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class EventFilterFactory implements FilterFactoryInterface
+final readonly class EventFilterFactory implements FilterFactoryInterface
 {
     public function __construct(
-        private EventDispatcherInterface $eventDispatcher,
+        private ResourceEventDispatcherInterface $eventDispatcher,
         private FilterFactoryInterface $decorated,
     ) {
     }
 
-    public function create(FilterInterface $filter): FilterInterface
+    public function create(CollectionOperationInterface $operation, FilterInterface $filter): FilterInterface
     {
-        $event = new FilterEvent($filter);
-        $this->eventDispatcher->dispatch($event, FilterEvent::FILTER_CREATE);
-        $this->eventDispatcher->dispatch($event, \sprintf(FilterEvent::FILTER_CREATE_PATTERN, $filter->getName()));
+        $event = new FilterEvent($filter, $operation);
 
-        $filter = $this->decorated->create($filter);
+        $this->eventDispatcher->dispatchEvents(
+            $event,
+            FilterEvents::FILTER_CREATE_EVENT_PATTERN,
+            $operation->getResource()->getApplication(),
+            $operation->getResource()->getName(),
+            $operation->getName(),
+        );
 
-        $event = new FilterEvent($filter);
-        $this->eventDispatcher->dispatch($event, FilterEvent::FILTER_CREATED);
-        $this->eventDispatcher->dispatch($event, \sprintf(FilterEvent::FILTER_CREATED_PATTERN, $filter->getName()));
+        $filter = $this->decorated->create($operation, $event->getFilter());
 
-        return $filter;
-    }
-
-    public function createFromProperty(PropertyInterface $property): FilterInterface
-    {
-        $filter = $this->decorated->createFromProperty($property);
-
-        $event = new FilterEvent($filter);
-        $this->eventDispatcher->dispatch($event, FilterEvent::FILTER_CREATED);
-        $this->eventDispatcher->dispatch($event, \sprintf(FilterEvent::FILTER_CREATED_PATTERN, $filter->getName()));
+        $this->eventDispatcher->dispatchEvents(
+            $event,
+            FilterEvents::FILTER_CREATED_EVENT_PATTERN,
+            $operation->getResource()->getApplication(),
+            $operation->getResource()->getName(),
+            $operation->getName(),
+        );
 
         return $filter;
     }

@@ -8,19 +8,20 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 interface ResourceEventDispatcherInterface
 {
-    public function dispatchResourceEvents(
+    public function dispatchBuildEvents(
         Event $event,
-        string $eventName,
+        string $eventPattern,
         string $applicationName,
         string $resourceName,
         ?string $operationName = null,
     ): void;
 
-    public function dispatchGridEvents(
+    public function dispatchEvents(
         Event $event,
-        string $eventName,
+        string $eventPattern,
         string $applicationName,
         string $resourceName,
-        string $gridName,
+        ?string $operationName = null,
+        ?string $gridName = null,
     ): void;
 }

@@ -27,7 +27,7 @@ final class EventResourceFactoryTest extends TestCase
 
         $this->eventDispatcher
             ->expects(self::exactly(2))
-            ->method('dispatchResourceEvents')
+            ->method('dispatchBuildEvents')
             ->willReturnCallback(static function (
                 ResourceEvent $event,
                 string $patternName,
@@ -36,7 +36,10 @@ final class EventResourceFactoryTest extends TestCase
                 ?string $operation,
             ) use ($definition): void {
                 self::assertEquals(new ResourceEvent($definition), $event);
-                self::assertContains($patternName, [ResourceEvents::RESOURCE_CREATE, ResourceEvents::RESOURCE_CREATED]);
+                self::assertContains($patternName, [
+                    ResourceEvents::RESOURCE_CREATE_PATTERN,
+                    ResourceEvents::RESOURCE_CREATED_PATTERN,
+                ]);
                 self::assertEquals('my_application', $application);
                 self::assertEquals('my_resource', $resource);
                 self::assertNull($operation);

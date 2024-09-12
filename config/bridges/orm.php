@@ -40,7 +40,7 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$provider', service('.inner'))
     ;
     $services->set(IdentifierProvider::class)
-        ->decorate(ORMProvider::class, priority: 250)
+        ->decorate(ProviderInterface::class, priority: 250)
         ->arg('$provider', service('.inner'))
     ;
     $services->set(PaginationProvider::class)
@@ -67,11 +67,19 @@ return static function (ContainerConfigurator $container): void {
     // Event listeners
     $services->set(InitializeResourcePropertiesListener::class)
         ->arg('$propertyFactory', service(MetadataPropertyFactoryInterface::class))
-        ->tag('kernel.event_listener', ['event' => ResourceEvents::RESOURCE_CREATE, 'priority' => 200])
+        ->tag('kernel.event_listener', [
+            'event' => ResourceEvents::RESOURCE_CREATE,
+            'dispatcher' => 'lag_admin.build_event_dispatcher',
+            'priority' => 255,
+        ])
     ;
     $services->set(InitializeResourceIdentifiersListener::class)
         ->arg('$metadataHelper', service(MetadataHelperInterface::class))
-        ->tag('kernel.event_listener', ['event' => ResourceEvents::RESOURCE_CREATE, 'priority' => 255])
+        ->tag('kernel.event_listener', [
+            'event' => ResourceEvents::RESOURCE_CREATE,
+            'dispatcher' => 'lag_admin.build_event_dispatcher',
+            'priority' => 255,
+        ])
     ;
 
     // Doctrine metadata helpers

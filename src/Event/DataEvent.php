@@ -8,7 +8,7 @@ use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use Symfony\Contracts\EventDispatcher\Event;
 
-final class DataEvent extends Event
+class DataEvent extends Event
 {
     public function __construct(
         private readonly mixed $data,
