@@ -1,5 +1,24 @@
 {% import '@LAGAdmin/grids/macro/helpers.html.twig' as lag_admin %}
 
-{% if header.label %}
-    {{ lag_admin.translate(header.label, header .translationDomain, true) }}
+{% if header.sortable %}
+    {% set order = 'asc' %}
+
+    {% if app.request.query.get('order') == 'asc' %}
+        {% set order = 'desc' %}
+    {% endif %}
+
+    <a href="?sort={{ header.name }}&order={{ order }}"
+       class="text-dark">
+        {{ lag_admin.translate(header.label, header.translationDomain, true) }}
+
+        {% if app.request.query.get('sort') == header.name %}
+            {% if order == 'asc' %}
+                <i class="bi bi-arrow-down sort-icon sort-asc"></i>
+            {% else %}
+                <i class="bi bi-arrow-up sort-icon sort-desc"></i>
+            {% endif %}
+        {% endif %}
+    </a>
+{% elseif header.label %}
+    {{ lag_admin.translate(header.label, header.translationDomain, true) }}
 {% endif %}
