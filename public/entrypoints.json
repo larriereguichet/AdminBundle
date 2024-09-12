@@ -7,11 +7,6 @@
       "js": [
         "/bundles/lagadmin/admin.js"
       ]
-    },
-    "choice-js": {
-      "css": [
-        "/bundles/lagadmin/choice-js.css"
-      ]
     }
   }
 }
