@@ -13,12 +13,10 @@
                 {% for cell in row.cells %}
                     {% if cell.name == options.thumbnail|default(false) %}
                         {{ lag_admin_cell(cell, {attributes: {class: 'card-img-top'}}) }}
-                    {% elseif cell.name == options.footer|default(false) and cell.template %}
-                        <div class="card-footer">
-                            {{ lag_admin_cell(cell) }}
-                        </div>
                     {% elseif cell.template %}
-                        <div class="card-body">
+                        {% set defaultAttributes = loop.last ? {class: 'card-footer'} : {class: 'card-body'} %}
+
+                        <div {{ cellAttributes.defaults(defaultAttributes|merge(cell.containerAttributes)) }}>
                             {{ lag_admin_cell(cell) }}
                         </div>
                     {% endif %}
