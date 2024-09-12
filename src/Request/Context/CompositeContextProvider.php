@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Request\Context;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class CompositeContextProvider implements ContextProviderInterface
+final readonly class CompositeContextProvider implements ContextProviderInterface
 {
     public function __construct(
         /** @var iterable<int, ContextProviderInterface> $contextProviders */

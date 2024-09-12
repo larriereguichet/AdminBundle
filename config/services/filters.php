@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Filter\Applicator\CompositeFilterApplicator;
 use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
 use LAG\AdminBundle\Filter\Factory\EventFilterFactory;
@@ -22,7 +23,7 @@ return static function (ContainerConfigurator $container): void {
     ;
     $services->set(EventFilterFactory::class)
         ->decorate(FilterFactoryInterface::class)
-        ->arg('$eventDispatcher', service('event_dispatcher'))
+        ->arg('$eventDispatcher', service(ResourceEventDispatcherInterface::class))
         ->arg('$decorated', service('.inner'))
     ;
 

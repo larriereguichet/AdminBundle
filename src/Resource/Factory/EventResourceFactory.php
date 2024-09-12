@@ -28,9 +28,9 @@ final readonly class EventResourceFactory implements ResourceFactoryInterface
         $applicationName = $definition->getApplication();
         $resourceName = $definition->getName();
 
-        $this->eventDispatcher->dispatchResourceEvents(
+        $this->eventDispatcher->dispatchBuildEvents(
             $event,
-            ResourceEvents::RESOURCE_CREATE,
+            ResourceEvents::RESOURCE_CREATE_PATTERN,
             $applicationName,
             $resourceName,
         );
@@ -40,9 +40,9 @@ final readonly class EventResourceFactory implements ResourceFactoryInterface
 
         $resource = $this->resourceFactory->create($event->getResource());
 
-        $this->eventDispatcher->dispatchResourceEvents(
+        $this->eventDispatcher->dispatchBuildEvents(
             new ResourceEvent($resource),
-            ResourceEvents::RESOURCE_CREATED,
+            ResourceEvents::RESOURCE_CREATED_PATTERN,
             $resource->getApplication(),
             $resource->getName()
         );

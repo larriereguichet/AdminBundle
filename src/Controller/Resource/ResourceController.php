@@ -62,10 +62,9 @@ final readonly class ResourceController
                 return $this->redirectionHandler->createRedirectResponse($operation, $data, $context);
             }
         }
-        $event = new ResourceControllerEvent($operation, $request, $data);
-        $this->eventDispatcher->dispatchResourceEvents(
-            $event,
-            ResourceControllerEvents::RESOURCE_CONTROLLER,
+        $this->eventDispatcher->dispatchEvents(
+            $event = new ResourceControllerEvent($operation, $request, $data),
+            ResourceControllerEvents::RESOURCE_CONTROLLER_PATTERN,
             $operation->getResource()->getApplication(),
             $operation->getResource()->getName(),
             $operation->getName(),
