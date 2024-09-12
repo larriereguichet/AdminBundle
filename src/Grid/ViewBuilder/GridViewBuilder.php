@@ -46,7 +46,7 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
             throw new InvalidGridException($grid->getName() ?? '', $errors);
         }
         $context['resource'] = $resource;
-        $context['object'] = $data;
+        $context['objects'] = $data;
         $context['grid'] = $grid;
 
         return new GridView(
@@ -62,6 +62,8 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
             actions: $this->buildCollectionActions($grid, $data),
             options: $grid->getOptions(),
             extraColumn: \count($grid->getActions()) > 0,
+            emptyMessage: $grid->getEmptyMessage(),
+            translationDomain: $grid->getTranslationDomain(),
         );
     }
 
