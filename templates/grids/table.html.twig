@@ -65,7 +65,13 @@
                 <tfoot>
                 <tr>
                     <td colspan="{{ grid.headers|length + 1 }}">
-                        {% block empty_message %}{{ 'lag_admin.ui.no_record'|trans({}, 'admin') }}{% endblock %}
+                        {% block empty_message %}
+                            {% if grid.emptyMessage %}
+                                {{ grid.emptyMessage|trans({}, grid.translationDomain) }}
+                            {% else %}
+                                {{ 'lag_admin.ui.no_record'|trans({}, 'admin') }}
+                            {% endif %}
+                        {% endblock %}
                     </td>
                 </tr>
                 </tfoot>
