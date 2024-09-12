@@ -1,8 +1,8 @@
 {% extends operation.baseTemplate %}
 
-{% block page_title %}{{ operation.title|admin_trans }} - {{ parent() }}{% endblock %}
+{% block page_title %}{{ operation.title|trans({}, lag_admin.resource.translationDomain) }} - {{ parent() }}{% endblock %}
 
-{% block title %}{{ operation.title|admin_trans }}{% endblock %}
+{% block title %}{{ operation.title|trans({}, lag_admin.resource.translationDomain) }}{% endblock %}
 
 {% block content %}
     <div class="admin-container admin-{{ resource.name }} admin-{{ operation.name }}">
