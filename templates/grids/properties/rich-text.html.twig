@@ -1,0 +1,5 @@
+<div {{ attributes }}>
+    {% if options.prefix %}{{ options.prefix }}{% endif %}
+    {{ data|lag_admin_rich_text }}
+    {% if options.suffix %}{{ options.suffix }}{% endif %}
+</div>
