@@ -1,7 +1,7 @@
 import {Controller} from "@hotwired/stimulus";
 
 export default class extends Controller {
-    static targets = ["collectionContainer"]
+    //static targets = ["collectionContainer"]
 
     static values = {
         index    : Number,
@@ -9,9 +9,9 @@ export default class extends Controller {
     }
 
     connect() {
-        Array.from(this.collectionContainerTarget.children).forEach(item => {
+        // Array.from(this.collectionContainerTarget.children).forEach(item => {
             //this.addTagFormDeleteLink(item)
-        })
+        // })
     }
 
     addCollectionElement(event)

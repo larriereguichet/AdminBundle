@@ -37,6 +37,11 @@ final class LAGAdminVars implements LAGAdminVarsInterface
         return $this->getVars()?->operation;
     }
 
+    public function getTranslationDomain(): ?string
+    {
+        return $this->getResource()->getTranslationDomain();
+    }
+
     private function getVars(): ?LAGAdmin
     {
         $request = $this->requestStack->getCurrentRequest();

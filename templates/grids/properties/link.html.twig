@@ -1,9 +1,11 @@
-<a href="{{ lag_admin_resource_url(options, context['original_data']|default([])) }}" {{ attributes }}>
+<a href="{{ lag_admin_resource_url(options, context['row_data']) }}" {{ attributes }}>
     {% if options.icon %}<i class="bi bi-{{ options.icon }}"></i>{% endif %}
 
+    {% set text = options.label ?: data %}
+
     {% if options.translatable %}
-        {{ data|trans(options.translationParameters, options.translationDomain) }}
+        {{ text|trans({}, options.translationDomain) }}
     {% else %}
-        {{ data }}
+        {{ text }}
     {% endif %}
 </a>
