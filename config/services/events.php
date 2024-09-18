@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use LAG\AdminBundle\Event\GridEvents;
+use LAG\AdminBundle\Event\OperationEvents;
+use LAG\AdminBundle\Event\ResourceEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcher;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\EventListener\Data\PasswordListener;
@@ -38,40 +41,73 @@ return static function (ContainerConfigurator $container) {
         ->arg('$translationDomain', param('lag_admin.translation_domain'))
         ->arg('$registry', service(ApplicationRegistryInterface::class))
         ->tag('kernel.event_listener', [
-            'event' => 'lag_admin.resource.create', 'priority' => 255,
+            'event' => ResourceEvents::RESOURCE_CREATE,
             'dispatcher' => 'lag_admin.build_event_dispatcher',
+            'priority' => 255,
         ])
     ;
     $services->set(InitializeResourceOperationsListener::class)
         ->arg('$routeNameGenerator', service(RouteNameGeneratorInterface::class))
-        ->tag('kernel.event_listener', ['event' => 'lag_admin.resource.create', 'priority' => 254, 'dispatcher' => 'lag_admin.build_event_dispatcher'])
+        ->tag('kernel.event_listener', [
+            'event' => ResourceEvents::RESOURCE_CREATE,
+            'dispatcher' => 'lag_admin.build_event_dispatcher',
+            'priority' => 254,
+        ])
     ;
     $services->set(InitializeResourcePropertiesListener::class)
-        ->tag('kernel.event_listener', ['event' => 'lag_admin.resource.create', 'priority' => 253, 'dispatcher' => 'lag_admin.build_event_dispatcher'])
+        ->tag('kernel.event_listener', [
+            'event' => ResourceEvents::RESOURCE_CREATE,
+            'dispatcher' => 'lag_admin.build_event_dispatcher',
+            'priority' => 253,
+        ])
     ;
 
     // Operations listeners
     $services->set(InitializeOperationListener::class)
         ->arg('$routeNameGenerator', service(RouteNameGeneratorInterface::class))
         ->arg('$applicationRegistry', service(ApplicationRegistryInterface::class))
-        ->tag('kernel.event_listener', ['event' => 'lag_admin.operation.create', 'priority' => 255, 'dispatcher' => 'lag_admin.build_event_dispatcher'])
+        ->tag('kernel.event_listener', [
+            'event' => OperationEvents::OPERATION_CREATE,
+            'dispatcher' => 'lag_admin.build_event_dispatcher',
+            'priority' => 255,
+        ])
     ;
     $services->set(InitializeCollectionOperationListener::class)
-        ->tag('kernel.event_listener', ['event' => 'lag_admin.operation.create', 'priority' => 254, 'dispatcher' => 'lag_admin.build_event_dispatcher'])
+        ->tag('kernel.event_listener', [
+            'event' => OperationEvents::OPERATION_CREATE,
+            'dispatcher' => 'lag_admin.build_event_dispatcher',
+            'priority' => 254,
+        ])
     ;
     $services->set(InitializeCollectionOperationFiltersListener::class)
-        ->tag('kernel.event_listener', ['event' => 'lag_admin.operation.create', 'priority' => 253, 'dispatcher' => 'lag_admin.build_event_dispatcher'])
+        ->tag('kernel.event_listener', [
+            'event' => OperationEvents::OPERATION_CREATE,
+            'dispatcher' => 'lag_admin.build_event_dispatcher',
+            'priority' => 253,
+        ])
     ;
     $services->set(InitializeOperationPathListener::class)
-        ->tag('kernel.event_listener', ['event' => 'lag_admin.operation.create', 'priority' => -255, 'dispatcher' => 'lag_admin.build_event_dispatcher'])
+        ->tag('kernel.event_listener', [
+            'event' => OperationEvents::OPERATION_CREATE,
+            'dispatcher' => 'lag_admin.build_event_dispatcher',
+            'priority' => -255,
+        ])
     ;
     $services->set(InitializeOperationRouteParametersListener::class)
-        ->tag('kernel.event_listener', ['event' => 'lag_admin.operation.create', 'priority' => -255, 'dispatcher' => 'lag_admin.build_event_dispatcher'])
+        ->tag('kernel.event_listener', [
+            'event' => OperationEvents::OPERATION_CREATE,
+            'dispatcher' => 'lag_admin.build_event_dispatcher',
+            'priority' => -255,
+        ])
     ;
 
     // Grid listeners
     $services->set(InitializeGridListener::class)
-        ->tag('kernel.event_listener', ['event' => 'lag_admin.grid.build', 'priority' => -255])
+        ->tag('kernel.event_listener', [
+            'event' => GridEvents::GRID_BUILD,
+            'dispatcher' => 'lag_admin.build_event_dispatcher',
+            'priority' => -255,
+        ])
     ;
 
     // Security listeners

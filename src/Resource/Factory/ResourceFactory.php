@@ -30,7 +30,7 @@ final readonly class ResourceFactory implements ResourceFactoryInterface
         $errors = $this->validator->validate($resource, [new Valid()]);
 
         if ($errors->count() > 0) {
-            throw new InvalidResourceException($resource->getName(), $errors);
+            throw new InvalidResourceException($resource->getName(), $resource->getApplication(), $errors);
         }
 
         return $resource;
