@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Validation\Constraint;
 
 use LAG\AdminBundle\Resource\Metadata\Create;
+use LAG\AdminBundle\Resource\Metadata\Delete;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\Update;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -18,7 +20,7 @@ final class AtLeastOneIdentifierValidator extends ConstraintValidator
             throw new UnexpectedTypeException($value, OperationInterface::class);
         }
 
-        if ($value instanceof Create) {
+        if (!$value instanceof Update && !$value instanceof Delete) {
             return;
         }
 

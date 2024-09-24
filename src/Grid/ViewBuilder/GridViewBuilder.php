@@ -32,11 +32,12 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
         $event = new GridEvent($grid, $operation);
         $resource = $operation->getResource();
 
-        $this->eventDispatcher->dispatchResourceEvents(
+        $this->eventDispatcher->dispatchEvents(
             $event,
-            GridEvents::GRID_BUILD,
+            GridEvents::GRID_BUILD_PATTERN,
             $resource->getApplication(),
             $resource->getName(),
+            null,
             $grid->getName(),
         );
         $grid = $event->getGrid();

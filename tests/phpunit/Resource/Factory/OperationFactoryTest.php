@@ -32,7 +32,7 @@ final class OperationFactoryTest extends TestCase
         $this->filterFactory
             ->expects(self::once())
             ->method('create')
-            ->with(new Filter('my_filter'))
+            ->with($definition, new Filter('my_filter'))
             ->willReturn(new Filter('my_filter'))
         ;
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Bridge\KnpMenu\Builder\EventChainProvider;
 use LAG\AdminBundle\Bridge\KnpMenu\Extension\ResourceExtension;
 use LAG\AdminBundle\Menu\Builder\ContextualMenuBuilder;
 use LAG\AdminBundle\Menu\Builder\ResourceMenuBuilder;
@@ -41,11 +40,6 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     // KnpMenu bridge
-    $services->set(EventChainProvider::class)
-        ->decorate('knp_menu.menu_provider.chain')
-        ->arg('$decorated', service('.inner'))
-        ->arg('$eventDispatcher', service('event_dispatcher'))
-    ;
     $services->set(ResourceExtension::class)
         ->arg('$registry', service(ResourceRegistryInterface::class))
         ->arg('$urlGenerator', service(UrlGeneratorInterface::class))

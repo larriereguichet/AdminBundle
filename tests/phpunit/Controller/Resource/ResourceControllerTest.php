@@ -78,7 +78,7 @@ final class ResourceControllerTest extends TestCase
         ;
         $this->eventDispatcher
             ->expects(self::once())
-            ->method('dispatchResourceEvents')
+            ->method('dispatchEvents')
             ->with()
         ;
         $expected = 'some html';
