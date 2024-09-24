@@ -27,16 +27,12 @@ final class OperationPermissionVoter extends Voter
     {
         \assert($subject instanceof OperationInterface);
 
-        if (\count($subject->getPermissions()) > 0 && $token->getUser() === null) {
-            return false;
-        }
-
         foreach ($subject->getPermissions() as $permission) {
-            if (!$this->security->isGranted($permission, $token->getUser())) {
-                return false;
+            if ($this->security->isGranted($permission, $token->getUser())) {
+                return true;
             }
         }
 
-        return true;
+        return count($subject->getPermissions()) === 0;
     }
 }
