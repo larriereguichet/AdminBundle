@@ -6,6 +6,8 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Form\Extension\ChoiceTypeExtension;
 use LAG\AdminBundle\Form\Extension\CollectionTypeExtension;
+use LAG\AdminBundle\Form\Guesser\FormGuesser;
+use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
 use LAG\AdminBundle\Form\Transformer\ImageFileToArrayTransformer;
 use LAG\AdminBundle\Form\Type\DateRangeType;
 use LAG\AdminBundle\Form\Type\Image\ImageType;
@@ -55,6 +57,7 @@ return static function (ContainerConfigurator $container): void {
     ;
     $services->set(ResourceDataType::class)
         ->arg('$resourceRegistry', service(ResourceRegistryInterface::class))
+        ->arg('$formGuesser', service(FormGuesserInterface::class))
         ->tag('form.type')
     ;
 
@@ -68,4 +71,7 @@ return static function (ContainerConfigurator $container): void {
 
     // Data transformers
     $services->set(ImageFileToArrayTransformer::class);
+
+    // Form guessers
+    $services->set(FormGuesserInterface::class, FormGuesser::class);
 };
