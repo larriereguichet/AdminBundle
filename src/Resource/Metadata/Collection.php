@@ -23,6 +23,7 @@ class Collection extends Property
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
 
         #[Assert\NotNull(message: 'The collection should have an property for each entry')]
         private ?PropertyInterface $entryProperty = null,
@@ -41,6 +42,7 @@ class Collection extends Property
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath,
         );
     }
 
