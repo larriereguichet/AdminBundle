@@ -21,6 +21,7 @@ class Text extends Property
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
 
         #[Assert\Length(min: 1)]
         private int $length = 100,
@@ -42,6 +43,7 @@ class Text extends Property
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath,
         );
     }
 

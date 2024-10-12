@@ -23,6 +23,7 @@ class ResourceLink extends Text
         string $emptyString = '~',
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
 
         #[NotBlank]
         private ?string $application = null,
@@ -42,11 +43,12 @@ class ResourceLink extends Text
             translationDomain: $translationDomain,
             attributes: $attributes,
             headerAttributes: $headerAttributes,
+            permissions: $permissions,
+            condition: $condition,
+            sortingPath: $sortingPath,
             length: $length,
             replace: $replace,
             empty: $emptyString,
-            permissions: $permissions,
-            condition: $condition,
         );
     }
 

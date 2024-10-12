@@ -157,4 +157,8 @@ interface PropertyInterface extends PermissibleInterface, ConditionalInterface
      * Define the property permissions.
      */
     public function withPermissions(array $permissions): self;
+
+    public function getSortingPath(): ?string;
+
+    public function withSortingPath(?string $sortingPath): self;
 }

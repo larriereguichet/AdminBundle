@@ -19,6 +19,7 @@ class Action extends Property implements Url, WorkflowSubjectInterface
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
 
         private ?string $route = null,
         private array $routeParameters = [],
@@ -44,6 +45,7 @@ class Action extends Property implements Url, WorkflowSubjectInterface
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath,
         );
     }
 
