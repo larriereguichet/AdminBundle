@@ -23,5 +23,6 @@ return $config
         'declare_strict_types' => true,
         'single_line_throw' => false,
     ])
+    ->setCacheFile('var/cache/.php-cs-fixer.cache')
     ->setFinder($finder)
 ;
