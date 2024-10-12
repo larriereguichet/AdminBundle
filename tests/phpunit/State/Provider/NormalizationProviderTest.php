@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Tests\State\Provider;
 use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Get;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
@@ -15,6 +15,7 @@ use LAG\AdminBundle\Resource\Metadata\Update;
 use LAG\AdminBundle\State\Provider\NormalizationProvider;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -26,7 +27,7 @@ class NormalizationProviderTest extends TestCase
     private MockObject $normalizer;
     private MockObject $denormalizer;
 
-    /** @dataProvider supportsProvider */
+    #[DataProvider('supportsProvider')]
     public function testSupports(OperationInterface $operation, mixed $data, bool $supports, ?string $expectedType = null): void
     {
         $this
@@ -81,12 +82,9 @@ class NormalizationProviderTest extends TestCase
         $fake = new \stdClass();
         $fake->myProperty = 'test';
 
-        $denormalizedData = new \stdClass();
-        $denormalizedData->myOtherProperty = 'otherTest';
-
         yield [new Index(output: null), null, false];
-        yield [new Get(output: null), null, false];
-        yield [new Get(output: 'Output'), ['value'], false];
+        yield [new Show(output: null), null, false];
+        yield [new Show(output: 'Output'), ['value'], false];
         yield [new Create(output: null), null, false];
         yield [new Update(output: null), null, false];
         yield [new Delete(output: null), null, false];
@@ -94,26 +92,26 @@ class NormalizationProviderTest extends TestCase
         yield [new Index(output: null), new ArrayCollection(), false];
         yield [new Index(output: 'TestClass'), $fake, false];
         yield [
-            (new Get(output: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
+            (new Show(output: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
             new ArrayCollection(),
             false,
         ];
         yield [
-            (new Get(output: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
+            (new Show(output: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
             new ArrayCollection(),
             false,
         ];
         yield [
-            (new Get(output: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
+            (new Show(output: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
             new ArrayCollection(),
             false,
         ];
 
         yield [
-            (new Get(
-                output: 'Output',
+            (new Show(
                 normalizationContext: ['groups' => ['normalization']],
                 denormalizationContext: ['groups' => ['denormalization']],
+                output: 'Output',
             ))->withResource(new Resource(dataClass: \stdClass::class)),
             $fake,
             true,
@@ -121,9 +119,9 @@ class NormalizationProviderTest extends TestCase
         ];
         yield [
             (new Index(
-                output: 'Output',
                 normalizationContext: ['groups' => ['normalization']],
                 denormalizationContext: ['groups' => ['denormalization']],
+                output: 'Output',
             ))->withResource(new Resource(dataClass: \stdClass::class)),
             [$fake],
             true,

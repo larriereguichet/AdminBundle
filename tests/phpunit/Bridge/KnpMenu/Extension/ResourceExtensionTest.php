@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Bridge\KnpMenu\Extension;
 
 use LAG\AdminBundle\Bridge\KnpMenu\Extension\ResourceExtension;
-use LAG\AdminBundle\Resource\Metadata\Get;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
@@ -22,7 +22,7 @@ final class ResourceExtensionTest extends TestCase
     #[Test]
     public function itBuildOptions(): void
     {
-        $operation = new Get(name: 'my_operation', route: 'my_route', title: 'Some title');
+        $operation = new Show(name: 'my_operation', route: 'my_route', title: 'Some title');
         $resource = new Resource(
             name: 'my_resource',
             operations: [$operation],

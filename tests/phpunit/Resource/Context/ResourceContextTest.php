@@ -8,7 +8,7 @@ use LAG\AdminBundle\Exception\ResourceNotFoundException;
 use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContext;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
-use LAG\AdminBundle\Resource\Metadata\Get;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -56,7 +56,7 @@ final class ResourceContextTest extends TestCase
     public function itReturnsTheCurrentOperation(): void
     {
         $request = new Request(['some_key' => 'some_value']);
-        $operation = new Get(name: 'an_operation');
+        $operation = new Show(name: 'an_operation');
         $resource = new Resource(name: 'a_resource', application: 'an_application', operations: [$operation]);
 
         $this->parametersExtractor
