@@ -25,7 +25,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set('lag_admin.debug.event_dispatcher', TraceableEventDispatcher::class)
         ->decorate('lag_admin.build_event_dispatcher')
         ->args([
-            service('debug.event_dispatcher.inner'),
+            service('.inner'),
             service('debug.stopwatch'),
             service('logger')->nullOnInvalid(),
             service('.virtual_request_stack')->nullOnInvalid(),
