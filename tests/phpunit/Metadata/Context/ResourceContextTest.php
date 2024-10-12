@@ -7,10 +7,11 @@ namespace LAG\AdminBundle\Tests\Metadata\Context;
 use LAG\AdminBundle\Exception\ResourceNotFoundException;
 use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContext;
-use LAG\AdminBundle\Resource\Metadata\Get;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,7 +26,7 @@ class ResourceContextTest extends TestCase
         $request = new Request(['test']);
 
         $resource = new Resource(name: 'my_resource');
-        $operation = new Get(name: 'my_operation');
+        $operation = new Show(name: 'my_operation');
         $operation = $operation->withResource($resource);
         $resource = $resource->withOperations([$operation]);
 
@@ -63,7 +64,7 @@ class ResourceContextTest extends TestCase
         $this->assertEquals($resource->getName(), $contextResource->getName());
     }
 
-    /** @dataProvider supportsProvider */
+    #[DataProvider('supportsProvider')]
     public function testSupports(?string $application, ?string $resource, ?string $operation, bool $expectedSupport): void
     {
         $request = new Request(['test']);

@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Tests\State\Provider;
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Get;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
@@ -15,6 +15,7 @@ use LAG\AdminBundle\Resource\Metadata\Update;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\State\Provider\SerializationProvider;
 use LAG\AdminBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -25,7 +26,7 @@ class SerializationProviderTest extends TestCase
     private MockObject $decoratedProvider;
     private MockObject $serializer;
 
-    /** @dataProvider operationsProvider */
+    #[DataProvider('operationsProvider')]
     public function testProvide(OperationInterface $operation): void
     {
         $data = new \stdClass();
@@ -60,7 +61,7 @@ class SerializationProviderTest extends TestCase
         $this->assertEquals('{"some": "json"}', $returnedData);
     }
 
-    /** @dataProvider operationsProvider */
+    #[DataProvider('operationsProvider')]
     public function testProvideWithoutAjax(OperationInterface $operation): void
     {
         $operation = $operation->withAjax(false);
@@ -80,7 +81,7 @@ class SerializationProviderTest extends TestCase
         $this->provider->provide($operation, [], ['json' => true]);
     }
 
-    /** @dataProvider wrongContextProvider */
+    #[DataProvider('wrongContextProvider')]
     public function testWithoutContext(array $context): void
     {
         $data = new \stdClass();
@@ -116,7 +117,7 @@ class SerializationProviderTest extends TestCase
     {
         return [
             [new Index()],
-            [new Get()],
+            [new Show()],
             [new Create()],
             [new Update()],
             [new Delete()],

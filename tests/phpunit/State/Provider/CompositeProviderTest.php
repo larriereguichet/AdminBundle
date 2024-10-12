@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Tests\State\Provider;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Get;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
@@ -15,10 +15,11 @@ use LAG\AdminBundle\Resource\Metadata\Update;
 use LAG\AdminBundle\State\Provider\CompositeProvider;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class CompositeProviderTest extends TestCase
+final class CompositeProviderTest extends TestCase
 {
-    /** @dataProvider operationsProvider */
+    #[DataProvider('operationsProvider')]
     public function testProvide(OperationInterface $operation): void
     {
         $customProvider = self::createMock(ProviderInterface::class);
@@ -28,14 +29,13 @@ class CompositeProviderTest extends TestCase
         $customProvider
             ->expects(self::once())
             ->method('provide')
-            ->with($operation, ['code' => 'abcd'], ['groups' => 'test'])
-        ;
+            ->with($operation, ['code' => 'abcd'], ['groups' => 'test']);
 
         $provider = new CompositeProvider([$customProvider, $nevenCalledProvider]);
         $provider->provide($operation, ['code' => 'abcd'], ['groups' => 'test']);
     }
 
-    /** @dataProvider operationsProvider */
+    #[DataProvider('operationsProvider')]
     public function testProvideWithoutProvider(OperationInterface $operation): void
     {
         $resource = new Resource(name: 'my_resource');
@@ -56,7 +56,7 @@ class CompositeProviderTest extends TestCase
     {
         return [
             [new Index()],
-            [new Get()],
+            [new Show()],
             [new Create()],
             [new Update()],
             [new Delete()],
