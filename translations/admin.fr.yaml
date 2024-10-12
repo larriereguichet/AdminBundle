@@ -35,11 +35,12 @@ lag_admin:
 
     ui:
         add: Ajouter
+        apply: Appliquer
         cancel: Annuler
         create: Créer
         delete: Supprimer
         filter: Filtrer
-        hide_filters: Cacher les filtres
+        hide_filters: Masquer les filtres
         no: Non
         no_record: Aucun élément n'a été trouvé
         update: Modifier
