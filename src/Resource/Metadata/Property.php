@@ -35,7 +35,7 @@ class Property implements PropertyInterface
 
         private bool $translatable = false,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The translation domain should not be empty. Use null instead')]
+        #[Assert\NotBlank(message: 'The translation domain should not be empty. Use null instead', allowNull: true)]
         private ?string $translationDomain = null,
 
         private array $attributes = [],
@@ -44,13 +44,20 @@ class Property implements PropertyInterface
 
         private array $headerAttributes = [],
 
-        #[Assert\NotBlank(allowNull: true, message: 'The data transformer should not be empty. Use null instead')]
+        #[Assert\NotBlank(message: 'The data transformer should not be empty. Use null instead', allowNull: true)]
         private ?string $dataTransformer = null,
 
         private ?array $permissions = null,
 
         #[WorkflowInstalled]
         private ?string $condition = null,
+
+        #[Assert\NotBlank(message: 'The sorting path should not be empty. Use null instead', allowNull: true)]
+        #[Assert\Expression(
+            expression: 'this.isSortable() and this.getSortingPath() === null',
+            message: 'The sorting path should not be null if the property is sortable',
+        )]
+        private ?string $sortingPath = null,
     ) {
     }
 
@@ -232,6 +239,19 @@ class Property implements PropertyInterface
     {
         $self = clone $this;
         $self->condition = $condition;
+
+        return $self;
+    }
+
+    public function getSortingPath(): ?string
+    {
+        return $this->sortingPath;
+    }
+
+    public function withSortingPath(?string $sortingPath): self
+    {
+        $self = clone $this;
+        $self->sortingPath = $sortingPath;
 
         return $self;
     }

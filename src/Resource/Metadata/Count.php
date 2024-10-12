@@ -19,6 +19,7 @@ class Count extends Property
         ?string $dataTransformer = CountDataTransformer::class,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
     ) {
         parent::__construct(
             name: $name,
@@ -31,6 +32,7 @@ class Count extends Property
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath,
         );
     }
 }

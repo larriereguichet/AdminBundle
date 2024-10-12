@@ -21,6 +21,7 @@ class Title extends Property
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
 
         #[Assert\Length(min: 1)]
         private int $length = 100,
@@ -33,15 +34,16 @@ class Title extends Property
             name: $name,
             propertyPath: $propertyPath,
             label: $label,
+            template: '@LAGAdmin/components/cells/title.html.twig',
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
             attributes: $attributes,
             headerAttributes: $headerAttributes,
-            template: '@LAGAdmin/components/cells/title.html.twig',
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath,
         );
     }
 
