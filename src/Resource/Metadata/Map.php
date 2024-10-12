@@ -21,6 +21,7 @@ class Map extends Property
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
 
         #[Assert\Count(min: 1, minMessage: 'The map should have at least 1 element')]
         private array $map = [],
@@ -38,6 +39,7 @@ class Map extends Property
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath,
         );
     }
 

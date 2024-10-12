@@ -19,7 +19,8 @@ class Boolean extends Property
         array $headerAttributes = [],
         ?string $dataTransformer = null,
         ?array $permissions = null,
-        ?string $condition = null
+        ?string $condition = null,
+        ?string $sortingPath = null,
     ) {
         parent::__construct(
             name: $name,
@@ -34,6 +35,7 @@ class Boolean extends Property
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath,
         );
     }
 }
