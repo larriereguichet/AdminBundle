@@ -12,11 +12,17 @@ use LAG\AdminBundle\Resource\Metadata\Grid;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Update;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 use function Symfony\Component\String\u;
 
 final readonly class InitializeGridListener
 {
+    public function __construct(
+        private RequestStack $requestStack,
+    ) {
+    }
+
     public function __invoke(GridEvent $event): void
     {
         $grid = $event->getGrid();
@@ -27,7 +33,7 @@ final readonly class InitializeGridListener
             $grid = $grid->withType('table');
         }
 
-        if ($grid->getComponent() === null) {
+        if ($grid->getComponent() === null && $grid->getTemplate() === null) {
             if ($grid->getType() === 'card') {
                 $grid = $grid->withTemplate('@LAGAdmin/grids/card.html.twig');
             }
@@ -60,6 +66,16 @@ final readonly class InitializeGridListener
 
         if ($grid->getTranslationDomain() === null) {
             $grid = $grid->withTranslationDomain($resource->getTranslationDomain());
+        }
+
+        if ($grid->isSortable() === null) {
+            $request = $this->requestStack->getCurrentRequest();
+            $grid = $grid->withSortable(true);
+
+            // Sort on sub-request grid is not allowed
+            if ($request !== $this->requestStack->getMainRequest()) {
+                $grid = $grid->withSortable(false);
+            }
         }
         $actions = [];
 
@@ -121,10 +137,11 @@ final readonly class InitializeGridListener
             if ($grid->getTranslationDomain()) {
                 /** @var Action $action */
                 $action = $action->withLabel(
-                    u('{application}.{resource}.{operation}')
+                    u($operation->getResource()->getTranslationPattern() ?? '{application}.{resource}.{message}')
                         ->replace('{application}', $resource->getApplication())
                         ->replace('{resource}', $resource->getName())
                         ->replace('{operation}', $action->getOperation())
+                        ->replace('{message}', $action->getOperation())
                         ->toString()
                 );
             } else {

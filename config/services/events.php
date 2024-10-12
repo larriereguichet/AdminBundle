@@ -103,9 +103,9 @@ return static function (ContainerConfigurator $container) {
 
     // Grid listeners
     $services->set(InitializeGridListener::class)
+        ->arg('$requestStack', service('request_stack'))
         ->tag('kernel.event_listener', [
             'event' => GridEvents::GRID_BUILD,
-            'dispatcher' => 'lag_admin.build_event_dispatcher',
             'priority' => -255,
         ])
     ;
