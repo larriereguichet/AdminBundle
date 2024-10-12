@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\PaginationProvider;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Get;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Update;
@@ -67,7 +67,7 @@ final class PaginationProviderTest extends TestCase
 
     public static function noCollectionOperations(): iterable
     {
-        yield [new Get()];
+        yield [new Show()];
         yield [new Create()];
         yield [new Update()];
         yield [new Delete()];

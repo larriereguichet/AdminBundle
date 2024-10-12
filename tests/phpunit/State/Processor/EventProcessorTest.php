@@ -9,7 +9,7 @@ use LAG\AdminBundle\Event\DataEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Get;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
@@ -70,7 +70,7 @@ final class EventProcessorTest extends TestCase
     {
         return [
             [new Index()],
-            [new Get()],
+            [new Show()],
             [new Create()],
             [new Update()],
             [new Delete()],

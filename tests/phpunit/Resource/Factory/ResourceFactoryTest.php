@@ -8,7 +8,7 @@ use LAG\AdminBundle\Exception\InvalidResourceException;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Resource\Factory\ResourceFactory;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Resource\Metadata\Get;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
@@ -25,7 +25,7 @@ final class ResourceFactoryTest extends TestCase
     #[Test]
     public function itCreatesAResourceFromADefinition(): void
     {
-        $operationDefinition = new Get(name: 'my_operation');
+        $operationDefinition = new Show(name: 'my_operation');
         $definition = new Resource(
             name: 'my_resource',
             operations: [$operationDefinition],
@@ -51,7 +51,7 @@ final class ResourceFactoryTest extends TestCase
     #[Test]
     public function itDoesNotCreateInvalidResource(): void
     {
-        $operationDefinition = new Get(name: 'my_operation');
+        $operationDefinition = new Show(name: 'my_operation');
         $definition = new Resource(
             name: 'my_resource',
             operations: [$operationDefinition],

@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Tests\State\Processor;
 
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Get;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Update;
@@ -49,7 +49,7 @@ class ValidationProcessorTest extends TestCase
         $this->processor->process($data, $operation, ['my_var' => 'value'], ['test' => 'ok']);
     }
 
-    /** @dataProvider operations */
+    #[DataProvider('operations')]
     public function testProcessWithoutValidation(OperationInterface $operation): void
     {
         $data = new \stdClass();
@@ -73,7 +73,7 @@ class ValidationProcessorTest extends TestCase
     {
         return [
             [new Index()],
-            [new Get()],
+            [new Show()],
             [new Create()],
             [new Update()],
             [new Delete()],

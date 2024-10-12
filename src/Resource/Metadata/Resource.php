@@ -37,7 +37,7 @@ class Resource
         #[Assert\Valid]
         private array $operations = [
             new Index(),
-            new Get(),
+            new Show(),
             new Create(),
             new Update(),
             new Delete(),
@@ -70,7 +70,7 @@ class Resource
 
         private ?string $form = null,
 
-        private array $formOptions = [],
+        private ?array $formOptions = null,
 
         #[Assert\NotBlank(allowNull: true, message: 'The form template should not be empty. Use null instead')]
         private ?string $formTemplate = null,

@@ -9,18 +9,19 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Controller\Resource\ResourceController;
 
 /**
- * The get operation is used to show a resource in a read-only view. Usually the processor is not used.
+ * The show operation is used to show a resource in a read-only view. Usually the processor is not used.
  */
-class Get extends Operation
+class Show extends Operation
 {
     public function __construct(
-        ?string $name = 'get',
+        ?string $name = 'show',
+        array $context = [],
         ?string $title = null,
         ?string $description = null,
         ?string $icon = null,
         ?string $template = '@LAGAdmin/resources/show.html.twig',
         ?string $baseTemplate = null,
-        ?array $permissions = [],
+        ?array $permissions = null,
         ?string $controller = ResourceController::class,
         ?string $route = null,
         ?array $routeParameters = null,
@@ -29,7 +30,7 @@ class Get extends Operation
         ?string $redirectRoute = null,
         ?array $redirectRouteParameters = null,
         ?string $form = null,
-        array $formOptions = [],
+        ?array $formOptions = null,
         string $processor = ORMProcessor::class,
         string $provider = ORMProvider::class,
         ?array $identifiers = null,
@@ -49,6 +50,7 @@ class Get extends Operation
     ) {
         parent::__construct(
             name: $name,
+            context: $context,
             title: $title,
             description: $description,
             icon: $icon,

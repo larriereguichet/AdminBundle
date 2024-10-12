@@ -10,7 +10,7 @@ use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Get;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
@@ -42,12 +42,12 @@ final class OperationValueResolverTest extends TestCase
         $this->resourceContext
             ->expects(self::once())
             ->method('getOperation')
-            ->willReturn(new Get())
+            ->willReturn(new Show())
         ;
         $parameters = $this->resolver->resolve($request, new ArgumentMetadata('test', $type, false, false, null));
         $parameters = iterator_to_array($parameters);
 
-        self::assertEquals(new Get(), $parameters[0]);
+        self::assertEquals(new Show(), $parameters[0]);
     }
 
     #[Test]
@@ -88,7 +88,7 @@ final class OperationValueResolverTest extends TestCase
 
     public static function supportTypes(): iterable
     {
-        yield [Get::class];
+        yield [Show::class];
         yield [Create::class];
         yield [Update::class];
         yield [Delete::class];
