@@ -7,6 +7,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use LAG\AdminBundle\Bridge\LiipImagine\DataTransformer\ImageDataTransformer;
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
 use LAG\AdminBundle\Grid\DataTransformer\CountDataTransformer;
+use LAG\AdminBundle\Grid\DataTransformer\EnumDataTransformer;
 use LAG\AdminBundle\Grid\DataTransformer\FormDataTransformer;
 use LAG\AdminBundle\Grid\DataTransformer\MapDataTransformer;
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistry;
@@ -130,6 +131,9 @@ return static function (ContainerConfigurator $container): void {
     ;
     $services->set(FormDataTransformer::class)
         ->arg('$formFactory', service('form.factory'))
+        ->tag('lag_admin.data_transformer')
+    ;
+    $services->set(EnumDataTransformer::class)
         ->tag('lag_admin.data_transformer')
     ;
 
