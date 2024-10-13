@@ -14,7 +14,6 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactory;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\DoctrineCollectionNormalizeProvider;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\IdentifierProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\PaginationProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ResultProvider;
