@@ -9,13 +9,13 @@ use LAG\AdminBundle\Form\Extension\CollectionTypeExtension;
 use LAG\AdminBundle\Form\Guesser\FormGuesser;
 use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
 use LAG\AdminBundle\Form\Transformer\ImageFileToArrayTransformer;
+use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
 use LAG\AdminBundle\Form\Type\DateRangeType;
 use LAG\AdminBundle\Form\Type\Image\ImageType;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Form\Type\Resource\LegacyResourceType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceChoiceType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceDataType;
-use LAG\AdminBundle\Form\Type\Resource\ResourceHiddenType;
 use LAG\AdminBundle\Form\Type\Security\LoginType;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
@@ -50,14 +50,13 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$dataProvider', service(ProviderInterface::class))
         ->tag('form.type')
     ;
-    $services->set(ResourceHiddenType::class)
+    $services->set(HiddenDataType::class)
         ->arg('$defaultApplication', param('lag_admin.application_name'))
         ->arg('$registry', service(ResourceRegistryInterface::class))
         ->tag('form.type')
     ;
     $services->set(ResourceDataType::class)
         ->arg('$resourceRegistry', service(ResourceRegistryInterface::class))
-        ->arg('$formGuesser', service(FormGuesserInterface::class))
         ->tag('form.type')
     ;
 

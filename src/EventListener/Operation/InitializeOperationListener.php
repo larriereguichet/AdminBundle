@@ -18,6 +18,7 @@ use LAG\AdminBundle\Resource\Metadata\Update;
 use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
+
 use function Symfony\Component\String\u;
 
 final readonly class InitializeOperationListener

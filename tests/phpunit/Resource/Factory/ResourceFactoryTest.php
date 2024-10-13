@@ -75,7 +75,11 @@ final class ResourceFactoryTest extends TestCase
             ->willReturn($constraintViolationList)
         ;
 
-        self::expectExceptionObject(new InvalidResourceException($definition->getName(), $constraintViolationList));
+        self::expectExceptionObject(new InvalidResourceException(
+            $definition->getName(),
+            $definition->getApplication(),
+            $constraintViolationList,
+        ));
 
         $this->resourceFactory->create($definition);
     }
