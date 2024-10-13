@@ -4,69 +4,57 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Form\Type\Resource;
 
+use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 final class ResourceDataType extends AbstractType
 {
     public function __construct(
         private readonly ResourceRegistryInterface $resourceRegistry,
+        private readonly FormGuesserInterface $formGuesser,
     ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
-            $data = $event->getData();
-            $form = $event->getForm();
+        $resource = $this->resourceRegistry->get($options['resource'], $options['application']);
+        $operation = $resource->getOperation($options['operation']);
 
-            if ($data === null) {
-                return;
+        foreach ($resource->getProperties() as $property) {
+            if (\in_array($property->getName(), $options['exclude'])) {
+                continue;
             }
-            $resource = $this->resourceRegistry->get($options['resource'], $options['application']);
-            $accessor = PropertyAccess::createPropertyAccessor();
+            $formType = $this->formGuesser->guessFormType($operation, $property);
+            $formOptions = $this->formGuesser->guessFormOptions($operation, $property);
 
-            foreach ($resource->getProperties() as $property) {
-                if (\in_array($property->getName(), $options['exclude'])) {
-                    continue;
-                }
-
-                if (
-                    \is_string($property->getPropertyPath())
-                    && $property->getPropertyPath() !== '.'
-                    && $accessor->isReadable($data, $property->getPropertyPath())
-                    && $accessor->isWritable($data, $property->getPropertyPath())
-                ) {
-                    $form->add($property->getName(), null, ['property_path' => $property->getPropertyPath()]);
-                }
+            if ($formType === null) {
+                continue;
             }
-        });
+            $builder->add($property->getName(), $formType, $formOptions);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults([
-                'exclude' => [],
-            ])
-            ->setAllowedTypes('exclude', 'array')
+            ->define('exclude')
+            ->default([])
+            ->allowedTypes('exclude', 'array')
 
             ->define('application')
             ->allowedTypes('string', 'null')
             ->required()
 
             ->define('resource')
-            ->allowedTypes('string', 'null')
+            ->allowedTypes('string')
             ->required()
 
             ->define('operation')
-            ->allowedTypes('string', 'null')
             ->required()
+            ->allowedTypes('string')
         ;
     }
 }
