@@ -22,6 +22,7 @@ final class Grid
     public ComponentAttributes $headerAttributes;
     public ComponentAttributes $rowAttributes;
     public ComponentAttributes $cellAttributes;
+    public ComponentAttributes $actionCellAttributes;
     public ComponentAttributes $titleAttributes;
 
     public mixed $data;
@@ -39,16 +40,18 @@ final class Grid
         array $headerAttributes = [],
         array $rowAttributes = [],
         array $cellAttributes = [],
+        array $actionCellAttributes = [],
         array $titleAttributes = [],
     ): void {
         if ($grid->template === null && $grid->component === null) {
             throw new Exception(\sprintf('The grid "%s" should have a template or a component', $grid->name));
         }
+        $this->titleAttributes = new ComponentAttributes($grid->titleAttributes + $titleAttributes);
         $this->headerRowAttributes = new ComponentAttributes($grid->headerRowAttributes + $headerRowAttributes);
         $this->headerAttributes = new ComponentAttributes($grid->headerAttributes + $headerAttributes);
         $this->rowAttributes = new ComponentAttributes($grid->rowAttributes + $rowAttributes);
         $this->cellAttributes = new ComponentAttributes($grid->cellAttributes + $cellAttributes);
-        $this->titleAttributes = new ComponentAttributes($grid->titleAttributes + $titleAttributes);
+        $this->actionCellAttributes = new ComponentAttributes($grid->actionCellAttributes + $actionCellAttributes);
 
         $this->grid = $grid;
         $this->options = $grid->options + $options;

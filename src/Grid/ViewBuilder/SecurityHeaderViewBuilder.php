@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\View\HeaderView;
 use LAG\AdminBundle\Resource\Metadata\Grid;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionCheckerInterface;
 
@@ -17,12 +18,16 @@ final readonly class SecurityHeaderViewBuilder implements HeaderViewBuilderInter
     ) {
     }
 
-    public function buildHeader(Grid $grid, PropertyInterface $property, array $context = []): HeaderView
-    {
+    public function buildHeader(
+        OperationInterface $operation,
+        Grid $grid,
+        PropertyInterface $property,
+        array $context = []
+    ): HeaderView {
         if (!$this->permissionChecker->isGranted($property)) {
             return new HeaderView(name: $property->getName());
         }
 
-        return $this->headerBuilder->buildHeader($grid, $property, $context);
+        return $this->headerBuilder->buildHeader($operation, $grid, $property, $context);
     }
 }

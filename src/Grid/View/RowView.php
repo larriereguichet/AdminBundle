@@ -15,6 +15,7 @@ final readonly class RowView implements \IteratorAggregate
         public iterable $cells = [],
         /** @var iterable<CellView> */
         public iterable $actions = [],
+        public mixed $data = null,
         array $attributes = [],
     ) {
         $this->attributes = new ComponentAttributes($attributes);

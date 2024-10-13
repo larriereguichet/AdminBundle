@@ -19,8 +19,12 @@ final readonly class TextHelper implements TextHelperInterface
         return (new EnglishInflector())->pluralize($singular)[0];
     }
 
-    public function richText(string $richText): string
+    public function richText(?string $richText): string
     {
+        if ($richText === null) {
+            return '';
+        }
+
         return $this->quillJsRenderer->render($richText);
     }
 }

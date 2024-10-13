@@ -8,6 +8,7 @@ use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Grid\ViewBuilder\CellViewBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\SecurityCellViewBuilder;
 use LAG\AdminBundle\Resource\Metadata\Grid;
+use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\Text;
 use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionCheckerInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -28,6 +29,7 @@ final class SecurityViewBuilderTest extends TestCase
         $data = new \stdClass();
         $context = ['some_context'];
         $cellView = new CellView(name: 'some property');
+        $operation = new Index();
 
         $this->permissionChecker
             ->expects(self::once())
@@ -38,10 +40,10 @@ final class SecurityViewBuilderTest extends TestCase
         $this->decorated
             ->expects(self::once())
             ->method('buildCell')
-            ->with($grid, $property, $data, $context)
+            ->with($operation, $grid, $property, $data, $context)
             ->willReturn($cellView)
         ;
-        $result = $this->cellBuilder->buildCell($grid, $property, $data, $context);
+        $result = $this->cellBuilder->buildCell($operation, $grid, $property, $data, $context);
 
         self::assertEquals($cellView, $result);
     }
@@ -51,6 +53,7 @@ final class SecurityViewBuilderTest extends TestCase
     {
         $grid = new Grid(name: 'some grid');
         $property = new Text(name: 'some property', permissions: ['ROLE_USER']);
+        $operation = new Index();
 
         $this->permissionChecker
             ->expects(self::once())
@@ -62,7 +65,7 @@ final class SecurityViewBuilderTest extends TestCase
             ->expects(self::never())
             ->method('buildCell')
         ;
-        $cellView = $this->cellBuilder->buildCell($grid, $property, new \stdClass());
+        $cellView = $this->cellBuilder->buildCell($operation, $grid, $property, new \stdClass());
 
         self::assertEquals($property->getName(), $cellView->name);
         self::assertNull($cellView->template);

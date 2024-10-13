@@ -20,7 +20,7 @@ final readonly class CellRenderer implements CellRendererInterface
         if ($cell->template === null) {
             return '';
         }
-        $attributes = array_merge($options['attributes'] ?? [], $cell->attributes);
+        $attributes = array_merge($cell->attributes, $options['attributes'] ?? []);
 
         return $this->environment->render($cell->template, [
             'options' => $cell->options,

@@ -13,7 +13,6 @@ use LAG\AdminBundle\Grid\View\GridView;
 use LAG\AdminBundle\Grid\View\RowView;
 use LAG\AdminBundle\Resource\Metadata\Grid;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -46,15 +45,12 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
         if ($errors->count() > 0) {
             throw new InvalidGridException($grid->getName() ?? '', $errors);
         }
-        $context['resource'] = $resource;
-        $context['objects'] = $data;
-        $context['grid'] = $grid;
 
         return new GridView(
             name: $grid->getName(),
             type: $grid->getType(),
-            headers: $this->buildHeaders($grid, $resource, $context),
-            rows: $this->buildRows($grid, $resource, $data, $context),
+            headers: $this->buildHeaders($operation, $grid, $context),
+            rows: $this->buildRows($operation, $grid, $data, $context),
             attributes: $grid->getAttributes(),
             title: $grid->getTitle(),
             template: $grid->getTemplate(),
@@ -62,18 +58,19 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
             options: $grid->getOptions(),
             actions: $this->buildCollectionActions($grid, $data),
             context: $context,
+            actionCellAttributes: $grid->getActionCellAttributes(),
             extraColumn: \count($grid->getActions()) > 0,
             emptyMessage: $grid->getEmptyMessage(),
             translationDomain: $grid->getTranslationDomain(),
         );
     }
 
-    private function buildHeaders(Grid $grid, Resource $resource, array $context): RowView
+    private function buildHeaders(OperationInterface $operation, Grid $grid, array $context): RowView
     {
-        return $this->rowBuilder->buildHeadersRow($grid, $resource, $context);
+        return $this->rowBuilder->buildHeadersRow($operation, $grid, $context);
     }
 
-    private function buildRows(Grid $grid, Resource $resource, mixed $data, array $context): iterable
+    private function buildRows(OperationInterface $operation, Grid $grid, mixed $data, array $context): iterable
     {
         if (!is_iterable($data)) {
             throw new Exception('Data must be iterable to build a grid.');
@@ -81,7 +78,7 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
         $rows = [];
 
         foreach ($data as $row) {
-            $rows[] = $this->rowBuilder->buildRow($grid, $resource, $row, $context);
+            $rows[] = $this->rowBuilder->buildRow($operation, $grid, $row, $context);
         }
 
         return $rows;

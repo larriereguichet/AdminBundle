@@ -8,5 +8,5 @@ interface TextHelperInterface
 {
     public function pluralize(string $singular): string;
 
-    public function richText(string $richText): string;
+    public function richText(?string $richText): string;
 }

@@ -9,6 +9,7 @@ use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use LAG\AdminBundle\Resource\Metadata\Collection;
 use LAG\AdminBundle\Resource\Metadata\Grid;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 
 final readonly class CollectionCellViewBuilder implements CellViewBuilderInterface
@@ -19,10 +20,15 @@ final readonly class CollectionCellViewBuilder implements CellViewBuilderInterfa
     ) {
     }
 
-    public function buildCell(Grid $grid, PropertyInterface $property, mixed $data, array $context = []): CellView
+    public function buildCell(
+        OperationInterface $operation,
+        Grid $grid,
+        PropertyInterface $property,
+        mixed $data,
+        array $context = []): CellView
     {
         if (!$property instanceof Collection) {
-            return $this->cellBuilder->buildCell($grid, $property, $data, $context);
+            return $this->cellBuilder->buildCell($operation, $grid, $property, $data, $context);
         }
 
         if (!is_iterable($data)) {
@@ -39,6 +45,7 @@ final readonly class CollectionCellViewBuilder implements CellViewBuilderInterfa
             $propertyData = $this->dataMapper->getValue($child, $propertyData);
 
             $context['children'][] = $this->cellBuilder->buildCell(
+                $operation,
                 $grid,
                 $child,
                 $propertyData,
@@ -46,6 +53,6 @@ final readonly class CollectionCellViewBuilder implements CellViewBuilderInterfa
             ++$index;
         }
 
-        return $this->cellBuilder->buildCell($grid, $property, $data, $context);
+        return $this->cellBuilder->buildCell($operation, $grid, $property, $data, $context);
     }
 }
