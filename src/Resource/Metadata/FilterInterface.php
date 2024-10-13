@@ -25,4 +25,8 @@ interface FilterInterface
     public function getFormOptions(): array;
 
     public function withFormOptions(array $formOptions): self;
+
+    public function getLabel(): ?string;
+
+    public function withLabel(?string $label): self;
 }

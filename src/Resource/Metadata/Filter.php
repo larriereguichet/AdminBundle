@@ -14,6 +14,8 @@ class Filter implements FilterInterface
         #[Assert\NotBlank]
         private string $name,
 
+        private ?string $label = null,
+
         #[Assert\NotBlank]
         private string $comparator = '=',
 
@@ -88,6 +90,19 @@ class Filter implements FilterInterface
     {
         $self = clone $this;
         $self->formOptions = $formOptions;
+
+        return $self;
+    }
+
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
+
+    public function withLabel(?string $label): FilterInterface
+    {
+        $self = clone $this;
+        $self->label = $label;
 
         return $self;
     }

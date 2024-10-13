@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Metadata;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class TextFilter extends Filter
@@ -12,6 +13,8 @@ class TextFilter extends Filter
         string $name,
         string $comparator = 'like',
         string $operator = 'and',
+        string $formType = TextType::class,
+        array $formOptions = [],
 
         #[Assert\Count(min: 1)]
         #[Assert\All(constraints: [new Assert\Type(type: 'string'), new Assert\NotBlank()])]
@@ -21,6 +24,8 @@ class TextFilter extends Filter
             name: $name,
             comparator: $comparator,
             operator: $operator,
+            formType: $formType,
+            formOptions: $formOptions,
         );
     }
 

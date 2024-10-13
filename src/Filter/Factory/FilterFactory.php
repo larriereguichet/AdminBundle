@@ -19,6 +19,12 @@ final readonly class FilterFactory implements FilterFactoryInterface
 
     public function create(CollectionOperationInterface $operation, FilterInterface $filter): FilterInterface
     {
+        $formOptions = $filter->getFormOptions();
+
+        if ($filter->getLabel() !== null & empty($formOptions['label'])) {
+            $formOptions['label'] = $filter->getLabel();
+            $filter = $filter->withFormOptions($formOptions);
+        }
         $errors = $this->validator->validate($filter, [new Valid()]);
 
         if ($errors->count() > 0) {
