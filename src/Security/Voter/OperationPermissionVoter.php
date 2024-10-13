@@ -33,6 +33,6 @@ final class OperationPermissionVoter extends Voter
             }
         }
 
-        return count($subject->getPermissions()) === 0;
+        return \count($subject->getPermissions()) === 0;
     }
 }

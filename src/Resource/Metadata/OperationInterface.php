@@ -63,7 +63,7 @@ interface OperationInterface extends PermissibleInterface, WorkflowSubjectInterf
 
     public function withForm(?string $form): self;
 
-    public function getFormOptions(): array;
+    public function getFormOptions(): ?array;
 
     public function withFormOptions(array $formOptions): self;
 

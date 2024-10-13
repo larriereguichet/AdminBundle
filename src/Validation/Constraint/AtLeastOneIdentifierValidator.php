@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Validation\Constraint;
 
-use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Update;

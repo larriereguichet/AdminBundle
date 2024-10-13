@@ -48,7 +48,7 @@ abstract class Operation implements OperationInterface
         #[Assert\NotBlank]
         private ?string $path = null,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The redirect route should not be empty, use null instead')]
+        #[Assert\NotBlank(message: 'The redirect route should not be empty, use null instead', allowNull: true)]
         private ?string $redirectRoute = null,
 
         #[Assert\NotNull]
@@ -56,9 +56,9 @@ abstract class Operation implements OperationInterface
 
         private ?string $form = null,
 
-        private array $formOptions = [],
+        private ?array $formOptions = null,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The form template should not be empty. Use null instead')]
+        #[Assert\NotBlank(message: 'The form template should not be empty. Use null instead', allowNull: true)]
         private ?string $formTemplate = null,
 
         private string $processor = ORMProcessor::class,
@@ -75,13 +75,13 @@ abstract class Operation implements OperationInterface
 
         private ?array $itemActions = null,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The redirect application should not be empty, use null instead')]
+        #[Assert\NotBlank(message: 'The redirect application should not be empty, use null instead', allowNull: true)]
         private ?string $redirectApplication = null,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The redirect resource should not be empty, use null instead')]
+        #[Assert\NotBlank(message: 'The redirect resource should not be empty, use null instead', allowNull: true)]
         private ?string $redirectResource = null,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The redirect operation should not be empty, use null instead')]
+        #[Assert\NotBlank(message: 'The redirect operation should not be empty, use null instead', allowNull: true)]
         private ?string $redirectOperation = null,
 
         private ?bool $validation = true,
@@ -290,7 +290,7 @@ abstract class Operation implements OperationInterface
         return $self;
     }
 
-    public function getFormOptions(): array
+    public function getFormOptions(): ?array
     {
         return $this->formOptions;
     }
