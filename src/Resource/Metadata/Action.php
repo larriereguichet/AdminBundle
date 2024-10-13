@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Metadata;
 
-class Action extends Property implements Url
+use LAG\AdminBundle\Workflow\WorkflowSubjectInterface;
+
+class Action extends Property implements Url, WorkflowSubjectInterface
 {
     public function __construct(
         ?string $name = null,

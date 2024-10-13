@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\State\Provider;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 
-readonly class CompositeProvider implements ProviderInterface
+final readonly class CompositeProvider implements ProviderInterface
 {
     public function __construct(
         /** @var ProviderInterface[] $providers */
@@ -24,6 +24,11 @@ readonly class CompositeProvider implements ProviderInterface
             }
         }
 
-        throw new Exception(\sprintf('The admin resource "%s" and operation "%s" is not supported by any provider', $operation->getResource()->getName(), $operation->getName()));
+        throw new Exception(\sprintf(
+            'The resource "%s" and operation "%s" in the application "%s" is not supported by any provider',
+            $operation->getResource()->getName(),
+            $operation->getName(),
+            $operation->getResource()->getApplication(),
+        ));
     }
 }

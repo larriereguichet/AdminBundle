@@ -7,6 +7,4 @@ namespace LAG\AdminBundle\Workflow;
 interface WorkflowSubjectInterface
 {
     public function getWorkflow(): ?string;
-
-    public function getWorkflowTransition(): ?string;
 }
