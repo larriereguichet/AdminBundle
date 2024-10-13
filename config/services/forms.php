@@ -8,7 +8,6 @@ use LAG\AdminBundle\Form\Extension\ChoiceTypeExtension;
 use LAG\AdminBundle\Form\Extension\CollectionTypeExtension;
 use LAG\AdminBundle\Form\Guesser\FormGuesser;
 use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
-use LAG\AdminBundle\Form\Transformer\ImageFileToArrayTransformer;
 use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
 use LAG\AdminBundle\Form\Type\DateRangeType;
 use LAG\AdminBundle\Form\Type\Image\ImageType;
@@ -67,9 +66,6 @@ return static function (ContainerConfigurator $container): void {
     $services->set(ChoiceTypeExtension::class)
         ->tag('form.type_extension')
     ;
-
-    // Data transformers
-    $services->set(ImageFileToArrayTransformer::class);
 
     // Form guessers
     $services->set(FormGuesserInterface::class, FormGuesser::class);
