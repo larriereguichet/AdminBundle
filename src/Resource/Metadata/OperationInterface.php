@@ -145,6 +145,8 @@ interface OperationInterface extends PermissibleInterface, WorkflowSubjectInterf
 
     public function setWorkflow(?string $workflow): self;
 
+    public function getWorkflowTransition(): ?string;
+
     public function setWorkflowTransition(?string $workflowTransition): self;
 
     public function isPartial(): bool;

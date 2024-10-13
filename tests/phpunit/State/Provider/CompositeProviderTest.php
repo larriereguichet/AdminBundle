@@ -41,12 +41,12 @@ class CompositeProviderTest extends TestCase
         $resource = new Resource(name: 'my_resource');
         $operation = $operation->withResource($resource);
 
-        $this->expectExceptionMessage(\sprintf(
-            'The admin resource "%s" and operation "%s" is not supported by any provider',
-            'my_resource',
-            $operation->getName()
-        ));
-        $this->expectException(Exception::class);
+        self::expectExceptionObject(new Exception(\sprintf(
+            'The resource "%s" and operation "%s" in the application "%s" is not supported by any provider',
+            $operation->getResource()->getName(),
+            $operation->getName(),
+            $operation->getResource()->getApplication(),
+        )));
 
         $provider = new CompositeProvider();
         $provider->provide($operation, ['what-ever'], ['some', 'thing']);

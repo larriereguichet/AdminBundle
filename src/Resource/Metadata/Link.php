@@ -16,7 +16,7 @@ class Link extends Property implements Url
     public function __construct(
         ?string $name = null,
         ?string $template = '@LAGAdmin/grids/properties/link.html.twig',
-        string|bool|null $propertyPath = null,
+        string|bool|null $propertyPath = true,
         string|bool|null $label = null,
         bool $sortable = true,
         bool $translatable = false,

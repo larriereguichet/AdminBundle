@@ -33,6 +33,8 @@ class Grid
 
         private array $attributes = [],
         private array $rowAttributes = [],
+        private array $actionCellAttributes = [],
+
         private ?string $headerTemplate = null,
         private array $headerRowAttributes = [],
         private array $headerAttributes = [],
@@ -55,6 +57,9 @@ class Grid
         private ?array $collectionActions = null,
 
         private ?string $emptyMessage = null,
+
+        #[Assert\NotNull]
+        private ?bool $sortable = null,
     ) {
     }
 
@@ -175,6 +180,19 @@ class Grid
         return $self;
     }
 
+    public function getActionCellAttributes(): array
+    {
+        return $this->actionCellAttributes;
+    }
+
+    public function withActionCellAttributes(array $actionCellAttributes): self
+    {
+        $self = clone $this;
+        $self->actionCellAttributes = $actionCellAttributes;
+
+        return $self;
+    }
+
     public function getHeaderTemplate(): ?string
     {
         return $this->headerTemplate;
@@ -288,6 +306,19 @@ class Grid
     {
         $self = clone $this;
         $self->emptyMessage = $emptyMessage;
+
+        return $self;
+    }
+
+    public function isSortable(): ?bool
+    {
+        return $this->sortable;
+    }
+
+    public function withSortable(bool $sortable): self
+    {
+        $self = clone $this;
+        $self->sortable = $sortable;
 
         return $self;
     }
