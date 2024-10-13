@@ -39,10 +39,6 @@ return static function (ContainerConfigurator $container): void {
         ->decorate(ProviderInterface::class, priority: 300)
         ->arg('$provider', service('.inner'))
     ;
-    $services->set(IdentifierProvider::class)
-        ->decorate(ProviderInterface::class, priority: 250)
-        ->arg('$provider', service('.inner'))
-    ;
     $services->set(PaginationProvider::class)
         ->decorate(ProviderInterface::class, priority: 210)
         ->arg('$provider', service('.inner'))
