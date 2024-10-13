@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventListener\Operation;
 
 use LAG\AdminBundle\Event\OperationEvent;
+use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
-use LAG\AdminBundle\Form\Type\Resource\ResourceHiddenType;
 use LAG\AdminBundle\Resource\Metadata\Action;
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-
 use function Symfony\Component\String\u;
 
 final readonly class InitializeCollectionOperationListener
@@ -42,11 +41,12 @@ final readonly class InitializeCollectionOperationListener
             ], $operation->getFilterFormOptions()));
         }
 
-        if ($operation->getForm() === ResourceHiddenType::class) {
+        if ($operation->getForm() === HiddenDataType::class) {
             /** @var CollectionOperationInterface $operation */
             $operation = $operation->withFormOptions([
                 'application' => $resource->getApplication(),
                 'resource' => $resource->getName(),
+                'operation' => $operation->getName(),
                 'data_class' => $resource->getDataClass(),
             ]);
         }
@@ -67,7 +67,7 @@ final readonly class InitializeCollectionOperationListener
                     name: $resource->getOperationOfType(Create::class)->getName(),
                     operation: $resource->getOperationOfType(Create::class)->getName(),
                     attributes: ['class' => 'btn-success'],
-                    icon: 'bi bi-plus-circle me-1',
+                    icon: 'plus-circle me-1',
                 );
             }
             $operation = $operation->withCollectionActions($collectionActions);

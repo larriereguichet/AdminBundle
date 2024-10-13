@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventListener\Operation;
 
 use LAG\AdminBundle\Event\OperationEvent;
+use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceDataType;
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
@@ -17,7 +18,6 @@ use LAG\AdminBundle\Resource\Metadata\Update;
 use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
-
 use function Symfony\Component\String\u;
 
 final readonly class InitializeOperationListener
@@ -62,7 +62,7 @@ final readonly class InitializeOperationListener
             $operation = $operation->withTitle($title->replace('_', ' ')->title()->trim()->toString());
         }
 
-        if (!$operation->getForm()) {
+        if ($operation->getForm() === null) {
             if ($operation instanceof Create || $operation instanceof Update) {
                 if ($resource->getForm()) {
                     $operation = $operation
@@ -82,6 +82,19 @@ final readonly class InitializeOperationListener
                     ;
                 }
             }
+        }
+
+        if ($operation->getForm() === HiddenDataType::class && $operation->getFormOptions() === null) {
+            $operation = $operation->withFormOptions([
+                'application' => $resource->getApplication(),
+                'resource' => $resource->getName(),
+                'operation' => $operation->getName(),
+                'translation_domain' => $resource->getTranslationDomain(),
+            ]);
+        }
+
+        if ($operation->getFormOptions() === null) {
+            $operation = $operation->withFormOptions([]);
         }
 
         if ($operation->getBaseTemplate() === null) {
@@ -146,8 +159,12 @@ final readonly class InitializeOperationListener
             }
         }
 
-        if ($operation->getPermissions() === null && $resource->getPermissions() !== null) {
+        if ($operation->getPermissions() === null) {
             $operation = $operation->withPermissions($resource->getPermissions());
+        }
+
+        if ($operation->getPermissions() === null) {
+            $operation = $operation->withPermissions([]);
         }
 
         if ($operation->getInput() === null & $resource->getInput() !== null) {
