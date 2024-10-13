@@ -75,7 +75,7 @@ final class InitializeResourceListenerTest extends TestCase
     #[Test]
     public function itDefinesPermissions(): void
     {
-        $resource = new Resource(name: 'some_resource');
+        $resource = new Resource(name: 'some_resource', permissions: ['ROLE_ADMIN']);
         $event = new ResourceEvent($resource);
 
         $this->listener->__invoke($event);
