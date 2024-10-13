@@ -2,25 +2,37 @@
 
 {% block content %}
     <div class="admin-index admin-{{ resource.name }}">
-        {% include '@LAGAdmin/resources/index/_collection_operations.html.twig' %}
+        {% block actions %}
+            <div class="row">
+                {% block filters %}
+                    <div class="col-9">
+                        {% if filterForm and filterForm.children|length > 0 %}
+                            {% include '@LAGAdmin/resources/index/_filters.html.twig' with {form: filterForm} %}
+                        {% endif %}
+                    </div>
+                {% endblock %}
 
-        {% block filter_form %}
-            {% if filterForm and filterForm.children|length > 0 %}
-                {% include '@LAGAdmin/resources/index/_filters.html.twig' with {form: filterForm} %}
-            {% endif %}
+                {% block collection_actions %}
+                    {% if grid.actions|length == 1 %}
+                        <div class="col-3">
+                            {% include '@LAGAdmin/resources/index/_collection_operations.html.twig' %}
+                        </div>
+                    {% endif %}
+                {% endblock %}
+            </div>
         {% endblock %}
 
         {% block grid %}
-            <div class="admin-grid-container">
-                {% if grid %}
+            {% if grid %}
+                <div class="admin-grid-container">
                     {{ component('lag_admin:grid', {
                         data: data,
                         grid: grid,
                         operation: operation,
                         ...grid.attributes
                     }) }}
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
         {% endblock %}
 
         {% block pagination %}
@@ -29,7 +41,8 @@
                     <div class="pagination justify-content-center">
                         {{ pagerfanta(data, {
                             page: data.currentPage,
-                            routeName: app.request.attributes.get('_route')
+                            routeName: app.request.attributes.get('_route'),
+                            routeParams: app.request.attributes.get('_route_params'),
                         }) }}
                     </div>
                 </div>
