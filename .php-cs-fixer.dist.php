@@ -21,6 +21,7 @@ return $config
         'yoda_style' => false,
         'elseif' => true,
         'declare_strict_types' => true,
+        'single_line_throw' => false,
     ])
     ->setFinder($finder)
 ;
