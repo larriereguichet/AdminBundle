@@ -1,27 +1,18 @@
 import {Controller} from "@hotwired/stimulus";
 
 export default class extends Controller {
-    //static targets = ["collectionContainer"]
-
-    static values = {
-        index    : Number,
-        prototype: String,
-    }
-
-    connect() {
-        // Array.from(this.collectionContainerTarget.children).forEach(item => {
-            //this.addTagFormDeleteLink(item)
-        // })
+    targets() {
+        return this.element.querySelectorAll(this.element.dataset.target)
     }
 
     addCollectionElement(event)
     {
-        const item = document.createElement('div');
-        item.innerHTML = this.element.dataset.prototypeValue.replace(/__name__/g, this.element.dataset.indexValue);
-        this.collectionContainerTarget.appendChild(item);
-        this.element.dataset.indexValue = (parseInt(this.element.dataset.indexValue) + 1).toString()
+        event.preventDefault()
 
-        //this.addTagFormDeleteLink(item)
+        const item = document.createElement('div')
+        item.innerHTML = this.element.dataset.prototypeValue.replace(/__name__/g, this.element.dataset.indexValue)
+        this.targets().forEach(target => target.appendChild(item))
+        this.element.dataset.indexValue = (parseInt(this.element.dataset.indexValue) + 1).toString()
     }
 
     removeCollectionElement(event) {
