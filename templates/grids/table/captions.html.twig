@@ -1,4 +1,4 @@
-<caption class="caption-top text-end">
+<div class="admin-actions text-end">
     {% if grid.actions|length == 1 %}
         {{ lag_admin_cell(grid.actions|first) }}
     {% elseif grid.actions|length > 1 %}
@@ -9,13 +9,11 @@
                     aria-expanded="false">
                 {{ 'lag_admin.actions.collection_action'|trans({}, 'admin') }}
             </button>
-            {# TODO #}
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                {% for action in grid.actions %}
+                    <li>{{ lag_admin_cell(action, {attributes: {class: 'dropdown-item'}}) }}</li>
+                {% endfor %}
             </ul>
         </div>
     {% endif %}
-
-</caption>
+</div>
