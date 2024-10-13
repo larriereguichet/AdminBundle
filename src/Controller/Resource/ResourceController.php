@@ -63,7 +63,7 @@ final readonly class ResourceController
             }
         }
         $this->eventDispatcher->dispatchEvents(
-            $event = new ResourceControllerEvent($operation, $request, $data),
+            $event = new ResourceControllerEvent($operation, $request, $data, $context),
             ResourceControllerEvents::RESOURCE_CONTROLLER_PATTERN,
             $operation->getResource()->getApplication(),
             $operation->getResource()->getName(),
