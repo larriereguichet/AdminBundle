@@ -10,14 +10,19 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CollectionTypeExtension extends AbstractTypeExtension
+final class CollectionTypeExtension extends AbstractTypeExtension
 {
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'add_label' => 'lag_admin.ui.add',
-            'delete_label' => 'lag_admin.ui.delete',
-        ]);
+        $resolver
+            ->define('delete_label')
+            ->allowedTypes('string')
+            ->default('lag_admin.ui.delete')
+
+            ->define('add_label')
+            ->allowedTypes('string')
+            ->default('lag_admin.ui.add')
+        ;
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options): void

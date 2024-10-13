@@ -8,6 +8,7 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\InitializeResourceIdentifi
 use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\InitializeResourcePropertiesListener;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Filter\EntityFilterApplicator;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Filter\TextFilterApplicator;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Form\Guesser\MetadataFormGuesser;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactory;
@@ -23,6 +24,7 @@ use LAG\AdminBundle\Event\ResourceEvents;
 use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
 use LAG\AdminBundle\Filter\Resolver\FilterValuesResolver;
 use LAG\AdminBundle\Filter\Resolver\FilterValuesResolverInterface;
+use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -101,5 +103,12 @@ return static function (ContainerConfigurator $container): void {
     $services->set(EntityFilterApplicator::class)
         ->arg('$registry', service('doctrine'))
         ->tag(FilterApplicatorInterface::SERVICE_TAG)
+    ;
+
+    // Form guesser
+    $services->set(MetadataFormGuesser::class)
+        ->arg('$formGuesser', service('.inner'))
+        ->arg('$metadataHelper', service(MetadataHelperInterface::class))
+        ->decorate(FormGuesserInterface::class)
     ;
 };

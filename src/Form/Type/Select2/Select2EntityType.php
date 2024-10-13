@@ -17,6 +17,7 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
+/** @deprecated  */
 class Select2EntityType extends AbstractType
 {
     private ManagerRegistry $registry;

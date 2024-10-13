@@ -7,6 +7,7 @@ namespace LAG\AdminBundle\Form\Transformer;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+// TODO remove
 class ImageFileToArrayTransformer implements DataTransformerInterface
 {
     public function transform(mixed $value): array
