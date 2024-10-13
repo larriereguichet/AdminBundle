@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Form\Guesser;
 
 use LAG\AdminBundle\Form\Guesser\FormGuesser;
@@ -32,7 +34,6 @@ final class FormGuesserTest extends TestCase
         ?string $expectedFormType,
         array $expectedFormOptions,
     ): void {
-
         $formType = $this->guesser->guessFormType($operation, $property);
         $formOptions = $this->guesser->guessFormOptions($operation, $property);
 
@@ -70,7 +71,7 @@ final class FormGuesserTest extends TestCase
         yield [$operation, new RichText(propertyPath: 'description'), TextareaType::class, ['required' => false, 'property_path' => 'description']];
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->guesser = new FormGuesser();
     }

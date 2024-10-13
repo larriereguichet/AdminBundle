@@ -50,8 +50,8 @@ final class ResourceControllerTest extends TestCase
         );
         $resource = new Resource(
             name: 'my_resource',
-            application: 'my_application',
             operations: [$operation],
+            application: 'my_application',
         );
         $operation = $operation->withResource($resource);
         $request = new Request(server: $headers);
@@ -125,9 +125,9 @@ final class ResourceControllerTest extends TestCase
         $operation = new Index(
             name: 'my_operation',
             template: 'my.html.twig',
+            route: 'my_route',
             form: FormType::class,
             formOptions: ['an_option' => 'a_value'],
-            route: 'my_route',
         );
         $request = new Request();
         $data = new FakeEntity();

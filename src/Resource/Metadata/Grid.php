@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Metadata;
 
-use LAG\AdminBundle\Form\Type\Resource\ResourceHiddenType;
+use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
@@ -14,7 +14,7 @@ class Grid
         #[Assert\NotBlank(message: 'The grid name should not be empty')]
         private ?string $name = null,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The grid title should not be empty. Use null instead')]
+        #[Assert\NotBlank(message: 'The grid title should not be empty. Use null instead', allowNull: true)]
         private ?string $title = null,
 
         #[Assert\NotBlank(message: 'The grid type should not be empty')]
@@ -38,7 +38,7 @@ class Grid
         private array $headerAttributes = [],
         private array $options = [],
 
-        private ?string $form = ResourceHiddenType::class,
+        private ?string $form = HiddenDataType::class,
 
         private array $formOptions = [],
 

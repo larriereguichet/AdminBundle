@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Form\Guesser;
 
 use LAG\AdminBundle\Form\Type\Text\TextareaType;
@@ -23,7 +25,7 @@ final readonly class FormGuesser implements FormGuesserInterface
 {
     public function guessFormType(OperationInterface $operation, PropertyInterface $property): ?string
     {
-        if (in_array($property->getName(), $operation->getIdentifiers())) {
+        if (\in_array($property->getName(), $operation->getIdentifiers())) {
             return null;
         }
 
@@ -58,7 +60,7 @@ final readonly class FormGuesser implements FormGuesserInterface
     {
         $options = ['required' => false];
 
-        if (is_string($property->getPropertyPath()) && $property->getPropertyPath() !== '.') {
+        if (\is_string($property->getPropertyPath()) && $property->getPropertyPath() !== '.') {
             $options['property_path'] = $property->getPropertyPath();
         }
 

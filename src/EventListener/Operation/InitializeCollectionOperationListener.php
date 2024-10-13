@@ -12,6 +12,7 @@ use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+
 use function Symfony\Component\String\u;
 
 final readonly class InitializeCollectionOperationListener

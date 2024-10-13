@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventListener\Grid;
 
 use LAG\AdminBundle\Event\GridEvent;
-use LAG\AdminBundle\Form\Type\Resource\ResourceHiddenType;
+use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
 use LAG\AdminBundle\Resource\Metadata\Action;
 use LAG\AdminBundle\Resource\Metadata\Delete;
 use LAG\AdminBundle\Resource\Metadata\Get;
@@ -51,7 +51,7 @@ final readonly class InitializeGridListener
             $grid = $grid->withName($gridName->toString());
         }
 
-        if ($grid->getForm() === ResourceHiddenType::class) {
+        if ($grid->getForm() === HiddenDataType::class) {
             $grid = $grid->withFormOptions([
                 'application' => $resource->getApplication(),
                 'resource' => $resource->getName(),
@@ -70,15 +70,15 @@ final readonly class InitializeGridListener
 
             if ($resource->hasOperationOfType(Update::class)) {
                 $actions[] = new Action(
-                    operation: $resource->getOperationOfType(Update::class)->getName(),
                     attributes: ['class' => 'btn-primary'],
+                    operation: $resource->getOperationOfType(Update::class)->getName(),
                 );
             }
 
             if ($resource->hasOperationOfType(Delete::class)) {
                 $actions[] = new Action(
-                    operation: $resource->getOperationOfType(Delete::class)->getName(),
                     attributes: ['class' => 'btn-danger'],
+                    operation: $resource->getOperationOfType(Delete::class)->getName(),
                 );
             }
             $grid = $grid->withActions($actions);
