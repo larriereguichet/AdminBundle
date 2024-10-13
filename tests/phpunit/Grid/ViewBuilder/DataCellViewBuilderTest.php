@@ -12,6 +12,7 @@ use LAG\AdminBundle\Grid\ViewBuilder\DataCellViewBuilder;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use LAG\AdminBundle\Resource\Metadata\Grid;
 use LAG\AdminBundle\Resource\Metadata\Text;
+use LAG\AdminBundle\Resource\Metadata\Update;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -32,6 +33,7 @@ final class DataCellViewBuilderTest extends TestCase
         $context = ['some_option' => 'some_value'];
 
         $cell = new CellView(name: 'cell view');
+        $operation = new Update();
 
         $dataTransformer = self::createMock(DataTransformerInterface::class);
         $dataTransformer->expects(self::once())
@@ -55,11 +57,11 @@ final class DataCellViewBuilderTest extends TestCase
         $this->decorated
             ->expects(self::once())
             ->method('buildCell')
-            ->with($grid, $property, 'some transformed data', $context)
+            ->with($operation, $grid, $property, 'some transformed data', $context)
             ->willReturn($cell)
         ;
 
-        $result = $this->cellBuilder->buildCell($grid, $property, $data, $context);
+        $result = $this->cellBuilder->buildCell($operation, $grid, $property, $data, $context);
 
         self::assertEquals($cell, $result);
     }

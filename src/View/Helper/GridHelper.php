@@ -11,8 +11,9 @@ use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Grid\View\GridView;
 use LAG\AdminBundle\Grid\View\HeaderView;
 use LAG\AdminBundle\Resource\Metadata\Operation;
+use Twig\Extension\RuntimeExtensionInterface;
 
-final readonly class GridHelper implements GridHelperInterface
+final readonly class GridHelper implements GridHelperInterface, RuntimeExtensionInterface
 {
     public function __construct(
         private GridRendererInterface $gridRenderer,

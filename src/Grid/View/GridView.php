@@ -23,6 +23,7 @@ final readonly class GridView implements \IteratorAggregate
         public array $headerAttributes = [],
         public array $rowAttributes = [],
         public array $cellAttributes = [],
+        public array $actionCellAttributes = [],
         public bool $extraColumn = false,
         public ?string $emptyMessage = null,
         public ?string $translationDomain = null,

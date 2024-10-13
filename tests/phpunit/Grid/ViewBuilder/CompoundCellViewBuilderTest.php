@@ -11,6 +11,7 @@ use LAG\AdminBundle\Resource\Metadata\Compound;
 use LAG\AdminBundle\Resource\Metadata\Grid;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Metadata\Text;
+use LAG\AdminBundle\Resource\Metadata\Update;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -31,13 +32,14 @@ final class CompoundCellViewBuilderTest extends TestCase
         $childView = new CellView(name: 'some_child_view');
 
         $resource = new Resource(properties: ['some_property' => $property, 'child' => $child]);
+        $operation = (new Update())->withResource($resource);
 
         $this->decorated
             ->expects(self::exactly(2))
             ->method('buildCell')
             ->willReturnMap([
-                [$grid, $child, $data, [], $childView],
-                [$grid, $property, $data, [
+                [$operation, $grid, $child, $data, [], $childView],
+                [$operation, $grid, $property, $data, [
                     'some' => 'context',
                     'resource' => $resource,
                     'children' => [$childView],
@@ -45,7 +47,7 @@ final class CompoundCellViewBuilderTest extends TestCase
             ])
         ;
 
-        $this->builder->buildCell($grid, $property, $data, ['some' => 'context', 'resource' => $resource]);
+        $this->builder->buildCell($operation, $grid, $property, $data, ['some' => 'context', 'resource' => $resource]);
     }
 
     #[Test]
@@ -56,14 +58,17 @@ final class CompoundCellViewBuilderTest extends TestCase
         $data = new \stdClass();
         $cellView = new CellView(name: 'some_view');
 
+        $resource = new Resource();
+        $operation = (new Update())->withResource($resource);
+
         $this->decorated
             ->expects(self::once())
             ->method('buildCell')
-            ->with($grid, $property, $data, [])
+            ->with($operation, $grid, $property, $data, [])
             ->willReturn($cellView)
         ;
 
-        $this->builder->buildCell($grid, $property, $data);
+        $this->builder->buildCell($operation, $grid, $property, $data);
     }
 
     #[Test]
@@ -74,14 +79,17 @@ final class CompoundCellViewBuilderTest extends TestCase
         $data = new \stdClass();
         $cellView = new CellView(name: 'some_view');
 
+        $resource = new Resource();
+        $operation = (new Update())->withResource($resource);
+
         $this->decorated
             ->expects(self::once())
             ->method('buildCell')
-            ->with($grid, $property, $data, ['children' => 'set'])
+            ->with($operation, $grid, $property, $data, ['children' => 'set'])
             ->willReturn($cellView)
         ;
 
-        $this->builder->buildCell($grid, $property, $data, ['children' => 'set']);
+        $this->builder->buildCell($operation, $grid, $property, $data, ['children' => 'set']);
     }
 
     protected function setUp(): void

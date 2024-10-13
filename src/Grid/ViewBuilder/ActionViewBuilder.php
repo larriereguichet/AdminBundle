@@ -23,10 +23,7 @@ final readonly class ActionViewBuilder implements ActionViewBuilderInterface
     {
         $actionAttributes = $action->getAttributes();
 
-        if (
-            $action->getCondition() !== null
-            && !$this->conditionMatcher->matchCondition($data, $action->getCondition())
-        ) {
+        if (!$this->conditionMatcher->matchCondition($action, $data, $context)) {
             return null;
         }
 

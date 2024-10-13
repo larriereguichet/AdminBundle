@@ -6,11 +6,11 @@ namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\View\RowView;
 use LAG\AdminBundle\Resource\Metadata\Grid;
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 
 interface RowViewBuilderInterface
 {
-    public function buildHeadersRow(Grid $grid, Resource $resource, array $context): RowView;
+    public function buildHeadersRow(OperationInterface $operation, Grid $grid, array $context): RowView;
 
-    public function buildRow(Grid $grid, Resource $resource, mixed $data, array $context): RowView;
+    public function buildRow(OperationInterface $operation, Grid $grid, mixed $data, array $context): RowView;
 }

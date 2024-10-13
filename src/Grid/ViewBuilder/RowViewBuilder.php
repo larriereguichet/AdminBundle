@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\View\RowView;
 use LAG\AdminBundle\Resource\Metadata\Grid;
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 
 final readonly class RowViewBuilder implements RowViewBuilderInterface
 {
@@ -17,13 +17,13 @@ final readonly class RowViewBuilder implements RowViewBuilderInterface
     ) {
     }
 
-    public function buildHeadersRow(Grid $grid, Resource $resource, array $context): RowView
+    public function buildHeadersRow(OperationInterface $operation, Grid $grid, array $context): RowView
     {
         $headers = [];
 
         foreach ($grid->getProperties() as $propertyName) {
-            $property = $resource->getProperty($propertyName);
-            $headers[] = $this->headerBuilder->buildHeader($grid, $property, $context);
+            $property = $operation->getResource()->getProperty($propertyName);
+            $headers[] = $this->headerBuilder->buildHeader($operation, $grid, $property, $context);
         }
 
         return new RowView(
@@ -32,14 +32,14 @@ final readonly class RowViewBuilder implements RowViewBuilderInterface
         );
     }
 
-    public function buildRow(Grid $grid, Resource $resource, mixed $data, array $context): RowView
+    public function buildRow(OperationInterface $operation, Grid $grid, mixed $data, array $context): RowView
     {
         $cells = [];
         $context['row_data'] = $data;
 
         foreach ($grid->getProperties() as $propertyName) {
-            $property = $resource->getProperty($propertyName);
-            $cells[] = $this->cellBuilder->buildCell($grid, $property, $data, $context);
+            $property = $operation->getResource()->getProperty($propertyName);
+            $cells[] = $this->cellBuilder->buildCell($operation, $grid, $property, $data, $context);
         }
         $actions = [];
 
@@ -54,6 +54,7 @@ final readonly class RowViewBuilder implements RowViewBuilderInterface
         return new RowView(
             cells: $cells,
             actions: $actions,
+            data: $data,
             attributes: $grid->getRowAttributes(),
         );
     }

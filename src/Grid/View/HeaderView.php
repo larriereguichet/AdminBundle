@@ -14,8 +14,10 @@ readonly class HeaderView
         public string $name,
         public ?string $template = null,
         public ?string $label = null,
-        public bool $sortable = false,
         public ?string $translationDomain = null,
+        public ?string $sort = null,
+        public ?string $order = null,
+        public bool $sortable = false,
         array $attributes = [],
     ) {
         $this->attributes = new ComponentAttributes($attributes);
