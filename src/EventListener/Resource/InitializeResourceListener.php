@@ -68,7 +68,7 @@ final readonly class InitializeResourceListener
         }
 
         if ($resource->getPermissions() === null) {
-            $resource = $resource->withPermissions(['ROLE_ADMIN']);
+            $resource = $resource->withPermissions([]);
         }
 
         if ($resource->getNormalizationContext() === null) {
@@ -77,6 +77,10 @@ final readonly class InitializeResourceListener
 
         if ($resource->getDenormalizationContext() === null) {
             $resource = $resource->withDenormalizationContext([]);
+        }
+
+        if ($resource->getFormOptions() === null) {
+            $resource = $resource->withFormOptions([]);
         }
 
         $event->setResource($resource);
