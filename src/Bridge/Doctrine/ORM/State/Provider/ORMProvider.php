@@ -34,7 +34,19 @@ final readonly class ORMProvider implements ProviderInterface
         $repository = $manager->getRepository($operation->getResource()->getDataClass());
         // Add a suffix to avoid error if the resource is named with a reserved keyword (like group)
         $rootAlias = $operation->getResource()->getName().'_entity';
+        $queryBuilder = $repository->createQueryBuilder($rootAlias);
+        $index = 0;
 
-        return $repository->createQueryBuilder($rootAlias);
+        foreach ($operation->getIdentifiers() as $identifier) {
+            if ($uriVariables[$identifier] ?? false) {
+                $parameterName = 'identifier_'.$index;
+                $queryBuilder->andWhere(\sprintf($rootAlias.'.%s = :%s', $identifier, $parameterName))
+                    ->setParameter($parameterName, $uriVariables[$identifier])
+                ;
+                ++$index;
+            }
+        }
+
+        return $queryBuilder;
     }
 }
