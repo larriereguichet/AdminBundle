@@ -10,16 +10,13 @@ use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
+use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Serializer\SerializerInterface;
-use Twig\Environment;
 
 final readonly class ResourceController
 {
@@ -29,10 +26,8 @@ final readonly class ResourceController
         private ProviderInterface $provider,
         private ProcessorInterface $processor,
         private FormFactoryInterface $formFactory,
-        private Environment $environment,
-        private RedirectHandlerInterface $redirectionHandler,
-        private SerializerInterface $serializer,
         private ResourceEventDispatcherInterface $eventDispatcher,
+        private ResponseHandlerInterface $responseHandler,
     ) {
     }
 
@@ -59,7 +54,7 @@ final readonly class ResourceController
                 $data = $form->getData();
                 $this->processor->process($data, $operation, $uriVariables, $context);
 
-                return $this->redirectionHandler->createRedirectResponse($operation, $data, $context);
+                return $this->responseHandler->createRedirectResponse($operation, $data, $context);
             }
         }
         $this->eventDispatcher->dispatchEvents(
@@ -74,17 +69,11 @@ final readonly class ResourceController
             return $event->getResponse();
         }
 
-        if ($request->getContentTypeFormat() === 'json') {
-            $content = $this->serializer->serialize($data, 'json', $operation->getNormalizationContext());
-
-            return new JsonResponse($content, Response::HTTP_OK, [], true);
-        }
-
-        return new Response($this->environment->render($operation->getTemplate(), [
-            'resource' => $operation->getResource(),
-            'operation' => $operation,
-            'data' => $data,
-            'form' => $form?->createView(),
-        ]), $form?->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK);
+        return $this->responseHandler->createResponse(
+            request: $request,
+            operation: $operation,
+            data: $data,
+            form: $form,
+        );
     }
 }

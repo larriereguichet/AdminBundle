@@ -6,9 +6,9 @@ namespace LAG\AdminBundle\Tests\State\Processor;
 
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Update;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Processor\ValidationProcessor;

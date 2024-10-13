@@ -27,7 +27,7 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
     ) {
     }
 
-    public function build(Grid $grid, OperationInterface $operation, mixed $data, array $context = []): GridView
+    public function build(OperationInterface $operation, Grid $grid, mixed $data, array $context = []): GridView
     {
         $event = new GridEvent($grid, $operation);
         $resource = $operation->getResource();
@@ -59,9 +59,9 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
             title: $grid->getTitle(),
             template: $grid->getTemplate(),
             component: $grid->getComponent(),
-            context: $context,
-            actions: $this->buildCollectionActions($grid, $data),
             options: $grid->getOptions(),
+            actions: $this->buildCollectionActions($grid, $data),
+            context: $context,
             extraColumn: \count($grid->getActions()) > 0,
             emptyMessage: $grid->getEmptyMessage(),
             translationDomain: $grid->getTranslationDomain(),

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Bridge\KnpMenu\Extension;
 
 use LAG\AdminBundle\Bridge\KnpMenu\Extension\ResourceExtension;
-use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use PHPUnit\Framework\Attributes\Test;

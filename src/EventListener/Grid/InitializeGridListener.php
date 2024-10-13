@@ -8,9 +8,9 @@ use LAG\AdminBundle\Event\GridEvent;
 use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
 use LAG\AdminBundle\Resource\Metadata\Action;
 use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Get;
 use LAG\AdminBundle\Resource\Metadata\Grid;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Metadata\Update;
 
 use function Symfony\Component\String\u;
@@ -64,8 +64,8 @@ final readonly class InitializeGridListener
         $actions = [];
 
         if ($grid->getActions() === null) {
-            if ($resource->hasOperationOfType(Get::class)) {
-                $actions[] = new Action(operation: $resource->getOperationOfType(Get::class)->getName());
+            if ($resource->hasOperationOfType(Show::class)) {
+                $actions[] = new Action(operation: $resource->getOperationOfType(Show::class)->getName());
             }
 
             if ($resource->hasOperationOfType(Update::class)) {

@@ -20,7 +20,7 @@ final readonly class JsonResponseHandler implements ResponseHandlerInterface
     ) {
     }
 
-    public function createResponse(Request $request, OperationInterface $operation, mixed $data, ?FormInterface $form = null, ?FormInterface $filterForm = null, ?GridView $grid = null,): Response
+    public function createResponse(Request $request, OperationInterface $operation, mixed $data, ?FormInterface $form = null, ?FormInterface $filterForm = null, ?GridView $grid = null): Response
     {
         if ($request->getContentTypeFormat() === 'json') {
             $content = $this->serializer->serialize($data, 'json', $operation->getNormalizationContext());
