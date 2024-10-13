@@ -1,15 +1,4 @@
-<div class="dropdown mb-4 mt-3">
-    <a href="#"
-       data-controller="show"
-       data-target=".admin-filters"
-       data-show-message="{{ 'lag_admin.ui.show_filters'|trans({}, resource.translationDomain) }}"
-       data-hide-message="{{ 'lag_admin.ui.hide_filters'|trans({}, resource.translationDomain) }}">
-        {% if not form.vars.submitted%}
-            {{ 'lag_admin.ui.show_filters'|trans({}, resource.translationDomain) }}
-        {% else %}
-            {{ 'lag_admin.ui.hide_filters'|trans({}, resource.translationDomain) }}
-        {% endif %}
-    </a>
+<div class="dropdown mb-4">
     <div class="admin-filters animated--fade-in{% if not form.vars.submitted%} d-none{% endif %}">
         <div id="admin-filters" class="card">
             <div class="card-body">
@@ -30,7 +19,7 @@
                 <div class="text-right btn-group"
                      role="group">
                     <a href="{{ app.request.pathInfo }}"
-                       class="btn btn-secondary">
+                       class="btn btn-outline-secondary">
                         <i class="fas fa-eraser"></i>
                         {{ 'lag_admin.ui.reset'|trans({}, 'admin') }}
                     </a>
@@ -46,5 +35,17 @@
             </div>
         </div>
     </div>
+
+    <a href="#"
+       data-controller="show"
+       data-target=".admin-filters"
+       data-show-message="{{ 'lag_admin.ui.show_filters'|trans({}, resource.translationDomain) }}"
+       data-hide-message="{{ 'lag_admin.ui.hide_filters'|trans({}, resource.translationDomain) }}">
+        {% if not form.vars.submitted%}
+            {{ 'lag_admin.ui.show_filters'|trans({}, resource.translationDomain) }}
+        {% else %}
+            {{ 'lag_admin.ui.hide_filters'|trans({}, resource.translationDomain) }}
+        {% endif %}
+    </a>
 </div>
 

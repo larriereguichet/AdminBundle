@@ -2,12 +2,18 @@
 
 {% block page_title %}{{ operation.title|trans({}, lag_admin.resource.translationDomain) }} - {{ parent() }}{% endblock %}
 
-{% block title %}{{ operation.title|trans({}, lag_admin.resource.translationDomain) }}{% endblock %}
+{% block title %}
+    {% if operation.title %}
+        <h1 class="h3 mb-4 mt-4 border-bottom">
+            {{ operation.title|trans({}, lag_admin.resource.translationDomain) }}
+        </h1>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
     <div class="admin-container admin-{{ resource.name }} admin-{{ operation.name }}">
         {% block form %}
-            {% if form %}
+            {% if form is defined %}
                 {{ form_start(form) }}
 
                 {% block form_content %}
@@ -16,21 +22,25 @@
 
                 {% block form_buttons %}
                     <hr>
-                    <div class="row mt-3 justify-content-end">
-                        <div class="col-5 text-end">
-                            <div class="btn-group">
+                    <div class="row">
+                        <div class="col-6 text-start">
+                            {% block cancel %}
                                 {% if operation.resource.hasOperation('index') %}
                                     <a href="{{ lag_admin_url(operation.resource.name, 'index') }}"
                                        class="btn btn-light">
                                         {{ 'lag_admin.ui.cancel'|trans({}, 'admin') }}
                                     </a>
                                 {% endif %}
+                            {% endblock %}
+                        </div>
 
+                        <div class="col-6 text-end">
+                            {% block submit %}
                                 <button type="submit"
                                         class="btn btn-primary">
                                     {{ 'lag_admin.ui.save'|trans({}, 'admin') }}
                                 </button>
-                            </div>
+                            {% endblock %}
                         </div>
                     </div>
                 {% endblock %}
