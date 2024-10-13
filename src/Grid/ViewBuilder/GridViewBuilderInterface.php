@@ -10,5 +10,5 @@ use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 
 interface GridViewBuilderInterface
 {
-    public function build(Grid $grid, OperationInterface $operation, mixed $data, array $context = []): GridView;
+    public function build(OperationInterface $operation, Grid $grid, mixed $data, array $context = []): GridView;
 }

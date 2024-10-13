@@ -17,7 +17,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,7 +34,7 @@ final class ResponseHandlerTest extends TestCase
     public function itCreatesAResponse(OperationInterface $operation, string $expectedResourceName): void
     {
         $request = new Request();
-        $data = new stdClass();
+        $data = new \stdClass();
 
         $form = self::createMock(FormInterface::class);
         $formView = self::createMock(FormView::class);
@@ -84,7 +83,7 @@ final class ResponseHandlerTest extends TestCase
             redirectResource: 'my_other_resource',
             redirectOperation: 'my_other_operation'
         );
-        $data = new stdClass();
+        $data = new \stdClass();
         $context = ['some' => 'context'];
         $url = '/some/url';
 
@@ -115,7 +114,7 @@ final class ResponseHandlerTest extends TestCase
             redirectRoute: 'my_redirect_route',
             redirectRouteParameters: ['some' => 'parameter'],
         );
-        $data = new stdClass();
+        $data = new \stdClass();
         $context = ['some' => 'context'];
         $url = '/some/url';
 
@@ -146,7 +145,7 @@ final class ResponseHandlerTest extends TestCase
             route: 'my_redirect_route',
             routeParameters: ['some' => 'parameter'],
         );
-        $data = new stdClass();
+        $data = new \stdClass();
         $context = ['some' => 'context'];
         $url = '/some/url';
 

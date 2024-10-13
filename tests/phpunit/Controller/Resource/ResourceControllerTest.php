@@ -10,12 +10,11 @@ use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Response\Handler\RedirectHandlerInterface;
+use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\Tests\Entity\FakeEntity;
 use LAG\AdminBundle\Tests\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -23,8 +22,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\SerializerInterface;
-use Twig\Environment;
+use Symfony\Component\HttpFoundation\Response;
 
 final class ResourceControllerTest extends TestCase
 {
@@ -34,14 +32,11 @@ final class ResourceControllerTest extends TestCase
     private MockObject $provider;
     private MockObject $processor;
     private MockObject $formFactory;
-    private MockObject $environment;
-    private MockObject $redirectHandler;
-    private MockObject $serializer;
+    private MockObject $responseHandler;
     private MockObject $eventDispatcher;
 
     #[Test]
-    #[DataProvider(methodName: 'headers')]
-    public function itHandlesRequest(array $headers, bool $useTwig): void
+    public function itHandlesRequest(): void
     {
         $operation = new Index(
             name: 'my_operation',
@@ -54,7 +49,7 @@ final class ResourceControllerTest extends TestCase
             application: 'my_application',
         );
         $operation = $operation->withResource($resource);
-        $request = new Request(server: $headers);
+        $request = new Request();
         $data = new FakeEntity();
         $data->id = 666;
 
@@ -81,42 +76,15 @@ final class ResourceControllerTest extends TestCase
             ->method('dispatchEvents')
             ->with()
         ;
-        $expected = 'some html';
+        $this->responseHandler
+            ->expects(self::once())
+            ->method('createResponse')
+            ->willReturn(new Response(content: 'some html'))
+        ;
 
-        if ($useTwig) {
-            $this->environment
-                ->expects(self::once())
-                ->method('render')
-                ->with('my.html.twig', [
-                    'resource' => $resource,
-                    'operation' => $operation,
-                    'data' => $data,
-                    'form' => null,
-                ])
-                ->willReturn('some html')
-            ;
-
-            $this->serializer
-                ->expects($this->never())
-                ->method('serialize')
-            ;
-        } else {
-            $this->environment
-                ->expects($this->never())
-                ->method('render')
-            ;
-
-            $this->serializer
-                ->expects(self::once())
-                ->method('serialize')
-                ->with($data, 'json', ['groups' => ['my_group']])
-                ->willReturn('{"some": "json"}')
-            ;
-            $expected = '{"some": "json"}';
-        }
         $response = $this->controller->__invoke($request, $operation);
 
-        self::assertEquals($expected, $response->getContent());
+        self::assertEquals('some html', $response->getContent());
     }
 
     #[Test]
@@ -187,29 +155,21 @@ final class ResourceControllerTest extends TestCase
         ;
 
         $this
-            ->redirectHandler
+            ->responseHandler
             ->expects(self::once())
             ->method('createRedirectResponse')
             ->with($operation, $data, ['page' => 1])
             ->willReturn(new RedirectResponse('/url'))
         ;
-
-        $this
-            ->environment
+        $this->responseHandler
             ->expects($this->never())
-            ->method('render')
+            ->method('createResponse')
         ;
 
         $response = $this->controller->__invoke($request, $operation);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals('/url', $response->getTargetUrl());
-    }
-
-    public static function headers(): iterable
-    {
-        yield [['CONTENT_TYPE' => 'text/html'], true];
-        yield [['CONTENT_TYPE' => 'application/json'], false];
     }
 
     protected function setUp(): void
@@ -219,9 +179,7 @@ final class ResourceControllerTest extends TestCase
         $this->provider = self::createMock(ProviderInterface::class);
         $this->processor = self::createMock(ProcessorInterface::class);
         $this->formFactory = self::createMock(FormFactoryInterface::class);
-        $this->environment = self::createMock(Environment::class);
-        $this->redirectHandler = self::createMock(RedirectHandlerInterface::class);
-        $this->serializer = self::createMock(SerializerInterface::class);
+        $this->responseHandler = self::createMock(ResponseHandlerInterface::class);
         $this->eventDispatcher = self::createMock(ResourceEventDispatcherInterface::class);
         $this->controller = new ResourceController(
             $this->uriVariablesExtractor,
@@ -229,10 +187,8 @@ final class ResourceControllerTest extends TestCase
             $this->provider,
             $this->processor,
             $this->formFactory,
-            $this->environment,
-            $this->redirectHandler,
-            $this->serializer,
             $this->eventDispatcher,
+            $this->responseHandler,
         );
     }
 }
