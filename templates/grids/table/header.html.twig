@@ -3,7 +3,7 @@
 {% if header.sortable %}
     {% set order = 'asc' %}
 
-    {% if app.request.query.get('order') == 'asc' %}
+    {% if header.order|lower == 'asc' %}
         {% set order = 'desc' %}
     {% endif %}
 
@@ -12,7 +12,7 @@
        class="text-dark">
         {{ lag_admin.translate(header.label, header.translationDomain, true) }}
 
-        {% if app.request.query.get('sort') == header.name %}
+        {% if header.sort == header.name %}
             {% if order == 'asc' %}
                 <i class="bi bi-arrow-down sort-icon sort-asc"></i>
             {% else %}
@@ -21,5 +21,7 @@
         {% endif %}
     </a>
 {% elseif header.label %}
-    {{ lag_admin.translate(header.label, header.translationDomain, true) }}
+    <p {{ attributes.defaults({class: 'text-dark'}) }}>
+        {{ lag_admin.translate(header.label, header.translationDomain, true) }}
+    </p>
 {% endif %}
