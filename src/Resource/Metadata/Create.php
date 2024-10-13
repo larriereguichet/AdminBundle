@@ -16,12 +16,13 @@ class Create extends Operation
 {
     public function __construct(
         ?string $name = 'create',
+        array $context = [],
         ?string $title = null,
         ?string $description = null,
         ?string $icon = null,
         ?string $template = '@LAGAdmin/resources/create.html.twig',
         ?string $baseTemplate = null,
-        ?array $permissions = [],
+        ?array $permissions = null,
         ?string $controller = ResourceController::class,
         ?string $route = null,
         ?array $routeParameters = null,
@@ -30,7 +31,8 @@ class Create extends Operation
         ?string $redirectRoute = null,
         ?array $redirectRouteParameters = null,
         ?string $form = null,
-        array $formOptions = [],
+        ?array $formOptions = null,
+        ?string $formTemplate = null,
         string $processor = ORMProcessor::class,
         string $provider = ORMProvider::class,
         ?array $identifiers = null,
@@ -52,6 +54,7 @@ class Create extends Operation
     ) {
         parent::__construct(
             name: $name,
+            context: $context,
             title: $title,
             description: $description,
             icon: $icon,
@@ -67,6 +70,7 @@ class Create extends Operation
             redirectRouteParameters: $redirectRouteParameters,
             form: $form,
             formOptions: $formOptions,
+            formTemplate: $formTemplate,
             processor: $processor,
             provider: $provider,
             identifiers: $identifiers,

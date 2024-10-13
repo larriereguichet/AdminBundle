@@ -18,6 +18,8 @@ abstract class Operation implements OperationInterface
         #[Assert\NotBlank(message: 'The operation name should not be empty')]
         private ?string $name = null,
 
+        private array $context = [],
+
         #[Assert\Length(max: 255, maxMessage: 'The operation title should be shorter than 255 characters')]
         private ?string $title = null,
 
@@ -32,7 +34,7 @@ abstract class Operation implements OperationInterface
         #[Assert\NotBlank(message: 'The operation base template should not be empty. Use "@LAGAdmin/partial.html.twig" instead if you want an empty base')]
         private ?string $baseTemplate = null,
 
-        private ?array $permissions = [],
+        private ?array $permissions = null,
 
         #[Assert\NotBlank(message: 'The operation controller should not be empty')]
         private ?string $controller = null,
@@ -117,6 +119,19 @@ abstract class Operation implements OperationInterface
     {
         $self = clone $this;
         $self->name = $name;
+
+        return $self;
+    }
+
+    public function getContext(): array
+    {
+        return $this->context;
+    }
+
+    public function withContext(array $context): self
+    {
+        $self = clone $this;
+        $self->context = $context;
 
         return $self;
     }
@@ -295,7 +310,7 @@ abstract class Operation implements OperationInterface
         return $this->formOptions;
     }
 
-    public function withFormOptions(array $formOptions): self
+    public function withFormOptions(?array $formOptions): self
     {
         $self = clone $this;
         $self->formOptions = $formOptions;
