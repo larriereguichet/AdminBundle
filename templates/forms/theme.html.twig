@@ -16,21 +16,25 @@
 
 {% block collection_widget %}
     {% set data = form.vars.data %}
+    {% set add_label = form.vars.add_label|default('lag_admin.ui.add')|trans({}, translation_domain|default('admin')) %}
+    {% set delete_label = form.vars.delete_label|default('lag_admin.ui.delete')|trans({}, translation_domain|default('admin')) %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' collection-widget')|trim}) -%}
 
-    <div class="collection-widget"
+    <div {{ block('widget_attributes') }}
          {{ stimulus_controller('lag-admin-collection') }}
          data-index-value="{{ data|length > 0 ? data|length + 1 : 0 }}"
-         data-delete-label="{{ form.vars.deleteLabel|default('')|trans({}, 'admin') }}"
+         data-delete-label="{{ delete_label }}"
+         data-target=".collection-container"
          {% if prototype is defined %}
          data-prototype-value="{{ _self.collection_item(
              form.vars.prototype,
              form.vars.allow_delete,
-             form.vars.delete_label,
+             delete_label,
              '__name__'
          )|e }}"
          {% endif %}>
 
-        <div {{ stimulus_target('lag-admin-collection', 'collectionContainer') }}>
+        <div class="collection-container">
             {% for child in form %}
                 {{ _self.collection_item(child, allow_delete, delete_label, loop.index0) }}
             {% endfor %}
@@ -41,7 +45,7 @@
                 <button type="button"
                         class="btn btn-primary add-button"
                         {{ stimulus_action('lag-admin-collection', 'addCollectionElement') }}>
-                    {{ form.vars.add_label|trans({}, 'admin') }}
+                    {{ add_label }}
                 </button>
             </div>
         {% endif %}
@@ -49,10 +53,12 @@
 {% endblock collection_widget %}
 
 {% macro collection_item(form, allow_delete, delete_label, index) %}
+    {% set attr = form.vars.attr|merge({class: (form.vars.attr.class|default('') ~ ' collection-item')|trim}) -%}
+
     {% apply spaceless %}
         <div data-form-collection="item"
              data-form-collection-index="{{ index }}"
-             class="collection-item">
+             {{ block('attributes') }}>
             <div class="collection-box{% if form|length == 1 %} unique-field{% endif %}">
                 {{ form_row(form) }}
 
@@ -63,7 +69,7 @@
                            data-form-collection-index="{{ index }}"
                            class="btn btn-danger">
                             <i class="glyphicon glyphicon-remove collection-button-remove"></i>
-                            {{ delete_label|trans }}
+                            {{ delete_label }}
                         </a>
                     </p>
                 {% endif %}
