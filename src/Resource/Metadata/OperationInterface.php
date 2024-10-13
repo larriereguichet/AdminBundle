@@ -6,12 +6,17 @@ namespace LAG\AdminBundle\Resource\Metadata;
 
 use LAG\AdminBundle\Security\PermissibleInterface;
 use LAG\AdminBundle\Workflow\WorkflowSubjectInterface;
+use LAG\AdminBundle\Workflow\WorkflowTransitionSubjectInterface;
 
-interface OperationInterface extends PermissibleInterface, WorkflowSubjectInterface
+interface OperationInterface extends PermissibleInterface, WorkflowSubjectInterface, WorkflowTransitionSubjectInterface
 {
     public function getName(): ?string;
 
     public function withName(?string $name): self;
+
+    public function getContext(): array;
+
+    public function withContext(array $context): self;
 
     public function getTitle(): ?string;
 
@@ -65,7 +70,7 @@ interface OperationInterface extends PermissibleInterface, WorkflowSubjectInterf
 
     public function getFormOptions(): ?array;
 
-    public function withFormOptions(array $formOptions): self;
+    public function withFormOptions(?array $formOptions): self;
 
     public function getFormTemplate(): ?string;
 

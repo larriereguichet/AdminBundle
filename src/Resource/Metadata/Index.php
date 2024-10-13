@@ -10,19 +10,20 @@ use LAG\AdminBundle\Controller\Resource\ResourceCollectionController;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 
 /**
- * The get collection operation is used to show a collection of resources, usually in a grid. The provider should return
+ * The index operation is used to show a collection of resources, usually in a grid. The provider should return
  * a collection or a pager. The processor could handle the form filtering processing for instance.
  */
 class Index extends CollectionOperation
 {
     public function __construct(
         string $name = 'index',
+        array $context = [],
         ?string $title = null,
         ?string $description = null,
         ?string $icon = null,
         ?string $template = '@LAGAdmin/resources/index.html.twig',
         ?string $baseTemplate = null,
-        array $permissions = [],
+        ?array $permissions = null,
         ?string $controller = ResourceCollectionController::class,
         ?string $route = null,
         array $routeParameters = [],
@@ -31,7 +32,8 @@ class Index extends CollectionOperation
         ?string $redirectRoute = null,
         array $redirectRouteParameters = [],
         ?string $form = null,
-        array $formOptions = [],
+        ?array $formOptions = null,
+        ?string $formTemplate = null,
         string $processor = ORMProcessor::class,
         string $provider = ORMProvider::class,
         ?array $identifiers = null,
@@ -68,6 +70,7 @@ class Index extends CollectionOperation
     ) {
         parent::__construct(
             name: $name,
+            context: $context,
             title: $title,
             description: $description,
             icon: $icon,
@@ -83,6 +86,7 @@ class Index extends CollectionOperation
             redirectRouteParameters: $redirectRouteParameters,
             form: $form,
             formOptions: $formOptions,
+            formTemplate: $formTemplate,
             processor: $processor,
             provider: $provider,
             identifiers: $identifiers,
@@ -91,15 +95,16 @@ class Index extends CollectionOperation
             redirectApplication: $redirectApplication,
             redirectResource: $redirectResource,
             redirectOperation: $redirectOperation,
+            validation: $validation,
+            validationContext: $validationContext,
+            ajax: $ajax,
             normalizationContext: $normalizationContext,
             denormalizationContext: $denormalizationContext,
             input: $input,
             output: $output,
-            validation: $validation,
-            validationContext: $validationContext,
-            ajax: $ajax,
             workflow: $workflow,
             workflowTransition: $workflowTransition,
+            partial: $partial,
             pagination: $pagination,
             itemsPerPage: $itemsPerPage,
             pageParameter: $pageParameter,
@@ -108,14 +113,13 @@ class Index extends CollectionOperation
             filters: $filters,
             grid: $grid,
             gridOptions: $gridOptions,
+            collectionActions: $collectionActions,
             filterForm: $filterForm,
             filterFormOptions: $filterFormOptions,
             itemForm: $itemForm,
             itemFormOptions: $itemFormOptions,
-            collectionActions: $collectionActions,
             collectionForm: $collectionForm,
             collectionFormOptions: $collectionFormOptions,
-            partial: $partial,
         );
     }
 }

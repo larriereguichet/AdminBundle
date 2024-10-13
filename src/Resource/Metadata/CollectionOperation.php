@@ -13,12 +13,13 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
 {
     public function __construct(
         ?string $name = null,
+        array $context = [],
         ?string $title = null,
         ?string $description = null,
         ?string $icon = null,
         ?string $template = null,
         ?string $baseTemplate = null,
-        array $permissions = [],
+        ?array $permissions = null,
         ?string $controller = null,
         ?string $route = null,
         array $routeParameters = [],
@@ -27,7 +28,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         ?string $redirectRoute = null,
         array $redirectRouteParameters = [],
         ?string $form = null,
-        array $formOptions = [],
+        ?array $formOptions = null,
+        ?string $formTemplate = null,
         ?string $processor = ORMProcessor::class,
         string $provider = ORMProvider::class,
         ?array $identifiers = null,
@@ -43,11 +45,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         ?array $denormalizationContext = null,
         ?string $input = null,
         ?string $output = null,
-
         ?string $workflow = null,
-
         ?string $workflowTransition = null,
-
         bool $partial = false,
 
         private bool $pagination = true,
@@ -88,6 +87,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
     ) {
         parent::__construct(
             name: $name,
+            context: $context,
             title: $title,
             description: $description,
             icon: $icon,
@@ -103,6 +103,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             redirectRouteParameters: $redirectRouteParameters,
             form: $form,
             formOptions: $formOptions,
+            formTemplate: $formTemplate,
             processor: $processor,
             provider: $provider,
             identifiers: $identifiers,
@@ -111,13 +112,13 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             redirectApplication: $redirectApplication,
             redirectResource: $redirectResource,
             redirectOperation: $redirectOperation,
+            validation: $validation,
+            validationContext: $validationContext,
+            ajax: $ajax,
             normalizationContext: $normalizationContext,
             denormalizationContext: $denormalizationContext,
             input: $input,
             output: $output,
-            validation: $validation,
-            validationContext: $validationContext,
-            ajax: $ajax,
             workflow: $workflow,
             workflowTransition: $workflowTransition,
             partial: $partial,
