@@ -54,7 +54,7 @@ class Property implements PropertyInterface
 
         #[Assert\NotBlank(message: 'The sorting path should not be empty. Use null instead', allowNull: true)]
         #[Assert\Expression(
-            expression: 'this.isSortable() and this.getSortingPath() === null',
+            expression: '(this.isSortable() and this.getSortingPath() !== null) or !this.isSortable()',
             message: 'The sorting path should not be null if the property is sortable',
         )]
         private ?string $sortingPath = null,

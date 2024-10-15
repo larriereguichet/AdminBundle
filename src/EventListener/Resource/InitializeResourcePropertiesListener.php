@@ -70,7 +70,12 @@ final readonly class InitializeResourcePropertiesListener
         }
 
         if ($property->isSortable() && $property->getSortingPath() === null) {
-            $property = $property->withSortingPath($property->getPropertyPath() ?? $property->getName());
+            $sortingPath = $property->getName();
+
+            if (is_string($property->getPropertyPath())) {
+                $sortingPath = $property->getPropertyPath();
+            }
+            $property = $property->withSortingPath($sortingPath);
         }
 
         return $property;
