@@ -11,7 +11,7 @@
 {% block table %}
     <table {{ attributes.defaults({'class': 'admin-table table table-responsive align-middle'}) }}>
         {% block table_head %}
-            {% if grid.options.displayHeaders|default(true) and grid.headers|length > 0 %}
+            {% if grid.options.displayHeaders is defined and grid.options.displayHeaders != false and grid.headers|length > 0 %}
                 <thead>
                 <tr {{ headerRowAttributes }}>
                     {%- for header in grid.headers -%}
