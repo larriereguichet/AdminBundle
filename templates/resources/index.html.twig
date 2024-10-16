@@ -5,11 +5,11 @@
         {% block actions %}
             <div class="row">
                 {% block filters %}
-                    <div class="col-9">
-                        {% if filterForm and filterForm.children|length > 0 %}
+                    {% if filterForm and filterForm.children|length > 0 %}
+                        <div class="col-9">
                             {% include '@LAGAdmin/resources/index/_filters.html.twig' with {form: filterForm} %}
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
                 {% endblock %}
 
                 {% block collection_actions %}
