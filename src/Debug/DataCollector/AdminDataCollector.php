@@ -30,6 +30,14 @@ final class AdminDataCollector extends AbstractDataCollector
         $data['operation'] = $this->parametersExtractor->getOperationName($request);
         $data['resources'] = $this->collectResources();
 
+        if (!empty($data['resource']) && $this->registry->has($data['resource'])) {
+            $data['properties'] = [];
+            $resource = $this->registry->get($data['resource']);
+
+            foreach ($resource->getProperties() as $property) {
+                $data['properties'][$property->getName()] = $this->cloneVar($property);
+            }
+        }
         $this->data = $data;
     }
 

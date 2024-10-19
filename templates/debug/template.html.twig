@@ -38,21 +38,35 @@
 {% block panel %}
     <h2>LAG Admin</h2>
 
-    <h3>Request</h3>
+    <h3>Resource</h3>
     <table style="width: 50%">
         <tbody>
         <tr>
             <th style="width: 150px">Application</th>
-            <td>"{{ collector.data.application }}"</td>
+            <td>{{ collector.data.application }}</td>
         </tr>
         <tr>
             <th>Resource</th>
-            <td>"{{ collector.data.resource }}"</td>
+            <td>{{ collector.data.resource }}</td>
         </tr>
         <tr>
             <th>Operation</th>
-            <td>"{{ collector.data.operation }}"</td>
+            <td>{{ collector.data.operation }}</td>
         </tr>
         </tbody>
     </table>
+
+    <h3>Properties</h3>
+    <table style="width: 50%">
+        <tbody>
+        {% for propertyName, property in collector.data.properties|default([]) %}
+        <tr>
+            <th style="width: 150px">{{ propertyName }}</th>
+            <td>{{ profiler_dump(property) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# TODO grid #}
 {% endblock %}
