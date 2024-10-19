@@ -14,6 +14,7 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactory;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\CriteriaProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\DoctrineCollectionNormalizeProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\PaginationProvider;
@@ -37,7 +38,11 @@ return static function (ContainerConfigurator $container): void {
         ->tag('lag_admin.state_provider', ['identifier' => 'doctrine', 'priority' => 0])
     ;
     $services->set(SortingProvider::class)
-        ->decorate(ProviderInterface::class, priority: 300)
+        ->decorate(ProviderInterface::class, priority: 230)
+        ->arg('$provider', service('.inner'))
+    ;
+    $services->set(CriteriaProvider::class)
+        ->decorate(ProviderInterface::class, priority: 220)
         ->arg('$provider', service('.inner'))
     ;
     $services->set(PaginationProvider::class)

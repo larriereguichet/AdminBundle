@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
 
 use Doctrine\ORM\QueryBuilder;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Exception\ORMException;
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
@@ -35,7 +36,15 @@ final readonly class SortingProvider implements ProviderInterface
 
         foreach ($orderBy as $field => $direction) {
             $property = $resource->getProperty($field);
-            $order = u($property->getPropertyPath() ?? $field);
+            $sort = $property->getSortingPath();
+
+            if ($sort === null) {
+                throw new ORMException(\sprintf(
+                    'The property "%s" can not be sorted by as the sorting path is null.',
+                    $property->getName(),
+                ));
+            }
+            $order = u($sort);
 
             if ($order->containsAny('.')) {
                 $alias = $rootAlias;

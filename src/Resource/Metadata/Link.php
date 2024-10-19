@@ -27,6 +27,7 @@ class Link extends Property implements Url
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
 
         private ?string $route = null,
         private array $routeParameters = [],
@@ -41,8 +42,8 @@ class Link extends Property implements Url
         parent::__construct(
             name: $name,
             propertyPath: $propertyPath,
-            template: $template,
             label: $label,
+            template: $template,
             sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
@@ -52,6 +53,7 @@ class Link extends Property implements Url
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath,
         );
     }
 

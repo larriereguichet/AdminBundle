@@ -20,6 +20,7 @@ class Compound extends Property implements CompoundPropertyInterface
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
 
         private array $properties = [],
     ) {
@@ -36,6 +37,7 @@ class Compound extends Property implements CompoundPropertyInterface
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath,
         );
     }
 

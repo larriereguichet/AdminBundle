@@ -24,6 +24,7 @@ class Slug extends Property
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
     ) {
         parent::__construct(
             name: $name,
@@ -38,6 +39,7 @@ class Slug extends Property
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath
         );
     }
 
