@@ -28,7 +28,7 @@ class Grid
 
         private ?string $translationDomain = null,
 
-        #[Assert\GreaterThan(value: 0, message: 'The grid should have at least one property')]
+        #[Assert\Count(min: 1, minMessage: 'The grid should have at least one property')]
         private array $properties = [],
 
         private array $attributes = [],
