@@ -66,8 +66,8 @@ final readonly class InitializeCollectionOperationListener
             if ($resource->hasOperationOfType(Create::class)) {
                 $collectionActions[] = new Action(
                     name: $resource->getOperationOfType(Create::class)->getName(),
-                    operation: $resource->getOperationOfType(Create::class)->getName(),
                     attributes: ['class' => 'btn-success'],
+                    operation: $resource->getOperationOfType(Create::class)->getName(),
                     icon: 'plus-circle me-1',
                 );
             }

@@ -154,6 +154,11 @@ class Grid
         return $self;
     }
 
+    public function hasProperties(): bool
+    {
+        return \count($this->properties) > 0;
+    }
+
     public function getAttributes(): array
     {
         return $this->attributes;

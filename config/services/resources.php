@@ -14,6 +14,10 @@ use LAG\AdminBundle\Resource\Locator\PropertyLocator;
 use LAG\AdminBundle\Resource\Locator\PropertyLocatorInterface;
 use LAG\AdminBundle\Resource\Locator\ResourceLocator;
 use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
+use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesser;
+use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesserInterface;
+use LAG\AdminBundle\Resource\PropertyGuesser\ResourcePropertyGuesser;
+use LAG\AdminBundle\Resource\PropertyGuesser\ResourcePropertyGuesserInterface;
 use LAG\AdminBundle\Resource\Registry\ApplicationRegistry;
 use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
 use LAG\AdminBundle\Resource\Registry\CacheRegistry;
@@ -80,4 +84,10 @@ return static function (ContainerConfigurator $container): void {
 
     // Mappers
     $services->set(DataMapperInterface::class, DataMapper::class);
+
+    // Property guessers
+    $services->set(ResourcePropertyGuesserInterface::class, ResourcePropertyGuesser::class)
+        ->arg('$propertyGuesser', service(PropertyGuesserInterface::class))
+    ;
+    $services->set(PropertyGuesserInterface::class, PropertyGuesser::class);
 };
