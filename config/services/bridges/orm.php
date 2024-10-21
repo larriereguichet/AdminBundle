@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\InitializeResourceIdentifiersListener;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\InitializeResourcePropertiesListener;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Filter\EntityFilterApplicator;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Filter\TextFilterApplicator;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Form\Guesser\MetadataFormGuesser;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactory;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataPropertyFactoryInterface;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Resource\ORMPropertyGuesser;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\DoctrineCollectionNormalizeProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
@@ -24,6 +22,7 @@ use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
 use LAG\AdminBundle\Filter\Resolver\FilterValuesResolver;
 use LAG\AdminBundle\Filter\Resolver\FilterValuesResolverInterface;
 use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
+use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesserInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -62,14 +61,6 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     // Event listeners
-    $services->set(InitializeResourcePropertiesListener::class)
-        ->arg('$propertyFactory', service(MetadataPropertyFactoryInterface::class))
-        ->tag('kernel.event_listener', [
-            'event' => ResourceEvents::RESOURCE_CREATE,
-            'dispatcher' => 'lag_admin.build_event_dispatcher',
-            'priority' => 255,
-        ])
-    ;
     $services->set(InitializeResourceIdentifiersListener::class)
         ->arg('$metadataHelper', service(MetadataHelperInterface::class))
         ->tag('kernel.event_listener', [
@@ -79,10 +70,7 @@ return static function (ContainerConfigurator $container): void {
         ])
     ;
 
-    // Doctrine metadata helpers
-    $services->set(MetadataPropertyFactoryInterface::class, MetadataPropertyFactory::class)
-        ->arg('$metadataHelper', service(MetadataHelperInterface::class))
-    ;
+    // Metadata helpers
     $services->set(MetadataHelperInterface::class, MetadataHelper::class)
         ->arg('$entityManager', service('doctrine.orm.entity_manager'))
     ;
@@ -105,5 +93,12 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$formGuesser', service('.inner'))
         ->arg('$metadataHelper', service(MetadataHelperInterface::class))
         ->decorate(FormGuesserInterface::class)
+    ;
+
+    // Property guesser
+    $services->set(ORMPropertyGuesser::class)
+        ->arg('$propertyGuesser', service('.inner'))
+        ->arg('$metadataHelper', service(MetadataHelperInterface::class))
+        ->decorate(PropertyGuesserInterface::class)
     ;
 };

@@ -25,6 +25,7 @@ use LAG\AdminBundle\EventListener\Resource\InitializeResourcePropertiesListener;
 use LAG\AdminBundle\EventListener\Security\PermissionListener;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
+use LAG\AdminBundle\Resource\PropertyGuesser\ResourcePropertyGuesserInterface;
 use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use LAG\AdminBundle\Slug\Registry\SluggerRegistryInterface;
@@ -55,6 +56,7 @@ return static function (ContainerConfigurator $container) {
         ])
     ;
     $services->set(InitializeResourcePropertiesListener::class)
+        ->arg('$propertyGuesser', service(ResourcePropertyGuesserInterface::class))
         ->tag('kernel.event_listener', [
             'event' => ResourceEvents::RESOURCE_CREATE,
             'dispatcher' => 'lag_admin.build_event_dispatcher',

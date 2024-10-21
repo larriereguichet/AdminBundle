@@ -77,6 +77,16 @@ final readonly class InitializeGridListener
                 $grid = $grid->withSortable(false);
             }
         }
+
+        if (!$grid->hasProperties()) {
+            $properties = [];
+
+            foreach ($resource->getProperties() as $property) {
+                $properties[] = $property->getName();
+            }
+            $grid = $grid->withProperties($properties);
+        }
+
         $actions = [];
 
         if ($grid->getActions() === null) {

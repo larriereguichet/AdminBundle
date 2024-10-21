@@ -9,16 +9,29 @@ use LAG\AdminBundle\Resource\Metadata\Link;
 use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Metadata\ResourceLink;
+use LAG\AdminBundle\Resource\PropertyGuesser\ResourcePropertyGuesserInterface;
 
 use function Symfony\Component\String\u;
 
 final readonly class InitializeResourcePropertiesListener
 {
+    public function __construct(
+        private ResourcePropertyGuesserInterface $propertyGuesser,
+    ) {
+    }
+
     public function __invoke(ResourceEvent $event): void
     {
         $resource = $event->getResource();
 
-        // Initialize single properties first as they will be available to build collection properties
+        if (!$resource->hasProperties()) {
+            $properties = $this->propertyGuesser->guessProperties($resource);
+
+            foreach ($properties as $property) {
+                $resource = $resource->withProperty($property);
+            }
+        }
+
         foreach ($resource->getProperties() as $property) {
             $property = $this->initializeProperty($resource, $property);
             $resource = $resource->withProperty($property);
