@@ -21,6 +21,7 @@ class Date extends Property
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
 
         #[Assert\NotBlank(message: 'The date format should not be empty. Use "none" instead')]
         private string $dateFormat = 'medium',
@@ -41,6 +42,7 @@ class Date extends Property
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath,
         );
     }
 

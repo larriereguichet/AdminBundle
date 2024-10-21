@@ -18,10 +18,10 @@ class Group extends Property implements CompoundPropertyInterface
     ) {
         parent::__construct(
             name: $name,
+            propertyPath: '.',
             label: $label,
             template: '@LAGAdmin/grids/properties/group.html.twig',
             sortable: false,
-            propertyPath: '.',
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
