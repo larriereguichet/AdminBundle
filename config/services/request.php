@@ -69,6 +69,7 @@ return static function (ContainerConfigurator $container): void {
         ->alias('lag_admin.response_handler', ResponseHandlerInterface::class)
     ;
     $services->set(JsonResponseHandler::class)
+        ->arg('$responseHandler', service('.inner'))
         ->arg('$serializer', service('serializer'))
         ->decorate(ResponseHandlerInterface::class)
     ;
