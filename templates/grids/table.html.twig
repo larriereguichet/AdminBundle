@@ -2,7 +2,7 @@
 
 {% block title %}
     {% if grid.title %}
-        <h3 {{ titleAttributes.defaults({class: 'my-2 mb-5'}) }}>
+        <h3 {{ titleAttributes.defaults({class: 'my-3'}) }}>
             {{ lag_admin.translate(grid.title, resource.translationDomain, true) }}
         </h3>
     {% endif %}
