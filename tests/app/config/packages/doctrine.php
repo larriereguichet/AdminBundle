@@ -24,7 +24,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                     'is_bundle' => false,
                     'type' => 'attribute',
                     'dir' => '%kernel.project_dir%/src/Entity',
-                    'prefix' => 'App\Entity',
+                    'prefix' => 'LAG\AdminBundle\Tests\Application\Entity',
                     'alias' => 'App',
                 ],
             ],
