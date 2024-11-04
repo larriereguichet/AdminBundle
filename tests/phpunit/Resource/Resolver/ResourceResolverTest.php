@@ -10,7 +10,8 @@ use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Resolver\ClassResolverInterface;
 use LAG\AdminBundle\Resource\Resolver\PhpFileResolverInterface;
 use LAG\AdminBundle\Resource\Resolver\ResourceResolver;
-use LAG\AdminBundle\Tests\Application\Entity\TestEntity;
+use LAG\AdminBundle\Tests\Application\Entity\Book;
+use LAG\AdminBundle\Tests\TestTrait;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -18,6 +19,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 final class ResourceResolverTest extends TestCase
 {
+    use TestTrait;
+
     private ResourceResolver $resolver;
     private MockObject $kernel;
     private MockObject $classResolver;
@@ -29,29 +32,33 @@ final class ResourceResolverTest extends TestCase
     public function itResolveResources(): void
     {
         $directories = [
-            __DIR__.'/../../../app/src',
-            __DIR__.'/../../../app/config/admin/resources',
+            self::getApplicationPath().'/src',
+            self::getApplicationPath().'/config/admin/resources',
         ];
 
+        $bookClass = new \ReflectionClass(Book::class);
+
         $this->classResolver
-            ->expects(self::exactly(2))
+            ->expects(self::exactly(4))
             ->method('resolveClass')
             ->willReturnMap([
-                [realpath(__DIR__.'/../../../app/src/Entity/TestEntity.php'), new \ReflectionClass(TestEntity::class)],
-                [realpath(__DIR__.'/../../../app/config/admin/resources/Project.php'), null],
+                [realpath(self::getApplicationPath().'/src/Entity/Book.php'), $bookClass],
+                [realpath(self::getApplicationPath().'/config/admin/resources/Project.php'), null],
             ])
         ;
         $this->resourceLocator
             ->expects(self::once())
             ->method('locateResources')
-            ->with(new \ReflectionClass(TestEntity::class))
-            ->willReturn([new Resource()])
+            ->willReturnMap([
+                [$bookClass, [new Resource()]],
+            ])
         ;
         $this->propertyLocator
             ->expects(self::once())
             ->method('locateProperties')
-            ->with(new \ReflectionClass(TestEntity::class))
-            ->willReturn([])
+            ->willReturnMap([
+                [$bookClass, []]
+            ])
         ;
 
         $resources = $this->resolver->resolveResources($directories);
