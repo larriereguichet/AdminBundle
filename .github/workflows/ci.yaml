@@ -42,6 +42,9 @@ jobs:
             -   name: Build yarn dependencies
                 run: yarn run encore production
 
+            -   name: Run docker compose
+                run: docker compose up -d
+
             -   name: Run phpunit
                 run: bin/phpunit
 
