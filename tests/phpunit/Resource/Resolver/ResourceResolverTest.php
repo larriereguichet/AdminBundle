@@ -57,7 +57,7 @@ final class ResourceResolverTest extends TestCase
             ->expects(self::once())
             ->method('locateProperties')
             ->willReturnMap([
-                [$bookClass, []]
+                [$bookClass, []],
             ])
         ;
 
