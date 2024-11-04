@@ -27,9 +27,16 @@
     "require": {
         "php": "^8.3",
         "doctrine/annotations": "^2.0",
-        "johnkrovitch/orm-pack": "^3.1",
+        "doctrine/orm": "^2.14",
+        "babdev/pagerfanta-bundle": "*",
+        "gedmo/doctrine-extensions": "*",
+        "stof/doctrine-extensions-bundle": "*",
+        "symfony/orm-pack": "*",
         "knplabs/knp-menu-bundle": "^3.2",
         "league/flysystem-bundle": "^3.2",
+        "pagerfanta/doctrine-collections-adapter": "^4.0",
+        "pagerfanta/doctrine-orm-adapter": "^4.0",
+        "pagerfanta/twig": "^4.0",
         "nadar/quill-delta-parser": "^3.4",
         "symfony/dependency-injection": "^7.0",
         "symfony/error-handler": "^7.0",
@@ -53,6 +60,7 @@
     },
     "require-dev": {
         "dg/bypass-finals": "^1.1",
+        "doctrine/doctrine-bundle": "^2.13",
         "friendsofphp/php-cs-fixer": "^3.13",
         "liip/imagine-bundle": "^2.13",
         "nyholm/symfony-bundle-test": "^3.0",
@@ -65,6 +73,7 @@
         "symfony/debug-bundle": "^7.1",
         "symfony/dotenv": "^7.1",
         "symfony/monolog-bundle": "^3.5",
+        "symfony/runtime": "^7.1",
         "symfony/var-dumper": "^7.0",
         "symfony/web-profiler-bundle": "^7.0",
         "symfony/webpack-encore-bundle": "^2.0",
@@ -88,7 +97,8 @@
         "bin-dir": "bin",
         "sort-packages": true,
         "allow-plugins": {
-            "symfony/flex": true
+            "symfony/flex": true,
+            "symfony/runtime": true
         }
     }
 }
