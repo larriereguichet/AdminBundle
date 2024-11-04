@@ -1,15 +1,6 @@
 services:
-    php:
-        build:
-            context: .
-        ports:
-            - '8000:8000'
-        volumes:
-            - ./:/srv/bundle
-        working_dir: /srv/bundle
-
     db:
-        image: mysql:8.0
+        image: mariadb:11
         ports:
             - '3306:3306'
         environment:
@@ -18,10 +9,10 @@ services:
             MYSQL_DATABASE: admin_test
             MYSQL_RANDOM_ROOT_PASSWORD: "yes"
         volumes:
-            - ./docker/mysql/data:/var/lib/mysql
+            - .docker/mysql/data:/var/lib/mysql
 
     js:
-        image: node:18
+        image: node:20-slim
         volumes:
             - .:/srv/admin-bundle
         working_dir: /srv/admin-bundle

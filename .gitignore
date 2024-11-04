@@ -1,17 +1,10 @@
-.sass-cache
-.php_cs.cache
-docker/mysql/data*
-bin
-!bin/php-cs-fixer-modified-files
-build
-composer.lock
-yarn.lock
-symfony.lock
-phpunit.xml
-tests/app/var
-vendor
-var/phpunit
-.phpunit.cache
+/.docker
+/bin
+/composer.lock
+/yarn.lock
+/tests/app/var
+/tests/app/public
+/var
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/

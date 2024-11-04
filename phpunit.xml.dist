@@ -18,7 +18,8 @@
     </testsuites>
 
     <php>
-        <server name="KERNEL_DIR" value="src/LAG/AdminBundle/Tests/Fixtures/app"/>
+        <env name="KERNEL_CLASS" value="LAG\AdminBundle\Tests\Application\TestKernel"/>
+
         <!-- ###+ symfony/framework-bundle ### -->
         <env name="APP_ENV" value="test"/>
         <env name="APP_SECRET" value="4885b6328504a001d0e801257fb51d3f"/>
@@ -26,7 +27,7 @@
 
         <!-- ###+ doctrine/doctrine-bundle ### -->
         <env name="DATABASE_URL"
-             value="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7"/>
+             value="mysql://admin_test:admin_test@127.0.0.1:3306/admin_test?serverVersion=5.7"/>
         <!-- ###- doctrine/doctrine-bundle ### -->
     </php>
 
