@@ -3,6 +3,7 @@
 /composer.lock
 /yarn.lock
 /tests/app/var
+/tests/app/public
 /var
 
 ###> symfony/webpack-encore-bundle ###
