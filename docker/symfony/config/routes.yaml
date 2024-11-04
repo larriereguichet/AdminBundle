@@ -1,3 +1,0 @@
-lag_admin:
-    resource: '@LAGAdminBundle/Resources/config/routing.yaml'
-    prefix: /admin
