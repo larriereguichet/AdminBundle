@@ -18,7 +18,7 @@ jobs:
             -   uses: actions/checkout@v3
 
             -   name: Cache vendors
-                uses: actions/cache@v2
+                uses: actions/cache@v3
                 with:
                     path: |
                         ~/.composer/cache
@@ -43,10 +43,10 @@ jobs:
                 run: yarn run encore production
 
             -   name: Run docker compose
-                run: docker compose up -d
+                run: docker compose up -d db
 
             -   name: Run phpunit
-                run: bin/phpunit
+                run: bin/phpunit -c phpunit.xml.dist
 
             -   name: Run php-cs-fixer
                 run: PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --dry-run --using-cache=no --verbose --diff --allow-risky=yes --config .php-cs-fixer.dist.php

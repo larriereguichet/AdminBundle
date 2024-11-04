@@ -65,6 +65,7 @@
         "symfony/debug-bundle": "^7.1",
         "symfony/dotenv": "^7.1",
         "symfony/monolog-bundle": "^3.5",
+        "symfony/runtime": "^7.1",
         "symfony/var-dumper": "^7.0",
         "symfony/web-profiler-bundle": "^7.0",
         "symfony/webpack-encore-bundle": "^2.0",
@@ -88,7 +89,8 @@
         "bin-dir": "bin",
         "sort-packages": true,
         "allow-plugins": {
-            "symfony/flex": true
+            "symfony/flex": true,
+            "symfony/runtime": true
         }
     }
 }
