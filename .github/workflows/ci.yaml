@@ -43,7 +43,7 @@ jobs:
                 run: yarn run encore production
 
             -   name: Run docker compose
-                run: docker compose up -d db
+                run: docker compose up -d db && sleep 10 && docker compose logs db
 
             -   name: Run phpunit
                 run: bin/phpunit -c phpunit.xml.dist
@@ -56,3 +56,6 @@ jobs:
 
             -   name: Run var_dump checker
                 run: bin/var-dump-check --symfony src tests
+
+            -   name: Stop docker compose
+                run: docker compose down
