@@ -17,12 +17,13 @@ jobs:
         steps:
             -   uses: actions/checkout@v3
 
-            -   name: Cache vendors
-                uses: actions/cache@v3
+            -   name: Restore cached vendors
+                uses: actions/cache/restore@v4
                 with:
                     path: |
-                        ~/.composer/cache
-                    key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+                        node_modules
+                        vendor
+                    key: ${{ runner.os }}-vendor
 
             -   name: Setup PHP with extensions
                 uses: shivammathur/setup-php@v2
@@ -59,3 +60,11 @@ jobs:
 
             -   name: Stop docker compose
                 run: docker compose down
+
+            -   name: Cache vendors
+                uses: actions/cache/save@v4
+                with:
+                    path: |
+                        node_modules
+                        vendor
+                    key: ${{ runner.os }}-vendor
