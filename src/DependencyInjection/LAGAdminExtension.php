@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\DependencyInjection;
 
+use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use LAG\AdminBundle\Grid\Builder\GridBuilderInterface;
 use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
@@ -118,10 +119,12 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
             'default_twig_template' => '@BabDevPagerfanta/twitter_bootstrap5.html.twig',
         ]);
 
-        $container->prependExtensionConfig('knp_menu', [
-            'twig' => [
-                'template' => '@LAGAdmin/menu/menu-base.html.twig',
-            ],
-        ]);
+        if (class_exists(KnpMenuBundle::class)) {
+            $container->prependExtensionConfig('knp_menu', [
+                'twig' => [
+                    'template' => '@LAGAdmin/menu/menu-base.html.twig',
+                ],
+            ]);
+        }
     }
 }
