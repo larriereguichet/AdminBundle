@@ -13,7 +13,7 @@
                 {% endblock %}
 
                 {% block collection_actions %}
-                    {% if grid.actions|length == 1 %}
+                    {% if grid is defined and grid.actions|length == 1 %}
                         <div class="col-3">
                             {% include '@LAGAdmin/resources/index/_collection_operations.html.twig' %}
                         </div>
@@ -23,7 +23,7 @@
         {% endblock %}
 
         {% block grid %}
-            {% if grid %}
+            {% if grid is defined and grid is not empty %}
                 <div class="admin-grid-container">
                     {{ component('lag_admin:grid', {
                         data: data,
