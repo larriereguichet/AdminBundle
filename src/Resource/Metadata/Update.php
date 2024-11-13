@@ -22,7 +22,7 @@ class Update extends Operation
         ?string $controller = ResourceController::class,
         ?string $route = null,
         ?array $routeParameters = null,
-        array $methods = ['POST', 'GET'],
+        array $methods = ['POST', 'PUT', 'GET'],
         ?string $path = null,
         ?string $redirectRoute = null,
         ?array $redirectRouteParameters = null,

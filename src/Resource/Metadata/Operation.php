@@ -6,10 +6,8 @@ namespace LAG\AdminBundle\Resource\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
-use LAG\AdminBundle\Validation\Constraint\AtLeastOneIdentifier;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[AtLeastOneIdentifier]
 abstract class Operation implements OperationInterface
 {
     private ?Resource $resource = null;
