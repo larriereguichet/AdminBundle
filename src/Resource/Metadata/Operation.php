@@ -61,8 +61,10 @@ abstract class Operation implements OperationInterface
         #[Assert\NotBlank(message: 'The form template should not be empty. Use null instead', allowNull: true)]
         private ?string $formTemplate = null,
 
+        #[Assert\NotBlank(message: 'The processor should not be empty')]
         private string $processor = ORMProcessor::class,
 
+        #[Assert\NotBlank(message: 'The provider should not be empty')]
         private string $provider = ORMProvider::class,
 
         #[Assert\NotNull]
