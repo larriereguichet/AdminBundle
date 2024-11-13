@@ -28,8 +28,9 @@ $application->run($input, new ConsoleOutput());
 $input = new ArrayInput(['command' => 'doctrine:schema:create']);
 $application->run($input, new ConsoleOutput());
 
-//$input = new ArrayInput(['command' => 'debug:router']);
-//$application->run($input, new ConsoleOutput());
+$application->run(new ArrayInput(['command' => 'fixtures:load']), new ConsoleOutput());
+
+$application->run(new ArrayInput(['command' => 'debug:router']), new ConsoleOutput());
 
 $finder = (new \Symfony\Component\Finder\Finder())
     ->in(dirname(__DIR__).'/public')
@@ -42,5 +43,3 @@ foreach ($finder as $file) {
 
 }
 
-//$input = new ArrayInput(['command' => 'doctrine:fixtures:load', '--no-interaction' => true, '--append' => false]);
-//$application->run($input, new ConsoleOutput());
