@@ -12,8 +12,16 @@ final class BookResourceTest extends WebTestCase
     #[Test]
     public function testIndex(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request('GET', '/books');
+
+        self::assertResponseIsSuccessful();
+    }
+
+    public function testShowLatest(): void
+    {
+        $client = self::createClient();
+        $client->request('GET', '/books/latest');
 
         self::assertResponseIsSuccessful();
     }

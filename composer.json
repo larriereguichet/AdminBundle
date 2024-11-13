@@ -71,7 +71,7 @@
         "symfony/webpack-encore-bundle": "^2.0",
         "symfony/workflow": "^7.1",
         "symplify/config-transformer": "^12.3",
-        "zenstruck/foundry": "^2.0"
+        "zenstruck/foundry": "^2.2"
     },
     "autoload": {
         "psr-4": {

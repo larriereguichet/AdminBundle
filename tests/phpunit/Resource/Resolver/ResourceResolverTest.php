@@ -39,7 +39,7 @@ final class ResourceResolverTest extends TestCase
         $bookClass = new \ReflectionClass(Book::class);
 
         $this->classResolver
-            ->expects(self::exactly(4))
+            ->expects(self::exactly(8))
             ->method('resolveClass')
             ->willReturnMap([
                 [realpath(self::getApplicationPath().'/src/Entity/Book.php'), $bookClass],
