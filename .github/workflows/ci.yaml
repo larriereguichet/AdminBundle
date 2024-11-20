@@ -58,6 +58,9 @@ jobs:
             -   name: Run var_dump checker
                 run: bin/var-dump-check --symfony src tests
 
+            -   name: Run Rector
+                run: bin/rector --dry-run
+
             -   name: Stop docker compose
                 run: docker compose down
 
