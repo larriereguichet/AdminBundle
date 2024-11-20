@@ -12,10 +12,10 @@ use LAG\AdminBundle\Resource\Metadata\Text;
 class FakeResource
 {
     #[Text]
-    private int $id;
+    private readonly int $id;
 
     #[Text]
-    private string $name;
+    private readonly string $name;
 
-    private string $description;
+    private readonly string $description;
 }

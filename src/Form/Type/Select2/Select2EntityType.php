@@ -20,11 +20,8 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 /** @deprecated  */
 class Select2EntityType extends AbstractType
 {
-    private ManagerRegistry $registry;
-
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private readonly ManagerRegistry $registry)
     {
-        $this->registry = $registry;
     }
 
     public function getParent(): string
@@ -63,7 +60,7 @@ class Select2EntityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($options) {
+            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($options): void {
                 $manager = $this->registry->getManagerForClass($options['class']);
                 $repository = $manager->getRepository($options['class']);
                 $propertyAccessor = PropertyAccess::createPropertyAccessor();

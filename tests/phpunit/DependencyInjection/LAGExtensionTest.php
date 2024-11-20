@@ -21,7 +21,7 @@ final class LAGExtensionTest extends TestCase
             ->container
             ->expects($this->atLeastOnce())
             ->method('setParameter')
-            ->willReturnCallback(function ($parameter, $value) {
+            ->willReturnCallback(function ($parameter, $value): void {
                 $this->assertContains($parameter, [
                     'lag_admin.application_parameter',
                     'lag_admin.application_name',

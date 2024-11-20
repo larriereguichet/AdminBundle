@@ -27,11 +27,7 @@ final readonly class OutputProvider implements ProviderInterface
         }
 
         if ($data instanceof PagerfantaInterface) {
-            return new Pagerfanta(new CallbackAdapter(function () use ($data) {
-                return $data->getNbResults();
-            }, function () use ($data) {
-                return $data->getCurrentPageResults();
-            }));
+            return new Pagerfanta(new CallbackAdapter(fn () => $data->getNbResults(), fn () => $data->getCurrentPageResults()));
         }
 
         return $data;

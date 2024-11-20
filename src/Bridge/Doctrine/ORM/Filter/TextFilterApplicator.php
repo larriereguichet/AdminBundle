@@ -48,7 +48,7 @@ final readonly class TextFilterApplicator extends AbstractApplicator
 
         if ($filter->getComparator() === 'between') {
             if (!\is_array($value)) {
-                throw new Exception(\sprintf('The parameters for a "between" comparison filter are invalid, expected an array of 2 parameters, got "%s"', \is_object($value) ? $value::class : \gettype($value)));
+                throw new Exception(\sprintf('The parameters for a "between" comparison filter are invalid, expected an array of 2 parameters, got "%s"', get_debug_type($value)));
             }
 
             if (\count($value) === 2) {

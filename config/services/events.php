@@ -33,7 +33,7 @@ use LAG\AdminBundle\Upload\Uploader\UploaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-return static function (ContainerConfigurator $container) {
+return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     // Resources listeners

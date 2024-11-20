@@ -14,8 +14,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ResourceChoiceType extends AbstractType
 {
     public function __construct(
-        private ResourceRegistryInterface $registry,
-        private ProviderInterface $dataProvider,
+        private readonly ResourceRegistryInterface $registry,
+        private readonly ProviderInterface $dataProvider,
     ) {
     }
 

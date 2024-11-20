@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class LoginType extends AbstractType
 {
     public function __construct(
-        private string $translationDomain,
+        private readonly string $translationDomain,
     ) {
     }
 

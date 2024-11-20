@@ -12,8 +12,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class LegacyResourceType extends AbstractType
 {
     public function __construct(
-        private ResourceContextInterface $context,
-        private RequestStack $requestStack,
+        private readonly ResourceContextInterface $context,
+        private readonly RequestStack $requestStack,
     ) {
     }
 

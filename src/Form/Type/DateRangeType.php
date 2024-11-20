@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 class DateRangeType extends AbstractType
 {
     public function __construct(
-        private string $translationDomain
+        private readonly string $translationDomain
     ) {
     }
 

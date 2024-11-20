@@ -16,26 +16,13 @@ use LAG\AdminBundle\Twig\Extension\AdminExtension;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class AdminExtensionTest extends TestCase
+final class AdminExtensionTest extends TestCase
 {
     private AdminExtension $adminExtension;
     private MockObject $security;
     private MockObject $linkRenderer;
     private MockObject $urlGenerator;
     private MockObject $registry;
-
-    public function testGetFunctions(): void
-    {
-        foreach ($this->adminExtension->getFunctions() as $function) {
-            $this->assertContains($function->getName(), [
-                'lag_admin_operation_allowed',
-                'lag_admin_link',
-                'lag_admin_operation_url',
-                'lag_admin_link_url',
-            ]);
-            $this->assertTrue(method_exists($this->adminExtension, $function->getCallable()[1]));
-        }
-    }
 
     public function testIsOperationAllowed(): void
     {

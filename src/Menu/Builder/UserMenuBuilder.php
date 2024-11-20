@@ -10,7 +10,7 @@ use Knp\Menu\ItemInterface;
 class UserMenuBuilder
 {
     public function __construct(
-        private FactoryInterface $factory,
+        private readonly FactoryInterface $factory,
     ) {
     }
 

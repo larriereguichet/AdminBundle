@@ -29,7 +29,7 @@ final readonly class ResourceRegistry implements ResourceRegistryInterface
 
     public function get(string $resourceName, ?string $applicationName = null): Resource
     {
-        $applicationName = $applicationName ?? $this->defaultApplication;
+        $applicationName ??= $this->defaultApplication;
 
         if (!$this->has($resourceName, $applicationName)) {
             throw new Exception(\sprintf('Resource with name "%s" not found in the application "%s"', $resourceName, $applicationName));
@@ -50,7 +50,7 @@ final readonly class ResourceRegistry implements ResourceRegistryInterface
 
     public function has(string $resourceName, ?string $applicationName = null): bool
     {
-        $applicationName = $applicationName ?? $this->defaultApplication;
+        $applicationName ??= $this->defaultApplication;
 
         return \array_key_exists($resourceName, $this->resources[$applicationName] ?? []);
     }

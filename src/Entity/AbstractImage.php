@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\MappedSuperclass]
-abstract class AbstractImage implements ImageInterface
+abstract class AbstractImage implements ImageInterface, \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]

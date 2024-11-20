@@ -13,7 +13,7 @@ use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Resource\Factory\ResourceFactory;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
 
-return static function (ContainerConfigurator $container) {
+return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     // Resources factories

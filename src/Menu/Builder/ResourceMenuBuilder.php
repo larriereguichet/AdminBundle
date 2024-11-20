@@ -16,9 +16,9 @@ use function Symfony\Component\String\u;
 class ResourceMenuBuilder
 {
     public function __construct(
-        private ResourceRegistryInterface $resourceRegistry,
-        private RouteNameGeneratorInterface $routeNameGenerator,
-        private FactoryInterface $factory,
+        private readonly ResourceRegistryInterface $resourceRegistry,
+        private readonly RouteNameGeneratorInterface $routeNameGenerator,
+        private readonly FactoryInterface $factory,
     ) {
     }
 

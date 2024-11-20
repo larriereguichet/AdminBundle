@@ -19,7 +19,7 @@ final class CacheRegistry implements ResourceRegistryInterface
 
     public function get(string $resourceName, ?string $applicationName = null): Resource
     {
-        $applicationName = $applicationName ?? $this->defaultApplication;
+        $applicationName ??= $this->defaultApplication;
 
         if (!isset($this->cache[$applicationName][$resourceName])) {
             $this->cache[$applicationName][$resourceName] = $this->registry->get($resourceName, $applicationName);
