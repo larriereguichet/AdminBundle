@@ -12,7 +12,7 @@ use Twig\Environment;
 class TemplateValidator extends ConstraintValidator
 {
     public function __construct(
-        private Environment $environment,
+        private readonly Environment $environment,
     ) {
     }
 

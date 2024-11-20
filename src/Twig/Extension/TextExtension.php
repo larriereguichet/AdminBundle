@@ -18,8 +18,8 @@ final class TextExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('pluralize', [$this->helper, 'pluralize']),
-            new TwigFilter('lag_admin_rich_text', [$this->helper, 'richText'], ['is_safe' => ['html']]),
+            new TwigFilter('pluralize', $this->helper->pluralize(...)),
+            new TwigFilter('lag_admin_rich_text', $this->helper->richText(...), ['is_safe' => ['html']]),
         ];
     }
 }

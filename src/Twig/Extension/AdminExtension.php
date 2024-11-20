@@ -26,9 +26,9 @@ class AdminExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('lag_admin_operation_allowed', [$this, 'isOperationAllowed']),
-            new TwigFunction('lag_admin_link', [$this, 'renderLink'], ['is_safe' => ['html']]),
-            new TwigFunction('lag_admin_link_url', [$this, 'generateLinkUrl']),
+            new TwigFunction('lag_admin_operation_allowed', $this->isOperationAllowed(...)),
+            new TwigFunction('lag_admin_link', $this->renderLink(...), ['is_safe' => ['html']]),
+            new TwigFunction('lag_admin_link_url', $this->generateLinkUrl(...)),
         ];
     }
 

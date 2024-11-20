@@ -18,7 +18,7 @@ final class RenderExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('lag_admin_action', [$this->helper, 'renderAction'], ['is_safe' => ['html']]),
+            new TwigFunction('lag_admin_action', $this->helper->renderAction(...), ['is_safe' => ['html']]),
         ];
     }
 }

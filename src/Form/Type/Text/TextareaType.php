@@ -35,9 +35,7 @@ final class TextareaType extends AbstractType
             }
 
             return $value;
-        }, function ($value) {
-            return $value;
-        }));
+        }, fn ($value) => $value));
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options): void

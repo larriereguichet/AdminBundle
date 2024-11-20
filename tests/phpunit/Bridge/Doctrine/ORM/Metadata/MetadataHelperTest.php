@@ -27,7 +27,7 @@ final class MetadataHelperTest extends TestCase
         $metadataFactory
             ->expects(self::once())
             ->method('getMetadataFor')
-            ->willReturnCallback(function (string $class) {
+            ->willReturnCallback(function (string $class): void {
                 $this->assertEquals('MyLittleClass', $class);
 
                 throw new \Exception();

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Twig\Environment;
 
-class Login
+final readonly class Login
 {
     public function __construct(
         private FormFactoryInterface $formFactory,

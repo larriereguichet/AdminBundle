@@ -14,7 +14,7 @@ use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 
-return static function (ContainerConfigurator $container) {
+return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     $services->set(ResourceController::class)

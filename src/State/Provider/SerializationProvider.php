@@ -12,8 +12,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 class SerializationProvider implements ProviderInterface
 {
     public function __construct(
-        private ProviderInterface $provider,
-        private SerializerInterface $serializer,
+        private readonly ProviderInterface $provider,
+        private readonly SerializerInterface $serializer,
     ) {
     }
 
