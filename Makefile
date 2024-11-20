@@ -1,39 +1,55 @@
-all: install
-
 current_dir = $(shell pwd)
 DOCKER_COMPOSE=docker compose
-PHP = php
 JS = $(DOCKER_COMPOSE) run --rm js
 
-include make/php.mk
-include make/js.mk
+.PHONY: tests phpunit phpstan rector var-dump-checker cs
 
-install: build assets
+tests: phpunit phpstan rector var-dump-checker cs
 
-update: composer.update assets
+# PHP
+phpunit:
+	bin/phpunit
+	@echo "Results file generated file://$(current_dir)/var/phpunit/coverage/index.html"
 
-build: docker.pull docker.build
+phpunit.stop-on-failure:
+	bin/phpunit --stop-on-failure
+	@echo "Results file generated file://$(current_dir)/var/phpunit/coverage/index.html"
 
-start:
-	$(DOCKER_COMPOSE) up
+cs.fix:
+	PHP_CS_FIXER_IGNORE_ENV=1 bin/php-cs-fixer fix --diff --allow-risky=yes --config .php-cs-fixer.dist.php
 
-start.d:
-	$(DOCKER_COMPOSE) up -d
+cs:
+	PHP_CS_FIXER_IGNORE_ENV=1 bin/php-cs-fixer fix --diff --allow-risky=yes --config .php-cs-fixer.dist.php --dry-run
 
-stop:
-	$(DOCKER_COMPOSE) stop
+phpstan:
+	bin/phpstan analyse --level=5 src
 
-docker.pull:
-	$(DOCKER_COMPOSE) pull
+rector:
+	bin/rector --dry-run
 
-docker.build:
-	$(DOCKER_COMPOSE) build
+rector.fix:
+	bin/rector
 
-php:
-	$(PHP) bash
+bc.check:
+	bin/roave-backward-compatibility-check
 
-composer.install:
-	$(PHP) composer install
+var-dump-checker:
+	bin/var-dump-check --symfony src
+	bin/var-dump-check --symfony tests
 
-composer.update:
-	$(PHP) composer update
+# Assets
+.PHONY: assets assets.production assets.build assets.watch assets.install
+
+assets: assets.install assets.production
+
+assets.dev:
+	$(JS) yarn run encore dev
+
+assets.watch:
+	$(JS) yarn run encore dev --watch
+
+assets.production:
+	$(JS) yarn run encore production
+
+assets.install:
+	$(JS) yarn install
