@@ -5,8 +5,9 @@
          bootstrap="tests/bootstrap.php"
          displayDetailsOnIncompleteTests="true"
          displayDetailsOnSkippedTests="true"
+         displayDetailsOnPhpunitDeprecations="true"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.3/phpunit.xsd"
-         cacheDirectory="var/phpunit/cache">
+         cacheDirectory="var/cache/phpunit">
 
     <testsuites>
         <testsuite name="AdminBundle Test Suite">
@@ -27,7 +28,7 @@
 
         <!-- ###+ doctrine/doctrine-bundle ### -->
         <env name="DATABASE_URL"
-             value="mysql://admin_test:admin_test@127.0.0.1:3306/admin_test?serverVersion=5.7"/>
+             value="mysql://admin_test:admin_test@127.0.0.1:3366/admin_test?serverVersion=5.7"/>
         <!-- ###- doctrine/doctrine-bundle ### -->
     </php>
 
