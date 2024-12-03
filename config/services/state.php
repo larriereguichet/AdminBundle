@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
+use LAG\AdminBundle\Session\FlashMessageHelperInterface;
 use LAG\AdminBundle\State\Processor\CompositeProcessor;
 use LAG\AdminBundle\State\Processor\EventProcessor;
+use LAG\AdminBundle\State\Processor\FlashMessageProcessor;
 use LAG\AdminBundle\State\Processor\NormalizationProcessor;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Processor\ValidationProcessor;
@@ -59,5 +61,10 @@ return static function (ContainerConfigurator $container): void {
         ->decorate(ProcessorInterface::class, priority: 20)
         ->arg('$processor', service('.inner'))
         ->arg('$workflowRegistry', service('workflow.registry'))
+    ;
+    $services->set(FlashMessageProcessor::class)
+        ->decorate(ProcessorInterface::class, priority: -200)
+        ->arg('$processor', service('.inner'))
+        ->arg('$flashMessageHelper', service(FlashMessageHelperInterface::class))
     ;
 };

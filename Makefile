@@ -8,7 +8,7 @@ tests: phpunit phpstan rector var-dump-checker cs
 
 # PHP
 phpunit:
-	bin/phpunit
+	XDEBUG_MODE=coverage bin/phpunit
 	@echo "Results file generated file://$(current_dir)/var/phpunit/coverage/index.html"
 
 phpunit.stop-on-failure:
