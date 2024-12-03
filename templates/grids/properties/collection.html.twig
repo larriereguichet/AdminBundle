@@ -1,3 +1,3 @@
 {% for child in context.children %}
-    {{ lag_admin_cell(child) }}
+    {{ component('lag_admin:grid_cell', {'cell': child}) }}
 {% endfor %}
