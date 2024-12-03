@@ -9,6 +9,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/** @extends Voter<string, OperationInterface> */
 final class OperationPermissionVoter extends Voter
 {
     public const string RESOURCE_ACCESS = 'resource_access';
