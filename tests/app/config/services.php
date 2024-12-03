@@ -22,4 +22,8 @@ return static function (ContainerConfigurator $container): void {
             __DIR__.'/../src/Kernel.php',
         ])
     ;
+    $services->load('LAG\\AdminBundle\\Tests\\Application\\Controller\\', __DIR__.'/../src/Controller')
+        ->autowire()
+        ->tag('controller.service_arguments')
+    ;
 };

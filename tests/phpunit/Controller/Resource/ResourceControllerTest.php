@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class ResourceControllerTest extends TestCase
 {
     private ResourceController $controller;
-    private UriVariablesExtractorInterface $uriVariablesExtractor;
+    private MockObject $uriVariablesExtractor;
     private MockObject $contextProvider;
     private MockObject $provider;
     private MockObject $processor;

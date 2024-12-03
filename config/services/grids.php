@@ -14,14 +14,6 @@ use LAG\AdminBundle\Grid\Registry\DataTransformerRegistry;
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
 use LAG\AdminBundle\Grid\Registry\GridRegistry;
 use LAG\AdminBundle\Grid\Registry\GridRegistryInterface;
-use LAG\AdminBundle\Grid\Render\CellRenderer;
-use LAG\AdminBundle\Grid\Render\CellRendererInterface;
-use LAG\AdminBundle\Grid\Render\GridRenderer;
-use LAG\AdminBundle\Grid\Render\GridRendererInterface;
-use LAG\AdminBundle\Grid\Render\HeaderRenderer;
-use LAG\AdminBundle\Grid\Render\HeaderRendererInterface;
-use LAG\AdminBundle\Grid\Render\LinkRenderer;
-use LAG\AdminBundle\Grid\Render\LinkRendererInterface;
 use LAG\AdminBundle\Grid\Resolver\GridResolver;
 use LAG\AdminBundle\Grid\Resolver\GridResolverInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\ActionViewBuilder;
@@ -104,22 +96,6 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
         ->arg('$conditionMatcher', service(ConditionMatcherInterface::class))
         ->arg('$translator', service('translator'))
-    ;
-
-    // Renderers
-    $services->set(GridRendererInterface::class, GridRenderer::class)
-        ->arg('$environment', service('twig'))
-    ;
-    $services->set(HeaderRendererInterface::class, HeaderRenderer::class)
-        ->arg('$environment', service('twig'))
-    ;
-    $services->set(CellRendererInterface::class, CellRenderer::class)
-        ->arg('$environment', service('twig'))
-    ;
-    $services->set(LinkRendererInterface::class, LinkRenderer::class)
-        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
-        ->arg('$validator', service('validator'))
-        ->arg('$environment', service('twig'))
     ;
 
     // Data transformers

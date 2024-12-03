@@ -39,6 +39,7 @@ final class OperationFactoryTest extends TestCase
         $operation = $this->factory->create($definition);
 
         self::assertEquals($resource, $operation->getResource());
+        self::assertInstanceOf(Index::class, $operation);
         self::assertCount(1, $operation->getFilters());
     }
 

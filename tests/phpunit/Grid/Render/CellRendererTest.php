@@ -8,6 +8,7 @@ use LAG\AdminBundle\Grid\Render\CellRenderer;
 use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Resource\Metadata\Text;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Environment;
@@ -15,18 +16,18 @@ use Twig\Environment;
 final class CellRendererTest extends TestCase
 {
     private CellRenderer $renderer;
-    private Environment $environment;
+    private MockObject $environment;
 
     #[Test]
     public function itRendersACell(): void
     {
         $cell = new CellView(
             name: 'some_cell',
-            template: 'my_template.html.twig',
             options: new Text(),
-            context: ['some_context' => 'some_value'],
+            template: 'my_template.html.twig',
             data: 'some_data',
             attributes: ['class' => 'some_class'],
+            context: ['some_context' => 'some_value'],
         );
         $this->environment
             ->expects(self::once())

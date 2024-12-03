@@ -14,6 +14,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 )]
 final class Actions
 {
+    /** @var Collection<int, array>> */
     public Collection $actions;
 
     public function __construct()
