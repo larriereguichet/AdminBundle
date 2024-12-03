@@ -22,7 +22,7 @@ cs:
 	PHP_CS_FIXER_IGNORE_ENV=1 bin/php-cs-fixer fix --diff --allow-risky=yes --config .php-cs-fixer.dist.php --dry-run
 
 phpstan:
-	bin/phpstan analyse --level=5 src
+	bin/phpstan analyse
 
 rector:
 	bin/rector --dry-run
