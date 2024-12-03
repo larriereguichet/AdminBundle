@@ -48,6 +48,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         ?string $workflow = null,
         ?string $workflowTransition = null,
         bool $partial = false,
+        ?string $successMessage = null,
 
         private bool $pagination = true,
 
@@ -122,6 +123,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             workflow: $workflow,
             workflowTransition: $workflowTransition,
             partial: $partial,
+            successMessage: $successMessage,
         );
     }
 

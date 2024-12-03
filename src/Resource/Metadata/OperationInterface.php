@@ -157,4 +157,8 @@ interface OperationInterface extends PermissibleInterface, WorkflowSubjectInterf
     public function isPartial(): bool;
 
     public function withPartial(bool $partial): self;
+
+    public function getSuccessMessage(): ?string;
+
+    public function withSuccessMessage(?string $successMessage): self;
 }
