@@ -55,14 +55,6 @@ class LAGAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('lag_admin.media_directory', $config['media_directory']);
         $container->setParameter('lag_admin.upload_storage', $config['uploads']['storage']);
         $container->setParameter('lag_admin.grids', $config['grids'] ?? []); // TODO remove
-
-        $container->registerForAutoconfiguration(ProviderInterface::class)->addTag('lag_admin.state_provider');
-        $container->registerForAutoconfiguration(ProcessorInterface::class)->addTag('lag_admin.state_processor');
-        $container->registerForAutoconfiguration(ContextProviderInterface::class)->addTag('lag_admin.request_context_provider');
-        $container->registerForAutoconfiguration(MetadataLocatorInterface::class)->addTag('lag_admin.metadata_locator');
-        $container->registerForAutoconfiguration(ResourceLocatorInterface::class)->addTag('lag_admin.resource_locator');
-        $container->registerForAutoconfiguration(GridBuilderInterface::class)->addTag('lag_admin.grid_builder');
-        $container->registerForAutoconfiguration(DataTransformerInterface::class)->addTag('lag_admin.grid.data_transformer');
     }
 
     public function getAlias(): string
