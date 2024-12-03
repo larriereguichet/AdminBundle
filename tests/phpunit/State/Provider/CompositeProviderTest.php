@@ -49,7 +49,7 @@ final class CompositeProviderTest extends TestCase
         )));
 
         $provider = new CompositeProvider();
-        $provider->provide($operation, ['what-ever'], ['some', 'thing']);
+        $provider->provide($operation, ['key' => 'what-ever'], ['some' => 'thing']);
     }
 
     public static function operationsProvider(): array

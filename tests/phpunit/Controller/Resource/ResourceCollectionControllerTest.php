@@ -37,6 +37,7 @@ final class ResourceCollectionControllerTest extends TestCase
     private MockObject $gridRegistry;
     private MockObject $gridViewBuilder;
     private MockObject $formFactory;
+    private MockObject $eventDispatcher;
 
     public function testInvoke(): void
     {
@@ -138,7 +139,7 @@ final class ResourceCollectionControllerTest extends TestCase
             ->willReturn(new Response(content: '<p>content</p>'))
         ;
 
-        $response = $this->controller->__invoke($request, $operation);
+        $response = $this->controller->__invoke($request, $operation); // @phpstan-ignore-line
 
         self::assertEquals('<p>content</p>', $response->getContent());
     }
