@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Bridge\QuillJs\Render\QuillJsRendererInterface;
-use LAG\AdminBundle\Grid\Render\CellRendererInterface;
-use LAG\AdminBundle\Grid\Render\HeaderRendererInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
