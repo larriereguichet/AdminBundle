@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Request\Context\AjaxContextProvider;
-use LAG\AdminBundle\Request\Context\CompositeContextProvider;
+use LAG\AdminBundle\Request\Context\ContextProvider;
 use LAG\AdminBundle\Request\Context\ContextProviderInterface;
 use LAG\AdminBundle\Request\Context\FilterContextProvider;
-use LAG\AdminBundle\Request\Context\OperationContextProvider;
 use LAG\AdminBundle\Request\Context\SortingContextProvider;
 use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractor;
 use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
@@ -45,21 +44,19 @@ return static function (ContainerConfigurator $container): void {
     $services->set(UriVariablesExtractorInterface::class, UriVariablesExtractor::class);
 
     // Request context providers
-    $services->set(ContextProviderInterface::class, CompositeContextProvider::class)
-        ->arg('$contextProviders', tagged_iterator(tag: 'lag_admin.request_context_provider'))
-    ;
+    $services->set(ContextProviderInterface::class, ContextProvider::class);
     $services->set(SortingContextProvider::class)
-        ->tag('lag_admin.request_context_provider', ['priority' => 255])
+        ->decorate(id: ContextProviderInterface::class, priority: 200)
+        ->arg('$contextProvider', service('.inner'))
     ;
     $services->set(AjaxContextProvider::class)
-        ->tag('lag_admin.request_context_provider', ['priority' => 255])
+        ->decorate(id: ContextProviderInterface::class, priority: 200)
+        ->arg('$contextProvider', service('.inner'))
     ;
     $services->set(FilterContextProvider::class)
+        ->decorate(id: ContextProviderInterface::class, priority: 200)
+        ->arg('$contextProvider', service('.inner'))
         ->arg('$formFactory', service('form.factory'))
-        ->tag('lag_admin.request_context_provider', ['priority' => 255])
-    ;
-    $services->set(OperationContextProvider::class)
-        ->tag('lag_admin.request_context_provider', ['priority' => -255])
     ;
 
     // Response handlers
