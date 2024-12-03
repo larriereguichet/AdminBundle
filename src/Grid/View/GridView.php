@@ -19,6 +19,7 @@ final readonly class GridView implements \IteratorAggregate
         public array $options = [],
         public array $actions = [],
         public array $context = [],
+        public array $containerAttributes = [],
         public array $headerRowAttributes = [],
         public array $headerAttributes = [],
         public array $rowAttributes = [],

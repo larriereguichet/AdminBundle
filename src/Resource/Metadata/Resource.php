@@ -20,14 +20,16 @@ class Resource
         #[Assert\NotBlank(message: 'The data class should not be null or empty')]
         private ?string $dataClass = null,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The resource title should not be an empty string. Use null instead')]
+        #[Assert\NotBlank(message: 'The resource title should not be an empty string. Use null instead', allowNull: true)]
         private ?string $title = null,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The resource group should not be an empty string. Use null instead')]
+        #[Assert\NotBlank(message: 'The resource group should not be an empty string. Use null instead', allowNull: true)]
         private ?string $group = null,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The resource icon should not be an empty string. Use null instead')]
+        #[Assert\NotBlank(message: 'The resource icon should not be an empty string. Use null instead', allowNull: true)]
         private ?string $icon = null,
+
+        private ?string $pathPrefix = null,
 
         private ?array $permissions = null,
 
@@ -43,7 +45,7 @@ class Resource
             new Delete(),
         ],
 
-        /** @var PropertyInterface[] */
+        /** @var array<int|string, PropertyInterface> */
         #[Assert\All(constraints: [new Assert\Type(type: PropertyInterface::class)])]
         #[Assert\Valid]
         private array $properties = [],
@@ -59,8 +61,6 @@ class Resource
 
         private ?string $routePattern = '{application}.{resource}.{operation}',
 
-        private ?string $pathPrefix = null,
-
         private ?string $translationPattern = null,
 
         private ?string $translationDomain = null,
@@ -72,7 +72,7 @@ class Resource
 
         private ?array $formOptions = null,
 
-        #[Assert\NotBlank(allowNull: true, message: 'The form template should not be empty. Use null instead')]
+        #[Assert\NotBlank(message: 'The form template should not be empty. Use null instead', allowNull: true)]
         private ?string $formTemplate = null,
 
         private bool $validation = true,
@@ -93,6 +93,11 @@ class Resource
 
         private array $grids = [],
     ) {
+        $this->properties = [];
+
+        foreach ($properties as $index => $property) {
+            $this->properties[$property->getName() ?? $index] = $property;
+        }
     }
 
     public function getName(): ?string
@@ -218,7 +223,7 @@ class Resource
         return $self;
     }
 
-    /** @return array<int, PropertyInterface> */
+    /** @return array<int|string, PropertyInterface> */
     public function getProperties(): array
     {
         return $this->properties;
@@ -229,12 +234,13 @@ class Resource
         return \count($this->properties) > 0;
     }
 
+    /** @param array<int|string, PropertyInterface> $properties */
     public function withProperties(array $properties): self
     {
         $self = clone $this;
 
-        foreach ($properties as $property) {
-            $self->properties[$property->getName()] = $property;
+        foreach ($properties as $index => $property) {
+            $self->properties[$property->getName() ?? $index] = $property;
         }
 
         return $self;
