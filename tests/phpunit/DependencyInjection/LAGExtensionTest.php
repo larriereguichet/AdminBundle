@@ -46,7 +46,7 @@ final class LAGExtensionTest extends TestCase
         ;
 
         $extension = new LAGAdminExtension();
-        $extension->load([], $this->container);
+        $extension->load([], $this->container); // @phpstan-ignore-line
     }
 
     #[Test]
@@ -55,7 +55,7 @@ final class LAGExtensionTest extends TestCase
         $extension = new LAGAdminExtension();
         $extension->load([
             'kernel.bundles' => [],
-        ], $this->container);
+        ], $this->container); // @phpstan-ignore-line
 
         $this->assertTrue(true);
     }
