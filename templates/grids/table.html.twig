@@ -34,7 +34,7 @@
                 {% for row in grid.rows %}
                     <tr{{ rowAttributes.defaults(row.attributes) }}>
                         {% for cell in row.cells %}
-                            <td{{ cellAttributes.defaults(cell.containerAttributes) }}>
+                            <td{{ cellAttributes.defaults(cell.rowAttributes) }}>
                                 {{ component('lag_admin:grid_cell', {'cell': cell}) }}
                             </td>
                         {% endfor %}

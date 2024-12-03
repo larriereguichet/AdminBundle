@@ -40,7 +40,7 @@ class Property implements PropertyInterface
 
         private array $attributes = [],
 
-        private array $containerAttributes = [],
+        private array $rowAttributes = [],
 
         private array $headerAttributes = [],
 
@@ -165,15 +165,15 @@ class Property implements PropertyInterface
         return $self;
     }
 
-    public function getContainerAttributes(): array
+    public function getRowAttributes(): array
     {
-        return $this->containerAttributes;
+        return $this->rowAttributes;
     }
 
-    public function withContainerAttributes(array $attributes): self
+    public function withRowAttributes(array $attributes): self
     {
         $self = clone $this;
-        $self->containerAttributes = $attributes;
+        $self->rowAttributes = $attributes;
 
         return $self;
     }

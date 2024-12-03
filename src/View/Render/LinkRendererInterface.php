@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Grid\Render;
+namespace LAG\AdminBundle\View\Render;
 
 use LAG\AdminBundle\Resource\Metadata\Link;
 

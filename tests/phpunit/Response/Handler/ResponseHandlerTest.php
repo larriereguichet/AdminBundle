@@ -99,7 +99,7 @@ final class ResponseHandlerTest extends TestCase
         ;
         $this->urlGenerator
             ->expects(self::never())
-            ->method('generateOperationUrl')
+            ->method('generate')
         ;
         $response = $this->handler->createRedirectResponse($operation, $data, $context);
 
@@ -130,7 +130,7 @@ final class ResponseHandlerTest extends TestCase
         ;
         $this->urlGenerator
             ->expects(self::never())
-            ->method('generateOperationUrl')
+            ->method('generate')
         ;
         $response = $this->handler->createRedirectResponse($operation, $data, $context);
 
@@ -161,7 +161,7 @@ final class ResponseHandlerTest extends TestCase
         ;
         $this->urlGenerator
             ->expects(self::never())
-            ->method('generateOperationUrl')
+            ->method('generate')
         ;
         $response = $this->handler->createRedirectResponse($operation, $data, $context);
 

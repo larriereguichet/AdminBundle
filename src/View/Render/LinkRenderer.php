@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Grid\Render;
+namespace LAG\AdminBundle\View\Render;
 
 use LAG\AdminBundle\Exception\InvalidLinkException;
 use LAG\AdminBundle\Resource\Metadata\Link;
@@ -30,7 +30,7 @@ final readonly class LinkRenderer implements LinkRendererInterface
         if ($errors->count() > 0) {
             throw new InvalidLinkException($errors);
         }
-        $url = $this->urlGenerator->generateUrl($link, $data);
+        $url = $this->urlGenerator->generateFromUrl($link, $data);
 
         return $this->environment->render($link->getTemplate(), [
             'link' => $link->withUrl($url),

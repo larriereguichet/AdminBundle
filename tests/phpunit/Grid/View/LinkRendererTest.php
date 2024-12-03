@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Grid\View;
 
-use LAG\AdminBundle\Grid\Render\LinkRenderer;
-use LAG\AdminBundle\Grid\Render\LinkRendererInterface;
 use LAG\AdminBundle\Resource\Metadata\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\View\Render\LinkRenderer;
+use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Validator\Constraints\Valid;
@@ -38,7 +38,7 @@ final class LinkRendererTest extends TestCase
         ;
         $this->urlGenerator
             ->expects(self::once())
-            ->method('generateUrl')
+            ->method('generateFromUrl')
             ->with($link)
             ->willReturn('/some/url')
         ;

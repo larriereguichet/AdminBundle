@@ -8,6 +8,7 @@ use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Url;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface as SymfonyUrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 final readonly class UrlGenerator implements UrlGeneratorInterface
@@ -19,19 +20,25 @@ final readonly class UrlGenerator implements UrlGeneratorInterface
     ) {
     }
 
-    public function generateOperationUrl(OperationInterface $operation, mixed $data = null): string
-    {
+    public function generate(
+        OperationInterface $operation,
+        mixed $data = null,
+        int $referenceType = SymfonyUrlGeneratorInterface::ABSOLUTE_PATH,
+    ): string {
         $parameters = $this->mapper->map($data, $operation->getRouteParameters());
 
         if (\count($parameters) !== \count($operation->getRouteParameters())) {
             throw new Exception(\sprintf('Unable to generate URL for resource "%s" and operation "%s". Expected "%s" route parameters, got "%s"', $operation->getResource()->getName(), $operation->getName(), \count($operation->getRouteParameters()), \count($parameters)));
         }
 
-        return $this->router->generate($operation->getRoute(), $parameters);
+        return $this->router->generate($operation->getRoute(), $parameters, $referenceType);
     }
 
-    public function generateUrl(Url $url, mixed $data = null): string
-    {
+    public function generateFromUrl(
+        Url $url,
+        mixed $data = null,
+        int $referenceType = SymfonyUrlGeneratorInterface::ABSOLUTE_PATH,
+    ): string {
         if ($url->getUrl()) {
             return $url->getUrl();
         }
@@ -42,6 +49,7 @@ final readonly class UrlGenerator implements UrlGeneratorInterface
                 $url->getOperation(),
                 $data,
                 $url->getApplication(),
+                $referenceType,
             );
         }
 
@@ -50,21 +58,26 @@ final readonly class UrlGenerator implements UrlGeneratorInterface
                 $url->getRoute(),
                 $url->getRouteParameters(),
                 $data,
+                $referenceType,
             );
         }
 
         throw new Exception('Unable to generate a route for an action.');
     }
 
-    public function generateFromRouteName(string $routeName, array $routeParameters = [], mixed $data = null): string
-    {
+    public function generateFromRouteName(
+        string $routeName,
+        array $routeParameters = [],
+        mixed $data = null,
+        int $referenceType = SymfonyUrlGeneratorInterface::ABSOLUTE_PATH,
+    ): string {
         $mappedRouteParameters = $routeParameters;
 
         if ($data !== null) {
             $mappedRouteParameters = (new ParametersMapper())->map($data, $routeParameters);
         }
 
-        return $this->router->generate($routeName, $mappedRouteParameters);
+        return $this->router->generate($routeName, $mappedRouteParameters, $referenceType);
     }
 
     public function generateFromOperationName(
@@ -72,10 +85,11 @@ final readonly class UrlGenerator implements UrlGeneratorInterface
         string $operationName,
         mixed $data = null,
         ?string $applicationName = null,
+        int $referenceType = SymfonyUrlGeneratorInterface::ABSOLUTE_PATH,
     ): string {
         $resource = $this->resourceRegistry->get($resourceName, $applicationName);
         $operation = $resource->getOperation($operationName);
 
-        return $this->generateOperationUrl($operation, $data);
+        return $this->generate($operation, $data, $referenceType);
     }
 }

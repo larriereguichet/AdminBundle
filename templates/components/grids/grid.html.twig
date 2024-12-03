@@ -1,4 +1,4 @@
-<div {{ containerAttributes.defaults({class: 'admin-grid-container'}) }}>
+<div {{ rowAttributes.defaults({class: 'admin-grid-container'}) }}>
     {% if grid.component %}
         {{ component(grid.component, {grid: grid, options: options}) }}
     {% else %}

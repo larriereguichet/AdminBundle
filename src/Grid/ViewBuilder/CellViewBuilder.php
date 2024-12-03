@@ -21,10 +21,10 @@ final readonly class CellViewBuilder implements CellViewBuilderInterface
         return new CellView(
             name: $property->getName(),
             options: $property,
-            data: $data,
             template: $property->getTemplate(),
+            data: $data,
             attributes: $property->getAttributes(),
-            containerAttributes: $property->getContainerAttributes(),
+            rowAttributes: $property->getRowAttributes(),
             context: $context,
         );
     }

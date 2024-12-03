@@ -28,9 +28,9 @@ $application->run($input, new ConsoleOutput());
 $input = new ArrayInput(['command' => 'doctrine:schema:create']);
 $application->run($input, new ConsoleOutput());
 
-$application->run(new ArrayInput(['command' => 'fixtures:load']), new ConsoleOutput());
-
-$application->run(new ArrayInput(['command' => 'debug:router']), new ConsoleOutput());
+//$application->run(new ArrayInput(['command' => 'fixtures:load']), new ConsoleOutput());
+//$output = new ConsoleOutput();
+//$application->run(new ArrayInput(['command' => 'debug:router']), $output);
 
 $finder = (new \Symfony\Component\Finder\Finder())
     ->in(dirname(__DIR__).'/public')
