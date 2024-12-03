@@ -15,7 +15,7 @@ readonly class CellView
         public ?string $label = null,
         public mixed $data = null,
         public array $attributes = [],
-        public array $containerAttributes = [],
+        public array $rowAttributes = [],
         public array $context = [],
     ) {
     }

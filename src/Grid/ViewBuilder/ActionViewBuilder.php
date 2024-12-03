@@ -36,7 +36,7 @@ final readonly class ActionViewBuilder implements ActionViewBuilderInterface
             template: $action->getTemplate(),
             label: $action->getLabel(),
             options: $action,
-            data: $this->urlGenerator->generateUrl($action, $data),
+            data: $this->urlGenerator->generateFromUrl($action, $data),
             attributes: $actionAttributes,
         );
     }

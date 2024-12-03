@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Grid\Render;
 
 use LAG\AdminBundle\Exception\InvalidLinkException;
-use LAG\AdminBundle\Grid\Render\LinkRenderer;
 use LAG\AdminBundle\Resource\Metadata\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
+use LAG\AdminBundle\View\Render\LinkRenderer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

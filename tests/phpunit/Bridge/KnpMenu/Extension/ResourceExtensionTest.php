@@ -43,7 +43,7 @@ final class ResourceExtensionTest extends TestCase
         ;
         $this->urlGenerator
             ->expects(self::once())
-            ->method('generateOperationUrl')
+            ->method('generate')
             ->with($operation)
             ->willReturn('/some-url')
         ;

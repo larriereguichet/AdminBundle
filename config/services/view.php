@@ -8,8 +8,8 @@ use LAG\AdminBundle\Bridge\QuillJs\Render\QuillJsRendererInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
-use LAG\AdminBundle\Twig\Extension\RenderExtension;
 use LAG\AdminBundle\Twig\Extension\PaginationExtension;
+use LAG\AdminBundle\Twig\Extension\RenderExtension;
 use LAG\AdminBundle\Twig\Extension\RoutingExtension;
 use LAG\AdminBundle\Twig\Extension\SecurityExtension;
 use LAG\AdminBundle\Twig\Extension\TextExtension;
@@ -27,6 +27,10 @@ use LAG\AdminBundle\View\Helper\RenderHelper;
 use LAG\AdminBundle\View\Helper\RoutingHelper;
 use LAG\AdminBundle\View\Helper\SecurityHelper;
 use LAG\AdminBundle\View\Helper\TextHelper;
+use LAG\AdminBundle\View\Render\ActionRenderer;
+use LAG\AdminBundle\View\Render\ActionRendererInterface;
+use LAG\AdminBundle\View\Render\LinkRenderer;
+use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use LAG\AdminBundle\View\Vars\LAGAdminVars;
 use LAG\AdminBundle\View\Vars\LAGAdminVarsInterface;
 
@@ -43,15 +47,14 @@ return static function (ContainerConfigurator $container): void {
 
     // Runtime extensions
     $services->set(RoutingHelper::class)
-        ->arg('$context', service(ResourceContextInterface::class))
+        ->arg('$resourceContext', service(ResourceContextInterface::class))
         ->arg('$requestStack', service('request_stack'))
         ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
         ->tag('twig.runtime')
     ;
     $services->set(RenderHelper::class)
-        ->arg('$environment', service('twig'))
-        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
-        ->arg('$translator', service('translator'))
+        ->arg('$linkRenderer', service(LinkRendererInterface::class))
+        ->arg('$actionRenderer', service(ActionRendererInterface::class))
         ->tag('twig.runtime')
     ;
     $services->set(PaginationHelper::class)->tag('twig.runtime');
@@ -85,7 +88,18 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$context', service(ResourceContextInterface::class))
         ->arg('$requestStack', service('request_stack'))
         ->arg('$applicationRegistry', service(ApplicationRegistryInterface::class))
-
         ->alias('lag_admin.twig_vars', LAGAdminVarsInterface::class)
+    ;
+
+    // Renderer
+    $services->set(LinkRendererInterface::class, LinkRenderer::class)
+        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
+        ->arg('$validator', service('validator'))
+        ->arg('$environment', service('twig'))
+    ;
+    $services->set(ActionRendererInterface::class, ActionRenderer::class)
+        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
+        ->arg('$environment', service('twig'))
+        ->arg('$translator', service('translator'))
     ;
 };

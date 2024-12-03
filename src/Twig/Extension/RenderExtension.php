@@ -14,7 +14,6 @@ final class RenderExtension extends AbstractExtension
     {
         return [
             new TwigFunction('lag_admin_link', [RenderHelper::class, 'renderLink'], ['is_safe' => ['html']]),
-            new TwigFunction('lag_admin_link_url', [RenderHelper::class, 'generateLinkUrl']),
             new TwigFunction('lag_admin_action', [RenderHelper::class, 'renderAction'], ['is_safe' => ['html']]),
         ];
     }

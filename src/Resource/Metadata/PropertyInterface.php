@@ -119,12 +119,12 @@ interface PropertyInterface extends PermissibleInterface, ConditionalInterface
     /**
      * Return the property view html attributes for the property element container.
      */
-    public function getContainerAttributes(): array;
+    public function getRowAttributes(): array;
 
     /**
      * Define the property view html attributes for the property element container.
      */
-    public function withContainerAttributes(array $attributes): self;
+    public function withRowAttributes(array $attributes): self;
 
     /**
      * Return the property view html attributes for the property element header.

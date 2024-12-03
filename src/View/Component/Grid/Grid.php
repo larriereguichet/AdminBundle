@@ -18,7 +18,6 @@ use Symfony\UX\TwigComponent\ComponentAttributes;
 )]
 final class Grid
 {
-    public ComponentAttributes $containerAttributes;
     public ComponentAttributes $headerRowAttributes;
     public ComponentAttributes $headerAttributes;
     public ComponentAttributes $rowAttributes;
@@ -37,7 +36,6 @@ final class Grid
         OperationInterface $operation,
         mixed $data,
         array $options = [],
-        array $containerAttributes = [],
         array $headerRowAttributes = [],
         array $headerAttributes = [],
         array $rowAttributes = [],
@@ -48,7 +46,6 @@ final class Grid
         if ($grid->template === null && $grid->component === null) {
             throw new Exception(\sprintf('The grid "%s" should have a template or a component', $grid->name));
         }
-        $this->containerAttributes = new ComponentAttributes($grid->containerAttributes + $containerAttributes);
         $this->titleAttributes = new ComponentAttributes($grid->titleAttributes + $titleAttributes);
         $this->headerRowAttributes = new ComponentAttributes($grid->headerRowAttributes + $headerRowAttributes);
         $this->headerAttributes = new ComponentAttributes($grid->headerAttributes + $headerAttributes);
