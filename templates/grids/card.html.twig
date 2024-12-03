@@ -11,14 +11,11 @@
         <div class="col">
             <div class="card h-100">
                 {% for cell in row.cells %}
+                    {{ component('lag_admin:grid_cell', {'cell': cell}) }}
+
                     {% if cell.name == options.thumbnail|default(false) %}
-                        {{ lag_admin_cell(cell, {attributes: {class: 'card-img-top'}}) }}
                     {% elseif cell.template %}
                         {% set defaultAttributes = loop.last ? {class: 'card-footer'} : {class: 'card-body'} %}
-
-                        <div {{ cellAttributes.defaults(defaultAttributes|merge(cell.containerAttributes)) }}>
-                            {{ lag_admin_cell(cell) }}
-                        </div>
                     {% endif %}
                 {% endfor %}
             </div>
