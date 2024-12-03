@@ -12,7 +12,7 @@ class ResourceLink extends Text
     public function __construct(
         ?string $name = null,
         string|bool $propertyPath = true,
-        ?string $label = null,
+        string|bool|null $label = null,
         bool $sortable = true,
         bool $translatable = false,
         ?string $translationDomain = null,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Factory;
 
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\InvalidResourceException;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use Symfony\Component\Validator\Constraints\Valid;
@@ -26,6 +27,19 @@ final readonly class ResourceFactory implements ResourceFactoryInterface
             $operations[] = $this->operationFactory->create($operation->withResource($definition));
         }
         $resource = $definition->withOperations($operations);
+        $position = 0;
+
+        foreach ($resource->getProperties() as $property) {
+            if ($property->getName() === null) {
+                throw new Exception(\sprintf(
+                    'The property at position "%s" for the resource "%s" of application "%s" has no name',
+                    $position,
+                    $resource->getName(),
+                    $resource->getApplication() ?? 'unknown',
+                ));
+            }
+            ++$position;
+        }
 
         $errors = $this->validator->validate($resource, [new Valid()]);
 

@@ -10,11 +10,13 @@ class Action extends Property implements Url, WorkflowSubjectInterface
 {
     public function __construct(
         ?string $name = null,
+        string|bool|null $propertyPath = true,
         string|bool|null $label = null,
         ?string $template = '@LAGAdmin/grids/properties/action.html.twig',
         bool $translatable = true,
         ?string $translationDomain = null,
         array $attributes = [],
+        array $rowAttributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
         ?array $permissions = null,
@@ -34,13 +36,14 @@ class Action extends Property implements Url, WorkflowSubjectInterface
     ) {
         parent::__construct(
             name: $name,
-            propertyPath: '.',
+            propertyPath: $propertyPath,
             label: $label,
             template: $template,
             sortable: false,
             translatable: $translatable,
             translationDomain: $translationDomain,
             attributes: $attributes,
+            rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
             permissions: $permissions,

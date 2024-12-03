@@ -11,11 +11,11 @@ class Collection extends Property
 {
     public function __construct(
         ?string $name = null,
-        bool|string|null $propertyPath = null,
+        string|bool|null $propertyPath = null,
         string|bool|null $label = null,
         ?string $template = '@LAGAdmin/grids/properties/collection.html.twig',
-        bool $sortable = true,
-        bool $translatable = false,
+        bool $sortable = false,
+        bool $translatable = true,
         ?string $translationDomain = null,
         array $attributes = [],
         array $rowAttributes = [],

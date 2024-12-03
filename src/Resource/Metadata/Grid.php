@@ -33,6 +33,7 @@ class Grid
 
         private array $attributes = [],
         private array $rowAttributes = [],
+        private array $containerAttributes = [],
         private array $actionCellAttributes = [],
 
         private ?string $headerTemplate = null,
@@ -168,6 +169,19 @@ class Grid
     {
         $self = clone $this;
         $self->attributes = $attributes;
+
+        return $self;
+    }
+
+    public function getContainerAttributes(): array
+    {
+        return $this->containerAttributes;
+    }
+
+    public function withContainerAttributes(array $attributes): self
+    {
+        $self = clone $this;
+        $self->containerAttributes = $attributes;
 
         return $self;
     }
