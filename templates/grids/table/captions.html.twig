@@ -1,6 +1,6 @@
 <div class="admin-actions text-end">
     {% if grid.actions|length == 1 %}
-        {{ lag_admin_cell(grid.actions|first) }}
+        {{ {{ component('lag_admin:grid_cell', {'cell': grid.actions|first}) }} }}
     {% elseif grid.actions|length > 1 %}
         <div class="dropdown float-end">
             <button class="btn btn-secondary dropdown-toggle"
@@ -11,7 +11,11 @@
             </button>
             <ul class="dropdown-menu">
                 {% for action in grid.actions %}
-                    <li>{{ lag_admin_cell(action, {attributes: {class: 'dropdown-item'}}) }}</li>
+                    <li>
+                        {{ component('lag_admin:grid_cell', {
+                            'cell': action,
+                            'attributes': {class: 'dropdown-item'}
+                        }) }}</li>
                 {% endfor %}
             </ul>
         </div>
