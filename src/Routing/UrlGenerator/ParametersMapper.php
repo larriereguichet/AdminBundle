@@ -24,6 +24,10 @@ final readonly class ParametersMapper implements ParametersMapperInterface
             if (\is_int($parameter)) {
                 $parameter = $propertyPath;
             }
+
+            if (\is_array($data)) {
+                $propertyPath = '['.$propertyPath.']';
+            }
             $mappedRouteParameters[$parameter] = $accessor->getValue($data, $propertyPath);
         }
 
