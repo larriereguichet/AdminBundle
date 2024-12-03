@@ -107,6 +107,8 @@ abstract class Operation implements OperationInterface
         private ?string $workflowTransition = null,
 
         private bool $partial = false,
+
+        private ?string $successMessage = null,
     ) {
     }
 
@@ -587,6 +589,19 @@ abstract class Operation implements OperationInterface
     {
         $self = clone $this;
         $self->partial = $partial;
+
+        return $self;
+    }
+
+    public function getSuccessMessage(): ?string
+    {
+        return $this->successMessage;
+    }
+
+    public function withSuccessMessage(?string $successMessage): self
+    {
+        $self = clone $this;
+        $self->successMessage = $successMessage;
 
         return $self;
     }

@@ -52,6 +52,7 @@ class Delete extends Operation
         ?string $workflow = null,
         ?string $workflowTransition = null,
         bool $partial = false,
+        ?string $successMessage = null,
     ) {
         parent::__construct(
             name: $name,
@@ -90,6 +91,7 @@ class Delete extends Operation
             workflow: $workflow,
             workflowTransition: $workflowTransition,
             partial: $partial,
+            successMessage: $successMessage,
         );
     }
 }

@@ -67,6 +67,7 @@ class Index extends CollectionOperation
         ?array $collectionFormOptions = null,
         ?array $collectionActions = null,
         bool $partial = false,
+        ?string $successMessage = null,
     ) {
         parent::__construct(
             name: $name,
@@ -105,6 +106,7 @@ class Index extends CollectionOperation
             workflow: $workflow,
             workflowTransition: $workflowTransition,
             partial: $partial,
+            successMessage: $successMessage,
             pagination: $pagination,
             itemsPerPage: $itemsPerPage,
             pageParameter: $pageParameter,
