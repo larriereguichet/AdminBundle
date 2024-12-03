@@ -24,14 +24,12 @@
 
         {% block grid %}
             {% if grid is defined and grid is not empty %}
-                <div class="admin-grid-container">
-                    {{ component('lag_admin:grid', {
-                        data: data,
-                        grid: grid,
-                        operation: operation,
-                        ...grid.attributes
-                    }) }}
-                </div>
+                {{ component('lag_admin:grid', {
+                    data: data,
+                    grid: grid,
+                    operation: operation,
+                    ...grid.attributes
+                }) }}
             {% endif %}
         {% endblock %}
 

@@ -47,6 +47,7 @@ class Show extends Operation
         ?string $input = null,
         ?string $output = null,
         bool $partial = false,
+        ?string $successMessage = null,
     ) {
         parent::__construct(
             name: $name,
@@ -82,6 +83,7 @@ class Show extends Operation
             input: $input,
             output: $output,
             partial: $partial,
+            successMessage: $successMessage,
         );
     }
 }

@@ -20,9 +20,14 @@ class ValidationException extends Exception
             $message = $message->append(\PHP_EOL);
 
             if ($error->getPropertyPath()) {
-                $message = $message->append('"', $error->getPropertyPath(), '"', ' ');
+                $message = $message->append($error->getPropertyPath(), ':', ' ');
             }
-            $message = $message->append($error->getMessage())->append(\PHP_EOL);
+            $message = $message
+                ->append('"')
+                ->append($error->getMessage())
+                ->append('"')
+                ->append(\PHP_EOL)
+            ;
         }
 
         parent::__construct($message->toString());

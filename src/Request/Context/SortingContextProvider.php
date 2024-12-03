@@ -10,12 +10,18 @@ use Symfony\Component\HttpFoundation\Request;
 
 final readonly class SortingContextProvider implements ContextProviderInterface
 {
+    public function __construct(
+        private ContextProviderInterface $contextProvider
+    ) {
+    }
+
     public function getContext(OperationInterface $operation, Request $request): array
     {
+        $context = $this->contextProvider->getContext($operation, $request);
+
         if (!$operation instanceof CollectionOperationInterface) {
-            return [];
+            return $context;
         }
-        $context = [];
         $pageParameter = $operation->getPageParameter();
 
         if ($request->query->has($pageParameter)) {

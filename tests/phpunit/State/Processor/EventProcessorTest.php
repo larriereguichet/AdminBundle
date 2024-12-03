@@ -19,12 +19,13 @@ use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 
 final class EventProcessorTest extends TestCase
 {
     private EventProcessor $processor;
-    private ProcessorInterface $decoratedProcessor;
-    private ResourceEventDispatcherInterface $eventDispatcher;
+    private MockObject $decoratedProcessor;
+    private MockObject $eventDispatcher;
 
     #[Test]
     #[DataProvider(methodName: 'operations')]

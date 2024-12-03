@@ -9,7 +9,14 @@ class Group extends Property implements CompoundPropertyInterface
 {
     public function __construct(
         ?string $name = null,
+        string|bool|null $propertyPath = true,
         string|bool|null $label = null,
+        ?string $template = '@LAGAdmin/grids/properties/group.html.twig',
+        bool $translatable = false,
+        ?string $translationDomain = null,
+        array $attributes = [],
+        array $rowAttributes = [],
+        array $headerAttributes = [],
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
@@ -18,10 +25,15 @@ class Group extends Property implements CompoundPropertyInterface
     ) {
         parent::__construct(
             name: $name,
-            propertyPath: '.',
+            propertyPath: $propertyPath,
             label: $label,
-            template: '@LAGAdmin/grids/properties/group.html.twig',
+            template: $template,
             sortable: false,
+            translatable: $translatable,
+            translationDomain: $translationDomain,
+            attributes: $attributes,
+            rowAttributes: $rowAttributes,
+            headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,

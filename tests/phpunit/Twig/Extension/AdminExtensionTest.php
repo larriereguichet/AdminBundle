@@ -12,13 +12,13 @@ use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
 use LAG\AdminBundle\Tests\TestCase;
-use LAG\AdminBundle\Twig\Extension\AdminExtension;
+use LAG\AdminBundle\Twig\Extension\RenderExtension;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 
 final class AdminExtensionTest extends TestCase
 {
-    private AdminExtension $adminExtension;
+    private RenderExtension $adminExtension;
     private MockObject $security;
     private MockObject $linkRenderer;
     private MockObject $urlGenerator;
@@ -89,7 +89,7 @@ final class AdminExtensionTest extends TestCase
         $this->linkRenderer = self::createMock(LinkRendererInterface::class);
         $this->urlGenerator = self::createMock(UrlGeneratorInterface::class);
         $this->registry = self::createMock(ResourceRegistryInterface::class);
-        $this->adminExtension = new AdminExtension(
+        $this->adminExtension = new RenderExtension(
             $this->security,
             $this->linkRenderer,
             $this->urlGenerator,

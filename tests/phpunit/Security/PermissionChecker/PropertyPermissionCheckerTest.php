@@ -7,6 +7,7 @@ namespace LAG\AdminBundle\Tests\Security\PermissionChecker;
 use LAG\AdminBundle\Resource\Metadata\Text;
 use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionChecker;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\InMemoryUser;
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Core\User\InMemoryUser;
 final class PropertyPermissionCheckerTest extends TestCase
 {
     private PropertyPermissionChecker $permissionChecker;
-    private Security $security;
+    private MockObject $security;
 
     #[Test]
     public function itCheckPropertyPermissions(): void

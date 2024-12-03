@@ -5,19 +5,13 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Bridge\QuillJs\Render\QuillJsRendererInterface;
-use LAG\AdminBundle\Grid\Render\CellRendererInterface;
-use LAG\AdminBundle\Grid\Render\GridRendererInterface;
-use LAG\AdminBundle\Grid\Render\HeaderRendererInterface;
-use LAG\AdminBundle\Grid\Render\LinkRendererInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
-use LAG\AdminBundle\Twig\Extension\AdminExtension;
-use LAG\AdminBundle\Twig\Extension\GridExtension;
-use LAG\AdminBundle\Twig\Extension\PaginationExtension;
 use LAG\AdminBundle\Twig\Extension\RenderExtension;
+use LAG\AdminBundle\Twig\Extension\PaginationExtension;
 use LAG\AdminBundle\Twig\Extension\RoutingExtension;
+use LAG\AdminBundle\Twig\Extension\SecurityExtension;
 use LAG\AdminBundle\Twig\Extension\TextExtension;
 use LAG\AdminBundle\View\Component\Cell\Actions;
 use LAG\AdminBundle\View\Component\Cell\FormComponent;
@@ -26,16 +20,13 @@ use LAG\AdminBundle\View\Component\Cell\Link;
 use LAG\AdminBundle\View\Component\Cell\MapComponent;
 use LAG\AdminBundle\View\Component\Cell\TextComponent;
 use LAG\AdminBundle\View\Component\Grid\Grid;
-use LAG\AdminBundle\View\Helper\GridHelper;
-use LAG\AdminBundle\View\Helper\GridHelperInterface;
+use LAG\AdminBundle\View\Component\Grid\GridCell;
+use LAG\AdminBundle\View\Component\Grid\GridHeader;
 use LAG\AdminBundle\View\Helper\PaginationHelper;
-use LAG\AdminBundle\View\Helper\PaginationHelperInterface;
 use LAG\AdminBundle\View\Helper\RenderHelper;
-use LAG\AdminBundle\View\Helper\RenderHelperInterface;
 use LAG\AdminBundle\View\Helper\RoutingHelper;
-use LAG\AdminBundle\View\Helper\RoutingHelperInterface;
+use LAG\AdminBundle\View\Helper\SecurityHelper;
 use LAG\AdminBundle\View\Helper\TextHelper;
-use LAG\AdminBundle\View\Helper\TextHelperInterface;
 use LAG\AdminBundle\View\Vars\LAGAdminVars;
 use LAG\AdminBundle\View\Vars\LAGAdminVarsInterface;
 
@@ -43,36 +34,42 @@ return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     // Extensions
-    $services->set(AdminExtension::class)
-        ->arg('$security', service('security.helper'))
-        ->arg('$linkRenderer', service(LinkRendererInterface::class))
+    $services->set(RenderExtension::class)->tag('twig.extension');
+    $services->set(PaginationExtension::class)->tag('twig.extension');
+    $services->set(RoutingExtension::class)->tag('twig.extension');
+    $services->set(RenderExtension::class)->tag('twig.extension');
+    $services->set(SecurityExtension::class)->tag('twig.extension');
+    $services->set(TextExtension::class)->tag('twig.extension');
+
+    // Runtime extensions
+    $services->set(RoutingHelper::class)
+        ->arg('$context', service(ResourceContextInterface::class))
+        ->arg('$requestStack', service('request_stack'))
         ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
-        ->arg('$registry', service(ResourceRegistryInterface::class))
-        ->tag('twig.extension')
+        ->tag('twig.runtime')
     ;
-    $services->set(GridExtension::class)
-        ->arg('$helper', service(GridHelperInterface::class))
-        ->tag('twig.extension')
+    $services->set(RenderHelper::class)
+        ->arg('$environment', service('twig'))
+        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
+        ->arg('$translator', service('translator'))
+        ->tag('twig.runtime')
     ;
-    $services->set(TextExtension::class)
-        ->arg('$helper', service(TextHelperInterface::class))
-        ->tag('twig.extension')
+    $services->set(PaginationHelper::class)->tag('twig.runtime');
+    $services->set(SecurityHelper::class)
+        ->arg('$registry', service('lag_admin.resource.registry'))
+        ->arg('$security', service('security.helper'))
+        ->tag('twig.runtime')
     ;
-    $services->set(RoutingExtension::class)
-        ->arg('$helper', service(RoutingHelperInterface::class))
-        ->tag('twig.extension')
-    ;
-    $services->set(RenderExtension::class)
-        ->arg('$helper', service(RenderHelperInterface::class))
-        ->tag('twig.extension')
-    ;
-    $services->set(PaginationExtension::class)
-        ->arg('$helper', service(PaginationHelperInterface::class))
-        ->tag('twig.extension')
+    $services->set(TextHelper::class)
+        ->arg('$quillJsRenderer', service(QuillJsRendererInterface::class))
+        ->tag('twig.runtime')
     ;
 
     // Components
     $services->set(Grid::class)->autoconfigure();
+    $services->set(GridHeader::class)->autoconfigure();
+    $services->set(GridCell::class)->autoconfigure();
+
     $services->set(TextComponent::class)->autoconfigure();
     $services->set(Link::class)->autoconfigure();
     $services->set(Actions::class)->autoconfigure();
@@ -81,27 +78,6 @@ return static function (ContainerConfigurator $container): void {
     $services->set(FormComponent::class)
         ->autoconfigure()
         ->arg('$formFactory', service('form.factory'))
-    ;
-
-    // Helpers
-    $services->set(RoutingHelperInterface::class, RoutingHelper::class)
-        ->arg('$context', service(ResourceContextInterface::class))
-        ->arg('$requestStack', service('request_stack'))
-        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
-    ;
-    $services->set(RenderHelperInterface::class, RenderHelper::class)
-        ->arg('$environment', service('twig'))
-        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
-        ->arg('$translator', service('translator'))
-    ;
-    $services->set(PaginationHelperInterface::class, PaginationHelper::class);
-    $services->set(GridHelperInterface::class, GridHelper::class)
-        ->arg('$gridRenderer', service(GridRendererInterface::class))
-        ->arg('$headerRenderer', service(HeaderRendererInterface::class))
-        ->arg('$cellRenderer', service(CellRendererInterface::class))
-    ;
-    $services->set(TextHelperInterface::class, TextHelper::class)
-        ->arg('$quillJsRenderer', service(QuillJsRendererInterface::class))
     ;
 
     // Factories

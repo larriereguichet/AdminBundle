@@ -4,27 +4,32 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Metadata;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Slug extends Property
 {
     public function __construct(
-        private string $source,
-        private string $slugger = 'default',
-
         ?string $name = null,
-        bool|string|null $propertyPath = null,
+        string|bool|null $propertyPath = null,
         string|bool|null $label = null,
         ?string $template = '@LAGAdmin/grids/properties/slug.html.twig',
-        bool $sortable = true,
-        bool $translatable = false,
+        bool $sortable = false,
+        bool $translatable = true,
         ?string $translationDomain = null,
         array $attributes = [],
-        array $containerAttributes = [],
+        array $rowAttributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
         ?string $sortingPath = null,
+
+        #[Assert\NotBlank(message: 'The source property should not be blank')]
+        private string $source = 'name',
+
+        #[Assert\NotBlank(message: 'The slugger should not be blank')]
+        private string $slugger = 'default',
     ) {
         parent::__construct(
             name: $name,
@@ -34,7 +39,7 @@ class Slug extends Property
             translatable: $translatable,
             translationDomain: $translationDomain,
             attributes: $attributes,
-            containerAttributes: $containerAttributes,
+            rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
             permissions: $permissions,
