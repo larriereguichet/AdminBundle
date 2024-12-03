@@ -11,12 +11,12 @@
 {% block table %}
     <table {{ attributes.defaults({'class': 'admin-table table table-responsive align-middle'}) }}>
         {% block table_head %}
-            {% if grid.options.displayHeaders is defined and grid.options.displayHeaders != false and grid.headers|length > 0 %}
+            {% if grid.options.displayHeaders|default(true) != false and grid.headers|length > 0 %}
                 <thead>
                 <tr {{ headerRowAttributes }}>
                     {%- for header in grid.headers -%}
-                        <th{{ header.attributes.defaults({'class': 'text-dark'}) }}>
-                            {{ lag_admin_header(header) }}
+                        <th {{ header.attributes.defaults({'class': 'text-dark'}) }}>
+                            {{ component('lag_admin:grid_header', {header: header}) }}
                         </th>
                     {%- endfor -%}
 
@@ -35,7 +35,7 @@
                     <tr{{ rowAttributes.defaults(row.attributes) }}>
                         {% for cell in row.cells %}
                             <td{{ cellAttributes.defaults(cell.containerAttributes) }}>
-                                {{ lag_admin_cell(cell) }}
+                                {{ component('lag_admin:grid_cell', {'cell': cell}) }}
                             </td>
                         {% endfor %}
 
@@ -43,7 +43,7 @@
                             <td {{ actionCellAttributes.defaults({class: 'text-end'}) }}>
                                 <div class="btn-group">
                                     {% for action in row.actions %}
-                                        {{ lag_admin_cell(action) }}
+                                        {{ component('lag_admin:grid_cell', {'cell': action}) }}
                                     {% endfor %}
                                 </div>
                             </td>

@@ -1,5 +1,7 @@
-{% if grid.component %}
-    {{ component(grid.component, {grid: grid, options: options}) }}
-{% else %}
-    {% include grid.template %}
-{% endif %}
+<div {{ containerAttributes.defaults({class: 'admin-grid-container'}) }}>
+    {% if grid.component %}
+        {{ component(grid.component, {grid: grid, options: options}) }}
+    {% else %}
+        {% include grid.template %}
+    {% endif %}
+</div>
