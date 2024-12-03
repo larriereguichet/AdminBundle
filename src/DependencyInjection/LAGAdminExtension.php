@@ -4,14 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\DependencyInjection;
 
-use LAG\AdminBundle\Grid\Builder\GridBuilderInterface;
-use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Resource\Locator\MetadataLocatorInterface;
-use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
 use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
-use LAG\AdminBundle\State\Processor\ProcessorInterface;
-use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
