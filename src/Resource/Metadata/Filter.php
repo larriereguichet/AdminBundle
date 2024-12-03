@@ -14,7 +14,7 @@ class Filter implements FilterInterface
         #[Assert\NotBlank]
         private string $name,
 
-        private ?string $label = null,
+        private string|bool|null $label = null,
 
         #[Assert\NotBlank]
         private string $comparator = '=',
