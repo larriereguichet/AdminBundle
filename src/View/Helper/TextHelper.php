@@ -6,8 +6,9 @@ namespace LAG\AdminBundle\View\Helper;
 
 use LAG\AdminBundle\Bridge\QuillJs\Render\QuillJsRendererInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
+use Twig\Extension\RuntimeExtensionInterface;
 
-final readonly class TextHelper implements TextHelperInterface
+final readonly class TextHelper implements RuntimeExtensionInterface
 {
     public function __construct(
         private QuillJsRendererInterface $quillJsRenderer,

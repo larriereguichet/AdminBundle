@@ -8,8 +8,9 @@ use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Metadata\Url;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Extension\RuntimeExtensionInterface;
 
-final readonly class RoutingHelper implements RoutingHelperInterface
+final readonly class RoutingHelper implements RuntimeExtensionInterface
 {
     public function __construct(
         private ResourceContextInterface $context,
