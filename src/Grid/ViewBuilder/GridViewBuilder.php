@@ -58,6 +58,7 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
             options: $grid->getOptions(),
             actions: $this->buildCollectionActions($grid, $data),
             context: $context,
+            containerAttributes: $grid->getContainerAttributes(),
             actionCellAttributes: $grid->getActionCellAttributes(),
             extraColumn: \count($grid->getActions()) > 0,
             emptyMessage: $grid->getEmptyMessage(),

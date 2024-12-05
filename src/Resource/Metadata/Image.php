@@ -12,15 +12,19 @@ class Image extends Property
 {
     public function __construct(
         ?string $name = null,
-        ?string $propertyPath = null,
-        ?string $label = null,
-        bool $translatable = false,
+        string|bool|null $propertyPath = null,
+        string|bool|null $label = null,
+        ?string $template = '@LAGAdmin/grids/properties/image.html.twig',
+        bool $sortable = false,
+        bool $translatable = true,
         ?string $translationDomain = null,
         array $attributes = [],
+        array $rowAttributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = ImageDataTransformer::class,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $sortingPath = null,
 
         #[Assert\NotBlank(allowNull: true)]
         private ?string $imageFilter = null,
@@ -34,15 +38,17 @@ class Image extends Property
             name: $name,
             propertyPath: $propertyPath,
             label: $label,
-            template: '@LAGAdmin/grids/properties/image.html.twig',
-            sortable: false,
+            template: $template,
+            sortable: $sortable,
             translatable: $translatable,
             translationDomain: $translationDomain,
             attributes: $attributes,
+            rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            sortingPath: $sortingPath,
         );
     }
 
