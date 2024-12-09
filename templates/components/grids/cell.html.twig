@@ -4,6 +4,7 @@
         'options': cell.options,
         'context': cell.context,
         'data': cell.data,
-        'attributes': attributes,
+        'attributes': attributes.defaults(cell.attributes),
+        'rowAttributes': rowAttributes
     } %}
 {% endif %}

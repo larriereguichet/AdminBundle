@@ -33,9 +33,9 @@ final readonly class ActionViewBuilder implements ActionViewBuilderInterface
 
         return new CellView(
             name: $action->getName(),
+            options: $action,
             template: $action->getTemplate(),
             label: $action->getLabel(),
-            options: $action,
             data: $this->urlGenerator->generateFromUrl($action, $data),
             attributes: $actionAttributes,
         );
