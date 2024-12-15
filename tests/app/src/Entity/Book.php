@@ -30,7 +30,7 @@ use LAG\AdminBundle\Tests\Application\State\Provider\Book\LatestBookProvider;
 #[LAG\Grid(
     name: 'projects_table',
     title: 'Books',
-    properties: ['id', 'name', 'isbn']
+    properties: ['id', 'name', 'isbn', 'show']
 )]
 #[Entity(repositoryClass: BookRepository::class)]
 #[Table]
@@ -39,7 +39,19 @@ class Book
     #[ORM\Id]
     #[ORM\Column]
     #[GeneratedValue(strategy: 'AUTO')]
-    #[LAG\Text]
+    #[LAG\Link(
+        propertyPath: true,
+        label: false,
+        operation: 'show',
+        textPath: 'id',
+    )]
+    #[LAG\Link(
+        name: 'show',
+        propertyPath: true,
+        label: 'actions',
+        operation: 'show',
+        text: 'Show book'
+    )]
     public ?int $id = null;
 
     #[ORM\Column]

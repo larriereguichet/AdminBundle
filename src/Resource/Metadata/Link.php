@@ -37,6 +37,7 @@ class Link extends Property implements Url
         private ?string $type = null,
         private ?string $url = null,
         private ?string $text = null,
+        private ?string $textPath = null,
         private ?string $icon = null,
     ) {
         parent::__construct(
@@ -170,6 +171,19 @@ class Link extends Property implements Url
     {
         $self = clone $this;
         $self->icon = $icon;
+
+        return $self;
+    }
+
+    public function getTextPath(): ?string
+    {
+        return $this->textPath;
+    }
+
+    public function withTextPath(?string $textPath): self
+    {
+        $self = clone $this;
+        $self->textPath = $textPath;
 
         return $self;
     }
