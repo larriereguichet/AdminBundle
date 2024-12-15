@@ -27,5 +27,6 @@ final class AuthorResourceTest extends WebTestCase
         self::assertSelectorTextContains('h1', 'Authors');
 
         self::assertEquals(3, $crawler->filter('table thead th')->count());
+        self::assertCount(0, $crawler->filter('table.admin-table thead tr th p'));
     }
 }

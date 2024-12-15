@@ -21,7 +21,5 @@
         {% endif %}
     </a>
 {% elseif header.label %}
-    <p {{ attributes.defaults({class: 'text-dark'}) }}>
-        {{ lag_admin.translate(header.label, header.translationDomain, true) }}
-    </p>
+    {{ lag_admin.translate(header.label, header.translationDomain, true) }}
 {% endif %}
