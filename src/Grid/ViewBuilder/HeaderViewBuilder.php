@@ -20,7 +20,6 @@ final readonly class HeaderViewBuilder implements HeaderViewBuilderInterface
         if ($property->getLabel() === false) {
             return new HeaderView(
                 name: $property->getName(),
-                attributes: ['class' => 'border border-0'],
             );
         }
 
@@ -28,11 +27,11 @@ final readonly class HeaderViewBuilder implements HeaderViewBuilderInterface
             name: $property->getName(),
             template: $grid->getHeaderTemplate(),
             label: $property->getLabel() ?: '',
-            sortable: $grid->isSortable() && $property->isSortable(),
             translationDomain: $grid->getTranslationDomain(),
             sort: $context['sort'] ?? null,
             order: $context['order'] ?? null,
-            attributes: $property->getAttributes(),
+            sortable: $grid->isSortable() && $property->isSortable(),
+            attributes: $property->getHeaderAttributes(),
         );
     }
 }
