@@ -5,6 +5,7 @@
 /tests/app/var
 /tests/app/public
 /var
+/TODO.md
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
