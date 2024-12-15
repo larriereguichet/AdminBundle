@@ -78,8 +78,14 @@ final readonly class InitializeResourcePropertiesListener
             }
         }
 
-        if ($property instanceof Link && $property->getText() === null) {
-            $property = $property->withText($property->getName());
+        if ($property instanceof Link) {
+            if ($property->getText() === null) {
+                if ($property->getTextPath() !== null) {
+                    $property = $property->withText(null);
+                } else {
+                    $property = $property->withText($property->getName());
+                }
+            }
         }
 
         if ($property->isSortable() && $property->getSortingPath() === null) {
