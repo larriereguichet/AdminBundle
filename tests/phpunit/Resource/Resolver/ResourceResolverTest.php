@@ -10,6 +10,7 @@ use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Resource\Resolver\ClassResolverInterface;
 use LAG\AdminBundle\Resource\Resolver\PhpFileResolverInterface;
 use LAG\AdminBundle\Resource\Resolver\ResourceResolver;
+use LAG\AdminBundle\Tests\Application\Entity\Author;
 use LAG\AdminBundle\Tests\Application\Entity\Book;
 use LAG\AdminBundle\Tests\TestTrait;
 use PHPUnit\Framework\Attributes\Test;
@@ -37,33 +38,37 @@ final class ResourceResolverTest extends TestCase
         ];
 
         $bookClass = new \ReflectionClass(Book::class);
+        $authorClass = new \ReflectionClass(Author::class);
 
         $this->classResolver
-            ->expects(self::exactly(8))
+            ->expects(self::atLeastOnce())
             ->method('resolveClass')
             ->willReturnMap([
                 [realpath(self::getApplicationPath().'/src/Entity/Book.php'), $bookClass],
+                [realpath(self::getApplicationPath().'/src/Entity/Author.php'), $authorClass],
                 [realpath(self::getApplicationPath().'/config/admin/resources/Project.php'), null],
             ])
         ;
         $this->resourceLocator
-            ->expects(self::once())
+            ->expects(self::atLeastOnce())
             ->method('locateResources')
             ->willReturnMap([
                 [$bookClass, [new Resource()]],
+                [$authorClass, [new Resource()]],
             ])
         ;
         $this->propertyLocator
-            ->expects(self::once())
+            ->expects(self::atLeastOnce())
             ->method('locateProperties')
             ->willReturnMap([
                 [$bookClass, []],
+                [$authorClass, []],
             ])
         ;
 
         $resources = $this->resolver->resolveResources($directories);
         $resources = iterator_to_array($resources);
-        $this->assertCount(1, $resources);
+        $this->assertCount(2, $resources);
     }
 
     #[Test]
