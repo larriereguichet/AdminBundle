@@ -31,6 +31,8 @@ final class BookResourceTest extends WebTestCase
         self::assertEquals('book.isbn', $crawler->filter('table.admin-table thead tr th')->eq(2)->text());
         self::assertEquals('', $crawler->filter('table.admin-table thead tr th')->eq(3)->text());
 
+        self::assertCount(0, $crawler->filter('table.admin-table thead tr th p'));
+
         self::assertCount(5, $crawler->filter('table.admin-table tbody tr'));
 
         self::assertEquals($books[0]->id, $crawler->filter('table.admin-table tbody tr td')->eq(0)->text());
