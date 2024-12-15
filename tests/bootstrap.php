@@ -28,9 +28,8 @@ $application->run($input, new ConsoleOutput());
 $input = new ArrayInput(['command' => 'doctrine:schema:create']);
 $application->run($input, new ConsoleOutput());
 
-//$application->run(new ArrayInput(['command' => 'fixtures:load']), new ConsoleOutput());
-//$output = new ConsoleOutput();
-//$application->run(new ArrayInput(['command' => 'debug:router']), $output);
+$input = new ArrayInput(['command' => 'cache:clear']);
+$application->run($input, new ConsoleOutput());
 
 $finder = (new \Symfony\Component\Finder\Finder())
     ->in(dirname(__DIR__).'/public')
@@ -40,6 +39,5 @@ $finder = (new \Symfony\Component\Finder\Finder())
 foreach ($finder as $file) {
     (new Symfony\Component\Filesystem\Filesystem())
         ->copy($file->getRealPath(), __DIR__.'/app/public/build/'.$file->getRelativePathname());
-
 }
 
