@@ -28,8 +28,6 @@ final readonly class PaginationProvider implements ProviderInterface
         }
 
         if (!$operation->usePagination()) {
-            $data->setMaxResults($operation->getItemsPerPage());
-
             return $data;
         }
         $pager = new Pagerfanta(new QueryAdapter($data, true, true));

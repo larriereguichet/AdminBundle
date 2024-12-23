@@ -19,7 +19,7 @@ final readonly class ActionRenderer implements ActionRendererInterface
     ) {
     }
 
-    public function renderAction(Action $action, mixed $data): string
+    public function renderAction(Action $action, mixed $data = null): string
     {
         if ($action->getTitle() !== null && $action->getAttribute('title') === null) {
             $title = $this->translator->trans($action->getTitle(), [], $action->getTranslationDomain());

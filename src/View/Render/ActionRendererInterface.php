@@ -8,5 +8,5 @@ use LAG\AdminBundle\Resource\Metadata\Action;
 
 interface ActionRendererInterface
 {
-    public function renderAction(Action $action, mixed $data): string;
+    public function renderAction(Action $action, mixed $data = null): string;
 }

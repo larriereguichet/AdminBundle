@@ -11,8 +11,8 @@ use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\InvalidGridException;
 use LAG\AdminBundle\Grid\View\GridView;
 use LAG\AdminBundle\Grid\View\RowView;
+use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\Grid;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -26,7 +26,7 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
     ) {
     }
 
-    public function build(OperationInterface $operation, Grid $grid, mixed $data, array $context = []): GridView
+    public function build(CollectionOperationInterface $operation, Grid $grid, mixed $data, array $context = []): GridView
     {
         $event = new GridEvent($grid, $operation);
         $resource = $operation->getResource();
@@ -56,7 +56,7 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
             template: $grid->getTemplate(),
             component: $grid->getComponent(),
             options: $grid->getOptions(),
-            actions: $this->buildCollectionActions($grid, $data),
+            actions: $this->buildCollectionActions($operation, $grid, $data),
             context: $context,
             containerAttributes: $grid->getContainerAttributes(),
             actionCellAttributes: $grid->getActionCellAttributes(),
@@ -66,12 +66,12 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
         );
     }
 
-    private function buildHeaders(OperationInterface $operation, Grid $grid, array $context): RowView
+    private function buildHeaders(CollectionOperationInterface $operation, Grid $grid, array $context): RowView
     {
         return $this->rowBuilder->buildHeadersRow($operation, $grid, $context);
     }
 
-    private function buildRows(OperationInterface $operation, Grid $grid, mixed $data, array $context): iterable
+    private function buildRows(CollectionOperationInterface $operation, Grid $grid, mixed $data, array $context): iterable
     {
         if (!is_iterable($data)) {
             throw new Exception('Data must be iterable to build a grid.');
@@ -85,18 +85,23 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
         return $rows;
     }
 
-    private function buildCollectionActions(Grid $grid, mixed $data): array
+    private function buildCollectionActions(CollectionOperationInterface $operation, Grid $grid, mixed $data): array
     {
-        $actions = [];
+        $actionViews = [];
+        $actions = $grid->getCollectionActions();
 
-        foreach ($grid->getCollectionActions() as $action) {
-            $action = $this->actionBuilder->buildActions($action, $data);
+        if (count($actions) === 0) {
+            $actions = $operation->getCollectionActions();
+        }
 
-            if ($action !== null) {
-                $actions[] = $action;
+        foreach ($actions as $action) {
+            $actionView = $this->actionBuilder->buildActions($action, $data);
+
+            if ($actionView !== null) {
+                $actionViews[] = $actionView;
             }
         }
 
-        return $actions;
+        return $actionViews;
     }
 }

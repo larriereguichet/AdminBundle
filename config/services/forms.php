@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use LAG\AdminBundle\Form\DataTransformer\TextareaDataTransformer;
 use LAG\AdminBundle\Form\Extension\ChoiceTypeExtension;
 use LAG\AdminBundle\Form\Extension\CollectionTypeExtension;
 use LAG\AdminBundle\Form\Guesser\FormGuesser;
@@ -16,6 +17,7 @@ use LAG\AdminBundle\Form\Type\Resource\LegacyResourceType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceChoiceType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceDataType;
 use LAG\AdminBundle\Form\Type\Security\LoginType;
+use LAG\AdminBundle\Form\Type\Text\TextareaType;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
@@ -58,6 +60,10 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$resourceRegistry', service(ResourceRegistryInterface::class))
         ->tag('form.type')
     ;
+    $services->set(TextareaType::class)
+        ->arg('$dataTransformer', service(TextareaDataTransformer::class))
+        ->tag('form.type')
+    ;
 
     // Form types extensions
     $services->set(CollectionTypeExtension::class)
@@ -69,4 +75,7 @@ return static function (ContainerConfigurator $container): void {
 
     // Form guessers
     $services->set(FormGuesserInterface::class, FormGuesser::class);
+
+    // Data transformers
+    $services->set(TextareaDataTransformer::class);
 };
