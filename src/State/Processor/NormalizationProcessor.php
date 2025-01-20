@@ -17,10 +17,10 @@ final readonly class NormalizationProcessor implements ProcessorInterface
     ) {
     }
 
-    public function process(mixed $data, OperationInterface $operation, array $uriVariables = [], array $context = []): void
+    public function process(mixed $data, OperationInterface $operation, array $urlVariables = [], array $context = []): void
     {
         if ($operation->getInput() === null) {
-            $this->processor->process($data, $operation, $uriVariables, $context);
+            $this->processor->process($data, $operation, $urlVariables, $context);
 
             return;
         }
@@ -32,6 +32,6 @@ final readonly class NormalizationProcessor implements ProcessorInterface
             $operation->getDenormalizationContext(),
         );
 
-        $this->processor->process($denormalizedData, $operation, $uriVariables, $context);
+        $this->processor->process($denormalizedData, $operation, $urlVariables, $context);
     }
 }

@@ -14,8 +14,8 @@ interface ProcessorInterface
      *
      * @param mixed $data Data to process
      * @param OperationInterface $operation The current operation according to the current request url and method
-     * @param array<string, mixed> $uriVariables Variables (for example identifiers) extracted from the request path
+     * @param array<string, mixed> $urlVariables Variables (for example identifiers) extracted from the request path
      * @param array<string, mixed> $context Additional context
      */
-    public function process(mixed $data, OperationInterface $operation, array $uriVariables = [], array $context = []): void;
+    public function process(mixed $data, OperationInterface $operation, array $urlVariables = [], array $context = []): void;
 }

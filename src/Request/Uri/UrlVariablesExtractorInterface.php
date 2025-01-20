@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Request\Uri;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-interface UriVariablesExtractorInterface
+interface UrlVariablesExtractorInterface
 {
     /**
      * @return array<string, string>

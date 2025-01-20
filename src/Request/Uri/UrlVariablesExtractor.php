@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Request\Uri;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class UriVariablesExtractor implements UriVariablesExtractorInterface
+class UrlVariablesExtractor implements UrlVariablesExtractorInterface
 {
     public function extractVariables(OperationInterface $operation, Request $request): array
     {

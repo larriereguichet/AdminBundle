@@ -11,7 +11,7 @@ use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class ResourceRoutingLoader extends Loader
+final class ResourceRoutingLoader extends Loader
 {
     private bool $loaded = false;
 
@@ -63,8 +63,10 @@ class ResourceRoutingLoader extends Loader
                 $this->operationParameter => $operation->getName(),
             ];
 
-            $route = new Route($path, $defaults, [], $identifiers, null, [], $operation->getMethods());
-            $routes->add($operation->getRoute(), $route);
+            $routes->add(
+                $operation->getRoute(),
+                new Route($path, $defaults, [], $identifiers, null, [], $operation->getMethods())
+            );
         }
     }
 }

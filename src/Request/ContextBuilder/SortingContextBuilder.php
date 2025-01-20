@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Request\Context;
+namespace LAG\AdminBundle\Request\ContextBuilder;
 
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-final readonly class SortingContextProvider implements ContextProviderInterface
+final readonly class SortingContextBuilder implements ContextBuilderInterface
 {
     public function __construct(
-        private ContextProviderInterface $contextProvider
+        private ContextBuilderInterface $contextBuilder
     ) {
     }
 
-    public function getContext(OperationInterface $operation, Request $request): array
+    public function buildContext(OperationInterface $operation, Request $request): array
     {
-        $context = $this->contextProvider->getContext($operation, $request);
+        $context = $this->contextBuilder->buildContext($operation, $request);
 
         if (!$operation instanceof CollectionOperationInterface) {
             return $context;

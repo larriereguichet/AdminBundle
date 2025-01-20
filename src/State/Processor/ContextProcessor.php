@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\State\Processor;
 
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use Symfony\Component\Workflow\Registry;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-final readonly class WorkflowProcessor implements ProcessorInterface
+final readonly class ContextProcessor implements ProcessorInterface
 {
     public function __construct(
-        private Registry $workflowRegistry,
         private ProcessorInterface $processor,
+        private RequestStack $requestStack,
+        private ContextBuilderInterface $contextBuilder,
     ) {
     }
 
     public function process(mixed $data, OperationInterface $operation, array $urlVariables = [], array $context = []): void
     {
-        if ($operation->getWorkflow() !== null && $this->workflowRegistry->has($data, $operation->getWorkflow())) {
-            $workflow = $this->workflowRegistry->get($data, $operation->getWorkflow());
-            $workflow->apply($data, $operation->getWorkflowTransition());
-        }
+        $request = $this->requestStack->getCurrentRequest();
+        $context += $this->contextBuilder->buildContext($operation, $request);
 
         $this->processor->process($data, $operation, $urlVariables, $context);
     }

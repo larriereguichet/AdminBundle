@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventDispatcher;
 
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 interface ResourceEventDispatcherInterface
@@ -23,5 +24,11 @@ interface ResourceEventDispatcherInterface
         string $resourceName,
         ?string $operationName = null,
         ?string $gridName = null,
+    ): void;
+
+    public function dispatchOperationEvents(
+        Event $event,
+        string $eventPattern,
+        OperationInterface $operation,
     ): void;
 }

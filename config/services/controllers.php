@@ -9,8 +9,8 @@ use LAG\AdminBundle\Controller\Resource\ResourceController;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Grid\Registry\GridRegistryInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
+use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 
@@ -18,8 +18,8 @@ return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     $services->set(ResourceController::class)
-        ->arg('$uriVariablesExtractor', service(UriVariablesExtractorInterface::class))
-        ->arg('$contextProvider', service(ContextProviderInterface::class))
+        ->arg('$uriVariablesExtractor', service(UrlVariablesExtractorInterface::class))
+        ->arg('$contextBuilder', service(ContextBuilderInterface::class))
         ->arg('$provider', service(ProviderInterface::class))
         ->arg('$processor', service(ProcessorInterface::class))
         ->arg('$formFactory', service('form.factory'))
@@ -30,8 +30,8 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     $services->set(ResourceCollectionController::class)
-        ->arg('$uriVariablesExtractor', service(UriVariablesExtractorInterface::class))
-        ->arg('$contextProvider', service(ContextProviderInterface::class))
+        ->arg('$uriVariablesExtractor', service(UrlVariablesExtractorInterface::class))
+        ->arg('$contextBuilder', service(ContextBuilderInterface::class))
         ->arg('$provider', service(ProviderInterface::class))
         ->arg('$processor', service(ProcessorInterface::class))
         ->arg('$gridRegistry', service(GridRegistryInterface::class))

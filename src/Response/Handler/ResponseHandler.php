@@ -25,13 +25,19 @@ final readonly class ResponseHandler implements ResponseHandlerInterface
     ) {
     }
 
-    public function createResponse(
+    public function createResponse(OperationInterface $operation, mixed $data, ?FormInterface $form = null): Response
+    {
+        // TODO: Implement createResponse() method.
+    }
+
+    public function createCollectionResponse(
         Request $request,
         OperationInterface $operation,
         mixed $data,
         ?FormInterface $form = null,
         ?FormInterface $filterForm = null,
         ?GridView $grid = null,
+        array $context = [],
     ): Response {
         $resourceName = $operation->getResource()->getName();
         $responseCode = $form?->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK;
@@ -40,11 +46,13 @@ final readonly class ResponseHandler implements ResponseHandlerInterface
             $inflector = new EnglishInflector();
             $resourceName = $inflector->pluralize($resourceName)[0];
         }
-        $context = [
+        dump($context);
+        $context += [
             'resource' => $operation->getResource(),
             'operation' => $operation,
             'data' => $data,
             $resourceName => $data,
+            'baseTemplate' => $operation->getBaseTemplate(),
         ];
 
         if ($form !== null) {
@@ -58,11 +66,17 @@ final readonly class ResponseHandler implements ResponseHandlerInterface
         if ($grid !== null) {
             $context['grid'] = $grid;
         }
+        $template = $operation->getTemplate();
 
-        return new Response($this->environment->render($operation->getTemplate(), $context), $responseCode);
+        if (($context['partial'] ?? false) === true) {
+            $context['baseTemplate'] = '@LAGAdmin/partial.html.twig';
+        }
+        dump($context);
+
+        return new Response($this->environment->render($template, $context), $responseCode);
     }
 
-    public function createRedirectResponse(OperationInterface $operation, mixed $data, array $context = []): Response
+    public function createRedirectResponse(OperationInterface $operation, mixed $data, array $context = []): RedirectResponse
     {
         if ($operation->getRedirectOperation()) {
             $redirectUrl = $this->urlGenerator->generateFromOperationName(

@@ -8,6 +8,7 @@ use LAG\AdminBundle\Grid\View\GridView;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -20,18 +21,33 @@ final readonly class JsonResponseHandler implements ResponseHandlerInterface
     ) {
     }
 
-    public function createResponse(Request $request, OperationInterface $operation, mixed $data, ?FormInterface $form = null, ?FormInterface $filterForm = null, ?GridView $grid = null): Response
-    {
+    public function createCollectionResponse(
+        Request $request,
+        OperationInterface $operation,
+        mixed $data,
+        ?FormInterface $form = null,
+        ?FormInterface $filterForm = null,
+        ?GridView $grid = null,
+        array $context = [],
+    ): Response {
         if ($request->getContentTypeFormat() === 'json') {
             $content = $this->serializer->serialize($data, 'json', $operation->getNormalizationContext());
 
             return new JsonResponse($content, Response::HTTP_OK, [], true);
         }
 
-        return $this->responseHandler->createResponse($request, $operation, $data, $form, $filterForm, $grid);
+        return $this->responseHandler->createCollectionResponse(
+            request: $request,
+            operation: $operation,
+            data: $data,
+            form: $form,
+            filterForm: $filterForm,
+            grid: $grid,
+            context: $context,
+        );
     }
 
-    public function createRedirectResponse(OperationInterface $operation, mixed $data, array $context = []): Response
+    public function createRedirectResponse(OperationInterface $operation, mixed $data, array $context = []): RedirectResponse
     {
         return $this->responseHandler->createRedirectResponse($operation, $data, $context);
     }

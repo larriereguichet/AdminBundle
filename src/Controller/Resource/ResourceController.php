@@ -7,8 +7,8 @@ namespace LAG\AdminBundle\Controller\Resource;
 use LAG\AdminBundle\Event\ResourceControllerEvent;
 use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
+use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
@@ -21,8 +21,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 final readonly class ResourceController
 {
     public function __construct(
-        private UriVariablesExtractorInterface $uriVariablesExtractor,
-        private ContextProviderInterface $contextProvider,
+        private UrlVariablesExtractorInterface $uriVariablesExtractor,
+        private ContextBuilderInterface $contextBuilder,
         private ProviderInterface $provider,
         private ProcessorInterface $processor,
         private FormFactoryInterface $formFactory,
@@ -34,8 +34,8 @@ final readonly class ResourceController
     public function __invoke(Request $request, OperationInterface $operation): Response
     {
         $uriVariables = $this->uriVariablesExtractor->extractVariables($operation, $request);
-        $context = $this->contextProvider->getContext($operation, $request);
-        $data = $this->provider->provide($operation, $uriVariables, $context);
+        $context = $this->contextBuilder->buildContext($operation, $request);
+        $data = $this->provider->provide($operation, $uriVariables, ['request' => $request]);
         $form = null;
 
         if ($data === null) {
@@ -50,7 +50,8 @@ final readonly class ResourceController
                 $form->submit($request->toArray());
             }
 
-            if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid() && ($context['partial'] ?? true) === false) {
+                throw new \Exception();
                 $data = $form->getData();
                 $this->processor->process($data, $operation, $uriVariables, $context);
 
@@ -69,11 +70,12 @@ final readonly class ResourceController
             return $event->getResponse();
         }
 
-        return $this->responseHandler->createResponse(
+        return $this->responseHandler->createCollectionResponse(
             request: $request,
             operation: $operation,
             data: $data,
             form: $form,
+            context: $context,
         );
     }
 }

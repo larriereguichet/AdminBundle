@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Request\Context;
 
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Request\Context\FilterContextProvider;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
+use LAG\AdminBundle\Request\ContextBuilder\FilterContextBuilder;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
 use LAG\AdminBundle\Resource\Metadata\Index;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class FilterContextProviderTest extends TestCase
 {
-    private FilterContextProvider $provider;
+    private FilterContextBuilder $provider;
     private MockObject $decorated;
     private MockObject $formFactory;
 
@@ -38,7 +38,7 @@ final class FilterContextProviderTest extends TestCase
 
         $this->decorated
             ->expects(self::once())
-            ->method('getContext')
+            ->method('buildContext')
             ->with($operation, $request)
             ->willReturn(['some-key' => 'some-value'])
         ;
@@ -65,7 +65,7 @@ final class FilterContextProviderTest extends TestCase
             ->willReturn(['my_filter' => 'my_value'])
         ;
 
-        $context = $this->provider->getContext($operation, $request);
+        $context = $this->provider->buildContext($operation, $request);
 
         self::assertEquals('my_value', $context['filters']['my_filter']);
     }
@@ -78,7 +78,7 @@ final class FilterContextProviderTest extends TestCase
 
         $this->decorated
             ->expects(self::once())
-            ->method('getContext')
+            ->method('buildContext')
             ->with($operation, $request)
             ->willReturn(['some-key' => 'some-value'])
         ;
@@ -86,7 +86,7 @@ final class FilterContextProviderTest extends TestCase
             ->expects(self::never())
             ->method('create')
         ;
-        $context = $this->provider->getContext($operation, $request);
+        $context = $this->provider->buildContext($operation, $request);
 
         self::assertEquals(['some-key' => 'some-value'], $context);
     }
@@ -101,9 +101,9 @@ final class FilterContextProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = self::createMock(ContextProviderInterface::class);
+        $this->decorated = self::createMock(ContextBuilderInterface::class);
         $this->formFactory = self::createMock(FormFactoryInterface::class);
-        $this->provider = new FilterContextProvider(
+        $this->provider = new FilterContextBuilder(
             $this->decorated,
             $this->formFactory,
         );

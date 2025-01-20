@@ -15,12 +15,12 @@ final readonly class CompositeProvider implements ProviderInterface
     ) {
     }
 
-    public function provide(OperationInterface $operation, array $uriVariables = [], array $context = []): mixed
+    public function provide(OperationInterface $operation, array $urlVariables = [], array $context = []): mixed
     {
         /** @var ProviderInterface $provider */
         foreach ($this->providers as $provider) {
             if ($provider::class === $operation->getProvider()) {
-                return $provider->provide($operation, $uriVariables, $context);
+                return $provider->provide($operation, $urlVariables, $context);
             }
         }
 

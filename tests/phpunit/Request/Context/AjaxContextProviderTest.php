@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Request\Context;
 
-use LAG\AdminBundle\Request\Context\AjaxContextProvider;
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
+use LAG\AdminBundle\Request\ContextBuilder\AjaxContextBuilder;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Resource\Metadata\Update;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class AjaxContextProviderTest extends TestCase
 {
-    private AjaxContextProvider $provider;
+    private AjaxContextBuilder $provider;
     private MockObject $decorated;
 
     #[Test]
@@ -25,12 +25,12 @@ final class AjaxContextProviderTest extends TestCase
 
         $this->decorated
             ->expects(self::once())
-            ->method('getContext')
+            ->method('buildContext')
             ->with($operation, $request)
             ->willReturn(['a_key' => 'a_value'])
         ;
 
-        $context = $this->provider->getContext($operation, $request);
+        $context = $this->provider->buildContext($operation, $request);
 
         self::assertEquals([
             'a_key' => 'a_value',
@@ -40,7 +40,7 @@ final class AjaxContextProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = self::createMock(ContextProviderInterface::class);
-        $this->provider = new AjaxContextProvider($this->decorated);
+        $this->decorated = self::createMock(ContextBuilderInterface::class);
+        $this->provider = new AjaxContextBuilder($this->decorated);
     }
 }

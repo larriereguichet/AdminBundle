@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventDispatcher;
 
+use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -54,6 +55,17 @@ final readonly class ResourceEventDispatcher implements ResourceEventDispatcherI
         foreach ($eventNames as $eventName) {
             $this->eventDispatcher->dispatch($event, $eventName);
         }
+    }
+
+    public function dispatchOperationEvents(Event $event, string $eventPattern, OperationInterface $operation): void
+    {
+        $this->dispatchEvents(
+            $event,
+            $eventPattern,
+            $operation->getResource()->getApplication(),
+            $operation->getResource()->getName(),
+            $operation->getName(),
+        );
     }
 
     private function buildEvents(

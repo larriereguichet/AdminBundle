@@ -18,7 +18,6 @@ class ResourceControllerEvent extends Event
         private readonly OperationInterface $operation,
         private readonly Request $request,
         private readonly mixed $data,
-        private readonly array $context,
     ) {
     }
 
@@ -50,10 +49,5 @@ class ResourceControllerEvent extends Event
     public function setResponse(?Response $response): void
     {
         $this->response = $response;
-    }
-
-    public function getContext(): array
-    {
-        return $this->context;
     }
 }

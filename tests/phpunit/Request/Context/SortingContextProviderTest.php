@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Request\Context;
 
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Request\Context\SortingContextProvider;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
+use LAG\AdminBundle\Request\ContextBuilder\SortingContextBuilder;
 use LAG\AdminBundle\Resource\Metadata\Create;
 use LAG\AdminBundle\Resource\Metadata\Delete;
 use LAG\AdminBundle\Resource\Metadata\Index;
@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class SortingContextProviderTest extends TestCase
 {
-    private SortingContextProvider $provider;
+    private SortingContextBuilder $provider;
     private MockObject $decorated;
 
     #[Test]
@@ -35,12 +35,12 @@ final class SortingContextProviderTest extends TestCase
 
         $this->decorated
             ->expects(self::once())
-            ->method('getContext')
+            ->method('buildContext')
             ->with($operation, $request)
             ->willReturn(['some-key' => 'some-value'])
         ;
 
-        $context = $this->provider->getContext($operation, $request);
+        $context = $this->provider->buildContext($operation, $request);
 
         self::assertEquals(23, $context['_page']);
         self::assertEquals('name', $context['sort']);
@@ -56,11 +56,11 @@ final class SortingContextProviderTest extends TestCase
 
         $this->decorated
             ->expects(self::once())
-            ->method('getContext')
+            ->method('buildContext')
             ->with($operation, $request)
             ->willReturn(['some-key' => 'some-value'])
         ;
-        $context = $this->provider->getContext($operation, $request);
+        $context = $this->provider->buildContext($operation, $request);
 
         self::assertEquals(['some-key' => 'some-value'], $context);
     }
@@ -75,7 +75,7 @@ final class SortingContextProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = self::createMock(ContextProviderInterface::class);
-        $this->provider = new SortingContextProvider($this->decorated);
+        $this->decorated = self::createMock(ContextBuilderInterface::class);
+        $this->provider = new SortingContextBuilder($this->decorated);
     }
 }

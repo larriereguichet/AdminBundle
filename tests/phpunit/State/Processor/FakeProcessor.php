@@ -9,7 +9,7 @@ use LAG\AdminBundle\State\Processor\ProcessorInterface;
 
 class FakeProcessor implements ProcessorInterface
 {
-    public function process(mixed $data, OperationInterface $operation, array $uriVariables = [], array $context = []): void
+    public function process(mixed $data, OperationInterface $operation, array $urlVariables = [], array $context = []): void
     {
     }
 }

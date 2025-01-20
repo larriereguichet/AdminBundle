@@ -6,8 +6,8 @@ namespace LAG\AdminBundle\Tests\Controller\Resource;
 
 use LAG\AdminBundle\Controller\Resource\ResourceController;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
+use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
@@ -61,7 +61,7 @@ final class ResourceControllerTest extends TestCase
         ;
         $this->contextProvider
             ->expects(self::once())
-            ->method('getContext')
+            ->method('buildContext')
             ->with($operation, $request)
             ->willReturn(['page' => 1])
         ;
@@ -78,7 +78,7 @@ final class ResourceControllerTest extends TestCase
         ;
         $this->responseHandler
             ->expects(self::once())
-            ->method('createResponse')
+            ->method('createCollectionResponse')
             ->willReturn(new Response(content: 'some html'))
         ;
 
@@ -112,7 +112,7 @@ final class ResourceControllerTest extends TestCase
         $this
             ->contextProvider
             ->expects(self::once())
-            ->method('getContext')
+            ->method('buildContext')
             ->with($operation, $request)
             ->willReturn(['page' => 1])
         ;
@@ -163,7 +163,7 @@ final class ResourceControllerTest extends TestCase
         ;
         $this->responseHandler
             ->expects($this->never())
-            ->method('createResponse')
+            ->method('createCollectionResponse')
         ;
 
         $response = $this->controller->__invoke($request, $operation);
@@ -174,8 +174,8 @@ final class ResourceControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->uriVariablesExtractor = self::createMock(UriVariablesExtractorInterface::class);
-        $this->contextProvider = self::createMock(ContextProviderInterface::class);
+        $this->uriVariablesExtractor = self::createMock(UrlVariablesExtractorInterface::class);
+        $this->contextProvider = self::createMock(ContextBuilderInterface::class);
         $this->provider = self::createMock(ProviderInterface::class);
         $this->processor = self::createMock(ProcessorInterface::class);
         $this->formFactory = self::createMock(FormFactoryInterface::class);

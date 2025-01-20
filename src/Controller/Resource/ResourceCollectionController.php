@@ -9,8 +9,8 @@ use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Grid\Registry\GridRegistryInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
+use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
@@ -23,8 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
 final readonly class ResourceCollectionController
 {
     public function __construct(
-        private UriVariablesExtractorInterface $uriVariablesExtractor,
-        private ContextProviderInterface $contextProvider,
+        private UrlVariablesExtractorInterface $uriVariablesExtractor,
+        private ContextBuilderInterface $contextBuilder,
         private ProviderInterface $provider,
         private ProcessorInterface $processor,
         private GridRegistryInterface $gridRegistry,
@@ -38,7 +38,7 @@ final readonly class ResourceCollectionController
     public function __invoke(Request $request, CollectionOperationInterface $operation): Response
     {
         $uriVariables = $this->uriVariablesExtractor->extractVariables($operation, $request);
-        $context = $this->contextProvider->getContext($operation, $request);
+        $context = $this->contextBuilder->buildContext($operation, $request);
         $filterForm = null;
 
         if ($operation->getFilterForm() !== null) {
@@ -83,7 +83,7 @@ final readonly class ResourceCollectionController
             return $event->getResponse();
         }
 
-        return $this->responseHandler->createResponse(
+        return $this->responseHandler->createCollectionResponse(
             request: $request,
             operation: $operation,
             data: $data,

@@ -18,7 +18,7 @@ final readonly class ORMProvider implements ProviderInterface
     ) {
     }
 
-    public function provide(OperationInterface $operation, array $uriVariables = [], array $context = []): mixed
+    public function provide(OperationInterface $operation, array $urlVariables = [], array $context = []): mixed
     {
         if ($operation instanceof Create) {
             $class = $operation->getResource()->getDataClass();
@@ -38,10 +38,10 @@ final readonly class ORMProvider implements ProviderInterface
         $index = 0;
 
         foreach ($operation->getIdentifiers() as $identifier) {
-            if ($uriVariables[$identifier] ?? false) {
+            if ($urlVariables[$identifier] ?? false) {
                 $parameterName = 'identifier_'.$index;
                 $queryBuilder->andWhere(\sprintf($rootAlias.'.%s = :%s', $identifier, $parameterName))
-                    ->setParameter($parameterName, $uriVariables[$identifier])
+                    ->setParameter($parameterName, $urlVariables[$identifier])
                 ;
                 ++$index;
             }

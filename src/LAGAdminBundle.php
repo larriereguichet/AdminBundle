@@ -9,7 +9,7 @@ use LAG\AdminBundle\DependencyInjection\CompilerPass\WorkflowCompilerPass;
 use LAG\AdminBundle\DependencyInjection\LAGAdminExtension;
 use LAG\AdminBundle\Grid\Builder\GridBuilderInterface;
 use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Resource\Locator\MetadataLocatorInterface;
 use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
@@ -27,7 +27,7 @@ final class LAGAdminBundle extends AbstractBundle
 
         $container->registerForAutoconfiguration(ProviderInterface::class)->addTag('lag_admin.state_provider');
         $container->registerForAutoconfiguration(ProcessorInterface::class)->addTag('lag_admin.state_processor');
-        $container->registerForAutoconfiguration(ContextProviderInterface::class)->addTag('lag_admin.request_context_provider');
+        $container->registerForAutoconfiguration(ContextBuilderInterface::class)->addTag('lag_admin.request_context_provider');
         $container->registerForAutoconfiguration(MetadataLocatorInterface::class)->addTag('lag_admin.metadata_locator');
         $container->registerForAutoconfiguration(ResourceLocatorInterface::class)->addTag('lag_admin.resource_locator');
         $container->registerForAutoconfiguration(GridBuilderInterface::class)->addTag('lag_admin.grid_builder');

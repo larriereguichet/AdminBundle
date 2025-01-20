@@ -10,8 +10,8 @@ use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Grid\Registry\GridRegistryInterface;
 use LAG\AdminBundle\Grid\View\GridView;
 use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
+use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\Resource\Metadata\Grid;
 use LAG\AdminBundle\Resource\Metadata\Index;
 use LAG\AdminBundle\Resource\Metadata\Resource;
@@ -103,7 +103,7 @@ final class ResourceCollectionControllerTest extends TestCase
         ;
         $this->contextProvider
             ->expects(self::once())
-            ->method('getContext')
+            ->method('buildContext')
             ->with($operation, $request)
             ->willReturn(['a_context' => 'a_value'])
         ;
@@ -127,7 +127,7 @@ final class ResourceCollectionControllerTest extends TestCase
         ;
         $this->responseHandler
             ->expects(self::once())
-            ->method('createResponse')
+            ->method('createCollectionResponse')
             ->with(
                 $request,
                 $operation,
@@ -146,8 +146,8 @@ final class ResourceCollectionControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->uriVariablesExtractor = self::createMock(UriVariablesExtractorInterface::class);
-        $this->contextProvider = self::createMock(ContextProviderInterface::class);
+        $this->uriVariablesExtractor = self::createMock(UrlVariablesExtractorInterface::class);
+        $this->contextProvider = self::createMock(ContextBuilderInterface::class);
         $this->provider = self::createMock(ProviderInterface::class);
         $this->processor = self::createMock(ProcessorInterface::class);
         $this->responseHandler = self::createMock(ResponseHandlerInterface::class);

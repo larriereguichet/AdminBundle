@@ -17,7 +17,7 @@ final readonly class LatestBookProvider implements ProviderInterface
     ) {
     }
 
-    public function provide(OperationInterface $operation, array $uriVariables = [], array $context = []): ?Book
+    public function provide(OperationInterface $operation, array $urlVariables = [], array $context = []): ?Book
     {
         return $this->bookRepository->createQueryBuilder('books')
             ->orderBy('books.id', 'DESC')

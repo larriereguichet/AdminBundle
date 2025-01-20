@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Request\Context;
+namespace LAG\AdminBundle\Request\ContextBuilder;
 
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-final readonly class FilterContextProvider implements ContextProviderInterface
+final readonly class FilterContextBuilder implements ContextBuilderInterface
 {
     public function __construct(
-        private ContextProviderInterface $contextProvider,
+        private ContextBuilderInterface $contextBuilder,
         private FormFactoryInterface $formFactory,
     ) {
     }
 
-    public function getContext(OperationInterface $operation, Request $request): array
+    public function buildContext(OperationInterface $operation, Request $request): array
     {
-        $context = $this->contextProvider->getContext($operation, $request);
+        $context = $this->contextBuilder->buildContext($operation, $request);
 
         if (!$operation instanceof CollectionOperationInterface || !$operation->getFilterForm()) {
             return $context;

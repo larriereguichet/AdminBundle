@@ -17,7 +17,7 @@ final readonly class EventProcessor implements ProcessorInterface
     ) {
     }
 
-    public function process(mixed $data, OperationInterface $operation, array $uriVariables = [], array $context = []): void
+    public function process(mixed $data, OperationInterface $operation, array $urlVariables = [], array $context = []): void
     {
         $this->eventDispatcher->dispatchEvents(
             new DataEvent($data, $operation),
@@ -27,7 +27,7 @@ final readonly class EventProcessor implements ProcessorInterface
             $operation->getName(),
         );
 
-        $this->processor->process($data, $operation, $uriVariables, $context);
+        $this->processor->process($data, $operation, $urlVariables, $context);
 
         $this->eventDispatcher->dispatchEvents(
             new DataEvent($data, $operation),

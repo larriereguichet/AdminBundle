@@ -72,7 +72,7 @@ final class ResponseHandlerTest extends TestCase
             ])
         ;
 
-        $this->handler->createResponse($request, $operation, $data, $form, $filterForm, $gridView);
+        $this->handler->createCollectionResponse($request, $operation, $data, $form, $filterForm, $gridView);
     }
 
     #[Test]

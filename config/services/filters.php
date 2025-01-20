@@ -27,15 +27,6 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$decorated', service('.inner'))
     ;
 
-    // Providers
-    $services->set(FilterProvider::class)
-        ->decorate(ProviderInterface::class, priority: 220)
-        ->arg('$provider', service('.inner'))
-        ->arg('$filterValuesResolver', service(FilterValuesResolverInterface::class))
-        ->arg('$filterApplicator', service(FilterApplicatorInterface::class))
-        ->tag('lag_admin.state_provider')
-    ;
-
     // Applicators
     $services->set(FilterApplicatorInterface::class, CompositeFilterApplicator::class)
         ->arg('$applicators', tagged_iterator(FilterApplicatorInterface::SERVICE_TAG))

@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Request\Context\AjaxContextProvider;
-use LAG\AdminBundle\Request\Context\ContextProvider;
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Request\Context\FilterContextProvider;
-use LAG\AdminBundle\Request\Context\SortingContextProvider;
+use LAG\AdminBundle\Request\ContextBuilder\AjaxContextBuilder;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilder;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
+use LAG\AdminBundle\Request\ContextBuilder\FilterContextBuilder;
+use LAG\AdminBundle\Request\ContextBuilder\PartialContextBuilder;
+use LAG\AdminBundle\Request\ContextBuilder\SortingContextBuilder;
 use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractor;
 use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
 use LAG\AdminBundle\Request\Resolver\OperationValueResolver;
 use LAG\AdminBundle\Request\Resolver\ResourceValueResolver;
-use LAG\AdminBundle\Request\Uri\UriVariablesExtractor;
-use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
+use LAG\AdminBundle\Request\Uri\UrlVariablesExtractor;
+use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Response\Handler\JsonResponseHandler;
 use LAG\AdminBundle\Response\Handler\ResponseHandler;
@@ -41,22 +42,26 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$resourceParameter', param('lag_admin.resource_parameter'))
         ->arg('$operationParameter', param('lag_admin.operation_parameter'))
     ;
-    $services->set(UriVariablesExtractorInterface::class, UriVariablesExtractor::class);
+    $services->set(UrlVariablesExtractorInterface::class, UrlVariablesExtractor::class);
 
-    // Request context providers
-    $services->set(ContextProviderInterface::class, ContextProvider::class);
-    $services->set(SortingContextProvider::class)
-        ->decorate(id: ContextProviderInterface::class, priority: 200)
-        ->arg('$contextProvider', service('.inner'))
+    // Request context builders
+    $services->set(ContextBuilderInterface::class, ContextBuilder::class);
+    $services->set(SortingContextBuilder::class)
+        ->decorate(id: ContextBuilderInterface::class, priority: 200)
+        ->arg('$contextBuilder', service('.inner'))
     ;
-    $services->set(AjaxContextProvider::class)
-        ->decorate(id: ContextProviderInterface::class, priority: 200)
-        ->arg('$contextProvider', service('.inner'))
+    $services->set(AjaxContextBuilder::class)
+        ->decorate(id: ContextBuilderInterface::class, priority: 200)
+        ->arg('$contextBuilder', service('.inner'))
     ;
-    $services->set(FilterContextProvider::class)
-        ->decorate(id: ContextProviderInterface::class, priority: 200)
-        ->arg('$contextProvider', service('.inner'))
+    $services->set(FilterContextBuilder::class)
+        ->decorate(id: ContextBuilderInterface::class, priority: 200)
+        ->arg('$contextBuilder', service('.inner'))
         ->arg('$formFactory', service('form.factory'))
+    ;
+    $services->set(PartialContextBuilder::class)
+        ->decorate(id: ContextBuilderInterface::class, priority: 200)
+        ->arg('$contextBuilder', service('.inner'))
     ;
 
     // Response handlers

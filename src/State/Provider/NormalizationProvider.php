@@ -25,9 +25,9 @@ final readonly class NormalizationProvider implements ProviderInterface
      *   - the operation is collection and data is an array; other data formats should be handled by its proper provider
      *   - the operation is not a collection and data are either an array or an object of the operation data class.
      */
-    public function provide(OperationInterface $operation, array $uriVariables = [], array $context = []): mixed
+    public function provide(OperationInterface $operation, array $urlVariables = [], array $context = []): mixed
     {
-        $data = $this->provider->provide($operation, $uriVariables, $context);
+        $data = $this->provider->provide($operation, $urlVariables, $context);
 
         if (!$this->supports($operation, $data)) {
             return $data;

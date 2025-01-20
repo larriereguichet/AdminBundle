@@ -22,7 +22,7 @@ final readonly class ORMProcessor implements ProcessorInterface
     public function process(
         mixed $data,
         OperationInterface $operation,
-        array $uriVariables = [],
+        array $urlVariables = [],
         array $context = []
     ): void {
         $manager = $this->registry->getManagerForClass($operation->getResource()->getDataClass());

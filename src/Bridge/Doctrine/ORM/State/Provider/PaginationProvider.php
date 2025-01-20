@@ -19,9 +19,9 @@ final readonly class PaginationProvider implements ProviderInterface
     ) {
     }
 
-    public function provide(OperationInterface $operation, array $uriVariables = [], array $context = []): mixed
+    public function provide(OperationInterface $operation, array $urlVariables = [], array $context = []): mixed
     {
-        $data = $this->provider->provide($operation, $uriVariables, $context);
+        $data = $this->provider->provide($operation, $urlVariables, $context);
 
         if (!$operation instanceof CollectionOperationInterface || !$this->shouldPaginate($operation, $data)) {
             return $data;
