@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Response\Handler;
 
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\SerializerInterface;
 
-final readonly class JsonResponseHandler implements ResponseHandlerInterface
+final readonly class ContextResponseHandler implements ResponseHandlerInterface
 {
     public function __construct(
-        private SerializerInterface $serializer,
+        private ResponseHandlerInterface $responseHandler,
+        private ContextBuilderInterface $contextBuilder,
     ) {
     }
 
     public function supports(OperationInterface $operation, mixed $data, Request $request, array $context = []): bool
     {
-        return $request->getContentTypeFormat() === 'json';
+        return $this->responseHandler->supports($operation, $data, $request, $context);
     }
 
     public function createResponse(OperationInterface $operation, mixed $data, Request $request, array $context = []): Response
     {
-        $content = $this->serializer->serialize($data, 'json', $operation->getNormalizationContext());
+        $context += $this->contextBuilder->buildContext($operation, $request);
 
-        return new JsonResponse($content, Response::HTTP_OK, [], true);
+        return $this->responseHandler->createResponse($operation, $data, $request, $context);
     }
 }

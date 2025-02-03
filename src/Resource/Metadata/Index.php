@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Resource\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
-use LAG\AdminBundle\Controller\Resource\ResourceCollectionController;
+use LAG\AdminBundle\Controller\Resource\IndexResources;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 
 /**
@@ -24,7 +24,7 @@ class Index extends CollectionOperation
         ?string $template = '@LAGAdmin/resources/index.html.twig',
         ?string $baseTemplate = null,
         ?array $permissions = null,
-        ?string $controller = ResourceCollectionController::class,
+        ?string $controller = IndexResources::class,
         ?string $route = null,
         array $routeParameters = [],
         array $methods = [],

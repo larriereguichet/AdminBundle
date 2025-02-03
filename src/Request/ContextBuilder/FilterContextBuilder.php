@@ -12,18 +12,20 @@ use Symfony\Component\HttpFoundation\Request;
 final readonly class FilterContextBuilder implements ContextBuilderInterface
 {
     public function __construct(
-        private ContextBuilderInterface $contextBuilder,
         private FormFactoryInterface $formFactory,
     ) {
     }
 
+    public function supports(OperationInterface $operation, Request $request): bool
+    {
+        return $operation instanceof CollectionOperationInterface && $operation->getFilterForm() !== null;
+    }
+
+    /** @param CollectionOperationInterface $operation */
     public function buildContext(OperationInterface $operation, Request $request): array
     {
-        $context = $this->contextBuilder->buildContext($operation, $request);
+        $context = [];
 
-        if (!$operation instanceof CollectionOperationInterface || !$operation->getFilterForm()) {
-            return $context;
-        }
         $form = $this->formFactory->create($operation->getFilterForm(), [], $operation->getFilterFormOptions());
         $form->handleRequest($request);
 

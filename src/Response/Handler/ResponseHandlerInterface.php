@@ -13,21 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 interface ResponseHandlerInterface
 {
-    public function createResponse(
-        OperationInterface $operation,
-        mixed $data,
-        ?FormInterface $form = null,
-    ): Response;
+    public function supports(OperationInterface $operation, mixed $data, Request $request, array $context = []): bool;
 
-    public function createCollectionResponse(
-        Request $request,
-        OperationInterface $operation,
-        mixed $data,
-        ?FormInterface $form = null,
-        ?FormInterface $filterForm = null,
-        ?GridView $grid = null,
-        array $context = [],
-    ): Response;
-
-    public function createRedirectResponse(OperationInterface $operation, mixed $data, array $context = []): RedirectResponse;
+    public function createResponse(OperationInterface $operation, mixed $data, Request $request, array $context = []): Response;
 }

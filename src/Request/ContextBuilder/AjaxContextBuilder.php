@@ -9,19 +9,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 final readonly class AjaxContextBuilder implements ContextBuilderInterface
 {
-    public function __construct(
-        private ContextBuilderInterface $contextBuilder
-    ) {
+    public function supports(OperationInterface $operation, Request $request): bool
+    {
+        return $operation->useAjax();
     }
 
     public function buildContext(OperationInterface $operation, Request $request): array
     {
-        $context = $this->contextBuilder->buildContext($operation, $request);
-
-        if (!$operation->useAjax()) {
-            return $context;
-        }
-
+        $context = [];
+        
         if ($request->getContentTypeFormat() === 'json') {
             $context['json'] = true;
         }

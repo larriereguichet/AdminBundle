@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Resource\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
-use LAG\AdminBundle\Controller\Resource\ResourceController;
+use LAG\AdminBundle\Controller\Resource\ProcessResource;
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
 
 /**
@@ -24,7 +24,7 @@ class Delete extends Operation
         ?string $template = '@LAGAdmin/resources/delete.html.twig',
         ?string $baseTemplate = null,
         ?array $permissions = null,
-        ?string $controller = ResourceController::class,
+        ?string $controller = ProcessResource::class,
         ?string $route = null,
         ?array $routeParameters = null,
         array $methods = ['POST', 'GET'],

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Request\ContextBuilder\AjaxContextBuilder;
-use LAG\AdminBundle\Request\ContextBuilder\ContextBuilder;
+use LAG\AdminBundle\Request\ContextBuilder\CompositeContextBuilder;
+use LAG\AdminBundle\Request\ContextBuilder\OperationContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Request\ContextBuilder\FilterContextBuilder;
+use LAG\AdminBundle\Request\ContextBuilder\PaginationContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\PartialContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\SortingContextBuilder;
 use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractor;
@@ -17,9 +19,13 @@ use LAG\AdminBundle\Request\Resolver\ResourceValueResolver;
 use LAG\AdminBundle\Request\Uri\UrlVariablesExtractor;
 use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
+use LAG\AdminBundle\Response\Handler\CompositeResponseHandler;
+use LAG\AdminBundle\Response\Handler\ContextResponseHandler;
 use LAG\AdminBundle\Response\Handler\JsonResponseHandler;
+use LAG\AdminBundle\Response\Handler\RedirectRespondHandler;
 use LAG\AdminBundle\Response\Handler\ResponseHandler;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
+use LAG\AdminBundle\Response\Handler\TemplateResponseHandler;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 
 return static function (ContainerConfigurator $container): void {
@@ -45,34 +51,51 @@ return static function (ContainerConfigurator $container): void {
     $services->set(UrlVariablesExtractorInterface::class, UrlVariablesExtractor::class);
 
     // Request context builders
-    $services->set(ContextBuilderInterface::class, ContextBuilder::class);
+    $services->set(ContextBuilderInterface::class, CompositeContextBuilder::class)
+        ->arg('$contextBuilders', tagged_iterator(ContextBuilderInterface::SERVICE_TAG))
+        ->alias('lag_admin.request.context_builder', ContextBuilderInterface::class)
+    ;
     $services->set(SortingContextBuilder::class)
-        ->decorate(id: ContextBuilderInterface::class, priority: 200)
-        ->arg('$contextBuilder', service('.inner'))
+        ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
     ;
     $services->set(AjaxContextBuilder::class)
-        ->decorate(id: ContextBuilderInterface::class, priority: 200)
-        ->arg('$contextBuilder', service('.inner'))
+        ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
     ;
     $services->set(FilterContextBuilder::class)
-        ->decorate(id: ContextBuilderInterface::class, priority: 200)
-        ->arg('$contextBuilder', service('.inner'))
+        ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
         ->arg('$formFactory', service('form.factory'))
     ;
     $services->set(PartialContextBuilder::class)
-        ->decorate(id: ContextBuilderInterface::class, priority: 200)
-        ->arg('$contextBuilder', service('.inner'))
+        ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
+    ;
+    $services->set(PaginationContextBuilder::class)
+        ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
     ;
 
     // Response handlers
-    $services->set(ResponseHandlerInterface::class, ResponseHandler::class)
-        ->arg('$environment', service('twig'))
-        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
+    $services->set(ResponseHandlerInterface::class, CompositeResponseHandler::class)
+        ->arg('$responseHandlers', tagged_iterator('lag_admin.response_handler', exclude: [
+            CompositeResponseHandler::class,
+            ContextResponseHandler::class,
+        ]))
+        ->tag('lag_admin.response_handler')
         ->alias('lag_admin.response_handler', ResponseHandlerInterface::class)
     ;
-    $services->set(JsonResponseHandler::class)
+    $services->set(ContextResponseHandler::class)
+        ->decorate(id: ResponseHandlerInterface::class, priority: -250)
         ->arg('$responseHandler', service('.inner'))
+        ->arg('$contextBuilder', service('lag_admin.request.context_builder'))
+    ;
+    $services->set(JsonResponseHandler::class)
         ->arg('$serializer', service('serializer'))
-        ->decorate(ResponseHandlerInterface::class)
+        ->tag('lag_admin.response_handler')
+    ;
+    $services->set(RedirectRespondHandler::class)
+        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
+        ->tag('lag_admin.response_handler')
+    ;
+    $services->set(TemplateResponseHandler::class)
+        ->arg('$environment', service('twig'))
+        ->tag('lag_admin.response_handler')
     ;
 };

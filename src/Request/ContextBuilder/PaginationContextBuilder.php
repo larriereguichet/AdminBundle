@@ -8,26 +8,16 @@ use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Resource\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-final readonly class SortingContextBuilder implements ContextBuilderInterface
+final readonly class PaginationContextBuilder implements ContextBuilderInterface
 {
     public function supports(OperationInterface $operation, Request $request): bool
     {
-        return $operation instanceof CollectionOperationInterface;
+        return $operation instanceof CollectionOperationInterface && $request->query->has('page');
     }
 
     /** @param CollectionOperationInterface $operation */
     public function buildContext(OperationInterface $operation, Request $request): array
     {
-        $context = [];
-
-        if ($request->query->has('sort')) {
-            $context['sort'] = $request->query->get('sort');
-        }
-
-        if ($request->query->has('order')) {
-            $context['order'] = strtoupper($request->query->get('order'));
-        }
-
-        return $context;
+        return ['page' => $request->query->getInt($operation->getPageParameter(), 1)];
     }
 }

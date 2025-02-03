@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Resource\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
-use LAG\AdminBundle\Controller\Resource\ResourceController;
+use LAG\AdminBundle\Controller\Resource\ShowResource;
 
 /**
  * The show operation is used to show a resource in a read-only view. Usually the processor is not used.
@@ -22,7 +22,7 @@ class Show extends Operation
         ?string $template = '@LAGAdmin/resources/show.html.twig',
         ?string $baseTemplate = null,
         ?array $permissions = null,
-        ?string $controller = ResourceController::class,
+        ?string $controller = ShowResource::class,
         ?string $route = null,
         ?array $routeParameters = null,
         array $methods = ['GET'],

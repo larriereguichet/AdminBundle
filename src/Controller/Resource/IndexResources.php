@@ -9,8 +9,6 @@ use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Grid\Registry\GridRegistryInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
-use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
-use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
@@ -20,16 +18,14 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final readonly class ResourceCollectionController
+final readonly class IndexResources
 {
     public function __construct(
-        private UrlVariablesExtractorInterface $uriVariablesExtractor,
-        private ContextBuilderInterface $contextBuilder,
         private ProviderInterface $provider,
         private ProcessorInterface $processor,
+        private FormFactoryInterface $formFactory,
         private GridRegistryInterface $gridRegistry,
         private GridViewBuilderInterface $gridViewBuilder,
-        private FormFactoryInterface $formFactory,
         private ResourceEventDispatcherInterface $eventDispatcher,
         private ResponseHandlerInterface $responseHandler,
     ) {
@@ -37,16 +33,19 @@ final readonly class ResourceCollectionController
 
     public function __invoke(Request $request, CollectionOperationInterface $operation): Response
     {
-        $uriVariables = $this->uriVariablesExtractor->extractVariables($operation, $request);
-        $context = $this->contextBuilder->buildContext($operation, $request);
-        $filterForm = null;
+        $context = [];
+        $templateContext = [];
 
         if ($operation->getFilterForm() !== null) {
             $filterForm = $this->formFactory->create($operation->getFilterForm(), [], $operation->getFilterFormOptions());
             $filterForm->handleRequest($request);
+
+            if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+                $context['filters'] = $filterForm->getData();
+            }
+            $templateContext['filterForm'] = $filterForm->createView();
         }
-        $data = $this->provider->provide($operation, $uriVariables, $context);
-        $form = null;
+        $data = $this->provider->provide($operation, [], $context);
 
         if ($operation->getForm() !== null) {
             $form = $this->formFactory->create(CollectionType::class, $data, [
@@ -61,18 +60,22 @@ final readonly class ResourceCollectionController
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $data = $form->getData();
-                $this->processor->process($data, $operation, $uriVariables, $context);
+                $this->processor->process($data, $operation);
 
-                return $this->responseHandler->createRedirectResponse($operation, $data, $context);
+                return $this->responseHandler->createResponse($operation, $data, $request, $context);
             }
+            $templateContext['form'] = $form->createView();
         }
 
         if ($operation->getGrid() !== null) {
             $grid = $this->gridRegistry->get($operation->getGrid());
             $gridView = $this->gridViewBuilder->build($operation, $grid, $data, $context);
+            $templateContext['grid'] = $gridView;
         }
+        $event = new ResourceControllerEvent($operation, $request, $data);
+
         $this->eventDispatcher->dispatchEvents(
-            $event = new ResourceControllerEvent($operation, $request, $data, $context),
+            $event,
             ResourceControllerEvents::RESOURCE_CONTROLLER_PATTERN,
             $operation->getResource()->getApplication(),
             $operation->getResource()->getName(),
@@ -83,13 +86,6 @@ final readonly class ResourceCollectionController
             return $event->getResponse();
         }
 
-        return $this->responseHandler->createCollectionResponse(
-            request: $request,
-            operation: $operation,
-            data: $data,
-            form: $form,
-            filterForm: $filterForm,
-            grid: $gridView ?? null,
-        );
+        return $this->responseHandler->createResponse($operation, $data, $request, $templateContext);
     }
 }
