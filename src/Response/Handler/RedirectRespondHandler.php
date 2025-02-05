@@ -19,7 +19,15 @@ final readonly class RedirectRespondHandler implements ResponseHandlerInterface
 
     public function supports(OperationInterface $operation, mixed $data, Request $request, array $context = []): bool
     {
-        return ($context['submitted'] ?? false) && $request->query->getBoolean('_partial') !== true;
+        if (!$context['valid'] ?? false) {
+            return false;
+        }
+
+        if (!$context['submitted'] ?? false) {
+            return false;
+        }
+
+        return $request->query->getBoolean('_partial') !== true;
     }
 
     public function createResponse(OperationInterface $operation, mixed $data, Request $request, array $context = []): Response

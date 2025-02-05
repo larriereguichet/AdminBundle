@@ -56,6 +56,7 @@ final readonly class ProcessResource
         return $this->responseHandler->createResponse($operation, $data, $request, [
             'form' => $form->createView(),
             'submitted' => $form->isSubmitted(),
+            'valid' => $form->isValid(),
         ]);
     }
 }
