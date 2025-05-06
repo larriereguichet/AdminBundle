@@ -12,7 +12,6 @@ use LAG\AdminBundle\Config\Transformer\InheritedPropertyTransformer;
 use LAG\AdminBundle\Config\Transformer\SnakeCaseTransformer;
 use LAG\AdminBundle\Metadata\Collection;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use LAG\AdminBundle\Metadata\Text;
 
 final class PropertyMapper
 {
@@ -30,17 +29,7 @@ final class PropertyMapper
     public function fromArray(mixed $data): PropertyInterface
     {
         $entryProperty = null;
-
-//        if (!empty($data['entry_property'])) {
-//            $entryProperty = $this->fromArray($data['entry_property']);
-//            dump($entryProperty);
-//        }
-
-        //$data['entry_property'] = new Text();
-//        unset($data['entry_property']);
-
         $property = $this->builder
-            //->infer(PropertyInterface::class, fn (string $__class__): string => $__class__)
             ->registerConstructor(
                 #[DynamicConstructor]
                 function (string $className, array $value): Collection {
@@ -71,11 +60,11 @@ final class PropertyMapper
             ->normalizer(Format::array())
             ->normalize($property)
         ;
-        $data['__class__'] = get_class($property);
+        $data['__class__'] = $property::class;
 
         if ($property instanceof Collection && $property->getEntryProperty() !== null) {
             $data['entry_property'] = $this->toArray($property->getEntryProperty());
-            $data['entry_property']['__class__'] = get_class($property->getEntryProperty());
+            $data['entry_property']['__class__'] = \get_class($property->getEntryProperty());
         }
 
         return $data;

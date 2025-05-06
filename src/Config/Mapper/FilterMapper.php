@@ -32,7 +32,7 @@ final class FilterMapper
             ->normalizer(Format::array())
             ->normalize($filter)
         ;
-        $data['class'] = get_class($filter);
+        $data['class'] = $filter::class;
 
         return $data;
     }

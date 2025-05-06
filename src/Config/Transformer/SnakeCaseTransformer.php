@@ -12,13 +12,13 @@ final readonly class SnakeCaseTransformer
     {
         $result = $next();
 
-        if (!is_array($result)) {
+        if (!\is_array($result)) {
             return $result;
         }
         $snakeCased = [];
 
         foreach ($result as $key => $value) {
-            if (!is_string($key)) {
+            if (!\is_string($key)) {
                 $snakeCased[$key] = $value;
 
                 continue;

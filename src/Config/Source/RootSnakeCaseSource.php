@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Config\Source;
 
-use IteratorAggregate;
-use Traversable;
 use function Symfony\Component\String\u;
 
-final readonly class RootSnakeCaseSource implements IteratorAggregate
+final readonly class RootSnakeCaseSource implements \IteratorAggregate
 {
     private array $source;
 
@@ -21,7 +21,7 @@ final readonly class RootSnakeCaseSource implements IteratorAggregate
         $this->source = $this->toCamelCase($source);
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
         yield from $this->source;
     }
@@ -31,7 +31,7 @@ final readonly class RootSnakeCaseSource implements IteratorAggregate
         $camelSource = [];
 
         foreach ($source as $key => $value) {
-            if (!is_string($key) || u($key)->startsWith('__')) {
+            if (!\is_string($key) || u($key)->startsWith('__')) {
                 $camelSource[$key] = $value;
 
                 continue;

@@ -10,13 +10,8 @@ use LAG\AdminBundle\Config\Source\RootSnakeCaseSource;
 use LAG\AdminBundle\Config\Transformer\InheritedPropertyTransformer;
 use LAG\AdminBundle\Config\Transformer\SnakeCaseTransformer;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\FilterInterface;
-use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Show;
-use LAG\AdminBundle\Metadata\Update;
 
 final class OperationMapper
 {
@@ -36,7 +31,7 @@ final class OperationMapper
         $filters = array_map(fn (array $data): FilterInterface => new FilterMapper()->fromArray($data), $data['filters'] ?? []);
         unset($data['filters']);
 
-        $operation =  $this->builder
+        $operation = $this->builder
             ->mapper()
             ->map($data['class'] ?? OperationInterface::class, RootSnakeCaseSource::array($data))
         ;
@@ -68,7 +63,7 @@ final class OperationMapper
             ->normalizer(Format::array())
             ->normalize($operation)
         ;
-        $data['class'] = get_class($operation);
+        $data['class'] = $operation::class;
 
         return $data;
     }

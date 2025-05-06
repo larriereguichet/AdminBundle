@@ -19,7 +19,7 @@ final readonly class InheritedPropertyTransformer
         }
 
         foreach ($properties as $property) {
-            if (array_key_exists($property->getName(), $result)) {
+            if (\array_key_exists($property->getName(), $result)) {
                 continue;
             }
             $result[$property->getName()] = $property->getValue($object);
