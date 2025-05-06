@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Context;
 
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Resource;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Retrieve the current resource and operation for the given request.
- */
 interface ResourceContextInterface
 {
-    public function getResource(Request $request): Resource;
+    /**
+     * Return the current resource. If no resource is found, an exception will be thrown.
+     *
+     * @return Resource The current resource
+     */
+    public function getResource(): Resource;
 
-    public function getOperation(Request $request): OperationInterface;
-
-    public function supports(Request $request): bool;
+    /**
+     * Return true if the current request has a resource.
+     *
+     * @return bool
+     */
+    public function hasResource(): bool;
 }

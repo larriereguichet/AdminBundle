@@ -4,140 +4,108 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Resource\Context;
 
-use LAG\AdminBundle\Exception\ResourceNotFoundException;
-use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
+use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContext;
-use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Show;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
-use PHPUnit\Framework\Attributes\DataProvider;
+use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 final class ResourceContextTest extends TestCase
 {
-    private ResourceContextInterface $resourceContext;
+    private ResourceContext $resourceContext;
+    private MockObject $requestStack;
     private MockObject $parametersExtractor;
-    private MockObject $resourceRegistry;
+    private MockObject $resourceFactory;
 
     #[Test]
-    public function itSupportsRequest(): void
+    public function itReturnsTheCurrentResource(): void
     {
-        $request = new Request(['some_key' => 'some_value']);
+        $request = new Request();
+        $expectedResource = new Resource(name: 'my_resource');
 
-        $this->parametersExtractor
+        $this->requestStack
             ->expects(self::once())
-            ->method('getApplicationName')
-            ->with($request)
-            ->willReturn('an_application')
+            ->method('getCurrentRequest')
+            ->willReturn($request)
         ;
         $this->parametersExtractor
             ->expects(self::once())
             ->method('getResourceName')
             ->with($request)
-            ->willReturn('a_resource')
+            ->willReturn('my_resource')
+        ;
+        $this->resourceFactory
+            ->expects(self::once())
+            ->method('create')
+            ->with('my_resource')
+            ->willReturn($expectedResource)
+        ;
+
+        $application = $this->resourceContext->getResource();
+
+        self::assertEquals($expectedResource, $application);
+    }
+
+    #[Test]
+    public function itDoesNotReturnAMissingResource(): void
+    {
+        $request = new Request();
+
+        $this->requestStack
+            ->expects(self::once())
+            ->method('getCurrentRequest')
+            ->willReturn($request)
         ;
         $this->parametersExtractor
             ->expects(self::once())
-            ->method('getOperationName')
+            ->method('getResourceName')
             ->with($request)
-            ->willReturn('an_operation')
+            ->willReturn(null)
+        ;
+        $this->resourceFactory
+            ->expects(self::never())
+            ->method('create')
         ;
 
-        $support = $this->resourceContext->supports($request);
+        self::expectExceptionObject(new Exception('The current request is not supported by any resource'));
 
-        self::assertTrue($support);
+        $this->resourceContext->getResource();
     }
 
     #[Test]
-    public function itReturnsTheCurrentOperation(): void
+    public function itChecksForTheCurrentResource(): void
     {
-        $request = new Request(['some_key' => 'some_value']);
-        $operation = new Show(name: 'an_operation');
-        $resource = new Resource(name: 'a_resource', application: 'an_application', operations: [$operation]);
+        $request = new Request();
 
-        $this->parametersExtractor
-            ->expects(self::atLeastOnce())
-            ->method('getApplicationName')
-            ->with($request)
-            ->willReturn('an_application')
+        $this->requestStack
+            ->expects(self::once())
+            ->method('getCurrentRequest')
+            ->willReturn($request)
         ;
         $this->parametersExtractor
-            ->expects(self::atLeastOnce())
+            ->expects(self::once())
             ->method('getResourceName')
             ->with($request)
-            ->willReturn('a_resource')
-        ;
-        $this->parametersExtractor
-            ->expects(self::atLeastOnce())
-            ->method('getOperationName')
-            ->with($request)
-            ->willReturn('an_operation')
+            ->willReturn(null)
         ;
 
-        $this->resourceRegistry
-            ->expects(self::atLeastOnce())
-            ->method('get')
-            ->with('a_resource', 'an_application')
-            ->willReturn($resource)
-        ;
-
-        $extractedResource = $this->resourceContext->getResource($request);
-        $extractedOperation = $this->resourceContext->getOperation($request);
-
-        self::assertEquals($resource, $extractedResource);
-        self::assertEquals($operation->withResource($resource), $extractedOperation);
-    }
-
-    #[Test]
-    #[DataProvider(methodName: 'notSupportedResources')]
-    public function itDoesNotReturnsNotSupportedResource(
-        ?string $applicationName,
-        ?string $resourceName,
-        ?string $operationName,
-    ): void {
-        $request = new Request(['some_key' => 'some_value']);
-
-        $this->parametersExtractor
-            ->expects(self::atLeastOnce())
-            ->method('getApplicationName')
-            ->with($request)
-            ->willReturn($applicationName)
-        ;
-        $this->parametersExtractor
-            ->method('getResourceName')
-            ->with($request)
-            ->willReturn($resourceName)
-        ;
-        $this->parametersExtractor
-            ->method('getOperationName')
-            ->with($request)
-            ->willReturn($operationName)
-        ;
-
-        self::expectExceptionObject(new ResourceNotFoundException('The current request is not supported by any admin resource'));
-
-        $this->resourceContext->getResource($request);
-    }
-
-    public static function notSupportedResources(): iterable
-    {
-        yield 'no_application' => [null, 'a_resource', 'an_operation'];
-        yield 'no_resource' => ['an_application', null, 'an_operation'];
-        yield 'no_operation' => ['an_application', 'a_resource', null];
-        yield 'nothing' => [null, null, null];
+        self::assertFalse($this->resourceContext->hasResource());
     }
 
     protected function setUp(): void
     {
-        $this->parametersExtractor = self::createMock(ResourceParametersExtractorInterface::class);
-        $this->resourceRegistry = self::createMock(ResourceRegistryInterface::class);
+        $this->requestStack = self::createMock(RequestStack::class);
+        $this->parametersExtractor = self::createMock(ParametersExtractorInterface::class);
+        $this->resourceFactory = self::createMock(ResourceFactoryInterface::class);
         $this->resourceContext = new ResourceContext(
+            $this->requestStack,
             $this->parametersExtractor,
-            $this->resourceRegistry
+            $this->resourceFactory,
         );
     }
 }
