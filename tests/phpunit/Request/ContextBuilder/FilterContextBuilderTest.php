@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Request\Context;
+namespace LAG\AdminBundle\Tests\Request\ContextBuilder;
 
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Request\Context\FilterContextProvider;
-use LAG\AdminBundle\Resource\Metadata\Create;
-use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Show;
-use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Update;
+use LAG\AdminBundle\Request\ContextBuilder\FilterContextBuilder;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -20,28 +19,21 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-final class FilterContextProviderTest extends TestCase
+final class FilterContextBuilderTest extends TestCase
 {
-    private FilterContextProvider $provider;
-    private MockObject $decorated;
+    private FilterContextBuilder $provider;
     private MockObject $formFactory;
 
     #[Test]
     public function itAddsFilteringContext(): void
     {
         $request = new Request();
-        $operation = (new Index())
+        $operation = new Index()
             ->withFilterForm('SomeFormType')
             ->withFilterFormOptions([])
         ;
         $form = self::createMock(FormInterface::class);
 
-        $this->decorated
-            ->expects(self::once())
-            ->method('getContext')
-            ->with($operation, $request)
-            ->willReturn(['some-key' => 'some-value'])
-        ;
         $this->formFactory
             ->expects(self::once())
             ->method('create')
@@ -65,7 +57,7 @@ final class FilterContextProviderTest extends TestCase
             ->willReturn(['my_filter' => 'my_value'])
         ;
 
-        $context = $this->provider->getContext($operation, $request);
+        $context = $this->provider->buildContext($operation, $request);
 
         self::assertEquals('my_value', $context['filters']['my_filter']);
     }
@@ -76,19 +68,11 @@ final class FilterContextProviderTest extends TestCase
     {
         $request = new Request();
 
-        $this->decorated
-            ->expects(self::once())
-            ->method('getContext')
-            ->with($operation, $request)
-            ->willReturn(['some-key' => 'some-value'])
-        ;
         $this->formFactory
             ->expects(self::never())
             ->method('create')
         ;
-        $context = $this->provider->getContext($operation, $request);
-
-        self::assertEquals(['some-key' => 'some-value'], $context);
+        self::assertFalse($this->provider->supports($operation, $request));
     }
 
     public static function nonCollectionOperations(): iterable
@@ -101,10 +85,8 @@ final class FilterContextProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = self::createMock(ContextProviderInterface::class);
         $this->formFactory = self::createMock(FormFactoryInterface::class);
-        $this->provider = new FilterContextProvider(
-            $this->decorated,
+        $this->provider = new FilterContextBuilder(
             $this->formFactory,
         );
     }
