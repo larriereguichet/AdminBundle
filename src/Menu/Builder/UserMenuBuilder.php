@@ -18,7 +18,7 @@ class UserMenuBuilder
     {
         $menu = $this->factory->createItem('root', $options);
         $menu->addChild('lag_admin.security.logout', [
-            'route' => 'lag_admin.logout',
+            'route' => 'lag_admin_logout',
             'extras' => ['icon' => 'sign-out-alt'],
         ]);
 
