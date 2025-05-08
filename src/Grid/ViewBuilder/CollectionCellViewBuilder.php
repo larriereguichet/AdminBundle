@@ -6,11 +6,11 @@ namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Grid\View\CellView;
+use LAG\AdminBundle\Metadata\Collection;
+use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\PropertyInterface;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
-use LAG\AdminBundle\Resource\Metadata\Collection;
-use LAG\AdminBundle\Resource\Metadata\Grid;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 
 final readonly class CollectionCellViewBuilder implements CellViewBuilderInterface
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\DataTransformer;
 
 use LAG\AdminBundle\Exception\UnexpectedTypeException;
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
+use LAG\AdminBundle\Metadata\PropertyInterface;
 
 final readonly class EnumDataTransformer implements DataTransformerInterface
 {

@@ -6,14 +6,14 @@ namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
 use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Resource\Metadata\Action;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
+use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final readonly class ActionViewBuilder implements ActionViewBuilderInterface
 {
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator,
+        private ResourceUrlGeneratorInterface $urlGenerator,
         private ConditionMatcherInterface $conditionMatcher,
         private TranslatorInterface $translator,
     ) {

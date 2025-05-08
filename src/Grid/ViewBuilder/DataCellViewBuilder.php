@@ -6,10 +6,10 @@ namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
 use LAG\AdminBundle\Grid\View\CellView;
+use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\PropertyInterface;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
-use LAG\AdminBundle\Resource\Metadata\Grid;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
 
 final readonly class DataCellViewBuilder implements CellViewBuilderInterface
 {

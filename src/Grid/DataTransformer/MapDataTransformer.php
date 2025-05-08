@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\DataTransformer;
 
-use LAG\AdminBundle\Resource\Metadata\Map;
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
+use LAG\AdminBundle\Metadata\Map;
+use LAG\AdminBundle\Metadata\PropertyInterface;
 
 // TODO keep ?
 readonly class MapDataTransformer implements DataTransformerInterface

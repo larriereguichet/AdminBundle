@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\DataTransformer;
 
-use LAG\AdminBundle\Resource\Metadata\Form;
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
+use LAG\AdminBundle\Metadata\Form;
+use LAG\AdminBundle\Metadata\PropertyInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
 final readonly class FormDataTransformer implements DataTransformerInterface

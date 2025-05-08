@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Resource\Metadata\CompoundPropertyInterface;
-use LAG\AdminBundle\Resource\Metadata\Grid;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
+use LAG\AdminBundle\Metadata\CompoundPropertyInterface;
+use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\PropertyInterface;
 
 /**
  * Build the cell view for the compound properties. Each child should be build separately and passed to the parent cell

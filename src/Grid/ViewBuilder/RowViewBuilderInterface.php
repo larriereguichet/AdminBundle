@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\View\RowView;
-use LAG\AdminBundle\Resource\Metadata\Grid;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\OperationInterface;
 
 interface RowViewBuilderInterface
 {

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\ViewBuilder\HeaderViewBuilder;
-use LAG\AdminBundle\Resource\Metadata\Grid;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\Text;
+use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\Text;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\TwigComponent\ComponentAttributes;
@@ -19,7 +19,7 @@ final class HeaderViewBuilderTest extends TestCase
     #[Test]
     public function itBuildAHeader(): void
     {
-        $operation = new Index(name: 'my_operation');
+        $operation = new Index(shortName: 'my_operation');
         $grid = new Grid(
             name: 'my_grid',
             translationDomain: 'a_domain',
@@ -57,7 +57,7 @@ final class HeaderViewBuilderTest extends TestCase
     #[Test]
     public function itBuildEmptyHeader(): void
     {
-        $operation = new Index(name: 'my_operation');
+        $operation = new Index(shortName: 'my_operation');
         $grid = new Grid(
             name: 'my_grid',
             translationDomain: 'a_domain',

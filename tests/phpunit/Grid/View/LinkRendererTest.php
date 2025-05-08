@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Grid\View;
 
-use LAG\AdminBundle\Resource\Metadata\Link;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
+use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use LAG\AdminBundle\View\Render\LinkRenderer;
 use LAG\AdminBundle\View\Render\LinkRendererInterface;
@@ -59,7 +59,7 @@ final class LinkRendererTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->urlGenerator = self::createMock(UrlGeneratorInterface::class);
+        $this->urlGenerator = self::createMock(ResourceUrlGeneratorInterface::class);
         $this->validator = self::createMock(ValidatorInterface::class);
         $this->environment = self::createMock(Environment::class);
         $this->linkRenderer = new LinkRenderer(

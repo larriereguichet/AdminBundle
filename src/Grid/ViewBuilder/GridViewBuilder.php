@@ -4,48 +4,26 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Event\GridEvent;
-use LAG\AdminBundle\Event\GridEvents;
-use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Exception\InvalidGridException;
 use LAG\AdminBundle\Grid\View\GridView;
 use LAG\AdminBundle\Grid\View\RowView;
-use LAG\AdminBundle\Resource\Metadata\Grid;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use Symfony\Component\Validator\Constraints\Valid;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\Grid;
 
 final readonly class GridViewBuilder implements GridViewBuilderInterface
 {
     public function __construct(
         private RowViewBuilderInterface $rowBuilder,
         private ActionViewBuilderInterface $actionBuilder,
-        private ResourceEventDispatcherInterface $eventDispatcher,
-        private ValidatorInterface $validator,
     ) {
     }
 
-    public function build(OperationInterface $operation, Grid $grid, mixed $data, array $context = []): GridView
-    {
-        $event = new GridEvent($grid, $operation);
-        $resource = $operation->getResource();
-
-        $this->eventDispatcher->dispatchEvents(
-            $event,
-            GridEvents::GRID_BUILD_PATTERN,
-            $resource->getApplication(),
-            $resource->getName(),
-            null,
-            $grid->getName(),
-        );
-        $grid = $event->getGrid();
-        $errors = $this->validator->validate($grid, [new Valid()]);
-
-        if ($errors->count() > 0) {
-            throw new InvalidGridException($grid->getName() ?? '', $errors);
-        }
-
+    public function build(
+        Grid $grid,
+        CollectionOperationInterface $operation,
+        mixed $data,
+        array $context = [],
+    ): GridView {
         return new GridView(
             name: $grid->getName(),
             type: $grid->getType(),
@@ -66,12 +44,12 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
         );
     }
 
-    private function buildHeaders(OperationInterface $operation, Grid $grid, array $context): RowView
+    private function buildHeaders(CollectionOperationInterface $operation, Grid $grid, array $context): RowView
     {
         return $this->rowBuilder->buildHeadersRow($operation, $grid, $context);
     }
 
-    private function buildRows(OperationInterface $operation, Grid $grid, mixed $data, array $context): iterable
+    private function buildRows(CollectionOperationInterface $operation, Grid $grid, mixed $data, array $context): iterable
     {
         if (!is_iterable($data)) {
             throw new Exception('Data must be iterable to build a grid.');
@@ -87,16 +65,17 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
 
     private function buildCollectionActions(Grid $grid, mixed $data): array
     {
-        $actions = [];
+        $actionViews = [];
+        $actions = $grid->getCollectionActions();
 
-        foreach ($grid->getCollectionActions() as $action) {
-            $action = $this->actionBuilder->buildActions($action, $data);
+        foreach ($actions as $action) {
+            $actionView = $this->actionBuilder->buildActions($action, $data);
 
-            if ($action !== null) {
-                $actions[] = $action;
+            if ($actionView !== null) {
+                $actionViews[] = $actionView;
             }
         }
 
-        return $actions;
+        return $actionViews;
     }
 }
