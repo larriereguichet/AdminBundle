@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Exception;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 
 class ManagerNotFoundException extends Exception
 {
@@ -13,7 +13,7 @@ class ManagerNotFoundException extends Exception
     {
         parent::__construct(\sprintf(
             'The data class "%s" of the admin resource "%s" is not managed by any Doctrine entity manager',
-            $resource->getResource()->getDataClass(),
+            $resource->getResource()->getResourceClass(),
             $resource->getResource()->getName(),
         ));
     }

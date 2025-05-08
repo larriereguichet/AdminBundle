@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Resource;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
-use LAG\AdminBundle\Resource\Metadata\Boolean;
-use LAG\AdminBundle\Resource\Metadata\Date;
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
-use LAG\AdminBundle\Resource\Metadata\RichText;
-use LAG\AdminBundle\Resource\Metadata\Text;
+use LAG\AdminBundle\Metadata\Boolean;
+use LAG\AdminBundle\Metadata\Date;
+use LAG\AdminBundle\Metadata\PropertyInterface;
+use LAG\AdminBundle\Metadata\RichText;
+use LAG\AdminBundle\Metadata\Text;
 use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesserInterface;
 
 final readonly class ORMPropertyGuesser implements PropertyGuesserInterface

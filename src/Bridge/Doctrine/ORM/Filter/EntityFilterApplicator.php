@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Filter;
 
 use Doctrine\ORM\QueryBuilder;
-use LAG\AdminBundle\Resource\Metadata\EntityFilter;
-use LAG\AdminBundle\Resource\Metadata\FilterInterface;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\EntityFilter;
+use LAG\AdminBundle\Metadata\FilterInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 
 final readonly class EntityFilterApplicator extends AbstractApplicator
 {

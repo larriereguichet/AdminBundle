@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
 
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Pagerfanta\Adapter\CallbackAdapter;
 use Pagerfanta\Pagerfanta;
@@ -18,9 +18,9 @@ final readonly class OutputProvider implements ProviderInterface
     ) {
     }
 
-    public function provide(OperationInterface $operation, array $uriVariables = [], array $context = []): mixed
+    public function provide(OperationInterface $operation, array $urlVariables = [], array $context = []): mixed
     {
-        $data = $this->provider->provide($operation, $uriVariables, $context);
+        $data = $this->provider->provide($operation, $urlVariables, $context);
 
         if ($operation->getOutput() === null) {
             return $data;

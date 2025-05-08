@@ -6,8 +6,8 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -19,17 +19,15 @@ final readonly class PaginationProvider implements ProviderInterface
     ) {
     }
 
-    public function provide(OperationInterface $operation, array $uriVariables = [], array $context = []): mixed
+    public function provide(OperationInterface $operation, array $urlVariables = [], array $context = []): mixed
     {
-        $data = $this->provider->provide($operation, $uriVariables, $context);
+        $data = $this->provider->provide($operation, $urlVariables, $context);
 
         if (!$operation instanceof CollectionOperationInterface || !$this->shouldPaginate($operation, $data)) {
             return $data;
         }
 
-        if (!$operation->usePagination()) {
-            $data->setMaxResults($operation->getItemsPerPage());
-
+        if (!$operation->hasPagination()) {
             return $data;
         }
         $pager = new Pagerfanta(new QueryAdapter($data, true, true));

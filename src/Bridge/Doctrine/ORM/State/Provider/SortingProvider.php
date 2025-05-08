@@ -6,8 +6,8 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
 
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Exception\ORMException;
-use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 
 use function Symfony\Component\String\u;
@@ -19,9 +19,9 @@ final readonly class SortingProvider implements ProviderInterface
     ) {
     }
 
-    public function provide(OperationInterface $operation, array $uriVariables = [], array $context = []): mixed
+    public function provide(OperationInterface $operation, array $urlVariables = [], array $context = []): mixed
     {
-        $data = $this->provider->provide($operation, $uriVariables, $context);
+        $data = $this->provider->provide($operation, $urlVariables, $context);
 
         if (!$data instanceof QueryBuilder || !$operation instanceof CollectionOperationInterface) {
             return $data;
@@ -35,13 +35,17 @@ final readonly class SortingProvider implements ProviderInterface
         }
 
         foreach ($orderBy as $field => $direction) {
-            $property = $resource->getProperty($field);
-            $sort = $property->getSortingPath();
+            $sort = $field;
+
+            if ($resource->hasProperty($field)) {
+                $property = $resource->getProperty($field);
+                $sort = $property->getSortingPath();
+            }
 
             if ($sort === null) {
                 throw new ORMException(\sprintf(
                     'The property "%s" can not be sorted by as the sorting path is null.',
-                    $property->getName(),
+                    $field,
                 ));
             }
             $order = u($sort);

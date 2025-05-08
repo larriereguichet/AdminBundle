@@ -21,7 +21,7 @@ final readonly class InitializeResourceIdentifiersListener
         if ($resource->getIdentifiers() !== null) {
             return;
         }
-        $metadata = $this->metadataHelper->findMetadata($resource->getDataClass());
+        $metadata = $this->metadataHelper->findMetadata($resource->getResourceClass());
         $identifiers = [];
 
         if ($metadata !== null) {
