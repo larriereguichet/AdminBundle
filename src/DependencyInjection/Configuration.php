@@ -212,10 +212,10 @@ final class Configuration implements ConfigurationInterface
                         ->end()
 
                         ->arrayNode('actions')
-                            ->variablePrototype()->end() // TODO
+                            ->variablePrototype()->end()
                         ->end()
                         ->arrayNode('collection_actions')
-                            ->variablePrototype()->end() // TODO
+                            ->variablePrototype()->end()
                         ->end()
 
                         ->scalarNode('empty_message')->end()
