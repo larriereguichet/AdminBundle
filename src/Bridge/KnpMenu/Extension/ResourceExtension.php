@@ -6,32 +6,24 @@ namespace LAG\AdminBundle\Bridge\KnpMenu\Extension;
 
 use Knp\Menu\Factory\ExtensionInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
+use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 
 final readonly class ResourceExtension implements ExtensionInterface
 {
     public function __construct(
-        private ResourceRegistryInterface $registry,
-        private UrlGeneratorInterface $urlGenerator,
+        private OperationFactoryInterface $operationFactory,
+        private ResourceUrlGeneratorInterface $urlGenerator,
     ) {
     }
 
     public function buildOptions(array $options): array
     {
-        if (!isset($options['resource']) || !isset($options['operation'])) {
+        if (!isset($options['operation'])) {
             return $options;
         }
-
-        if (!$this->registry->has($options['resource'], $options['application'] ?? null)) {
-            return $options;
-        }
-        $resource = $this->registry->get($options['resource'], $options['application'] ?? null);
-
-        if (!$resource->hasOperation($options['operation'])) {
-            return $options;
-        }
-        $operation = $resource->getOperation($options['operation']);
+        $operation = $this->operationFactory->create($options['operation']);
+        $resource = $operation->getResource();
 
         if (!empty($options['routeParameters'])) {
             $options['uri'] = $this->urlGenerator->generateFromRouteName($operation->getRoute(), $options['routeParameters']);
