@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\Tests\EventDispatcher;
 use LAG\AdminBundle\Event\ResourceEvent;
 use LAG\AdminBundle\Event\ResourceEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcher;
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Resource;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +20,7 @@ final class ResourceEventDispatcherTest extends TestCase
     private MockObject $buildEventDispatcher;
 
     #[Test]
-    public function itDispatchEvents(): void
+    public function itDispatchResourceEvents(): void
     {
         $resource = new Resource(name: 'my_resource', application: 'my_application');
         $event = new ResourceEvent($resource);
@@ -40,12 +40,31 @@ final class ResourceEventDispatcherTest extends TestCase
             })
         ;
 
-        $this->resourceEventDispatcher->dispatchEvents(
-            $event,
-            ResourceEvents::RESOURCE_CREATE_PATTERN,
-            'my_application',
-            'my_resource',
-        );
+        $this->resourceEventDispatcher->dispatchEvents($event, ResourceEvents::RESOURCE_CREATE_TEMPLATE);
+    }
+
+    #[Test]
+    public function itDispatchResourceBuildEvents(): void
+    {
+        $resource = new Resource(name: 'my_resource', application: 'my_application');
+        $event = new ResourceEvent($resource);
+
+        $this->buildEventDispatcher
+            ->expects(self::exactly(3))
+            ->method('dispatch')
+            ->willReturnCallback(function (ResourceEvent $expectedEvent, string $eventName) use ($event): ResourceEvent {
+                self::assertEquals($expectedEvent, $event);
+                self::assertContains($eventName, [
+                    'lag_admin.resource.create',
+                    'my_application.resource.create',
+                    'my_application.my_resource.create',
+                ]);
+
+                return $expectedEvent;
+            })
+        ;
+
+        $this->resourceEventDispatcher->dispatchBuildEvents($event, ResourceEvents::RESOURCE_CREATE_TEMPLATE);
     }
 
     protected function setUp(): void
@@ -53,8 +72,8 @@ final class ResourceEventDispatcherTest extends TestCase
         $this->eventDispatcher = self::createMock(EventDispatcherInterface::class);
         $this->buildEventDispatcher = self::createMock(EventDispatcherInterface::class);
         $this->resourceEventDispatcher = new ResourceEventDispatcher(
-            $this->eventDispatcher,
             $this->buildEventDispatcher,
+            $this->eventDispatcher,
         );
     }
 }

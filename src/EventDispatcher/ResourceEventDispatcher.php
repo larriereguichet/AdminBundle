@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventDispatcher;
 
-use Symfony\Contracts\EventDispatcher\Event;
+use LAG\AdminBundle\Event\ResourceEventInterface;
+use LAG\AdminBundle\Metadata\Resource;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 use function Symfony\Component\String\u;
@@ -12,96 +13,48 @@ use function Symfony\Component\String\u;
 final readonly class ResourceEventDispatcher implements ResourceEventDispatcherInterface
 {
     public function __construct(
-        private EventDispatcherInterface $eventDispatcher,
         private EventDispatcherInterface $buildEventDispatcher,
+        private EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
-    public function dispatchBuildEvents(
-        Event $event,
-        string $eventPattern,
-        string $applicationName,
-        string $resourceName,
-        ?string $operationName = null
-    ): void {
-        $eventNames = $this->buildEvents(
-            $eventPattern,
-            $applicationName,
-            $resourceName,
-            $operationName,
-        );
+    public function dispatchBuildEvents(ResourceEventInterface $event, string $eventName): void
+    {
+        $resource = $event->getResource();
+        $eventNames = $this->getEventNames($eventName, $resource);
 
         foreach ($eventNames as $eventName) {
             $this->buildEventDispatcher->dispatch($event, $eventName);
         }
     }
 
-    public function dispatchEvents(
-        Event $event,
-        string $eventPattern,
-        string $applicationName,
-        string $resourceName,
-        ?string $operationName = null,
-        ?string $gridName = null,
-    ): void {
-        $eventNames = $this->buildEvents(
-            $eventPattern,
-            $applicationName,
-            $resourceName,
-            $operationName,
-        );
+    public function dispatchEvents(ResourceEventInterface $event, string $eventName): void
+    {
+        $resource = $event->getResource();
+        $eventNames = $this->getEventNames($eventName, $resource);
 
         foreach ($eventNames as $eventName) {
             $this->eventDispatcher->dispatch($event, $eventName);
         }
     }
 
-    private function buildEvents(
-        string $eventPattern,
-        string $applicationName,
-        string $resourceName,
-        ?string $operationName = null,
-        ?string $gridName = null,
-    ): array {
-        $eventPattern = u($eventPattern);
-        $eventNames = [
-            // Generic event
-            $eventPattern
+    private function getEventNames(string $eventName, Resource $resource): iterable
+    {
+        $template = u($eventName);
+
+        return [
+            $template
                 ->replace('{application}', 'lag_admin')
                 ->replace('{resource}', 'resource')
                 ->toString(),
-
-            // Application event
-            $eventPattern
-                ->replace('{application}', $applicationName)
+            $template
+                ->replace('{application}', $resource->getApplication())
                 ->replace('{resource}', 'resource')
                 ->toString(),
-
-            // Resource event
-            $eventPattern
-                ->replace('{application}', $applicationName)
-                ->replace('{resource}', $resourceName)
+            $template
+                ->replace('{application}', $resource->getApplication())
+                ->replace('{resource}', $resource->getName())
                 ->toString(),
         ];
-
-        if ($operationName !== null) {
-            // Operation event
-            $eventNames[] = $eventPattern
-                ->replace('{application}', $applicationName)
-                ->replace('{resource}', $resourceName.'.'.$operationName)
-                ->toString()
-            ;
-        }
-
-        if ($gridName !== null) {
-            $eventNames[] = $eventPattern
-                ->replace('{application}', $applicationName)
-                ->replace('{resource}', $resourceName.'.'.$operationName)
-                ->replace('{grid}', $gridName)
-                ->toString()
-            ;
-        }
-
-        return $eventNames;
     }
 }

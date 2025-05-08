@@ -4,24 +4,17 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventDispatcher;
 
-use Symfony\Contracts\EventDispatcher\Event;
+use LAG\AdminBundle\Event\ResourceEventInterface;
 
 interface ResourceEventDispatcherInterface
 {
-    public function dispatchBuildEvents(
-        Event $event,
-        string $eventPattern,
-        string $applicationName,
-        string $resourceName,
-        ?string $operationName = null,
-    ): void;
+    /**
+     * Dispatch a resource event using the build event dispatcher.
+     */
+    public function dispatchBuildEvents(ResourceEventInterface $event, string $eventName);
 
-    public function dispatchEvents(
-        Event $event,
-        string $eventPattern,
-        string $applicationName,
-        string $resourceName,
-        ?string $operationName = null,
-        ?string $gridName = null,
-    ): void;
+    /**
+     * Dispatch a resource event using the default event dispatcher.
+     */
+    public function dispatchEvents(ResourceEventInterface $event, string $eventName): void;
 }
