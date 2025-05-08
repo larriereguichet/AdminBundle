@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventListener\Operation;
 
 use LAG\AdminBundle\Event\OperationEvent;
-use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Resource\Metadata\EntityFilter;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\EntityFilter;
 
 final readonly class InitializeCollectionOperationFiltersListener
 {

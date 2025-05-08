@@ -7,8 +7,8 @@ namespace LAG\AdminBundle\EventListener\Data;
 use LAG\AdminBundle\Entity\ImageInterface;
 use LAG\AdminBundle\Event\DataEvent;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Metadata\Image;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
-use LAG\AdminBundle\Resource\Metadata\Image;
 use LAG\AdminBundle\Upload\Uploader\UploaderInterface;
 
 final readonly class UploadListener

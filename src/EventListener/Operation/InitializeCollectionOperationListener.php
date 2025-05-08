@@ -7,11 +7,11 @@ namespace LAG\AdminBundle\EventListener\Operation;
 use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
-use LAG\AdminBundle\Resource\Metadata\Action;
-use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Create;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\OperationInterface;
 
 use function Symfony\Component\String\u;
 
@@ -35,25 +35,30 @@ final readonly class InitializeCollectionOperationListener
         }
 
         if (is_a($operation->getFilterForm(), FilterType::class, true)) {
-            $operation = $operation->withFilterFormOptions(array_merge([
-                'application' => $resource->getApplication(),
-                'resource' => $resource->getName(),
-                'operation' => $operation->getName(),
-            ], $operation->getFilterFormOptions()));
+            $operation = $operation->withFilterFormOptions(array_merge(
+                ['operation' => $operation->getName()],
+                $operation->getFilterFormOptions(),
+            ));
         }
 
         if ($operation->getForm() === HiddenDataType::class) {
             /** @var CollectionOperationInterface $operation */
             $operation = $operation->withFormOptions([
-                'application' => $resource->getApplication(),
-                'resource' => $resource->getName(),
                 'operation' => $operation->getName(),
-                'data_class' => $resource->getDataClass(),
+                'data_class' => $resource->getResourceClass(),
             ]);
         }
 
         if ($operation->getItemFormOptions() === null) {
             $operation = $operation->withItemFormOptions([]);
+        }
+        $filterFormOptions = $operation->getFilterFormOptions() ?? [];
+
+        if ($operation->getFilterForm() !== null && !isset($filterFormOptions['translation_domain'])) {
+            $operation = $operation->withFilterFormOptions(array_merge(
+                ['translation_domain' => $resource->getTranslationDomain()],
+                $filterFormOptions,
+            ));
         }
 
         if ($operation->getCollectionFormOptions() === null) {
@@ -65,7 +70,7 @@ final readonly class InitializeCollectionOperationListener
 
             if ($resource->hasOperationOfType(Create::class)) {
                 $collectionActions[] = new Action(
-                    name: $resource->getOperationOfType(Create::class)->getName(),
+                    name: $resource->getOperationOfType(Create::class)->getShortName(),
                     attributes: ['class' => 'btn-success'],
                     operation: $resource->getOperationOfType(Create::class)->getName(),
                     icon: 'plus-circle me-1',
@@ -115,7 +120,7 @@ final readonly class InitializeCollectionOperationListener
                 );
             } else {
                 /** @var Action $action */
-                $action = $action->withLabel(u($operation->getName())->title()->toString());
+                $action = $action->withLabel(u($operation->getShortName())->title()->toString());
             }
         }
 

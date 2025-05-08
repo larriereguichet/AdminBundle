@@ -6,12 +6,12 @@ namespace LAG\AdminBundle\EventListener\Grid;
 
 use LAG\AdminBundle\Event\GridEvent;
 use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
-use LAG\AdminBundle\Resource\Metadata\Action;
-use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Grid;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Show;
-use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Update;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 use function Symfony\Component\String\u;

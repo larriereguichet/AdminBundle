@@ -6,8 +6,9 @@ namespace LAG\AdminBundle\Tests\EventListener\Resource;
 
 use LAG\AdminBundle\Event\ResourceEvent;
 use LAG\AdminBundle\EventListener\Resource\InitializeResourceListener;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
+use LAG\AdminBundle\Metadata\Application;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Resource\Factory\ApplicationFactoryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -15,24 +16,21 @@ use PHPUnit\Framework\MockObject\MockObject;
 final class InitializeResourceListenerTest extends TestCase
 {
     private InitializeResourceListener $listener;
-    private MockObject $applicationRegistry;
-
-    #[Test]
-    public function itDefinesApplication(): void
-    {
-        $resource = new Resource(name: 'some_resource');
-        $event = new ResourceEvent($resource);
-
-        $this->listener->__invoke($event);
-
-        self::assertEquals('some_application', $event->getResource()->getApplication());
-    }
+    private MockObject $applicationFactory;
 
     #[Test]
     public function itDefinesTitle(): void
     {
-        $resource = new Resource(name: 'some_resource');
+        $application = new Application(name: 'My Little Application');
+        $resource = new Resource(name: 'some_resource', application: 'my_little_application');
         $event = new ResourceEvent($resource);
+
+        $this->applicationFactory
+            ->expects(self::once())
+            ->method('create')
+            ->with('my_little_application')
+            ->willReturn($application)
+        ;
 
         $this->listener->__invoke($event);
 
@@ -42,8 +40,16 @@ final class InitializeResourceListenerTest extends TestCase
     #[Test]
     public function itDefinesTranslationDomain(): void
     {
-        $resource = new Resource(name: 'some_resource');
+        $application = new Application(name: 'My Little Application', translationDomain: 'some_translation_domain');
+        $resource = new Resource(name: 'some_resource', application: 'my_little_application');
         $event = new ResourceEvent($resource);
+
+        $this->applicationFactory
+            ->expects(self::once())
+            ->method('create')
+            ->with('my_little_application')
+            ->willReturn($application)
+        ;
 
         $this->listener->__invoke($event);
 
@@ -107,11 +113,7 @@ final class InitializeResourceListenerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->applicationRegistry = self::createMock(ApplicationRegistryInterface::class);
-        $this->listener = new InitializeResourceListener(
-            'some_application',
-            'some_translation_domain',
-            $this->applicationRegistry
-        );
+        $this->applicationFactory = self::createMock(ApplicationFactoryInterface::class);
+        $this->listener = new InitializeResourceListener($this->applicationFactory);
     }
 }

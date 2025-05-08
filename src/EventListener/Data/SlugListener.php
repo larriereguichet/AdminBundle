@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventListener\Data;
 
 use LAG\AdminBundle\Event\DataEvent;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Slug;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Slug;
 use LAG\AdminBundle\Slug\Registry\SluggerRegistryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 

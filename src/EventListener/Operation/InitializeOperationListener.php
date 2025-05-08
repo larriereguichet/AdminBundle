@@ -8,14 +8,14 @@ use LAG\AdminBundle\Event\OperationEvent;
 use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceDataType;
-use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Create;
-use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Link;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Update;
-use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Update;
+use LAG\AdminBundle\Resource\Factory\ApplicationFactoryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
 
@@ -25,7 +25,7 @@ final readonly class InitializeOperationListener
 {
     public function __construct(
         private RouteNameGeneratorInterface $routeNameGenerator,
-        private ApplicationRegistryInterface $applicationRegistry,
+        private ApplicationFactoryInterface $applicationFactory,
     ) {
     }
 
@@ -33,21 +33,7 @@ final readonly class InitializeOperationListener
     {
         $operation = $event->getOperation();
         $resource = $operation->getResource();
-        $application = null;
-
-        if ($resource->getApplication() && $this->applicationRegistry->has($resource->getApplication())) {
-            $application = $this->applicationRegistry->get($resource->getApplication());
-        }
-
-        if (!$operation->getName()) {
-            $operation = $operation->withName(
-                u($operation::class)
-                    ->afterLast('\\')
-                    ->snake()
-                    ->lower()
-                    ->toString()
-            );
-        }
+        $application = $this->applicationFactory->create($resource->getApplication());
 
         if ($operation->getTitle() === null) {
             $inflector = new EnglishInflector();
@@ -55,7 +41,7 @@ final readonly class InitializeOperationListener
             if ($operation instanceof CollectionOperationInterface) {
                 $title = u($inflector->pluralize($resource->getName())[0]);
             } else {
-                $title = u($operation->getName())
+                $title = u($operation->getShortName())
                     ->append(' ')
                     ->append($resource->getName())
                 ;
@@ -75,7 +61,7 @@ final readonly class InitializeOperationListener
                         ->withForm(ResourceDataType::class)
                         ->withFormOptions([
                             'exclude' => $resource->getIdentifiers(),
-                            'data_class' => $resource->getDataClass(),
+                            'data_class' => $resource->getResourceClass(),
                             'application' => $resource->getApplication(),
                             'resource' => $resource->getName(),
                             'operation' => $operation->getName(),
@@ -96,6 +82,10 @@ final readonly class InitializeOperationListener
 
         if ($operation->getFormOptions() === null) {
             $operation = $operation->withFormOptions([]);
+        }
+
+        if (empty($operation->getFormOptions()['translation_domain']) && $resource->getTranslationDomain() !== null) {
+            $operation = $operation->withFormOptions(['translation_domain' => $resource->getTranslationDomain()]);
         }
 
         if ($operation->getBaseTemplate() === null) {
@@ -133,7 +123,7 @@ final readonly class InitializeOperationListener
         }
 
         if ($resource->isValidationEnabled() !== null) {
-            if ($operation->useValidation() === null) {
+            if ($operation->hasValidation() === null) {
                 $operation = $operation->withValidation($resource->isValidationEnabled());
             }
 
@@ -144,12 +134,12 @@ final readonly class InitializeOperationListener
             }
         }
 
-        if ($resource->useAjax() !== null) {
-            if ($operation->useAjax() === null) {
-                $operation = $operation->withAjax($resource->useAjax());
+        if ($resource->hasAjax() !== null) {
+            if ($operation->hasAjax() === null) {
+                $operation = $operation->withAjax($resource->hasAjax());
             }
 
-            if ($operation->useAjax()) {
+            if ($operation->hasAjax()) {
                 if ($resource->getNormalizationContext() !== null && $operation->getNormalizationContext() === null) {
                     $operation = $operation->withNormalizationContext($resource->getNormalizationContext());
                 }
@@ -194,24 +184,21 @@ final readonly class InitializeOperationListener
         if ($operation instanceof CollectionOperationInterface) {
             if ($resource->hasOperation('update')) {
                 $actions[] = new Link(
-                    resource: $resource->getName(),
-                    operation: 'update',
+                    operation: $resource->getApplication().'.'.$resource->getName().'update',
                     label: 'lag_admin.ui.update',
                 );
             }
 
             if ($resource->hasOperation('delete')) {
                 $actions[] = new Link(
-                    resource: $resource->getName(),
-                    operation: 'delete',
+                    operation: $resource->getApplication().'.'.$resource->getName().'delete',
                     label: 'lag_admin.ui.delete',
                 );
             }
         } else {
             if ($resource->hasOperation('index')) {
                 $actions[] = new Link(
-                    resource: $resource->getName(),
-                    operation: 'index',
+                    operation: $resource->getApplication().'.'.$resource->getName().'index',
                     label: 'lag_admin.ui.cancel',
                 );
             }

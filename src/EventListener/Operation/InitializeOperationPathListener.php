@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventListener\Operation;
 
 use LAG\AdminBundle\Event\OperationEvent;
-use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Index;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\Index;
 use Symfony\Component\String\Inflector\EnglishInflector;
 
 use function Symfony\Component\String\u;
@@ -31,7 +31,7 @@ final readonly class InitializeOperationPathListener
             ;
 
             if ($operation instanceof CollectionOperationInterface && !$operation instanceof Index) {
-                $path = $path->append('/', $operation->getName());
+                $path = $path->append('/', $operation->getShortName());
             }
 
             if (!$operation instanceof CollectionOperationInterface) {
@@ -46,9 +46,7 @@ final readonly class InitializeOperationPathListener
                     ;
                 }
 
-                $path = $path
-                    ->append($operation->getName())
-                ;
+                $path = $path->append($operation->getShortName());
             }
             $event->setOperation($operation->withPath($path->lower()->toString()));
         } elseif ($resource->getPathPrefix() !== null) {
