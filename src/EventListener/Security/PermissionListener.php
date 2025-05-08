@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\EventListener\Security;
 
-use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
+use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use LAG\AdminBundle\Resource\Context\OperationContextInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -13,7 +14,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 final readonly class PermissionListener
 {
     public function __construct(
-        private ResourceContextInterface $resourceContext,
+        private ParametersExtractorInterface $parametersExtractor,
+        private OperationContextInterface $operationContext,
         private Security $security,
     ) {
     }
@@ -22,10 +24,10 @@ final readonly class PermissionListener
     {
         $request = $event->getRequest();
 
-        if (!$this->resourceContext->supports($request)) {
+        if ($this->parametersExtractor->getOperationName($request) === null) {
             return;
         }
-        $operation = $this->resourceContext->getOperation($request);
+        $operation = $this->operationContext->getOperation();
 
         if (!$this->security->isGranted(OperationPermissionVoter::RESOURCE_ACCESS, $operation)) {
             throw new AccessDeniedException('You are not allowed to access to this resource');

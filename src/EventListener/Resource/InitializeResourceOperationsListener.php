@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventListener\Resource;
 
 use LAG\AdminBundle\Event\ResourceEvent;
-use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
+
+use function Symfony\Component\String\u;
 
 final readonly class InitializeResourceOperationsListener
 {
@@ -23,6 +25,16 @@ final readonly class InitializeResourceOperationsListener
         $operations = [];
 
         foreach ($resource->getOperations() as $operation) {
+            if ($operation->getName() === null) {
+                $operation = $operation->withName(
+                    u($resource->getApplication())
+                        ->append('.', $resource->getName())
+                        ->append('.', $operation->getShortName())
+                        ->lower()
+                        ->toString()
+                );
+            }
+
             if ($operation instanceof CollectionOperationInterface) {
                 if ($operation->getContextualActions() === null && $resource->hasOperation('create')) {
                     $operation = $operation->withContextualActions([]);
