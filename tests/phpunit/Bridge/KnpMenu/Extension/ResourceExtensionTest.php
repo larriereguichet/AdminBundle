@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Bridge\KnpMenu\Extension;
 
 use LAG\AdminBundle\Bridge\KnpMenu\Extension\ResourceExtension;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Show;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -16,30 +16,25 @@ use PHPUnit\Framework\TestCase;
 final class ResourceExtensionTest extends TestCase
 {
     private ResourceExtension $extension;
-    private MockObject $registry;
+    private MockObject $operationFactory;
     private MockObject $urlGenerator;
 
     #[Test]
     public function itBuildOptions(): void
     {
-        $operation = new Show(name: 'my_operation', route: 'my_route', title: 'Some title');
+        $operation = new Show(shortName: 'my_operation', route: 'my_route', title: 'Some title');
         $resource = new Resource(
             name: 'my_resource',
             operations: [$operation],
             translationDomain: 'my_domain',
         );
+        $operation = $operation->withResource($resource);
 
-        $this->registry
+        $this->operationFactory
             ->expects(self::once())
-            ->method('has')
-            ->with('my_resource')
-            ->willReturn(true)
-        ;
-        $this->registry
-            ->expects(self::once())
-            ->method('get')
-            ->with('my_resource')
-            ->willReturn($resource)
+            ->method('create')
+            ->with('my_operation')
+            ->willReturn($operation)
         ;
         $this->urlGenerator
             ->expects(self::once())
@@ -63,58 +58,11 @@ final class ResourceExtensionTest extends TestCase
     }
 
     #[Test]
-    public function itDoesNotBuildOptionsMissingOperation(): void
-    {
-        $resource = new Resource(name: 'my_resource');
-
-        $this->registry
-            ->expects(self::once())
-            ->method('has')
-            ->with('my_resource')
-            ->willReturn(true)
-        ;
-        $this->registry
-            ->expects(self::once())
-            ->method('get')
-            ->with('my_resource')
-            ->willReturn($resource)
-        ;
-
-        $options = [
-            'some_option' => 'some_value',
-            'resource' => 'my_resource',
-            'operation' => 'my_operation',
-        ];
-        $buildOptions = $this->extension->buildOptions($options);
-
-        self::assertEquals($options, $buildOptions);
-    }
-
-    #[Test]
-    public function itDoesNotBuildOptionsMissingResource(): void
-    {
-        $this->registry
-            ->expects(self::once())
-            ->method('has')
-            ->with('my_resource')
-            ->willReturn(false)
-        ;
-        $options = [
-            'some_option' => 'some_value',
-            'resource' => 'my_resource',
-            'operation' => 'my_operation',
-        ];
-        $buildOptions = $this->extension->buildOptions($options);
-
-        self::assertEquals($options, $buildOptions);
-    }
-
-    #[Test]
     public function itDoesNotBuildOptionsWithoutResource(): void
     {
-        $this->registry
+        $this->operationFactory
             ->expects(self::never())
-            ->method('has')
+            ->method('create')
         ;
         $options = ['some_option' => 'some_value'];
         $buildOptions = $this->extension->buildOptions($options);
@@ -124,8 +72,8 @@ final class ResourceExtensionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->registry = self::createMock(ResourceRegistryInterface::class);
-        $this->urlGenerator = self::createMock(UrlGeneratorInterface::class);
-        $this->extension = new ResourceExtension($this->registry, $this->urlGenerator);
+        $this->operationFactory = self::createMock(OperationFactoryInterface::class);
+        $this->urlGenerator = self::createMock(ResourceUrlGeneratorInterface::class);
+        $this->extension = new ResourceExtension($this->operationFactory, $this->urlGenerator);
     }
 }
