@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Request\Uri;
 
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-interface UriVariablesExtractorInterface
+interface UrlVariablesExtractorInterface
 {
     /**
      * @return array<string, string>
