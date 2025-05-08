@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Request\Resolver;
 
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
