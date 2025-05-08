@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\PropertyGuesser;
 
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Resource;
 
 interface ResourcePropertyGuesserInterface
 {

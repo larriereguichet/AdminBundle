@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\PropertyGuesser;
 
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Resource;
 
 final readonly class ResourcePropertyGuesser implements ResourcePropertyGuesserInterface
 {
@@ -15,14 +15,14 @@ final readonly class ResourcePropertyGuesser implements ResourcePropertyGuesserI
 
     public function guessProperties(Resource $resource): iterable
     {
-        if ($resource->getDataClass() === null) {
+        if ($resource->getResourceClass() === null) {
             return [];
         }
-        $reflectionClass = new \ReflectionClass($resource->getDataClass());
+        $reflectionClass = new \ReflectionClass($resource->getResourceClass());
 
         foreach ($reflectionClass->getProperties() as $reflectionProperty) {
             $property = $this->propertyGuesser->guessProperty(
-                $resource->getDataClass(),
+                $resource->getResourceClass(),
                 $reflectionProperty->getName(),
                 (string) $reflectionProperty->getType(),
             );

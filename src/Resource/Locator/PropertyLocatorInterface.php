@@ -6,5 +6,11 @@ namespace LAG\AdminBundle\Resource\Locator;
 
 interface PropertyLocatorInterface
 {
-    public function locateProperties(\ReflectionClass $resourceClass): array;
+    /**
+     * Return available properties for the given resource class.
+     *
+     * @param class-string $resourceClass
+     * @return array
+     */
+    public function locateProperties(string $resourceClass): iterable;
 }
