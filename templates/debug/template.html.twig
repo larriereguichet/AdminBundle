@@ -11,15 +11,15 @@
 
         <div class="sf-toolbar-info-piece">
             <b>Application</b>
-            <span class="sf-toolbar-status ">{{ collector.data.application }}</span>
+            <span class="sf-toolbar-status ">{{ collector.data.application|default('~') }}</span>
         </div>
         <div class="sf-toolbar-info-piece">
             <b>Resource</b>
-            <span class="sf-toolbar-status ">{{ collector.data.resource }}</span>
+            <span class="sf-toolbar-status ">{{ collector.data.resource|default('~') }}</span>
         </div>
         <div class="sf-toolbar-info-piece">
             <b>Operation</b>
-            <span class="sf-toolbar-status ">{{ collector.data.operation }}</span>
+            <span class="sf-toolbar-status ">{{ collector.data.operation|default('~') }}</span>
         </div>
     {% endset %}
 
@@ -43,30 +43,16 @@
         <tbody>
         <tr>
             <th style="width: 150px">Application</th>
-            <td>{{ collector.data.application }}</td>
+            <td>{{ collector.data.application|default('~') }}</td>
         </tr>
         <tr>
             <th>Resource</th>
-            <td>{{ collector.data.resource }}</td>
+            <td>{{ collector.data.resource|default('~') }}</td>
         </tr>
         <tr>
             <th>Operation</th>
-            <td>{{ collector.data.operation }}</td>
+            <td>{{ collector.data.operation|default('~') }}</td>
         </tr>
         </tbody>
     </table>
-
-    <h3>Properties</h3>
-    <table style="width: 50%">
-        <tbody>
-        {% for propertyName, property in collector.data.properties|default([]) %}
-        <tr>
-            <th style="width: 150px">{{ propertyName }}</th>
-            <td>{{ profiler_dump(property) }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    {# TODO grid #}
 {% endblock %}

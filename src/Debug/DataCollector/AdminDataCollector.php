@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Debug\DataCollector;
 
-use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Context\OperationContextInterface;
 use Symfony\Bundle\FrameworkBundle\DataCollector\AbstractDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,8 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class AdminDataCollector extends AbstractDataCollector
 {
     public function __construct(
-        private readonly ResourceRegistryInterface $registry,
-        private readonly ResourceParametersExtractorInterface $parametersExtractor,
+        private readonly OperationContextInterface $operationContext,
     ) {
     }
 
@@ -25,20 +23,12 @@ final class AdminDataCollector extends AbstractDataCollector
 
     public function collect(Request $request, Response $response, ?\Throwable $exception = null): void
     {
-        $data['application'] = $this->parametersExtractor->getApplicationName($request);
-        $data['resource'] = $this->parametersExtractor->getResourceName($request);
-        $data['operation'] = $this->parametersExtractor->getOperationName($request);
-        $data['resources'] = $this->collectResources();
-
-        if (!empty($data['resource']) && $this->registry->has($data['resource'])) {
-            $data['properties'] = [];
-            $resource = $this->registry->get($data['resource']);
-
-            foreach ($resource->getProperties() as $property) {
-                $data['properties'][$property->getName()] = $this->cloneVar($property);
-            }
+        if ($this->operationContext->hasOperation()) {
+            $operation = $this->operationContext->getOperation();
+            $this->data['application'] = $operation->getResource()->getApplication();
+            $this->data['resource'] = $operation->getResource()->getName();
+            $this->data['operation'] = $operation->getName();
         }
-        $this->data = $data;
     }
 
     public function reset(): void
@@ -49,16 +39,5 @@ final class AdminDataCollector extends AbstractDataCollector
     public function getData(): array
     {
         return $this->data;
-    }
-
-    private function collectResources(): array
-    {
-        $data = [];
-
-        foreach ($this->registry->all() as $resource) {
-            $data[$resource->getName()] = $resource;
-        }
-
-        return $data;
     }
 }
