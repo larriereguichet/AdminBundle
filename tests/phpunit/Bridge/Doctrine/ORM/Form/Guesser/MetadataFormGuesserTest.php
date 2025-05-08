@@ -9,9 +9,9 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Form\Guesser\MetadataFormGuesser;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Text;
-use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Text;
+use LAG\AdminBundle\Metadata\Update;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +25,7 @@ final class MetadataFormGuesserTest extends TestCase
     #[Test]
     public function itDoesNotGuessFormOnGeneratedValues(): void
     {
-        $resource = new Resource(dataClass: \stdClass::class);
+        $resource = new Resource(resourceClass: \stdClass::class);
         $operation = (new Update())->withResource($resource);
         $property = new Text(propertyPath: 'name');
 
@@ -71,7 +71,7 @@ final class MetadataFormGuesserTest extends TestCase
     #[Test]
     public function itDoesNotGuessFormOnNotReadableProperty(): void
     {
-        $resource = new Resource(dataClass: \stdClass::class);
+        $resource = new Resource(resourceClass: \stdClass::class);
         $operation = (new Update())->withResource($resource);
         $property = new Text(propertyPath: 'name');
 
@@ -113,7 +113,7 @@ final class MetadataFormGuesserTest extends TestCase
             ->with(\stdClass::class)
             ->willReturn(null)
         ;
-        $resource = new Resource(dataClass: \stdClass::class);
+        $resource = new Resource(resourceClass: \stdClass::class);
         $operation = (new Update())->withResource($resource);
         $property = new Text();
 

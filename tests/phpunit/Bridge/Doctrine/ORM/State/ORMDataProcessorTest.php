@@ -8,11 +8,11 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManagerInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Exception\ManagerNotFoundException;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
-use LAG\AdminBundle\Resource\Metadata\Create;
-use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\Tests\Entity\FakeEntity;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -68,13 +68,13 @@ final class ORMDataProcessorTest extends TestCase
             ->method('flush')
         ;
 
-        $this->processor->process($data, (new Delete())->withResource(new Resource(dataClass: FakeEntity::class)));
+        $this->processor->process($data, (new Delete())->withResource(new Resource(resourceClass: FakeEntity::class)));
     }
 
     #[Test]
     public function itDoesNotSavedNotManagedData(): void
     {
-        $operation = (new Delete())->withResource(new Resource(dataClass: FakeEntity::class));
+        $operation = (new Delete())->withResource(new Resource(resourceClass: FakeEntity::class));
         $data = new FakeEntity();
         $this->registry
             ->expects(self::once())
@@ -91,7 +91,7 @@ final class ORMDataProcessorTest extends TestCase
     {
         $resource = new Resource(
             operations: [new Create(), new Update()],
-            dataClass: FakeEntity::class,
+            resourceClass: FakeEntity::class,
         );
 
         yield [$resource->getOperation('create')->withResource($resource)];

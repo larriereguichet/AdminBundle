@@ -6,12 +6,12 @@ namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\State;
 
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\PaginationProvider;
-use LAG\AdminBundle\Resource\Metadata\Create;
-use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Show;
-use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Pagerfanta\PagerfantaInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
