@@ -17,8 +17,6 @@ interface OperationContextInterface
 
     /**
      * Return true if there is a supported operation in the current operation.
-     *
-     * @return bool
      */
     public function hasOperation(): bool;
 }

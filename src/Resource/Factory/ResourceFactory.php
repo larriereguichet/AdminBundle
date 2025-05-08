@@ -4,48 +4,47 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Factory;
 
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Exception\InvalidResourceException;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use Symfony\Component\Validator\Constraints\Valid;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use LAG\AdminBundle\Event\OperationEvent;
+use LAG\AdminBundle\Event\OperationEvents;
+use LAG\AdminBundle\Event\ResourceEvent;
+use LAG\AdminBundle\Event\ResourceEvents;
+use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
+use LAG\AdminBundle\Metadata\Resource;
 
 final readonly class ResourceFactory implements ResourceFactoryInterface
 {
     public function __construct(
-        private OperationFactoryInterface $operationFactory,
-        private ValidatorInterface $validator,
+        private DefinitionFactoryInterface $definitionFactory,
+        private ResourceEventDispatcherInterface $eventDispatcher,
     ) {
     }
 
-    public function create(Resource $definition): Resource
+    public function create(string $resourceName): Resource
     {
-        $operations = [];
+        $definition = $this->definitionFactory->createResourceDefinition($resourceName);
+        $applicationName = $definition->getApplication();
+        $resourceName = $definition->getName();
 
-        foreach ($definition->getOperations() as $operation) {
-            // Ensure the operation belongs to the right resource
-            $operations[] = $this->operationFactory->create($operation->withResource($definition));
+        $event = new ResourceEvent($definition);
+        $this->eventDispatcher->dispatchBuildEvents($event, ResourceEvents::RESOURCE_CREATE_TEMPLATE);
+
+        $resource = $event->getResource()
+            ->withApplication($applicationName)
+            ->withName($resourceName)
+        ;
+
+        foreach ($resource->getOperations() as $operation) {
+            $operationEvent = new OperationEvent($operation->withResource($resource));
+            $this->eventDispatcher->dispatchBuildEvents($operationEvent, OperationEvents::OPERATION_CREATE_TEMPLATE);
+
+            $operation = $operationEvent->getOperation();
+            $resource = $resource->withOperation($operation);
+
+            $operationEvent = new OperationEvent($operation->withResource($resource));
+            $this->eventDispatcher->dispatchBuildEvents($operationEvent, OperationEvents::OPERATION_CREATED_TEMPLATE);
         }
-        $resource = $definition->withOperations($operations);
-        $position = 0;
-
-        foreach ($resource->getProperties() as $property) {
-            if ($property->getName() === null) {
-                throw new Exception(\sprintf(
-                    'The property at position "%s" for the resource "%s" of application "%s" has no name',
-                    $position,
-                    $resource->getName(),
-                    $resource->getApplication() ?? 'unknown',
-                ));
-            }
-            ++$position;
-        }
-
-        $errors = $this->validator->validate($resource, [new Valid()]);
-
-        if ($errors->count() > 0) {
-            throw new InvalidResourceException($resource->getName(), $resource->getApplication(), $errors);
-        }
+        $event = new ResourceEvent($resource);
+        $this->eventDispatcher->dispatchBuildEvents($event, ResourceEvents::RESOURCE_CREATED_TEMPLATE);
 
         return $resource;
     }

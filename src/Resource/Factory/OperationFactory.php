@@ -4,39 +4,22 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Factory;
 
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
-use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
+
+use function Symfony\Component\String\u;
 
 final readonly class OperationFactory implements OperationFactoryInterface
 {
     public function __construct(
-        private FilterFactoryInterface $filterFactory,
+        private ResourceFactoryInterface $resourceFactory,
     ) {
     }
 
-    public function create(OperationInterface $operation): OperationInterface
+    public function create(string $operationName): OperationInterface
     {
-        if ($operation->getResource() === null) {
-            throw new Exception('The operation should be owned by a resource.');
-        }
+        $resourceName = u($operationName)->beforeLast('.')->toString();
+        $operationName = u($operationName)->afterLast('.')->toString();
 
-        if ($operation instanceof CollectionOperationInterface) {
-            $operation = $operation->withFilters($this->createFilters($operation));
-        }
-
-        return $operation;
-    }
-
-    private function createFilters(CollectionOperationInterface $operation): array
-    {
-        $filters = [];
-
-        foreach ($operation->getFilters() ?? [] as $filter) {
-            $filters[] = $this->filterFactory->create($operation, $filter);
-        }
-
-        return $filters;
+        return $this->resourceFactory->create($resourceName)->getOperation($operationName);
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Resource\DataMapper;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
+use LAG\AdminBundle\Metadata\PropertyInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 

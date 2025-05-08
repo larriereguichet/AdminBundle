@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Resource\DataMapper;
 
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Metadata\PropertyInterface;
+use LAG\AdminBundle\Metadata\Text;
 use LAG\AdminBundle\Resource\DataMapper\DataMapper;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
-use LAG\AdminBundle\Resource\Metadata\Text;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

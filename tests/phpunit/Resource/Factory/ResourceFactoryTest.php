@@ -4,93 +4,72 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Resource\Factory;
 
-use LAG\AdminBundle\Exception\InvalidResourceException;
-use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
+use LAG\AdminBundle\Event\OperationEvents;
+use LAG\AdminBundle\Event\ResourceEventInterface;
+use LAG\AdminBundle\Event\ResourceEvents;
+use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\TextFilter;
+use LAG\AdminBundle\Resource\Factory\DefinitionFactoryInterface;
 use LAG\AdminBundle\Resource\Factory\ResourceFactory;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ResourceFactoryTest extends TestCase
 {
     private ResourceFactoryInterface $resourceFactory;
-    private MockObject $operationFactory;
-    private MockObject $validator;
+    private MockObject $definitionFactory;
+    private MockObject $eventDispatcher;
 
     #[Test]
     public function itCreatesAResourceFromADefinition(): void
     {
-        $operationDefinition = new Show(name: 'my_operation');
+        $operationDefinition = new Show(shortName: 'my_operation');
+        $collectionOperationDefinition = new Index(
+            shortName: 'my_collection_operation',
+            filters: [new TextFilter(name: 'my_filter')],
+        );
         $definition = new Resource(
             name: 'my_resource',
-            operations: [$operationDefinition],
+            application: 'my_application',
+            operations: [$operationDefinition, $collectionOperationDefinition],
         );
 
-        $this->operationFactory
+        $this->definitionFactory
             ->expects(self::once())
-            ->method('create')
-            ->with($operationDefinition->withResource($definition))
-            ->willReturn($operationDefinition)
+            ->method('createResourceDefinition')
+            ->willReturn($definition)
         ;
-        $this->validator
-            ->expects(self::once())
-            ->method('validate')
-            ->with($definition)
+        $this->eventDispatcher
+            ->expects(self::exactly(6))
+            ->method('dispatchBuildEvents')
+            ->willReturnCallback(function (ResourceEventInterface $event, string $eventName) {
+                self::assertEquals('my_resource', $event->getResource()->getName());
+                self::assertContains($eventName, [
+                    ResourceEvents::RESOURCE_CREATE_TEMPLATE,
+                    ResourceEvents::RESOURCE_CREATED_TEMPLATE,
+                    OperationEvents::OPERATION_CREATE_TEMPLATE,
+                    OperationEvents::OPERATION_CREATED_TEMPLATE,
+                ]);
+            })
         ;
 
-        $resource = $this->resourceFactory->create($definition);
+        $resource = $this->resourceFactory->create('my_resource');
 
         self::assertEquals($definition->getName(), $resource->getName());
     }
 
-    #[Test]
-    public function itDoesNotCreateInvalidResource(): void
-    {
-        $operationDefinition = new Show(name: 'my_operation');
-        $definition = new Resource(
-            name: 'my_resource',
-            operations: [$operationDefinition],
-        );
-        $constraintViolationList = self::createMock(ConstraintViolationList::class);
-        $constraintViolationList->expects(self::atLeastOnce())
-            ->method('count')
-            ->willReturn(1)
-        ;
-
-        $this->operationFactory
-            ->expects(self::once())
-            ->method('create')
-            ->with($operationDefinition->withResource($definition))
-            ->willReturn($operationDefinition)
-        ;
-        $this->validator
-            ->expects(self::once())
-            ->method('validate')
-            ->with($definition)
-            ->willReturn($constraintViolationList)
-        ;
-
-        self::expectExceptionObject(new InvalidResourceException(
-            $definition->getName(),
-            $definition->getApplication(),
-            $constraintViolationList,
-        ));
-
-        $this->resourceFactory->create($definition);
-    }
-
     protected function setUp(): void
     {
-        $this->operationFactory = self::createMock(OperationFactoryInterface::class);
-        $this->validator = self::createMock(ValidatorInterface::class);
+        $this->definitionFactory = self::createMock(DefinitionFactoryInterface::class);
+        $this->eventDispatcher = self::createMock(ResourceEventDispatcherInterface::class);
         $this->resourceFactory = new ResourceFactory(
-            $this->operationFactory,
-            $this->validator,
+            $this->definitionFactory,
+            $this->eventDispatcher,
         );
     }
 }

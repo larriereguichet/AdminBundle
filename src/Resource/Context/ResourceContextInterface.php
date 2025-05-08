@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Context;
 
-use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Resource;
-use Symfony\Component\HttpFoundation\Request;
 
 interface ResourceContextInterface
 {
@@ -19,8 +17,6 @@ interface ResourceContextInterface
 
     /**
      * Return true if the current request has a resource.
-     *
-     * @return bool
      */
     public function hasResource(): bool;
 }

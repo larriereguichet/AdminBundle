@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\DataMapper;
 
-use LAG\AdminBundle\Resource\Metadata\PropertyInterface;
+use LAG\AdminBundle\Metadata\PropertyInterface;
 
 /**
  * Map resource data to a property data. Use the property path to retrieve the property data. The property path should
