@@ -6,8 +6,8 @@ namespace LAG\AdminBundle\Event;
 
 class OperationEvents
 {
-    public const string OPERATION_CREATE_PATTERN = '{application}.{resource}.operation_create';
-    public const string OPERATION_CREATED_PATTERN = '{application}.{resource}.operation_created';
+    public const string OPERATION_CREATE_TEMPLATE = '{application}.{resource}.operation_create';
+    public const string OPERATION_CREATED_TEMPLATE = '{application}.{resource}.operation_created';
 
     public const string OPERATION_CREATE = 'lag_admin.resource.operation_create';
     public const string OPERATION_CREATED = 'lag_admin.resource.operation_created';

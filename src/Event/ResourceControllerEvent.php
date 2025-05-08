@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Resource;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class ResourceControllerEvent extends Event
+class ResourceControllerEvent extends Event implements ResourceEventInterface
 {
     private ?Response $response = null;
 
@@ -18,7 +18,6 @@ class ResourceControllerEvent extends Event
         private readonly OperationInterface $operation,
         private readonly Request $request,
         private readonly mixed $data,
-        private readonly array $context,
     ) {
     }
 
@@ -50,10 +49,5 @@ class ResourceControllerEvent extends Event
     public function setResponse(?Response $response): void
     {
         $this->response = $response;
-    }
-
-    public function getContext(): array
-    {
-        return $this->context;
     }
 }

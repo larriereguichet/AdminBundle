@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Resource;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class ResourceEvent extends Event
+class ResourceEvent extends Event implements ResourceEventInterface
 {
     public function __construct(private Resource $resource)
     {

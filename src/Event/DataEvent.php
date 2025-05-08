@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Resource;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class DataEvent extends Event
+class DataEvent extends Event implements ResourceEventInterface
 {
     public function __construct(
         private readonly mixed $data,
