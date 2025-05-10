@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\View\Component\Cell;
 
 use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Resource\Metadata\Text;
+use LAG\AdminBundle\Metadata\Text;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 use function Symfony\Component\String\u;

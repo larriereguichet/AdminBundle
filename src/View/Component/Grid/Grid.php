@@ -6,8 +6,8 @@ namespace LAG\AdminBundle\View\Component\Grid;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Grid\View\GridView;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Resource;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 

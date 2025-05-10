@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Helper;
 
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
 use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -12,14 +12,14 @@ use Twig\Extension\RuntimeExtensionInterface;
 final readonly class SecurityHelper implements RuntimeExtensionInterface
 {
     public function __construct(
-        private ResourceRegistryInterface $registry,
+        private OperationFactoryInterface $operationFactory,
         private Security $security,
     ) {
     }
 
-    public function isOperationAllowed(string $resourceName, string $operationName, ?string $applicationName = null): bool
+    public function isOperationAllowed(string $operationName): bool
     {
-        $operation = $this->registry->get($resourceName, $applicationName)->getOperation($operationName);
+        $operation = $this->operationFactory->create($operationName);
 
         return $this->security->isGranted(OperationPermissionVoter::RESOURCE_ACCESS, $operation);
     }

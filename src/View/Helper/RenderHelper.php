@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Helper;
 
-use LAG\AdminBundle\Resource\Metadata\Action;
-use LAG\AdminBundle\Resource\Metadata\Link;
+use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\View\Render\ActionRendererInterface;
 use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -26,7 +26,7 @@ final readonly class RenderHelper implements RuntimeExtensionInterface
         return $this->linkRenderer->render($link, $data, $options);
     }
 
-    public function renderAction(Action $action, mixed $data): string
+    public function renderAction(Action $action, mixed $data = null): string
     {
         return $this->actionRenderer->renderAction($action, $data);
     }

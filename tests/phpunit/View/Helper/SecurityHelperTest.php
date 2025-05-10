@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\View\Helper;
 
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Show;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
 use LAG\AdminBundle\View\Helper\SecurityHelper;
 use PHPUnit\Framework\Attributes\Test;
@@ -17,20 +17,20 @@ use Symfony\Bundle\SecurityBundle\Security;
 final class SecurityHelperTest extends TestCase
 {
     private SecurityHelper $helper;
-    private MockObject $registry;
+    private MockObject $operationFactory;
     private MockObject $security;
 
     #[Test]
     public function itChecksOperationPermissions(): void
     {
-        $operation = new Show(name: 'my_operation');
+        $operation = new Show(shortName: 'my_operation');
         $resource = new Resource(name: 'my_resource', operations: [$operation]);
 
-        $this->registry
+        $this->operationFactory
             ->expects(self::once())
-            ->method('get')
+            ->method('create')
             ->with('my_resource')
-            ->willReturn($resource)
+            ->willReturn($operation)
         ;
 
         $this->security
@@ -44,10 +44,10 @@ final class SecurityHelperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->registry = self::createMock(ResourceRegistryInterface::class);
+        $this->operationFactory = self::createMock(OperationFactoryInterface::class);
         $this->security = self::createMock(Security::class);
         $this->helper = new SecurityHelper(
-            $this->registry,
+            $this->operationFactory,
             $this->security,
         );
     }

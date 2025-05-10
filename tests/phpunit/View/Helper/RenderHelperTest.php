@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\View\Helper;
 
-use LAG\AdminBundle\Resource\Metadata\Action;
-use LAG\AdminBundle\Resource\Metadata\Link;
+use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\View\Helper\RenderHelper;
 use LAG\AdminBundle\View\Render\ActionRendererInterface;
 use LAG\AdminBundle\View\Render\LinkRendererInterface;

@@ -28,7 +28,7 @@ final class FormComponent
         mixed $data,
         CellView $cell,
     ): void {
-        /** @var \LAG\AdminBundle\Resource\Metadata\Form $property */
+        /** @var \LAG\AdminBundle\Metadata\Form $property */
         $property = $cell->options;
         $form = $this->formFactory->create($property->getForm(), $data, $property->getFormOptions());
         $this->form = $form->createView();

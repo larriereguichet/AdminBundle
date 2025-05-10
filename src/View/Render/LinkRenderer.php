@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\View\Render;
 
 use LAG\AdminBundle\Exception\InvalidLinkException;
-use LAG\AdminBundle\Resource\Metadata\Link;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
+use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
@@ -14,7 +14,7 @@ use Twig\Environment;
 final readonly class LinkRenderer implements LinkRendererInterface
 {
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator,
+        private ResourceUrlGeneratorInterface $urlGenerator,
         private ValidatorInterface $validator,
         private Environment $environment,
     ) {
