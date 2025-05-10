@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Metadata\Resource;
 
-use LAG\AdminBundle\Resource\Metadata\Link;
+use LAG\AdminBundle\Metadata\Link;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

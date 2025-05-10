@@ -7,10 +7,10 @@ namespace LAG\AdminBundle\Tests\Metadata\Factory;
 use LAG\AdminBundle\Event\ResourceEvent;
 use LAG\AdminBundle\Event\ResourceEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Resource\Factory\EventResourceFactory;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\Resource;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 

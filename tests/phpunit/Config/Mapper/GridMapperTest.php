@@ -47,7 +47,6 @@ final class GridMapperTest extends TestCase
                 permissions: ['ROLE_ADMIN'],
                 condition: '$data.isEnabled()',
                 sortingPath: 'someSortingPath',
-
             )],
             collectionActions: [new Action(
                 name: 'some_action',
@@ -263,6 +262,5 @@ final class GridMapperTest extends TestCase
         ];
 
         self::assertEquals($expectedConfig, $config);
-
     }
 }

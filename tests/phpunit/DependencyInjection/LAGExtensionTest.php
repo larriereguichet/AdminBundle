@@ -24,7 +24,6 @@ final class LAGExtensionTest extends TestCase
             ->willReturnCallback(function ($parameter, $value): void {
                 $this->assertContains($parameter, [
                     'lag_admin.application_parameter',
-                    'lag_admin.application_name',
                     'lag_admin.media_directory',
                     'lag_admin.upload_storage',
                     'lag_admin.resource_parameter',
@@ -32,7 +31,6 @@ final class LAGExtensionTest extends TestCase
                     'lag_admin.application.configuration',
                     'lag_admin.resource_paths',
                     'lag_admin.title',
-                    'lag_admin.translation_domain',
                     'lag_admin.resource_paths',
                     'lag_admin.date_format',
                     'lag_admin.time_format',

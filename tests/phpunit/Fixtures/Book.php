@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Fixtures;
 
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Text;
+use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Text;
 
 #[Resource(application: 'shop')]
 #[Resource(application: 'admin')]
-class FakeResource
+#[Link(name: 'show_link')]
+class Book
 {
     #[Text]
     private ?int $id = null;

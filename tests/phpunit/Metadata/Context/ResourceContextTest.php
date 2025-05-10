@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Metadata\Context;
 
 use LAG\AdminBundle\Exception\ResourceNotFoundException;
-use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContext;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Show;
 use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -124,7 +124,7 @@ class ResourceContextTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->parametersExtractor = self::createMock(ResourceParametersExtractorInterface::class);
+        $this->parametersExtractor = self::createMock(ParametersExtractorInterface::class);
         $this->resourceRegistry = self::createMock(ResourceRegistryInterface::class);
         $this->resourceContext = new ResourceContext(
             $this->parametersExtractor,

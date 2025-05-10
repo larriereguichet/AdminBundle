@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Metadata\Factory;
 
 use LAG\AdminBundle\Filter\Factory\FilterFactoryInterface;
+use LAG\AdminBundle\Metadata\Filter;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Text;
 use LAG\AdminBundle\Resource\Factory\OperationFactory;
-use LAG\AdminBundle\Resource\Metadata\Filter;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Text;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;

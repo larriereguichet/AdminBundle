@@ -92,7 +92,7 @@ final class OperationMapperTest extends TestCase
         $mapper = new OperationMapper();
         $data = $mapper->toArray($operation);
 
-        self::assertEquals(get_class($operation), $data['class']);
+        self::assertEquals($operation::class, $data['class']);
         self::assertEquals($operation->getName(), $data['name']);
         self::assertEquals($operation->getContext(), $data['context']);
         self::assertEquals($operation->getTitle(), $data['title']);
@@ -127,7 +127,7 @@ final class OperationMapperTest extends TestCase
         self::assertEquals($operation->getSuccessMessage(), $data['success_message']);
 
         if ($operation instanceof CollectionOperationInterface) {
-            self::assertCount(count($operation->getFilters()), $data['filters']);
+            self::assertCount(\count($operation->getFilters()), $data['filters']);
 
             foreach ($data['filters'] as $index => $filter) {
                 self::assertEquals($data['filters'][$index]['name'], $operation->getFilters()[$index]->getName());
@@ -199,9 +199,9 @@ final class OperationMapperTest extends TestCase
             'grid_options' => ['an_option' => 'value'],
             'collection_actions' => [],
             'item_form' => 'MyForm',
-            'item_form_options' =>  ['an_option' => 'value'],
+            'item_form_options' => ['an_option' => 'value'],
             'collection_form' => 'MyForm',
-            'collection_form_options' =>  ['an_option' => 'value'],
+            'collection_form_options' => ['an_option' => 'value'],
             'filter_form' => 'MyFilterForm',
             'filter_form_options' => ['an_option' => 'value'],
         ];

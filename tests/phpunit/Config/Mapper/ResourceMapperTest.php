@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LAG\AdminBundle\Tests\Config\Mapper;
 
 use LAG\AdminBundle\Config\Mapper\ResourceMapper;
@@ -41,7 +43,7 @@ final class ResourceMapperTest extends TestCase
                     translatable: true,
                     translationDomain: 'messages',
                 ),
-                new Boolean(name: 'enabled')
+                new Boolean(name: 'enabled'),
             ],
             provider: 'ResourceProvider',
             processor: 'ResourceProcessor',
@@ -410,7 +412,7 @@ final class ResourceMapperTest extends TestCase
                 ),
                 new Boolean(
                     name: 'enabled',
-                )
+                ),
             ],
             provider: 'ResourceProvider',
             processor: 'ResourceProcessor',

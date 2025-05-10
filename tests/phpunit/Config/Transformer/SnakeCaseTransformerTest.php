@@ -16,7 +16,7 @@ final class SnakeCaseTransformerTest extends TestCase
     public function itTransformsASource(mixed $source, mixed $expectedTarget): void
     {
         $transformer = new SnakeCaseTransformer();
-        $target = $transformer(new \stdClass(), fn() => $source);
+        $target = $transformer(new \stdClass(), fn () => $source);
 
         self::assertSame($expectedTarget, $target);
     }
