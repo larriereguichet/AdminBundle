@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Security\Voter;
 
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /** @extends Voter<string, OperationInterface> */
 final class OperationPermissionVoter extends Voter
@@ -26,7 +27,9 @@ final class OperationPermissionVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        \assert($subject instanceof OperationInterface);
+        if (!$subject instanceof OperationInterface) {
+            throw new UnexpectedTypeException($subject, OperationInterface::class);
+        }
 
         foreach ($subject->getPermissions() as $permission) {
             if ($this->security->isGranted($permission, $token->getUser())) {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Security\PermissionChecker;
 
-use LAG\AdminBundle\Resource\Metadata\Text;
+use LAG\AdminBundle\Metadata\Text;
 use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionChecker;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
