@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\State\Processor;
 
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Session\FlashMessageHelperInterface;
 
 final readonly class FlashMessageProcessor implements ProcessorInterface
@@ -15,9 +15,9 @@ final readonly class FlashMessageProcessor implements ProcessorInterface
     ) {
     }
 
-    public function process(mixed $data, OperationInterface $operation, array $uriVariables = [], array $context = []): void
+    public function process(mixed $data, OperationInterface $operation, array $urlVariables = [], array $context = []): void
     {
-        $this->processor->process($data, $operation, $uriVariables, $context);
+        $this->processor->process($data, $operation, $urlVariables, $context);
 
         if ($operation->getSuccessMessage() === null) {
             return;

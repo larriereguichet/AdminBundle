@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\State\Processor;
 
-use LAG\AdminBundle\Resource\Metadata\Create;
-use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Show;
-use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\Session\FlashMessageHelperInterface;
 use LAG\AdminBundle\State\Processor\FlashMessageProcessor;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
-use LAG\AdminBundle\Tests\Fixtures\FakeResource;
+use LAG\AdminBundle\Tests\Fixtures\Book;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -29,7 +29,7 @@ final class FlashMessageProcessorTest extends TestCase
     #[DataProvider(methodName: 'operations')]
     public function itProcessSuccessMessage(OperationInterface $operation): void
     {
-        $resource = new FakeResource();
+        $resource = new Book();
         $operation = $operation->withSuccessMessage('some_success_message');
 
         $this->decoratedProcessor
@@ -50,7 +50,7 @@ final class FlashMessageProcessorTest extends TestCase
     #[DataProvider(methodName: 'operations')]
     public function itDoesNotProcessEmptyMessage(OperationInterface $operation): void
     {
-        $resource = new FakeResource();
+        $resource = new Book();
 
         $this->decoratedProcessor
             ->expects(self::once())

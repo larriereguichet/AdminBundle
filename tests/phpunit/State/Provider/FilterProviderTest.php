@@ -7,9 +7,8 @@ namespace LAG\AdminBundle\Tests\State\Provider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
-use LAG\AdminBundle\Filter\Resolver\FilterValuesResolverInterface;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\TextFilter;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\TextFilter;
 use LAG\AdminBundle\State\Provider\FilterProvider;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -20,7 +19,6 @@ final class FilterProviderTest extends TestCase
 {
     private FilterProvider $provider;
     private MockObject $decorated;
-    private MockObject $filterValuesResolver;
     private MockObject $filterApplicator;
 
     #[Test]
@@ -29,7 +27,12 @@ final class FilterProviderTest extends TestCase
         $filter = new TextFilter(name: 'my_filter');
         $operation = (new Index())->withFilter($filter);
         $uriVariables = ['some' => 'value'];
-        $context = ['some_context' => 'context_value'];
+        $context = [
+            'some_context' => 'context_value',
+            'filters' => [
+                'my_filter' => 'some_filter_value',
+            ],
+        ];
 
         $data = self::createMock(QueryBuilder::class);
 
@@ -39,24 +42,16 @@ final class FilterProviderTest extends TestCase
             ->with($operation, $uriVariables, $context)
             ->willReturn($data)
         ;
-
-        $this->filterValuesResolver
-            ->expects(self::once())
-            ->method('resolveFilters')
-            ->with($operation->getFilters(), $context)
-            ->willReturn(['my_filter' => 'my_filter_value'])
-        ;
-
         $this->filterApplicator
             ->expects(self::once())
             ->method('supports')
-            ->with($operation, $filter, $data, 'my_filter_value')
+            ->with($operation, $filter, $data, 'some_filter_value')
             ->willReturn(true)
         ;
         $this->filterApplicator
             ->expects(self::once())
             ->method('apply')
-            ->with($operation, $filter, $data, 'my_filter_value')
+            ->with($operation, $filter, $data, 'some_filter_value')
         ;
 
         $this->provider->provide($operation, $uriVariables, $context);
@@ -70,10 +65,6 @@ final class FilterProviderTest extends TestCase
             ->method('provide')
             ->with(new Index(), ['some' => 'value'], ['some_context' => 'context_value'])
             ->willReturn(new ArrayCollection([new \stdClass()]))
-        ;
-        $this->filterValuesResolver
-            ->expects(self::never())
-            ->method('resolveFilters')
         ;
         $this->filterApplicator
             ->expects(self::never())
@@ -90,11 +81,9 @@ final class FilterProviderTest extends TestCase
     protected function setUp(): void
     {
         $this->decorated = self::createMock(ProviderInterface::class);
-        $this->filterValuesResolver = self::createMock(FilterValuesResolverInterface::class);
         $this->filterApplicator = self::createMock(FilterApplicatorInterface::class);
         $this->provider = new FilterProvider(
             $this->decorated,
-            $this->filterValuesResolver,
             $this->filterApplicator,
         );
     }

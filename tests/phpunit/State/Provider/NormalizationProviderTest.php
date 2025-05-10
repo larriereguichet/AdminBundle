@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\State\Provider;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use LAG\AdminBundle\Resource\Metadata\Create;
-use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Show;
-use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Provider\NormalizationProvider;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\Tests\TestCase;
@@ -92,17 +92,17 @@ class NormalizationProviderTest extends TestCase
         yield [new Index(output: null), new ArrayCollection(), false];
         yield [new Index(output: 'TestClass'), $fake, false];
         yield [
-            (new Show(output: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
+            (new Show(output: 'TestClass'))->withResource(new Resource(resourceClass: 'OtherClass')),
             new ArrayCollection(),
             false,
         ];
         yield [
-            (new Show(output: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
+            (new Show(output: 'TestClass'))->withResource(new Resource(resourceClass: 'OtherClass')),
             new ArrayCollection(),
             false,
         ];
         yield [
-            (new Show(output: 'TestClass'))->withResource(new Resource(dataClass: 'OtherClass')),
+            (new Show(output: 'TestClass'))->withResource(new Resource(resourceClass: 'OtherClass')),
             new ArrayCollection(),
             false,
         ];
@@ -112,7 +112,7 @@ class NormalizationProviderTest extends TestCase
                 normalizationContext: ['groups' => ['normalization']],
                 denormalizationContext: ['groups' => ['denormalization']],
                 output: 'Output',
-            ))->withResource(new Resource(dataClass: \stdClass::class)),
+            ))->withResource(new Resource(resourceClass: \stdClass::class)),
             $fake,
             true,
             'Output',
@@ -122,7 +122,7 @@ class NormalizationProviderTest extends TestCase
                 normalizationContext: ['groups' => ['normalization']],
                 denormalizationContext: ['groups' => ['denormalization']],
                 output: 'Output',
-            ))->withResource(new Resource(dataClass: \stdClass::class)),
+            ))->withResource(new Resource(resourceClass: \stdClass::class)),
             [$fake],
             true,
             'Output[]',

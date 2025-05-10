@@ -7,7 +7,7 @@ namespace LAG\AdminBundle\State\Processor;
 use LAG\AdminBundle\Event\DataEvent;
 use LAG\AdminBundle\Event\DataEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 
 final readonly class EventProcessor implements ProcessorInterface
 {
@@ -17,24 +17,18 @@ final readonly class EventProcessor implements ProcessorInterface
     ) {
     }
 
-    public function process(mixed $data, OperationInterface $operation, array $uriVariables = [], array $context = []): void
+    public function process(mixed $data, OperationInterface $operation, array $urlVariables = [], array $context = []): void
     {
-        $this->eventDispatcher->dispatchEvents(
+        $this->eventDispatcher->dispatchBuildEvents(
             new DataEvent($data, $operation),
-            DataEvents::DATA_PROCESS_EVENT_PATTERN,
-            $operation->getResource()->getApplication(),
-            $operation->getResource()->getName(),
-            $operation->getName(),
+            DataEvents::DATA_PROCESS_EVENT_TEMPLATE,
         );
 
-        $this->processor->process($data, $operation, $uriVariables, $context);
+        $this->processor->process($data, $operation, $urlVariables, $context);
 
-        $this->eventDispatcher->dispatchEvents(
+        $this->eventDispatcher->dispatchBuildEvents(
             new DataEvent($data, $operation),
-            DataEvents::DATA_PROCESSED_EVENT_PATTERN,
-            $operation->getResource()->getApplication(),
-            $operation->getResource()->getName(),
-            $operation->getName(),
+            DataEvents::DATA_PROCESSED_EVENT_TEMPLATE,
         );
     }
 }

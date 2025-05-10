@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\State\Processor;
 
-use LAG\AdminBundle\Resource\Metadata\Create;
-use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Show;
-use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Processor\ValidationProcessor;
 use LAG\AdminBundle\Tests\TestCase;

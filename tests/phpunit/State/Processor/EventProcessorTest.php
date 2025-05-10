@@ -7,13 +7,13 @@ namespace LAG\AdminBundle\Tests\State\Processor;
 use LAG\AdminBundle\Event\DataEvent;
 use LAG\AdminBundle\Event\DataEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Resource\Metadata\Create;
-use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Show;
-use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Processor\EventProcessor;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\Tests\TestCase;
@@ -38,7 +38,7 @@ final class EventProcessorTest extends TestCase
 
         $this->eventDispatcher
             ->expects(self::exactly(2))
-            ->method('dispatchEvents')
+            ->method('dispatchBuildEvents')
             ->willReturnMap([
                 [
                     new DataEvent($data, $operation),

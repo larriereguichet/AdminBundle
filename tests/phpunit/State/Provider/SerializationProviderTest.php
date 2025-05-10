@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\State\Provider;
 
-use LAG\AdminBundle\Resource\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Create;
-use LAG\AdminBundle\Resource\Metadata\Delete;
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Metadata\Show;
-use LAG\AdminBundle\Resource\Metadata\Update;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\State\Provider\SerializationProvider;
 use LAG\AdminBundle\Tests\TestCase;
@@ -38,7 +38,7 @@ class SerializationProviderTest extends TestCase
             $expectedType .= '[]';
         }
 
-        $resource = new Resource(name: 'my_resource', dataClass: \stdClass::class);
+        $resource = new Resource(name: 'my_resource', resourceClass: \stdClass::class);
         $operation = $operation->withAjax(true)
             ->withResource($resource)
             ->withNormalizationContext(['groups' => ['my_group']])

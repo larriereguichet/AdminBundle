@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\State\Processor;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 
 final readonly class CompositeProcessor implements ProcessorInterface
 {
@@ -15,17 +15,21 @@ final readonly class CompositeProcessor implements ProcessorInterface
     ) {
     }
 
-    public function process(mixed $data, OperationInterface $operation, array $uriVariables = [], array $context = []): void
+    public function process(mixed $data, OperationInterface $operation, array $urlVariables = [], array $context = []): void
     {
         /** @var ProcessorInterface $processor */
         foreach ($this->processors as $processor) {
             if ($processor::class === $operation->getProcessor()) {
-                $processor->process($data, $operation, $uriVariables, $context);
+                $processor->process($data, $operation, $urlVariables, $context);
 
                 return;
             }
         }
 
-        throw new Exception(\sprintf('The resource "%s" and operation "%s" is not supported by any processor', $operation->getResource()->getName(), $operation->getName()));
+        throw new Exception(\sprintf(
+            'The resource "%s" and operation "%s" is not supported by any processor',
+            $operation->getResource()->getName(),
+            $operation->getName(),
+        ));
     }
 }

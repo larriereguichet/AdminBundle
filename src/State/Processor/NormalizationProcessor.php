@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\State\Processor;
 
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -17,21 +17,21 @@ final readonly class NormalizationProcessor implements ProcessorInterface
     ) {
     }
 
-    public function process(mixed $data, OperationInterface $operation, array $uriVariables = [], array $context = []): void
+    public function process(mixed $data, OperationInterface $operation, array $urlVariables = [], array $context = []): void
     {
         if ($operation->getInput() === null) {
-            $this->processor->process($data, $operation, $uriVariables, $context);
+            $this->processor->process($data, $operation, $urlVariables, $context);
 
             return;
         }
         $normalizedData = $this->normalizer->normalize($data, null, $operation->getNormalizationContext());
         $denormalizedData = $this->denormalizer->denormalize(
             $normalizedData,
-            $operation->getResource()->getDataClass(),
+            $operation->getResource()->getResourceClass(),
             null,
             $operation->getDenormalizationContext(),
         );
 
-        $this->processor->process($denormalizedData, $operation, $uriVariables, $context);
+        $this->processor->process($denormalizedData, $operation, $urlVariables, $context);
     }
 }
