@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Response\Handler;
 
-use LAG\AdminBundle\Grid\View\GridView;
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use Symfony\Component\Form\FormInterface;
+use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,19 +18,13 @@ final readonly class JsonResponseHandler implements ResponseHandlerInterface
     ) {
     }
 
-    public function createResponse(Request $request, OperationInterface $operation, mixed $data, ?FormInterface $form = null, ?FormInterface $filterForm = null, ?GridView $grid = null): Response
+    public function createResponse(OperationInterface $operation, mixed $data, Request $request, array $context = []): Response
     {
-        if ($request->getContentTypeFormat() === 'json') {
-            $content = $this->serializer->serialize($data, 'json', $operation->getNormalizationContext());
-
-            return new JsonResponse($content, Response::HTTP_OK, [], true);
+        if ($request->getContentTypeFormat() !== 'json') {
+            return $this->responseHandler->createResponse($operation, $data, $request, $context);
         }
+        $content = $this->serializer->serialize($data, 'json', $operation->getNormalizationContext());
 
-        return $this->responseHandler->createResponse($request, $operation, $data, $form, $filterForm, $grid);
-    }
-
-    public function createRedirectResponse(OperationInterface $operation, mixed $data, array $context = []): Response
-    {
-        return $this->responseHandler->createRedirectResponse($operation, $data, $context);
+        return new JsonResponse($content, Response::HTTP_OK, [], true);
     }
 }
