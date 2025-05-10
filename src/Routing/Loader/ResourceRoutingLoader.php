@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\Loader;
 
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Resource\Factory\DefinitionFactoryInterface;
+use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGeneratorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class ResourceRoutingLoader extends Loader
+final class ResourceRoutingLoader extends Loader
 {
     private bool $loaded = false;
 
@@ -19,7 +20,8 @@ class ResourceRoutingLoader extends Loader
         private readonly string $applicationParameter,
         private readonly string $resourceParameter,
         private readonly string $operationParameter,
-        private readonly ResourceRegistryInterface $resourceRegistry,
+        private readonly DefinitionFactoryInterface $definitionFactory,
+        private readonly ResourceFactoryInterface $resourceFactory,
         private readonly PathGeneratorInterface $pathGenerator,
     ) {
         parent::__construct();
@@ -31,9 +33,10 @@ class ResourceRoutingLoader extends Loader
             throw new \RuntimeException('Do not add the Admin routing loader "lag_admin" twice');
         }
         $routes = new RouteCollection();
-        $resources = $this->resourceRegistry->all();
+        $resourceNames = $this->definitionFactory->getResourceNames();
 
-        foreach ($resources as $resource) {
+        foreach ($resourceNames as $resourceName) {
+            $resource = $this->resourceFactory->create($resourceName);
             $this->loadResource($resource, $routes);
         }
         $this->loaded = true;
@@ -60,7 +63,7 @@ class ResourceRoutingLoader extends Loader
                 '_controller' => $operation->getController(),
                 $this->applicationParameter => $operation->getResource()->getApplication(),
                 $this->resourceParameter => $operation->getResource()->getName(),
-                $this->operationParameter => $operation->getName(),
+                $this->operationParameter => $operation->getShortName(),
             ];
 
             $route = new Route($path, $defaults, [], $identifiers, null, [], $operation->getMethods());

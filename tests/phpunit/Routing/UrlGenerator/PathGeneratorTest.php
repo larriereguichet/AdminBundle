@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Routing\UrlGenerator;
 
-use LAG\AdminBundle\Resource\Metadata\Index;
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGenerator;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;

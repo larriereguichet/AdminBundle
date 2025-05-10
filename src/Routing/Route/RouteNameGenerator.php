@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\Route;
 
-use LAG\AdminBundle\Resource\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\Resource;
 
 use function Symfony\Component\String\u;
 
-class RouteNameGenerator implements RouteNameGeneratorInterface
+final readonly class RouteNameGenerator implements RouteNameGeneratorInterface
 {
     public function generateRouteName(Resource $resource, OperationInterface $operation): string
     {
         return u($resource->getRoutePattern())
             ->replace('{application}', $resource->getApplication())
             ->replace('{resource}', $resource->getName())
-            ->replace('{operation}', $operation->getName())
+            ->replace('{operation}', $operation->getShortName())
             ->lower()
             ->toString()
         ;
