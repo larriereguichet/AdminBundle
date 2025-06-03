@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests;
 
-use LAG\AdminBundle\DependencyInjection\CompilerPass\EventCompilerPass;
+use LAG\AdminBundle\DependencyInjection\CompilerPass\WorkflowCompilerPass;
 use LAG\AdminBundle\LAGAdminBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class LAGAdminBundleTest extends TestCase
+final class LAGAdminBundleTest extends TestCase
 {
     private LAGAdminBundle $bundle;
 
@@ -19,7 +19,7 @@ class LAGAdminBundleTest extends TestCase
         $contains = false;
 
         foreach ($container->getCompilerPassConfig()->getPasses() as $pass) {
-            if ($pass instanceof EventCompilerPass) {
+            if ($pass instanceof WorkflowCompilerPass) {
                 $contains = true;
             }
         }
