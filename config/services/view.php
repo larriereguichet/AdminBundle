@@ -17,7 +17,7 @@ use LAG\AdminBundle\View\Component\Cell\ImageComponent;
 use LAG\AdminBundle\View\Component\Cell\Link;
 use LAG\AdminBundle\View\Component\Cell\MapComponent;
 use LAG\AdminBundle\View\Component\Cell\TextComponent;
-use LAG\AdminBundle\View\Component\Grid\Grid;
+use LAG\AdminBundle\View\Component\Grid;
 use LAG\AdminBundle\View\Component\Grid\GridCell;
 use LAG\AdminBundle\View\Component\Grid\GridHeader;
 use LAG\AdminBundle\View\Helper\PaginationHelper;

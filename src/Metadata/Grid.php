@@ -20,12 +20,6 @@ class Grid
         #[Assert\NotBlank(message: 'The grid type should not be empty')]
         private ?string $type = null,
 
-        #[Assert\NotBlank(message: 'The grid template should not be an empty string', allowNull: true)]
-        private ?string $template = null,
-
-        #[Assert\NotBlank(message: 'The grid component should not be an empty string', allowNull: true)]
-        private ?string $component = null,
-
         private ?string $translationDomain = null,
 
         #[Assert\Count(min: 1, minMessage: 'The grid should have at least one property')]
@@ -99,32 +93,6 @@ class Grid
     {
         $self = clone $this;
         $self->type = $type;
-
-        return $self;
-    }
-
-    public function getTemplate(): ?string
-    {
-        return $this->template;
-    }
-
-    public function withTemplate(?string $template): self
-    {
-        $self = clone $this;
-        $self->template = $template;
-
-        return $self;
-    }
-
-    public function getComponent(): ?string
-    {
-        return $this->component;
-    }
-
-    public function withComponent(?string $component): self
-    {
-        $self = clone $this;
-        $self->component = $component;
 
         return $self;
     }

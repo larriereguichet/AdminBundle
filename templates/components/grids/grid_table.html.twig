@@ -1,29 +1,24 @@
 {% import '@LAGAdmin/grids/macro/helpers.html.twig' as lag_admin %}
 
-{% if grid.title %}
-    <h3 {{ titleAttributes.defaults({class: 'my-2 mb-5'}) }}>
-        {{ lag_admin.translate(grid.title, resource.translationDomain, true) }}
-    </h3>
-{% endif %}
-
 <table {{ attributes.defaults({'class': 'admin-table table table-responsive align-middle'}) }}>
-    {% block table_head %}
-        {% if grid.options.displayHeaders|default(true) != false and grid.headers|length > 0 %}
-            <thead>
-            <tr {{ headerRowAttributes }}>
-                {%- for header in grid.headers -%}
-                    <th {{ header.attributes.defaults({'class': 'text-dark'}) }}>
-                        {{ component('lag_admin:grid_header', {header: header}) }}
-                    </th>
-                {%- endfor -%}
+    {% if displayHeaders %}
+        <thead>
+        {{ component('lag_admin:grid:table_row', {
 
-                {% if grid.extraColumn %}
-                    <th></th>
-                {% endif %}
-            </tr>
-            </thead>
-        {% endif %}
-    {% endblock %}
+        }) }}
+        <tr {{ headerRowAttributes }}>
+            {%- for header in grid.headers -%}
+                <th {{ header.attributes.defaults({'class': 'text-dark'}) }}>
+                    {{ component('lag_admin:grid_header', {header: header}) }}
+                </th>
+            {%- endfor -%}
+
+            {% if grid.extraColumn %}
+                <th></th>
+            {% endif %}
+        </tr>
+        </thead>
+    {% endif %}
 
     {% block table_body %}
         {% if grid.rows|length > 0 %}

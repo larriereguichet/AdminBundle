@@ -27,9 +27,8 @@
         {% block grid %}
             {% if grid is defined %}
                 {{ component('lag_admin:grid', {
-                    data: data,
                     grid: grid,
-                    operation: operation,
+                    data: data,
                     ...grid.attributes
                 }) }}
             {% endif %}

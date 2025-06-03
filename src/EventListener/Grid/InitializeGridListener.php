@@ -33,16 +33,6 @@ final readonly class InitializeGridListener
             $grid = $grid->withType('table');
         }
 
-        if ($grid->getComponent() === null && $grid->getTemplate() === null) {
-            if ($grid->getType() === 'card') {
-                $grid = $grid->withTemplate('@LAGAdmin/grids/card.html.twig');
-            }
-
-            if ($grid->getType() === 'table') {
-                $grid = $grid->withTemplate('@LAGAdmin/grids/table.html.twig');
-            }
-        }
-
         if ($grid->getHeaderTemplate() === null) {
             if ($grid->getType() === 'table') {
                 $grid = $grid->withHeaderTemplate('@LAGAdmin/grids/table/header.html.twig');
