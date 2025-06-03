@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Form\Type\Text;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -13,6 +13,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class TextareaType extends AbstractType
 {
+    public function __construct(
+        private readonly DataTransformerInterface $dataTransformer,
+    ) {
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -27,15 +32,9 @@ final class TextareaType extends AbstractType
         ;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addModelTransformer(new CallbackTransformer(function ($value) {
-            if (!json_validate($value)) {
-                return json_encode([['insert' => $value]]);
-            }
-
-            return $value;
-        }, fn ($value) => $value));
+        $builder->addModelTransformer($this->dataTransformer);
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options): void

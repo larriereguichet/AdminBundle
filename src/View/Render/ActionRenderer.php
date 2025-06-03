@@ -9,6 +9,7 @@ use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Environment;
+use Twig\Runtime\EscaperRuntime;
 
 final readonly class ActionRenderer implements ActionRendererInterface
 {
@@ -30,7 +31,7 @@ final readonly class ActionRenderer implements ActionRendererInterface
         return $this->environment->render($action->getTemplate(), [
             'data' => $this->urlGenerator->generateFromUrl($action, $data),
             'options' => $action,
-            'attributes' => new ComponentAttributes($action->getAttributes()),
+            'attributes' => new ComponentAttributes($action->getAttributes(), $this->environment->getRuntime(EscaperRuntime::class)),
         ]);
     }
 }

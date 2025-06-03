@@ -9,14 +9,14 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final readonly class FormResponseHandler implements ResponseHandlerInterface
+final readonly class FormResponseHandler implements ContentResponseHandlerInterface
 {
     public function __construct(
         private ResponseHandlerInterface $responseHandler,
     ) {
     }
 
-    public function createResponse(OperationInterface $operation, mixed $data, Request $request, array $context = []): Response
+    public function createResponse(OperationInterface $operation, mixed $data, array $context = []): Response
     {
         foreach ($context as $name => $form) {
             if (!$form instanceof FormInterface) {
@@ -29,6 +29,6 @@ final readonly class FormResponseHandler implements ResponseHandlerInterface
             }
         }
 
-        return $this->responseHandler->createResponse($operation, $data, $request, $context);
+        return $this->responseHandler->createResponse($operation, $data, $context);
     }
 }

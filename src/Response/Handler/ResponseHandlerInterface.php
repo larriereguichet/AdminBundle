@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Handle response creation.
  */
-interface ResponseHandlerInterface
+interface ResponseHandlerInterface extends ContentResponseHandlerInterface, RedirectResponseHandlerInterface
 {
-    public function createResponse(OperationInterface $operation, mixed $data, Request $request, array $context = []): Response;
 }
