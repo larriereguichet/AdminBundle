@@ -1,7 +1,8 @@
 <div class="admin-actions text-end">
-    {% if operation.collectionActions|length == 1 %}
-        {{ lag_admin_action(operation.collectionActions|first, null) }}
-    {% elseif operation.collectionActions|length > 1 %}
+    {% if actions|length == 1 %}
+        {% set action = actions|first %}
+        {{ lag_admin_action(action.options) }}
+    {% elseif actions|length > 1 %}
         <div class="dropdown float-end">
             <button class="btn btn-secondary dropdown-toggle"
                     type="button"
@@ -10,8 +11,8 @@
                 {{ 'lag_admin.actions.collection_action'|trans({}, 'admin') }}
             </button>
             <ul class="dropdown-menu">
-                {% for action in operation.collectionActions %}
-                    <li>{{ lag_admin_action(operation.collectionActions|first, null) }}</li>
+                {% for action in actions %}
+                    <li>{{ lag_admin_action(action.options) }}</li>
                 {% endfor %}
             </ul>
         </div>

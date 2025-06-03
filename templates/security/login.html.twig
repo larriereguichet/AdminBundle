@@ -30,28 +30,27 @@
                             </div>
                         {% endif %}
 
-                        {{ form_start(form, {
-                            'attr': {'class': 'user'},
-                            'action': path('lag_admin.login')
-                        }) }}
-                        <div class="mb-3">
-                            {{ form_label(form.login) }}
-                            {{ form_widget(form.login) }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form_label(form.password) }}
-                            {{ form_widget(form.password) }}
-                        </div>
-                        <div class="mb-3">
-                            <input type="hidden"
-                                   id="_token"
-                                   name="_csrf_token"
-                                   value="{{ csrf_token('authenticate') }}">
-                            <input type="submit"
-                                   class="btn btn-primary btn-user btn-block"
-                                   value="Se connecter">
-                        </div>
-                        {{ form_end(form) }}
+                        <form action="{{ path('lag_admin_login') }}"
+                              method="post"
+                              class="user">
+                            <div class="mb-3">
+                                <label for="username">Email:</label>
+                                <input type="text" id="username" name="_username" value="{{ last_username }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password">Mot de passe:</label>
+                                <input type="password" id="password" name="_password" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="hidden"
+                                       name="_csrf_token"
+                                       data-controller="csrf-protection"
+                                       value="{{ csrf_token('authenticate') }}">
+                                <input type="submit"
+                                       class="btn btn-primary btn-user btn-block"
+                                       value="Se connecter">
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

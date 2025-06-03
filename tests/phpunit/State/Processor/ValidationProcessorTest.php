@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ValidationProcessorTest extends TestCase
+final class ValidationProcessorTest extends TestCase
 {
     private ValidationProcessor $processor;
     private MockObject $decoratedProcessor;

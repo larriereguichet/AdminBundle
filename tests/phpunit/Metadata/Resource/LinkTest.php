@@ -23,8 +23,6 @@ final class LinkTest extends TestCase
             headerAttributes: ['an' => 'attribute'],
             route: 'my_route',
             routeParameters: ['my_param' => 'value'],
-            application: 'an_application',
-            resource: 'a_resource',
             operation: 'an_operation',
             type: 'custom',
             url: 'property.com',
@@ -39,8 +37,6 @@ final class LinkTest extends TestCase
         self::assertEquals(['an' => 'attribute'], $link->getHeaderAttributes());
         self::assertEquals('my_route', $link->getRoute());
         self::assertEquals(['my_param' => 'value'], $link->getRouteParameters());
-        self::assertEquals('an_application', $link->getApplication());
-        self::assertEquals('a_resource', $link->getResource());
         self::assertEquals('an_operation', $link->getOperation());
         self::assertEquals('property.com', $link->getUrl());
         self::assertEquals('custom', $link->getType());
@@ -69,14 +65,6 @@ final class LinkTest extends TestCase
         $newLink = $link->withHeaderAttributes(['class' => 'header']);
         self::assertNotEquals($link, $newLink);
         self::assertEquals(['class' => 'header'], $newLink->getHeaderAttributes());
-
-        $newLink = $link->withApplication('admin_application');
-        self::assertNotEquals($link, $newLink);
-        self::assertEquals('admin_application', $newLink->getApplication());
-
-        $newLink = $link->withResource('orders');
-        self::assertNotEquals($link, $newLink);
-        self::assertEquals('orders', $newLink->getResource());
 
         $newLink = $link->withOperation('show');
         self::assertNotEquals($link, $newLink);

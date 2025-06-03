@@ -23,10 +23,9 @@ use LAG\AdminBundle\EventListener\Resource\InitializeResourceListener;
 use LAG\AdminBundle\EventListener\Resource\InitializeResourceOperationsListener;
 use LAG\AdminBundle\EventListener\Resource\InitializeResourcePropertiesListener;
 use LAG\AdminBundle\EventListener\Security\PermissionListener;
-use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
+use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use LAG\AdminBundle\Resource\PropertyGuesser\ResourcePropertyGuesserInterface;
-use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use LAG\AdminBundle\Slug\Registry\SluggerRegistryInterface;
 use LAG\AdminBundle\Upload\Uploader\UploaderInterface;
@@ -38,9 +37,9 @@ return static function (ContainerConfigurator $container): void {
 
     // Resources listeners
     $services->set(InitializeResourceListener::class)
-        ->arg('$application', param('lag_admin.application_name'))
-        ->arg('$translationDomain', param('lag_admin.translation_domain'))
-        ->arg('$registry', service(ApplicationRegistryInterface::class))
+        ->args([
+            '$applicationFactory' => service('lag_admin.application.factory'),
+        ])
         ->tag('kernel.event_listener', [
             'event' => ResourceEvents::RESOURCE_CREATE,
             'dispatcher' => 'lag_admin.build_event_dispatcher',
@@ -66,8 +65,10 @@ return static function (ContainerConfigurator $container): void {
 
     // Operations listeners
     $services->set(InitializeOperationListener::class)
-        ->arg('$routeNameGenerator', service(RouteNameGeneratorInterface::class))
-        ->arg('$applicationRegistry', service(ApplicationRegistryInterface::class))
+        ->args([
+            '$routeNameGenerator' => service(RouteNameGeneratorInterface::class),
+            '$applicationFactory' => service('lag_admin.application.factory'),
+        ])
         ->tag('kernel.event_listener', [
             'event' => OperationEvents::OPERATION_CREATE,
             'dispatcher' => 'lag_admin.build_event_dispatcher',
@@ -107,15 +108,19 @@ return static function (ContainerConfigurator $container): void {
     $services->set(InitializeGridListener::class)
         ->arg('$requestStack', service('request_stack'))
         ->tag('kernel.event_listener', [
-            'event' => GridEvents::GRID_BUILD,
+            'event' => GridEvents::GRID_EVENT,
+            'dispatcher' => 'lag_admin.build_event_dispatcher',
             'priority' => -255,
         ])
     ;
 
     // Security listeners
     $services->set(PermissionListener::class)
-        ->arg('$resourceContext', service(ResourceContextInterface::class))
-        ->arg('$security', service('security.helper'))
+        ->args([
+            '$parametersExtractor' => service(ParametersExtractorInterface::class),
+            '$operationContext' => service('lag_admin.operation.context'),
+            '$security' => service('security.helper'),
+        ])
         ->tag('kernel.event_listener', ['event' => KernelEvents::REQUEST])
     ;
 
@@ -141,10 +146,11 @@ return static function (ContainerConfigurator $container): void {
     $services->set('lag_admin.build_event_dispatcher', EventDispatcher::class)
         ->tag('event_dispatcher.dispatcher', ['name' => 'lag_admin.build_event_dispatcher'])
     ;
-
     $services->set(ResourceEventDispatcherInterface::class, ResourceEventDispatcher::class)
-        ->arg('$buildEventDispatcher', service('lag_admin.build_event_dispatcher'))
-        ->arg('$eventDispatcher', service('event_dispatcher'))
+        ->args([
+            '$buildEventDispatcher' => service('lag_admin.build_event_dispatcher'),
+            '$eventDispatcher' => service('event_dispatcher'),
+        ])
+        ->alias('lag_admin.event_dispatcher', ResourceEventDispatcherInterface::class)
     ;
-    $services->alias('lag_admin.event_dispatcher', ResourceEventDispatcherInterface::class);
 };

@@ -38,7 +38,7 @@ final class TemplateResponseHandlerTest extends TestCase
             ->willReturn('My html content')
         ;
 
-        $response = $this->handler->createResponse($operation, $data, $request);
+        $response = $this->handler->createResponse($operation, $data);
 
         self::assertEquals('My html content', $response->getContent());
     }
@@ -57,7 +57,7 @@ final class TemplateResponseHandlerTest extends TestCase
 
         self::expectExceptionObject(new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getName()));
 
-        $this->handler->createResponse($operation, $data, $request);
+        $this->handler->createResponse($operation, $data);
     }
 
     protected function setUp(): void

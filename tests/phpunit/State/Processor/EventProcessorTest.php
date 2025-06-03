@@ -61,10 +61,10 @@ final class EventProcessorTest extends TestCase
         $this->decoratedProcessor
             ->expects(self::once())
             ->method('process')
-            ->with($data, $operation, ['id' => 123, ['context' => true]])
+            ->with($data, $operation, ['id' => 123], ['context' => true])
         ;
 
-        $this->processor->process($data, $operation, ['id' => 123, ['context' => true]]);
+        $this->processor->process($data, $operation, ['id' => 123], ['context' => true]);
     }
 
     public static function operations(): array

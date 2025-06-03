@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
 use LAG\AdminBundle\Routing\Loader\ResourceRoutingLoader;
 use LAG\AdminBundle\Routing\Route\RouteNameGenerator;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
@@ -12,18 +11,21 @@ use LAG\AdminBundle\Routing\UrlGenerator\ParametersMapper;
 use LAG\AdminBundle\Routing\UrlGenerator\ParametersMapperInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGenerator;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGeneratorInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGenerator;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGenerator;
+use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     $services->set(ResourceRoutingLoader::class)
-        ->arg('$applicationParameter', param('lag_admin.application_parameter'))
-        ->arg('$resourceParameter', param('lag_admin.resource_parameter'))
-        ->arg('$operationParameter', param('lag_admin.operation_parameter'))
-        ->arg('$pathGenerator', service(PathGeneratorInterface::class))
-        ->arg('$resourceRegistry', service(ResourceRegistryInterface::class))
+        ->args([
+            '$applicationParameter' => param('lag_admin.application_parameter'),
+            '$resourceParameter' => param('lag_admin.resource_parameter'),
+            '$operationParameter' => param('lag_admin.operation_parameter'),
+            '$pathGenerator' => service(PathGeneratorInterface::class),
+            '$definitionFactory' => service('lag_admin.definition.factory'),
+            '$resourceFactory' => service('lag_admin.resource.factory'),
+        ])
         ->tag('routing.loader')
     ;
 
@@ -31,12 +33,13 @@ return static function (ContainerConfigurator $container): void {
         ->alias('lag_admin.routing.route_name_generator', RouteNameGeneratorInterface::class)
     ;
 
-    $services->set(UrlGeneratorInterface::class, UrlGenerator::class)
-        ->arg('$router', service('router'))
-        ->arg('$mapper', service(ParametersMapperInterface::class))
-        ->arg('$resourceRegistry', service(ResourceRegistryInterface::class))
-
-        ->alias('lag_admin.routing.url_generator', UrlGeneratorInterface::class)
+    $services->set(ResourceUrlGeneratorInterface::class, ResourceUrlGenerator::class)
+        ->args([
+            '$router' => service('router'),
+            '$mapper' => service(ParametersMapperInterface::class),
+            '$operationFactory' => service('lag_admin.operation.factory'),
+        ])
+        ->alias('lag_admin.routing.url_generator', ResourceUrlGeneratorInterface::class)
     ;
     $services->set(ParametersMapperInterface::class, ParametersMapper::class);
 

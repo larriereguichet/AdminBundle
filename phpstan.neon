@@ -1,13 +1,12 @@
 parameters:
 	paths:
 		- src
-		- tests
 	level: 6
 	excludePaths:
 		- src/DependencyInjection/Configuration.php
 		- tests/app
 		- tests/fixtures
-		- tests/phpunit/Fixtures/FakeResource.php
+		- tests/phpunit/Fixtures/Book.php
 	ignoreErrors:
 		- 	identifier: missingType.iterableValue
 		- 	identifier: missingType.generics

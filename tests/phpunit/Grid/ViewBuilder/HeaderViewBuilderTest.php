@@ -9,12 +9,17 @@ use LAG\AdminBundle\Metadata\Grid;
 use LAG\AdminBundle\Metadata\Index;
 use LAG\AdminBundle\Metadata\Text;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\TwigComponent\ComponentAttributes;
+use Twig\Environment;
+use Twig\Extension\RuntimeExtensionInterface;
+use Twig\Runtime\EscaperRuntime;
 
 final class HeaderViewBuilderTest extends TestCase
 {
     private HeaderViewBuilder $headerViewBuilder;
+    private MockObject $environment;
 
     #[Test]
     public function itBuildAHeader(): void
@@ -32,6 +37,12 @@ final class HeaderViewBuilderTest extends TestCase
             sortable: true,
             headerAttributes: ['class' => 'a-class'],
         );
+        $this->environment
+            ->expects(self::once())
+            ->method('getRuntime')
+            ->with(EscaperRuntime::class)
+            ->willReturn(new EscaperRuntime())
+        ;
 
         $headerView = $this->headerViewBuilder->buildHeader(
             operation: $operation,
@@ -51,7 +62,7 @@ final class HeaderViewBuilderTest extends TestCase
         self::assertEquals('name', $headerView->sort);
         self::assertEquals('desc', $headerView->order);
         self::assertTrue($headerView->sortable);
-        self::assertEquals(new ComponentAttributes(['class' => 'a-class']), $headerView->attributes);
+        self::assertEquals(['class' => 'a-class'], $headerView->attributes->all());
     }
 
     #[Test]
@@ -70,6 +81,12 @@ final class HeaderViewBuilderTest extends TestCase
             sortable: true,
             headerAttributes: ['class' => 'a-class'],
         );
+        $this->environment
+            ->expects(self::once())
+            ->method('getRuntime')
+            ->with(EscaperRuntime::class)
+            ->willReturn(new EscaperRuntime())
+        ;
 
         $headerView = $this->headerViewBuilder->buildHeader(
             operation: $operation,
@@ -86,6 +103,7 @@ final class HeaderViewBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->headerViewBuilder = new HeaderViewBuilder();
+        $this->environment = self::createMock(Environment::class);
+        $this->headerViewBuilder = new HeaderViewBuilder($this->environment);
     }
 }

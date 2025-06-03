@@ -57,7 +57,7 @@ final class FormResponseHandlerTest extends TestCase
         $this->responseHandler
             ->expects(self::once())
             ->method('createResponse')
-            ->with($operation, $data, $request, [
+            ->with($operation, $data, [
                 'form' => $formView,
                 'customForm' => $customFormView,
                 'some_data' => 'some_value',
@@ -66,7 +66,7 @@ final class FormResponseHandlerTest extends TestCase
             ->willReturn(new Response('some html content'))
         ;
 
-        $this->handler->createResponse($operation, $data, $request, $context);
+        $this->handler->createResponse($operation, $data, $context);
     }
 
     protected function setUp(): void

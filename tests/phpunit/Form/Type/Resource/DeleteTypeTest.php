@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Form\Type\Resource;
 
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
-use LAG\AdminBundle\Resource\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Tests\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;

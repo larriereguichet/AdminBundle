@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Bridge\QuillJs\Render\QuillJsRendererInterface;
-use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
-use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use LAG\AdminBundle\Twig\Extension\PaginationExtension;
 use LAG\AdminBundle\Twig\Extension\RenderExtension;
 use LAG\AdminBundle\Twig\Extension\RoutingExtension;
@@ -31,8 +29,6 @@ use LAG\AdminBundle\View\Render\ActionRenderer;
 use LAG\AdminBundle\View\Render\ActionRendererInterface;
 use LAG\AdminBundle\View\Render\LinkRenderer;
 use LAG\AdminBundle\View\Render\LinkRendererInterface;
-use LAG\AdminBundle\View\Vars\LAGAdminVars;
-use LAG\AdminBundle\View\Vars\LAGAdminVarsInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -47,9 +43,7 @@ return static function (ContainerConfigurator $container): void {
 
     // Runtime extensions
     $services->set(RoutingHelper::class)
-        ->arg('$resourceContext', service(ResourceContextInterface::class))
-        ->arg('$requestStack', service('request_stack'))
-        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
+        ->args(['$urlGenerator' => service(ResourceUrlGeneratorInterface::class)])
         ->tag('twig.runtime')
     ;
     $services->set(RenderHelper::class)
@@ -59,7 +53,7 @@ return static function (ContainerConfigurator $container): void {
     ;
     $services->set(PaginationHelper::class)->tag('twig.runtime');
     $services->set(SecurityHelper::class)
-        ->arg('$registry', service('lag_admin.resource.registry'))
+        ->arg('$operationFactory', service('lag_admin.operation.factory'))
         ->arg('$security', service('security.helper'))
         ->tag('twig.runtime')
     ;
@@ -83,23 +77,17 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$formFactory', service('form.factory'))
     ;
 
-    // Factories
-    $services->set(LAGAdminVarsInterface::class, LAGAdminVars::class)
-        ->arg('$context', service(ResourceContextInterface::class))
-        ->arg('$requestStack', service('request_stack'))
-        ->arg('$applicationRegistry', service(ApplicationRegistryInterface::class))
-        ->alias('lag_admin.twig_vars', LAGAdminVarsInterface::class)
-    ;
-
     // Renderer
     $services->set(LinkRendererInterface::class, LinkRenderer::class)
-        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
+        ->arg('$urlGenerator', service(ResourceUrlGeneratorInterface::class))
         ->arg('$validator', service('validator'))
         ->arg('$environment', service('twig'))
     ;
     $services->set(ActionRendererInterface::class, ActionRenderer::class)
-        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
-        ->arg('$environment', service('twig'))
-        ->arg('$translator', service('translator'))
+        ->args([
+            '$urlGenerator' => service(ResourceUrlGeneratorInterface::class),
+            '$environment' => service('twig'),
+            '$translator' => service('translator')
+        ])
     ;
 };

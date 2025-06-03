@@ -4,83 +4,129 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
+use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
+use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
+use LAG\AdminBundle\Resource\Context\ApplicationContext;
+use LAG\AdminBundle\Resource\Context\ApplicationContextInterface;
+use LAG\AdminBundle\Resource\Context\OperationContext;
+use LAG\AdminBundle\Resource\Context\OperationContextInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContext;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\DataMapper\DataMapper;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
+use LAG\AdminBundle\Resource\Factory\ApplicationFactory;
+use LAG\AdminBundle\Resource\Factory\ApplicationFactoryInterface;
+use LAG\AdminBundle\Resource\Factory\CacheApplicationFactory;
+use LAG\AdminBundle\Resource\Factory\CacheResourceFactory;
+use LAG\AdminBundle\Resource\Factory\DefinitionFactory;
+use LAG\AdminBundle\Resource\Factory\DefinitionFactoryInterface;
+use LAG\AdminBundle\Resource\Factory\OperationFactory;
+use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
+use LAG\AdminBundle\Resource\Factory\ResourceFactory;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Resource\Locator\PropertyLocator;
+use LAG\AdminBundle\Resource\Factory\ValidationResourceFactory;
+use LAG\AdminBundle\Resource\Locator\AttributePropertyLocator;
+use LAG\AdminBundle\Resource\Locator\CompositePropertyLocator;
 use LAG\AdminBundle\Resource\Locator\PropertyLocatorInterface;
-use LAG\AdminBundle\Resource\Locator\ResourceLocator;
-use LAG\AdminBundle\Resource\Locator\ResourceLocatorInterface;
 use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesser;
 use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesserInterface;
 use LAG\AdminBundle\Resource\PropertyGuesser\ResourcePropertyGuesser;
 use LAG\AdminBundle\Resource\PropertyGuesser\ResourcePropertyGuesserInterface;
-use LAG\AdminBundle\Resource\Registry\ApplicationRegistry;
-use LAG\AdminBundle\Resource\Registry\ApplicationRegistryInterface;
-use LAG\AdminBundle\Resource\Registry\CacheRegistry;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistry;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
-use LAG\AdminBundle\Resource\Resolver\ClassResolver;
-use LAG\AdminBundle\Resource\Resolver\ClassResolverInterface;
-use LAG\AdminBundle\Resource\Resolver\PhpFileResolver;
-use LAG\AdminBundle\Resource\Resolver\PhpFileResolverInterface;
-use LAG\AdminBundle\Resource\Resolver\ResourceResolver;
-use LAG\AdminBundle\Resource\Resolver\ResourceResolverInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
+use LAG\AdminBundle\Twig\Globals\LAGAdminGlobal;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
-    // Registries
-    $services->set(ResourceRegistryInterface::class, ResourceRegistry::class)
-        ->arg('$resources', expr('service("lag_admin.resource_resolver").resolveResources(parameter("lag_admin.resource_paths"))'))
-        ->arg('$defaultApplication', param('lag_admin.application_name'))
-        ->arg('$factory', service(ResourceFactoryInterface::class))
-
-        ->alias('lag_admin.resource.registry', ResourceFactoryInterface::class)
+    // Application factories
+    $services->set(ApplicationFactoryInterface::class, ApplicationFactory::class)
+        ->args([
+            '$definitionFactory' => service(DefinitionFactoryInterface::class),
+        ])
+        ->alias('lag_admin.application.factory', ApplicationFactoryInterface::class)
     ;
-    $services->set(ApplicationRegistryInterface::class, ApplicationRegistry::class);
-
-    if ($container->env() === 'prod') {
-        $services->set(CacheRegistry::class)
-            ->decorate(ResourceRegistryInterface::class)
-            ->arg('$registry', service('.inner'))
-            ->arg('$defaultApplication', param('lag_admin.application_name'))
-        ;
-    }
-
-    // Metadata locators
-    $services->set(ResourceLocatorInterface::class, ResourceLocator::class)
-        ->arg('$defaultApplication', param('lag_admin.application_name'))
-        ->tag('lag_admin.resource_locator')
-    ;
-    $services->set(PropertyLocatorInterface::class, PropertyLocator::class)
-        ->tag('lag_admin.metadata_locator')
+    $services->set(CacheApplicationFactory::class)
+        ->args([
+            '$applicationFactory' => service('.inner'),
+        ])
+        ->decorate('lag_admin.application.factory')
     ;
 
-    // Request context
+    // Resources factories
+    $services->set(ResourceFactoryInterface::class, ResourceFactory::class)
+        ->args([
+            '$definitionFactory' => service(DefinitionFactoryInterface::class),
+            '$eventDispatcher' => service(ResourceEventDispatcherInterface::class),
+        ])
+        ->alias('lag_admin.resource.factory', ResourceFactoryInterface::class)
+    ;
+    $services->set(ValidationResourceFactory::class)
+        ->decorate(ResourceFactoryInterface::class)
+        ->args([
+            '$resourceFactory' => service('.inner'),
+            '$validator' => service('validator'),
+        ])
+    ;
+    $services->set(CacheResourceFactory::class)
+        ->decorate(ResourceFactoryInterface::class)
+        ->args([
+            '$resourceFactory' => service('.inner'),
+        ])
+    ;
+
+    // Operation factories
+    $services->set(OperationFactoryInterface::class, OperationFactory::class)
+        ->args([
+            '$resourceFactory' => service('lag_admin.resource.factory'),
+        ])
+        ->alias('lag_admin.operation.factory', OperationFactoryInterface::class)
+    ;
+
+    // Definition factories
+    $services->set(DefinitionFactoryInterface::class, DefinitionFactory::class)
+        ->alias('lag_admin.definition.factory', DefinitionFactoryInterface::class)
+    ;
+
+    // Properties locators
+    $services->set(PropertyLocatorInterface::class, CompositePropertyLocator::class)
+        ->args(['$locators' => tagged_iterator('lag_admin.property_locator')])
+    ;
+    $services->set(AttributePropertyLocator::class)
+        ->tag('lag_admin.property_locator')
+    ;
+
+    // Contexts
+    $services->set(LAGAdminGlobal::class)
+        ->args([
+            '$applicationContext' => service('lag_admin.application.context'),
+            '$resourceContext' => service('lag_admin.resource.context'),
+            '$operationContext' => service('lag_admin.operation.context'),
+        ])
+        ->alias('lag_admin.twig.global', LAGAdminGlobal::class)
+    ;
+    $services->set(ApplicationContextInterface::class, ApplicationContext::class)
+        ->args([
+            '$requestStack' => service('request_stack'),
+            '$parametersExtractor' => service(ParametersExtractorInterface::class),
+            '$applicationFactory' => service('lag_admin.application.factory'),
+        ])
+        ->alias('lag_admin.application.context', ApplicationContextInterface::class)
+    ;
     $services->set(ResourceContextInterface::class, ResourceContext::class)
-        ->arg('$parametersExtractor', service(ResourceParametersExtractorInterface::class))
-        ->arg('$resourceRegistry', service(ResourceRegistryInterface::class))
+        ->args([
+            '$requestStack' => service('request_stack'),
+            '$parametersExtractor' => service(ParametersExtractorInterface::class),
+            '$resourceFactory' => service('lag_admin.resource.factory'),
+        ])
+        ->alias('lag_admin.resource.context', ResourceContextInterface::class)
     ;
-
-    // Resolvers
-    $services->set(ResourceResolverInterface::class, ResourceResolver::class)
-        ->arg('$kernel', service(KernelInterface::class))
-        ->arg('$classResolver', service(ClassResolverInterface::class))
-        ->arg('$resourceLocator', service(ResourceLocatorInterface::class))
-        ->arg('$propertyLocator', service(PropertyLocatorInterface::class))
-        ->arg('$fileResolver', service(PhpFileResolverInterface::class))
-        ->public()
+    $services->set(OperationContextInterface::class, OperationContext::class)
+        ->args([
+            '$requestStack' => service('request_stack'),
+            '$parametersExtractor' => service(ParametersExtractorInterface::class),
+            '$operationFactory' => service('lag_admin.operation.factory'),
+        ])
+        ->alias('lag_admin.operation.context', OperationContextInterface::class)
     ;
-    $services->alias('lag_admin.resource_resolver', ResourceResolverInterface::class)
-        ->public()
-    ;
-    $services->set(ClassResolverInterface::class, ClassResolver::class);
-    $services->set(PhpFileResolverInterface::class, PhpFileResolver::class);
 
     // Mappers
     $services->set(DataMapperInterface::class, DataMapper::class);

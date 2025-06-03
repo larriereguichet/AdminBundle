@@ -24,12 +24,11 @@ final class SecurityHelperTest extends TestCase
     public function itChecksOperationPermissions(): void
     {
         $operation = new Show(shortName: 'my_operation');
-        $resource = new Resource(name: 'my_resource', operations: [$operation]);
 
         $this->operationFactory
             ->expects(self::once())
             ->method('create')
-            ->with('my_resource')
+            ->with('my_resource.my_operation')
             ->willReturn($operation)
         ;
 
@@ -39,7 +38,7 @@ final class SecurityHelperTest extends TestCase
             ->with(OperationPermissionVoter::RESOURCE_ACCESS, $operation)
         ;
 
-        $this->helper->isOperationAllowed('my_resource', 'my_operation');
+        $this->helper->isOperationAllowed('my_resource.my_operation');
     }
 
     protected function setUp(): void

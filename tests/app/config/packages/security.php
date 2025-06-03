@@ -35,12 +35,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'lazy' => true,
                 'provider' => 'admin_users',
                 'form_login' => [
-                    'login_path' => 'lag_admin.login',
-                    'check_path' => 'lag_admin.login_check',
+                    'login_path' => 'lag_admin_login',
+                    'check_path' => 'lag_admin_login_check',
                     'default_target_path' => 'lag_admin.homepage',
                 ],
                 'logout' => [
-                    'path' => 'lag_admin.logout',
+                    'path' => 'lag_admin_logout',
                 ],
             ],
         ],

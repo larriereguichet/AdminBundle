@@ -1,4 +1,4 @@
-{% extends operation.baseTemplate %}
+{% extends baseTemplate|default('@LAGAdmin/base.html.twig') %}
 
 {% block page_title %}{{ operation.title|trans({}, lag_admin.resource.translationDomain) }} - {{ parent() }}{% endblock %}
 
@@ -26,7 +26,7 @@
                         <div class="col-6 text-start">
                             {% block cancel %}
                                 {% if operation.resource.hasOperation('index') %}
-                                    <a href="{{ lag_admin_url(operation.resource.name, 'index') }}"
+                                    <a href="{{ lag_admin_url(operation.resource.operation('index').name) }}"
                                        class="btn btn-light">
                                         {{ 'lag_admin.ui.cancel'|trans({}, 'admin') }}
                                     </a>

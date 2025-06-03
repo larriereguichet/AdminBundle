@@ -33,7 +33,7 @@ final class CompositeProcessorTest extends TestCase
         ;
 
         $processor = new CompositeProcessor([$processor1, $processor2]);
-        $processor->process(null, $operation, ['id' => 123, ['context' => true]]);
+        $processor->process(null, $operation, ['id' => 123], ['context' => true]);
     }
 
     #[DataProvider('operationsProvider')]

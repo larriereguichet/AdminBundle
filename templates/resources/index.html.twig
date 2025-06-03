@@ -3,27 +3,29 @@
 {% block content %}
     <div class="admin-index admin-{{ resource.name }}">
         {% block actions %}
-            <div class="row">
-                {% block filters %}
-                    {% if filterForm and filterForm.children|length > 0 %}
-                        <div class="col-9">
-                            {% include '@LAGAdmin/resources/index/_filters.html.twig' with {form: filterForm} %}
-                        </div>
-                    {% endif %}
-                {% endblock %}
+            {% if (filterForm is defined and filterForm.children|length > 0) or (grid is defined and grid.actions|length > 0) %}
+                <div class="row">
+                    {% block filters %}
+                        {% if filterForm and filterForm.children|length > 0 %}
+                            <div class="col-8">
+                                {% include '@LAGAdmin/resources/index/_filters.html.twig' with {form: filterForm} %}
+                            </div>
+                        {% endif %}
+                    {% endblock %}
 
-                {% block collection_actions %}
-                    {% if grid is defined and grid.actions|length == 1 %}
-                        <div class="col-3">
-                            {% include '@LAGAdmin/resources/index/_collection_operations.html.twig' %}
-                        </div>
-                    {% endif %}
-                {% endblock %}
-            </div>
+                    {% block collection_actions %}
+                        {% if grid is defined and grid.actions|length > 0 %}
+                            <div class="offset-8 col-4">
+                                {% include '@LAGAdmin/resources/index/collection_actions.html.twig' with {actions: grid.actions} %}
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+            {% endif %}
         {% endblock %}
 
         {% block grid %}
-            {% if grid is defined and grid is not empty %}
+            {% if grid is defined %}
                 {{ component('lag_admin:grid', {
                     data: data,
                     grid: grid,

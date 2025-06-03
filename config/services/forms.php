@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use LAG\AdminBundle\Form\DataTransformer\TextareaDataTransformer;
 use LAG\AdminBundle\Form\Extension\ChoiceTypeExtension;
 use LAG\AdminBundle\Form\Extension\CollectionTypeExtension;
 use LAG\AdminBundle\Form\Guesser\FormGuesser;
@@ -12,50 +13,47 @@ use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
 use LAG\AdminBundle\Form\Type\DateRangeType;
 use LAG\AdminBundle\Form\Type\Image\ImageType;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
-use LAG\AdminBundle\Form\Type\Resource\LegacyResourceType;
-use LAG\AdminBundle\Form\Type\Resource\ResourceChoiceType;
+use LAG\AdminBundle\Form\Type\Resource\ResourceDataChoiceType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceDataType;
 use LAG\AdminBundle\Form\Type\Security\LoginType;
-use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Form\Type\Text\TextareaType;
+use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
     // Form types
-    $services->set(LegacyResourceType::class)
-        ->arg('$context', service(ResourceContextInterface::class))
-        ->arg('$requestStack', service('request_stack'))
-        ->tag('form.type')
-    ;
     $services->set(FilterType::class)
-        ->arg('$registry', service(ResourceRegistryInterface::class))
+        ->args([
+            '$operationFactory' => service('lag_admin.operation.factory'),
+        ])
         ->tag('form.type')
     ;
     $services->set(DateRangeType::class)
-        ->arg('$translationDomain', param('lag_admin.translation_domain'))
         ->tag('form.type')
     ;
     $services->set(LoginType::class)
-        ->arg('$translationDomain', param('lag_admin.translation_domain'))
         ->tag('form.type')
     ;
     $services->set(ImageType::class)
         ->tag('form.type')
     ;
-    $services->set(ResourceChoiceType::class)
-        ->arg('$registry', service(ResourceRegistryInterface::class))
+    $services->set(ResourceDataChoiceType::class)
+        ->arg('$operationFactory', service('lag_admin.operation.factory'))
         ->arg('$dataProvider', service(ProviderInterface::class))
         ->tag('form.type')
     ;
     $services->set(HiddenDataType::class)
-        ->arg('$defaultApplication', param('lag_admin.application_name'))
-        ->arg('$registry', service(ResourceRegistryInterface::class))
+        ->arg('$operationFactory', service('lag_admin.operation.factory'))
         ->tag('form.type')
     ;
     $services->set(ResourceDataType::class)
-        ->arg('$resourceRegistry', service(ResourceRegistryInterface::class))
+        ->arg('$operationFactory', service(OperationFactoryInterface::class))
+        ->tag('form.type')
+    ;
+    $services->set(TextareaType::class)
+        ->arg('$dataTransformer', service(TextareaDataTransformer::class))
         ->tag('form.type')
     ;
 
@@ -69,4 +67,7 @@ return static function (ContainerConfigurator $container): void {
 
     // Form guessers
     $services->set(FormGuesserInterface::class, FormGuesser::class);
+
+    // Data transformers
+    $services->set(TextareaDataTransformer::class);
 };

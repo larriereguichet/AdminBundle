@@ -3,7 +3,7 @@
 namespace LAG\AdminBundle\Tests\Response\Handler;
 
 use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Response\Handler\RedirectHandler;
+use LAG\AdminBundle\Response\Handler\RedirectResponseHandler;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -12,7 +12,7 @@ use stdClass;
 
 final class RedirectHandlerTest extends TestCase
 {
-    private RedirectHandler $handler;
+    private RedirectResponseHandler $handler;
     private MockObject $urlGenerator;
 
     #[Test]
@@ -91,6 +91,6 @@ final class RedirectHandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->urlGenerator = self::createMock(ResourceUrlGeneratorInterface::class);
-        $this->handler = new RedirectHandler($this->urlGenerator);
+        $this->handler = new RedirectResponseHandler($this->urlGenerator);
     }
 }

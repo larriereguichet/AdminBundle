@@ -19,8 +19,6 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ResultProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\SortingProvider;
 use LAG\AdminBundle\Event\ResourceEvents;
 use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
-use LAG\AdminBundle\Filter\Resolver\FilterValuesResolver;
-use LAG\AdminBundle\Filter\Resolver\FilterValuesResolverInterface;
 use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
 use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesserInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
@@ -64,7 +62,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(InitializeResourceIdentifiersListener::class)
         ->arg('$metadataHelper', service(MetadataHelperInterface::class))
         ->tag('kernel.event_listener', [
-            'event' => ResourceEvents::RESOURCE_CREATE,
+            'event' => ResourceEvents::RESOURCE_CREATE_TEMPLATE,
             'dispatcher' => 'lag_admin.build_event_dispatcher',
             'priority' => 255,
         ])
@@ -74,9 +72,6 @@ return static function (ContainerConfigurator $container): void {
     $services->set(MetadataHelperInterface::class, MetadataHelper::class)
         ->arg('$entityManager', service('doctrine.orm.entity_manager'))
     ;
-
-    // Context resolvers
-    $services->set(FilterValuesResolverInterface::class, FilterValuesResolver::class);
 
     // Filter applicators
     $services->set(TextFilterApplicator::class)

@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Bridge\LiipImagine\DataTransformer\ImageDataTransformer;
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
 use LAG\AdminBundle\Grid\DataTransformer\CountDataTransformer;
 use LAG\AdminBundle\Grid\DataTransformer\EnumDataTransformer;
 use LAG\AdminBundle\Grid\DataTransformer\FormDataTransformer;
 use LAG\AdminBundle\Grid\DataTransformer\MapDataTransformer;
+use LAG\AdminBundle\Grid\Factory\CacheGridFactory;
+use LAG\AdminBundle\Grid\Factory\GridFactory;
+use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistry;
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
-use LAG\AdminBundle\Grid\Registry\GridRegistry;
-use LAG\AdminBundle\Grid\Registry\GridRegistryInterface;
-use LAG\AdminBundle\Grid\Resolver\GridResolver;
-use LAG\AdminBundle\Grid\Resolver\GridResolverInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\ActionViewBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\ActionViewBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\CellViewBuilder;
@@ -33,21 +31,37 @@ use LAG\AdminBundle\Grid\ViewBuilder\RowViewBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\SecurityCellViewBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\SecurityHeaderViewBuilder;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
-use LAG\AdminBundle\Resource\Resolver\ClassResolverInterface;
-use LAG\AdminBundle\Resource\Resolver\PhpFileResolverInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionCheckerInterface;
-use Liip\ImagineBundle\LiipImagineBundle;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
+    // Factories
+    $services->set(GridFactoryInterface::class, GridFactory::class)
+        ->args([
+            '$definitionFactory' => service('lag_admin.definition.factory'),
+            '$eventDispatcher' => service('lag_admin.event_dispatcher'),
+            '$validator' => service('validator'),
+            '$builders' => tagged_iterator('lag_admin.grid_builder'),
+        ])
+        ->alias('lag_admin.grid.factory', GridFactoryInterface::class)
+    ;
+    $services->set(CacheGridFactory::class)
+        ->decorate(GridFactoryInterface::class)
+        ->args([
+            '$gridFactory' => service('.inner'),
+        ])
+    ;
+
     // View builders
     $services->set(GridViewBuilderInterface::class, GridViewBuilder::class)
-        ->arg('$rowBuilder', service(RowViewBuilderInterface::class))
-        ->arg('$actionBuilder', service(ActionViewBuilderInterface::class))
-        ->arg('$eventDispatcher', service('lag_admin.event_dispatcher'))
-        ->arg('$validator', service('validator'))
+        ->args([
+            '$gridFactory' => service('lag_admin.grid.factory'),
+            '$rowBuilder' => service(RowViewBuilderInterface::class),
+            '$actionBuilder' => service(ActionViewBuilderInterface::class),
+        ])
+        ->alias('lag_admin.grid.view_builder', GridViewBuilderInterface::class)
     ;
 
     $services->set(RowViewBuilderInterface::class, RowViewBuilder::class)
@@ -55,8 +69,9 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$headerBuilder', service(HeaderViewBuilderInterface::class))
         ->arg('$actionsBuilder', service(ActionViewBuilderInterface::class))
     ;
-
-    $services->set(HeaderViewBuilderInterface::class, HeaderViewBuilder::class);
+    $services->set(HeaderViewBuilderInterface::class, HeaderViewBuilder::class)
+        ->args(['$environment' => service('twig')])
+    ;
     $services->set(SecurityHeaderViewBuilder::class)
         ->decorate(id: HeaderViewBuilderInterface::class, priority: 200)
         ->arg('$headerBuilder', service('.inner'))
@@ -93,7 +108,7 @@ return static function (ContainerConfigurator $container): void {
 
     // Action view builder
     $services->set(ActionViewBuilderInterface::class, ActionViewBuilder::class)
-        ->arg('$urlGenerator', service(UrlGeneratorInterface::class))
+        ->arg('$urlGenerator', service(ResourceUrlGeneratorInterface::class))
         ->arg('$conditionMatcher', service(ConditionMatcherInterface::class))
         ->arg('$translator', service('translator'))
     ;
@@ -113,29 +128,7 @@ return static function (ContainerConfigurator $container): void {
         ->tag('lag_admin.data_transformer')
     ;
 
-    if (class_exists(LiipImagineBundle::class)) {
-        $container->services()
-            ->set(ImageDataTransformer::class)
-            ->tag('lag_admin.data_transformer')
-            ->arg('$filterExtension', service('liip_imagine.templating.filter_runtime'))
-        ;
-    }
-
-    // Resolvers
-    $services->set(GridResolverInterface::class, GridResolver::class)
-        ->arg('$classResolver', service(ClassResolverInterface::class))
-        ->arg('$fileResolver', service(PhpFileResolverInterface::class))
-        ->public()
-    ;
-    $services->alias('lag_admin.grid_resolver', GridResolverInterface::class)
-        ->public()
-    ;
-
     // Registry
-    $services->set(GridRegistryInterface::class, GridRegistry::class)
-        ->arg('$grids', expr('service("lag_admin.grid_resolver").resolveGrids(parameter("lag_admin.grid_paths"))'))
-        ->arg('$builders', tagged_iterator('lag_admin.grid_builder'))
-    ;
     $services->set(DataTransformerRegistryInterface::class, DataTransformerRegistry::class)
         ->arg('$dataTransformers', tagged_iterator('lag_admin.data_transformer'))
     ;
