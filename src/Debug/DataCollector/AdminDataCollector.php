@@ -27,7 +27,7 @@ final class AdminDataCollector extends AbstractDataCollector
             $operation = $this->operationContext->getOperation();
             $this->data['application'] = $operation->getResource()->getApplication();
             $this->data['resource'] = $operation->getResource()->getName();
-            $this->data['operation'] = $operation->getName();
+            $this->data['operation'] = $operation->getShortName();
         }
     }
 

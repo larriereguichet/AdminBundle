@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Debug\Collector;
 
 use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
-use LAG\AdminBundle\Request\Extractor\ResourceParametersExtractorInterface;
-use LAG\AdminBundle\Resource\Metadata\Resource;
-use LAG\AdminBundle\Resource\Registry\ResourceRegistryInterface;
+use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Resource\Context\OperationContextInterface;
 use LAG\AdminBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -17,8 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class AdminDataCollectorTest extends TestCase
 {
     private AdminDataCollector $collector;
-    private MockObject $registry;
-    private MockObject $parametersExtractor;
+    private MockObject $operationContext;
 
     #[Test]
     public function itCollectsDebugData(): void
@@ -26,47 +25,30 @@ final class AdminDataCollectorTest extends TestCase
         $request = new Request();
         $response = new Response();
 
-        $resource1 = new Resource(name: 'my_resource');
-        $resource2 = new Resource(name: 'my_other_resource');
+        $resource = new Resource(name: 'my_resource', application: 'my_application');
+        $operation = new Show(shortName: 'my_operation')->withResource($resource);
 
-        $this
-            ->registry
+        $this->operationContext
             ->expects(self::once())
-            ->method('all')
-            ->willReturn([$resource1, $resource2])
+            ->method('hasOperation')
+            ->willReturn(true)
         ;
-
-        $this
-            ->parametersExtractor
+        $this->operationContext
             ->expects(self::once())
-            ->method('getApplicationName')
-            ->willReturn('admin')
-        ;
-        $this
-            ->parametersExtractor
-            ->expects(self::once())
-            ->method('getResourceName')
-            ->with($request)
-            ->willReturn('my_resource')
-        ;
-        $this
-            ->parametersExtractor
-            ->expects(self::once())
-            ->method('getOperationName')
-            ->with($request)
-            ->willReturn('my_operation')
+            ->method('getOperation')
+            ->willReturn($operation)
         ;
 
         $this->collector->collect($request, $response);
 
         self::assertEquals([
-            'application' => 'admin',
+            'application' => 'my_application',
             'resource' => 'my_resource',
             'operation' => 'my_operation',
-            'resources' => ['my_resource' => $resource1, 'my_other_resource' => $resource2],
         ], $this->collector->getData());
 
         $this->collector->reset();
+
         self::assertEquals([], $this->collector->getData());
     }
 
@@ -78,11 +60,9 @@ final class AdminDataCollectorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->registry = self::createMock(ResourceRegistryInterface::class);
-        $this->parametersExtractor = self::createMock(ResourceParametersExtractorInterface::class);
+        $this->operationContext = self::createMock(OperationContextInterface::class);
         $this->collector = new AdminDataCollector(
-            $this->registry,
-            $this->parametersExtractor,
+            $this->operationContext,
         );
     }
 }
