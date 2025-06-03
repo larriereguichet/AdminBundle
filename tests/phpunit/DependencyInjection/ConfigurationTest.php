@@ -39,6 +39,7 @@ final class ConfigurationTest extends TestCase
             'applications' => [],
             'resources' => [],
             'grids' => [],
+            'cache' => true,
         ], $data);
     }
 }

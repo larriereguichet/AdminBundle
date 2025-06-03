@@ -21,7 +21,7 @@ final class LAGExtensionTest extends TestCase
             ->container
             ->expects($this->atLeastOnce())
             ->method('setParameter')
-            ->willReturnCallback(function ($parameter, $value): void {
+            ->willReturnCallback(function ($parameter): void {
                 $this->assertContains($parameter, [
                     'lag_admin.application_parameter',
                     'lag_admin.media_directory',
@@ -44,7 +44,11 @@ final class LAGExtensionTest extends TestCase
         ;
 
         $extension = new LAGAdminExtension();
-        $extension->load([], $this->container); // @phpstan-ignore-line
+        $extension->load([
+            'lag_admin' => [
+                'mapping' => ['paths' => [__DIR__.'/../../app/src/Entity']],
+            ],
+        ], $this->container); // @phpstan-ignore-line
     }
 
     #[Test]
@@ -53,6 +57,9 @@ final class LAGExtensionTest extends TestCase
         $extension = new LAGAdminExtension();
         $extension->load([
             'kernel.bundles' => [],
+            'lag_admin' => [
+                'mapping' => ['paths' => [__DIR__.'/../../app/src/Entity']],
+            ],
         ], $this->container); // @phpstan-ignore-line
 
         $this->assertTrue(true);
@@ -67,6 +74,7 @@ final class LAGExtensionTest extends TestCase
             ->willReturnMap([
                 ['kernel.environment', 'dev'],
                 ['kernel.bundles', []],
+                ['kernel.project_dir', __DIR__.'/../../app',]
             ])
         ;
     }

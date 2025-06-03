@@ -161,10 +161,10 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
     {
         $applications = $config['applications'] ?? [];
 
-        /** @var resource $resource */
+        /** @var Resource $resource */
         foreach ($resources as $resource) {
             if (!empty($resource['application']) && empty($applications[$resource['application']])) {
-                $applications[$resource->getApplication()] = ['name' => $resource['application']];
+                $applications[$resource['application']] = ['name' => $resource['application']];
             }
         }
 
