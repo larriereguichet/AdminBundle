@@ -4,42 +4,47 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Controller\Resource\ResourceCollectionController;
-use LAG\AdminBundle\Controller\Resource\ResourceController;
+use LAG\AdminBundle\Controller\Resource\IndexResources;
+use LAG\AdminBundle\Controller\Resource\ProcessResource;
+use LAG\AdminBundle\Controller\Resource\ShowResource;
+use LAG\AdminBundle\Controller\Security\Login;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Grid\Registry\GridRegistryInterface;
-use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
-use LAG\AdminBundle\Request\Context\ContextProviderInterface;
-use LAG\AdminBundle\Request\Uri\UriVariablesExtractorInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
-    $services->set(ResourceController::class)
-        ->arg('$uriVariablesExtractor', service(UriVariablesExtractorInterface::class))
-        ->arg('$contextProvider', service(ContextProviderInterface::class))
-        ->arg('$provider', service(ProviderInterface::class))
-        ->arg('$processor', service(ProcessorInterface::class))
-        ->arg('$formFactory', service('form.factory'))
-        ->arg('$eventDispatcher', service(ResourceEventDispatcherInterface::class))
-        ->arg('$responseHandler', service('lag_admin.response_handler'))
-
+    $services->set(IndexResources::class)
+        ->args([
+            '$provider' => service(ProviderInterface::class),
+            '$processor' => service(ProcessorInterface::class),
+            '$gridBuilder' => service('lag_admin.grid.view_builder'),
+            '$formFactory' => service('form.factory'),
+            '$eventDispatcher' => service('lag_admin.event_dispatcher'),
+            '$responseHandler' => service('lag_admin.response_handler'),
+        ])
         ->tag('controller.service_arguments')
     ;
-
-    $services->set(ResourceCollectionController::class)
-        ->arg('$uriVariablesExtractor', service(UriVariablesExtractorInterface::class))
-        ->arg('$contextProvider', service(ContextProviderInterface::class))
+    $services->set(ProcessResource::class)
+        ->args([
+            '$provider' => service(ProviderInterface::class),
+            '$processor' => service(ProcessorInterface::class),
+            '$formFactory' => service('form.factory'),
+            '$eventDispatcher' => service('lag_admin.event_dispatcher'),
+            '$responseHandler' => service('lag_admin.response_handler'),
+        ])
+        ->tag('controller.service_arguments')
+    ;
+    $services->set(ShowResource::class)
         ->arg('$provider', service(ProviderInterface::class))
-        ->arg('$processor', service(ProcessorInterface::class))
-        ->arg('$gridRegistry', service(GridRegistryInterface::class))
-        ->arg('$gridViewBuilder', service(GridViewBuilderInterface::class))
-        ->arg('$formFactory', service('form.factory'))
         ->arg('$eventDispatcher', service(ResourceEventDispatcherInterface::class))
         ->arg('$responseHandler', service('lag_admin.response_handler'))
-
+        ->tag('controller.service_arguments')
+    ;
+    $services->set(Login::class)
+        ->arg('$authenticationUtils', service('security.authentication_utils'))
+        ->arg('$environment', service('twig'))
         ->tag('controller.service_arguments')
     ;
 };
