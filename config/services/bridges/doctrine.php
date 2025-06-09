@@ -62,7 +62,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(InitializeResourceIdentifiersListener::class)
         ->arg('$metadataHelper', service(MetadataHelperInterface::class))
         ->tag('kernel.event_listener', [
-            'event' => ResourceEvents::RESOURCE_CREATE_TEMPLATE,
+            'event' => ResourceEvents::RESOURCE_CREATE,
             'dispatcher' => 'lag_admin.build_event_dispatcher',
             'priority' => 255,
         ])
