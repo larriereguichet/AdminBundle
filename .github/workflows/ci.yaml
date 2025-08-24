@@ -43,6 +43,9 @@ jobs:
             -   name: Build yarn dependencies
                 run: yarn run encore production
 
+            -   name: Copy assets files for functionnal tests
+                run: mkdir -p tests/app/public/build && cp -r public/* tests/app/public/build
+
             -   name: Run docker compose
                 run: docker compose up -d db && sleep 10 && docker compose logs db
 
