@@ -11,7 +11,7 @@ interface ResourceEventDispatcherInterface
     /**
      * Dispatch a resource event using the build event dispatcher.
      */
-    public function dispatchBuildEvents(ResourceEventInterface $event, string $eventName);
+    public function dispatchBuildEvents(ResourceEventInterface $event, string $eventName): void;
 
     /**
      * Dispatch a resource event using the default event dispatcher.
