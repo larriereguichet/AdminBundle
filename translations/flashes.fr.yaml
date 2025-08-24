@@ -1,3 +1,4 @@
 lag_admin:
-    resource:
-        updated: La ressource a été mise à jour
+    ui:
+        create_success: Les modifications ont été sauvegardées
+        process_success: Les modifications ont été sauvegardées
