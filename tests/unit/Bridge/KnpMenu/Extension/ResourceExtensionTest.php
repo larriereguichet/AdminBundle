@@ -61,7 +61,7 @@ final class ResourceExtensionTest extends TestCase
     public function itDoesNotBuildOptionsWithoutResource(): void
     {
         $this->operationFactory
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('create')
         ;
         $options = ['some_option' => 'some_value'];

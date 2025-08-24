@@ -31,7 +31,7 @@ class DeleteTypeTest extends TestCase
     {
         $builder = $this->createMock(FormBuilderInterface::class);
         $builder
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('add')
             ->willReturnCallback(function (string $name, string $type) use ($builder) {
                 $this->assertContains($name, ['id', 'slug']);

@@ -41,7 +41,7 @@ final class JsonResponseHandlerTest extends TestCase
             ->willReturn('{"json": "content"}')
         ;
         $this->responseHandler
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('createResponse')
         ;
 
@@ -63,7 +63,7 @@ final class JsonResponseHandlerTest extends TestCase
             ->willReturn($request)
         ;
         $this->serializer
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('serialize')
         ;
         $this->responseHandler

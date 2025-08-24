@@ -68,11 +68,11 @@ final class OperationContextTest extends TestCase
             ->willReturn(null)
         ;
         $this->operationFactory
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('create')
         ;
 
-        self::expectExceptionObject(new Exception('The current request is not supported by any resource or operation'));
+        $this->expectExceptionObject(new Exception('The current request is not supported by any resource or operation'));
 
         $this->operationContext->getOperation();
     }

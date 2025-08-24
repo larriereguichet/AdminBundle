@@ -68,11 +68,11 @@ final class ResourceContextTest extends TestCase
             ->willReturn(null)
         ;
         $this->resourceFactory
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('create')
         ;
 
-        self::expectExceptionObject(new Exception('The current request is not supported by any resource'));
+        $this->expectExceptionObject(new Exception('The current request is not supported by any resource'));
 
         $this->resourceContext->getResource();
     }

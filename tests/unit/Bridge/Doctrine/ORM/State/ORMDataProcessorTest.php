@@ -83,7 +83,7 @@ final class ORMDataProcessorTest extends TestCase
             ->willReturn(null)
         ;
 
-        self::expectExceptionObject(new ManagerNotFoundException($operation));
+        $this->expectExceptionObject(new ManagerNotFoundException($operation));
         $this->processor->process($data, $operation);
     }
 

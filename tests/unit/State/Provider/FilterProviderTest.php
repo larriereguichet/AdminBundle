@@ -67,11 +67,11 @@ final class FilterProviderTest extends TestCase
             ->willReturn(new ArrayCollection([new \stdClass()]))
         ;
         $this->filterApplicator
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('supports')
         ;
         $this->filterApplicator
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('apply')
         ;
 

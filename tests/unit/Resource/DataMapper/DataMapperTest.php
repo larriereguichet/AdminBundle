@@ -32,7 +32,7 @@ final class DataMapperTest extends TestCase
         $data = new \stdClass();
         $data->name = 'Some name';
 
-        self::expectExceptionObject(new Exception('The property path "wrongPath" is not readable in data of type "stdClass"'));
+        $this->expectExceptionObject(new Exception('The property path "wrongPath" is not readable in data of type "stdClass"'));
         $this->dataMapper->getValue(new Text(name: 'some', propertyPath: 'wrongPath'), $data);
     }
 

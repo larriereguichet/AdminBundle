@@ -48,7 +48,7 @@ final class OperationPermissionVoterTest extends TestCase
         $operation = new Update(permissions: []);
 
         $this->security
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('isGranted')
         ;
 
@@ -65,7 +65,7 @@ final class OperationPermissionVoterTest extends TestCase
     public function itDoesNotChecksPermissionsOnInvalidAttribute(): void
     {
         $this->security
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('isGranted')
         ;
         $authorized = $this->voter->vote(
@@ -81,7 +81,7 @@ final class OperationPermissionVoterTest extends TestCase
     public function itDoesNotChecksPermissionsOnInvalidSubject(): void
     {
         $this->security
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('isGranted')
         ;
         $authorized = $this->voter->vote(

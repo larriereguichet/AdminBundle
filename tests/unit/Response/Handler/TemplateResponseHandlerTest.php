@@ -52,11 +52,11 @@ final class TemplateResponseHandlerTest extends TestCase
         $request = new Request();
 
         $this->environment
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('render')
         ;
 
-        self::expectExceptionObject(new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getFullName()));
+        $this->expectExceptionObject(new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getFullName()));
 
         $this->handler->createResponse($operation, $data);
     }

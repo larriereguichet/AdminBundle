@@ -99,7 +99,7 @@ final class OperationValueResolverTest extends TestCase
             ->willReturn(false)
         ;
         $this->operationContext
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getOperation')
         ;
         $parameters = $this->resolver->resolve($request, new ArgumentMetadata('test', null, false, false, null));

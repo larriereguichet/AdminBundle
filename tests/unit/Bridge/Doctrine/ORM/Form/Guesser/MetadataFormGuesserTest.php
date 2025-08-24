@@ -59,7 +59,7 @@ final class MetadataFormGuesserTest extends TestCase
             ->willReturn($classMetadata)
         ;
         $this->decorated
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('guessFormType')
         ;
 

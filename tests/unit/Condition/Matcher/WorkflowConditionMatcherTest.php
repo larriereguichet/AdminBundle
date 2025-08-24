@@ -51,7 +51,7 @@ final class WorkflowConditionMatcherTest extends TestCase
         $data = new \stdClass();
 
         $this->workflowRegistry
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('get')
         ;
         $this->decoratedConditionMatcher
@@ -73,7 +73,7 @@ final class WorkflowConditionMatcherTest extends TestCase
         $data = new \stdClass();
 
         $this->workflowRegistry
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('get')
         ;
         $this->decoratedConditionMatcher

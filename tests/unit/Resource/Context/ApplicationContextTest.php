@@ -68,11 +68,11 @@ final class ApplicationContextTest extends TestCase
             ->willReturn(null)
         ;
         $this->applicationFactory
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('create')
         ;
 
-        self::expectExceptionObject(new Exception('The current request is not supported by any application'));
+        $this->expectExceptionObject(new Exception('The current request is not supported by any application'));
 
         $this->applicationContext->getApplication();
     }

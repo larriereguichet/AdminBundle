@@ -41,7 +41,7 @@ final class CompositeProviderTest extends TestCase
         $resource = new Resource(name: 'my_resource');
         $operation = $operation->setResource($resource);
 
-        self::expectExceptionObject(new Exception(\sprintf(
+        $this->expectExceptionObject(new Exception(\sprintf(
             'The resource "%s" and operation "%s" in the application "%s" is not supported by any provider',
             $operation->getResource()->getName(),
             $operation->getFullName(),

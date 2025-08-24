@@ -63,10 +63,10 @@ final class LinkRendererTest extends TestCase
             ->willReturn($violationList)
         ;
         $this->environment
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('render')
         ;
-        self::expectException(InvalidLinkException::class);
+        $this->expectException(InvalidLinkException::class);
 
         $this->renderer->render($link);
     }

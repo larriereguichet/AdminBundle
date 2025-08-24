@@ -62,7 +62,7 @@ final class SecurityViewBuilderTest extends TestCase
             ->willReturn(false)
         ;
         $this->decorated
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('buildCell')
         ;
         $cellView = $this->cellBuilder->buildCell($operation, $grid, $property, new \stdClass());

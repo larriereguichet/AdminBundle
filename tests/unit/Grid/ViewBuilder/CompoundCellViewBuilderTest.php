@@ -35,7 +35,7 @@ final class CompoundCellViewBuilderTest extends TestCase
         $operation = (new Update())->setResource($resource);
 
         $this->decorated
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('buildCell')
             ->willReturnMap([
                 [$operation, $grid, $child, $data, [], $childView],
