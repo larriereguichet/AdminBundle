@@ -9,6 +9,7 @@ use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
 use LAG\AdminBundle\Metadata\Image;
 use LAG\AdminBundle\Metadata\PropertyInterface;
 use Liip\ImagineBundle\Templating\LazyFilterRuntime;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 final readonly class ImageDataTransformer implements DataTransformerInterface
 {
@@ -17,12 +18,12 @@ final readonly class ImageDataTransformer implements DataTransformerInterface
     ) {
     }
 
-    /**
-     * @param Image $property
-     * @param ImageInterface $data
-     */
     public function transform(PropertyInterface $property, mixed $data): ?string
     {
+        if (!$property instanceof Image) {
+            throw new UnexpectedTypeException($property, Image::class);
+        }
+
         if (!$data instanceof ImageInterface) {
             return null;
         }
