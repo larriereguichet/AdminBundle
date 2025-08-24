@@ -6,11 +6,9 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
-use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\Session\FlashMessageHelperInterface;
 use LAG\AdminBundle\State\Processor\CompositeProcessor;
-use LAG\AdminBundle\State\Processor\ContextProcessor;
 use LAG\AdminBundle\State\Processor\EventProcessor;
 use LAG\AdminBundle\State\Processor\FlashMessageProcessor;
 use LAG\AdminBundle\State\Processor\NormalizationProcessor;
@@ -19,7 +17,7 @@ use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Processor\ValidationProcessor;
 use LAG\AdminBundle\State\Processor\WorkflowProcessor;
 use LAG\AdminBundle\State\Provider\CompositeProvider;
-use LAG\AdminBundle\State\Provider\ContextProvider;
+use LAG\AdminBundle\State\Provider\CreateProvider;
 use LAG\AdminBundle\State\Provider\FilterProvider;
 use LAG\AdminBundle\State\Provider\NormalizationProvider;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
@@ -32,12 +30,6 @@ return static function (ContainerConfigurator $container): void {
     // Data providers
     $services->set(ProviderInterface::class, CompositeProvider::class)
         ->arg('$providers', tagged_iterator('lag_admin.state_provider'))
-    ;
-    $services->set(ContextProvider::class)
-        ->decorate(ProviderInterface::class, priority: -250)
-        ->arg('$provider', service('.inner'))
-        ->arg('$requestStack', service('request_stack'))
-        ->arg('$contextBuilder', service(ContextBuilderInterface::class))
     ;
     $services->set(UrlVariableProvider::class)
         ->decorate(ProviderInterface::class, priority: -250)
@@ -62,16 +54,13 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$filterApplicator', service(FilterApplicatorInterface::class))
         ->tag('lag_admin.state_provider')
     ;
+    $services->set(CreateProvider::class)
+        ->tag('lag_admin.state_provider')
+    ;
 
     // Data processors
     $services->set(ProcessorInterface::class, CompositeProcessor::class)
         ->arg('$processors', tagged_iterator('lag_admin.state_processor'))
-    ;
-    $services->set(ContextProcessor::class)
-        ->decorate(ProcessorInterface::class, priority: -250)
-        ->arg('$processor', service('.inner'))
-        ->arg('$requestStack', service('request_stack'))
-        ->arg('$contextBuilder', service(ContextBuilderInterface::class))
     ;
     $services->set(PartialAjaxFormProcessor::class)
         ->decorate(ProcessorInterface::class, priority: -220)
