@@ -59,19 +59,20 @@
         <div data-form-collection="item"
              data-form-collection-index="{{ index }}"
              {{ block('attributes') }}>
-            <div class="collection-box{% if form|length == 1 %} unique-field{% endif %}">
-                {{ form_row(form) }}
+            <div class="collection-box row {% if form|length == 1 %} unique-field{% endif %}">
+                {{ form_row(form, {row_attr: {class: 'col-10'}}) }}
 
                 {% if allow_delete %}
-                    <p class="text-right">
+                    <div class="col-2 text-right">
+                        <br/>
                         <a href="#"
                            {{ stimulus_action('lag-admin-collection', 'removeCollectionElement') }}
                            data-form-collection-index="{{ index }}"
-                           class="btn btn-danger">
+                           class="btn btn-danger mt-2">
                             <i class="glyphicon glyphicon-remove collection-button-remove"></i>
                             {{ delete_label }}
                         </a>
-                    </p>
+                    </div>
                 {% endif %}
             </div>
         </div>
