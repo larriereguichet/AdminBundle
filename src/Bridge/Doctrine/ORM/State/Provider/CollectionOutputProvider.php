@@ -14,7 +14,7 @@ use Pagerfanta\PagerfantaInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final readonly class DoctrineCollectionNormalizeProvider implements ProviderInterface
+final readonly class CollectionOutputProvider implements ProviderInterface
 {
     public function __construct(
         private ProviderInterface $provider,
