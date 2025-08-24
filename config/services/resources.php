@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ApplicationContext;
 use LAG\AdminBundle\Resource\Context\ApplicationContextInterface;
@@ -24,7 +23,22 @@ use LAG\AdminBundle\Resource\Factory\OperationFactory;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Resource\Factory\ResourceFactory;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Resource\Factory\ValidationResourceFactory;
+use LAG\AdminBundle\Resource\Initializer\ActionInitializer;
+use LAG\AdminBundle\Resource\Initializer\ActionInitializerInterface;
+use LAG\AdminBundle\Resource\Initializer\CollectionOperationInitializer;
+use LAG\AdminBundle\Resource\Initializer\CollectionOperationInitializerInterface;
+use LAG\AdminBundle\Resource\Initializer\OperationDefaultsInitializer;
+use LAG\AdminBundle\Resource\Initializer\OperationDefaultsInitializerInterface;
+use LAG\AdminBundle\Resource\Initializer\OperationFormInitializeInterface;
+use LAG\AdminBundle\Resource\Initializer\OperationFormInitializer;
+use LAG\AdminBundle\Resource\Initializer\OperationInitializer;
+use LAG\AdminBundle\Resource\Initializer\OperationInitializerInterface;
+use LAG\AdminBundle\Resource\Initializer\OperationRoutingInitializer;
+use LAG\AdminBundle\Resource\Initializer\OperationRoutingInitializerInterface;
+use LAG\AdminBundle\Resource\Initializer\PropertyInitializer;
+use LAG\AdminBundle\Resource\Initializer\PropertyInitializerInterface;
+use LAG\AdminBundle\Resource\Initializer\ResourceInitializer;
+use LAG\AdminBundle\Resource\Initializer\ResourceInitializerInterface;
 use LAG\AdminBundle\Resource\Locator\AttributePropertyLocator;
 use LAG\AdminBundle\Resource\Locator\CompositePropertyLocator;
 use LAG\AdminBundle\Resource\Locator\PropertyLocatorInterface;
@@ -32,6 +46,7 @@ use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesser;
 use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesserInterface;
 use LAG\AdminBundle\Resource\PropertyGuesser\ResourcePropertyGuesser;
 use LAG\AdminBundle\Resource\PropertyGuesser\ResourcePropertyGuesserInterface;
+use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use LAG\AdminBundle\Twig\Globals\LAGAdminGlobal;
 
 return static function (ContainerConfigurator $container): void {
@@ -55,16 +70,10 @@ return static function (ContainerConfigurator $container): void {
     $services->set(ResourceFactoryInterface::class, ResourceFactory::class)
         ->args([
             '$definitionFactory' => service(DefinitionFactoryInterface::class),
-            '$eventDispatcher' => service(ResourceEventDispatcherInterface::class),
-        ])
-        ->alias('lag_admin.resource.factory', ResourceFactoryInterface::class)
-    ;
-    $services->set(ValidationResourceFactory::class)
-        ->decorate(ResourceFactoryInterface::class)
-        ->args([
-            '$resourceFactory' => service('.inner'),
+            '$resourceInitializer' => service(ResourceInitializerInterface::class),
             '$validator' => service('validator'),
         ])
+        ->alias('lag_admin.resource.factory', ResourceFactoryInterface::class)
     ;
     $services->set(CacheResourceFactory::class)
         ->decorate(ResourceFactoryInterface::class)
@@ -136,4 +145,35 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$propertyGuesser', service(PropertyGuesserInterface::class))
     ;
     $services->set(PropertyGuesserInterface::class, PropertyGuesser::class);
+
+    // Initializers
+    $services->set(ResourceInitializerInterface::class, ResourceInitializer::class)
+        ->args([
+            '$applicationFactory' => service('lag_admin.application.factory'),
+            '$operationInitializer' => service(OperationInitializerInterface::class),
+            '$propertyInitializer' => service(PropertyInitializerInterface::class),
+            '$propertyGuesser' => service(ResourcePropertyGuesserInterface::class),
+        ])
+    ;
+    $services->set(OperationInitializerInterface::class, OperationInitializer::class)
+        ->args([
+            '$defaultsOperationInitializer' => service(OperationDefaultsInitializerInterface::class),
+            '$collectionOperationInitializer' => service(CollectionOperationInitializerInterface::class),
+            '$operationFormInitializer' => service(OperationFormInitializeInterface::class),
+            '$operationRoutingInitializer' => service(OperationRoutingInitializerInterface::class),
+        ])
+    ;
+    $services->set(CollectionOperationInitializerInterface::class, CollectionOperationInitializer::class)
+        ->args([
+            '$actionInitializer' => service(ActionInitializerInterface::class),
+        ])
+    ;
+    $services->set(OperationDefaultsInitializerInterface::class, OperationDefaultsInitializer::class);
+    $services->set(OperationFormInitializeInterface::class, OperationFormInitializer::class);
+    $services->set(OperationRoutingInitializerInterface::class, OperationRoutingInitializer::class)
+        ->args([
+            '$routeNameGenerator' => service(RouteNameGeneratorInterface::class),
+        ]);
+    $services->set(PropertyInitializerInterface::class, PropertyInitializer::class);
+    $services->set(ActionInitializerInterface::class, ActionInitializer::class);
 };

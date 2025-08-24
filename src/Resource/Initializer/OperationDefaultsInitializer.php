@@ -2,38 +2,38 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\EventListener\Operation;
+namespace LAG\AdminBundle\Resource\Initializer;
 
-use LAG\AdminBundle\Event\OperationEvent;
-use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
-use LAG\AdminBundle\Form\Type\Resource\DeleteType;
-use LAG\AdminBundle\Form\Type\Resource\ResourceDataType;
+use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Metadata\Application;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
 use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Update;
-use LAG\AdminBundle\Resource\Factory\ApplicationFactoryInterface;
-use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
 
 use function Symfony\Component\String\u;
 
-final readonly class InitializeOperationListener
+final readonly class OperationDefaultsInitializer implements OperationDefaultsInitializerInterface
 {
-    public function __construct(
-        private RouteNameGeneratorInterface $routeNameGenerator,
-        private ApplicationFactoryInterface $applicationFactory,
-    ) {
-    }
-
-    public function __invoke(OperationEvent $event): void
+    public function initializeOperationDefaults(Application $application, OperationInterface $operation): OperationInterface
     {
-        $operation = $event->getOperation();
         $resource = $operation->getResource();
-        $application = $this->applicationFactory->create($resource->getApplication());
+
+        if ($resource === null) {
+            throw new Exception('The resource should be initialized');
+        }
+
+        if ($operation->getFullName() === null) {
+            $operation = $operation->withName(
+                u($resource->getApplication())
+                    ->append('.', $resource->getName())
+                    ->append('.', $operation->getName())
+                    ->lower()
+                    ->toString()
+            );
+        }
 
         if ($operation->getTitle() === null) {
             $inflector = new EnglishInflector();
@@ -41,7 +41,7 @@ final readonly class InitializeOperationListener
             if ($operation instanceof CollectionOperationInterface) {
                 $title = u($inflector->pluralize($resource->getName())[0]);
             } else {
-                $title = u($operation->getShortName())
+                $title = u($operation->getName())
                     ->append(' ')
                     ->append($resource->getName())
                 ;
@@ -49,92 +49,42 @@ final readonly class InitializeOperationListener
             $operation = $operation->withTitle($title->replace('_', ' ')->title()->trim()->toString());
         }
 
-        if ($operation->getForm() === null) {
-            if ($operation instanceof Create || $operation instanceof Update) {
-                if ($resource->getForm()) {
-                    $operation = $operation
-                        ->withForm($resource->getForm())
-                        ->withFormOptions($resource->getFormOptions())
-                    ;
-                } else {
-                    $operation = $operation
-                        ->withForm(ResourceDataType::class)
-                        ->withFormOptions([
-                            'exclude' => $resource->getIdentifiers(),
-                            'data_class' => $resource->getResourceClass(),
-                            'application' => $resource->getApplication(),
-                            'resource' => $resource->getName(),
-                            'operation' => $operation->getName(),
-                        ])
-                    ;
-                }
-            }
-        }
-
-        if ($operation->getForm() === HiddenDataType::class && $operation->getFormOptions() === null) {
-            $operation = $operation->withFormOptions([
-                'application' => $resource->getApplication(),
-                'resource' => $resource->getName(),
-                'operation' => $operation->getName(),
-                'translation_domain' => $resource->getTranslationDomain(),
-            ]);
-        }
-
-        if ($operation->getFormOptions() === null) {
-            $operation = $operation->withFormOptions([]);
-        }
-
-        if (empty($operation->getFormOptions()['translation_domain']) && $resource->getTranslationDomain() !== null) {
-            $operation = $operation->withFormOptions(['translation_domain' => $resource->getTranslationDomain()]);
-        }
-
         if ($operation->getBaseTemplate() === null) {
             $baseTemplate = '@LAGAdmin/base.html.twig';
 
-            if ($application?->getBaseTemplate()) {
+            if ($application->getBaseTemplate()) {
                 $baseTemplate = $application->getBaseTemplate();
             }
             $operation = $operation->withBaseTemplate($operation->isPartial() ? '@LAGAdmin/partial.html.twig' : $baseTemplate);
-        }
-
-        if ($operation->getFormTemplate() === null && $resource->getFormTemplate() !== null) {
-            $operation = $operation->withFormTemplate($resource->getFormTemplate());
-        }
-
-        if (!$operation->getRoute()) {
-            $route = $this->routeNameGenerator->generateRouteName($resource, $operation);
-            $operation = $operation->withRoute($route);
-        }
-
-        if ($operation instanceof Delete && $operation->getForm() === DeleteType::class) {
-            $operation = $operation->withFormOptions(array_merge($operation->getFormOptions(), ['resource' => $resource]));
         }
 
         if ($operation->getContextualActions() === null) {
             $operation = $operation->withContextualActions([]);
         }
 
-        if (!$operation->getItemActions()) {
-            $operation = $this->withDefaultItemActions($resource, $operation);
+        if ($operation->getItemActions() === null) {
+            $operation = $this->initializeItemActions($resource, $operation);
         }
 
-        if (!$operation->getRedirectRouteParameters()) {
+        if ($operation->getRedirectRouteParameters() === null) {
             $operation = $operation->withRedirectRouteParameters([]);
         }
 
-        if ($resource->isValidationEnabled() !== null) {
+        if ($operation->getRedirectOperation() !== null && !u($operation->getRedirectOperation())->containsAny('.')) {
+            $operation = $operation->withRedirectOperation($application->getName().'.'.$resource->getName().'.'.$operation->getRedirectOperation());
+        }
+
+        if ($resource->hasValidation()) {
             if ($operation->hasValidation() === null) {
-                $operation = $operation->withValidation($resource->isValidationEnabled());
+                $operation = $operation->withValidation($resource->hasValidation());
             }
 
-            if ($resource->getValidationContext() !== null) {
-                if ($operation->getValidationContext() === null) {
-                    $operation = $operation->withValidationContext($resource->getValidationContext());
-                }
+            if (($resource->getValidationContext() !== null) && $operation->getValidationContext() === null) {
+                $operation = $operation->withValidationContext($resource->getValidationContext());
             }
         }
 
-        if ($resource->hasAjax() !== null) {
+        if ($resource->hasAjax()) {
             if ($operation->hasAjax() === null) {
                 $operation = $operation->withAjax($resource->hasAjax());
             }
@@ -174,10 +124,10 @@ final readonly class InitializeOperationListener
             }
         }
 
-        $event->setOperation($operation);
+        return $operation;
     }
 
-    private function withDefaultItemActions(Resource $resource, OperationInterface $operation): OperationInterface
+    private function initializeItemActions(Resource $resource, OperationInterface $operation): OperationInterface
     {
         $actions = [];
 

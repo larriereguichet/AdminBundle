@@ -2,43 +2,17 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\EventListener\Resource;
+namespace LAG\AdminBundle\Resource\Initializer;
 
-use LAG\AdminBundle\Event\ResourceEvent;
 use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Metadata\PropertyInterface;
 use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Resource\PropertyGuesser\ResourcePropertyGuesserInterface;
 
 use function Symfony\Component\String\u;
 
-final readonly class InitializeResourcePropertiesListener
+final class PropertyInitializer implements PropertyInitializerInterface
 {
-    public function __construct(
-        private ResourcePropertyGuesserInterface $propertyGuesser,
-    ) {
-    }
-
-    public function __invoke(ResourceEvent $event): void
-    {
-        $resource = $event->getResource();
-
-        if (!$resource->hasProperties()) {
-            $properties = $this->propertyGuesser->guessProperties($resource);
-
-            foreach ($properties as $property) {
-                $resource = $resource->withProperty($property);
-            }
-        }
-
-        foreach ($resource->getProperties() as $property) {
-            $property = $this->initializeProperty($resource, $property);
-            $resource = $resource->withProperty($property);
-        }
-        $event->setResource($resource);
-    }
-
-    private function initializeProperty(Resource $resource, PropertyInterface $property): PropertyInterface
+    public function initializeProperty(Resource $resource, PropertyInterface $property): PropertyInterface
     {
         if ($property->getPropertyPath() === null) {
             $property = $property->withPropertyPath($property->getName());
@@ -74,6 +48,10 @@ final readonly class InitializeResourcePropertiesListener
                 } else {
                     $property = $property->withText($property->getName());
                 }
+            }
+
+            if ($property->getOperation() !== null && !u($property->getOperation())->containsAny('.')) {
+                $property = $property->withOperation($resource->getApplication().'.'.$resource->getName().'.'.$property->getOperation());
             }
         }
 
