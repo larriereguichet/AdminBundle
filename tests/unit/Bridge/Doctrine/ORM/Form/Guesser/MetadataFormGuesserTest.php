@@ -29,31 +29,31 @@ final class MetadataFormGuesserTest extends TestCase
         $operation = (new Update())->setResource($resource);
         $property = new Text(propertyPath: 'name');
 
-        $reflectionProperty = self::createMock(\ReflectionProperty::class);
-        $reflectionClass = self::createMock(\ReflectionClass::class);
-        $classMetadata = self::createMock(ClassMetadata::class);
+        $reflectionProperty = $this->createMock(\ReflectionProperty::class);
+        $reflectionClass = $this->createMock(\ReflectionClass::class);
+        $classMetadata = $this->createMock(ClassMetadata::class);
 
-        $reflectionClass->expects(self::once())
+        $reflectionClass->expects($this->once())
             ->method('hasProperty')
             ->with('name')
             ->willReturn(true)
         ;
-        $reflectionClass->expects(self::once())
+        $reflectionClass->expects($this->once())
             ->method('getProperty')
             ->with('name')
             ->willReturn($reflectionProperty)
         ;
-        $classMetadata->expects(self::once())
+        $classMetadata->expects($this->once())
             ->method('getReflectionClass')
             ->willReturn($reflectionClass)
         ;
-        $reflectionProperty->expects(self::once())
+        $reflectionProperty->expects($this->once())
             ->method('getAttributes')
             ->with(GeneratedValue::class)
             ->willReturn([new GeneratedValue()])
         ;
         $this->metadataHelper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findMetadata')
             ->with(\stdClass::class)
             ->willReturn($classMetadata)
@@ -75,25 +75,25 @@ final class MetadataFormGuesserTest extends TestCase
         $operation = (new Update())->setResource($resource);
         $property = new Text(propertyPath: 'name');
 
-        $reflectionClass = self::createMock(\ReflectionClass::class);
-        $reflectionClass->expects(self::once())
+        $reflectionClass = $this->createMock(\ReflectionClass::class);
+        $reflectionClass->expects($this->once())
             ->method('hasProperty')
             ->with('name')
             ->willReturn(false)
         ;
-        $classMetadata = self::createMock(ClassMetadata::class);
-        $classMetadata->expects(self::once())
+        $classMetadata = $this->createMock(ClassMetadata::class);
+        $classMetadata->expects($this->once())
             ->method('getReflectionClass')
             ->willReturn($reflectionClass)
         ;
         $this->metadataHelper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findMetadata')
             ->with(\stdClass::class)
             ->willReturn($classMetadata)
         ;
         $this->decorated
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('guessFormType')
             ->with($operation, $property)
             ->willReturn('SomeFormType')
@@ -108,7 +108,7 @@ final class MetadataFormGuesserTest extends TestCase
     public function itDoesNotGuessFormWithoutMetadata(): void
     {
         $this->metadataHelper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findMetadata')
             ->with(\stdClass::class)
             ->willReturn(null)
@@ -118,7 +118,7 @@ final class MetadataFormGuesserTest extends TestCase
         $property = new Text();
 
         $this->decorated
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('guessFormType')
             ->with($operation, $property)
             ->willReturn('SomeFormType')
@@ -131,8 +131,8 @@ final class MetadataFormGuesserTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = self::createMock(FormGuesserInterface::class);
-        $this->metadataHelper = self::createMock(MetadataHelperInterface::class);
+        $this->decorated = $this->createMock(FormGuesserInterface::class);
+        $this->metadataHelper = $this->createMock(MetadataHelperInterface::class);
         $this->guesser = new MetadataFormGuesser(
             $this->decorated,
             $this->metadataHelper,

@@ -27,15 +27,15 @@ final class ConditionMatcherTest extends TestCase
 
         $property = new Text(condition: 'this.name === "Some thing" and workflow.can(this, "order") and is_granted("ROLE_TESTER")');
 
-        $workflow = self::createMock(WorkflowInterface::class);
-        $workflow->expects(self::once())
+        $workflow = $this->createMock(WorkflowInterface::class);
+        $workflow->expects($this->once())
             ->method('can')
             ->with($data, 'order')
             ->willReturn(true)
         ;
 
         $this->authorizationChecker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_TESTER')
             ->willReturn(true)
@@ -54,7 +54,7 @@ final class ConditionMatcherTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->authorizationChecker = self::createMock(AuthorizationCheckerInterface::class);
+        $this->authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $this->conditionMatcher = new ConditionMatcher(
             $this->authorizationChecker,
         );

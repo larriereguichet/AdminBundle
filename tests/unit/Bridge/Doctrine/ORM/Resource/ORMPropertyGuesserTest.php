@@ -28,13 +28,13 @@ final class ORMPropertyGuesserTest extends TestCase
     public function itDoesNotGuessPropertiesWithoutDoctrineMetadata(): void
     {
         $this->metadataHelper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findMetadata')
             ->with('SomeClass')
             ->willReturn(null)
         ;
         $this->decoratedPropertyGuesser
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('guessProperty')
             ->with('SomeClass', 'name', null)
             ->willReturn(null)
@@ -47,21 +47,21 @@ final class ORMPropertyGuesserTest extends TestCase
     #[Test]
     public function itDoesNotGuessPropertiesWithoutDoctrineField(): void
     {
-        $classMetadata = self::createMock(ClassMetadata::class);
+        $classMetadata = $this->createMock(ClassMetadata::class);
 
         $this->metadataHelper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findMetadata')
             ->with('SomeClass')
             ->willReturn($classMetadata)
         ;
-        $classMetadata->expects(self::once())
+        $classMetadata->expects($this->once())
             ->method('hasField')
             ->with('name')
             ->willReturn(false)
         ;
         $this->decoratedPropertyGuesser
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('guessProperty')
             ->with('SomeClass', 'name', null)
             ->willReturn(null)
@@ -75,20 +75,20 @@ final class ORMPropertyGuesserTest extends TestCase
     #[DataProvider('propertyTypes')]
     public function itGuessProperties(?string $propertyType, ?PropertyInterface $expectedProperty): void
     {
-        $classMetadata = self::createMock(ClassMetadata::class);
+        $classMetadata = $this->createMock(ClassMetadata::class);
 
         $this->metadataHelper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findMetadata')
             ->with('SomeClass')
             ->willReturn($classMetadata)
         ;
-        $classMetadata->expects(self::once())
+        $classMetadata->expects($this->once())
             ->method('hasField')
             ->with('name')
             ->willReturn(true)
         ;
-        $classMetadata->expects(self::once())
+        $classMetadata->expects($this->once())
             ->method('getTypeOfField')
             ->with('name')
             ->willReturn($propertyType)
@@ -113,8 +113,8 @@ final class ORMPropertyGuesserTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decoratedPropertyGuesser = self::createMock(PropertyGuesserInterface::class);
-        $this->metadataHelper = self::createMock(MetadataHelperInterface::class);
+        $this->decoratedPropertyGuesser = $this->createMock(PropertyGuesserInterface::class);
+        $this->metadataHelper = $this->createMock(MetadataHelperInterface::class);
         $this->propertyGuesser = new ORMPropertyGuesser(
             $this->decoratedPropertyGuesser,
             $this->metadataHelper,

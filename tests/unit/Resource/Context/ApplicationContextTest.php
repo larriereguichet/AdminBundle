@@ -29,18 +29,18 @@ final class ApplicationContextTest extends TestCase
         $expectedApplication = new Application(name: 'my_application');
 
         $this->requestStack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getApplicationName')
             ->with($request)
             ->willReturn('my_application')
         ;
         $this->applicationFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('create')
             ->with('my_application')
             ->willReturn($expectedApplication)
@@ -57,12 +57,12 @@ final class ApplicationContextTest extends TestCase
         $request = new Request();
 
         $this->requestStack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getApplicationName')
             ->with($request)
             ->willReturn(null)
@@ -83,12 +83,12 @@ final class ApplicationContextTest extends TestCase
         $request = new Request();
 
         $this->requestStack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getApplicationName')
             ->with($request)
             ->willReturn(null)
@@ -99,9 +99,9 @@ final class ApplicationContextTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->requestStack = self::createMock(RequestStack::class);
-        $this->parametersExtractor = self::createMock(ParametersExtractorInterface::class);
-        $this->applicationFactory = self::createMock(ApplicationFactoryInterface::class);
+        $this->requestStack = $this->createMock(RequestStack::class);
+        $this->parametersExtractor = $this->createMock(ParametersExtractorInterface::class);
+        $this->applicationFactory = $this->createMock(ApplicationFactoryInterface::class);
         $this->applicationContext = new ApplicationContext(
             $this->requestStack,
             $this->parametersExtractor,

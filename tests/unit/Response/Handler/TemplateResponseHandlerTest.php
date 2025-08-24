@@ -28,7 +28,7 @@ final class TemplateResponseHandlerTest extends TestCase
         $request = new Request();
 
         $this->environment
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('render')
             ->with('my_template.html.twig', [
                 'resource' => $resource,
@@ -63,7 +63,7 @@ final class TemplateResponseHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->environment = self::createMock(Environment::class);
+        $this->environment = $this->createMock(Environment::class);
         $this->handler = new TemplateResponseHandler($this->environment);
     }
 }

@@ -30,12 +30,12 @@ final class JsonResponseHandlerTest extends TestCase
         $request = new Request(server: ['CONTENT_TYPE' => 'application/json']);
 
         $this->requestStack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
         $this->serializer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('serialize')
             ->with($data, 'json', ['groups' => 'my-group'])
             ->willReturn('{"json": "content"}')
@@ -58,7 +58,7 @@ final class JsonResponseHandlerTest extends TestCase
         $request = new Request(server: ['Content-Type' => 'text/html']);
 
         $this->requestStack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
@@ -67,7 +67,7 @@ final class JsonResponseHandlerTest extends TestCase
             ->method('serialize')
         ;
         $this->responseHandler
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createResponse')
             ->with($operation, $data)
             ->willReturn(new Response('some content'))
@@ -80,9 +80,9 @@ final class JsonResponseHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->requestStack = self::createMock(RequestStack::class);
-        $this->responseHandler = self::createMock(ResponseHandlerInterface::class);
-        $this->serializer = self::createMock(SerializerInterface::class);
+        $this->requestStack = $this->createMock(RequestStack::class);
+        $this->responseHandler = $this->createMock(ResponseHandlerInterface::class);
+        $this->serializer = $this->createMock(SerializerInterface::class);
         $this->handler = new JsonResponseHandler(
             $this->requestStack,
             $this->responseHandler,

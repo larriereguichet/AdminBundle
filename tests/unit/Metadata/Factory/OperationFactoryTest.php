@@ -30,7 +30,7 @@ final class OperationFactoryTest extends TestCase
         );
 
         $this->resourceFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('create')
             ->with('admin.book')
             ->willReturn($resource)
@@ -43,7 +43,7 @@ final class OperationFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->resourceFactory = self::createMock(ResourceFactoryInterface::class);
+        $this->resourceFactory = $this->createMock(ResourceFactoryInterface::class);
         $this->factory = new OperationFactory(
             $this->resourceFactory,
         );

@@ -22,7 +22,7 @@ final class ApplicationFactoryTest extends TestCase
         $applicationDefinition = new Application(name: 'my_application');
 
         $this->definitionFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createApplicationDefinition')
             ->with('my_application')
             ->willReturn($applicationDefinition)
@@ -35,7 +35,7 @@ final class ApplicationFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->definitionFactory = self::createMock(DefinitionFactoryInterface::class);
+        $this->definitionFactory = $this->createMock(DefinitionFactoryInterface::class);
         $this->applicationFactory = new ApplicationFactory($this->definitionFactory);
     }
 }

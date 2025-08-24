@@ -22,12 +22,12 @@ final class CompositeProviderTest extends TestCase
     #[DataProvider('operationsProvider')]
     public function testProvide(OperationInterface $operation): void
     {
-        $customProvider = self::createMock(ProviderInterface::class);
-        $nevenCalledProvider = self::createMock(ProviderInterface::class);
+        $customProvider = $this->createMock(ProviderInterface::class);
+        $nevenCalledProvider = $this->createMock(ProviderInterface::class);
         $operation = $operation->withProvider($customProvider::class);
 
         $customProvider
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('provide')
             ->with($operation, ['code' => 'abcd'], ['groups' => 'test']);
 

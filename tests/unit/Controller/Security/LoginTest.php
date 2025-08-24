@@ -24,17 +24,17 @@ final class LoginTest extends TestCase
         $authenticationException = new AuthenticationException('Some error');
 
         $this->authenticationUtils
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getLastAuthenticationError')
             ->willReturn($authenticationException)
         ;
         $this->authenticationUtils
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getLastUsername')
             ->willReturn('my_username')
         ;
         $this->environment
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('render')
             ->with('@LAGAdmin/security/login.html.twig', [
                 'error' => $authenticationException,
@@ -50,8 +50,8 @@ final class LoginTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->authenticationUtils = self::createMock(AuthenticationUtils::class);
-        $this->environment = self::createMock(Environment::class);
+        $this->authenticationUtils = $this->createMock(AuthenticationUtils::class);
+        $this->environment = $this->createMock(Environment::class);
         $this->controller = new Login(
             $this->authenticationUtils,
             $this->environment,

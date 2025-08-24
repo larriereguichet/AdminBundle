@@ -59,7 +59,7 @@ final class EventProcessorTest extends TestCase
             ])
         ;
         $this->decoratedProcessor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('process')
             ->with($data, $operation, ['id' => 123], ['context' => true])
         ;
@@ -80,8 +80,8 @@ final class EventProcessorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decoratedProcessor = self::createMock(ProcessorInterface::class);
-        $this->eventDispatcher = self::createMock(ResourceEventDispatcherInterface::class);
+        $this->decoratedProcessor = $this->createMock(ProcessorInterface::class);
+        $this->eventDispatcher = $this->createMock(ResourceEventDispatcherInterface::class);
         $this->processor = new EventProcessor(
             $this->decoratedProcessor,
             $this->eventDispatcher,

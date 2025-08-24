@@ -62,7 +62,7 @@ final class CompoundCellViewBuilderTest extends TestCase
         $operation = (new Update())->setResource($resource);
 
         $this->decorated
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('buildCell')
             ->with($operation, $grid, $property, $data, [])
             ->willReturn($cellView)
@@ -83,7 +83,7 @@ final class CompoundCellViewBuilderTest extends TestCase
         $operation = (new Update())->setResource($resource);
 
         $this->decorated
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('buildCell')
             ->with($operation, $grid, $property, $data, ['children' => 'set'])
             ->willReturn($cellView)
@@ -94,7 +94,7 @@ final class CompoundCellViewBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = self::createMock(CellViewBuilderInterface::class);
+        $this->decorated = $this->createMock(CellViewBuilderInterface::class);
         $this->builder = new CompoundCellViewBuilder($this->decorated);
     }
 }

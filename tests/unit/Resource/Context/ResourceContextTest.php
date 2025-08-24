@@ -29,18 +29,18 @@ final class ResourceContextTest extends TestCase
         $expectedResource = new Resource(name: 'my_resource');
 
         $this->requestStack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getResourceName')
             ->with($request)
             ->willReturn('my_resource')
         ;
         $this->resourceFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('create')
             ->with('my_resource')
             ->willReturn($expectedResource)
@@ -57,12 +57,12 @@ final class ResourceContextTest extends TestCase
         $request = new Request();
 
         $this->requestStack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getResourceName')
             ->with($request)
             ->willReturn(null)
@@ -83,12 +83,12 @@ final class ResourceContextTest extends TestCase
         $request = new Request();
 
         $this->requestStack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getResourceName')
             ->with($request)
             ->willReturn(null)
@@ -99,9 +99,9 @@ final class ResourceContextTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->requestStack = self::createMock(RequestStack::class);
-        $this->parametersExtractor = self::createMock(ParametersExtractorInterface::class);
-        $this->resourceFactory = self::createMock(ResourceFactoryInterface::class);
+        $this->requestStack = $this->createMock(RequestStack::class);
+        $this->parametersExtractor = $this->createMock(ParametersExtractorInterface::class);
+        $this->resourceFactory = $this->createMock(ResourceFactoryInterface::class);
         $this->resourceContext = new ResourceContext(
             $this->requestStack,
             $this->parametersExtractor,

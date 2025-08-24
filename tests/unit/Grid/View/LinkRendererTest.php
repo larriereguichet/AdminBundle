@@ -31,19 +31,19 @@ final class LinkRendererTest extends TestCase
         );
 
         $this->validator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('validate')
             ->with($link, [new Valid()])
             ->willReturn(new ConstraintViolationList())
         ;
         $this->urlGenerator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generateFromUrl')
             ->with($link)
             ->willReturn('/some/url')
         ;
         $this->environment
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('render')
             ->with('some_template.html.twig', [
                 'link' => $link->withUrl('/some/url'),
@@ -59,9 +59,9 @@ final class LinkRendererTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->urlGenerator = self::createMock(ResourceUrlGeneratorInterface::class);
-        $this->validator = self::createMock(ValidatorInterface::class);
-        $this->environment = self::createMock(Environment::class);
+        $this->urlGenerator = $this->createMock(ResourceUrlGeneratorInterface::class);
+        $this->validator = $this->createMock(ValidatorInterface::class);
+        $this->environment = $this->createMock(Environment::class);
         $this->linkRenderer = new LinkRenderer(
             $this->urlGenerator,
             $this->validator,

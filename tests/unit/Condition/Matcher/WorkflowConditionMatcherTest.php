@@ -24,16 +24,16 @@ final class WorkflowConditionMatcherTest extends TestCase
         $subject = new WorkflowSubject(workflow: 'my_workflow');
         $data = new \stdClass();
 
-        $workflow = self::createMock(WorkflowInterface::class);
+        $workflow = $this->createMock(WorkflowInterface::class);
 
         $this->workflowRegistry
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('get')
             ->with($data, 'my_workflow')
             ->willReturn($workflow)
         ;
         $this->decoratedConditionMatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('matchCondition')
             ->with($subject, $data, ['workflow' => $workflow])
             ->willReturn(true)
@@ -55,7 +55,7 @@ final class WorkflowConditionMatcherTest extends TestCase
             ->method('get')
         ;
         $this->decoratedConditionMatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('matchCondition')
             ->with($subject, $data, ['workflow' => 'some_workflow'])
             ->willReturn(true)
@@ -77,7 +77,7 @@ final class WorkflowConditionMatcherTest extends TestCase
             ->method('get')
         ;
         $this->decoratedConditionMatcher
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('matchCondition')
             ->with($subject, $data, ['workflow_transition' => 'my_workflow_transition'])
             ->willReturn(true)
@@ -90,8 +90,8 @@ final class WorkflowConditionMatcherTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decoratedConditionMatcher = self::createMock(ConditionMatcherInterface::class);
-        $this->workflowRegistry = self::createMock(Registry::class);
+        $this->decoratedConditionMatcher = $this->createMock(ConditionMatcherInterface::class);
+        $this->workflowRegistry = $this->createMock(Registry::class);
         $this->conditionMatcher = new WorkflowConditionMatcher(
             $this->decoratedConditionMatcher,
             $this->workflowRegistry,

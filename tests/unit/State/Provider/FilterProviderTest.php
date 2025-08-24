@@ -34,22 +34,22 @@ final class FilterProviderTest extends TestCase
             ],
         ];
 
-        $data = self::createMock(QueryBuilder::class);
+        $data = $this->createMock(QueryBuilder::class);
 
         $this->decorated
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('provide')
             ->with($operation, $uriVariables, $context)
             ->willReturn($data)
         ;
         $this->filterApplicator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('supports')
             ->with($operation, $filter, $data, 'some_filter_value')
             ->willReturn(true)
         ;
         $this->filterApplicator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('apply')
             ->with($operation, $filter, $data, 'some_filter_value')
         ;
@@ -61,7 +61,7 @@ final class FilterProviderTest extends TestCase
     public function itDoesNotProvidesNonQueryBuilderData(): void
     {
         $this->decorated
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('provide')
             ->with(new Index(), ['some' => 'value'], ['some_context' => 'context_value'])
             ->willReturn(new ArrayCollection([new \stdClass()]))
@@ -80,8 +80,8 @@ final class FilterProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = self::createMock(ProviderInterface::class);
-        $this->filterApplicator = self::createMock(FilterApplicatorInterface::class);
+        $this->decorated = $this->createMock(ProviderInterface::class);
+        $this->filterApplicator = $this->createMock(FilterApplicatorInterface::class);
         $this->provider = new FilterProvider(
             $this->decorated,
             $this->filterApplicator,

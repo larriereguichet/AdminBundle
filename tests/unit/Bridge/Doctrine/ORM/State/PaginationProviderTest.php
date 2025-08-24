@@ -27,14 +27,14 @@ final class PaginationProviderTest extends TestCase
     #[Test]
     public function itPaginatesData(): void
     {
-        $data = self::createMock(QueryBuilder::class);
+        $data = $this->createMock(QueryBuilder::class);
 
         $operation = new Index(pagination: true);
         $uriVariables = ['some_variable' => 'some_value'];
         $context = ['some_context' => 'some_context_value'];
 
         $this->decorated
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('provide')
             ->with($operation, $uriVariables, $context)
             ->willReturn($data)
@@ -54,7 +54,7 @@ final class PaginationProviderTest extends TestCase
         $data = new \stdClass();
 
         $this->decorated
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('provide')
             ->with($operation, $uriVariables, $context)
             ->willReturn($data)
@@ -75,7 +75,7 @@ final class PaginationProviderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = self::createMock(ProviderInterface::class);
+        $this->decorated = $this->createMock(ProviderInterface::class);
         $this->provider = new PaginationProvider($this->decorated);
     }
 }

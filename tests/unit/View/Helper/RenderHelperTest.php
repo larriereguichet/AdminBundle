@@ -26,7 +26,7 @@ final class RenderHelperTest extends TestCase
         $data = new \stdClass();
 
         $this->linkRenderer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('render')
             ->with($link, $data, ['some_option' => 'some_value'])
             ->willReturn('<p>content</p>')
@@ -44,7 +44,7 @@ final class RenderHelperTest extends TestCase
         $data = new \stdClass();
 
         $this->actionRenderer
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('renderAction')
             ->with($link, $data)
             ->willReturn('<p>content</p>')
@@ -57,8 +57,8 @@ final class RenderHelperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->linkRenderer = self::createMock(LinkRendererInterface::class);
-        $this->actionRenderer = self::createMock(ActionRendererInterface::class);
+        $this->linkRenderer = $this->createMock(LinkRendererInterface::class);
+        $this->actionRenderer = $this->createMock(ActionRendererInterface::class);
         $this->helper = new RenderHelper(
             $this->linkRenderer,
             $this->actionRenderer,

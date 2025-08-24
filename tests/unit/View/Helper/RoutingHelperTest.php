@@ -22,7 +22,7 @@ final class RoutingHelperTest extends TestCase
         $data = new Book();
 
         $this->urlGenerator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generateFromOperationName')
             ->with('my_resource.my_operation', $data)
             ->willReturn('/url')
@@ -35,7 +35,7 @@ final class RoutingHelperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->urlGenerator = self::createMock(ResourceUrlGeneratorInterface::class);
+        $this->urlGenerator = $this->createMock(ResourceUrlGeneratorInterface::class);
         $this->helper = new RoutingHelper(
             $this->urlGenerator,
         );

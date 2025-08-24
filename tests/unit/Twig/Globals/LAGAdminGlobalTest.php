@@ -28,12 +28,12 @@ final class LAGAdminGlobalTest extends TestCase
         $expectedApplication = new Application(name: 'my_application');
 
         $this->applicationContext
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('hasApplication')
             ->willReturn(true)
         ;
         $this->applicationContext
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getApplication')
             ->willReturn($expectedApplication)
         ;
@@ -49,12 +49,12 @@ final class LAGAdminGlobalTest extends TestCase
         $expectedResource = new Resource(name: 'my_resource');
 
         $this->resourceContext
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('hasResource')
             ->willReturn(true)
         ;
         $this->resourceContext
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getResource')
             ->willReturn($expectedResource)
         ;
@@ -70,12 +70,12 @@ final class LAGAdminGlobalTest extends TestCase
         $expectedOperation = new Index(name: 'my_operation');
 
         $this->operationContext
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('hasOperation')
             ->willReturn(true)
         ;
         $this->operationContext
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getOperation')
             ->willReturn($expectedOperation)
         ;
@@ -87,9 +87,9 @@ final class LAGAdminGlobalTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->applicationContext = self::createMock(ApplicationContextInterface::class);
-        $this->resourceContext = self::createMock(ResourceContextInterface::class);
-        $this->operationContext = self::createMock(OperationContextInterface::class);
+        $this->applicationContext = $this->createMock(ApplicationContextInterface::class);
+        $this->resourceContext = $this->createMock(ResourceContextInterface::class);
+        $this->operationContext = $this->createMock(OperationContextInterface::class);
         $this->adminContext = new LAGAdminGlobal(
             $this->applicationContext,
             $this->resourceContext,

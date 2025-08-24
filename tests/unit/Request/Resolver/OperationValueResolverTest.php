@@ -36,13 +36,13 @@ final class OperationValueResolverTest extends TestCase
         $request = new Request();
 
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('supports')
             ->with($request)
             ->willReturn(true)
         ;
         $this->operationContext
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getOperation')
             ->willReturn(new Show())
         ;
@@ -58,7 +58,7 @@ final class OperationValueResolverTest extends TestCase
     {
         $request = new Request(['test']);
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('supports')
             ->with($request)
             ->willReturn(true)
@@ -75,7 +75,7 @@ final class OperationValueResolverTest extends TestCase
     {
         $request = new Request(['test']);
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('supports')
             ->with($request)
             ->willReturn(false)
@@ -93,7 +93,7 @@ final class OperationValueResolverTest extends TestCase
         $request = new Request();
 
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('supports')
             ->with($request)
             ->willReturn(false)
@@ -128,8 +128,8 @@ final class OperationValueResolverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->parametersExtractor = self::createMock(ParametersExtractorInterface::class);
-        $this->operationContext = self::createMock(OperationContextInterface::class);
+        $this->parametersExtractor = $this->createMock(ParametersExtractorInterface::class);
+        $this->operationContext = $this->createMock(OperationContextInterface::class);
         $this->resolver = new OperationValueResolver(
             $this->parametersExtractor,
             $this->operationContext,

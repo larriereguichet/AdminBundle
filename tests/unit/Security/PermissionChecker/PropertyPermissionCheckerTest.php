@@ -24,12 +24,12 @@ final class PropertyPermissionCheckerTest extends TestCase
         $user = new InMemoryUser(username: 'my_user', password: 'my_password', roles: ['ROLE_USER']);
 
         $this->security
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUser')
             ->willReturn($user)
         ;
         $this->security
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER', $user)
             ->willReturn(true)
@@ -46,12 +46,12 @@ final class PropertyPermissionCheckerTest extends TestCase
         $user = new InMemoryUser(username: 'my_user', password: 'my_password', roles: ['ROLE_NOT_ALLOWED']);
 
         $this->security
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUser')
             ->willReturn($user)
         ;
         $this->security
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER', $user)
             ->willReturn(false)
@@ -63,7 +63,7 @@ final class PropertyPermissionCheckerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->security = self::createMock(Security::class);
+        $this->security = $this->createMock(Security::class);
         $this->permissionChecker = new PropertyPermissionChecker($this->security);
     }
 }

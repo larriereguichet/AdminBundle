@@ -22,11 +22,11 @@ final class OperationPermissionVoterTest extends TestCase
     #[Test]
     public function itChecksOperationPermissions(): void
     {
-        $user = self::createMock(UserInterface::class);
+        $user = $this->createMock(UserInterface::class);
         $operation = new Update(permissions: ['ROLE_USER']);
 
         $this->security
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_USER', $user)
             ->willReturn(true)
@@ -44,7 +44,7 @@ final class OperationPermissionVoterTest extends TestCase
     #[Test]
     public function itAllowsOperationWithoutPermissions(): void
     {
-        $user = self::createMock(UserInterface::class);
+        $user = $this->createMock(UserInterface::class);
         $operation = new Update(permissions: []);
 
         $this->security
@@ -69,7 +69,7 @@ final class OperationPermissionVoterTest extends TestCase
             ->method('isGranted')
         ;
         $authorized = $this->voter->vote(
-            new UsernamePasswordToken(self::createMock(UserInterface::class), 'admin', ['ROLE_USER']),
+            new UsernamePasswordToken($this->createMock(UserInterface::class), 'admin', ['ROLE_USER']),
             new Update(permissions: ['ROLE_USER']),
             ['ROLE_ADMIN'],
         );
@@ -85,7 +85,7 @@ final class OperationPermissionVoterTest extends TestCase
             ->method('isGranted')
         ;
         $authorized = $this->voter->vote(
-            new UsernamePasswordToken(self::createMock(UserInterface::class), 'admin', ['ROLE_USER']),
+            new UsernamePasswordToken($this->createMock(UserInterface::class), 'admin', ['ROLE_USER']),
             new \stdClass(),
             [OperationPermissionVoter::RESOURCE_ACCESS],
         );
@@ -95,7 +95,7 @@ final class OperationPermissionVoterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->security = self::createMock(Security::class);
+        $this->security = $this->createMock(Security::class);
         $this->voter = new OperationPermissionVoter($this->security);
     }
 }

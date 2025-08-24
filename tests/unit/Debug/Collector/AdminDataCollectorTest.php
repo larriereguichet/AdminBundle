@@ -29,12 +29,12 @@ final class AdminDataCollectorTest extends TestCase
         $operation = new Show(name: 'my_operation')->setResource($resource);
 
         $this->operationContext
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('hasOperation')
             ->willReturn(true)
         ;
         $this->operationContext
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getOperation')
             ->willReturn($operation)
         ;
@@ -60,7 +60,7 @@ final class AdminDataCollectorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->operationContext = self::createMock(OperationContextInterface::class);
+        $this->operationContext = $this->createMock(OperationContextInterface::class);
         $this->collector = new AdminDataCollector(
             $this->operationContext,
         );

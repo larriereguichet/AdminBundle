@@ -29,7 +29,7 @@ class DeleteTypeTest extends TestCase
 
     public function testBuildForm(): void
     {
-        $builder = self::createMock(FormBuilderInterface::class);
+        $builder = $this->createMock(FormBuilderInterface::class);
         $builder
             ->expects(self::exactly(2))
             ->method('add')

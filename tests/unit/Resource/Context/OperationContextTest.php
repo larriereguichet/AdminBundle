@@ -29,18 +29,18 @@ final class OperationContextTest extends TestCase
         $expectedResource = new Index(name: 'my_operation');
 
         $this->requestStack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getOperationName')
             ->with($request)
             ->willReturn('my_operation')
         ;
         $this->operationFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('create')
             ->with('my_operation')
             ->willReturn($expectedResource)
@@ -57,12 +57,12 @@ final class OperationContextTest extends TestCase
         $request = new Request();
 
         $this->requestStack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getOperationName')
             ->with($request)
             ->willReturn(null)
@@ -83,12 +83,12 @@ final class OperationContextTest extends TestCase
         $request = new Request();
 
         $this->requestStack
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
         $this->parametersExtractor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getOperationName')
             ->with($request)
             ->willReturn(null)
@@ -99,9 +99,9 @@ final class OperationContextTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->requestStack = self::createMock(RequestStack::class);
-        $this->parametersExtractor = self::createMock(ParametersExtractorInterface::class);
-        $this->operationFactory = self::createMock(OperationFactoryInterface::class);
+        $this->requestStack = $this->createMock(RequestStack::class);
+        $this->parametersExtractor = $this->createMock(ParametersExtractorInterface::class);
+        $this->operationFactory = $this->createMock(OperationFactoryInterface::class);
         $this->operationContext = new OperationContext(
             $this->requestStack,
             $this->parametersExtractor,

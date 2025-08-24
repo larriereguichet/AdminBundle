@@ -27,19 +27,19 @@ final class LinkRendererTest extends TestCase
     {
         $link = new Link();
 
-        $violationList = self::createMock(ConstraintViolationListInterface::class);
+        $violationList = $this->createMock(ConstraintViolationListInterface::class);
         $violationList
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('count')
             ->willReturn(0)
         ;
         $this->validator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('validate')
             ->willReturn($violationList)
         ;
         $this->environment
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('render')
         ;
 
@@ -51,14 +51,14 @@ final class LinkRendererTest extends TestCase
     {
         $link = new Link();
 
-        $violationList = self::createMock(ConstraintViolationListInterface::class);
+        $violationList = $this->createMock(ConstraintViolationListInterface::class);
         $violationList
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('count')
             ->willReturn(1)
         ;
         $this->validator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('validate')
             ->willReturn($violationList)
         ;
@@ -73,9 +73,9 @@ final class LinkRendererTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->environment = self::createMock(Environment::class);
-        $this->urlGenerator = self::createMock(ResourceUrlGeneratorInterface::class);
-        $this->validator = self::createMock(ValidatorInterface::class);
+        $this->environment = $this->createMock(Environment::class);
+        $this->urlGenerator = $this->createMock(ResourceUrlGeneratorInterface::class);
+        $this->validator = $this->createMock(ValidatorInterface::class);
         $this->renderer = new LinkRenderer(
             $this->urlGenerator,
             $this->validator,

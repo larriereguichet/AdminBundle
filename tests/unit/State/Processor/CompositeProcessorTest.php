@@ -22,7 +22,7 @@ final class CompositeProcessorTest extends TestCase
     #[DataProvider('operationsProvider')]
     public function testProcess(OperationInterface $operation): void
     {
-        $processor1 = self::createMock(ProcessorInterface::class);
+        $processor1 = $this->createMock(ProcessorInterface::class);
         $processor2 = new FakeProcessor();
         $operation = $operation->withProcessor(FakeProcessor::class)
             ->setResource(new Resource(name: 'my_resource'))

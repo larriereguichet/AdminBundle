@@ -22,7 +22,7 @@ final class CacheResourceFactoryTest extends TestCase
         $expectedResource = new Resource(name: 'my_resource');
 
         $this->decorated
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('create')
             ->with('my_resource')
             ->willReturn($expectedResource)
@@ -35,7 +35,7 @@ final class CacheResourceFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = self::createMock(ResourceFactoryInterface::class);
+        $this->decorated = $this->createMock(ResourceFactoryInterface::class);
         $this->factory = new CacheResourceFactory(
             $this->decorated,
         );

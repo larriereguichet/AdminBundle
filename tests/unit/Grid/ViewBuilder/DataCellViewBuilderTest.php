@@ -35,27 +35,27 @@ final class DataCellViewBuilderTest extends TestCase
         $cell = new CellView(name: 'cell view');
         $operation = new Update();
 
-        $dataTransformer = self::createMock(DataTransformerInterface::class);
-        $dataTransformer->expects(self::once())
+        $dataTransformer = $this->createMock(DataTransformerInterface::class);
+        $dataTransformer->expects($this->once())
             ->method('transform')
             ->with($property, 'some data')
             ->willReturn('some transformed data')
         ;
 
         $this->dataMapper
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getValue')
             ->with($property, $data)
             ->willReturn('some data')
         ;
         $this->transformerRegistry
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('get')
             ->with($property->getDataTransformer())
             ->willReturn($dataTransformer)
         ;
         $this->decorated
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('buildCell')
             ->with($operation, $grid, $property, 'some transformed data', $context)
             ->willReturn($cell)
@@ -68,9 +68,9 @@ final class DataCellViewBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = self::createMock(CellViewBuilderInterface::class);
-        $this->dataMapper = self::createMock(DataMapperInterface::class);
-        $this->transformerRegistry = self::createMock(DataTransformerRegistryInterface::class);
+        $this->decorated = $this->createMock(CellViewBuilderInterface::class);
+        $this->dataMapper = $this->createMock(DataMapperInterface::class);
+        $this->transformerRegistry = $this->createMock(DataTransformerRegistryInterface::class);
         $this->cellBuilder = new DataCellViewBuilder(
             $this->decorated,
             $this->dataMapper,

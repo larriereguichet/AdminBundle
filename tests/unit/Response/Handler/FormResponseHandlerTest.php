@@ -27,24 +27,24 @@ final class FormResponseHandlerTest extends TestCase
         $data = new \stdClass();
         $request = new Request();
 
-        $formView = self::createMock(FormView::class);
-        $form = self::createMock(FormInterface::class);
-        $form->expects(self::once())
+        $formView = $this->createMock(FormView::class);
+        $form = $this->createMock(FormInterface::class);
+        $form->expects($this->once())
             ->method('createView')
             ->willReturn($formView)
         ;
-        $form->expects(self::once())
+        $form->expects($this->once())
             ->method('isSubmitted')
             ->willReturn(true)
         ;
-        $form->expects(self::once())
+        $form->expects($this->once())
             ->method('isValid')
             ->willReturn(false)
         ;
 
-        $customFormView = self::createMock(FormView::class);
-        $customForm = self::createMock(FormInterface::class);
-        $customForm->expects(self::once())
+        $customFormView = $this->createMock(FormView::class);
+        $customForm = $this->createMock(FormInterface::class);
+        $customForm->expects($this->once())
             ->method('createView')
             ->willReturn($customFormView)
         ;
@@ -56,7 +56,7 @@ final class FormResponseHandlerTest extends TestCase
         ];
 
         $this->responseHandler
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createResponse')
             ->with($operation, $data, [
                 'form' => $formView,
@@ -72,7 +72,7 @@ final class FormResponseHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->responseHandler = self::createMock(ResponseHandlerInterface::class);
+        $this->responseHandler = $this->createMock(ResponseHandlerInterface::class);
         $this->handler = new FormResponseHandler($this->responseHandler);
     }
 }

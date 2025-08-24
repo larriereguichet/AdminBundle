@@ -23,7 +23,7 @@ final class RedirectHandlerTest extends TestCase
         $data = new \stdClass();
 
         $this->urlGenerator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generateFromOperationName')
             ->with('lag_admin.book.index', $data)
             ->willReturn('/index-url')
@@ -41,7 +41,7 @@ final class RedirectHandlerTest extends TestCase
         $data = new \stdClass();
 
         $this->urlGenerator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generateFromRouteName')
             ->with('lag_admin.book.index', ['id'], $data)
             ->willReturn('/index-url')
@@ -59,7 +59,7 @@ final class RedirectHandlerTest extends TestCase
         $data = new \stdClass();
 
         $this->urlGenerator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generate')
             ->with($operation, $data)
             ->willReturn('/same-url')
@@ -77,7 +77,7 @@ final class RedirectHandlerTest extends TestCase
         $data = new \stdClass();
 
         $this->urlGenerator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generate')
             ->with($operation, $data)
             ->willReturn('/same-url')
@@ -91,7 +91,7 @@ final class RedirectHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->urlGenerator = self::createMock(ResourceUrlGeneratorInterface::class);
+        $this->urlGenerator = $this->createMock(ResourceUrlGeneratorInterface::class);
         $this->handler = new RedirectResponseHandler($this->urlGenerator);
     }
 }

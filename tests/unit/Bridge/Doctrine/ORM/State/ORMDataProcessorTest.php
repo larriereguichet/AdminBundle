@@ -29,19 +29,19 @@ final class ORMDataProcessorTest extends TestCase
     public function itPersistsData(OperationInterface $operation): void
     {
         $data = new FakeEntity();
-        $manager = self::createMock(EntityManagerInterface::class);
+        $manager = $this->createMock(EntityManagerInterface::class);
 
         $this->registry
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getManagerForClass')
             ->with(FakeEntity::class)
             ->willReturn($manager)
         ;
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('persist')
             ->with($data)
         ;
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('flush')
         ;
 
@@ -52,19 +52,19 @@ final class ORMDataProcessorTest extends TestCase
     public function itDeletesData(): void
     {
         $data = new FakeEntity();
-        $manager = self::createMock(EntityManagerInterface::class);
+        $manager = $this->createMock(EntityManagerInterface::class);
 
         $this->registry
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getManagerForClass')
             ->with(FakeEntity::class)
             ->willReturn($manager)
         ;
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('remove')
             ->with($data)
         ;
-        $manager->expects(self::once())
+        $manager->expects($this->once())
             ->method('flush')
         ;
 
@@ -77,7 +77,7 @@ final class ORMDataProcessorTest extends TestCase
         $operation = (new Delete())->setResource(new Resource(resourceClass: FakeEntity::class));
         $data = new FakeEntity();
         $this->registry
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getManagerForClass')
             ->with(FakeEntity::class)
             ->willReturn(null)
@@ -100,7 +100,7 @@ final class ORMDataProcessorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->registry = self::createMock(Registry::class);
+        $this->registry = $this->createMock(Registry::class);
         $this->processor = new ORMProcessor($this->registry);
     }
 }

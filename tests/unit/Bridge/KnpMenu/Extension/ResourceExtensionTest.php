@@ -31,13 +31,13 @@ final class ResourceExtensionTest extends TestCase
         $operation = $operation->setResource($resource);
 
         $this->operationFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('create')
             ->with('my_operation')
             ->willReturn($operation)
         ;
         $this->urlGenerator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generate')
             ->with($operation)
             ->willReturn('/some-url')
@@ -72,8 +72,8 @@ final class ResourceExtensionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->operationFactory = self::createMock(OperationFactoryInterface::class);
-        $this->urlGenerator = self::createMock(ResourceUrlGeneratorInterface::class);
+        $this->operationFactory = $this->createMock(OperationFactoryInterface::class);
+        $this->urlGenerator = $this->createMock(ResourceUrlGeneratorInterface::class);
         $this->extension = new ResourceExtension($this->operationFactory, $this->urlGenerator);
     }
 }

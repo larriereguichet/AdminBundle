@@ -25,14 +25,14 @@ final class SecurityHelperTest extends TestCase
         $operation = new Show(name: 'my_operation');
 
         $this->operationFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('create')
             ->with('my_resource.my_operation')
             ->willReturn($operation)
         ;
 
         $this->security
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGranted')
             ->with(OperationPermissionVoter::RESOURCE_ACCESS, $operation)
         ;
@@ -42,8 +42,8 @@ final class SecurityHelperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->operationFactory = self::createMock(OperationFactoryInterface::class);
-        $this->security = self::createMock(Security::class);
+        $this->operationFactory = $this->createMock(OperationFactoryInterface::class);
+        $this->security = $this->createMock(Security::class);
         $this->helper = new SecurityHelper(
             $this->operationFactory,
             $this->security,

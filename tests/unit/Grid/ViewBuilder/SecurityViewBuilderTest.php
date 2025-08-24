@@ -32,13 +32,13 @@ final class SecurityViewBuilderTest extends TestCase
         $operation = new Index();
 
         $this->permissionChecker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGranted')
             ->with($property)
             ->willReturn(true)
         ;
         $this->decorated
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('buildCell')
             ->with($operation, $grid, $property, $data, $context)
             ->willReturn($cellView)
@@ -56,7 +56,7 @@ final class SecurityViewBuilderTest extends TestCase
         $operation = new Index();
 
         $this->permissionChecker
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('isGranted')
             ->with($property)
             ->willReturn(false)
@@ -73,8 +73,8 @@ final class SecurityViewBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = self::createMock(CellViewBuilderInterface::class);
-        $this->permissionChecker = self::createMock(PropertyPermissionCheckerInterface::class);
+        $this->decorated = $this->createMock(CellViewBuilderInterface::class);
+        $this->permissionChecker = $this->createMock(PropertyPermissionCheckerInterface::class);
         $this->cellBuilder = new SecurityCellViewBuilder(
             $this->decorated,
             $this->permissionChecker,
