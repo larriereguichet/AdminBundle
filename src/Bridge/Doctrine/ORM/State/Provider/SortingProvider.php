@@ -34,18 +34,20 @@ final readonly class SortingProvider implements ProviderInterface
             $orderBy[$context['sort']] = $context['order'];
         }
 
-        foreach ($orderBy as $field => $direction) {
-            $sort = $field;
+        foreach ($orderBy as $sort => $direction) {
+            if ($resource->hasProperty($sort)) {
+                $property = $resource->getProperty($sort);
 
-            if ($resource->hasProperty($field)) {
-                $property = $resource->getProperty($field);
+                if (!$property->isSortable()) {
+                    continue;
+                }
                 $sort = $property->getSortingPath();
             }
 
             if ($sort === null) {
                 throw new ORMException(\sprintf(
                     'The property "%s" can not be sorted by as the sorting path is null.',
-                    $field,
+                    $sort,
                 ));
             }
             $order = u($sort);
