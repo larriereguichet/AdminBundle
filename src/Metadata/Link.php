@@ -15,8 +15,18 @@ class Link extends Property implements Url
 {
     public function __construct(
         ?string $name = null,
+
+        private ?string $route = null,
+        private array $routeParameters = [],
+        private ?string $operation = null,
+        private ?string $type = null,
+        private ?string $url = null,
+        private ?string $text = null,
+        private ?string $textPath = null,
+        private ?string $icon = null,
         string|bool|null $propertyPath = null,
         string|bool|null $label = null,
+
         ?string $template = '@LAGAdmin/grids/properties/link.html.twig',
         bool $sortable = false,
         bool $translatable = true,
@@ -28,15 +38,6 @@ class Link extends Property implements Url
         ?array $permissions = null,
         ?string $condition = null,
         ?string $sortingPath = null,
-
-        private ?string $route = null,
-        private array $routeParameters = [],
-        private ?string $operation = null,
-        private ?string $type = null,
-        private ?string $url = null,
-        private ?string $text = null,
-        private ?string $textPath = null,
-        private ?string $icon = null,
     ) {
         parent::__construct(
             name: $name,
