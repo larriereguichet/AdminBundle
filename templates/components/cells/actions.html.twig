@@ -1,9 +1,0 @@
-<div class="btn-group" role="group" aria-label="Basic example">
-    {% for action in actions %}
-        {{ component('lag_admin:link', {
-            data: action.data,
-            text: action.label,
-            ...action.attributes,
-        }) }}
-    {% endfor %}
-</div>

@@ -1,5 +1,11 @@
 <div {{ attributes }}>
     {% for child in context.children %}
-        {{ component('lag_admin:grid_cell', {'cell': child}) }}
+        {{ component('lag_admin:grid:cell', {
+            cell: child,
+            options: child.options,
+            context: child.context,
+            data: child.data,
+            ...child.attributes,
+        }) }}
     {% endfor %}
 </div>

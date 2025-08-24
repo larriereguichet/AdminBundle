@@ -26,6 +26,7 @@ final readonly class RenderHelper implements RuntimeExtensionInterface
         return $this->linkRenderer->render($link, $data, $options);
     }
 
+    // TODO remove
     public function renderAction(Action $action, mixed $data = null): string
     {
         return $this->actionRenderer->renderAction($action, $data);

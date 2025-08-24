@@ -6,20 +6,18 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Bridge\QuillJs\Render\QuillJsRendererInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
+use LAG\AdminBundle\Twig\Extension\AttributeExtension;
 use LAG\AdminBundle\Twig\Extension\PaginationExtension;
 use LAG\AdminBundle\Twig\Extension\RenderExtension;
 use LAG\AdminBundle\Twig\Extension\RoutingExtension;
 use LAG\AdminBundle\Twig\Extension\SecurityExtension;
 use LAG\AdminBundle\Twig\Extension\TextExtension;
-use LAG\AdminBundle\View\Component\Cell\Actions;
 use LAG\AdminBundle\View\Component\Cell\FormComponent;
 use LAG\AdminBundle\View\Component\Cell\ImageComponent;
 use LAG\AdminBundle\View\Component\Cell\Link;
 use LAG\AdminBundle\View\Component\Cell\MapComponent;
 use LAG\AdminBundle\View\Component\Cell\TextComponent;
-use LAG\AdminBundle\View\Component\Grid;
-use LAG\AdminBundle\View\Component\Grid\GridCell;
-use LAG\AdminBundle\View\Component\Grid\GridHeader;
+use LAG\AdminBundle\View\Helper\AttributeHelper;
 use LAG\AdminBundle\View\Helper\PaginationHelper;
 use LAG\AdminBundle\View\Helper\RenderHelper;
 use LAG\AdminBundle\View\Helper\RoutingHelper;
@@ -40,6 +38,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(RenderExtension::class)->tag('twig.extension');
     $services->set(SecurityExtension::class)->tag('twig.extension');
     $services->set(TextExtension::class)->tag('twig.extension');
+    $services->set(AttributeExtension::class)->tag('twig.extension');
 
     // Runtime extensions
     $services->set(RoutingHelper::class)
@@ -61,15 +60,12 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$quillJsRenderer', service(QuillJsRendererInterface::class))
         ->tag('twig.runtime')
     ;
-
-    // Components
-    $services->set(Grid::class)->autoconfigure();
-    $services->set(GridHeader::class)->autoconfigure();
-    $services->set(GridCell::class)->autoconfigure();
-
+    $services->set(AttributeHelper::class)
+        ->args(['$environment' => service('twig')])
+        ->tag('twig.runtime')
+    ;
     $services->set(TextComponent::class)->autoconfigure();
     $services->set(Link::class)->autoconfigure();
-    $services->set(Actions::class)->autoconfigure();
     $services->set(MapComponent::class)->autoconfigure();
     $services->set(ImageComponent::class)->autoconfigure();
     $services->set(FormComponent::class)
@@ -87,7 +83,7 @@ return static function (ContainerConfigurator $container): void {
         ->args([
             '$urlGenerator' => service(ResourceUrlGeneratorInterface::class),
             '$environment' => service('twig'),
-            '$translator' => service('translator')
+            '$translator' => service('translator'),
         ])
     ;
 };

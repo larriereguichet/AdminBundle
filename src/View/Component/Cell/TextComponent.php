@@ -10,6 +10,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 use function Symfony\Component\String\u;
 
+// TODO remove ?
 #[AsTwigComponent(
     name: 'lag_admin:text',
     template: '@LAGAdmin/components/cells/text.html.twig',

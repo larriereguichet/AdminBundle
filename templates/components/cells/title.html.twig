@@ -1,5 +1,9 @@
-<h5>{{ component('lag_admin:text', {
-        data: data,
+<h5>
+    {{ component('lag_admin:text', {
         cell: cell,
-        ...attributes.all
-    }) }}</h5>
+        options: cell.options,
+        context: cell.context,
+        data: cell.data,
+        ...cell.attributes,
+    }) }}
+</h5>

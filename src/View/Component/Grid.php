@@ -4,46 +4,30 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Component;
 
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Grid\View\GridView;
-use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Resource;
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Attribute\PostMount;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-#[AsTwigComponent(
-    name: 'lag_admin:grid',
-    template: '@LAGAdmin/components/grids/grid.html.twig',
-)]
-final class Grid
+final class Grid implements DynamicTemplateComponentInterface
 {
-    public array $titleAttributes = [];
-
-    public array $headerRowAttributes = [];
-    public array $headerAttributes = [];
-    public array $rowAttributes = [];
-    public array $cellAttributes = [];
-    public array $actionCellAttributes = [];
-
-    public mixed $data;
     public GridView $grid;
-    public OperationInterface $operation;
-    public Resource $resource;
-    public array $options = [];
+    public mixed $data;
 
-    public function mount(
-        GridView $grid,
-        mixed $data,
-        array $options = [],
-    ): void {
-        $this->options = $grid->options + $options;
-        $this->data = $data;
+    #[PreMount]
+    public function validate(array $data): void
+    {
+        if (!$data['grid'] instanceof GridView) {
+            throw new UnexpectedTypeException($data['grid'], GridView::class);
+        }
+
+        if ($data['grid']->template === null) {
+            throw new Exception('The grid view should have a template');
+        }
     }
 
-    #[PostMount]
-    public function postMount(): void
+    public function getTemplate(): ?string
     {
-        if ($this->grid->type === 'table') {
-            $this->titleAttributes = array_merge(['class' => 'my-2 mb-5'], $this->titleAttributes);
-        }
+        return $this->grid->template;
     }
 }

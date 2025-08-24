@@ -11,6 +11,7 @@ use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Environment;
 use Twig\Runtime\EscaperRuntime;
 
+// TODO remove
 final readonly class ActionRenderer implements ActionRendererInterface
 {
     public function __construct(

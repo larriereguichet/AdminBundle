@@ -1,10 +1,9 @@
-
-    <span {{ attributes.defaults({class: 'badge bg-secondary'}) }}>
-        {% if mappedValue %}
-            {% if translatable %}{{ text|trans({}, translationDomain) }}{% else %}{{ mappedValue }}{% endif %}
-        {% else %}
-            {{ data }}
-        {% endif %}
-    </span>
+<span {{ attributes.defaults({class: 'badge bg-secondary'}) }}>
+    {% if mappedValue %}
+        {% if translatable %}{{ text|trans({}, translationDomain) }}{% else %}{{ mappedValue }}{% endif %}
+    {% else %}
+        {{ data }}
+    {% endif %}
+</span>
 
 

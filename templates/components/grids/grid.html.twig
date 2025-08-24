@@ -1,34 +1,3 @@
-<div {{ attributes.defaults({class: 'admin-grid'}) }}>
-    {% if grid.title %}
-        {{ component('lag_admin:grid:title', {
-            title: grid.title,
-            translationDomain: grid.translationDomain,
-            ...grid.titleAttributes,
-        }) }}
-    {% endif %}
-
-    {% if grid.type == 'table' %}
-        {{ component('lag_admin:grid:table', {
-
-        }) }}
-    {% endif %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    {% if grid.component %}
-        {{ component(grid.component, {grid: grid, options: options}) }}
-    {% else %}
-        {% include grid.template %}
-    {% endif %}
+<div {{ lag_attributes(grid.containerAttributes).defaults({class: 'admin-grid'}) }}>
+    {% include grid.template %}
 </div>
