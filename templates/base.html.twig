@@ -54,7 +54,9 @@
 
     {% block container %}
         <div class="container-fluid">
-            {% include '@LAGAdmin/session/flash_messages.html.twig' %}
+            {% block flash_messages %}
+                {% include '@LAGAdmin/session/flash_messages.html.twig' %}
+            {% endblock %}
 
             {% block layout %}
                 <div class="row flex-nowrap">
@@ -76,6 +78,10 @@
 
     {% block modal %}
         {% include '@LAGAdmin/modal/modal.html.twig' %}
+    {% endblock %}
+
+    {% block loader %}
+        {% include '@LAGAdmin/modal/loader.html.twig' %}
     {% endblock %}
     </body>
 {% endblock %}
