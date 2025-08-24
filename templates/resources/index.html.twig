@@ -2,21 +2,33 @@
 
 {% block content %}
     <div class="admin-index admin-{{ resource.name }}">
+        {% block collection_actions %}
+            {% if grid is defined and grid.actions|length > 0 %}
+                <div class="row">
+                    <div class="col text-end">
+                        <div class="btn-group"
+                             role="group"
+                             aria-label="Collection actions">
+                            {% for action in grid.actions %}
+                                {{ component('lag_admin:grid:cell', {
+                                    cell: action,
+                                    data: action.data,
+                                    class: 'btn btn-outline-primary'
+                                }) }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endblock %}
+
         {% block actions %}
-            {% if (filterForm is defined and filterForm.children|length > 0) or (grid is defined and grid.actions|length > 0) %}
+            {% if (filterForm and filterForm.children|length > 0) or (grid is defined and grid.actions|length > 0) %}
                 <div class="row">
                     {% block filters %}
                         {% if filterForm and filterForm.children|length > 0 %}
                             <div class="col-8">
                                 {% include '@LAGAdmin/resources/index/_filters.html.twig' with {form: filterForm} %}
-                            </div>
-                        {% endif %}
-                    {% endblock %}
-
-                    {% block collection_actions %}
-                        {% if grid is defined and grid.actions|length > 0 %}
-                            <div class="offset-8 col-4">
-                                {% include '@LAGAdmin/resources/index/collection_actions.html.twig' with {actions: grid.actions} %}
                             </div>
                         {% endif %}
                     {% endblock %}

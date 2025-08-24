@@ -25,8 +25,8 @@
                     <div class="row">
                         <div class="col-6 text-start">
                             {% block cancel %}
-                                {% if operation.resource.hasOperation('index') %}
-                                    <a href="{{ lag_admin_url(operation.resource.operation('index').name) }}"
+                                {% if resource.hasOperation('index') %}
+                                    <a href="{{ lag_admin_url(resource.operation('index').fullName) }}"
                                        class="btn btn-light">
                                         {{ 'lag_admin.ui.cancel'|trans({}, 'admin') }}
                                     </a>

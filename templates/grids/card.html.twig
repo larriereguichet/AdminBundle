@@ -1,22 +1,21 @@
-{% import '@LAGAdmin/grids/macro/helpers.html.twig' as lag_admin %}
-
 {% if grid.title %}
-    <h3 {{ titleAttributes.defaults({class: 'my-2'}) }}>
-        {{ lag_admin.translate(grid.title, resource.translationDomain, true) }}
-    </h3>
+    {% if grid.title %}
+        <h3 {{ lag_attributes(grid.titleAttributes).defaults({class: 'my-2 mb-5'}) }}>
+            {{ title|trans(translationDomain) }}
+        </h3>
+    {% endif %}
 {% endif %}
 
 <div {{ attributes.defaults({class: 'admin row g-2'}) }}>
     {% for row in grid.rows %}
         <div class="col">
-            <div class="card h-100">
+            <div {{ lag_attributes({class: 'card h-100'}) }}>
                 {% for cell in row.cells %}
-                    {{ component('lag_admin:grid_cell', {'cell': cell}) }}
-
-                    {% if cell.name == options.thumbnail|default(false) %}
-                    {% elseif cell.template %}
-                        {% set defaultAttributes = loop.last ? {class: 'card-footer'} : {class: 'card-body'} %}
-                    {% endif %}
+                    {{ component('lag_admin:grid:cell', {
+                        cell: cell,
+                        data: cell.data,
+                        ...cell.attributes,
+                    }) }}
                 {% endfor %}
             </div>
         </div>
