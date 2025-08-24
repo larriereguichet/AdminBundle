@@ -25,7 +25,7 @@ final readonly class SortingContextBuilder implements ContextBuilderInterface
         }
 
         if ($request->query->has('order')) {
-            $context['order'] = strtoupper($request->query->get('order'));
+            $context['order'] = $request->query->get('order');
         }
 
         return $context;
