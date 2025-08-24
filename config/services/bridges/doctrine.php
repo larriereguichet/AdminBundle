@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\EventListener\InitializeResourceIdentifiersListener;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Filter\EntityFilterApplicator;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Filter\TextFilterApplicator;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Form\Guesser\MetadataFormGuesser;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Initializer\ResourceIdentifiersInitializer;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Initializer\ResourceIdentifiersInitializerInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Resource\ORMPropertyGuesser;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\DoctrineCollectionNormalizeProvider;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\CollectionOutputProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\PaginationProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ResultProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\SortingProvider;
-use LAG\AdminBundle\Event\ResourceEvents;
 use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
 use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
 use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesserInterface;
@@ -45,7 +45,7 @@ return static function (ContainerConfigurator $container): void {
         ->decorate(ProviderInterface::class, priority: 200)
         ->arg('$provider', service('.inner'))
     ;
-    $services->set(DoctrineCollectionNormalizeProvider::class)
+    $services->set(CollectionOutputProvider::class)
         ->decorate(ProviderInterface::class, priority: -200)
         ->arg('$provider', service('.inner'))
         ->arg('$normalizer', service(NormalizerInterface::class))
@@ -58,14 +58,9 @@ return static function (ContainerConfigurator $container): void {
         ->tag('lag_admin.state_processor', ['identifier' => 'doctrine', 'priority' => 0])
     ;
 
-    // Event listeners
-    $services->set(InitializeResourceIdentifiersListener::class)
+    // Initializers
+    $services->set(ResourceIdentifiersInitializerInterface::class, ResourceIdentifiersInitializer::class)
         ->arg('$metadataHelper', service(MetadataHelperInterface::class))
-        ->tag('kernel.event_listener', [
-            'event' => ResourceEvents::RESOURCE_CREATE,
-            'dispatcher' => 'lag_admin.build_event_dispatcher',
-            'priority' => 255,
-        ])
     ;
 
     // Metadata helpers
