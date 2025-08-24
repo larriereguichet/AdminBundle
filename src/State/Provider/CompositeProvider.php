@@ -27,7 +27,7 @@ final readonly class CompositeProvider implements ProviderInterface
         throw new Exception(\sprintf(
             'The resource "%s" and operation "%s" in the application "%s" is not supported by any provider',
             $operation->getResource()->getName(),
-            $operation->getName(),
+            $operation->getFullName(),
             $operation->getResource()->getApplication(),
         ));
     }
