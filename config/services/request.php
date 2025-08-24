@@ -7,7 +7,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use LAG\AdminBundle\Request\ContextBuilder\AjaxContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\CompositeContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
-use LAG\AdminBundle\Request\ContextBuilder\FilterContextBuilder;
+use LAG\AdminBundle\Request\ContextBuilder\OperationContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\PaginationContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\PartialContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\SortingContextBuilder;
@@ -49,6 +49,9 @@ return static function (ContainerConfigurator $container): void {
     $services->set(ContextBuilderInterface::class, CompositeContextBuilder::class)
         ->arg('$contextBuilders', tagged_iterator(ContextBuilderInterface::SERVICE_TAG))
         ->alias('lag_admin.request.context_builder', ContextBuilderInterface::class)
+    ;
+    $services->set(OperationContextBuilder::class)
+        ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
     ;
     $services->set(SortingContextBuilder::class)
         ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
