@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Config;
 
-use LAG\AdminBundle\Config\Mapper\GridMapper;
 use LAG\AdminBundle\Metadata\Grid;
 
 final class GridConfig implements GridConfigInterface
@@ -28,8 +27,8 @@ final class GridConfig implements GridConfigInterface
     {
         $output = [];
 
-        foreach ($this->grids as $resource) {
-            $output['grids'][] = new GridMapper()->toArray($resource);
+        foreach ($this->grids as $grid) {
+            $output['grids'][] = new ConfigurationMapper()->fromGrid($grid);
         }
 
         return $output;

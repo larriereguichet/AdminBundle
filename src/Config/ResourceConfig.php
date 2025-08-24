@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Config;
 
-use LAG\AdminBundle\Config\Mapper\ResourceMapper;
 use LAG\AdminBundle\Metadata\Resource;
 
 final class ResourceConfig implements ResourceConfigInterface
 {
-    /** @var Resource[] */
+    /** @var resource[] */
     private array $resources = [];
 
     public function addResource(Resource $resource): ResourceConfigInterface
@@ -29,7 +28,7 @@ final class ResourceConfig implements ResourceConfigInterface
         $output = [];
 
         foreach ($this->resources as $resource) {
-            $output['resources'][] = new ResourceMapper()->toArray($resource);
+            $output['resources'][] = new ConfigurationMapper()->fromResource($resource);
         }
 
         return $output;
