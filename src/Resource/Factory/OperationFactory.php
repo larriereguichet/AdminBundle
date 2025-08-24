@@ -19,7 +19,6 @@ final readonly class OperationFactory implements OperationFactoryInterface
     {
         $resourceName = u($operationName)->beforeLast('.')->toString();
         $operationName = u($operationName)->afterLast('.')->toString();
-
         $resource = $this->resourceFactory->create($resourceName);
 
         return $resource->getOperation($operationName);

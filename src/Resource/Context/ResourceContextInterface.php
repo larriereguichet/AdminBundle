@@ -11,7 +11,7 @@ interface ResourceContextInterface
     /**
      * Return the current resource. If no resource is found, an exception will be thrown.
      *
-     * @return Resource The current resource
+     * @return resource The current resource
      */
     public function getResource(): Resource;
 

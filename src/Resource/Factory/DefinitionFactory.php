@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Factory;
 
-use LAG\AdminBundle\Config\Mapper\ApplicationMapper;
-use LAG\AdminBundle\Config\Mapper\GridMapper;
-use LAG\AdminBundle\Config\Mapper\ResourceMapper;
+use LAG\AdminBundle\Config\ConfigurationMapper;
 use LAG\AdminBundle\Exception\MissingGridException;
 use LAG\AdminBundle\Exception\Resource\MissingApplicationException;
 use LAG\AdminBundle\Exception\Resource\MissingResourceException;
@@ -22,6 +20,7 @@ final readonly class DefinitionFactory implements DefinitionFactoryInterface
         private array $resources,
         private array $grids,
         private PropertyLocatorInterface $propertyLocator,
+        private ConfigurationMapper $configurationMapper = new ConfigurationMapper(),
     ) {
     }
 
@@ -31,7 +30,7 @@ final readonly class DefinitionFactory implements DefinitionFactoryInterface
             throw new MissingApplicationException($applicationName);
         }
 
-        return new ApplicationMapper()->fromArray($this->applications[$applicationName]);
+        return $this->configurationMapper->toApplication($this->applications[$applicationName]);
     }
 
     public function createResourceDefinition(string $resourceName): Resource
@@ -39,7 +38,7 @@ final readonly class DefinitionFactory implements DefinitionFactoryInterface
         if (!\array_key_exists($resourceName, $this->resources)) {
             throw new MissingResourceException($resourceName);
         }
-        $definition = new ResourceMapper()->fromArray($this->resources[$resourceName]);
+        $definition = $this->configurationMapper->toResource($this->resources[$resourceName]);
         $properties = $this->propertyLocator->locateProperties($definition->getResourceClass());
 
         foreach ($properties as $property) {
@@ -55,7 +54,7 @@ final readonly class DefinitionFactory implements DefinitionFactoryInterface
             throw new MissingGridException($gridName);
         }
 
-        return new GridMapper()->fromArray($this->grids[$gridName]);
+        return $this->configurationMapper->toGrid($this->grids[$gridName]);
     }
 
     public function getResourceNames(): array

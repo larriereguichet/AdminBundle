@@ -13,12 +13,13 @@ final readonly class ResourcePropertyGuesser implements ResourcePropertyGuesserI
     ) {
     }
 
-    public function guessProperties(Resource $resource): iterable
+    public function guessProperties(Resource $resource): array
     {
         if ($resource->getResourceClass() === null) {
             return [];
         }
         $reflectionClass = new \ReflectionClass($resource->getResourceClass());
+        $properties = [];
 
         foreach ($reflectionClass->getProperties() as $reflectionProperty) {
             $property = $this->propertyGuesser->guessProperty(
@@ -30,7 +31,9 @@ final readonly class ResourcePropertyGuesser implements ResourcePropertyGuesserI
             if ($property === null) {
                 continue;
             }
-            yield $property;
+            $properties[] = $property;
         }
+
+        return $properties;
     }
 }
