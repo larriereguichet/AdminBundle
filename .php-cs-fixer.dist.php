@@ -3,7 +3,7 @@
 $finder = PhpCsFixer\Finder::create()
     ->in('config/')
     ->in('src/')
-    ->in('tests/phpunit/')
+    ->in('tests/unit/')
     ->notPath([
         // bug in php-cs-fixer @see https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues/8095
         'Resource/Locator/',

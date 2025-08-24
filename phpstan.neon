@@ -1,13 +1,18 @@
 parameters:
 	paths:
 		- src
+		- config
+		- tests
 	level: 6
 	excludePaths:
 		- src/DependencyInjection/Configuration.php
 		- tests/app
 		- tests/fixtures
-		- tests/phpunit/Fixtures/Book.php
+		- tests/unit/Fixtures/Book.php
 	ignoreErrors:
+		# TODO
 		- 	identifier: missingType.iterableValue
+		# TODO
 		- 	identifier: missingType.generics
+		# TODO
 		- 	identifier: argument.templateType

@@ -20,7 +20,7 @@ use LAG\AdminBundle\Tests\Application\State\Provider\Book\LatestBookProvider;
         new Index(grid: 'projects_table'),
         new Show(),
         new Show(
-            shortName: 'latest',
+            name: 'latest',
             path: '/latest',
             provider: LatestBookProvider::class
         ),

@@ -26,7 +26,6 @@
     ],
     "require": {
         "php": "^8.4",
-        "cuyz/valinor": "^1.14",
         "doctrine/annotations": "^2.0",
         "johnkrovitch/orm-pack": "^3.1",
         "knplabs/knp-menu-bundle": "^3.2",
@@ -81,7 +80,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "LAG\\AdminBundle\\Tests\\": "tests/phpunit/",
+            "LAG\\AdminBundle\\Tests\\": "tests/unit/",
             "LAG\\AdminBundle\\Tests\\Functional\\": "tests/functional/",
             "LAG\\AdminBundle\\Tests\\Application\\": "tests/app/src/"
         }
