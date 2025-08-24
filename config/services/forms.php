@@ -9,8 +9,7 @@ use LAG\AdminBundle\Form\Extension\ChoiceTypeExtension;
 use LAG\AdminBundle\Form\Extension\CollectionTypeExtension;
 use LAG\AdminBundle\Form\Guesser\FormGuesser;
 use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
-use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
-use LAG\AdminBundle\Form\Type\DateRangeType;
+use LAG\AdminBundle\Form\Type\Date\DateRangeType;
 use LAG\AdminBundle\Form\Type\Image\ImageType;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceDataChoiceType;
@@ -44,12 +43,9 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$dataProvider', service(ProviderInterface::class))
         ->tag('form.type')
     ;
-    $services->set(HiddenDataType::class)
-        ->arg('$operationFactory', service('lag_admin.operation.factory'))
-        ->tag('form.type')
-    ;
     $services->set(ResourceDataType::class)
         ->arg('$operationFactory', service(OperationFactoryInterface::class))
+        ->arg('$formGuesser', service(FormGuesserInterface::class))
         ->tag('form.type')
     ;
     $services->set(TextareaType::class)
