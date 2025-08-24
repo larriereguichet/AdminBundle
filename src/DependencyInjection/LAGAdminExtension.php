@@ -6,11 +6,11 @@ namespace LAG\AdminBundle\DependencyInjection;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
-use LAG\AdminBundle\Config\Mapper\ResourceMapper;
+use LAG\AdminBundle\Config\ConfigurationMapper;
 use LAG\AdminBundle\DependencyInjection\Locator\ClassLocator;
 use LAG\AdminBundle\Exception\Resource\EmptyResourceNameException;
-use LAG\AdminBundle\Grid\Builder\GridBuilderInterface;
 use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
+use LAG\AdminBundle\Grid\Provider\GridProviderInterface;
 use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Resource\Factory\DefinitionFactoryInterface;
@@ -53,12 +53,13 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
         $container->setParameter('lag_admin.application_parameter', $config['request']['application_parameter']);
         $container->setParameter('lag_admin.resource_parameter', $config['request']['resource_parameter']);
         $container->setParameter('lag_admin.operation_parameter', $config['request']['operation_parameter']);
+        $container->setParameter('lag_admin.grids_templates', $config['grids_templates'] ?? []);
 
         $container->registerForAutoconfiguration(ProviderInterface::class)->addTag('lag_admin.state_provider');
         $container->registerForAutoconfiguration(ProcessorInterface::class)->addTag('lag_admin.state_processor');
         $container->registerForAutoconfiguration(ContextBuilderInterface::class)->addTag('lag_admin.request_context_provider');
         $container->registerForAutoconfiguration(PropertyLocatorInterface::class)->addTag('lag_admin.property_locator');
-        $container->registerForAutoconfiguration(GridBuilderInterface::class)->addTag('lag_admin.grid_builder');
+        $container->registerForAutoconfiguration(GridProviderInterface::class)->addTag('lag_admin.grid_provider');
         $container->registerForAutoconfiguration(DataTransformerInterface::class)->addTag('lag_admin.data_transformer');
     }
 
@@ -113,7 +114,7 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
     {
         $resources = [];
         $locator = new ClassLocator();
-        $mapper = new ResourceMapper();
+        $mapper = new ConfigurationMapper();
 
         $paths = $config['mapping']['paths'] ?? [];
         $defaultApplication = $config['default_application'] ?? 'admin';
@@ -139,10 +140,6 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
                     );
                 }
 
-                if (!$resource->getApplication()) {
-                    $resource = $resource->withApplication($defaultApplication);
-                }
-
                 if (!$resource->getResourceClass()) {
                     $resource = $resource->withResourceClass($reflectionClass->getName());
                 }
@@ -150,7 +147,7 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
                 if (!$resource->getName()) {
                     throw new EmptyResourceNameException($resourceClass);
                 }
-                $resources[$resource->getFullName()] = $mapper->toArray($resource);
+                $resources[$resource->getApplication().'.'.$resource->getName()] = $mapper->fromResource($resource);
             }
         }
 
@@ -161,7 +158,7 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
     {
         $applications = $config['applications'] ?? [];
 
-        /** @var Resource $resource */
+        /** @var resource $resource */
         foreach ($resources as $resource) {
             if (!empty($resource['application']) && empty($applications[$resource['application']])) {
                 $applications[$resource['application']] = ['name' => $resource['application']];

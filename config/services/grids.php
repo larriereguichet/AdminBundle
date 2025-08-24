@@ -12,6 +12,8 @@ use LAG\AdminBundle\Grid\DataTransformer\MapDataTransformer;
 use LAG\AdminBundle\Grid\Factory\CacheGridFactory;
 use LAG\AdminBundle\Grid\Factory\GridFactory;
 use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
+use LAG\AdminBundle\Grid\Initializer\GridInitializer;
+use LAG\AdminBundle\Grid\Initializer\GridInitializerInterface;
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistry;
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\ActionViewBuilder;
@@ -31,6 +33,7 @@ use LAG\AdminBundle\Grid\ViewBuilder\RowViewBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\SecurityCellViewBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\SecurityHeaderViewBuilder;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
+use LAG\AdminBundle\Resource\Initializer\ActionInitializerInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionCheckerInterface;
 
@@ -41,9 +44,9 @@ return static function (ContainerConfigurator $container): void {
     $services->set(GridFactoryInterface::class, GridFactory::class)
         ->args([
             '$definitionFactory' => service('lag_admin.definition.factory'),
-            '$eventDispatcher' => service('lag_admin.event_dispatcher'),
+            '$gridInitializer' => service(GridInitializerInterface::class),
             '$validator' => service('validator'),
-            '$builders' => tagged_iterator('lag_admin.grid_builder'),
+            '$builders' => tagged_iterator('lag_admin.grid_provider'),
         ])
         ->alias('lag_admin.grid.factory', GridFactoryInterface::class)
     ;
@@ -69,9 +72,7 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$headerBuilder', service(HeaderViewBuilderInterface::class))
         ->arg('$actionsBuilder', service(ActionViewBuilderInterface::class))
     ;
-    $services->set(HeaderViewBuilderInterface::class, HeaderViewBuilder::class)
-        ->args(['$environment' => service('twig')])
-    ;
+    $services->set(HeaderViewBuilderInterface::class, HeaderViewBuilder::class);
     $services->set(SecurityHeaderViewBuilder::class)
         ->decorate(id: HeaderViewBuilderInterface::class, priority: 200)
         ->arg('$headerBuilder', service('.inner'))
@@ -131,5 +132,14 @@ return static function (ContainerConfigurator $container): void {
     // Registry
     $services->set(DataTransformerRegistryInterface::class, DataTransformerRegistry::class)
         ->arg('$dataTransformers', tagged_iterator('lag_admin.data_transformer'))
+    ;
+
+    // Initializer
+    $services->set(GridInitializerInterface::class, GridInitializer::class)
+        ->args([
+            '$requestStack' => service('request_stack'),
+            '$actionInitializer' => service(ActionInitializerInterface::class),
+            '$gridTemplates' => param('lag_admin.grids_templates'),
+        ])
     ;
 };
