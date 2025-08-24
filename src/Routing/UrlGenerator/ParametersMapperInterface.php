@@ -10,7 +10,7 @@ interface ParametersMapperInterface
      * Map a list of parameters to properties of the given object.
      *
      * @param mixed $data Data use to fill parameters
-     * @param array<int, string|null> $routeParameters The list of the parameter names to map
+     * @param array<int|string, string|null> $routeParameters The list of the parameter names to map
      *
      * @return array<string, string> Mapped parameters
      */

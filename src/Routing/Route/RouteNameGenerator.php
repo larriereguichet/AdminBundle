@@ -16,7 +16,7 @@ final readonly class RouteNameGenerator implements RouteNameGeneratorInterface
         return u($resource->getRoutePattern())
             ->replace('{application}', $resource->getApplication())
             ->replace('{resource}', $resource->getName())
-            ->replace('{operation}', $operation->getShortName())
+            ->replace('{operation}', $operation->getName())
             ->lower()
             ->toString()
         ;

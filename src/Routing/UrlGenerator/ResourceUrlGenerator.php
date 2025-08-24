@@ -25,7 +25,7 @@ final readonly class ResourceUrlGenerator implements ResourceUrlGeneratorInterfa
         $parameters = $this->mapper->map($data, $operation->getRouteParameters());
 
         if (\count($parameters) !== \count($operation->getRouteParameters())) {
-            throw new Exception(\sprintf('Unable to generate URL for resource "%s" and operation "%s". Expected "%s" route parameters, got "%s"', $operation->getResource()->getName(), $operation->getName(), \count($operation->getRouteParameters()), \count($parameters)));
+            throw new Exception(\sprintf('Unable to generate URL for resource "%s" and operation "%s". Expected "%s" route parameters, got "%s"', $operation->getResource()->getName(), $operation->getFullName(), \count($operation->getRouteParameters()), \count($parameters)));
         }
 
         return $this->router->generate($operation->getRoute(), $parameters, $referenceType);

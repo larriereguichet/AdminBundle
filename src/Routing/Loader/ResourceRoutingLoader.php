@@ -63,7 +63,7 @@ final class ResourceRoutingLoader extends Loader
                 '_controller' => $operation->getController(),
                 $this->applicationParameter => $operation->getResource()->getApplication(),
                 $this->resourceParameter => $operation->getResource()->getName(),
-                $this->operationParameter => $operation->getShortName(),
+                $this->operationParameter => $operation->getName(),
             ];
 
             $route = new Route($path, $defaults, [], $identifiers, null, [], $operation->getMethods());
