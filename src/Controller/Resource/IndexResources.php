@@ -9,6 +9,7 @@ use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
@@ -20,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 final readonly class IndexResources
 {
     public function __construct(
+        private ContextBuilderInterface $contextBuilder,
         private ProviderInterface $provider,
         private ProcessorInterface $processor,
         private FormFactoryInterface $formFactory,
@@ -31,7 +33,7 @@ final readonly class IndexResources
 
     public function __invoke(Request $request, CollectionOperationInterface $operation): Response
     {
-        $context = [];
+        $context = $this->contextBuilder->buildContext($operation, $request);
 
         if ($operation->getFilterForm() !== null) {
             $filterForm = $this->formFactory->create($operation->getFilterForm(), null, $operation->getFilterFormOptions());
@@ -52,14 +54,14 @@ final readonly class IndexResources
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $data = $form->getData();
-                $this->processor->process($data, $operation);
+                $this->processor->process($data, $operation, [], $context);
 
                 return $this->responseHandler->createRedirectResponse($operation, $data);
             }
         }
 
         if ($operation->getGrid() !== null) {
-            $grid = $this->gridBuilder->build($operation->getGrid(), $operation, $data);
+            $grid = $this->gridBuilder->build($operation, $data, $context);
         }
         $event = new ResourceControllerEvent($operation, $request, $data);
         $this->eventDispatcher->dispatchEvents($event, ResourceControllerEvents::RESOURCE_CONTROLLER);

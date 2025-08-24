@@ -17,6 +17,7 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set(IndexResources::class)
         ->args([
+            '$contextBuilder' => service('lag_admin.request.context_builder'),
             '$provider' => service(ProviderInterface::class),
             '$processor' => service(ProcessorInterface::class),
             '$gridBuilder' => service('lag_admin.grid.view_builder'),
@@ -28,6 +29,7 @@ return static function (ContainerConfigurator $container): void {
     ;
     $services->set(ProcessResource::class)
         ->args([
+            '$contextBuilder' => service('lag_admin.request.context_builder'),
             '$provider' => service(ProviderInterface::class),
             '$processor' => service(ProcessorInterface::class),
             '$formFactory' => service('form.factory'),
@@ -37,6 +39,7 @@ return static function (ContainerConfigurator $container): void {
         ->tag('controller.service_arguments')
     ;
     $services->set(ShowResource::class)
+        ->arg('$contextBuilder', service('lag_admin.request.context_builder'))
         ->arg('$provider', service(ProviderInterface::class))
         ->arg('$eventDispatcher', service(ResourceEventDispatcherInterface::class))
         ->arg('$responseHandler', service('lag_admin.response_handler'))
