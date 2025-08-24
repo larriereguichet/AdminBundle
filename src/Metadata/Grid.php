@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
@@ -20,6 +20,10 @@ class Grid
         #[Assert\NotBlank(message: 'The grid type should not be empty')]
         private ?string $type = null,
 
+        #[Assert\NotBlank(message: 'The grid template should not be an empty string', allowNull: true)]
+        private ?string $template = null,
+
+        // TODO remove use operation domain instead
         private ?string $translationDomain = null,
 
         #[Assert\Count(min: 1, minMessage: 'The grid should have at least one property')]
@@ -30,12 +34,11 @@ class Grid
         private array $containerAttributes = [],
         private array $actionCellAttributes = [],
 
-        private ?string $headerTemplate = null,
         private array $headerRowAttributes = [],
         private array $headerAttributes = [],
         private array $options = [],
 
-        private ?string $form = HiddenDataType::class,
+        private ?string $form = FormType::class,
 
         private array $formOptions = [],
 
@@ -93,6 +96,19 @@ class Grid
     {
         $self = clone $this;
         $self->type = $type;
+
+        return $self;
+    }
+
+    public function getTemplate(): ?string
+    {
+        return $this->template;
+    }
+
+    public function withTemplate(?string $template): self
+    {
+        $self = clone $this;
+        $self->template = $template;
 
         return $self;
     }
@@ -176,19 +192,6 @@ class Grid
     {
         $self = clone $this;
         $self->actionCellAttributes = $actionCellAttributes;
-
-        return $self;
-    }
-
-    public function getHeaderTemplate(): ?string
-    {
-        return $this->headerTemplate;
-    }
-
-    public function withHeaderTemplate(?string $template): self
-    {
-        $self = clone $this;
-        $self->headerTemplate = $template;
 
         return $self;
     }
