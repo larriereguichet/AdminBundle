@@ -20,15 +20,15 @@ final readonly class ResourceValueResolver implements ValueResolverInterface
     /** @return iterable<resource> */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        if (!$this->supports($request, $argument)) {
+        if (!$this->supports($argument)) {
             return [];
         }
 
-        yield $this->resourceContext->getResource($request);
+        yield $this->resourceContext->getResource();
     }
 
-    private function supports(Request $request, ArgumentMetadata $argument): bool
+    private function supports(ArgumentMetadata $argument): bool
     {
-        return $argument->getType() === Resource::class && $this->resourceContext->supports($request);
+        return $argument->getType() === Resource::class && $this->resourceContext->hasResource();
     }
 }
