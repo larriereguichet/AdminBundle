@@ -142,9 +142,9 @@ final class Configuration implements ConfigurationInterface
                             ->end()
 
                             ->arrayNode('identifiers')->scalarPrototype()->defaultValue(['id'])->end()->end()
+
                             ->arrayNode('operations')
-                                ->ignoreExtraKeys(false)
-                                ->children()->end()
+                                ->variablePrototype()->end()
                             ->end()
 
                             ->arrayNode('properties')
@@ -222,6 +222,13 @@ final class Configuration implements ConfigurationInterface
                         ->booleanNode('sortable')->end()
                     ->end()
                 ->end()
+            ->end()
+            ->arrayNode('grids_templates')
+                ->defaultValue([
+                    'table' => '@LAGAdmin/grids/table.html.twig',
+                    'card' => '@LAGAdmin/grids/card.html.twig',
+                ])
+                ->variablePrototype()->end()
             ->end()
         ;
     }
