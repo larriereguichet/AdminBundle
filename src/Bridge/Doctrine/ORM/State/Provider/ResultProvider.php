@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
@@ -27,7 +28,7 @@ final readonly class ResultProvider implements ProviderInterface
 
         if ($data instanceof Query) {
             if ($operation instanceof CollectionOperationInterface) {
-                return $data->getResult();
+                return new ArrayCollection($data->getResult());
             }
 
             return $data->getOneOrNullResult();
