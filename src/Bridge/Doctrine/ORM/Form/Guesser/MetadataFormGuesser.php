@@ -28,6 +28,10 @@ final readonly class MetadataFormGuesser implements FormGuesserInterface
         }
         $reflectionClass = $metadata->getReflectionClass();
 
+        if (!\is_string($property->getPropertyPath())) {
+            return $this->formGuesser->guessFormType($operation, $property);
+        }
+
         if (!$reflectionClass->hasProperty($property->getPropertyPath())) {
             return $this->formGuesser->guessFormType($operation, $property);
         }
