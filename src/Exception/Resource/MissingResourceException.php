@@ -10,6 +10,6 @@ class MissingResourceException extends Exception
 {
     public function __construct(string $resourceName)
     {
-        return parent::__construct('The resource "%s" does not exist', $resourceName);
+        parent::__construct('The resource "%s" does not exist', $resourceName);
     }
 }

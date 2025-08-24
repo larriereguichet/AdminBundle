@@ -10,6 +10,6 @@ class MissingApplicationException extends Exception
 {
     public function __construct(string $resourceName)
     {
-        return parent::__construct('The application "%s" does not exist', $resourceName);
+        parent::__construct('The application "%s" does not exist', $resourceName);
     }
 }

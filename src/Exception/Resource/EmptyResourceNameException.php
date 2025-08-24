@@ -10,6 +10,6 @@ class EmptyResourceNameException extends Exception
 {
     public function __construct(string $resourceClass)
     {
-        return parent::__construct('The resource "%s" has no name', $resourceClass);
+        parent::__construct('The resource "%s" has no name', $resourceClass);
     }
 }
