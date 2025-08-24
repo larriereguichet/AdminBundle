@@ -23,7 +23,7 @@ final readonly class TemplateResponseHandler implements ContentResponseHandlerIn
     public function createResponse(OperationInterface $operation, mixed $data, array $context = []): Response
     {
         if ($operation->getTemplate() === null) {
-            throw new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getName());
+            throw new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getFullName());
         }
         $resource = $operation->getResource();
         $resourceName = u($resource->getName())->camel()->toString();

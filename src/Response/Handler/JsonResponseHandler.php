@@ -6,7 +6,6 @@ namespace LAG\AdminBundle\Response\Handler;
 
 use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -15,7 +14,7 @@ final readonly class JsonResponseHandler implements ContentResponseHandlerInterf
 {
     public function __construct(
         private RequestStack $requestStack,
-        private ResponseHandlerInterface $responseHandler,
+        private ContentResponseHandlerInterface $responseHandler,
         private SerializerInterface $serializer,
     ) {
     }

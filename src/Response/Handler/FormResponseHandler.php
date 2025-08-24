@@ -6,13 +6,12 @@ namespace LAG\AdminBundle\Response\Handler;
 
 use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final readonly class FormResponseHandler implements ContentResponseHandlerInterface
 {
     public function __construct(
-        private ResponseHandlerInterface $responseHandler,
+        private ContentResponseHandlerInterface $responseHandler,
     ) {
     }
 
