@@ -16,7 +16,7 @@ use LAG\AdminBundle\Form\Type\Resource\DeleteType;
 class Delete extends Operation
 {
     public function __construct(
-        string $shortName = 'delete',
+        string $name = 'delete',
         array $context = [],
         ?string $title = null,
         ?string $description = null,
@@ -50,10 +50,10 @@ class Delete extends Operation
         ?string $workflow = null,
         ?string $workflowTransition = null,
         bool $partial = false,
-        ?string $successMessage = null,
+        ?string $flashMessage = 'lag_admin.ui.delete_success',
     ) {
         parent::__construct(
-            shortName: $shortName,
+            name: $name,
             context: $context,
             title: $title,
             description: $description,
@@ -87,7 +87,7 @@ class Delete extends Operation
             workflow: $workflow,
             workflowTransition: $workflowTransition,
             partial: $partial,
-            successMessage: $successMessage,
+            successMessage: $flashMessage,
         );
     }
 }

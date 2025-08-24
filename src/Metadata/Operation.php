@@ -6,18 +6,18 @@ namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
+use LAG\AdminBundle\Exception\Exception;
+use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class Operation implements OperationInterface
 {
+    #[Ignore]
     private ?Resource $resource = null;
 
     public function __construct(
         // TODO check for space, dot and special characters
-        #[Assert\NotBlank(message: 'The operation short name should not be empty')]
-        private readonly string $shortName,
-
-        #[Assert\NotBlank(message: 'The operation short name should not be empty')]
+        #[Assert\NotBlank(message: 'The operation name should not be empty')]
         private ?string $name = null,
 
         private array $context = [],
@@ -106,21 +106,25 @@ abstract class Operation implements OperationInterface
 
         private bool $partial = false,
 
-        private ?string $successMessage = null,
+        private ?string $successMessage = 'lag_admin.ui.process_success',
     ) {
     }
 
-    public function getShortName(): string
-    {
-        return $this->shortName;
-    }
-
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function withName(?string $name): self
+    public function getFullName(): ?string
+    {
+        if ($this->resource === null) {
+            return null;
+        }
+
+        return $this->resource->getApplication().'.'.$this->resource->getName().'.'.$this->name;
+    }
+
+    public function withName(?string $name): static
     {
         $self = clone $this;
         $self->name = $name;
@@ -133,7 +137,7 @@ abstract class Operation implements OperationInterface
         return $this->context;
     }
 
-    public function withContext(array $context): self
+    public function withContext(array $context): static
     {
         $self = clone $this;
         $self->context = $context;
@@ -146,7 +150,7 @@ abstract class Operation implements OperationInterface
         return $this->title;
     }
 
-    public function withTitle(?string $title): self
+    public function withTitle(?string $title): static
     {
         $self = clone $this;
         $self->title = $title;
@@ -159,7 +163,7 @@ abstract class Operation implements OperationInterface
         return $this->description;
     }
 
-    public function withDescription(?string $description): self
+    public function withDescription(?string $description): static
     {
         $self = clone $this;
         $self->description = $description;
@@ -172,7 +176,7 @@ abstract class Operation implements OperationInterface
         return $this->icon;
     }
 
-    public function withIcon(?string $icon): self
+    public function withIcon(?string $icon): static
     {
         $self = clone $this;
         $self->icon = $icon;
@@ -185,7 +189,7 @@ abstract class Operation implements OperationInterface
         return $this->template;
     }
 
-    public function withTemplate(?string $template): self
+    public function withTemplate(?string $template): static
     {
         $self = clone $this;
         $self->template = $template;
@@ -198,7 +202,7 @@ abstract class Operation implements OperationInterface
         return $this->baseTemplate;
     }
 
-    public function withBaseTemplate(string $baseTemplate): self
+    public function withBaseTemplate(string $baseTemplate): static
     {
         $self = clone $this;
         $self->baseTemplate = $baseTemplate;
@@ -211,7 +215,7 @@ abstract class Operation implements OperationInterface
         return $this->permissions;
     }
 
-    public function withPermissions(?array $permissions): self
+    public function withPermissions(?array $permissions): static
     {
         $self = clone $this;
         $self->permissions = $permissions;
@@ -224,7 +228,7 @@ abstract class Operation implements OperationInterface
         return $this->controller;
     }
 
-    public function withController(?string $controller): self
+    public function withController(?string $controller): static
     {
         $self = clone $this;
         $self->controller = $controller;
@@ -237,7 +241,7 @@ abstract class Operation implements OperationInterface
         return $this->route;
     }
 
-    public function withRoute(?string $route): self
+    public function withRoute(?string $route): static
     {
         $self = clone $this;
         $self->route = $route;
@@ -250,7 +254,7 @@ abstract class Operation implements OperationInterface
         return $this->routeParameters;
     }
 
-    public function withRouteParameters(?array $routeParameters): self
+    public function withRouteParameters(?array $routeParameters): static
     {
         $self = clone $this;
         $self->routeParameters = $routeParameters;
@@ -263,7 +267,7 @@ abstract class Operation implements OperationInterface
         return $this->path;
     }
 
-    public function withPath(?string $path): self
+    public function withPath(?string $path): static
     {
         $self = clone $this;
         $self->path = $path;
@@ -276,7 +280,7 @@ abstract class Operation implements OperationInterface
         return $this->redirectRoute;
     }
 
-    public function withRedirectRoute(?string $targetRoute): self
+    public function withRedirectRoute(?string $targetRoute): static
     {
         $self = clone $this;
         $self->redirectRoute = $targetRoute;
@@ -289,7 +293,7 @@ abstract class Operation implements OperationInterface
         return $this->redirectRouteParameters;
     }
 
-    public function withRedirectRouteParameters(?array $targetRouteParameters): self
+    public function withRedirectRouteParameters(?array $targetRouteParameters): static
     {
         $self = clone $this;
         $self->redirectRouteParameters = $targetRouteParameters;
@@ -302,7 +306,7 @@ abstract class Operation implements OperationInterface
         return $this->form;
     }
 
-    public function withForm(?string $form): self
+    public function withForm(?string $form): static
     {
         $self = clone $this;
         $self->form = $form;
@@ -315,10 +319,23 @@ abstract class Operation implements OperationInterface
         return $this->formOptions;
     }
 
-    public function withFormOptions(?array $formOptions): self
+    public function withFormOptions(?array $formOptions): static
     {
         $self = clone $this;
         $self->formOptions = $formOptions;
+
+        return $self;
+    }
+
+    public function getFormOption(string $option): mixed
+    {
+        return $this->formOptions[$option] ?? null;
+    }
+
+    public function withFormOption(string $option, mixed $value): static
+    {
+        $self = clone $this;
+        $self->formOptions[$option] = $value;
 
         return $self;
     }
@@ -328,7 +345,7 @@ abstract class Operation implements OperationInterface
         return $this->formTemplate;
     }
 
-    public function withFormTemplate(?string $formTemplate): self
+    public function withFormTemplate(?string $formTemplate): static
     {
         $self = clone $this;
         $self->formTemplate = $formTemplate;
@@ -341,7 +358,7 @@ abstract class Operation implements OperationInterface
         return $this->processor;
     }
 
-    public function withProcessor(string $processor): self
+    public function withProcessor(string $processor): static
     {
         $self = clone $this;
         $self->processor = $processor;
@@ -354,7 +371,7 @@ abstract class Operation implements OperationInterface
         return $this->provider;
     }
 
-    public function withProvider(string $provider): self
+    public function withProvider(string $provider): static
     {
         $self = clone $this;
         $self->provider = $provider;
@@ -367,7 +384,7 @@ abstract class Operation implements OperationInterface
         return $this->methods;
     }
 
-    public function withMethods(array $methods): self
+    public function withMethods(array $methods): static
     {
         $self = clone $this;
         $self->methods = $methods;
@@ -380,7 +397,7 @@ abstract class Operation implements OperationInterface
         return $this->identifiers;
     }
 
-    public function withIdentifiers(array $identifiers): self
+    public function withIdentifiers(array $identifiers): static
     {
         $self = clone $this;
         $self->identifiers = $identifiers;
@@ -388,17 +405,20 @@ abstract class Operation implements OperationInterface
         return $self;
     }
 
+    #[Ignore]
     public function getResource(): ?Resource
     {
         return $this->resource;
     }
 
-    public function withResource(?Resource $resource): self
+    public function setResource(Resource $resource): static
     {
-        $self = clone $this;
-        $self->resource = $resource;
+        if ($this->resource !== null) {
+            throw new Exception('The operation resource can not be changed');
+        }
+        $this->resource = $resource;
 
-        return $self;
+        return $this;
     }
 
     public function getContextualActions(): ?array
@@ -406,7 +426,7 @@ abstract class Operation implements OperationInterface
         return $this->contextualActions;
     }
 
-    public function withContextualActions(array $contextualActions): self
+    public function withContextualActions(array $contextualActions): static
     {
         $self = clone $this;
         $self->contextualActions = $contextualActions;
@@ -419,7 +439,7 @@ abstract class Operation implements OperationInterface
         return $this->itemActions;
     }
 
-    public function withItemActions(array $itemActions): self
+    public function withItemActions(array $itemActions): static
     {
         $self = clone $this;
         $self->itemActions = $itemActions;
@@ -432,7 +452,7 @@ abstract class Operation implements OperationInterface
         return $this->redirectOperation;
     }
 
-    public function withRedirectOperation(?string $redirectOperation): self
+    public function withRedirectOperation(?string $redirectOperation): static
     {
         $self = clone $this;
         $self->redirectOperation = $redirectOperation;
@@ -445,7 +465,7 @@ abstract class Operation implements OperationInterface
         return $this->validation;
     }
 
-    public function withValidation(bool $validation): self
+    public function withValidation(bool $validation): static
     {
         $self = clone $this;
         $self->validation = $validation;
@@ -458,7 +478,7 @@ abstract class Operation implements OperationInterface
         return $this->validationContext;
     }
 
-    public function withValidationContext(array $context): self
+    public function withValidationContext(array $context): static
     {
         $self = clone $this;
         $self->validationContext = $context;
@@ -471,7 +491,7 @@ abstract class Operation implements OperationInterface
         return $this->ajax;
     }
 
-    public function withAjax(?bool $ajax): self
+    public function withAjax(?bool $ajax): static
     {
         $self = clone $this;
         $self->ajax = $ajax;
@@ -484,7 +504,7 @@ abstract class Operation implements OperationInterface
         return $this->normalizationContext;
     }
 
-    public function withNormalizationContext(array $context): self
+    public function withNormalizationContext(array $context): static
     {
         $self = clone $this;
         $self->normalizationContext = $context;
@@ -497,7 +517,7 @@ abstract class Operation implements OperationInterface
         return $this->denormalizationContext;
     }
 
-    public function withDenormalizationContext(array $context): self
+    public function withDenormalizationContext(array $context): static
     {
         $self = clone $this;
         $self->denormalizationContext = $context;
@@ -510,7 +530,7 @@ abstract class Operation implements OperationInterface
         return $this->input;
     }
 
-    public function withInput(?string $input): self
+    public function withInput(?string $input): static
     {
         $self = clone $this;
         $self->input = $input;
@@ -523,7 +543,7 @@ abstract class Operation implements OperationInterface
         return $this->output;
     }
 
-    public function withOutput(?string $output): self
+    public function withOutput(?string $output): static
     {
         $self = clone $this;
         $self->output = $output;
@@ -536,7 +556,7 @@ abstract class Operation implements OperationInterface
         return $this->workflow;
     }
 
-    public function setWorkflow(?string $workflow): self
+    public function setWorkflow(?string $workflow): static
     {
         $self = clone $this;
         $self->workflow = $workflow;
@@ -549,7 +569,7 @@ abstract class Operation implements OperationInterface
         return $this->workflowTransition;
     }
 
-    public function setWorkflowTransition(?string $workflowTransition): self
+    public function setWorkflowTransition(?string $workflowTransition): static
     {
         $self = clone $this;
         $self->workflowTransition = $workflowTransition;
@@ -562,7 +582,7 @@ abstract class Operation implements OperationInterface
         return $this->partial;
     }
 
-    public function withPartial(bool $partial): self
+    public function withPartial(bool $partial): static
     {
         $self = clone $this;
         $self->partial = $partial;
@@ -575,7 +595,7 @@ abstract class Operation implements OperationInterface
         return $this->successMessage;
     }
 
-    public function withSuccessMessage(?string $successMessage): self
+    public function withSuccessMessage(?string $successMessage): static
     {
         $self = clone $this;
         $self->successMessage = $successMessage;

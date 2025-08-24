@@ -6,13 +6,12 @@ namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
-use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class CollectionOperation extends Operation implements CollectionOperationInterface
 {
     public function __construct(
-        string $shortName,
+        string $name,
         array $context = [],
         ?string $title = null,
         ?string $description = null,
@@ -22,7 +21,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         ?array $permissions = null,
         ?string $controller = null,
         ?string $route = null,
-        array $routeParameters = [],
+        ?array $routeParameters = null,
         array $methods = [],
         ?string $path = null,
         ?string $redirectRoute = null,
@@ -35,8 +34,6 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         ?array $identifiers = null,
         ?array $contextualActions = null,
         ?array $itemActions = null,
-        ?string $redirectApplication = null,
-        ?string $redirectResource = null,
         ?string $redirectOperation = null,
         ?bool $validation = true,
         ?array $validationContext = null,
@@ -48,18 +45,20 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         ?string $workflow = null,
         ?string $workflowTransition = null,
         bool $partial = false,
-        ?string $successMessage = null,
+        ?string $flashMessage = null,
 
         private bool $pagination = true,
 
         #[Assert\GreaterThan(value: 0, message: 'The items per page should be greater than 0')]
         private int $itemsPerPage = 25,
 
+        #[Assert\NotBlank]
         private string $pageParameter = 'page',
         private array $criteria = [], // TODO remove use context
         private array $orderBy = [], // TODO remove use context
 
         #[Assert\NotNull]
+        #[Assert\Valid]
         #[Assert\All(constraints: [new Assert\Type(type: FilterInterface::class)])]
         private ?array $filters = null,
 
@@ -70,15 +69,9 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         #[Assert\NotNull]
         private ?array $collectionActions = null,
 
-        private ?string $filterForm = FilterType::class,
+        private ?string $filterForm = null,
 
         private array $filterFormOptions = [],
-
-        #[Assert\NotBlank(allowNull: true, message: 'The item form type should not be blank. Use null instead')]
-        private ?string $itemForm = null, // TODO remove ?
-
-        #[Assert\NotNull]
-        private ?array $itemFormOptions = null, // TODO remove ?
 
         #[Assert\NotBlank(allowNull: true, message: 'The collection form type should not be blank. Use null instead')]
         private ?string $collectionForm = null, // TODO remove ?
@@ -87,7 +80,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         private ?array $collectionFormOptions = null, // TODO remove ?
     ) {
         parent::__construct(
-            shortName: $shortName,
+            name: $name,
             context: $context,
             title: $title,
             description: $description,
@@ -121,7 +114,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             workflow: $workflow,
             workflowTransition: $workflowTransition,
             partial: $partial,
-            successMessage: $successMessage,
+            successMessage: $flashMessage,
         );
     }
 
@@ -286,32 +279,6 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
     {
         $self = clone $this;
         $self->filterFormOptions = $filterFormOptions;
-
-        return $self;
-    }
-
-    public function getItemForm(): ?string
-    {
-        return $this->itemForm;
-    }
-
-    public function withItemForm(?string $itemForm): self
-    {
-        $self = clone $this;
-        $self->itemForm = $itemForm;
-
-        return $self;
-    }
-
-    public function getItemFormOptions(): ?array
-    {
-        return $this->itemFormOptions;
-    }
-
-    public function withItemFormOptions(?array $itemFormOptions): self
-    {
-        $self = clone $this;
-        $self->itemFormOptions = $itemFormOptions;
 
         return $self;
     }

@@ -11,7 +11,7 @@ use LAG\AdminBundle\Controller\Resource\ProcessResource;
 class Update extends Operation
 {
     public function __construct(
-        string $shortName = 'update',
+        string $name = 'update',
         array $context = [],
         ?string $title = null,
         ?string $description = null,
@@ -45,10 +45,10 @@ class Update extends Operation
         ?string $workflow = null,
         ?string $workflowTransition = null,
         bool $partial = false,
-        ?string $successMessage = null,
+        ?string $flashMessage = 'lag_admin.ui.process_success',
     ) {
         parent::__construct(
-            shortName: $shortName,
+            name: $name,
             context: $context,
             title: $title,
             description: $description,
@@ -82,7 +82,7 @@ class Update extends Operation
             workflow: $workflow,
             workflowTransition: $workflowTransition,
             partial: $partial,
-            successMessage: $successMessage,
+            successMessage: $flashMessage,
         );
     }
 }

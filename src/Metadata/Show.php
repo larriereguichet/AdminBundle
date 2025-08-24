@@ -14,7 +14,7 @@ use LAG\AdminBundle\Controller\Resource\ShowResource;
 class Show extends Operation
 {
     public function __construct(
-        string $shortName = 'show',
+        string $name = 'show',
         array $context = [],
         ?string $title = null,
         ?string $description = null,
@@ -46,7 +46,7 @@ class Show extends Operation
         ?string $successMessage = null,
     ) {
         parent::__construct(
-            shortName: $shortName,
+            name: $name,
             context: $context,
             title: $title,
             description: $description,

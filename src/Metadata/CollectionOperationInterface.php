@@ -60,14 +60,6 @@ interface CollectionOperationInterface extends OperationInterface
 
     public function getGridOptions(): array;
 
-    public function getItemForm(): ?string;
-
-    public function withItemForm(?string $itemForm): self;
-
-    public function getItemFormOptions(): ?array;
-
-    public function withItemFormOptions(?array $itemFormOptions): self;
-
     public function getCollectionForm(): ?string;
 
     public function withCollectionForm(?string $collectionForm): self;

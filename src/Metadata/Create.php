@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Controller\Resource\ProcessResource;
+use LAG\AdminBundle\State\Provider\CreateProvider;
 
 /**
  * The create operation use a form to create a new resource. The provider should retrieve the resource and the processor
@@ -15,7 +15,7 @@ use LAG\AdminBundle\Controller\Resource\ProcessResource;
 class Create extends Operation
 {
     public function __construct(
-        string $shortName = 'create',
+        string $name = 'create',
         array $context = [],
         ?string $title = null,
         ?string $description = null,
@@ -34,7 +34,7 @@ class Create extends Operation
         ?array $formOptions = null,
         ?string $formTemplate = null,
         string $processor = ORMProcessor::class,
-        string $provider = ORMProvider::class,
+        string $provider = CreateProvider::class,
         ?array $identifiers = null,
         ?array $contextualActions = null,
         ?array $itemActions = null,
@@ -49,10 +49,10 @@ class Create extends Operation
         ?string $workflow = null,
         ?string $workflowTransition = null,
         bool $partial = false,
-        string|false|null $successMessage = null,
+        ?string $flashMessage = 'lag_admin.ui.create_success',
     ) {
         parent::__construct(
-            shortName: $shortName,
+            name: $name,
             context: $context,
             title: $title,
             description: $description,
@@ -86,7 +86,7 @@ class Create extends Operation
             workflow: $workflow,
             workflowTransition: $workflowTransition,
             partial: $partial,
-            successMessage: $successMessage,
+            successMessage: $flashMessage,
         );
     }
 }
