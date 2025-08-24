@@ -16,7 +16,7 @@ final class AdminDataCollector extends AbstractDataCollector
     ) {
     }
 
-    public static function getTemplate(): ?string
+    public static function getTemplate(): string
     {
         return '@LAGAdmin/debug/template.html.twig';
     }
@@ -27,7 +27,7 @@ final class AdminDataCollector extends AbstractDataCollector
             $operation = $this->operationContext->getOperation();
             $this->data['application'] = $operation->getResource()->getApplication();
             $this->data['resource'] = $operation->getResource()->getName();
-            $this->data['operation'] = $operation->getShortName();
+            $this->data['operation'] = $operation->getName();
         }
     }
 
