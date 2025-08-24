@@ -21,12 +21,11 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
     }
 
     public function build(
-        string $gridName,
         CollectionOperationInterface $operation,
         mixed $data,
         array $context = [],
     ): GridView {
-        $grid = $this->gridFactory->createGrid($gridName, $operation);
+        $grid = $this->gridFactory->createGrid($operation);
 
         return new GridView(
             name: $grid->getName(),
@@ -36,7 +35,6 @@ final readonly class GridViewBuilder implements GridViewBuilderInterface
             attributes: $grid->getAttributes(),
             title: $grid->getTitle(),
             template: $grid->getTemplate(),
-            component: $grid->getComponent(),
             options: $grid->getOptions(),
             actions: $this->buildCollectionActions($grid, $data),
             context: $context,

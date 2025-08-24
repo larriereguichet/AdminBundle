@@ -13,7 +13,6 @@ interface GridViewBuilderInterface
      * Build a grid view for the given grid and operation.
      */
     public function build(
-        string $gridName,
         CollectionOperationInterface $operation,
         mixed $data,
         array $context = [],

@@ -30,6 +30,7 @@ final readonly class SecurityCellViewBuilder implements CellViewBuilderInterface
         array $context = []
     ): CellView {
         if (!$this->permissionChecker->isGranted($property)) {
+            // TODO use empty cell ?
             return new CellView(name: $property->getName());
         }
 

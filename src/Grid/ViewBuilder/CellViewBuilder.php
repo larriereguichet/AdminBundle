@@ -24,7 +24,7 @@ final readonly class CellViewBuilder implements CellViewBuilderInterface
             template: $property->getTemplate(),
             data: $data,
             attributes: $property->getAttributes(),
-            rowAttributes: $property->getRowAttributes(),
+            containerAttributes: $property->getRowAttributes(),
             context: $context,
         );
     }

@@ -26,6 +26,7 @@ final readonly class ConditionCellViewBuilder implements CellViewBuilderInterfac
         array $context = []
     ): CellView {
         if ($property->getCondition() !== null && !$this->conditionMatcher->matchCondition($property, $data, $context)) {
+            // TODO use empty cell ?
             return new CellView(name: $property->getName());
         }
 

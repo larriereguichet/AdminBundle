@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
+use LAG\AdminBundle\Grid\View\HeaderView;
 use LAG\AdminBundle\Grid\View\RowView;
 use LAG\AdminBundle\Metadata\Grid;
 use LAG\AdminBundle\Metadata\OperationInterface;
@@ -24,6 +25,10 @@ final readonly class RowViewBuilder implements RowViewBuilderInterface
         foreach ($grid->getProperties() as $propertyName) {
             $property = $operation->getResource()->getProperty($propertyName);
             $headers[] = $this->headerBuilder->buildHeader($operation, $grid, $property, $context);
+        }
+
+        if (\count($grid->getActions()) > 0) {
+            $headers[] = new HeaderView(name: 'actions');
         }
 
         return new RowView(
