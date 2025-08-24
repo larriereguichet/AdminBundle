@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Form\Type\Data\HiddenDataType;
 use LAG\AdminBundle\Grid\DataTransformer\FormDataTransformer;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
-class Form extends Property implements PropertyInterface
+class Form extends Property
 {
     public function __construct(
         ?string $name = null,
@@ -22,7 +22,7 @@ class Form extends Property implements PropertyInterface
         ?array $permissions = null,
         ?string $condition = null,
 
-        private string $form = HiddenDataType::class,
+        private string $form = FormType::class,
         private ?string $formTemplate = null,
         private array $formOptions = [],
         private array $properties = [],
