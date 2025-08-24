@@ -7,7 +7,6 @@ namespace LAG\AdminBundle\Metadata;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Controller\Resource\IndexResources;
-use LAG\AdminBundle\Form\Type\Resource\FilterType;
 
 /**
  * The index operation is used to show a collection of resources, usually in a grid. The provider should return
@@ -16,7 +15,7 @@ use LAG\AdminBundle\Form\Type\Resource\FilterType;
 class Index extends CollectionOperation
 {
     public function __construct(
-        string $shortName = 'index',
+        string $name = 'index',
         array $context = [],
         ?string $title = null,
         ?string $description = null,
@@ -26,7 +25,7 @@ class Index extends CollectionOperation
         ?array $permissions = null,
         ?string $controller = IndexResources::class,
         ?string $route = null,
-        array $routeParameters = [],
+        ?array $routeParameters = null,
         array $methods = [],
         ?string $path = null,
         ?string $redirectRoute = null,
@@ -39,8 +38,6 @@ class Index extends CollectionOperation
         ?array $identifiers = null,
         ?array $contextualActions = null,
         ?array $itemActions = null,
-        ?string $redirectApplication = null,
-        ?string $redirectResource = null,
         ?string $redirectOperation = null,
         ?bool $validation = true,
         ?array $validationContext = null,
@@ -59,18 +56,16 @@ class Index extends CollectionOperation
         array $filters = [],
         ?string $grid = null,
         array $gridOptions = [],
-        ?string $filterForm = FilterType::class,
+        ?string $filterForm = null,
         array $filterFormOptions = [],
-        ?string $itemForm = null,
-        ?array $itemFormOptions = null,
         ?string $collectionForm = null,
         ?array $collectionFormOptions = null,
         ?array $collectionActions = null,
         bool $partial = false,
-        ?string $successMessage = null,
+        ?string $flashMessage = null,
     ) {
         parent::__construct(
-            shortName: $shortName,
+            name: $name,
             context: $context,
             title: $title,
             description: $description,
@@ -93,8 +88,6 @@ class Index extends CollectionOperation
             identifiers: $identifiers,
             contextualActions: $contextualActions,
             itemActions: $itemActions,
-            redirectApplication: $redirectApplication,
-            redirectResource: $redirectResource,
             redirectOperation: $redirectOperation,
             validation: $validation,
             validationContext: $validationContext,
@@ -106,7 +99,7 @@ class Index extends CollectionOperation
             workflow: $workflow,
             workflowTransition: $workflowTransition,
             partial: $partial,
-            successMessage: $successMessage,
+            flashMessage: $flashMessage,
             pagination: $pagination,
             itemsPerPage: $itemsPerPage,
             pageParameter: $pageParameter,
@@ -118,8 +111,6 @@ class Index extends CollectionOperation
             collectionActions: $collectionActions,
             filterForm: $filterForm,
             filterFormOptions: $filterFormOptions,
-            itemForm: $itemForm,
-            itemFormOptions: $itemFormOptions,
             collectionForm: $collectionForm,
             collectionFormOptions: $collectionFormOptions,
         );

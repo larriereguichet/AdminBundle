@@ -37,6 +37,7 @@ class Resource
 
         private ?array $permissions = null,
 
+        /** @var array<int, OperationInterface> $operations */
         #[Assert\Count(min: 1, minMessage: 'The must be at least one operation in the resource')]
         #[Assert\All(constraints: [new Assert\Type(type: OperationInterface::class)])]
         #[Assert\Valid]
@@ -100,11 +101,6 @@ class Resource
     public function getName(): ?string
     {
         return $this->name;
-    }
-
-    public function getFullName(): string
-    {
-        return $this->application.'.'.$this->name;
     }
 
     public function withName(?string $name): self
@@ -175,18 +171,13 @@ class Resource
 
     public function hasOperation(string $operationName): bool
     {
-        return array_any($this->operations, fn ($operation) => $operation->getShortName() === $operationName);
-    }
-
-    public function hasOperationOfType(string $operationClass): bool
-    {
-        return array_any($this->operations, fn ($operation) => $operation instanceof $operationClass);
+        return array_any($this->operations, fn (OperationInterface $operation) => $operation->getName() === $operationName);
     }
 
     public function getOperation(string $operationName): OperationInterface
     {
         foreach ($this->operations as $operation) {
-            if ($operation->getShortName() === $operationName) {
+            if ($operation->getName() === $operationName) {
                 return $operation;
             }
         }
@@ -194,24 +185,14 @@ class Resource
         throw new OperationMissingException(\sprintf('The operation with name "%s" does not exists in the resource "%s"', $operationName, $this->getName()));
     }
 
-    public function getOperationOfType(string $operationClass): OperationInterface
-    {
-        foreach ($this->operations as $operation) {
-            if ($operation instanceof $operationClass) {
-                return $operation;
-            }
-        }
-
-        throw new OperationMissingException(\sprintf('The operation of type "%s" does not exists in the resource "%s"', $operationClass, $this->getName()));
-    }
-
+    /** @param array<int, OperationInterface> $operations */
     public function withOperations(array $operations): self
     {
         $self = clone $this;
         $self->operations = [];
 
         foreach ($operations as $operation) {
-            $self->operations[$operation->getShortName()] = $operation;
+            $self->operations[$operation->getName()] = $operation;
         }
 
         return $self;
@@ -220,7 +201,7 @@ class Resource
     public function withOperation(OperationInterface $operation): self
     {
         $self = clone $this;
-        $self->operations[$operation->getShortName()] = $operation;
+        $self->operations[$operation->getName()] = $operation;
 
         return $self;
     }
@@ -418,7 +399,7 @@ class Resource
         return $self;
     }
 
-    public function isValidationEnabled(): bool
+    public function hasValidation(): bool
     {
         return $this->validation;
     }
