@@ -25,8 +25,6 @@ class Action extends Property implements Url, WorkflowSubjectInterface
 
         private ?string $route = null,
         private array $routeParameters = [],
-        private ?string $application = null,
-        private ?string $resource = null,
         private ?string $operation = null,
         private ?string $url = null,
         private ?string $type = null,
@@ -74,32 +72,6 @@ class Action extends Property implements Url, WorkflowSubjectInterface
     {
         $self = clone $this;
         $self->routeParameters = $routeParameters;
-
-        return $self;
-    }
-
-    public function getApplication(): ?string
-    {
-        return $this->application;
-    }
-
-    public function withApplication(?string $application): self
-    {
-        $self = clone $this;
-        $self->application = $application;
-
-        return $self;
-    }
-
-    public function getResource(): ?string
-    {
-        return $this->resource;
-    }
-
-    public function withResource(?string $resource): self
-    {
-        $self = clone $this;
-        $self->resource = $resource;
 
         return $self;
     }
