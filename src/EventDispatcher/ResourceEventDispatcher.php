@@ -13,19 +13,8 @@ use function Symfony\Component\String\u;
 final readonly class ResourceEventDispatcher implements ResourceEventDispatcherInterface
 {
     public function __construct(
-        private EventDispatcherInterface $buildEventDispatcher,
         private EventDispatcherInterface $eventDispatcher,
     ) {
-    }
-
-    public function dispatchBuildEvents(ResourceEventInterface $event, string $eventName): void
-    {
-        $resource = $event->getResource();
-        $eventNames = $this->getEventNames($eventName, $resource);
-
-        foreach ($eventNames as $eventName) {
-            $this->buildEventDispatcher->dispatch($event, $eventName);
-        }
     }
 
     public function dispatchEvents(ResourceEventInterface $event, string $eventName): void
@@ -33,8 +22,8 @@ final readonly class ResourceEventDispatcher implements ResourceEventDispatcherI
         $resource = $event->getResource();
         $eventNames = $this->getEventNames($eventName, $resource);
 
-        foreach ($eventNames as $eventName) {
-            $this->eventDispatcher->dispatch($event, $eventName);
+        foreach ($eventNames as $currentEventName) {
+            $this->eventDispatcher->dispatch($event, $currentEventName);
         }
     }
 

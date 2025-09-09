@@ -16,7 +16,6 @@ use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use LAG\AdminBundle\Slug\Registry\SluggerRegistryInterface;
 use LAG\AdminBundle\Upload\Uploader\UploaderInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 
@@ -57,12 +56,8 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     // Dispatcher
-    $services->set('lag_admin.build_event_dispatcher', EventDispatcher::class)
-        ->tag('event_dispatcher.dispatcher', ['name' => 'lag_admin.build_event_dispatcher'])
-    ;
     $services->set(ResourceEventDispatcherInterface::class, ResourceEventDispatcher::class)
         ->args([
-            '$buildEventDispatcher' => service('lag_admin.build_event_dispatcher'),
             '$eventDispatcher' => service('event_dispatcher'),
         ])
         ->alias('lag_admin.event_dispatcher', ResourceEventDispatcherInterface::class)

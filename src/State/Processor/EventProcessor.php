@@ -19,14 +19,14 @@ final readonly class EventProcessor implements ProcessorInterface
 
     public function process(mixed $data, OperationInterface $operation, array $urlVariables = [], array $context = []): void
     {
-        $this->eventDispatcher->dispatchBuildEvents(
+        $this->eventDispatcher->dispatchEvents(
             new DataEvent($data, $operation),
             DataEvents::DATA_PROCESS_EVENT_TEMPLATE,
         );
 
         $this->processor->process($data, $operation, $urlVariables, $context);
 
-        $this->eventDispatcher->dispatchBuildEvents(
+        $this->eventDispatcher->dispatchEvents(
             new DataEvent($data, $operation),
             DataEvents::DATA_PROCESSED_EVENT_TEMPLATE,
         );
