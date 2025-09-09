@@ -24,6 +24,7 @@ final readonly class ConditionMatcher implements ConditionMatcherInterface
             'this' => $data,
             'data' => $data,
             'object' => $context['object'] ?? $data,
+            'resource' => $context['row_data'] ?? null,
             'auth_checker' => $this->authorizationChecker,
         ] + $context;
 
