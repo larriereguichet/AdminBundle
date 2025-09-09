@@ -38,7 +38,7 @@ final class EventProcessorTest extends TestCase
 
         $this->eventDispatcher
             ->expects($this->exactly(2))
-            ->method('dispatchBuildEvents')
+            ->method('dispatchEvents')
             ->willReturnMap([
                 [
                     new DataEvent($data, $operation),
