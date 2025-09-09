@@ -36,7 +36,7 @@
                 {% endfor %}
 
                 {% if row.actions|length > 0 %}
-                    <td>
+                    <td class="text-end">
                         <div class="btn-group" role="group" aria-label="Actions">
                             {% for action in row.actions %}
                                 {{ component('lag_admin:grid:cell', {
