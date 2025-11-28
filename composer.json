@@ -37,7 +37,7 @@
         "symfony/expression-language": "^7.1",
         "symfony/form": "^7.0",
         "symfony/framework-bundle": "^7.0",
-        "symfony/security-bundle": "^7.0",
+        "symfony/security-bundle": "^8.0",
         "symfony/serializer": "^7.0",
         "symfony/translation": "^7.0",
         "symfony/twig-bundle": "^7.0",
