@@ -35,7 +35,7 @@
         "symfony/error-handler": "^7.0",
         "symfony/event-dispatcher": "^7.0",
         "symfony/expression-language": "^7.1",
-        "symfony/form": "^7.0",
+        "symfony/form": "^8.0",
         "symfony/framework-bundle": "^7.0",
         "symfony/security-bundle": "^7.0",
         "symfony/serializer": "^7.0",
