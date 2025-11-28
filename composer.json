@@ -32,7 +32,7 @@
         "league/flysystem-bundle": "^3.2",
         "nadar/quill-delta-parser": "^3.4",
         "symfony/dependency-injection": "^7.0",
-        "symfony/error-handler": "^7.0",
+        "symfony/error-handler": "^8.0",
         "symfony/event-dispatcher": "^7.0",
         "symfony/expression-language": "^7.1",
         "symfony/form": "^7.0",
