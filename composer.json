@@ -39,7 +39,7 @@
         "symfony/framework-bundle": "^7.0",
         "symfony/security-bundle": "^7.0",
         "symfony/serializer": "^7.0",
-        "symfony/translation": "^7.0",
+        "symfony/translation": "^8.0",
         "symfony/twig-bundle": "^7.0",
         "symfony/uid": "^7.1",
         "symfony/ux-autocomplete": "^2.17",
