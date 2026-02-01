@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Grid\View;
+namespace LAG\AdminBundle\Tests\Unit\Grid\View;
 
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Attribute\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use LAG\AdminBundle\View\Render\LinkRenderer;
 use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use PHPUnit\Framework\Attributes\Test;

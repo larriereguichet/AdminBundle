@@ -8,12 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Table;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Show;
 use LAG\AdminBundle\Tests\Application\Repository\BookRepository;
 use LAG\AdminBundle\Tests\Application\State\Provider\Book\LatestBookProvider;
 
-#[\LAG\AdminBundle\Metadata\Resource(
+#[\LAG\AdminBundle\Metadata\Attribute\Resource(
     name: 'book',
     pathPrefix: '/books',
     operations: [
@@ -26,7 +26,7 @@ use LAG\AdminBundle\Tests\Application\State\Provider\Book\LatestBookProvider;
         ),
     ],
 )]
-#[\LAG\AdminBundle\Metadata\Grid(
+#[\LAG\AdminBundle\Metadata\Attribute\Grid(
     name: 'projects_table',
     title: 'Books',
     properties: ['id', 'name', 'isbn', 'show']
@@ -38,13 +38,13 @@ class Book
     #[ORM\Id]
     #[ORM\Column]
     #[GeneratedValue(strategy: 'AUTO')]
-    #[\LAG\AdminBundle\Metadata\Link(
+    #[\LAG\AdminBundle\Metadata\Attribute\Link(
         propertyPath: true,
         label: false,
         operation: 'show',
         textPath: 'id',
     )]
-    #[\LAG\AdminBundle\Metadata\Link(
+    #[\LAG\AdminBundle\Metadata\Attribute\Link(
         name: 'show',
         propertyPath: true,
         label: 'actions',
@@ -54,10 +54,10 @@ class Book
     public ?int $id = null;
 
     #[ORM\Column]
-    #[\LAG\AdminBundle\Metadata\Text]
+    #[\LAG\AdminBundle\Metadata\Attribute\Text]
     public ?string $name = null;
 
     #[ORM\Column]
-    #[\LAG\AdminBundle\Metadata\Text]
+    #[\LAG\AdminBundle\Metadata\Attribute\Text]
     public ?string $isbn = null;
 }

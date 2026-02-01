@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Controller\Resource;
+namespace LAG\AdminBundle\Tests\Unit\Controller\Resource;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Controller\Resource\IndexResources;
 use LAG\AdminBundle\Event\ResourceControllerEvent;
 use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Grid\View\GridView;
-use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Grid\ViewFactory\GridViewFactoryInterface;
+use LAG\AdminBundle\Grid\View\Grid;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -55,7 +55,7 @@ final class IndexResourcesTest extends TestCase
 
         $form = $this->createMock(FormInterface::class);
         $filterForm = $this->createMock(FormInterface::class);
-        $gridView = new GridView(
+        $gridView = new Grid(
             name: 'my_grid',
             type: 'some_type',
             headers: [],
@@ -157,7 +157,7 @@ final class IndexResourcesTest extends TestCase
         )->setResource($resource);
 
         $form = $this->createMock(FormInterface::class);
-        $grid = new GridView(
+        $grid = new Grid(
             name: 'my_grid',
             type: 'some_type',
             headers: [],
@@ -285,7 +285,7 @@ final class IndexResourcesTest extends TestCase
         $this->provider = $this->createMock(ProviderInterface::class);
         $this->processor = $this->createMock(ProcessorInterface::class);
         $this->formFactory = $this->createMock(FormFactoryInterface::class);
-        $this->gridBuilder = $this->createMock(GridViewBuilderInterface::class);
+        $this->gridBuilder = $this->createMock(GridViewFactoryInterface::class);
         $this->eventDispatcher = $this->createMock(ResourceEventDispatcherInterface::class);
         $this->responseHandler = $this->createMock(ResponseHandlerInterface::class);
         $this->controller = new IndexResources(

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Initializer;
 
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Attribute\Action;
 use LAG\AdminBundle\Metadata\OperationInterface;
 
 interface ActionInitializerInterface

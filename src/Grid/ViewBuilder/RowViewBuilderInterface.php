@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Grid\View\RowView;
-use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Grid\View\Row;
 
 interface RowViewBuilderInterface
 {
-    public function buildHeadersRow(OperationInterface $operation, Grid $grid, array $context): RowView;
+    /** @param array<string, mixed> $context */
+    public function buildHeadersRow(OperationInterface $operation, GridInterface $grid, array $context = []): Row;
 
-    public function buildRow(OperationInterface $operation, Grid $grid, mixed $data, array $context): RowView;
+    /** @param array<string, mixed> $context */
+    public function buildRow(OperationInterface $operation, GridInterface $grid, mixed $data, array $context = []): Row;
 }

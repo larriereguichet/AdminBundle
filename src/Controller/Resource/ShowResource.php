@@ -38,6 +38,6 @@ final readonly class ShowResource
             return $event->getResponse();
         }
 
-        return $this->responseHandler->createResponse($operation, $data);
+        return $this->responseHandler->createResponse($request, $operation, $data);
     }
 }

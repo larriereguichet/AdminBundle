@@ -7,10 +7,10 @@ namespace LAG\AdminBundle\Response\Handler;
 use LAG\AdminBundle\Exception\Operation\MissingOperationTemplateException;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\Inflector\EnglishInflector;
 use Twig\Environment;
-
 use function Symfony\Component\String\u;
 
 final readonly class TemplateResponseHandler implements ContentResponseHandlerInterface
@@ -20,7 +20,8 @@ final readonly class TemplateResponseHandler implements ContentResponseHandlerIn
     ) {
     }
 
-    public function createResponse(OperationInterface $operation, mixed $data, array $context = []): Response
+    /** @param array<string, mixed> $context */
+    public function createResponse(Request $request, OperationInterface $operation, mixed $data, array $context = []): Response
     {
         if ($operation->getTemplate() === null) {
             throw new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getFullName());

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Resource\Factory;
+namespace LAG\AdminBundle\Tests\Unit\Resource\Factory;
 
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Show;
-use LAG\AdminBundle\Metadata\TextFilter;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Show;
+use LAG\AdminBundle\Metadata\Attribute\TextFilter;
 use LAG\AdminBundle\Resource\Factory\DefinitionFactoryInterface;
 use LAG\AdminBundle\Resource\Factory\ResourceFactory;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Resource\Initializer\ResourceInitializerInterface;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

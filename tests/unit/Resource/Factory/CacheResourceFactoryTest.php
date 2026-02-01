@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Resource\Factory;
+namespace LAG\AdminBundle\Tests\Unit\Resource\Factory;
 
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Resource\Factory\CacheResourceFactory;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
 use PHPUnit\Framework\Attributes\Test;

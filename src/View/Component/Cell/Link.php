@@ -17,6 +17,7 @@ class Link
     public ?string $icon = null;
     public bool $translation = true;
     public ?string $translationDomain = null;
+    /** @var array<string, mixed> $translationParameters */
     public array $translationParameters = [];
     public ?string $prefix = null;
     public ?string $suffix = null;

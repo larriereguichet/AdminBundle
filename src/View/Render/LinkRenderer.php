@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\View\Render;
 
 use LAG\AdminBundle\Exception\InvalidLinkException;
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Attribute\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

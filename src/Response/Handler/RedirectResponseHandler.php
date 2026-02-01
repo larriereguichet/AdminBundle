@@ -7,6 +7,7 @@ namespace LAG\AdminBundle\Response\Handler;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final readonly class RedirectResponseHandler implements RedirectResponseHandlerInterface
@@ -16,8 +17,13 @@ final readonly class RedirectResponseHandler implements RedirectResponseHandlerI
     ) {
     }
 
-    public function createRedirectResponse(OperationInterface $operation, mixed $data, array $context = []): RedirectResponse
-    {
+    /** @param array<string, mixed> $context */
+    public function createRedirectResponse(
+        Request $request,
+        OperationInterface $operation,
+        mixed $data,
+        array $context = []
+    ): RedirectResponse {
         $targetUrl = match (true) {
             $operation->getRedirectOperation() !== null => $this->urlGenerator->generateFromOperationName(
                 $operation->getRedirectOperation(),

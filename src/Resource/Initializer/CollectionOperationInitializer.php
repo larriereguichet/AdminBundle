@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Initializer;
 
-use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
-use LAG\AdminBundle\Metadata\Action;
-use LAG\AdminBundle\Metadata\Application;
+use LAG\AdminBundle\Metadata\Attribute\Action;
+use LAG\AdminBundle\Metadata\Attribute\Application;
+use LAG\AdminBundle\Metadata\Attribute\EntityFilter;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\EntityFilter;
 
 final readonly class CollectionOperationInitializer implements CollectionOperationInitializerInterface
 {
@@ -21,10 +20,6 @@ final readonly class CollectionOperationInitializer implements CollectionOperati
     public function initializeCollectionOperation(Application $application, CollectionOperationInterface $operation): CollectionOperationInterface
     {
         $resource = $operation->getResource();
-
-        if ($resource === null) {
-            throw new Exception('The resource should be initialized');
-        }
 
         if ($operation->getContextualActions() === null && $resource->hasOperation('create')) {
             $operation = $operation->withContextualActions([]);

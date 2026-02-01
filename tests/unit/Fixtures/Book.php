@@ -2,24 +2,44 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Fixtures;
+namespace LAG\AdminBundle\Tests\Unit\Fixtures;
 
-use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Text;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\ManyToOne;
+use LAG\AdminBundle\Entity\ImagesAwareInterface;
+use LAG\AdminBundle\Entity\ImagesAwareTrait;
+use LAG\AdminBundle\Entity\TimestampedResourceInterface;
+use LAG\AdminBundle\Entity\TimestampResourceTrait;
+use LAG\AdminBundle\Metadata\Attribute\Link;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Slug;
+use LAG\AdminBundle\Metadata\Attribute\Text;
 
 #[Resource(application: 'shop')]
 #[Resource(application: 'admin')]
 #[Link(name: 'show_link')]
-class Book
+class Book implements TimestampedResourceInterface, ImagesAwareInterface
 {
+    use TimestampResourceTrait, ImagesAwareTrait;
+
     #[Text]
     private ?int $id = null;
 
     #[Text]
     private ?string $name = null;
 
+    #[Slug]
+    private ?string $slug = null;
+
     private ?string $description = null;
+
+    #[ManyToOne]
+    private Collection $images;
+
+    public function __construct()
+    {
+        $this->initializeImages();
+    }
 
     public function getId(): ?int
     {
@@ -49,5 +69,15 @@ class Book
     public function setDescription(?string $description): void
     {
         $this->description = $description;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): void
+    {
+        $this->slug = $slug;
     }
 }

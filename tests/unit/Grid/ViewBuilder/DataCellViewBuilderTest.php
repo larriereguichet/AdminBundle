@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Grid\ViewBuilder;
+namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
-use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
-use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Grid\ViewBuilder\CellViewBuilderInterface;
-use LAG\AdminBundle\Grid\ViewBuilder\DataCellViewBuilder;
-use LAG\AdminBundle\Metadata\Grid;
-use LAG\AdminBundle\Metadata\Text;
-use LAG\AdminBundle\Metadata\Update;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Text;
+use LAG\AdminBundle\Metadata\Attribute\Update;
+use LAG\AdminBundle\Metadata\DataTransformer\DataTransformerInterface;
+use LAG\AdminBundle\Metadata\Registry\DataTransformerRegistryInterface;
+use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
+use LAG\AdminBundle\Grid\ViewFactory\DataCellBuilder;
+use LAG\AdminBundle\Grid\View\Cell;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 
 final class DataCellViewBuilderTest extends TestCase
 {
-    private DataCellViewBuilder $cellBuilder;
+    private DataCellBuilder $cellBuilder;
     private MockObject $decorated;
     private MockObject $dataMapper;
     private MockObject $transformerRegistry;
@@ -32,7 +32,7 @@ final class DataCellViewBuilderTest extends TestCase
         $data = new \stdClass();
         $context = ['some_option' => 'some_value'];
 
-        $cell = new CellView(name: 'cell view');
+        $cell = new Cell(name: 'cell view');
         $operation = new Update();
 
         $dataTransformer = $this->createMock(DataTransformerInterface::class);
@@ -44,8 +44,8 @@ final class DataCellViewBuilderTest extends TestCase
 
         $this->dataMapper
             ->expects($this->once())
-            ->method('getValue')
-            ->with($property, $data)
+            ->method('getPropertyValue')
+            ->with($data, $property)
             ->willReturn('some data')
         ;
         $this->transformerRegistry
@@ -68,10 +68,10 @@ final class DataCellViewBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = $this->createMock(CellViewBuilderInterface::class);
+        $this->decorated = $this->createMock(CellBuilderInterface::class);
         $this->dataMapper = $this->createMock(DataMapperInterface::class);
         $this->transformerRegistry = $this->createMock(DataTransformerRegistryInterface::class);
-        $this->cellBuilder = new DataCellViewBuilder(
+        $this->cellBuilder = new DataCellBuilder(
             $this->decorated,
             $this->dataMapper,
             $this->transformerRegistry,

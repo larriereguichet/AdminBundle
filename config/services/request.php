@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use LAG\AdminBundle\Request\ContextBuilder\AjaxContextBuilder;
-use LAG\AdminBundle\Request\ContextBuilder\CompositeContextBuilder;
+use LAG\AdminBundle\Request\ContextBuilder\JsonContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
-use LAG\AdminBundle\Request\ContextBuilder\OperationContextBuilder;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\PaginationContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\PartialContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\SortingContextBuilder;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractor;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
-use LAG\AdminBundle\Request\Resolver\OperationValueResolver;
-use LAG\AdminBundle\Request\Resolver\ResourceValueResolver;
+use LAG\AdminBundle\Request\ValueResolver\OperationValueResolver;
+use LAG\AdminBundle\Request\ValueResolver\ResourceValueResolver;
 use LAG\AdminBundle\Request\Uri\UrlVariablesExtractor;
 use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
@@ -46,23 +45,17 @@ return static function (ContainerConfigurator $container): void {
     $services->set(UrlVariablesExtractorInterface::class, UrlVariablesExtractor::class);
 
     // Request context builders
-    $services->set(ContextBuilderInterface::class, CompositeContextBuilder::class)
-        ->arg('$contextBuilders', tagged_iterator(ContextBuilderInterface::SERVICE_TAG))
-        ->alias('lag_admin.request.context_builder', ContextBuilderInterface::class)
-    ;
-    $services->set(OperationContextBuilder::class)
-        ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
-    ;
+    $services->set(ContextBuilderInterface::class, ContextBuilder::class);
     $services->set(SortingContextBuilder::class)
-        ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
+        ->decorate(ContextBuilderInterface::class)
     ;
-    $services->set(AjaxContextBuilder::class)
-        ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
+    $services->set(JsonContextBuilder::class)
+        ->decorate(ContextBuilderInterface::class)
     ;
     $services->set(PartialContextBuilder::class)
-        ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
+        ->decorate(ContextBuilderInterface::class)
     ;
     $services->set(PaginationContextBuilder::class)
-        ->tag(ContextBuilderInterface::SERVICE_TAG, ['priority' => 200])
+        ->decorate(ContextBuilderInterface::class)
     ;
 };

@@ -4,25 +4,19 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Initializer;
 
-use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceDataType;
-use LAG\AdminBundle\Metadata\Application;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Attribute\Application;
+use LAG\AdminBundle\Metadata\Attribute\Create;
+use LAG\AdminBundle\Metadata\Attribute\Delete;
+use LAG\AdminBundle\Metadata\Attribute\Update;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Update;
 
 final class OperationFormInitializer implements OperationFormInitializeInterface
 {
     public function initializeOperationForm(Application $application, OperationInterface $operation): OperationInterface
     {
         $resource = $operation->getResource();
-
-        if ($resource === null) {
-            throw new Exception('The resource should be initialized');
-        }
 
         if ($operation->getForm() === null) {
             // When the operation does not define a form, we try to set the resource default form. If none is defined

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Condition;
+namespace LAG\AdminBundle\Tests\Unit\Condition;
 
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcher;
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
-use LAG\AdminBundle\Metadata\Text;
+use LAG\AdminBundle\Metadata\Attribute\Text;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

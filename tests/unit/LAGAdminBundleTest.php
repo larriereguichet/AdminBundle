@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests\Unit;
 
 use LAG\AdminBundle\DependencyInjection\CompilerPass\WorkflowCompilerPass;
 use LAG\AdminBundle\LAGAdminBundle;

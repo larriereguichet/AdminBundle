@@ -13,4 +13,6 @@ interface PathGeneratorInterface
      * should be mapped to the property of the given data object when .
      */
     public function generatePath(OperationInterface $operation): string;
+
+    public function generateEmbeddedPath(OperationInterface $operation): string;
 }

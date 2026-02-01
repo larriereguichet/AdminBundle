@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\DependencyInjection;
+namespace LAG\AdminBundle\Tests\Unit\DependencyInjection;
 
 use LAG\AdminBundle\DependencyInjection\LAGAdminExtension;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -17,15 +17,14 @@ final class LAGExtensionTest extends TestCase
     #[Test]
     public function itLoadConfiguration(): void
     {
-        $this
-            ->container
+        $this->container
             ->expects($this->atLeastOnce())
             ->method('setParameter')
             ->willReturnCallback(function ($parameter): void {
                 $this->assertContains($parameter, [
                     'lag_admin.application_parameter',
                     'lag_admin.media_directory',
-                    'lag_admin.upload_storage',
+                    'lag_admin.media_storage',
                     'lag_admin.resource_parameter',
                     'lag_admin.operation_parameter',
                     'lag_admin.application.configuration',

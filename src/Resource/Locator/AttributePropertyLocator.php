@@ -12,21 +12,14 @@ final readonly class AttributePropertyLocator implements PropertyLocatorInterfac
     {
         $reflectionClass = new \ReflectionClass($resourceClass);
 
-        foreach ($reflectionClass->getAttributes() as $reflectionAttribute) {
+        foreach ($reflectionClass->getAttributes(PropertyInterface::class, \ReflectionAttribute::IS_INSTANCEOF) as $reflectionAttribute) {
             $attribute = $reflectionAttribute->newInstance();
-
-            if ($attribute instanceof PropertyInterface) {
-                yield $attribute;
-            }
+            yield $attribute;
         }
 
         foreach ($reflectionClass->getProperties() as $reflectionProperty) {
-            foreach ($reflectionProperty->getAttributes() as $reflectionAttribute) {
+            foreach ($reflectionProperty->getAttributes(PropertyInterface::class, \ReflectionAttribute::IS_INSTANCEOF) as $reflectionAttribute) {
                 $property = $reflectionAttribute->newInstance();
-
-                if (!$property instanceof PropertyInterface) {
-                    continue;
-                }
 
                 if (!$property->getName()) {
                     $property = $property->withName($reflectionProperty->getName());

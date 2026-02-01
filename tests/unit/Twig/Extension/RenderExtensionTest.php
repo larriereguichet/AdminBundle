@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Twig\Extension;
+namespace LAG\AdminBundle\Tests\Unit\Twig\Extension;
 
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use LAG\AdminBundle\Twig\Extension\RenderExtension;
 use LAG\AdminBundle\View\Helper\RenderHelper;
 use PHPUnit\Framework\Attributes\Test;

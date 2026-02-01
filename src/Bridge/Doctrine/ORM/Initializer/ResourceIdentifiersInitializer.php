@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Initializer;
 
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 
 final readonly class ResourceIdentifiersInitializer implements ResourceIdentifiersInitializerInterface
 {

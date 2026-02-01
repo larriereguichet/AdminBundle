@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventDispatcher;
 
 use LAG\AdminBundle\Event\ResourceEventInterface;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-
 use function Symfony\Component\String\u;
 
 final readonly class ResourceEventDispatcher implements ResourceEventDispatcherInterface

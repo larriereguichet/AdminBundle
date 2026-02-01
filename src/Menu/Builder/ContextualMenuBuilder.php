@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Menu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Attribute\Link;
 use LAG\AdminBundle\Resource\Context\OperationContextInterface;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;

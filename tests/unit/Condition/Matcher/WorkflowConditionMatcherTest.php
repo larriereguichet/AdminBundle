@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Condition\Matcher;
+namespace LAG\AdminBundle\Tests\Unit\Condition\Matcher;
 
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
 use LAG\AdminBundle\Condition\Matcher\WorkflowConditionMatcher;

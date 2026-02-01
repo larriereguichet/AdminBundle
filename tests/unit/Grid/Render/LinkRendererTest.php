@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Grid\Render;
+namespace LAG\AdminBundle\Tests\Unit\Grid\Render;
 
 use LAG\AdminBundle\Exception\InvalidLinkException;
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Attribute\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use LAG\AdminBundle\View\Render\LinkRenderer;
 use PHPUnit\Framework\Attributes\Test;

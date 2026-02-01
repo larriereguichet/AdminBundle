@@ -138,7 +138,11 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     // Mappers
-    $services->set(DataMapperInterface::class, DataMapper::class);
+    $services->set(DataMapperInterface::class, DataMapper::class)
+        ->args([
+            '$propertyAccessor' => service('property_accessor'),
+        ])
+    ;
 
     // Property guessers
     $services->set(ResourcePropertyGuesserInterface::class, ResourcePropertyGuesser::class)

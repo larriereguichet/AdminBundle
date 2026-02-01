@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Component\Cell;
 
-use LAG\AdminBundle\Grid\View\CellView;
+use LAG\AdminBundle\Grid\View\Cell;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -13,6 +13,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
     name: 'lag_admin:form',
     template: '@LAGAdmin/components/cells/form.html.twig',
 )]
+/** @param array<string, mixed> $data */
 final class FormComponent
 {
     public FormView $form;
@@ -26,10 +27,10 @@ final class FormComponent
 
     public function mount(
         mixed $data,
-        CellView $cell,
+        Cell $cell,
     ): void {
-        /** @var \LAG\AdminBundle\Metadata\Form $property */
-        $property = $cell->options;
+        /** @var \LAG\AdminBundle\Metadata\Attribute\Form $property */
+        $property = $cell->property;
         $form = $this->formFactory->create($property->getForm(), $data, $property->getFormOptions());
         $this->form = $form->createView();
         $this->template = $property->getFormTemplate();

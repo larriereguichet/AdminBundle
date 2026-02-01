@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Metadata\Context;
+namespace LAG\AdminBundle\Tests\Unit\Metadata\Context;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Show;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContext;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+// TODO move ?
 final class ResourceContextTest extends TestCase
 {
     private ResourceContext $resourceContext;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Grid\DataTransformer;
+namespace LAG\AdminBundle\Metadata\DataTransformer;
 
 use LAG\AdminBundle\Metadata\PropertyInterface;
 

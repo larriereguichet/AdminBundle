@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Config;
 
-use LAG\AdminBundle\Metadata\Application;
-use LAG\AdminBundle\Metadata\Grid;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Application;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;

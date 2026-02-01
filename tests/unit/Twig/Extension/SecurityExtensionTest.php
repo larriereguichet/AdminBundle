@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Twig\Extension;
+namespace LAG\AdminBundle\Tests\Unit\Twig\Extension;
 
 use LAG\AdminBundle\Twig\Extension\SecurityExtension;
 use LAG\AdminBundle\View\Helper\SecurityHelper;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Controller\Security;
+namespace LAG\AdminBundle\Tests\Unit\Controller\Security;
 
 use LAG\AdminBundle\Controller\Security\Login;
 use PHPUnit\Framework\Attributes\Test;

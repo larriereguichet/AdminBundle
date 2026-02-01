@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Form\Type\Resource;
+namespace LAG\AdminBundle\Tests\Unit\Form\Type\Resource;
 
 use LAG\AdminBundle\Form\Type\Resource\DeleteType;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

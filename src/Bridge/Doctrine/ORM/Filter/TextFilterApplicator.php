@@ -6,10 +6,9 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Filter;
 
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Metadata\Attribute\TextFilter;
 use LAG\AdminBundle\Metadata\FilterInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\TextFilter;
-
 use function Symfony\Component\String\u;
 
 final readonly class TextFilterApplicator extends AbstractApplicator
@@ -37,6 +36,7 @@ final readonly class TextFilterApplicator extends AbstractApplicator
         //        }
     }
 
+    /** @param string[] $properties */
     private function applyFilter(
         QueryBuilder $queryBuilder,
         FilterInterface $filter,

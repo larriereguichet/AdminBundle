@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\View\Helper;
+namespace LAG\AdminBundle\Tests\Unit\View\Helper;
 
-use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Attribute\Show;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
-use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
+use LAG\AdminBundle\Security\Voter\OperationVoter;
 use LAG\AdminBundle\View\Helper\SecurityHelper;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -34,7 +34,7 @@ final class SecurityHelperTest extends TestCase
         $this->security
             ->expects($this->once())
             ->method('isGranted')
-            ->with(OperationPermissionVoter::RESOURCE_ACCESS, $operation)
+            ->with(OperationVoter::OPERATION_ACCESS, $operation)
         ;
 
         $this->helper->isOperationAllowed('my_resource.my_operation');

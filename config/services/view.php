@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Bridge\QuillJs\Render\QuillJsRendererInterface;
+use LAG\AdminBundle\Grid\ViewFactory\AttributeViewFactory;
+use LAG\AdminBundle\Grid\ViewFactory\AttributeViewFactoryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use LAG\AdminBundle\Twig\Extension\AttributeExtension;
 use LAG\AdminBundle\Twig\Extension\PaginationExtension;
@@ -16,7 +18,7 @@ use LAG\AdminBundle\View\Component\Cell\FormComponent;
 use LAG\AdminBundle\View\Component\Cell\ImageComponent;
 use LAG\AdminBundle\View\Component\Cell\Link;
 use LAG\AdminBundle\View\Component\Cell\MapComponent;
-use LAG\AdminBundle\View\Component\Cell\TextComponent;
+use LAG\AdminBundle\View\Component\Text;
 use LAG\AdminBundle\View\Helper\AttributeHelper;
 use LAG\AdminBundle\View\Helper\PaginationHelper;
 use LAG\AdminBundle\View\Helper\RenderHelper;
@@ -30,6 +32,11 @@ use LAG\AdminBundle\View\Render\LinkRendererInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
+
+    // View factories
+    $services->set(AttributeViewFactoryInterface::class, AttributeViewFactory::class)
+        ->args(['$environment' => service('twig')])
+    ;
 
     // Extensions
     $services->set(RenderExtension::class)->tag('twig.extension');
@@ -64,7 +71,7 @@ return static function (ContainerConfigurator $container): void {
         ->args(['$environment' => service('twig')])
         ->tag('twig.runtime')
     ;
-    $services->set(TextComponent::class)->autoconfigure();
+    $services->set(Text::class)->autoconfigure();
     $services->set(Link::class)->autoconfigure();
     $services->set(MapComponent::class)->autoconfigure();
     $services->set(ImageComponent::class)->autoconfigure();

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Bridge\KnpMenu\Extension;
+namespace LAG\AdminBundle\Tests\Unit\Bridge\KnpMenu\Extension;
 
 use LAG\AdminBundle\Bridge\KnpMenu\Extension\ResourceExtension;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Show;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use PHPUnit\Framework\Attributes\Test;

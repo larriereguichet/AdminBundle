@@ -39,15 +39,11 @@ final readonly class ProcessResource
             $data = $form->getData();
             $this->processor->process($data, $operation, [], $context);
 
-            return $this->responseHandler->createRedirectResponse($operation, $data, ['form' => $form]);
+            return $this->responseHandler->createRedirectResponse($request, $operation, $data, ['form' => $form]);
         }
         $event = new ResourceControllerEvent($operation, $request, $data);
         $this->eventDispatcher->dispatchEvents($event, ResourceControllerEvents::RESOURCE_CONTROLLER);
 
-        if ($event->getResponse() !== null) {
-            return $event->getResponse();
-        }
-
-        return $this->responseHandler->createResponse($operation, $data, ['form' => $form]);
+        return $event->getResponse() ?? $this->responseHandler->createResponse($request, $operation, $data, ['form' => $form]);
     }
 }

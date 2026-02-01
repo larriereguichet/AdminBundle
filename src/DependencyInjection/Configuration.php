@@ -28,7 +28,6 @@ final class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('date_format')->defaultValue('medium')->end()
                 ->scalarNode('time_format')->defaultValue('short')->end()
-                ->scalarNode('media_directory')->defaultValue('media/images')->end()
                 ->booleanNode('date_localization')->defaultValue(true)->end()
                 ->booleanNode('filter_events')->defaultValue(true)->end()
                 ->booleanNode('cache')->defaultValue(true)->end()
@@ -76,7 +75,9 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('uploads')
                     ->addDefaultsIfNotSet()
                     ->children()
-                    ->scalarNode('storage')->defaultValue('lag_admin_image.storage')->end()
+                        ->scalarNode('storage')->defaultValue('lag_admin.media_storage')->end()
+                        ->scalarNode('media_directory')->defaultValue('%kernel.project_dir%/public/admin/media/uploads')->end()
+                    ->end()
                 ->end()
             ->end()
         ;

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\EventDispatcher;
+namespace LAG\AdminBundle\Tests\Unit\EventDispatcher;
 
 use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\Event\ResourceEvent;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcher;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

@@ -6,12 +6,11 @@ namespace LAG\AdminBundle\Menu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\Attribute\Index;
 use LAG\AdminBundle\Resource\Factory\DefinitionFactoryInterface;
 use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
-
 use function Symfony\Component\String\u;
 
 final readonly class ResourceMenuBuilder

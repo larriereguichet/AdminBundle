@@ -21,4 +21,8 @@ interface ImageInterface
     public function getPath(): ?string;
 
     public function setPath(?string $path): void;
+
+    public function getOwner(): mixed;
+
+    public function setOwner(?object $owner): void;
 }

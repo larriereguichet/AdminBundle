@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Initializer;
 
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Application;
+use LAG\AdminBundle\Metadata\Attribute\Application;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
-
 use function Symfony\Component\String\u;
 
 final readonly class OperationRoutingInitializer implements OperationRoutingInitializerInterface
@@ -23,10 +21,6 @@ final readonly class OperationRoutingInitializer implements OperationRoutingInit
     public function initializeOperationRouting(Application $application, OperationInterface $operation): OperationInterface
     {
         $resource = $operation->getResource();
-
-        if ($resource === null) {
-            throw new Exception('The resource should be initialized');
-        }
 
         if ($operation->getRoute() === null) {
             $route = $this->routeNameGenerator->generateRouteName($resource, $operation);

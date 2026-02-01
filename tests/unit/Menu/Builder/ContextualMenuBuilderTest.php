@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Menu\Builder;
+namespace LAG\AdminBundle\Tests\Unit\Menu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\MenuItem;
 use LAG\AdminBundle\Menu\Builder\ContextualMenuBuilder;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Link;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Show;
 use LAG\AdminBundle\Resource\Context\OperationContextInterface;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 

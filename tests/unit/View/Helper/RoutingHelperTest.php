@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\View\Helper;
+namespace LAG\AdminBundle\Tests\Unit\View\Helper;
 
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
-use LAG\AdminBundle\Tests\Application\Entity\Book;
+use LAG\AdminBundle\Tests\Unit\Fixtures\Book;
 use LAG\AdminBundle\View\Helper\RoutingHelper;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;

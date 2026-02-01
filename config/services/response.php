@@ -21,7 +21,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(ResponseHandlerInterface::class, ResponseHandler::class)
         ->args([
             '$responseHandler' => service(ContentResponseHandlerInterface::class),
-            '$redirectHandler' => service(RedirectResponseHandlerInterface::class),
+            '$redirectResponseHandler' => service(RedirectResponseHandlerInterface::class),
         ])
         ->alias('lag_admin.response_handler', ResponseHandlerInterface::class)
     ;
@@ -35,7 +35,6 @@ return static function (ContainerConfigurator $container): void {
     $services->set(JsonResponseHandler::class)
         ->decorate(id: ContentResponseHandlerInterface::class, priority: 250)
         ->args([
-            '$requestStack' => service('request_stack'),
             '$responseHandler' => service('.inner'),
             '$serializer' => service('serializer'),
         ])

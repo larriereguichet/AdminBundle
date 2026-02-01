@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Component\Cell;
 
-use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Metadata\Map;
+use LAG\AdminBundle\Metadata\Attribute\Map;
+use LAG\AdminBundle\Grid\View\Cell;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(
@@ -15,15 +15,16 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 final class MapComponent
 {
     public mixed $data;
+    /** @var array<int|string, mixed> $map */
     public array $map = [];
     public ?string $mappedValue = null;
     public bool $translatable = false;
     public ?string $translationDomain = null;
 
-    public function mount(mixed $data, CellView $cell): void
+    public function mount(mixed $data, Cell $cell): void
     {
         /** @var Map $property */
-        $property = $cell->options;
+        $property = $cell->property;
         $this->data = $data;
         $this->map = $property->getMap();
 

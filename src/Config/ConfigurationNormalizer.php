@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Config;
 
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Attribute\Action;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\FilterInterface;
-use LAG\AdminBundle\Metadata\Grid;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use LAG\AdminBundle\Metadata\Resource;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;

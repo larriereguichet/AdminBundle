@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Initializer;
 
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Attribute\Action;
 use LAG\AdminBundle\Metadata\OperationInterface;
-
 use function Symfony\Component\String\u;
 
 final readonly class ActionInitializer implements ActionInitializerInterface
@@ -15,10 +13,6 @@ final readonly class ActionInitializer implements ActionInitializerInterface
     public function initializeAction(OperationInterface $operation, Action $action): Action
     {
         $resource = $operation->getResource();
-
-        if ($resource === null) {
-            throw new Exception('The resource should be initialized');
-        }
 
         if ($action->getName() === null) {
             /** @var Action $action */

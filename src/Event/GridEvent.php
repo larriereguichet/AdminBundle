@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Event;
 
-use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Resource;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class GridEvent extends Event implements ResourceEventInterface

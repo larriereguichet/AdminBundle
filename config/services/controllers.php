@@ -20,7 +20,7 @@ return static function (ContainerConfigurator $container): void {
             '$contextBuilder' => service('lag_admin.request.context_builder'),
             '$provider' => service(ProviderInterface::class),
             '$processor' => service(ProcessorInterface::class),
-            '$gridBuilder' => service('lag_admin.grid.view_builder'),
+            '$gridViewBuilder' => service('lag_admin.grid.view_builder'),
             '$formFactory' => service('form.factory'),
             '$eventDispatcher' => service('lag_admin.event_dispatcher'),
             '$responseHandler' => service('lag_admin.response_handler'),

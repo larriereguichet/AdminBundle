@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Controller\Resource;
+namespace LAG\AdminBundle\Tests\Unit\Controller\Resource;
 
 use LAG\AdminBundle\Controller\Resource\ShowResource;
 use LAG\AdminBundle\Event\ResourceControllerEvent;
 use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Attribute\Show;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
-use LAG\AdminBundle\Tests\Entity\FakeEntity;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\Entity\Book;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +32,7 @@ final class ShowResourceTest extends TestCase
     {
         $operation = new Show();
         $request = new Request();
-        $data = new FakeEntity();
+        $data = new Book();
         $data->id = 666;
 
         $this->contextBuilder
@@ -67,7 +67,7 @@ final class ShowResourceTest extends TestCase
     {
         $operation = new Show();
         $request = new Request();
-        $data = new FakeEntity();
+        $data = new Book();
         $data->id = 666;
 
         $this->provider

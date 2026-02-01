@@ -1,0 +1,40 @@
+<?php
+
+declare(strict_types=1);
+
+namespace LAG\AdminBundle\Tests\Unit\Grid\ViewFactory;
+
+use LAG\AdminBundle\Grid\ViewFactory\AttributeViewFactory;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Twig\Environment;
+use Twig\Extension\RuntimeExtensionInterface;
+use Twig\Runtime\EscaperRuntime;
+
+final class AttributeViewFactoryTest extends TestCase
+{
+    private AttributeViewFactory $attributeViewFactory;
+    private MockObject $environment;
+
+    #[Test]
+    public function itCreatesAttributes(): void
+    {
+        $this->environment
+            ->expects($this->once())
+            ->method('getRuntime')
+            ->with(EscaperRuntime::class)
+            ->willReturn(new EscaperRuntime())
+        ;
+
+        $attributes = $this->attributeViewFactory->buildComponentAttributes(['some_attribute' => 'some_value']);
+
+        self::assertEquals(['some_attribute' => 'some_value'], $attributes->all());
+    }
+
+    protected function setUp(): void
+    {
+        $this->environment = $this->createMock(Environment::class);
+        $this->attributeViewFactory = new AttributeViewFactory($this->environment);
+    }
+}

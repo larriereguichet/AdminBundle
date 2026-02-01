@@ -9,15 +9,14 @@ use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use LAG\AdminBundle\Config\ConfigurationMapper;
 use LAG\AdminBundle\DependencyInjection\Locator\ClassLocator;
 use LAG\AdminBundle\Exception\Resource\EmptyResourceNameException;
-use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
-use LAG\AdminBundle\Grid\Provider\GridProviderInterface;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\DataTransformer\DataTransformerInterface;
+use LAG\AdminBundle\Metadata\Provider\GridProviderInterface;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Resource\Factory\DefinitionFactoryInterface;
 use LAG\AdminBundle\Resource\Locator\PropertyLocatorInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
-use League\FlysystemBundle\FlysystemBundle;
 use Liip\ImagineBundle\LiipImagineBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -25,7 +24,6 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-
 use function Symfony\Component\String\u;
 
 final class LAGAdminExtension extends Extension implements PrependExtensionInterface
@@ -49,7 +47,8 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
             '$propertyLocator' => new Reference(PropertyLocatorInterface::class),
         ]);
 
-        $container->setParameter('lag_admin.media_directory', $config['media_directory']);
+        $container->setParameter('lag_admin.media_directory', $config['uploads']['media_directory']);
+        $container->setParameter('lag_admin.media_storage', $config['uploads']['storage']);
         $container->setParameter('lag_admin.application_parameter', $config['request']['application_parameter']);
         $container->setParameter('lag_admin.resource_parameter', $config['request']['resource_parameter']);
         $container->setParameter('lag_admin.operation_parameter', $config['request']['operation_parameter']);
@@ -91,19 +90,15 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
             $loader->load('services_dev.php');
         }
 
-        if (\in_array(FlysystemBundle::class, $bundles)) {
-            $loader->load('services/bridges/flysystem.php');
-        }
-
-        if (\in_array(KnpMenuBundle::class, $bundles)) {
+        if (\in_array(KnpMenuBundle::class, $bundles, true)) {
             $loader->load('services/bridges/knp_menu.php');
         }
 
-        if (\in_array(LiipImagineBundle::class, $bundles)) {
+        if (\in_array(LiipImagineBundle::class, $bundles, true)) {
             $loader->load('services/bridges/liip_imagine.php');
         }
 
-        if (\in_array(DoctrineBundle::class, $bundles)) {
+        if (\in_array(DoctrineBundle::class, $bundles, true)) {
             $loader->load('services/bridges/doctrine.php');
         }
         // TODO use editor js
@@ -213,9 +208,9 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
     {
         $container->prependExtensionConfig('flysystem', [
             'storages' => [
-                'lag_admin_image.storage' => [
+                '%lag_admin.media_storage%' => [
                     'adapter' => 'local',
-                    'options' => ['directory' => '%kernel.project_dir%/public/%lag_admin.media_directory%'],
+                    'options' => ['directory' => '%lag_admin.media_directory%'],
                     'public_url_generator' => 'lag_admin.filesystem.public_url_generator',
                 ],
             ],
@@ -228,17 +223,13 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
             'twig' => ['mode' => 'lazy'],
             'filter_sets' => [
                 'lag_admin_thumbnail' => [
-                    'filters' => [
-                        'thumbnail' => ['size' => [100, 100]],
-                    ],
+                    'filters' => ['thumbnail' => ['size' => [100, 100]]],
                 ],
                 'lag_admin_full' => [],
             ],
             'loaders' => [
                 'lag_admin' => [
-                    'flysystem' => [
-                        'filesystem_service' => 'lag_admin_image.storage',
-                    ],
+                    'flysystem' => ['filesystem_service' => '%lag_admin.media_storage%'],
                 ],
             ],
             'data_loader' => 'lag_admin',

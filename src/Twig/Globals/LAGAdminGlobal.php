@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Globals;
 
-use LAG\AdminBundle\Metadata\Application;
+use LAG\AdminBundle\Metadata\Attribute\Application;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Resource\Context\ApplicationContextInterface;
 use LAG\AdminBundle\Resource\Context\OperationContextInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;

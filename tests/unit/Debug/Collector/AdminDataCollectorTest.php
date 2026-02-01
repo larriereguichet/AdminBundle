@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Debug\Collector;
+namespace LAG\AdminBundle\Tests\Unit\Debug\Collector;
 
 use LAG\AdminBundle\Debug\DataCollector\AdminDataCollector;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Show;
 use LAG\AdminBundle\Resource\Context\OperationContextInterface;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;

@@ -7,6 +7,7 @@ namespace LAG\AdminBundle\Resource\Locator;
 final readonly class CompositePropertyLocator implements PropertyLocatorInterface
 {
     public function __construct(
+        /** @var iterable<PropertyLocatorInterface> $locators */
         private iterable $locators,
     ) {
     }

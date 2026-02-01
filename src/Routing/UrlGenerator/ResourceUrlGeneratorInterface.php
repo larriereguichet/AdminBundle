@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
+use LAG\AdminBundle\Metadata\Attribute\Url;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Url;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 interface ResourceUrlGeneratorInterface

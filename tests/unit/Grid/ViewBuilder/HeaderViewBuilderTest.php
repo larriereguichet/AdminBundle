@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Grid\ViewBuilder;
+namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Grid\ViewBuilder\HeaderViewBuilder;
-use LAG\AdminBundle\Metadata\Grid;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Text;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Text;
+use LAG\AdminBundle\Grid\ViewFactory\HeaderViewBuilder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Helper;
 
-use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\Metadata\Url;
+use LAG\AdminBundle\Metadata\Attribute\Link;
+use LAG\AdminBundle\Metadata\Attribute\Url;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Extension\RuntimeExtensionInterface;

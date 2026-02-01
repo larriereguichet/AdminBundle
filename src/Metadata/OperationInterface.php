@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Security\PermissibleInterface;
+use LAG\AdminBundle\Metadata\Attribute\Link;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Security\RolesOwnerInterface;
 use LAG\AdminBundle\Workflow\WorkflowSubjectInterface;
 use LAG\AdminBundle\Workflow\WorkflowTransitionSubjectInterface;
 use Symfony\Component\Serializer\Attribute\Ignore;
 
-interface OperationInterface extends PermissibleInterface, WorkflowSubjectInterface, WorkflowTransitionSubjectInterface
+interface OperationInterface extends RolesOwnerInterface, WorkflowSubjectInterface, WorkflowTransitionSubjectInterface
 {
     public function getName(): string;
 
@@ -101,7 +103,7 @@ interface OperationInterface extends PermissibleInterface, WorkflowSubjectInterf
     public function withIdentifiers(array $identifiers): static;
 
     #[Ignore]
-    public function getResource(): ?Resource;
+    public function getResource(): Resource;
 
     public function setResource(Resource $resource): static;
 
@@ -154,9 +156,9 @@ interface OperationInterface extends PermissibleInterface, WorkflowSubjectInterf
 
     public function setWorkflowTransition(?string $workflowTransition): static;
 
-    public function isPartial(): bool;
+    public function canBeEmbedded(): bool;
 
-    public function withPartial(bool $partial): static;
+    public function withEmbedded(bool $embedded): static;
 
     public function getSuccessMessage(): ?string;
 

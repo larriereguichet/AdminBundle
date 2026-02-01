@@ -1,0 +1,114 @@
+{% block title %}
+    {% if grid.title %}
+        <h3 {{ grid.title.attributes.defaults({class: 'my-2 mb-5'}) }}>
+            {{ grid.title.title|trans(grid.translationDomain) }}
+        </h3>
+    {% endif %}
+{% endblock %}
+
+<table {{ attributes }}>
+    {% block header %}
+        <thead>
+        <tr {{ grid.headers.attributes) }}>
+            {% for header in grid.headers %}
+                <th {{ headers.attributes }}>
+                    <twig:lag_admin:grid_header header="{{ header }}"></twig:lag_admin:grid_header>
+                </th>
+            {% endfor %}
+        </tr>
+        </thead>
+    {% endblock %}
+
+    {% block rows %}
+        <tbody>
+        {% for row in grid.rows %}
+            <tr {{ row.attributes }}>
+                {% for cell in row.cells %}
+                    <td {{ cell.attributes }}>
+                        <twig:lag_admin:cell cell="{{ cell }}" data="{{ cell.data }}"></twig:lag_admin:cell>
+                    </td>
+                {% endfor %}
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="{{ grid.headers|length }}">
+                    {% if grid.emptyMessage %}
+                        {{ grid.emptyMessage|trans({}, grid.translationDomain) }}
+                    {% else %}
+                        {{ 'lag_admin.ui.no_record'|trans({}, 'admin') }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    {% endblock %}
+</table>
+
+
+
+
+{% block title %}
+    {% if grid.title %}
+        <h3 {{ lag_attributes(grid.titleAttributes).defaults({class: 'my-2 mb-5'}) }}>
+            {{ title|trans(translationDomain) }}
+        </h3>
+    {% endif %}
+{% endblock %}
+
+<table {{ attributes.defaults({'class': 'admin-table table table-responsive align-middle'}) }}>
+    {% block table_header %}
+    {% if grid.headers|length > 0 %}
+        <thead>
+        <tr {{ lag_attributes(grid.headerRowAttributes) }}>
+            {% for header in grid.headers %}
+                <th>
+                    {% include '@LAGAdmin/grids/table/header.html.twig' with {header} %}
+                </th>
+            {% endfor %}
+        </tr>
+        </thead>
+    {% endif %}
+    {% endblock %}
+
+    <tbody>
+    {% block table_body %}
+        {% for row in grid.rows %}
+            <tr {{ lag_attributes(grid.rowAttributes) }}>
+                {% for cell in row.cells %}
+                    <td>
+                        {{ component('lag_admin:grid:cell', {
+                            cell: cell,
+                            data: cell.data,
+                            ...cell.attributes,
+                        }) }}
+                    </td>
+                {% endfor %}
+
+                {% if row.actions|length > 0 %}
+                    <td class="text-end">
+                        <div class="btn-group" role="group" aria-label="Actions">
+                            {% for action in row.actions %}
+                                {{ component('lag_admin:grid:cell', {
+                                    cell: action,
+                                    data: action.data,
+                                    ...action.attributes,
+                                }) }}
+                            {% endfor %}
+                        </div>
+                    </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="{{ grid.headers|length }}">
+                    {% if grid.emptyMessage %}
+                        {{ grid.emptyMessage|trans({}, grid.translationDomain) }}
+                    {% else %}
+                        {{ 'lag_admin.ui.no_record'|trans({}, 'admin') }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    {% endblock %}
+    </tbody>
+</table>

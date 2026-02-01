@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\Provider;
 
-use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 
 /**
@@ -12,7 +13,7 @@ use LAG\AdminBundle\Metadata\OperationInterface;
  */
 interface GridProviderInterface
 {
-    public function supports(OperationInterface $operation): bool;
+    public function supports(string $gridName): bool;
 
-    public function getGrid(OperationInterface $operation): Grid;
+    public function provide(string $gridName): GridInterface;
 }

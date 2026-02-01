@@ -9,25 +9,25 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 
 #[ORM\Entity]
 #[ORM\Table]
-#[\LAG\AdminBundle\Metadata\Resource(
+#[\LAG\AdminBundle\Metadata\Attribute\Resource(
     operations: [
-        new \LAG\AdminBundle\Metadata\Index(grid: 'authors'),
-        new \LAG\AdminBundle\Metadata\Create(),
-        new \LAG\AdminBundle\Metadata\Update(),
-        new \LAG\AdminBundle\Metadata\Delete(),
-        new \LAG\AdminBundle\Metadata\Show(),
+        new \LAG\AdminBundle\Metadata\Attribute\Index(grid: 'authors'),
+        new \LAG\AdminBundle\Metadata\Attribute\Create(),
+        new \LAG\AdminBundle\Metadata\Attribute\Update(),
+        new \LAG\AdminBundle\Metadata\Attribute\Delete(),
+        new \LAG\AdminBundle\Metadata\Attribute\Show(),
     ]),
 ]
-#[\LAG\AdminBundle\Metadata\Grid(name: 'authors')]
+#[\LAG\AdminBundle\Metadata\Attribute\Grid(name: 'authors')]
 class Author
 {
     #[ORM\Id]
     #[ORM\Column]
     #[GeneratedValue(strategy: 'AUTO')]
-    #[\LAG\AdminBundle\Metadata\Text(label: false)]
+    #[\LAG\AdminBundle\Metadata\Attribute\Text(label: false)]
     public ?int $id = null;
 
     #[ORM\Column]
-    #[\LAG\AdminBundle\Metadata\Text]
+    #[\LAG\AdminBundle\Metadata\Attribute\Text]
     public ?string $name = null;
 }

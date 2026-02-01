@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Helper;
 
-use LAG\AdminBundle\Metadata\Action;
-use LAG\AdminBundle\Metadata\Link;
+use LAG\AdminBundle\Metadata\Attribute\Action;
+use LAG\AdminBundle\Metadata\Attribute\Link;
 use LAG\AdminBundle\View\Render\ActionRendererInterface;
 use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use Twig\Extension\RuntimeExtensionInterface;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Grid\Registry;
+namespace LAG\AdminBundle\Metadata\Registry;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
+use LAG\AdminBundle\Metadata\DataTransformer\DataTransformerInterface;
 
 final class DataTransformerRegistry implements DataTransformerRegistryInterface
 {

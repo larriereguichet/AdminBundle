@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Response\Handler;
+namespace LAG\AdminBundle\Tests\Unit\Response\Handler;
 
-use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Attribute\Create;
 use LAG\AdminBundle\Response\Handler\RedirectResponseHandler;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use PHPUnit\Framework\Attributes\Test;

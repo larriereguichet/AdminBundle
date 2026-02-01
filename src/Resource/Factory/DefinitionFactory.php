@@ -8,13 +8,18 @@ use LAG\AdminBundle\Config\ConfigurationMapper;
 use LAG\AdminBundle\Exception\MissingGridException;
 use LAG\AdminBundle\Exception\Resource\MissingApplicationException;
 use LAG\AdminBundle\Exception\Resource\MissingResourceException;
-use LAG\AdminBundle\Metadata\Application;
-use LAG\AdminBundle\Metadata\Grid;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Application;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Resource\Locator\PropertyLocatorInterface;
 
 final readonly class DefinitionFactory implements DefinitionFactoryInterface
 {
+    /**
+     * @param array<string, array<string, mixed>> $applications
+     * @param array<string, array<string, mixed>> $resources
+     * @param array<string, array<string, mixed>> $grids
+     */
     public function __construct(
         private array $applications,
         private array $resources,
@@ -46,15 +51,6 @@ final readonly class DefinitionFactory implements DefinitionFactoryInterface
         }
 
         return $definition;
-    }
-
-    public function createGridDefinition(string $gridName): Grid
-    {
-        if (!\array_key_exists($gridName, $this->grids)) {
-            throw new MissingGridException($gridName);
-        }
-
-        return $this->configurationMapper->toGrid($this->grids[$gridName]);
     }
 
     public function getResourceNames(): array

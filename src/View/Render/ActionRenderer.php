@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Render;
 
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Attribute\Action;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\ComponentAttributes;

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Metadata\Attribute\Url;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Url;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;

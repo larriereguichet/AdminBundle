@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Initializer;
 
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Resource\Factory\ApplicationFactoryInterface;
 use LAG\AdminBundle\Resource\PropertyGuesser\ResourcePropertyGuesserInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
-
 use function Symfony\Component\String\u;
 
 final readonly class ResourceInitializer implements ResourceInitializerInterface

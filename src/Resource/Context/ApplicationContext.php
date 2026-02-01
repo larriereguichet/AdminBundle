@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Resource\Context;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Application;
+use LAG\AdminBundle\Metadata\Attribute\Application;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Factory\ApplicationFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;

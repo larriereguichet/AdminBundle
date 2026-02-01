@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Form\Guesser;
+namespace LAG\AdminBundle\Tests\Unit\Form\Guesser;
 
 use LAG\AdminBundle\Form\Guesser\FormGuesser;
 use LAG\AdminBundle\Form\Type\Text\TextareaType;
-use LAG\AdminBundle\Metadata\Boolean;
-use LAG\AdminBundle\Metadata\Date;
-use LAG\AdminBundle\Metadata\Map;
+use LAG\AdminBundle\Metadata\Attribute\Boolean;
+use LAG\AdminBundle\Metadata\Attribute\Date;
+use LAG\AdminBundle\Metadata\Attribute\Map;
+use LAG\AdminBundle\Metadata\Attribute\RichText;
+use LAG\AdminBundle\Metadata\Attribute\Text;
+use LAG\AdminBundle\Metadata\Attribute\Update;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use LAG\AdminBundle\Metadata\RichText;
-use LAG\AdminBundle\Metadata\Text;
-use LAG\AdminBundle\Metadata\Update;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

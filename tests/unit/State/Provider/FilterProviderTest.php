@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\State\Provider;
+namespace LAG\AdminBundle\Tests\Unit\State\Provider;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\TextFilter;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\TextFilter;
 use LAG\AdminBundle\State\Provider\FilterProvider;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use PHPUnit\Framework\Attributes\Test;

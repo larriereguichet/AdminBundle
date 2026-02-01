@@ -4,23 +4,19 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Factory;
 
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use Symfony\Contracts\Cache\CacheInterface;
 
-final class CacheResourceFactory implements ResourceFactoryInterface
+final readonly class CacheResourceFactory implements ResourceFactoryInterface
 {
-    private array $cache = [];
-
     public function __construct(
-        private readonly ResourceFactoryInterface $resourceFactory,
+        private ResourceFactoryInterface $resourceFactory,
+        private CacheInterface $cache,
     ) {
     }
 
     public function create(string $resourceName): Resource
     {
-        if (empty($this->cache[$resourceName])) {
-            $this->cache[$resourceName] = $this->resourceFactory->create($resourceName);
-        }
-
-        return $this->cache[$resourceName];
+        return $this->cache->get($resourceName, fn () => $this->resourceFactory->create($resourceName));
     }
 }

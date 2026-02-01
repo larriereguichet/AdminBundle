@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Initializer;
 
-use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Application;
+use LAG\AdminBundle\Metadata\Attribute\Application;
+use LAG\AdminBundle\Metadata\Attribute\Create;
+use LAG\AdminBundle\Metadata\Attribute\Link;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Link;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Resource;
 use Symfony\Component\String\Inflector\EnglishInflector;
-
 use function Symfony\Component\String\u;
 
 final readonly class OperationDefaultsInitializer implements OperationDefaultsInitializerInterface
@@ -20,10 +18,6 @@ final readonly class OperationDefaultsInitializer implements OperationDefaultsIn
     public function initializeOperationDefaults(Application $application, OperationInterface $operation): OperationInterface
     {
         $resource = $operation->getResource();
-
-        if ($resource === null) {
-            throw new Exception('The resource should be initialized');
-        }
 
         if ($operation->getFullName() === null) {
             $operation = $operation->withName(
@@ -55,7 +49,7 @@ final readonly class OperationDefaultsInitializer implements OperationDefaultsIn
             if ($application->getBaseTemplate()) {
                 $baseTemplate = $application->getBaseTemplate();
             }
-            $operation = $operation->withBaseTemplate($operation->isPartial() ? '@LAGAdmin/partial.html.twig' : $baseTemplate);
+            $operation = $operation->withBaseTemplate($operation->canBeEmbedded() ? '@LAGAdmin/partial.html.twig' : $baseTemplate);
         }
 
         if ($operation->getContextualActions() === null) {

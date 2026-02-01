@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\PropertyGuesser;
 
-use LAG\AdminBundle\Metadata\Date;
+use LAG\AdminBundle\Metadata\Attribute\Date;
+use LAG\AdminBundle\Metadata\Attribute\Text;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use LAG\AdminBundle\Metadata\Text;
 
 final readonly class PropertyGuesser implements PropertyGuesserInterface
 {

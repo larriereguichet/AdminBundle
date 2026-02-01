@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\Factory;
 
+use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\Grid;
 
+// TODO ?
 final class CacheGridFactory implements GridFactoryInterface
 {
     private array $cache = [];
@@ -16,12 +17,12 @@ final class CacheGridFactory implements GridFactoryInterface
     ) {
     }
 
-    public function createGrid(CollectionOperationInterface $operation): Grid
+    public function create(CollectionOperationInterface $operation): Grid
     {
         $cacheKey = $operation->getFullName().'.'.$operation->getGrid();
 
         if (empty($this->cache[$cacheKey])) {
-            $this->cache[$cacheKey] = $this->gridFactory->createGrid($operation);
+            $this->cache[$cacheKey] = $this->gridFactory->create($operation);
         }
 
         return $this->cache[$cacheKey];

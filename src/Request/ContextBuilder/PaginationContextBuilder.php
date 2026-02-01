@@ -5,19 +5,23 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Request\ContextBuilder;
 
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 final readonly class PaginationContextBuilder implements ContextBuilderInterface
 {
-    public function supports(OperationInterface $operation, Request $request): bool
-    {
-        return $operation instanceof CollectionOperationInterface && $request->query->has('page');
+    public function __construct(
+        private ContextBuilderInterface $contextBuilder,
+    ) {
     }
 
     /** @param CollectionOperationInterface $operation */
-    public function buildContext(OperationInterface $operation, Request $request): array
+    public function buildContext(Request $request, OperationInterface $operation, ?GridInterface $grid = null): array
     {
-        return ['page' => $request->query->getInt($operation->getPageParameter(), 1)];
+        $context = $this->contextBuilder->buildContext($request, $operation, $grid);
+        $context['page'] = $request->query->getInt($operation->getPageParameter(), 1);
+
+        return $context;
     }
 }

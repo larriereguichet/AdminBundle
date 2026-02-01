@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Twig\Globals;
+namespace LAG\AdminBundle\Tests\Unit\Twig\Globals;
 
-use LAG\AdminBundle\Metadata\Application;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Application;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Resource\Context\ApplicationContextInterface;
 use LAG\AdminBundle\Resource\Context\OperationContextInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;

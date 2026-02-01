@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\Initializer;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Action;
+use LAG\AdminBundle\Metadata\Attribute\Action;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\Grid;
-use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Resource\Initializer\ActionInitializerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-
 use function Symfony\Component\String\u;
 
 final readonly class GridInitializer implements GridInitializerInterface

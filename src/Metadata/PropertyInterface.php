@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Metadata;
 
 use LAG\AdminBundle\Condition\ConditionalInterface;
-use LAG\AdminBundle\Security\PermissibleInterface;
+use LAG\AdminBundle\Security\RolesOwnerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -15,7 +15,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  *
  * The properties are linked to one or several Resource.
  */
-interface PropertyInterface extends PermissibleInterface, ConditionalInterface
+interface PropertyInterface extends RolesOwnerInterface, ConditionalInterface
 {
     /**
      * Return the property name. It should be unique for a resource.

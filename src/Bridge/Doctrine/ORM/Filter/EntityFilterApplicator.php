@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\Filter;
 
 use Doctrine\ORM\QueryBuilder;
-use LAG\AdminBundle\Metadata\EntityFilter;
+use LAG\AdminBundle\Metadata\Attribute\EntityFilter;
 use LAG\AdminBundle\Metadata\FilterInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 
