@@ -24,22 +24,6 @@ final readonly class SecurityCellBuilder implements CellBuilderInterface
     ) {
     }
 
-    public function buildHeader(
-        OperationInterface $operation,
-        GridInterface $grid,
-        PropertyInterface $property,
-        array $context = [],
-    ): Header {
-        if (!$this->permissionChecker->isGranted($property)) {
-            return new Header(
-                name: $property->getName(),
-                attributes: $this->attributeBuilder->buildAttributes($property->getHeaderAttributes()),
-            );
-        }
-
-        return $this->cellBuilder->buildHeader($operation, $grid, $property, $context);
-    }
-
     public function buildCell(
         OperationInterface $operation,
         GridInterface $grid,

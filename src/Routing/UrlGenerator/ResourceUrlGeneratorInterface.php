@@ -15,10 +15,10 @@ interface ResourceUrlGeneratorInterface
     public function generateFromUrl(Url $url, mixed $data = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string;
 
     /**
-     * Generate an url for a route name. Route parameters will be mapped to the property of the given data object.
+     * Generate a url for a route name. Route parameters will be mapped to the property of the given data object.
      *
      * @param string $routeName The route to generate url
-     * @param array<int, string> $routeParameters Optional parameters for url
+     * @param array<int|string, mixed> $routeParameters Optional parameters for url
      * @param mixed $data Data to provide the url parameters
      */
     public function generateFromRouteName(

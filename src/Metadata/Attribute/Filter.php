@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[\Attribute]
 class Filter implements FilterInterface
 {
+    /** @param array<string, mixed> $formOptions */
     public function __construct(
         #[Assert\NotBlank]
         private string $name,

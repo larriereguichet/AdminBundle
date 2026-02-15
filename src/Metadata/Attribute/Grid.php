@@ -11,6 +11,29 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class Grid implements GridInterface
 {
+    /**
+     * @param string|null $name
+     * @param string|null $title
+     * @param string|null $type
+     * @param string|null $template
+     * @param string|null $translationDomain
+     * @param array<string> $properties
+     * @param array<string, mixed> $attributes
+     * @param array<string, mixed> $rowAttributes
+     * @param array<string, mixed> $headerRowAttributes
+     * @param array<string, mixed> $headerAttributes
+     * @param array<string, mixed> $titleAttributes
+     * @param array<string, mixed> $options
+     * @param string|null $form
+     * @param array<string, mixed> $formOptions
+     * @param array<string, Action>|null $actions
+     * @param array<string, Action>|null $collectionActions
+     * @param string|null $emptyMessage
+     * @param bool|null $useHeaders
+     * @param bool|null $sortable
+     * @param string $sortParameter
+     * @param string $orderParameter
+     */
     public function __construct(
         #[Assert\NotBlank(message: 'The grid name should not be empty')]
         private ?string $name = null,
@@ -41,13 +64,13 @@ class Grid implements GridInterface
 
         private array $formOptions = [],
 
-        /** @var array<int, Action>|null $actions */
+        /** @var array<int|string, Action>|null $actions */
         #[Assert\All(constraints: [new Assert\Type(type: Action::class)])]
         #[Assert\Valid]
         #[Assert\NotNull]
         private ?array $actions = null,
 
-        /** @var array<int, Action>|null $collectionActions */
+        /** @var array<int|string, Action>|null $collectionActions */
         #[Assert\All(constraints: [new Assert\Type(type: Action::class)])]
         #[Assert\Valid]
         #[Assert\NotNull]
@@ -139,6 +162,7 @@ class Grid implements GridInterface
         return $this->properties;
     }
 
+    /** @param array<string, mixed> $properties */
     public function withProperties(array $properties): self
     {
         $self = clone $this;
@@ -157,6 +181,7 @@ class Grid implements GridInterface
         return $this->attributes;
     }
 
+    /** @param array<string, mixed> $attributes */
     public function withAttributes(array $attributes): self
     {
         $self = clone $this;
@@ -170,6 +195,7 @@ class Grid implements GridInterface
         return $this->rowAttributes;
     }
 
+    /** @param array<string, mixed> $rowAttributes */
     public function withRowAttributes(array $rowAttributes): self
     {
         $self = clone $this;
@@ -183,6 +209,7 @@ class Grid implements GridInterface
         return $this->headerRowAttributes;
     }
 
+    /** @param array<string, mixed> $headerRowAttributes */
     public function withHeaderRowAttributes(array $headerRowAttributes): self
     {
         $self = clone $this;
@@ -196,6 +223,7 @@ class Grid implements GridInterface
         return $this->headerAttributes;
     }
 
+    /** @param array<string, mixed> $headerAttributes */
     public function withHeaderAttributes(array $headerAttributes): self
     {
         $self = clone $this;
@@ -209,6 +237,7 @@ class Grid implements GridInterface
         return $this->options;
     }
 
+    /** @param array<string, mixed> $options */
     public function withOptions(array $options): self
     {
         $self = clone $this;
@@ -235,6 +264,7 @@ class Grid implements GridInterface
         return $this->formOptions;
     }
 
+    /** @param array<string, mixed> $formOptions */
     public function withFormOptions(array $formOptions): self
     {
         $self = clone $this;
@@ -243,11 +273,13 @@ class Grid implements GridInterface
         return $self;
     }
 
+    /** @return array<int|string, Action>|null */
     public function getActions(): ?array
     {
         return $this->actions;
     }
 
+    /** @param array<string, Action> $actions */
     public function withActions(?array $actions): self
     {
         $self = clone $this;
@@ -256,11 +288,13 @@ class Grid implements GridInterface
         return $self;
     }
 
+    /** @return array<int|string, Action>|null */
     public function getCollectionActions(): ?array
     {
         return $this->collectionActions;
     }
 
+    /** @param array<string, Action> $collectionActions */
     public function withCollectionActions(?array $collectionActions): self
     {
         $self = clone $this;

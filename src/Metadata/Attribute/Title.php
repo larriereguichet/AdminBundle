@@ -9,6 +9,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Title extends Property
 {
+    /**
+     * @param array<string, mixed> $attributes
+     * @param array<string, mixed> $rowAttributes
+     * @param array<string, mixed> $headerAttributes
+     * @param array<string> $permissions
+     */
     public function __construct(
         ?string $name = null,
         string|bool|null $propertyPath = null,

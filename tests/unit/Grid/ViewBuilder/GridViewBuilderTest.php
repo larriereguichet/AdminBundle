@@ -7,8 +7,8 @@ namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 use LAG\AdminBundle\Grid\View\Row;
 use LAG\AdminBundle\Grid\ViewBuilder\ActionBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\AttributeBuilderInterface;
-use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilder;
-use LAG\AdminBundle\Grid\ViewBuilder\RowViewBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\GridBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\RowBuilderInterface;
 use LAG\AdminBundle\Metadata\Attribute\Action;
 use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\Attribute\Index;
@@ -22,7 +22,7 @@ use Twig\Runtime\EscaperRuntime;
 
 final class GridViewBuilderTest extends TestCase
 {
-    private GridViewBuilder $gridViewBuilder;
+    private GridBuilder $gridViewBuilder;
     private MockObject $rowBuilder;
     private MockObject $actionBuilder;
     private MockObject $attributeBuilder;
@@ -73,10 +73,10 @@ final class GridViewBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->rowBuilder = $this->createMock(RowViewBuilderInterface::class);
+        $this->rowBuilder = $this->createMock(RowBuilderInterface::class);
         $this->actionBuilder = $this->createMock(ActionBuilderInterface::class);
         $this->attributeBuilder = $this->createMock(AttributeBuilderInterface::class);
-        $this->gridViewBuilder = new GridViewBuilder(
+        $this->gridViewBuilder = new GridBuilder(
             $this->rowBuilder,
             $this->actionBuilder,
             $this->attributeBuilder,

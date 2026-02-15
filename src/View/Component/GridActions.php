@@ -13,6 +13,7 @@ final class GridActions
     /** @var iterable<int, Action> */
     public iterable $actions = [];
 
+    /** @param array<int|string, mixed> $data */
     #[PreMount]
     public function validate(array $data): void
     {

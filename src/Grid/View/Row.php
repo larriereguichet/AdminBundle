@@ -6,6 +6,9 @@ namespace LAG\AdminBundle\Grid\View;
 
 use Symfony\UX\TwigComponent\ComponentAttributes;
 
+/**
+ * @template-implements \IteratorAggregate<Cell>
+ */
 readonly class Row implements \IteratorAggregate
 {
     public function __construct(

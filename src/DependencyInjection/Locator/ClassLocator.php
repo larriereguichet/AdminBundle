@@ -8,7 +8,11 @@ use Symfony\Component\Finder\Finder;
 
 final readonly class ClassLocator
 {
-    public function locateClassesByPaths(array $paths): iterable
+    /**
+     * @param iterable<string> $paths
+     * @return iterable<class-string>
+     */
+    public function locateClassesByPaths(iterable $paths): iterable
     {
         foreach ($paths as $resourceDirectory) {
             $resources = $this->locateClasses($resourceDirectory);
@@ -19,6 +23,7 @@ final readonly class ClassLocator
         }
     }
 
+    /** @return iterable<class-string> */
     public function locateClasses(string $path): iterable
     {
         $finder = new Finder();

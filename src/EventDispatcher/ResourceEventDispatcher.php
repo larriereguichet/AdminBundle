@@ -26,7 +26,8 @@ final readonly class ResourceEventDispatcher implements ResourceEventDispatcherI
         }
     }
 
-    private function getEventNames(string $eventName, Resource $resource): iterable
+    /** @return array<string> */
+    private function getEventNames(string $eventName, Resource $resource): array
     {
         $template = u($eventName);
 

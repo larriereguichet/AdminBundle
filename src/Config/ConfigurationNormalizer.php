@@ -29,6 +29,7 @@ final class ConfigurationNormalizer implements NormalizerInterface, Denormalizer
     ) {
     }
 
+    /** @return array<string, mixed> */
     public function normalize(mixed $data, ?string $format = null, array $context = []): array
     {
         $normalizedData = $this->objectNormalizer->normalize($data, $format, $context);

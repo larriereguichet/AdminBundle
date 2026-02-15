@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Link extends Property implements Url
 {
+    /** @param array<string, mixed> $routeParameters */
     public function __construct(
         ?string $name = null,
 
@@ -88,6 +89,7 @@ class Link extends Property implements Url
         return $this->routeParameters;
     }
 
+    /** @param array<string, mixed> $routeParameters */
     public function withRouteParameters(array $routeParameters): self
     {
         $self = clone $this;

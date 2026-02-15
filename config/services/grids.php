@@ -8,12 +8,18 @@ use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
 use LAG\AdminBundle\Grid\Factory\CacheGridFactory;
 use LAG\AdminBundle\Grid\Factory\GridFactory;
 use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\DataCellBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\CellBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\CellBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\AttributeBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\AttributeBuilderInterface;
-use LAG\AdminBundle\Grid\ViewBuilder\RowViewBuilder;
-use LAG\AdminBundle\Grid\ViewBuilder\RowViewBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\CollectionCellBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\CompoundCellBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\ConditionCellBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\HeaderBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\HeaderBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\RowBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\RowBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\SecurityCellBuilder;
 use LAG\AdminBundle\Metadata\DataTransformer\CountDataTransformer;
 use LAG\AdminBundle\Metadata\DataTransformer\EnumDataTransformer;
@@ -21,12 +27,12 @@ use LAG\AdminBundle\Metadata\DataTransformer\FormDataTransformer;
 use LAG\AdminBundle\Metadata\DataTransformer\MapDataTransformer;
 use LAG\AdminBundle\Grid\Initializer\GridInitializer;
 use LAG\AdminBundle\Grid\Initializer\GridInitializerInterface;
-use LAG\AdminBundle\Metadata\Registry\DataTransformerRegistry;
-use LAG\AdminBundle\Metadata\Registry\DataTransformerRegistryInterface;
+use LAG\AdminBundle\Grid\Registry\DataTransformerRegistry;
+use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\ActionBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\ActionBuilderInterface;
-use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilder;
-use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\GridBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\GridBuilderInterface;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use LAG\AdminBundle\Resource\Initializer\ActionInitializerInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
@@ -53,24 +59,23 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     // View builders
-    $services->set(GridViewBuilderInterface::class, GridViewBuilder::class)
+    $services->set(GridBuilderInterface::class, GridBuilder::class)
         ->args([
             '$gridFactory' => service('lag_admin.grid.factory'),
-            '$rowBuilder' => service(RowViewBuilderInterface::class),
+            '$rowBuilder' => service(RowBuilderInterface::class),
             '$actionBuilder' => service(ActionBuilderInterface::class),
         ])
-        ->alias('lag_admin.grid.view_builder', GridViewBuilderInterface::class)
+        ->alias('lag_admin.grid.view_builder', GridBuilderInterface::class)
     ;
-    $services->set(RowViewBuilderInterface::class, RowViewBuilder::class)
+    $services->set(RowBuilderInterface::class, RowBuilder::class)
         ->arg('$cellBuilder', service(CellBuilderInterface::class))
         ->arg('$actionsBuilder', service(ActionBuilderInterface::class))
         ->arg('$attributeBuilder', service(AttributeBuilderInterface::class))
     ;
-    $services->set(HeaderViewBuilderInterface::class, HeaderViewBuilder::class);
-    $services->set(SecurityHeaderViewBuilder::class)
-        ->decorate(id: HeaderViewBuilderInterface::class, priority: 200)
-        ->arg('$headerBuilder', service('.inner'))
-        ->arg('$permissionChecker', service(PropertyPermissionCheckerInterface::class))
+    $services->set(HeaderBuilderInterface::class, HeaderBuilder::class)
+        ->args([
+            '$attributeBuilder' => service(AttributeBuilderInterface::class),
+        ])
     ;
     $services->set(CellBuilderInterface::class, CellBuilder::class);
     $services->set(SecurityCellBuilder::class)
@@ -105,7 +110,6 @@ return static function (ContainerConfigurator $container): void {
             '$translator' => service('translator'),
             '$attributeBuilder' => service(AttributeBuilderInterface::class),
         ])
-
     ;
     $services->set(AttributeBuilderInterface::class, AttributeBuilder::class)
         ->args(['$environment' => service('twig')])

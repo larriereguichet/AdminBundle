@@ -36,6 +36,6 @@ final readonly class GridValueResolver implements ValueResolverInterface
             return [];
         }
 
-        yield $this->gridMetadataFactory->create($operation);
+        yield $this->gridMetadataFactory->create($operation->getGrid(), $operation);
     }
 }

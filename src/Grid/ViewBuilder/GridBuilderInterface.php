@@ -8,7 +8,7 @@ use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Grid\View\Grid;
 
-interface GridViewBuilderInterface
+interface GridBuilderInterface
 {
     /**
      * Build a grid view for the given grid and operation.

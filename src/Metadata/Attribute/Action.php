@@ -5,9 +5,16 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Metadata\Attribute;
 
 use LAG\AdminBundle\Workflow\WorkflowSubjectInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
+#[Assert\Expression(
+    expression: 'this.getRoute() or this.getOperation() or this.getUrl()',
+    message: 'The link should contains a route or an url or an resource and operation name'
+)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Action extends Property implements Url, WorkflowSubjectInterface
 {
+    /** @param array<string, mixed> $routeParameters */
     public function __construct(
         ?string $name = null,
         string|bool|null $propertyPath = true,
@@ -63,11 +70,13 @@ class Action extends Property implements Url, WorkflowSubjectInterface
         return $self;
     }
 
+    /** @return array<string, mixed> */
     public function getRouteParameters(): array
     {
         return $this->routeParameters;
     }
 
+    /** @param array<string, mixed> $routeParameters */
     public function withRouteParameters(array $routeParameters): self
     {
         $self = clone $this;

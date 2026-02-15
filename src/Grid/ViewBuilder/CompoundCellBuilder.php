@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Grid\View\Builder;
+namespace LAG\AdminBundle\Grid\ViewBuilder;
 
+use LAG\AdminBundle\Grid\View\Header;
 use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\CompoundPropertyInterface;
+use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
 use LAG\AdminBundle\Grid\View\Cell;
@@ -23,7 +25,7 @@ final readonly class CompoundCellBuilder implements CellBuilderInterface
 
     public function buildCell(
         OperationInterface $operation,
-        Grid $grid,
+        GridInterface $grid,
         PropertyInterface $property,
         mixed $data,
         array $context = []

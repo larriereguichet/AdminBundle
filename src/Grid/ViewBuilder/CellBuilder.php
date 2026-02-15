@@ -35,24 +35,4 @@ final readonly class CellBuilder implements CellBuilderInterface
             context: $context,
         );
     }
-
-    /** @param array<string, mixed> $context */
-    public function buildHeader(
-        OperationInterface $operation,
-        GridInterface $grid,
-        PropertyInterface $property,
-        array $context = []
-    ): Header {
-        return new Header(
-            name: $property->getName(),
-            attributes: $this->attributeBuilder->buildAttributes($property->getHeaderAttributes()),
-            label: $property->getLabel(),
-            translationDomain: $grid->getTranslationDomain(),
-            sort: $context['sort'] ?? null,
-            sortParameter: '', // TODO ?
-            order: $context['order'] ?? null,
-            orderParameter: '',
-            sortable: $grid->isSortable() && $property->isSortable(),
-        );
-    }
 }

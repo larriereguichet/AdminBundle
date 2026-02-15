@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Grid\View\Header;
 use LAG\AdminBundle\Metadata\Attribute\Collection;
-use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
@@ -20,15 +18,6 @@ final readonly class CollectionCellBuilder implements CellBuilderInterface
         private CellBuilderInterface $cellBuilder,
         private DataMapperInterface $dataMapper,
     ) {
-    }
-
-    public function buildHeader(
-        OperationInterface $operation,
-        GridInterface $grid,
-        PropertyInterface $property,
-        array $context = []
-    ): Header {
-        return $this->cellBuilder->buildHeader($operation, $grid, $property, $context);
     }
 
     public function buildCell(
@@ -49,10 +38,7 @@ final readonly class CollectionCellBuilder implements CellBuilderInterface
         $index = 0;
 
         foreach ($data as $propertyData) {
-            $childProperty = $property
-                ->getEntryProperty()
-                ->withName($property->getName().'_'.$index)
-            ;
+            $childProperty = $property->getEntryProperty()?->withName($property->getName().'_'.$index);
             $propertyData = $this->dataMapper->getPropertyValue($propertyData, $childProperty);
 
             $context['children'][] = $this->cellBuilder->buildCell(

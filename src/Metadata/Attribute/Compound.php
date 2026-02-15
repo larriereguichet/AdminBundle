@@ -9,6 +9,7 @@ use LAG\AdminBundle\Metadata\CompoundPropertyInterface;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Compound extends Property implements CompoundPropertyInterface
 {
+    /** @param array<string, mixed> $properties */
     public function __construct(
         ?string $name = null,
         string|bool|null $propertyPath = null,
@@ -45,11 +46,13 @@ class Compound extends Property implements CompoundPropertyInterface
         );
     }
 
+    /** @return array<string, mixed> */
     public function getProperties(): array
     {
         return $this->properties;
     }
 
+    /** @param array<string, mixed> $properties */
     public function withProperties(array $properties): self
     {
         $self = clone $this;

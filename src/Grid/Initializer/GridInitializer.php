@@ -6,15 +6,16 @@ namespace LAG\AdminBundle\Grid\Initializer;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\Attribute\Action;
-use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Resource\Initializer\ActionInitializerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use function Symfony\Component\String\u;
 
 final readonly class GridInitializer implements GridInitializerInterface
 {
+    /** @param array<string> $gridTemplates */
     public function __construct(
         private RequestStack $requestStack,
         private ActionInitializerInterface $actionInitializer,
@@ -22,7 +23,7 @@ final readonly class GridInitializer implements GridInitializerInterface
     ) {
     }
 
-    public function initializeGrid(Resource $resource, CollectionOperationInterface $operation, Grid $grid): Grid
+    public function initializeGrid(Resource $resource, CollectionOperationInterface $operation, GridInterface $grid): GridInterface
     {
         if ($grid->getType() === null) {
             $grid = $grid->withType('table');

@@ -21,6 +21,7 @@ final readonly class ContextualMenuBuilder
     ) {
     }
 
+    /** @param array<string, mixed> $options */
     public function build(array $options = []): ItemInterface
     {
         $menu = $this->factory->createItem('root', $options);
@@ -31,12 +32,13 @@ final readonly class ContextualMenuBuilder
         $operation = $this->operationContext->getOperation();
 
         foreach ($operation->getContextualActions() as $link) {
-            $menu->addChild($link->getText(), $this->buildItemOptions($link));
+            $menu->addChild($link->getTitle(), $this->buildItemOptions($link));
         }
 
         return $menu;
     }
 
+    /** @return array<string, mixed> */
     private function buildItemOptions(Link $link): array
     {
         $contextualOperation = $this->operationFactory->create($link->getOperation());

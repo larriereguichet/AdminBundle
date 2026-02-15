@@ -16,6 +16,43 @@ abstract class Operation implements OperationInterface
     #[Ignore]
     private ?Resource $resource = null;
 
+    /**
+     * @param string|null $name
+     * @param array<string, mixed> $context
+     * @param string|null $title
+     * @param string|null $description
+     * @param string|null $icon
+     * @param string|null $template
+     * @param string|null $baseTemplate
+     * @param array<string>|null $permissions
+     * @param string|null $controller
+     * @param string|null $route
+     * @param array<string, mixed>|null $routeParameters
+     * @param array<string> $methods
+     * @param string|null $path
+     * @param string|null $redirectRoute
+     * @param array<string, mixed>|null $redirectRouteParameters
+     * @param string|null $form
+     * @param array<string, mixed>|null $formOptions
+     * @param string|null $formTemplate
+     * @param string $processor
+     * @param string $provider
+     * @param array<string>|null $identifiers
+     * @param array<string, Action>|null $contextualActions
+     * @param array<string, Action>|null $itemActions
+     * @param string|null $redirectOperation
+     * @param bool|null $validation
+     * @param array<string, mixed>|null $validationContext
+     * @param bool|null $ajax
+     * @param array<string, mixed>|null $normalizationContext
+     * @param array<string, mixed>|null $denormalizationContext
+     * @param string|null $input
+     * @param string|null $output
+     * @param string|null $workflow
+     * @param string|null $workflowTransition
+     * @param bool $embedded
+     * @param string|null $successMessage
+     */
     public function __construct(
         // TODO check for space, dot and special characters
         #[Assert\NotBlank(message: 'The operation name should not be empty')]

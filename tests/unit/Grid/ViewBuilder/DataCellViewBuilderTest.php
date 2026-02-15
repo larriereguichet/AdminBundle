@@ -8,7 +8,7 @@ use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\Attribute\Text;
 use LAG\AdminBundle\Metadata\Attribute\Update;
 use LAG\AdminBundle\Metadata\DataTransformer\DataTransformerInterface;
-use LAG\AdminBundle\Metadata\Registry\DataTransformerRegistryInterface;
+use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
 use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
 use LAG\AdminBundle\Grid\ViewFactory\DataCellBuilder;
 use LAG\AdminBundle\Grid\View\Cell;

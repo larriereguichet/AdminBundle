@@ -10,6 +10,13 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Form extends Property
 {
+    /**
+     * @param array<string, mixed> $attributes
+     * @param array<string, mixed> $headerAttributes
+     * @param array<string, mixed>|null $permissions
+     * @param array<string, mixed> $formOptions
+     * @param array<string, mixed> $properties
+     */
     public function __construct(
         ?string $name = null,
         string|bool|null $propertyPath = null,
@@ -56,11 +63,13 @@ class Form extends Property
         return $self;
     }
 
+    /** @return array<string, mixed> */
     public function getFormOptions(): array
     {
         return $this->formOptions;
     }
 
+    /** @param array<string, mixed> $formOptions */
     public function setFormOptions(array $formOptions): self
     {
         $self = clone $this;
@@ -69,11 +78,13 @@ class Form extends Property
         return $self;
     }
 
+    /** @return array<string, mixed> */
     public function getProperties(): array
     {
         return $this->properties;
     }
 
+    /** @param array<string, mixed> $properties */
     public function withProperties(array $properties): self
     {
         $self = clone $this;

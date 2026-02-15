@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Grid\View\Builder;
+namespace LAG\AdminBundle\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use LAG\AdminBundle\Metadata\Registry\DataTransformerRegistryInterface;
+use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
 use LAG\AdminBundle\Grid\View\Cell;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 
@@ -22,7 +22,7 @@ final readonly class DataCellBuilder implements CellBuilderInterface
 
     public function buildCell(
         OperationInterface $operation,
-        Grid $grid,
+        GridInterface $grid,
         PropertyInterface $property,
         mixed $data,
         array $context = []

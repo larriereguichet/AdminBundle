@@ -13,6 +13,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class TextareaType extends AbstractType
 {
+    /**
+     * @param DataTransformerInterface<string, object> $dataTransformer
+     */
     public function __construct(
         private readonly DataTransformerInterface $dataTransformer,
     ) {

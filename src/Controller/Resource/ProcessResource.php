@@ -30,7 +30,7 @@ final readonly class ProcessResource
 
     public function __invoke(OperationInterface $operation, Request $request): Response
     {
-        $context = $this->contextBuilder->buildContext($operation, $request);
+        $context = $this->contextBuilder->buildContext($request, $operation);
         $data = $this->provider->provide($operation, [], $context);
         $form = $this->formFactory->create($operation->getForm(), $data, $operation->getFormOptions());
         $form->handleRequest($request);

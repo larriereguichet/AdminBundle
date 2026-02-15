@@ -12,6 +12,56 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class CollectionOperation extends Operation implements CollectionOperationInterface
 {
+    /**
+     * @param string $name
+     * @param array<string, mixed> $context
+     * @param string|null $title
+     * @param string|null $description
+     * @param string|null $icon
+     * @param string|null $template
+     * @param string|null $baseTemplate
+     * @param array<string>|null $permissions
+     * @param string|null $controller
+     * @param string|null $route
+     * @param array<string, mixed>|null $routeParameters
+     * @param array<string> $methods
+     * @param string|null $path
+     * @param string|null $redirectRoute
+     * @param array<string, mixed> $redirectRouteParameters
+     * @param string|null $form
+     * @param array<string, mixed>|null $formOptions
+     * @param string|null $formTemplate
+     * @param string|null $processor
+     * @param string $provider
+     * @param array<string>|null $identifiers
+     * @param array<string, Action>|null $contextualActions
+     * @param array<string, Action>|null $itemActions
+     * @param string|null $redirectOperation
+     * @param bool|null $validation
+     * @param array<string, mixed>|null $validationContext
+     * @param bool|null $ajax
+     * @param array<string, mixed>|null $normalizationContext
+     * @param array<string, mixed>|null $denormalizationContext
+     * @param string|null $input
+     * @param string|null $output
+     * @param string|null $workflow
+     * @param string|null $workflowTransition
+     * @param bool $embedded
+     * @param string|null $flashMessage
+     * @param bool $pagination
+     * @param int $itemsPerPage
+     * @param string $pageParameter
+     * @param array<string, mixed> $criteria
+     * @param array<string, mixed> $orderBy
+     * @param array<int|string, FilterInterface>|null $filters
+     * @param string|null $grid
+     * @param array<string, mixed> $gridOptions
+     * @param array<string, Action>|null $collectionActions
+     * @param string|null $filterForm
+     * @param array<string, mixed> $filterFormOptions
+     * @param string|null $collectionForm
+     * @param array<string, mixed>|null $collectionFormOptions
+     */
     public function __construct(
         string $name,
         array $context = [],
@@ -75,7 +125,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
 
         private array $filterFormOptions = [],
 
-        #[Assert\NotBlank(allowNull: true, message: 'The collection form type should not be blank. Use null instead')]
+        #[Assert\NotBlank(message: 'The collection form type should not be blank. Use null instead', allowNull: true)]
         private ?string $collectionForm = null, // TODO remove ?
 
         #[Assert\NotNull]

@@ -6,8 +6,10 @@ namespace LAG\AdminBundle\Resource\Factory;
 
 use LAG\AdminBundle\Metadata\Attribute\Application;
 
+// TODO use Symfony cache
 final class CacheApplicationFactory implements ApplicationFactoryInterface
 {
+    /** @var array<Application> $cache */
     private array $cache = [];
 
     public function __construct(

@@ -23,6 +23,7 @@ final class ResourceConfig implements ResourceConfigInterface
         return 'lag_admin';
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array
     {
         $output = [];

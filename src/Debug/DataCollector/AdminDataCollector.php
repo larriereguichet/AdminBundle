@@ -31,11 +31,7 @@ final class AdminDataCollector extends AbstractDataCollector
         }
     }
 
-    public function reset(): void
-    {
-        $this->data = [];
-    }
-
+    /** @return array<string, mixed> */
     public function getData(): array
     {
         return $this->data;

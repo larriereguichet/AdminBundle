@@ -12,6 +12,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Property implements PropertyInterface
 {
+    /**
+     * @param string|null $name
+     * @param string|bool|null $propertyPath
+     * @param string|bool|null $label
+     * @param string|null $template
+     * @param bool $sortable
+     * @param bool $translatable
+     * @param string|null $translationDomain
+     * @param array<string, mixed> $attributes
+     * @param array<string, mixed> $rowAttributes
+     * @param array<string, mixed> $headerAttributes
+     * @param string|null $dataTransformer
+     * @param array<string>|null $permissions
+     * @param string|null $condition
+     * @param string|null $sortingPath
+     */
     public function __construct(
         #[Assert\NotBlank(message: 'The name should not be empty')]
         #[Assert\Length(
@@ -184,10 +200,10 @@ class Property implements PropertyInterface
         return $this->headerAttributes;
     }
 
-    public function withHeaderAttributes(array $headerAttributes): self
+    public function withHeaderAttributes(array $attributes): self
     {
         $self = clone $this;
-        $self->headerAttributes = $headerAttributes;
+        $self->headerAttributes = $attributes;
 
         return $self;
     }

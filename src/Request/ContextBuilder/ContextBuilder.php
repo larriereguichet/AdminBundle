@@ -10,12 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 final readonly class ContextBuilder implements ContextBuilderInterface
 {
-    public function supports(Request $request, OperationInterface $operation, ?GridInterface $grid): bool
+    public function supports(): bool
     {
         return true;
     }
 
-    public function buildContext(Request $request, OperationInterface $operation, ?GridInterface $grid): array
+    public function buildContext(Request $request, OperationInterface $operation, ?GridInterface $grid = null): array
     {
         return $operation->getContext();
     }

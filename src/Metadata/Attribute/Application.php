@@ -110,11 +110,13 @@ class Application
         return $self;
     }
 
+    /** @return string[]|null */
     public function getPermissions(): ?array
     {
         return $this->permissions;
     }
 
+    /** @param string[] $permissions */
     public function withPermissions(array $permissions): self
     {
         $self = clone $this;

@@ -26,7 +26,7 @@ final readonly class ShowResource
 
     public function __invoke(OperationInterface $operation, Request $request): Response
     {
-        $context = $this->contextBuilder->buildContext($operation, $request);
+        $context = $this->contextBuilder->buildContext($request, $operation);
         $data = $this->provider->provide($operation, [], $context);
 
         $this->eventDispatcher->dispatchEvents(

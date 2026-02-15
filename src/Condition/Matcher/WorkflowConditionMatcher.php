@@ -19,6 +19,7 @@ final readonly class WorkflowConditionMatcher implements ConditionMatcherInterfa
 
     public function matchCondition(ConditionalInterface $subject, mixed $data, array $context = []): bool
     {
+        // TODO use only one workflow interface
         if (
             $subject instanceof WorkflowSubjectInterface
             && !isset($context['workflow'])

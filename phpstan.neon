@@ -1,8 +1,10 @@
 parameters:
-	paths:
-		- src
-		- config
-	level: 6
-	excludePaths:
-		- src/DependencyInjection/Configuration.php
-		- src/DependencyInjection/LAGAdminExtension.php
+    paths:
+        - src
+        - config
+    level: 6
+    excludePaths:
+        - src/DependencyInjection/Configuration.php
+        - src/DependencyInjection/LAGAdminExtension.php
+    ignoreErrors:
+          - identifier: trait.unused

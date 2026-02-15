@@ -23,6 +23,7 @@ final class GridConfig implements GridConfigInterface
         return 'lag_admin';
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array
     {
         $output = [];

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-use LAG\AdminBundle\Metadata\Attribute\Link;
+use LAG\AdminBundle\Metadata\Attribute\Action;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Security\RolesOwnerInterface;
 use LAG\AdminBundle\Workflow\WorkflowSubjectInterface;
@@ -19,8 +19,10 @@ interface OperationInterface extends RolesOwnerInterface, WorkflowSubjectInterfa
 
     public function withName(?string $name): static;
 
+    /** @return array<string, mixed> */
     public function getContext(): array;
 
+    /** @param  array<string, mixed> $context */
     public function withContext(array $context): static;
 
     public function getTitle(): ?string;
@@ -43,6 +45,7 @@ interface OperationInterface extends RolesOwnerInterface, WorkflowSubjectInterfa
 
     public function withBaseTemplate(string $baseTemplate): static;
 
+    /** @param  array<string, mixed> $permissions */
     public function withPermissions(?array $permissions): static;
 
     public function getController(): ?string;
@@ -53,9 +56,11 @@ interface OperationInterface extends RolesOwnerInterface, WorkflowSubjectInterfa
 
     public function withRoute(?string $route): static;
 
+    /** @return array<string, mixed>|null */
     public function getRouteParameters(): ?array;
 
-    public function withRouteParameters(?array $routeParameters): static;
+    /** @param array<string, mixed> $routeParameters */
+    public function withRouteParameters(array $routeParameters): static;
 
     public function getPath(): ?string;
 
@@ -65,16 +70,20 @@ interface OperationInterface extends RolesOwnerInterface, WorkflowSubjectInterfa
 
     public function withRedirectRoute(?string $targetRoute): static;
 
+    /** @return array<string, mixed>|null */
     public function getRedirectRouteParameters(): ?array;
 
+    /** @param array<string, mixed> $targetRouteParameters */
     public function withRedirectRouteParameters(?array $targetRouteParameters): static;
 
     public function getForm(): ?string;
 
     public function withForm(?string $form): static;
 
+    /** @return array<string, mixed>|null */
     public function getFormOptions(): ?array;
 
+    /** @param array<string, mixed> $formOptions */
     public function withFormOptions(?array $formOptions): static;
 
     public function getFormOption(string $option): mixed;
@@ -93,13 +102,16 @@ interface OperationInterface extends RolesOwnerInterface, WorkflowSubjectInterfa
 
     public function withProvider(string $provider): static;
 
+    /** @return array<string> */
     public function getMethods(): array;
 
+    /** @param array<string> $methods */
     public function withMethods(array $methods): static;
 
     /** @return string[]|null */
     public function getIdentifiers(): ?array;
 
+    /** @param array<string> $identifiers */
     public function withIdentifiers(array $identifiers): static;
 
     #[Ignore]
@@ -107,15 +119,16 @@ interface OperationInterface extends RolesOwnerInterface, WorkflowSubjectInterfa
 
     public function setResource(Resource $resource): static;
 
-    /** @return Link[]|null */
+    /** @return Action[]|null */
     public function getContextualActions(): ?array;
 
+    /** @param array<string, Action> $contextualActions */
     public function withContextualActions(array $contextualActions): static;
 
-    /** @return Link[]|null */
+    /** @return Action[]|null */
     public function getItemActions(): ?array;
 
-    /** @param array $itemActions Link[]|null */
+    /** @param array<Action> $itemActions */
     public function withItemActions(array $itemActions): static;
 
     public function getRedirectOperation(): ?string;
@@ -126,20 +139,26 @@ interface OperationInterface extends RolesOwnerInterface, WorkflowSubjectInterfa
 
     public function withValidation(bool $validation): static;
 
+    /** @return array<string, mixed>|null */
     public function getValidationContext(): ?array;
 
+    /** @param  array<string, mixed> $context */
     public function withValidationContext(array $context): static;
 
     public function hasAjax(): ?bool;
 
     public function withAjax(?bool $ajax): static;
 
+    /** @return array<string, mixed>|null */
     public function getNormalizationContext(): ?array;
 
+    /** @param  array<string, mixed> $context */
     public function withNormalizationContext(array $context): static;
 
+    /** @return array<string, mixed>|null */
     public function getDenormalizationContext(): ?array;
 
+    /** @param  array<string, mixed> $context */
     public function withDenormalizationContext(array $context): static;
 
     public function getInput(): ?string;

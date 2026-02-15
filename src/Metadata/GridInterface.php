@@ -18,21 +18,15 @@ interface GridInterface
 
     public function getTranslationDomain(): ?string;
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     public function getProperties(): array;
 
     public function hasProperties(): bool;
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     public function getAttributes(): array;
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     public function getRowAttributes(): array;
 
     /**
@@ -40,28 +34,21 @@ interface GridInterface
      */
     public function getHeaderRowAttributes(): array;
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     public function getHeaderAttributes(): array;
 
-    /**
-     * @return array<string, mixed>
-     */
+    /** @return array<string, mixed> */
     public function getOptions(): array;
 
     public function getForm(): ?string;
 
-    /**
-     * @return array<string, mixed>
-     */
+    /** @return array<string, mixed> */
     public function getFormOptions(): array;
 
-    /**
-     * @return array<string, Action>
-     */
+    /** @return array<string, Action>|null */
     public function getActions(): ?array;
 
+    /** @return array<string, Action>|null */
     public function getCollectionActions(): ?array;
 
     public function getEmptyMessage(): ?string;

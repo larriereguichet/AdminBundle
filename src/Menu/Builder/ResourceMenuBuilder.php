@@ -23,6 +23,7 @@ final readonly class ResourceMenuBuilder
     ) {
     }
 
+    /** @param array<string, mixed> $options */
     public function build(array $options = []): ItemInterface
     {
         $inflector = new EnglishInflector();

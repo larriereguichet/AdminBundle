@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Bridge\QuillJs\Render\QuillJsRendererInterface;
-use LAG\AdminBundle\Grid\ViewFactory\AttributeViewFactory;
-use LAG\AdminBundle\Grid\ViewFactory\AttributeViewFactoryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 use LAG\AdminBundle\Twig\Extension\AttributeExtension;
 use LAG\AdminBundle\Twig\Extension\PaginationExtension;
@@ -32,11 +30,6 @@ use LAG\AdminBundle\View\Render\LinkRendererInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
-
-    // View factories
-    $services->set(AttributeViewFactoryInterface::class, AttributeViewFactory::class)
-        ->args(['$environment' => service('twig')])
-    ;
 
     // Extensions
     $services->set(RenderExtension::class)->tag('twig.extension');

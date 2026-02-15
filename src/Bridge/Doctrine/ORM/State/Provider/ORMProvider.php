@@ -26,7 +26,7 @@ final readonly class ORMProvider implements ProviderInterface
             throw new ManagerNotFoundException($operation);
         }
         /** @var EntityRepository $repository */
-        $repository = $manager->getRepository($operation->getResource()->getResourceClass());
+        $repository = $manager->getRepository($operation->getResource()->getResourceClass()); // @phpstan-ignore-line
         // Add a suffix to avoid error if the resource is named with a reserved keyword (like "group" or "order")
         $rootAlias = $operation->getResource()->getName().'_entity';
         $queryBuilder = $repository->createQueryBuilder($rootAlias);

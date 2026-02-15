@@ -10,6 +10,20 @@ use LAG\AdminBundle\Controller\Resource\ProcessResource;
 
 class Update extends Operation
 {
+    /**
+     * @param array<string, mixed> $context
+     * @param array<string, Action> $itemActions
+     * @param array<string, Action> $contextualActions
+     * @param array<string> $methods
+     * @param array<string> $permissions
+     * @param array<string> $identifiers
+     * @param array<string, mixed> $normalizationContext
+     * @param array<string, mixed> $denormalizationContext
+     * @param array<string, mixed> $validationContext
+     * @param array<string, mixed> $formOptions
+     * @param array<string, mixed> $routeParameters
+     * @param array<string, mixed> $redirectRouteParameters
+     */
     public function __construct(
         string $name = 'update',
         array $context = [],

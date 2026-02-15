@@ -42,31 +42,38 @@ final readonly class ConfigurationMapper
         $this->denormalizer = $serializer;
     }
 
+
+    /** @return array<string, mixed> */
     public function fromApplication(Application $application): array
     {
         return $this->normalizer->normalize($application);
     }
 
+    /** @param array<string, mixed> $data */
     public function toApplication(array $data): Application
     {
         return $this->denormalizer->denormalize($data, Application::class);
     }
 
+    /** @return array<string, mixed> */
     public function fromResource(Resource $resource): array
     {
         return $this->normalizer->normalize($resource);
     }
 
+    /** @param array<string, mixed> $data */
     public function toResource(array $data): Resource
     {
         return $this->denormalizer->denormalize($data, Resource::class);
     }
 
+    /** @return array<string, mixed> */
     public function fromGrid(Grid $grid): array
     {
         return $this->normalizer->normalize($grid);
     }
 
+    /** @param array<string, mixed> $data */
     public function toGrid(array $data): Grid
     {
         return $this->denormalizer->denormalize($data, Grid::class);

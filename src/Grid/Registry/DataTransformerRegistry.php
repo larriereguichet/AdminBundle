@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Metadata\Registry;
+namespace LAG\AdminBundle\Grid\Registry;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\DataTransformer\DataTransformerInterface;
 
 final class DataTransformerRegistry implements DataTransformerRegistryInterface
 {
+    /** @var array<string, DataTransformerInterface> */
     private array $transformers;
 
+    /** @param iterable<DataTransformerInterface> $dataTransformers */
     public function __construct(
-        /* @var iterable<DataTransformerInterface> $dataTransformers */
         iterable $dataTransformers,
     ) {
         $this->transformers = [];

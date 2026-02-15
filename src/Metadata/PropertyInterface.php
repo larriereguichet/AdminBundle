@@ -97,44 +97,56 @@ interface PropertyInterface extends RolesOwnerInterface, ConditionalInterface
     public function withTranslatable(bool $translatable): self;
 
     /**
-     * Return the property view html attributes.
+     * Return the property view HTML attributes.
+     *
+     * @return array<string, mixed>
      */
     public function getAttributes(): array;
 
     /**
-     * Define the property view html attributes.
+     * Define the property view HTML attributes.
+     *
+     * @param array<string, mixed> $attributes
      */
     public function withAttributes(array $attributes): self;
 
     /**
-     * Return a property view html attribute according to its name.
+     * Return a property view HTML attribute according to its name.
      */
     public function getAttribute(string $name): mixed;
 
     /**
-     * Define a property view html attribute according to its name.
+     * Define a property view HTML attribute according to its name.
      */
     public function withAttribute(string $name, mixed $value): self;
 
     /**
-     * Return the property view html attributes for the property element container.
+     * Return the property view HTML attributes for the property element container.
+     *
+     * @return array<string, mixed>
      */
     public function getRowAttributes(): array;
 
     /**
-     * Define the property view html attributes for the property element container.
+     * Define the property view HTML attributes for the property element container.
+     *
+     * @param array<string, mixed> $attributes
      */
     public function withRowAttributes(array $attributes): self;
 
     /**
-     * Return the property view html attributes for the property element header.
+     * Return the property view HTML attributes for the property element header.
+     *
+     * @return array<string, mixed>
      */
     public function getHeaderAttributes(): array;
 
     /**
-     * Define the property view html attributes for the property element header.
+     * Define the property view HTML attributes for the property element header.
+     *
+     * @param array<string, mixed> $attributes
      */
-    public function withHeaderAttributes(array $headerAttributes): self;
+    public function withHeaderAttributes(array $attributes): self;
 
     /**
      * Return the property data transformer.
@@ -149,6 +161,8 @@ interface PropertyInterface extends RolesOwnerInterface, ConditionalInterface
 
     /**
      * Define the property permissions.
+     *
+     * @param array<string, string> $permissions
      */
     public function withPermissions(array $permissions): self;
 

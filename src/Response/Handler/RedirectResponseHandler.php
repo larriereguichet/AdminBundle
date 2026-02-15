@@ -17,7 +17,6 @@ final readonly class RedirectResponseHandler implements RedirectResponseHandlerI
     ) {
     }
 
-    /** @param array<string, mixed> $context */
     public function createRedirectResponse(
         Request $request,
         OperationInterface $operation,

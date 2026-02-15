@@ -15,6 +15,34 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class Resource
 {
+    /**
+     * @param string|null $name
+     * @param string $application
+     * @param string|null $resourceClass
+     * @param string|null $title
+     * @param string|null $group
+     * @param string|null $icon
+     * @param string|null $pathPrefix
+     * @param array<string>|null $permissions
+     * @param array<string, OperationInterface> $operations
+     * @param array<string, PropertyInterface> $properties
+     * @param string|null $processor
+     * @param string $provider
+     * @param array<string>|null $identifiers
+     * @param string|null $routePattern
+     * @param string|null $translationPattern
+     * @param string|null $translationDomain
+     * @param string|null $form
+     * @param array<string, mixed>|null $formOptions
+     * @param string|null $formTemplate
+     * @param bool $validation
+     * @param array<string, mixed>|null $validationContext
+     * @param bool $ajax
+     * @param array<string, mixed>|null $normalizationContext
+     * @param array<string, mixed>|null $denormalizationContext
+     * @param string|null $input
+     * @param string|null $output
+     */
     public function __construct(
         // TODO check for space, dot and special characters
         #[Assert\NotBlank(message: 'The resource name should not be null or empty')]
@@ -321,11 +349,13 @@ class Resource
         return $self;
     }
 
+    /** @return array<string>|null */
     public function getIdentifiers(): ?array
     {
         return $this->identifiers;
     }
 
+    /** @param array<string> $identifiers */
     public function withIdentifiers(array $identifiers): self
     {
         $self = clone $this;
@@ -386,11 +416,13 @@ class Resource
         return $self;
     }
 
+    /** @return array<string, mixed>|null */
     public function getFormOptions(): ?array
     {
         return $this->formOptions;
     }
 
+    /** @param array<string, mixed> $formOptions */
     public function withFormOptions(?array $formOptions): self
     {
         $self = clone $this;
@@ -425,11 +457,13 @@ class Resource
         return $self;
     }
 
+    /** @return array<string, mixed>|null */
     public function getValidationContext(): ?array
     {
         return $this->validationContext;
     }
 
+    /** @param array<string, mixed> $context */
     public function withValidationContext(array $context): self
     {
         $self = clone $this;
@@ -451,11 +485,13 @@ class Resource
         return $self;
     }
 
+    /** @return array<string, mixed>|null */
     public function getNormalizationContext(): ?array
     {
         return $this->normalizationContext;
     }
 
+    /** @param array<string, mixed> $context */
     public function withNormalizationContext(array $context): self
     {
         $self = clone $this;
@@ -464,11 +500,13 @@ class Resource
         return $self;
     }
 
+    /** @return array<string, mixed>|null */
     public function getDenormalizationContext(): ?array
     {
         return $this->denormalizationContext;
     }
 
+    /** @param array<string, mixed> $context */
     public function withDenormalizationContext(array $context): self
     {
         $self = clone $this;
@@ -477,11 +515,13 @@ class Resource
         return $self;
     }
 
+    /** @return array<string,>|null */
     public function getPermissions(): ?array
     {
         return $this->permissions;
     }
 
+    /** @param array<string> $permissions */
     public function withPermissions(array $permissions): self
     {
         $self = clone $this;

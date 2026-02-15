@@ -53,6 +53,15 @@ final readonly class DefinitionFactory implements DefinitionFactoryInterface
         return $definition;
     }
 
+    public function createGridDefinition(string $gridName): Grid
+    {
+        if (!\array_key_exists($gridName, $this->grids)) {
+            throw new MissingGridException($gridName);
+        }
+
+        return $this->configurationMapper->toGrid($this->grids[$gridName]);
+    }
+
     public function getResourceNames(): array
     {
         return array_keys($this->resources);

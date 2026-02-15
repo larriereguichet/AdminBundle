@@ -11,10 +11,11 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 
 final readonly class MetadataHelper implements MetadataHelperInterface
 {
+    /** @var Collection<string, ClassMetadata<object>> */
     private Collection $cache;
 
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
         $this->cache = new ArrayCollection();
     }

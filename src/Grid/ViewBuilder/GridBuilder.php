@@ -9,10 +9,10 @@ use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Grid\View;
 
-final readonly class GridViewBuilder implements GridViewBuilderInterface
+final readonly class GridBuilder implements GridBuilderInterface
 {
     public function __construct(
-        private RowViewBuilderInterface $rowBuilder,
+        private RowBuilderInterface $rowBuilder,
         private ActionBuilderInterface $actionBuilder,
         private AttributeBuilderInterface $attributeBuilder,
     ) {

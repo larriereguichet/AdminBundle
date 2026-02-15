@@ -9,10 +9,11 @@ use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Grid\View\Header;
 use LAG\AdminBundle\Grid\View\Row;
 
-final readonly class RowViewBuilder implements RowViewBuilderInterface
+final readonly class RowBuilder implements RowBuilderInterface
 {
     public function __construct(
         private CellBuilderInterface $cellBuilder,
+        private HeaderBuilderInterface $headerBuilder,
         private ActionBuilderInterface $actionsBuilder,
         private AttributeBuilderInterface $attributeBuilder,
     ) {
@@ -25,16 +26,16 @@ final readonly class RowViewBuilder implements RowViewBuilderInterface
 
         foreach ($grid->getProperties() as $propertyName) {
             $property = $operation->getResource()->getProperty($propertyName);
-            $headers[] = $this->cellBuilder->buildHeader($operation, $grid, $property, $context);
+            $headers[] = $this->headerBuilder->buildHeader($operation, $grid, $property, $context);
         }
 
         if (\count($grid->getActions()) > 0) {
-            $headers[] = new Header(name: 'actions');
+            $headers[] = new Header(name: 'actions', attributes: $this->attributeBuilder->buildAttributes([]));
         }
 
         return new Row(
-            cells: $headers,
             attributes: $this->attributeBuilder->buildAttributes($grid->getHeaderRowAttributes()),
+            cells: $headers,
         );
     }
 
@@ -50,7 +51,7 @@ final readonly class RowViewBuilder implements RowViewBuilderInterface
         }
         $actions = [];
 
-        foreach ($grid->getActions() as $action) {
+        foreach ($grid->getActions() ?? [] as $action) {
             $action = $this->actionsBuilder->buildAction($action, $data, $context);
 
             if ($action !== null) {
@@ -59,10 +60,10 @@ final readonly class RowViewBuilder implements RowViewBuilderInterface
         }
 
         return new Row(
+            attributes: $this->attributeBuilder->buildAttributes($grid->getRowAttributes()),
             cells: $cells,
             actions: $actions,
             data: $data,
-            attributes: $this->attributeBuilder->buildAttributes($grid->getRowAttributes()),
         );
     }
 }

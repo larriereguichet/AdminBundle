@@ -10,6 +10,7 @@ interface Url
 
     public function getRoute(): ?string;
 
+    /** @return array<string, mixed> */
     public function getRouteParameters(): array;
 
     public function getUrl(): ?string;

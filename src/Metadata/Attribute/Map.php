@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Map extends Property
 {
+    /** @param array<int|string, mixed> $map */
     public function __construct(
         ?string $name = null,
         string|bool|null $propertyPath = null,
@@ -46,11 +47,13 @@ class Map extends Property
         );
     }
 
+    /** @return array<int|string, mixed> */
     public function getMap(): array
     {
         return $this->map;
     }
 
+    /** @param array<int|string, mixed> $map */
     public function withMap(array $map): self
     {
         $self = clone $this;

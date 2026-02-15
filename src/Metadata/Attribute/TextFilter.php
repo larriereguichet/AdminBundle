@@ -9,6 +9,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class TextFilter extends Filter
 {
+    /**
+     * @param array<string, mixed> $formOptions
+     * @param array<string>|null $properties
+     */
     public function __construct(
         string $name,
         string $comparator = 'like',
@@ -29,11 +33,13 @@ class TextFilter extends Filter
         );
     }
 
+    /** @return array<string, string>|null */
     public function getProperties(): ?array
     {
         return $this->properties;
     }
 
+    /** @param array<string, string> $properties */
     public function withProperties(array $properties): self
     {
         $self = clone $this;

@@ -8,5 +8,14 @@ use LAG\AdminBundle\Condition\ConditionalInterface;
 
 interface ConditionMatcherInterface
 {
+    /**
+     * Return if the given condition contained in a subject is matched. An additional context could be added.
+     *
+     * @param ConditionalInterface $subject
+     * @param mixed $data
+     * @param array<string, mixed> $context
+     *
+     * @return bool
+     */
     public function matchCondition(ConditionalInterface $subject, mixed $data, array $context = []): bool;
 }

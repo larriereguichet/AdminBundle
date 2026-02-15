@@ -8,9 +8,9 @@ use LAG\AdminBundle\Event\ResourceControllerEvent;
 use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\GridBuilderInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\GridInterface;
-use LAG\AdminBundle\Grid\ViewFactory\GridViewFactoryInterface;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
@@ -28,7 +28,7 @@ final readonly class IndexResources
         private ProcessorInterface $processor,
         private FormFactoryInterface $formFactory,
         private GridFactoryInterface $gridFactory,
-        private GridViewFactoryInterface $gridViewFactory,
+        private GridBuilderInterface $gridBuilder,
         private ResourceEventDispatcherInterface $eventDispatcher,
         private ResponseHandlerInterface $responseHandler,
     ) {
@@ -67,7 +67,7 @@ final readonly class IndexResources
 
         if ($operation->getGrid() !== null) {
             $grid = $this->gridFactory->create($operation->getGrid(), $operation);
-            $gridView = $this->gridViewFactory->build($grid, $operation, $data, $context);
+            $gridView = $this->gridBuilder->build($grid, $operation, $data, $context);
         }
         $event = new ResourceControllerEvent($operation, $request, $data);
         $this->eventDispatcher->dispatchEvents($event, ResourceControllerEvents::RESOURCE_CONTROLLER);
