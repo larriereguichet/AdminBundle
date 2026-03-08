@@ -17,7 +17,7 @@ final class Links
     #[PreMount]
     public function validate(iterable $data): void
     {
-        $data['links'] = $data['links'] ?? [];
+        $data['links'] ??= [];
 
         foreach ($data['links'] as $link) {
             if (!$link instanceof Link) {

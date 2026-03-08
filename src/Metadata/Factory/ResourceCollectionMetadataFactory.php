@@ -32,9 +32,7 @@ final readonly class ResourceCollectionMetadataFactory implements ResourceCollec
 
             foreach ($finder as $file) {
                 // The closure forbids access to the private scope in the included file
-                $callback = \Closure::bind(static function ($filePath) {
-                    return include $filePath;
-                }, null, null);
+                $callback = \Closure::bind(static fn($filePath) => include $filePath, null, null);
 
                 try {
                     $callback = $callback($file->getRealPath());
