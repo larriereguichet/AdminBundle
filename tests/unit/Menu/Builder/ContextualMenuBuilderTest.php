@@ -11,8 +11,8 @@ use LAG\AdminBundle\Metadata\Attribute\Index;
 use LAG\AdminBundle\Metadata\Attribute\Link;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\Attribute\Show;
+use LAG\AdminBundle\Metadata\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Resource\Context\OperationContextInterface;
-use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
@@ -33,7 +33,7 @@ final class ContextualMenuBuilderTest extends TestCase
         $item = new MenuItem(name: 'Some link', factory: $this->factory); // @phpstan-ignore-line
 
         $resource = new Resource();
-        $operation = new Index(contextualActions: [new Link(operation: 'admin.product.show', text: 'Some link')])->setResource($resource);
+        $operation = new Index(contextualLinks: [new Link(operation: 'admin.product.show', text: 'Some link')])->setResource($resource);
         $linkedOperation = new Show(name: 'show')->setResource($resource);
 
         $this->operationContext

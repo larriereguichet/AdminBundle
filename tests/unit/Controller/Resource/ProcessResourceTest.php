@@ -111,7 +111,7 @@ final class ProcessResourceTest extends TestCase
         $this->eventDispatcher
             ->expects($this->once())
             ->method('dispatchEvents')
-            ->willReturnCallback(function (
+            ->willReturnCallback(static function (
                 ResourceControllerEvent $event,
                 string $expectedEventPattern,
             ): void {
@@ -208,9 +208,9 @@ final class ProcessResourceTest extends TestCase
         );
 
         $resource = new Resource(
-            name: 'my_resource',
+            shortName: 'my_resource',
             operations: [$create, $update, $delete],
-            application: 'my_application',
+            applicationName: 'my_application',
         );
 
         foreach ($resource->getOperations() as $operation) {

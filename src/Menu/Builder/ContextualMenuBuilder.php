@@ -7,14 +7,14 @@ namespace LAG\AdminBundle\Menu\Builder;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Metadata\Attribute\Link;
-use LAG\AdminBundle\Resource\Context\OperationContextInterface;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 
 final readonly class ContextualMenuBuilder
 {
     public function __construct(
-        private OperationContextInterface $operationContext,
+        private ResourceContextInterface $resourceContext,
         private OperationFactoryInterface $operationFactory,
         private RouteNameGeneratorInterface $routeNameGenerator,
         private FactoryInterface $factory,
@@ -26,13 +26,13 @@ final readonly class ContextualMenuBuilder
     {
         $menu = $this->factory->createItem('root', $options);
 
-        if (!$this->operationContext->hasOperation()) {
+        if (!$this->resourceContext->hasOperation()) {
             return $menu;
         }
-        $operation = $this->operationContext->getOperation();
+        $operation = $this->resourceContext->getOperation();
 
-        foreach ($operation->getContextualActions() as $link) {
-            $menu->addChild($link->getTitle(), $this->buildItemOptions($link));
+        foreach ($operation->getContextualLinks() as $link) {
+            $menu->addChild($link->getName(), $this->buildItemOptions($link));
         }
 
         return $menu;

@@ -10,12 +10,6 @@ use Symfony\UX\TwigComponent\ComponentAttributes;
 readonly class Cell
 {
     /**
-     * @param string $name
-     * @param ComponentAttributes $attributes
-     * @param PropertyInterface|null $property
-     * @param string|null $template
-     * @param string|null $label
-     * @param mixed|null $data
      * @param array<string, mixed> $context
      */
     public function __construct(

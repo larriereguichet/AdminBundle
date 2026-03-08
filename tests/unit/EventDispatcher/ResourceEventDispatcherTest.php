@@ -21,13 +21,13 @@ final class ResourceEventDispatcherTest extends TestCase
     #[Test]
     public function itDispatchResourceEvents(): void
     {
-        $resource = new Resource(name: 'my_resource', application: 'my_application');
+        $resource = new Resource(shortName: 'my_resource', applicationName: 'my_application');
         $event = new ResourceEvent($resource);
 
         $this->eventDispatcher
             ->expects($this->exactly(3))
             ->method('dispatch')
-            ->willReturnCallback(function (ResourceEvent $expectedEvent, string $eventName) use ($event): ResourceEvent {
+            ->willReturnCallback(static function (ResourceEvent $expectedEvent, string $eventName) use ($event): ResourceEvent {
                 self::assertEquals($expectedEvent, $event);
                 self::assertContains($eventName, [
                     'lag_admin.resource.controller',

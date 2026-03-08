@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\View\Row;
-use LAG\AdminBundle\Grid\ViewBuilder\ActionBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\AttributeBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\GridBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\LinkBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\RowBuilderInterface;
 use LAG\AdminBundle\Metadata\Attribute\Action;
 use LAG\AdminBundle\Metadata\Attribute\Grid;
@@ -57,7 +57,7 @@ final class GridViewBuilderTest extends TestCase
         ;
         $this->actionBuilder
             ->expects($this->once())
-            ->method('buildAction')
+            ->method('buildLink')
             ->with($action, $data, $context)
         ;
         $this->attributeBuilder
@@ -74,7 +74,7 @@ final class GridViewBuilderTest extends TestCase
     protected function setUp(): void
     {
         $this->rowBuilder = $this->createMock(RowBuilderInterface::class);
-        $this->actionBuilder = $this->createMock(ActionBuilderInterface::class);
+        $this->actionBuilder = $this->createMock(LinkBuilderInterface::class);
         $this->attributeBuilder = $this->createMock(AttributeBuilderInterface::class);
         $this->gridViewBuilder = new GridBuilder(
             $this->rowBuilder,

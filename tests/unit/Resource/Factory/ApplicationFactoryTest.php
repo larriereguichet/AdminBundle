@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Unit\Resource\Factory;
 
 use LAG\AdminBundle\Metadata\Attribute\Application;
-use LAG\AdminBundle\Resource\Factory\ApplicationFactory;
-use LAG\AdminBundle\Resource\Factory\DefinitionFactoryInterface;
+use LAG\AdminBundle\Metadata\Factory\ApplicationFactory;
+use LAG\AdminBundle\Metadata\Factory\ResourceMetadataFactoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +35,7 @@ final class ApplicationFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->definitionFactory = $this->createMock(DefinitionFactoryInterface::class);
+        $this->definitionFactory = $this->createMock(ResourceMetadataFactoryInterface::class);
         $this->applicationFactory = new ApplicationFactory($this->definitionFactory);
     }
 }

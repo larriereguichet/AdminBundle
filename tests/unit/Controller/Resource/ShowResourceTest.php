@@ -79,7 +79,7 @@ final class ShowResourceTest extends TestCase
         $this->eventDispatcher
             ->expects($this->once())
             ->method('dispatchEvents')
-            ->willReturnCallback(function (
+            ->willReturnCallback(static function (
                 ResourceControllerEvent $event,
                 string $expectedEventPattern,
             ): void {

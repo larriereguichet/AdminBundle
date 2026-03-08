@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\DependencyInjection;
 
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -110,58 +108,7 @@ final class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('resources')
                     ->arrayPrototype()
-                        ->addDefaultsIfNotSet()
-                        ->ignoreExtraKeys(false)
-                        ->children()
-                            ->scalarNode('name')->isRequired()->end()
-                            ->scalarNode('resource_class')->isRequired()->end()
-                            ->scalarNode('application')->defaultNull()->end()
-                            ->scalarNode('title')->defaultNull()->end()
-                            ->scalarNode('group')->defaultNull()->end()
-                            ->scalarNode('icon')->defaultNull()->end()
-
-                            ->scalarNode('path_prefix')->defaultNull()->end()
-                            ->scalarNode('route_pattern')->defaultValue('{application}.{resource}.{operation}')->end()
-
-                            ->scalarNode('translation_pattern')->defaultNull()->end()
-                            ->scalarNode('translation_domain')->defaultNull()->end()
-
-                            ->scalarNode('form')->defaultNull()->end()
-                            ->scalarNode('form_template')->defaultNull()->end()
-                            ->arrayNode('form_options')->variablePrototype()->end()->end()
-
-                            ->booleanNode('validation')->defaultTrue()->end()
-                            ->arrayNode('validation_context')->variablePrototype()->end()->end()
-
-                            ->booleanNode('ajax')->defaultTrue()->end()
-
-                            ->scalarNode('provider')->defaultValue(ORMProvider::class)->end()
-                            ->scalarNode('processor')->defaultValue(ORMProcessor::class)->end()
-
-                            ->arrayNode('permissions')
-                                ->scalarPrototype()->end()
-                            ->end()
-
-                            ->arrayNode('identifiers')->scalarPrototype()->defaultValue(['id'])->end()->end()
-
-                            ->arrayNode('operations')
-                                ->variablePrototype()->end()
-                            ->end()
-
-                            ->arrayNode('properties')
-                                ->variablePrototype()->end()
-                            ->end()
-
-                            ->scalarNode('input')->defaultNull()->end()
-                            ->scalarNode('output')->defaultNull()->end()
-
-                            ->arrayNode('normalization_context')
-                                ->variablePrototype()->end()
-                            ->end()
-                            ->arrayNode('denormalization_context')
-                                ->variablePrototype()->end()
-                            ->end()
-                        ->end()
+                        ->variablePrototype()->end()
                     ->end()
                 ->end()
             ->end()

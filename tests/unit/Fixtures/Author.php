@@ -10,7 +10,8 @@ use LAG\AdminBundle\Entity\TimestampResourceTrait;
 
 final class Author implements ImageAwareInterface
 {
-    use TimestampResourceTrait, ImageAwareTrait;
+    use ImageAwareTrait;
+    use TimestampResourceTrait;
 
     public ?string $name = null;
 }

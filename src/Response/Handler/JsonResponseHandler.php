@@ -25,7 +25,6 @@ final readonly class JsonResponseHandler implements ContentResponseHandlerInterf
         mixed $data,
         array $context = [],
     ): Response {
-
         if ($request->getContentTypeFormat() !== 'json') {
             return $this->responseHandler->createResponse($request, $operation, $data, $context);
         }

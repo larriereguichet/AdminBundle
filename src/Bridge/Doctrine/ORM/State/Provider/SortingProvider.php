@@ -9,6 +9,7 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\Exception\ORMException;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
+
 use function Symfony\Component\String\u;
 
 final readonly class SortingProvider implements ProviderInterface

@@ -23,11 +23,6 @@ interface PropertyInterface extends RolesOwnerInterface, ConditionalInterface
     public function getName(): ?string;
 
     /**
-     * Define the property name. It should be unique for a resource.
-     */
-    public function withName(string $property): self;
-
-    /**
      * Return the property path used to retrieve property data from the object. The property path used the
      * PropertyAccess syntax.
      *
@@ -39,22 +34,9 @@ interface PropertyInterface extends RolesOwnerInterface, ConditionalInterface
     public function getPropertyPath(): string|bool|null;
 
     /**
-     * Define the property path.
-     *
-     * If the property path is true, the whole object is mapped.
-     * If the property path is false, no data will be mapped.
-     */
-    public function withPropertyPath(string|bool|null $propertyPath): self;
-
-    /**
      * Return the property label. The label could be rendered differently according to the current Grid.
      */
     public function getLabel(): string|bool|null;
-
-    /**
-     * Define the property label.
-     */
-    public function withLabel(string|bool $label): self;
 
     /**
      * Return the property view template.
@@ -62,39 +44,14 @@ interface PropertyInterface extends RolesOwnerInterface, ConditionalInterface
     public function getTemplate(): ?string;
 
     /**
-     * Define the property view template.
-     */
-    public function withTemplate(?string $template): self;
-
-    /**
      * Return true if data can be sorted using this property.
      */
     public function isSortable(): bool;
 
     /**
-     * Define if data can be sorted using this property.
-     */
-    public function withSortable(bool $sortable): self;
-
-    /**
      * Return true if property data should be translated.
      */
     public function isTranslatable(): bool;
-
-    /**
-     * Return the property translation domain. It can override the operation one.
-     */
-    public function getTranslationDomain(): ?string;
-
-    /**
-     * Define the property translation domain.
-     */
-    public function withTranslationDomain(?string $translationDomain): self;
-
-    /**
-     * Define if property data should be translated.
-     */
-    public function withTranslatable(bool $translatable): self;
 
     /**
      * Return the property view HTML attributes.
@@ -104,21 +61,9 @@ interface PropertyInterface extends RolesOwnerInterface, ConditionalInterface
     public function getAttributes(): array;
 
     /**
-     * Define the property view HTML attributes.
-     *
-     * @param array<string, mixed> $attributes
-     */
-    public function withAttributes(array $attributes): self;
-
-    /**
      * Return a property view HTML attribute according to its name.
      */
     public function getAttribute(string $name): mixed;
-
-    /**
-     * Define a property view HTML attribute according to its name.
-     */
-    public function withAttribute(string $name, mixed $value): self;
 
     /**
      * Return the property view HTML attributes for the property element container.
@@ -128,13 +73,6 @@ interface PropertyInterface extends RolesOwnerInterface, ConditionalInterface
     public function getRowAttributes(): array;
 
     /**
-     * Define the property view HTML attributes for the property element container.
-     *
-     * @param array<string, mixed> $attributes
-     */
-    public function withRowAttributes(array $attributes): self;
-
-    /**
      * Return the property view HTML attributes for the property element header.
      *
      * @return array<string, mixed>
@@ -142,31 +80,9 @@ interface PropertyInterface extends RolesOwnerInterface, ConditionalInterface
     public function getHeaderAttributes(): array;
 
     /**
-     * Define the property view HTML attributes for the property element header.
-     *
-     * @param array<string, mixed> $attributes
-     */
-    public function withHeaderAttributes(array $attributes): self;
-
-    /**
      * Return the property data transformer.
      */
     public function getDataTransformer(): ?string;
 
-    /**
-     * Define the property data transformer. It should be the id of a tagged container service using the
-     * "lag_admin.data_transformer" tag.
-     */
-    public function withDataTransformer(?string $dataTransformer): self;
-
-    /**
-     * Define the property permissions.
-     *
-     * @param array<string, string> $permissions
-     */
-    public function withPermissions(array $permissions): self;
-
     public function getSortingPath(): ?string;
-
-    public function withSortingPath(?string $sortingPath): self;
 }

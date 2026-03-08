@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\Inflector\EnglishInflector;
 use Twig\Environment;
+
 use function Symfony\Component\String\u;
 
 final readonly class TemplateResponseHandler implements ContentResponseHandlerInterface
@@ -24,10 +25,10 @@ final readonly class TemplateResponseHandler implements ContentResponseHandlerIn
     public function createResponse(Request $request, OperationInterface $operation, mixed $data, array $context = []): Response
     {
         if ($operation->getTemplate() === null) {
-            throw new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getFullName());
+            throw new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getName());
         }
         $resource = $operation->getResource();
-        $resourceName = u($resource->getName())->camel()->toString();
+        $resourceName = u($resource->getShortName())->camel()->toString();
 
         if ($operation instanceof CollectionOperationInterface && !u($resourceName)->endsWith('s')) {
             $inflector = new EnglishInflector();

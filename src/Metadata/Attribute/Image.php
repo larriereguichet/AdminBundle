@@ -17,7 +17,7 @@ class Image extends Property
         ?string $template = '@LAGAdmin/grids/properties/image.html.twig',
         bool $sortable = false,
         bool $translatable = true,
-        ?string $translationDomain = null,
+
         array $attributes = [],
         array $rowAttributes = [],
         array $headerAttributes = [],
@@ -41,7 +41,7 @@ class Image extends Property
             template: $template,
             sortable: $sortable,
             translatable: $translatable,
-            translationDomain: $translationDomain,
+
             attributes: $attributes,
             rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,

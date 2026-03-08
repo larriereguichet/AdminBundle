@@ -16,7 +16,7 @@ class Date extends Property
         ?string $template = '@LAGAdmin/grids/properties/date.html.twig',
         bool $sortable = true,
         bool $translatable = true,
-        ?string $translationDomain = null,
+
         array $attributes = [],
         array $rowAttributes = [],
         array $headerAttributes = [],
@@ -38,7 +38,7 @@ class Date extends Property
             template: $template,
             sortable: $sortable,
             translatable: $translatable,
-            translationDomain: $translationDomain,
+
             attributes: $attributes,
             rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,

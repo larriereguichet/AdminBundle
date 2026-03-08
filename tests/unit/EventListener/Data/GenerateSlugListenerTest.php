@@ -40,7 +40,7 @@ final class GenerateSlugListenerTest extends TestCase
         $this->slugger
             ->expects($this->once())
             ->method('generateSlug')
-            ->willReturnCallback(function () use ($data) {
+            ->willReturnCallback(static function () use ($data) {
                 $data->setSlug('a-beautiful-slug');
 
                 return 'a-beautiful-slug';

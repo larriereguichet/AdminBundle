@@ -11,18 +11,18 @@ use function Symfony\Component\String\u;
 
 class ValidationException extends Exception
 {
-    public function __construct(string $message, ConstraintViolationListInterface $errors)
+    public function __construct(string $message, ConstraintViolationListInterface $errors, mixed ...$parameters)
     {
-        $message = u($message);
+        $errorMessage = u($message);
 
         /** @var ConstraintViolationInterface $error */
         foreach ($errors as $error) {
-            $message = $message->append(\PHP_EOL);
+            $errorMessage = $errorMessage->append(\PHP_EOL);
 
             if ($error->getPropertyPath()) {
-                $message = $message->append($error->getPropertyPath(), ':', ' ');
+                $errorMessage = $errorMessage->append($error->getPropertyPath(), ':', ' ');
             }
-            $message = $message
+            $errorMessage = $errorMessage
                 ->append('"')
                 ->append($error->getMessage())
                 ->append('"')
@@ -30,6 +30,6 @@ class ValidationException extends Exception
             ;
         }
 
-        parent::__construct($message->toString());
+        parent::__construct((string) $errorMessage, $parameters);
     }
 }

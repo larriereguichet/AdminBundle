@@ -16,7 +16,7 @@ class RichText extends Property
         ?string $template = '@LAGAdmin/grids/properties/rich_text.html.twig',
         bool $sortable = false,
         bool $translatable = true,
-        ?string $translationDomain = null,
+
         array $attributes = [],
         array $rowAttributes = [],
         array $headerAttributes = [],
@@ -39,7 +39,7 @@ class RichText extends Property
             template: $template,
             sortable: $sortable,
             translatable: $translatable,
-            translationDomain: $translationDomain,
+
             attributes: $attributes,
             rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,

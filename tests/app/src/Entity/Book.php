@@ -14,7 +14,7 @@ use LAG\AdminBundle\Tests\Application\Repository\BookRepository;
 use LAG\AdminBundle\Tests\Application\State\Provider\Book\LatestBookProvider;
 
 #[\LAG\AdminBundle\Metadata\Attribute\Resource(
-    name: 'book',
+    shortName: 'book',
     pathPrefix: '/books',
     operations: [
         new Index(grid: 'projects_table'),

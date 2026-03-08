@@ -12,8 +12,8 @@ class Update extends Operation
 {
     /**
      * @param array<string, mixed> $context
-     * @param array<string, Action> $itemActions
-     * @param array<string, Action> $contextualActions
+     * @param array<string, Link> $itemLinks
+     * @param array<string, Link> $contextualLinks
      * @param array<string> $methods
      * @param array<string> $permissions
      * @param array<string> $identifiers
@@ -46,8 +46,8 @@ class Update extends Operation
         ?string $processor = ORMProcessor::class,
         string $provider = ORMProvider::class,
         ?array $identifiers = null,
-        ?array $contextualActions = null,
-        ?array $itemActions = null,
+        ?array $contextualLinks = null,
+        ?array $itemLinks = null,
         ?string $redirectOperation = null,
         ?bool $validation = true,
         ?array $validationContext = null,
@@ -62,7 +62,7 @@ class Update extends Operation
         ?string $flashMessage = 'lag_admin.ui.process_success',
     ) {
         parent::__construct(
-            name: $name,
+            shortName: $name,
             context: $context,
             title: $title,
             description: $description,
@@ -83,8 +83,8 @@ class Update extends Operation
             processor: $processor,
             provider: $provider,
             identifiers: $identifiers,
-            contextualActions: $contextualActions,
-            itemActions: $itemActions,
+            contextualLinks: $contextualLinks,
+            itemLinks: $itemLinks,
             redirectOperation: $redirectOperation,
             validation: $validation,
             validationContext: $validationContext,

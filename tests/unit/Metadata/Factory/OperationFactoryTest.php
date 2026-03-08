@@ -7,8 +7,8 @@ namespace LAG\AdminBundle\Tests\Unit\Metadata\Factory;
 use LAG\AdminBundle\Metadata\Attribute\Index;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\Attribute\Text;
-use LAG\AdminBundle\Resource\Factory\OperationFactory;
-use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
+use LAG\AdminBundle\Metadata\Factory\OperationFactory;
+use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -23,7 +23,7 @@ final class OperationFactoryTest extends TestCase
     public function itCreatesAnOperation(): void
     {
         $resource = new Resource(
-            name: 'my_resource',
+            shortName: 'my_resource',
             properties: [new Text('my_property')],
             operations: [
                 new Index(),

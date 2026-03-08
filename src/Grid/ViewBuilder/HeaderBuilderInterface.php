@@ -14,12 +14,7 @@ interface HeaderBuilderInterface
     /**
      * Build cell header. It is useful for some grid like table grids.
      *
-     * @param OperationInterface $operation
-     * @param GridInterface $grid
-     * @param PropertyInterface $property
      * @param array<string, mixed> $context
-     *
-     * @return Header
      */
     public function buildHeader(
         OperationInterface $operation,

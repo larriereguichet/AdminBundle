@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Metadata\GridInterface;
-use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Grid\View\Header;
 use LAG\AdminBundle\Grid\View\Row;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\GridInterface;
 
 final readonly class RowBuilder implements RowBuilderInterface
 {
     public function __construct(
         private CellBuilderInterface $cellBuilder,
         private HeaderBuilderInterface $headerBuilder,
-        private ActionBuilderInterface $actionsBuilder,
+        private LinkBuilderInterface $linkBuilder,
         private AttributeBuilderInterface $attributeBuilder,
     ) {
     }
 
     /** @param array<string, mixed> $context */
-    public function buildHeadersRow(OperationInterface $operation, GridInterface $grid, array $context = []): Row
+    public function buildHeadersRow(CollectionOperationInterface $operation, GridInterface $grid, array $context = []): Row
     {
         $headers = [];
 
@@ -29,8 +29,8 @@ final readonly class RowBuilder implements RowBuilderInterface
             $headers[] = $this->headerBuilder->buildHeader($operation, $grid, $property, $context);
         }
 
-        if (\count($grid->getActions()) > 0) {
-            $headers[] = new Header(name: 'actions', attributes: $this->attributeBuilder->buildAttributes([]));
+        if (\count($operation->getItemLinks()) > 0) {
+            $headers[] = new Header(name: 'links', attributes: $this->attributeBuilder->buildAttributes([]));
         }
 
         return new Row(
@@ -40,7 +40,7 @@ final readonly class RowBuilder implements RowBuilderInterface
     }
 
     /** @param array<string, mixed> $context */
-    public function buildRow(OperationInterface $operation, GridInterface $grid, mixed $data, array $context = []): Row
+    public function buildRow(CollectionOperationInterface $operation, GridInterface $grid, mixed $data, array $context = []): Row
     {
         $cells = [];
         $context['row_data'] = $data;
@@ -49,20 +49,18 @@ final readonly class RowBuilder implements RowBuilderInterface
             $property = $operation->getResource()->getProperty($propertyName);
             $cells[] = $this->cellBuilder->buildCell($operation, $grid, $property, $data, $context);
         }
-        $actions = [];
 
-        foreach ($grid->getActions() ?? [] as $action) {
-            $action = $this->actionsBuilder->buildAction($action, $data, $context);
+        foreach ($operation->getItemLinks() ?? [] as $link) {
+            $link = $this->linkBuilder->buildLink($link, $data, $context);
 
-            if ($action !== null) {
-                $actions[] = $action;
+            if ($link !== null) {
+                $cells[] = $link;
             }
         }
 
         return new Row(
             attributes: $this->attributeBuilder->buildAttributes($grid->getRowAttributes()),
             cells: $cells,
-            actions: $actions,
             data: $data,
         );
     }

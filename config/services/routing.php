@@ -7,12 +7,12 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use LAG\AdminBundle\Routing\Loader\ResourceRoutingLoader;
 use LAG\AdminBundle\Routing\Route\RouteNameGenerator;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGenerator;
+use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\ParametersMapper;
 use LAG\AdminBundle\Routing\UrlGenerator\ParametersMapperInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGenerator;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGeneratorInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGenerator;
-use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -33,13 +33,12 @@ return static function (ContainerConfigurator $container): void {
         ->alias('lag_admin.routing.route_name_generator', RouteNameGeneratorInterface::class)
     ;
 
-    $services->set(ResourceUrlGeneratorInterface::class, ResourceUrlGenerator::class)
+    $services->set(OperationUrlGeneratorInterface::class, OperationUrlGenerator::class)
         ->args([
             '$router' => service('router'),
             '$mapper' => service(ParametersMapperInterface::class),
-            '$operationFactory' => service('lag_admin.operation.factory'),
         ])
-        ->alias('lag_admin.routing.url_generator', ResourceUrlGeneratorInterface::class)
+        ->alias('lag_admin.operation.url_generator', OperationUrlGeneratorInterface::class)
     ;
     $services->set(ParametersMapperInterface::class, ParametersMapper::class);
 

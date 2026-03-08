@@ -6,8 +6,8 @@ namespace LAG\AdminBundle\Resource\Metadata;
 
 use LAG\AdminBundle\Metadata\Attribute\Grid;
 
-return static function (): iterable {
-    yield new Grid(
+return static function (): void {
+    new Grid(
         name: 'projects_table',
         properties: ['id'],
     );

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Config;
 
-use LAG\AdminBundle\Metadata\Attribute\Action;
 use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
@@ -61,20 +60,20 @@ final class ConfigurationNormalizer implements NormalizerInterface, Denormalizer
         if (is_a($class, CollectionOperationInterface::class, true)) {
             $data['filters'] = $this->denormalizer->denormalize($data['filters'] ?? [], FilterInterface::class.'[]', $format, $context);
 
-            if ($data['collection_actions'] !== null) {
-                $data['collection_actions'] = $this->denormalizer->denormalize($data['collection_actions'], Action::class.'[]', $format, $context);
-            }
+            //            if ($data['collection_actions'] !== null) {
+            // $data['collection_actions'] = $this->denormalizer->denormalize($data['collection_actions'], Action::class.'[]', $format, $context);
+            //            }
         }
 
-        if (is_a($class, Grid::class, true)) {
-            if ($data['collection_actions'] !== null) {
-                $data['collection_actions'] = $this->denormalizer->denormalize($data['collection_actions'], Action::class.'[]', $format, $context);
-            }
-
-            if ($data['actions'] !== null) {
-                $data['actions'] = $this->denormalizer->denormalize($data['actions'], Action::class.'[]', $format, $context);
-            }
-        }
+        //        if (is_a($class, Grid::class, true)) {
+        //            if ($data['collection_actions'] !== null) {
+        //                $data['collection_actions'] = $this->denormalizer->denormalize($data['collection_actions'], Action::class.'[]', $format, $context);
+        //            }
+        //
+        //            if ($data['actions'] !== null) {
+        //                $data['actions'] = $this->denormalizer->denormalize($data['actions'], Action::class.'[]', $format, $context);
+        //            }
+        //        }
 
         return $this->objectDenormalizer->denormalize($data, $class, $format, $context);
     }

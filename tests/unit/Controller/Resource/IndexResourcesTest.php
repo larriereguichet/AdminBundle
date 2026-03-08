@@ -9,10 +9,10 @@ use LAG\AdminBundle\Controller\Resource\IndexResources;
 use LAG\AdminBundle\Event\ResourceControllerEvent;
 use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
+use LAG\AdminBundle\Grid\View\Grid;
+use LAG\AdminBundle\Grid\ViewFactory\GridViewFactoryInterface;
 use LAG\AdminBundle\Metadata\Attribute\Index;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
-use LAG\AdminBundle\Grid\ViewFactory\GridViewFactoryInterface;
-use LAG\AdminBundle\Grid\View\Grid;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
@@ -43,7 +43,7 @@ final class IndexResourcesTest extends TestCase
     {
         $request = new Request();
 
-        $resource = new Resource(name: 'my_resource', application: 'my_application');
+        $resource = new Resource(shortName: 'my_resource', applicationName: 'my_application');
         $operation = new Index(
             template: 'my_template.html.twig',
             form: 'MyForm',
@@ -145,7 +145,7 @@ final class IndexResourcesTest extends TestCase
     #[Test]
     public function itListResourcesWithEvent(): void
     {
-        $resource = new Resource(name: 'my_resource', application: 'my_application');
+        $resource = new Resource(shortName: 'my_resource', applicationName: 'my_application');
         $request = new Request();
 
         $operation = new Index(
@@ -195,7 +195,7 @@ final class IndexResourcesTest extends TestCase
         $this->eventDispatcher
             ->expects($this->once())
             ->method('dispatchEvents')
-            ->willReturnCallback(function (ResourceControllerEvent $event, string $eventName) use ($operation, $request, $data): void {
+            ->willReturnCallback(static function (ResourceControllerEvent $event, string $eventName) use ($operation, $request, $data): void {
                 self::assertEquals($operation, $event->getOperation());
                 self::assertEquals($request, $event->getRequest());
                 self::assertEquals($data, $event->getData());
@@ -216,7 +216,7 @@ final class IndexResourcesTest extends TestCase
     #[Test]
     public function itProcessAForm(): void
     {
-        $resource = new Resource(name: 'my_resource', application: 'my_application');
+        $resource = new Resource(shortName: 'my_resource', applicationName: 'my_application');
         $request = new Request();
 
         $operation = new Index(

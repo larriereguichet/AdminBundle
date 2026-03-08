@@ -31,15 +31,14 @@ return static function (ContainerConfigurator $container): void {
     ;
     $services->set(ResourceMenuBuilder::class)
         ->args([
-            '$factory' => service('knp_menu.factory'),
-            '$definitionFactory' => service('lag_admin.definition.factory'),
-            '$resourceFactory' => service('lag_admin.resource.factory'),
+            '$resourceCollectionFactory' => service('lag_admin.resource.collection_factory'),
             '$routeNameGenerator' => service('lag_admin.routing.route_name_generator'),
+            '$factory' => service('knp_menu.factory'),
         ])
         ->tag('knp_menu.menu_builder', ['method' => 'build', 'alias' => 'resource'])
     ;
 
-    // KnpMenu bridge
+    // Menu extensions
     $services->set(ResourceExtension::class)
         ->args([
             '$operationFactory' => service('lag_admin.operation.factory'),

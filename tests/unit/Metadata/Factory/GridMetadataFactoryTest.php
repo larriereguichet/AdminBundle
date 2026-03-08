@@ -17,7 +17,7 @@ final class GridMetadataFactoryTest extends TestCase
     #[Test]
     public function itCreateGridMetadata(): void
     {
-        $grid = $this->factory->create('a_grid');
+        $grid = $this->factory->createMetadata('a_grid');
 
         $this->assertInstanceOf(Grid::class, $grid);
         $this->assertEquals('a_grid', $grid->getName());
@@ -27,7 +27,7 @@ final class GridMetadataFactoryTest extends TestCase
     public function itThrowsMissingMetadataException(): void
     {
         $this->expectExceptionObject(new MissingMetadataException('Unable to find metadata fir the grid "missing_grid"'));
-        $this->factory->create('missing_grid');
+        $this->factory->createMetadata('missing_grid');
     }
 
     protected function setUp(): void

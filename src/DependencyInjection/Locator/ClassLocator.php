@@ -10,6 +10,7 @@ final readonly class ClassLocator
 {
     /**
      * @param iterable<string> $paths
+     *
      * @return iterable<class-string>
      */
     public function locateClassesByPaths(iterable $paths): iterable
@@ -31,19 +32,17 @@ final readonly class ClassLocator
 
         foreach ($finder as $file) {
             $fileContent = file_get_contents((string) $file->getRealPath());
+
             if (false === $fileContent) {
                 throw new \RuntimeException(\sprintf('Unable to read "%s" file', $file->getRealPath()));
             }
-
             preg_match('/namespace (.+);/', $fileContent, $matches);
-
             $namespace = $matches[1] ?? null;
 
             if (!preg_match('/class +([^{ ]+)/', $fileContent, $matches)) {
                 // no class found
                 continue;
             }
-
             $className = trim($matches[1]);
 
             if (null !== $namespace) {

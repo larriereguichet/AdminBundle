@@ -20,7 +20,8 @@ use LAG\AdminBundle\Metadata\Attribute\Text;
 #[Link(name: 'show_link')]
 class Book implements TimestampedResourceInterface, ImagesAwareInterface
 {
-    use TimestampResourceTrait, ImagesAwareTrait;
+    use ImagesAwareTrait;
+    use TimestampResourceTrait;
 
     #[Text]
     private ?int $id = null;

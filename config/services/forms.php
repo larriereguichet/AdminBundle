@@ -16,7 +16,6 @@ use LAG\AdminBundle\Form\Type\Resource\ResourceDataChoiceType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceDataType;
 use LAG\AdminBundle\Form\Type\Security\LoginType;
 use LAG\AdminBundle\Form\Type\Text\TextareaType;
-use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 
 return static function (ContainerConfigurator $container): void {
@@ -44,7 +43,7 @@ return static function (ContainerConfigurator $container): void {
         ->tag('form.type')
     ;
     $services->set(ResourceDataType::class)
-        ->arg('$operationFactory', service(OperationFactoryInterface::class))
+        ->arg('$operationFactory', service('lag_admin.operation.factory'))
         ->arg('$formGuesser', service(FormGuesserInterface::class))
         ->tag('form.type')
     ;

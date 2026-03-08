@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/** @deprecated use trait */
+// TODO remove
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**

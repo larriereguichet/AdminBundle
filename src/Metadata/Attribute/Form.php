@@ -22,7 +22,7 @@ class Form extends Property
         string|bool|null $propertyPath = null,
         string|bool|null $label = null,
         bool $translatable = false,
-        ?string $translationDomain = null,
+
         array $attributes = [],
         array $headerAttributes = [],
         ?string $dataTransformer = FormDataTransformer::class,
@@ -41,7 +41,7 @@ class Form extends Property
             template: '@LAGAdmin/grids/properties/form.html.twig',
             sortable: false,
             translatable: $translatable,
-            translationDomain: $translationDomain,
+
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             dataTransformer: $dataTransformer,

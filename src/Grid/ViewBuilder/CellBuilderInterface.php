@@ -4,23 +4,17 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
+use LAG\AdminBundle\Grid\View\Cell;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use LAG\AdminBundle\Grid\View\Cell;
 
 interface CellBuilderInterface
 {
     /**
      * Build a cell view according to the underlying property and given data.
      *
-     * @param OperationInterface $operation
-     * @param GridInterface $grid
-     * @param PropertyInterface $property
-     * @param mixed $data
      * @param array<string, mixed> $context
-     *
-     * @return Cell
      */
     public function buildCell(
         OperationInterface $operation,

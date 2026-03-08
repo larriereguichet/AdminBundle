@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Component;
 
-use LAG\AdminBundle\Metadata\PropertyInterface;
 use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Metadata\PropertyInterface;
 
 final class GridCell
 {
@@ -13,7 +13,7 @@ final class GridCell
     public mixed $data;
     public PropertyInterface $property;
 
-    /** @var array<string|mixed> $context */
+    /** @var array<string|mixed> */
     public array $context = [];
 
     public function mount(Cell $cell): void

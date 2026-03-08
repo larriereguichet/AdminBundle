@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
+use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
+use LAG\AdminBundle\Grid\View\Cell;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
-use LAG\AdminBundle\Grid\View\Cell;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 
 final readonly class DataCellBuilder implements CellBuilderInterface
@@ -27,7 +27,7 @@ final readonly class DataCellBuilder implements CellBuilderInterface
         mixed $data,
         array $context = []
     ): Cell {
-        $data = $this->dataMapper->getPropertyValue($data, $property);
+        $data = $this->dataMapper->getPropertyValue($property, $data);
 
         if ($property->getDataTransformer() !== null) {
             $dataTransformer = $this->transformerRegistry->get($property->getDataTransformer());

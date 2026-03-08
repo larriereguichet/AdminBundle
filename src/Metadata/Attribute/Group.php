@@ -16,7 +16,7 @@ class Group extends Property implements CompoundPropertyInterface
         string|bool|null $label = null,
         ?string $template = '@LAGAdmin/grids/properties/group.html.twig',
         bool $translatable = false,
-        ?string $translationDomain = null,
+
         array $attributes = [],
         array $rowAttributes = [],
         array $headerAttributes = [],
@@ -33,7 +33,7 @@ class Group extends Property implements CompoundPropertyInterface
             template: $template,
             sortable: false,
             translatable: $translatable,
-            translationDomain: $translationDomain,
+
             attributes: $attributes,
             rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,

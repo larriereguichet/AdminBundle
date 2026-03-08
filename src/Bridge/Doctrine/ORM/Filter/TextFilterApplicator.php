@@ -9,6 +9,7 @@ use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\Attribute\TextFilter;
 use LAG\AdminBundle\Metadata\FilterInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
+
 use function Symfony\Component\String\u;
 
 final readonly class TextFilterApplicator extends AbstractApplicator

@@ -8,48 +8,38 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\OperationMissingException;
+use LAG\AdminBundle\Exception\Resource\MissingResourceNameException;
+use LAG\AdminBundle\Metadata\ApplicationInterface;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\OperationMetadataInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
+use LAG\AdminBundle\Metadata\ResourceInterface;
+use LAG\AdminBundle\Metadata\ResourceMetadataInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class Resource
+class Resource implements ResourceInterface, ResourceMetadataInterface
 {
+    private ApplicationInterface $application;
+
     /**
-     * @param string|null $name
-     * @param string $application
-     * @param string|null $resourceClass
-     * @param string|null $title
-     * @param string|null $group
-     * @param string|null $icon
-     * @param string|null $pathPrefix
      * @param array<string>|null $permissions
      * @param array<string, OperationInterface> $operations
      * @param array<string, PropertyInterface> $properties
-     * @param string|null $processor
-     * @param string $provider
      * @param array<string>|null $identifiers
-     * @param string|null $routePattern
-     * @param string|null $translationPattern
-     * @param string|null $translationDomain
-     * @param string|null $form
      * @param array<string, mixed>|null $formOptions
-     * @param string|null $formTemplate
-     * @param bool $validation
      * @param array<string, mixed>|null $validationContext
-     * @param bool $ajax
      * @param array<string, mixed>|null $normalizationContext
      * @param array<string, mixed>|null $denormalizationContext
-     * @param string|null $input
-     * @param string|null $output
      */
     public function __construct(
-        // TODO check for space, dot and special characters
+        // TODO check for space, dot and special characters, lowercase and should contains a dot
         #[Assert\NotBlank(message: 'The resource name should not be null or empty')]
-        private ?string $name = null,
+        private ?string $shortName = null,
 
         #[Assert\NotBlank(message: 'The application name should not be empty')]
-        private string $application = 'admin',
+        private string $applicationName = 'admin',
 
         #[Assert\NotBlank(message: 'The resource class should not be null or empty')]
         private ?string $resourceClass = null,
@@ -67,8 +57,8 @@ class Resource
 
         private ?array $permissions = null,
 
-        /** @var array<int, OperationInterface> $operations */
-        #[Assert\Count(min: 1, minMessage: 'The must be at least one operation in the resource')]
+        /** @var array<int, OperationInterface|OperationMetadataInterface> $operations */
+        #[Assert\Count(min: 1, minMessage: 'The resource should contains at least one operation')]
         #[Assert\All(constraints: [new Assert\Type(type: OperationInterface::class)])]
         #[Assert\Valid]
         private array $operations = [
@@ -121,22 +111,29 @@ class Resource
 
         private ?string $output = null,
     ) {
-        $this->properties = [];
-
         foreach ($properties as $index => $property) {
             $this->properties[$property->getName() ?? $index] = $property;
         }
     }
 
-    public function getName(): ?string
+    public function getShortName(): ?string
     {
-        return $this->name;
+        return $this->shortName;
     }
 
-    public function withName(?string $name): self
+    public function getName(): string
+    {
+        if ($this->shortName === null) {
+            throw new MissingResourceNameException();
+        }
+
+        return $this->applicationName.'.'.$this->shortName;
+    }
+
+    public function withShortName(?string $shortName): self
     {
         $self = clone $this;
-        $self->name = $name;
+        $self->shortName = $shortName;
 
         return $self;
     }
@@ -193,29 +190,37 @@ class Resource
         return $self;
     }
 
-    /** @return array<int, OperationInterface> */
+    /** @return array<OperationInterface> */
     public function getOperations(): array
     {
         return $this->operations;
     }
 
+    public function getCollectionOperations(): array
+    {
+        return array_filter($this->operations, static fn (OperationInterface $operation): bool => $operation instanceof CollectionOperationInterface);
+    }
+
     public function hasOperation(string $operationName): bool
     {
-        return array_any($this->operations, fn (OperationInterface $operation) => $operation->getName() === $operationName);
+        return array_any($this->operations, static fn (OperationInterface $operation) => $operation->getShortName() === $operationName);
     }
 
     public function getOperation(string $operationName): OperationInterface
     {
         foreach ($this->operations as $operation) {
-            if ($operation->getName() === $operationName) {
+            if ($operation->getShortName() === $operationName) {
                 return $operation;
             }
         }
 
-        throw new OperationMissingException(\sprintf('The operation with name "%s" does not exists in the resource "%s"', $operationName, $this->getName()));
+        throw new OperationMissingException(
+            'The operation with name "%s" does not exists in the resource "%s"',
+            $operationName,
+            $this->getShortName(),
+        );
     }
 
-    /** @param array<int, OperationInterface> $operations */
     public function withOperations(array $operations): self
     {
         $self = clone $this;
@@ -228,29 +233,14 @@ class Resource
         return $self;
     }
 
-    public function withOperation(OperationInterface $operation): self
-    {
-        $self = clone $this;
-        $self->operations[$operation->getName()] = $operation;
-
-        return $self;
-    }
-
-    /** @return array<int|string, PropertyInterface> */
     public function getProperties(): array
     {
         return $this->properties;
     }
 
-    /**
-     * @template T
-     *
-     * @param class-string<T> $type
-     * @return array<int|string, T>
-     */
     public function getPropertiesByType(string $type): array
     {
-        return array_filter($this->properties, fn (PropertyInterface $property) => $property instanceof $type);
+        return array_filter($this->properties, static fn (PropertyInterface $property) => $property instanceof $type);
     }
 
     public function hasProperties(): bool
@@ -258,7 +248,6 @@ class Resource
         return \count($this->properties) > 0;
     }
 
-    /** @param array<int|string, PropertyInterface> $properties */
     public function withProperties(array $properties): self
     {
         $self = clone $this;
@@ -266,14 +255,6 @@ class Resource
         foreach ($properties as $index => $property) {
             $self->properties[$property->getName() ?? $index] = $property;
         }
-
-        return $self;
-    }
-
-    public function withProperty(PropertyInterface $property): self
-    {
-        $self = clone $this;
-        $self->properties[$property->getName()] = $property;
 
         return $self;
     }
@@ -289,7 +270,7 @@ class Resource
             throw new Exception(
                 'The property "%s" does not exists in the resource "%s". Available properties are: %s',
                 $name,
-                $this->name,
+                $this->shortName,
                 implode(', ', array_keys($this->properties))
             );
         }
@@ -349,13 +330,11 @@ class Resource
         return $self;
     }
 
-    /** @return array<string>|null */
     public function getIdentifiers(): ?array
     {
         return $this->identifiers;
     }
 
-    /** @param array<string> $identifiers */
     public function withIdentifiers(array $identifiers): self
     {
         $self = clone $this;
@@ -390,15 +369,15 @@ class Resource
         return $self;
     }
 
-    public function getApplication(): string
+    public function getApplicationName(): string
     {
-        return $this->application;
+        return $this->applicationName;
     }
 
-    public function withApplication(?string $application): self
+    public function withApplicationName(?string $applicationName): self
     {
         $self = clone $this;
-        $self->application = $application;
+        $self->applicationName = $applicationName;
 
         return $self;
     }
@@ -416,13 +395,11 @@ class Resource
         return $self;
     }
 
-    /** @return array<string, mixed>|null */
     public function getFormOptions(): ?array
     {
         return $this->formOptions;
     }
 
-    /** @param array<string, mixed> $formOptions */
     public function withFormOptions(?array $formOptions): self
     {
         $self = clone $this;
@@ -457,13 +434,11 @@ class Resource
         return $self;
     }
 
-    /** @return array<string, mixed>|null */
     public function getValidationContext(): ?array
     {
         return $this->validationContext;
     }
 
-    /** @param array<string, mixed> $context */
     public function withValidationContext(array $context): self
     {
         $self = clone $this;
@@ -485,13 +460,11 @@ class Resource
         return $self;
     }
 
-    /** @return array<string, mixed>|null */
     public function getNormalizationContext(): ?array
     {
         return $this->normalizationContext;
     }
 
-    /** @param array<string, mixed> $context */
     public function withNormalizationContext(array $context): self
     {
         $self = clone $this;
@@ -500,13 +473,11 @@ class Resource
         return $self;
     }
 
-    /** @return array<string, mixed>|null */
     public function getDenormalizationContext(): ?array
     {
         return $this->denormalizationContext;
     }
 
-    /** @param array<string, mixed> $context */
     public function withDenormalizationContext(array $context): self
     {
         $self = clone $this;
@@ -515,13 +486,11 @@ class Resource
         return $self;
     }
 
-    /** @return array<string,>|null */
     public function getPermissions(): ?array
     {
         return $this->permissions;
     }
 
-    /** @param array<string> $permissions */
     public function withPermissions(array $permissions): self
     {
         $self = clone $this;
@@ -554,5 +523,15 @@ class Resource
         $self->output = $output;
 
         return $self;
+    }
+
+    public function getApplication(): ApplicationInterface
+    {
+        return $this->application;
+    }
+
+    public function withApplication(ApplicationInterface $application): void
+    {
+        $this->application = $application;
     }
 }

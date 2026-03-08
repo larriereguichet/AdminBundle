@@ -28,7 +28,7 @@ final readonly class ORMProvider implements ProviderInterface
         /** @var EntityRepository $repository */
         $repository = $manager->getRepository($operation->getResource()->getResourceClass()); // @phpstan-ignore-line
         // Add a suffix to avoid error if the resource is named with a reserved keyword (like "group" or "order")
-        $rootAlias = $operation->getResource()->getName().'_entity';
+        $rootAlias = $operation->getResource()->getShortName().'_entity';
         $queryBuilder = $repository->createQueryBuilder($rootAlias);
         $index = 0;
 

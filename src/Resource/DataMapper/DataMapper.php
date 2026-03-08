@@ -15,7 +15,7 @@ final readonly class DataMapper implements DataMapperInterface
     ) {
     }
 
-    public function getPropertyValue(mixed $data, PropertyInterface $property): mixed
+    public function getPropertyValue(PropertyInterface $property, mixed $data): mixed
     {
         if ($property->getPropertyPath() === '.' || $property->getPropertyPath() === true) {
             return $data;

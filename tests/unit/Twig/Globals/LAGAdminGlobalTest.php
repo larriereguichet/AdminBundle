@@ -46,7 +46,7 @@ final class LAGAdminGlobalTest extends TestCase
     #[Test]
     public function itReturnsTheCurrentResource(): void
     {
-        $expectedResource = new Resource(name: 'my_resource');
+        $expectedResource = new Resource(shortName: 'my_resource');
 
         $this->resourceContext
             ->expects($this->once())

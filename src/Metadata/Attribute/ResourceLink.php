@@ -15,7 +15,7 @@ class ResourceLink extends Text
         string|bool|null $label = null,
         bool $sortable = true,
         bool $translatable = false,
-        ?string $translationDomain = null,
+
         array $attributes = [],
         array $headerAttributes = [],
         int $length = 100,
@@ -40,7 +40,7 @@ class ResourceLink extends Text
             label: $label,
             sortable: $sortable,
             translatable: $translatable,
-            translationDomain: $translationDomain,
+
             attributes: $attributes,
             headerAttributes: $headerAttributes,
             permissions: $permissions,

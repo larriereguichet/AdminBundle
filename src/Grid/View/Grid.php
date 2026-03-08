@@ -22,8 +22,6 @@ readonly class Grid implements \IteratorAggregate
         public ?string $template = null,
         /** @var array<string, mixed> $options */
         public array $options = [],
-        /** @var array<int, Cell> $actions */
-        public array $actions = [],
         /** @var array<string, mixed> $context */
         public array $context = [],
         public ?string $emptyMessage = null,

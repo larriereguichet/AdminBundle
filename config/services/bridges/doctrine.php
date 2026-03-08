@@ -7,11 +7,8 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Filter\EntityFilterApplicator;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Filter\TextFilterApplicator;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Form\Guesser\MetadataFormGuesser;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Initializer\ResourceIdentifiersInitializer;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Initializer\ResourceIdentifiersInitializerInterface;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
-use LAG\AdminBundle\Bridge\Doctrine\ORM\Resource\ORMPropertyGuesser;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\PropertyCollectionMetadataFactory;
+use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\ResourceIdentifierMetadataFactory;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\CollectionOutputProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
@@ -20,7 +17,6 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ResultProvider;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\SortingProvider;
 use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
 use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
-use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesserInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -58,14 +54,20 @@ return static function (ContainerConfigurator $container): void {
         ->tag('lag_admin.state_processor', ['identifier' => 'doctrine', 'priority' => 0])
     ;
 
-    // Initializers
-    $services->set(ResourceIdentifiersInitializerInterface::class, ResourceIdentifiersInitializer::class)
-        ->arg('$metadataHelper', service(MetadataHelperInterface::class))
+    // Metadata factories
+    $services->set(ResourceIdentifierMetadataFactory::class)
+        ->args([
+            '$metadataFactory' => service('.inner'),
+            '$registry' => service('doctrine'),
+        ])
+        ->decorate('lag_admin.resource.metadata_factory')
     ;
-
-    // Metadata helpers
-    $services->set(MetadataHelperInterface::class, MetadataHelper::class)
-        ->arg('$entityManager', service('doctrine.orm.entity_manager'))
+    $services->set(PropertyCollectionMetadataFactory::class)
+        ->args([
+            '$metadataFactory' => service('.inner'),
+            '$registry' => service('doctrine'),
+        ])
+        ->decorate('lag_admin.property.metadata_collection_factory')
     ;
 
     // Filter applicators
@@ -81,14 +83,7 @@ return static function (ContainerConfigurator $container): void {
     // Form guesser
     $services->set(MetadataFormGuesser::class)
         ->arg('$formGuesser', service('.inner'))
-        ->arg('$metadataHelper', service(MetadataHelperInterface::class))
+        ->arg('$entityManager', service('doctrine.orm.entity_manager'))
         ->decorate(FormGuesserInterface::class)
-    ;
-
-    // Property guesser
-    $services->set(ORMPropertyGuesser::class)
-        ->arg('$propertyGuesser', service('.inner'))
-        ->arg('$metadataHelper', service(MetadataHelperInterface::class))
-        ->decorate(PropertyGuesserInterface::class)
     ;
 };

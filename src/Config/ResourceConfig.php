@@ -4,34 +4,24 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Config;
 
-use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\ResourceMetadataInterface;
 
-final class ResourceConfig implements ResourceConfigInterface
+final class ResourceConfig
 {
-    /** @var resource[] */
+    /** @var ResourceMetadataInterface[] */
     private array $resources = [];
 
-    public function addResource(Resource $resource): ResourceConfigInterface
+    public function addResource(string $name, ResourceMetadataInterface $resource): self
     {
+        $resource = $resource->withShortName($name);
         $this->resources[$resource->getName()] = $resource;
 
         return $this;
     }
 
-    public function getExtensionAlias(): string
+    /** @return array<string, ResourceMetadataInterface> */
+    public function getResources(): array
     {
-        return 'lag_admin';
-    }
-
-    /** @return array<string, mixed> */
-    public function toArray(): array
-    {
-        $output = [];
-
-        foreach ($this->resources as $resource) {
-            $output['resources'][] = new ConfigurationMapper()->fromResource($resource);
-        }
-
-        return $output;
+        return $this->resources;
     }
 }

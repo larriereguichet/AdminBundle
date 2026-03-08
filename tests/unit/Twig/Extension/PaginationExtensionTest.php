@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Unit\Twig\Extension;
 
 use LAG\AdminBundle\Twig\Extension\PaginationExtension;
-use LAG\AdminBundle\View\Helper\PaginationHelper;
+use LAG\AdminBundle\Twig\Runtime\PaginationHelper;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;

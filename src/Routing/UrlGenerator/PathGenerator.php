@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
 use LAG\AdminBundle\Metadata\OperationInterface;
+
 use function Symfony\Component\String\u;
 
 final readonly class PathGenerator implements PathGeneratorInterface

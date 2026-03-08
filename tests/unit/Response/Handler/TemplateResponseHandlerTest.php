@@ -22,7 +22,7 @@ final class TemplateResponseHandlerTest extends TestCase
     #[Test]
     public function itCreatesATwigResponse(): void
     {
-        $resource = new Resource(name: 'my_resource');
+        $resource = new Resource(shortName: 'my_resource');
         $operation = new Index(template: 'my_template.html.twig')->setResource($resource);
         $data = new \stdClass();
         $request = new Request();
@@ -56,7 +56,7 @@ final class TemplateResponseHandlerTest extends TestCase
             ->method('render')
         ;
 
-        $this->expectExceptionObject(new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getFullName()));
+        $this->expectExceptionObject(new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getName()));
 
         $this->handler->createResponse($operation, $data);
     }

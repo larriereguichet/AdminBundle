@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Metadata\Factory;
 
 use LAG\AdminBundle\Grid\Provider\GridProviderInterface;
-use LAG\AdminBundle\Metadata\GridInterface;
+use LAG\AdminBundle\Metadata\GridMetadataInterface;
 
 final readonly class GridProviderMetadataFactory implements GridMetadataFactoryInterface
 {
@@ -16,7 +16,7 @@ final readonly class GridProviderMetadataFactory implements GridMetadataFactoryI
     ) {
     }
 
-    public function create(string $gridName): GridInterface
+    public function createMetadata(string $gridName): GridMetadataInterface
     {
         foreach ($this->builders as $builder) {
             if ($builder->supports($gridName)) {
@@ -24,6 +24,6 @@ final readonly class GridProviderMetadataFactory implements GridMetadataFactoryI
             }
         }
 
-        return $this->metadataFactory->create($gridName);
+        return $this->metadataFactory->createMetadata($gridName);
     }
 }

@@ -15,6 +15,7 @@ use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\Attribute\Show;
 use LAG\AdminBundle\Metadata\Attribute\Text;
 use LAG\AdminBundle\Metadata\Attribute\Update;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -83,11 +84,11 @@ final class ConfigurationMapperTest extends TestCase
 
     #[Test]
     #[DataProvider('resources')]
-    public function itConvertsAResourceToAnArray(Resource $resource): void
+    public function itConvertsAResourceToAnArray(ResourceInterface $resource): void
     {
         $data = $this->configurationMapper->fromResource($resource);
 
-        self::assertEquals($resource->getName(), $data['name']);
+        self::assertEquals($resource->getShortName(), $data['name']);
         self::assertEquals($resource->getResourceClass(), $data['resource_class']);
         self::assertEquals($resource->getTitle(), $data['title']);
         self::assertEquals($resource->getGroup(), $data['group']);
@@ -113,7 +114,7 @@ final class ConfigurationMapperTest extends TestCase
 
         foreach ($resource->getOperations() as $key => $operation) {
             self::assertEquals($data['operations'][$key]['class'], $operation::class);
-            self::assertEquals($data['operations'][$key]['name'], $operation->getName());
+            self::assertEquals($data['operations'][$key]['name'], $operation->getShortName());
             self::assertEquals($data['operations'][$key]['processor'], $operation->getProcessor());
             self::assertEquals($data['operations'][$key]['provider'], $operation->getProvider());
         }
@@ -126,7 +127,7 @@ final class ConfigurationMapperTest extends TestCase
 
     #[Test]
     #[DataProvider('resources')]
-    public function itConvertsAnArrayToAResource(Resource $expectedResource): void
+    public function itConvertsAnArrayToAResource(ResourceInterface $expectedResource): void
     {
         $operations = [
             [
@@ -237,7 +238,7 @@ final class ConfigurationMapperTest extends TestCase
         ];
 
         $resource = new Resource(
-            name: 'MyResource',
+            shortName: 'MyResource',
             resourceClass: 'MyEntity',
             title: 'Some Title',
             group: 'some group',

@@ -5,28 +5,35 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Resource\Factory;
 
 use LAG\AdminBundle\Exception\InvalidResourceException;
-use LAG\AdminBundle\Metadata\Attribute\Resource;
-use LAG\AdminBundle\Resource\Initializer\ResourceInitializerInterface;
+use LAG\AdminBundle\Metadata\Factory\OperationMetadataFactoryInterface;
+use LAG\AdminBundle\Metadata\Factory\ResourceMetadataFactoryInterface;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final readonly class ResourceFactory implements ResourceFactoryInterface
 {
     public function __construct(
-        private DefinitionFactoryInterface $definitionFactory,
-        private ResourceInitializerInterface $resourceInitializer,
+        private ResourceMetadataFactoryInterface $metadataFactory,
+        private OperationMetadataFactoryInterface $operationMetadataFactory,
         private ValidatorInterface $validator,
     ) {
     }
 
-    public function create(string $resourceName): Resource
+    public function create(string $resourceName): ResourceInterface
     {
-        $definition = $this->definitionFactory->createResourceDefinition($resourceName);
-        $resource = $this->resourceInitializer->initializeResource($definition);
+        $resource = $this->metadataFactory->createMetadata($resourceName);
+        $operations = [];
+
+        foreach ($resource->getOperations() as $operation) {
+            $operation->setResource($resource);
+            $operations[] = $this->operationMetadataFactory->createMetadata($operation);
+        }
+        $resource = $resource->withOperations($operations);
         $errors = $this->validator->validate($resource, [new Valid()]);
 
         if ($errors->count() > 0) {
-            throw new InvalidResourceException($resource->getName(), $errors);
+            throw new InvalidResourceException($resource->getShortName(), $errors);
         }
 
         return $resource;

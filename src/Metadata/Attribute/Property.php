@@ -5,28 +5,19 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Metadata\Attribute;
 
 use LAG\AdminBundle\Metadata\PropertyInterface;
+use LAG\AdminBundle\Metadata\PropertyMetadataInterface;
 use LAG\AdminBundle\Validation\Constraint\TemplateValid;
 use LAG\AdminBundle\Validation\Constraint\WorkflowInstalled;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
-class Property implements PropertyInterface
+class Property implements PropertyInterface, PropertyMetadataInterface
 {
     /**
-     * @param string|null $name
-     * @param string|bool|null $propertyPath
-     * @param string|bool|null $label
-     * @param string|null $template
-     * @param bool $sortable
-     * @param bool $translatable
-     * @param string|null $translationDomain
      * @param array<string, mixed> $attributes
      * @param array<string, mixed> $rowAttributes
      * @param array<string, mixed> $headerAttributes
-     * @param string|null $dataTransformer
      * @param array<string>|null $permissions
-     * @param string|null $condition
-     * @param string|null $sortingPath
      */
     public function __construct(
         #[Assert\NotBlank(message: 'The name should not be empty')]
@@ -51,9 +42,6 @@ class Property implements PropertyInterface
         private bool $sortable = true,
 
         private bool $translatable = false,
-
-        #[Assert\NotBlank(message: 'The translation domain should not be empty. Use null instead', allowNull: true)]
-        private ?string $translationDomain = null,
 
         private array $attributes = [],
 
@@ -83,7 +71,7 @@ class Property implements PropertyInterface
         return $this->name;
     }
 
-    public function withName(string $property): self
+    public function withName(string $property): static
     {
         $self = clone $this;
         $self->name = $property;
@@ -96,7 +84,7 @@ class Property implements PropertyInterface
         return $this->propertyPath;
     }
 
-    public function withPropertyPath(string|bool|null $propertyPath): self
+    public function withPropertyPath(string|bool|null $propertyPath): static
     {
         $self = clone $this;
         $self->propertyPath = $propertyPath;
@@ -109,7 +97,7 @@ class Property implements PropertyInterface
         return $this->label;
     }
 
-    public function withLabel(string|bool $label): self
+    public function withLabel(string|bool $label): static
     {
         $self = clone $this;
         $self->label = $label;
@@ -122,7 +110,7 @@ class Property implements PropertyInterface
         return $this->template;
     }
 
-    public function withTemplate(?string $template): self
+    public function withTemplate(?string $template): static
     {
         $self = clone $this;
         $self->template = $template;
@@ -135,7 +123,7 @@ class Property implements PropertyInterface
         return $this->sortable;
     }
 
-    public function withSortable(bool $sortable): self
+    public function withSortable(bool $sortable): static
     {
         $self = clone $this;
         $self->sortable = $sortable;
@@ -148,7 +136,7 @@ class Property implements PropertyInterface
         return $this->translatable;
     }
 
-    public function withTranslatable(bool $translatable): self
+    public function withTranslatable(bool $translatable): static
     {
         $self = clone $this;
         $self->translatable = $translatable;
@@ -161,7 +149,7 @@ class Property implements PropertyInterface
         return $this->attributes;
     }
 
-    public function withAttributes(array $attributes): self
+    public function withAttributes(array $attributes): static
     {
         $self = clone $this;
         $self->attributes = $attributes;
@@ -174,7 +162,7 @@ class Property implements PropertyInterface
         return $this->attributes[$name] ?? null;
     }
 
-    public function withAttribute(string $name, mixed $value): self
+    public function withAttribute(string $name, mixed $value): static
     {
         $self = clone $this;
         $self->attributes[$name] = $value;
@@ -187,7 +175,7 @@ class Property implements PropertyInterface
         return $this->rowAttributes;
     }
 
-    public function withRowAttributes(array $attributes): self
+    public function withRowAttributes(array $attributes): static
     {
         $self = clone $this;
         $self->rowAttributes = $attributes;
@@ -200,23 +188,10 @@ class Property implements PropertyInterface
         return $this->headerAttributes;
     }
 
-    public function withHeaderAttributes(array $attributes): self
+    public function withHeaderAttributes(array $attributes): static
     {
         $self = clone $this;
         $self->headerAttributes = $attributes;
-
-        return $self;
-    }
-
-    public function getTranslationDomain(): ?string
-    {
-        return $this->translationDomain;
-    }
-
-    public function withTranslationDomain(?string $translationDomain): self
-    {
-        $self = clone $this;
-        $self->translationDomain = $translationDomain;
 
         return $self;
     }
@@ -226,7 +201,7 @@ class Property implements PropertyInterface
         return $this->dataTransformer;
     }
 
-    public function withDataTransformer(?string $dataTransformer): self
+    public function withDataTransformer(?string $dataTransformer): static
     {
         $self = clone $this;
         $self->dataTransformer = $dataTransformer;
@@ -239,7 +214,7 @@ class Property implements PropertyInterface
         return $this->permissions;
     }
 
-    public function withPermissions(array $permissions): self
+    public function withPermissions(array $permissions): static
     {
         $self = clone $this;
         $self->permissions = $permissions;
@@ -252,7 +227,7 @@ class Property implements PropertyInterface
         return $this->condition;
     }
 
-    public function withCondition(?string $condition): self
+    public function withCondition(?string $condition): static
     {
         $self = clone $this;
         $self->condition = $condition;
@@ -265,7 +240,7 @@ class Property implements PropertyInterface
         return $this->sortingPath;
     }
 
-    public function withSortingPath(?string $sortingPath): self
+    public function withSortingPath(?string $sortingPath): static
     {
         $self = clone $this;
         $self->sortingPath = $sortingPath;

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Unit\View\Helper;
 
 use LAG\AdminBundle\Metadata\Attribute\Show;
-use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
+use LAG\AdminBundle\Metadata\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Security\Voter\OperationVoter;
-use LAG\AdminBundle\View\Helper\SecurityHelper;
+use LAG\AdminBundle\Twig\Runtime\SecurityRuntime;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +15,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 final class SecurityHelperTest extends TestCase
 {
-    private SecurityHelper $helper;
+    private SecurityRuntime $helper;
     private MockObject $operationFactory;
     private MockObject $security;
 
@@ -44,7 +44,7 @@ final class SecurityHelperTest extends TestCase
     {
         $this->operationFactory = $this->createMock(OperationFactoryInterface::class);
         $this->security = $this->createMock(Security::class);
-        $this->helper = new SecurityHelper(
+        $this->helper = new SecurityRuntime(
             $this->operationFactory,
             $this->security,
         );

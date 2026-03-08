@@ -16,7 +16,7 @@ class Count extends Property
         ?string $template = '@LAGAdmin/grids/properties/count.html.twig',
         bool $sortable = true,
         bool $translatable = true,
-        ?string $translationDomain = null,
+
         array $attributes = [],
         array $rowAttributes = [],
         array $headerAttributes = [],
@@ -32,7 +32,7 @@ class Count extends Property
             template: $template,
             sortable: $sortable,
             translatable: $translatable,
-            translationDomain: $translationDomain,
+
             attributes: $attributes,
             rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,

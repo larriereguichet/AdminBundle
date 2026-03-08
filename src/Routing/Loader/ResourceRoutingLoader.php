@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\Loader;
 
-use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 use LAG\AdminBundle\Request\ContextBuilder\PartialContextBuilder;
-use LAG\AdminBundle\Resource\Factory\DefinitionFactoryInterface;
-use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
+use LAG\AdminBundle\Resource\Factory\ResourceCollectionFactoryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGeneratorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+
 use function Symfony\Component\String\u;
 
 final class ResourceRoutingLoader extends Loader
@@ -22,8 +22,7 @@ final class ResourceRoutingLoader extends Loader
         private readonly string $applicationParameter,
         private readonly string $resourceParameter,
         private readonly string $operationParameter,
-        private readonly DefinitionFactoryInterface $definitionFactory,
-        private readonly ResourceFactoryInterface $resourceFactory,
+        private readonly ResourceCollectionFactoryInterface $resourceCollectionFactory,
         private readonly PathGeneratorInterface $pathGenerator,
     ) {
         parent::__construct();
@@ -35,11 +34,10 @@ final class ResourceRoutingLoader extends Loader
             throw new \RuntimeException('Do not add the Admin routing loader "lag_admin" twice');
         }
         $routes = new RouteCollection();
-        $resourceNames = $this->definitionFactory->getResourceNames();
+        $resources = $this->resourceCollectionFactory->create();
 
-        foreach ($resourceNames as $resourceName) {
-            $resource = $this->resourceFactory->create($resourceName);
-            $this->loadResource($resource, $routes);
+        foreach ($resources as $adminResource) {
+            $this->loadResource($adminResource, $routes);
         }
         $this->loaded = true;
 
@@ -51,7 +49,7 @@ final class ResourceRoutingLoader extends Loader
         return 'lag_admin' === $type;
     }
 
-    private function loadResource(Resource $resource, RouteCollection $routes): void
+    private function loadResource(ResourceInterface $resource, RouteCollection $routes): void
     {
         $identifiers = [];
 
@@ -63,9 +61,9 @@ final class ResourceRoutingLoader extends Loader
             $path = $this->pathGenerator->generatePath($operation);
             $defaults = [
                 '_controller' => $operation->getController(),
-                $this->applicationParameter => $operation->getResource()->getApplication(),
-                $this->resourceParameter => $operation->getResource()->getName(),
-                $this->operationParameter => $operation->getName(),
+                $this->applicationParameter => $operation->getResource()->getApplicationName(),
+                $this->resourceParameter => $operation->getResource()->getShortName(),
+                $this->operationParameter => $operation->getShortName(),
             ];
 
             $route = new Route($path, $defaults, [], $identifiers, null, [], $operation->getMethods());

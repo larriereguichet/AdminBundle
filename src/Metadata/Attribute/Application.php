@@ -4,18 +4,36 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Attribute;
 
-class Application
+use LAG\AdminBundle\Metadata\ApplicationInterface;
+use LAG\AdminBundle\Metadata\ApplicationMetadataInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
+class Application implements ApplicationInterface, ApplicationMetadataInterface
 {
     public function __construct(
+        #[Assert\NotBlank(message: 'The application name should not be blank')]
         private string $name,
-        private ?string $dateFormat = null,
-        private ?string $timeFormat = null,
-        private ?string $translationDomain = null,
-        private ?string $translationPattern = null,
-        private ?string $routePattern = null,
-        private ?string $baseTemplate = null,
-        /** @var array<int, string>|null $permissions */
-        private ?array $permissions = null,
+
+        #[Assert\NotBlank(message: 'The application date format should not be blank')]
+        private string $dateFormat = 'd/m/Y',
+
+        #[Assert\NotBlank(message: 'The application time format should not be blank')]
+        private string $timeFormat = 'H:i',
+
+        #[Assert\NotBlank(message: 'The application translation domain should not be blank')]
+        private string $translationDomain = 'messages',
+
+        #[Assert\NotBlank(message: 'The application translation pattern should not be blank')]
+        private string $translationPattern = '{application}.{resource}.{message}',
+
+        #[Assert\NotBlank(message: 'The application route pattern should not be blank')]
+        private string $routePattern = '{application}.{resource}.{operation}',
+
+        #[Assert\NotBlank(message: 'The application base template should not be blank')]
+        private string $baseTemplate = '@LAGAdmin/base.html.twig',
+
+        /** @var array<int, string> $permissions */
+        private array $permissions = ['ROLE_ADMIN'],
     ) {
     }
 
@@ -32,7 +50,7 @@ class Application
         return $self;
     }
 
-    public function getDateFormat(): ?string
+    public function getDateFormat(): string
     {
         return $this->dateFormat;
     }
@@ -45,7 +63,7 @@ class Application
         return $self;
     }
 
-    public function getTimeFormat(): ?string
+    public function getTimeFormat(): string
     {
         return $this->timeFormat;
     }
@@ -58,7 +76,7 @@ class Application
         return $self;
     }
 
-    public function getTranslationDomain(): ?string
+    public function getTranslationDomain(): string
     {
         return $this->translationDomain;
     }
@@ -71,7 +89,7 @@ class Application
         return $self;
     }
 
-    public function getTranslationPattern(): ?string
+    public function getTranslationPattern(): string
     {
         return $this->translationPattern;
     }
@@ -84,7 +102,7 @@ class Application
         return $self;
     }
 
-    public function getRoutePattern(): ?string
+    public function getRoutePattern(): string
     {
         return $this->routePattern;
     }
@@ -97,7 +115,7 @@ class Application
         return $self;
     }
 
-    public function getBaseTemplate(): ?string
+    public function getBaseTemplate(): string
     {
         return $this->baseTemplate;
     }
@@ -110,8 +128,7 @@ class Application
         return $self;
     }
 
-    /** @return string[]|null */
-    public function getPermissions(): ?array
+    public function getPermissions(): array
     {
         return $this->permissions;
     }

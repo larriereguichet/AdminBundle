@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Component\Cell;
 
-use LAG\AdminBundle\Metadata\Attribute\Map;
 use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Metadata\Attribute\Map;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(
@@ -15,7 +15,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 final class MapComponent
 {
     public mixed $data;
-    /** @var array<int|string, mixed> $map */
+    /** @var array<int|string, mixed> */
     public array $map = [];
     public ?string $mappedValue = null;
     public bool $translatable = false;

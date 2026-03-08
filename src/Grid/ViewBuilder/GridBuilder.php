@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
+use LAG\AdminBundle\Grid\View;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Grid\View;
 
 final readonly class GridBuilder implements GridBuilderInterface
 {
     public function __construct(
         private RowBuilderInterface $rowBuilder,
-        private ActionBuilderInterface $actionBuilder,
         private AttributeBuilderInterface $attributeBuilder,
     ) {
     }
@@ -29,6 +28,7 @@ final readonly class GridBuilder implements GridBuilderInterface
         if ($grid->useHeaders()) {
             $headers = $this->rowBuilder->buildHeadersRow($operation, $grid, $context);
         }
+        $context['translation_domain'] = $operation->getResource()->getTranslationDomain();
 
         return new View\Grid(
             name: $grid->getName(),
@@ -39,10 +39,9 @@ final readonly class GridBuilder implements GridBuilderInterface
             title: $this->buildTitle($grid, $operation),
             template: $grid->getTemplate(),
             options: $grid->getOptions(),
-            actions: $this->buildCollectionActions($grid, $data, $context),
             context: $context,
             emptyMessage: $grid->getEmptyMessage(),
-            translationDomain: $grid->getTranslationDomain(),
+            translationDomain: $operation->getResource()->getTranslationDomain(),
         );
     }
 
@@ -61,27 +60,6 @@ final readonly class GridBuilder implements GridBuilderInterface
         }
 
         return $rows;
-    }
-
-    /**
-     * @param array<string, mixed> $context
-     *
-     * @return array<int, View\Cell>
-     */
-    private function buildCollectionActions(GridInterface $grid, mixed $data, array $context): array
-    {
-        $actionViews = [];
-        $actions = $grid->getCollectionActions();
-
-        foreach ($actions as $action) {
-            $actionView = $this->actionBuilder->buildAction($action, $data, $context);
-
-            if ($actionView !== null) {
-                $actionViews[] = $actionView;
-            }
-        }
-
-        return $actionViews;
     }
 
     private function buildTitle(GridInterface $grid, OperationInterface $operation): ?View\Title

@@ -22,7 +22,7 @@ final class DataMapperTest extends TestCase
     #[DataProvider('values')]
     public function itMapsPropertyData(PropertyInterface $property, mixed $data, mixed $expectedValue): void
     {
-        $value = $this->dataMapper->getPropertyValue($data, $property);
+        $value = $this->dataMapper->getPropertyValue($property, $data);
 
         self::assertEquals($expectedValue, $value);
     }
@@ -34,7 +34,7 @@ final class DataMapperTest extends TestCase
         $data->name = 'Some name';
 
         $this->expectExceptionObject(new Exception('The property path "wrongPath" is not readable in data of type "stdClass"'));
-        $this->dataMapper->getPropertyValue($data, new Text(name: 'some', propertyPath: 'wrongPath'));
+        $this->dataMapper->getPropertyValue(new Text(name: 'some', propertyPath: 'wrongPath'), $data);
     }
 
     public static function values(): iterable

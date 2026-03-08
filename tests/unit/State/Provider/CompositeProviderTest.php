@@ -38,7 +38,7 @@ final class CompositeProviderTest extends TestCase
     #[DataProvider('operationsProvider')]
     public function testProvideWithoutProvider(OperationInterface $operation): void
     {
-        $resource = new Resource(name: 'my_resource');
+        $resource = new Resource(shortName: 'my_resource');
         $operation = $operation->setResource($resource);
 
         $this->expectExceptionObject(new Exception(\sprintf(

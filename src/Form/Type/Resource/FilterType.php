@@ -33,15 +33,14 @@ final class FilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->define('operation')
-            ->required()
-            ->allowedTypes('string')
-        ;
-        $resolver
             ->setDefaults([
                 'csrf_protection' => false,
                 'method' => 'GET',
             ])
+
+            ->define('operation')
+            ->required()
+            ->allowedTypes('string')
         ;
     }
 

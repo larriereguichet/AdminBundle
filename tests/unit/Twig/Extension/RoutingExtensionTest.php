@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Tests\Unit\Twig\Extension;
 
 use LAG\AdminBundle\Tests\Unit\TestCase;
 use LAG\AdminBundle\Twig\Extension\RoutingExtension;
-use LAG\AdminBundle\View\Helper\RoutingHelper;
+use LAG\AdminBundle\Twig\Runtime\RoutingRuntime;
 use PHPUnit\Framework\Attributes\Test;
 use Twig\TwigFunction;
 
@@ -18,10 +18,10 @@ final class RoutingExtensionTest extends TestCase
         $extension = new RoutingExtension();
 
         self::assertEquals([
-            new TwigFunction('lag_admin_path', [RoutingHelper::class, 'generatePath']),
-            new TwigFunction('lag_admin_url', [RoutingHelper::class, 'generateUrl']),
-            new TwigFunction('lag_admin_resource_url', [RoutingHelper::class, 'generateResourceUrl']),
-            new TwigFunction('lag_admin_link_url', [RoutingHelper::class, 'generateLinkUrl']),
+            new TwigFunction('lag_admin_path', [RoutingRuntime::class, 'generatePath']),
+            new TwigFunction('lag_admin_url', [RoutingRuntime::class, 'generateUrl']),
+            new TwigFunction('lag_admin_resource_url', [RoutingRuntime::class, 'generateResourceUrl']),
+            new TwigFunction('lag_admin_link_url', [RoutingRuntime::class, 'generateLinkUrl']),
         ], $extension->getFunctions());
     }
 }

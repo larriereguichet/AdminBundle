@@ -12,6 +12,4 @@ final class Filters
 
     public FormView $form;
     public bool $show = false;
-
-
 }

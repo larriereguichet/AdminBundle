@@ -25,7 +25,7 @@ final class CompositeProcessorTest extends TestCase
         $processor1 = $this->createMock(ProcessorInterface::class);
         $processor2 = new FakeProcessor();
         $operation = $operation->withProcessor(FakeProcessor::class)
-            ->setResource(new Resource(name: 'my_resource'))
+            ->setResource(new Resource(shortName: 'my_resource'))
         ;
 
         $processor1->expects($this->never())
@@ -39,7 +39,7 @@ final class CompositeProcessorTest extends TestCase
     #[DataProvider('operationsProvider')]
     public function testProcessWithoutProcessors(OperationInterface $operation): void
     {
-        $operation = $operation->setResource(new Resource(name: 'my_resource'));
+        $operation = $operation->setResource(new Resource(shortName: 'my_resource'));
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(\sprintf(
             'The resource "my_resource" and operation "%s" is not supported by any processor',

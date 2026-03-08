@@ -9,7 +9,6 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
-use Twig\Extension\RuntimeExtensionInterface;
 use Twig\Runtime\EscaperRuntime;
 
 final class AttributeViewFactoryTest extends TestCase

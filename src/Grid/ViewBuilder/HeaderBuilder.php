@@ -27,7 +27,7 @@ final readonly class HeaderBuilder implements HeaderBuilderInterface
             name: $property->getName(),
             attributes: $this->attributeBuilder->buildAttributes($property->getHeaderAttributes()),
             label: $property->getLabel(),
-            translationDomain: $grid->getTranslationDomain(),
+            translationDomain: $context['translation_domain'] ?? 'admin',
             sort: $context['sort'] ?? null,
             sortParameter: '', // TODO ?
             order: $context['order'] ?? null,

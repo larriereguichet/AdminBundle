@@ -4,25 +4,32 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Factory;
 
-use LAG\AdminBundle\Config\ConfigurationMapper;
 use LAG\AdminBundle\Exception\MissingMetadataException;
-use LAG\AdminBundle\Metadata\GridInterface;
+use LAG\AdminBundle\Metadata\GridMetadataInterface;
 
 final readonly class GridMetadataFactory implements GridMetadataFactoryInterface
 {
+    /** @param array<string, string> $gridTemplates */
     public function __construct(
-        /** @var  array<string, array<string, mixed>> $grids */
-        private array $grids,
-        private ConfigurationMapper $configurationMapper = new ConfigurationMapper(),
+        private GridCollectionMetadataFactoryInterface $metadataFactory,
+        private array $gridTemplates,
     ) {
     }
 
-    public function create(string $gridName): GridInterface
+    public function createMetadata(string $gridName): GridMetadataInterface
     {
-        if (!\array_key_exists($gridName, $this->grids)) {
-            throw new MissingMetadataException('Unable to find metadata fir the grid "%s"', $gridName);
-        }
+        $grids = $this->metadataFactory->createMetadata();
+        $grid = $grids[$gridName] ?? null;
 
-        return $this->configurationMapper->toGrid($this->grids[$gridName]);
+        if ($grid === null) {
+            throw new MissingMetadataException('Unable to find metadata for the grid "%s"', $gridName);
+        }
+        $type = $grid->getType() ?? 'table';
+        $template = $grid->getTemplate() ?? $this->gridTemplates[$type] ?? null;
+
+        return $grid
+            ->withType($type)
+            ->withTemplate($template)
+        ;
     }
 }

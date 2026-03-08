@@ -14,7 +14,7 @@ class Boolean extends Property
         ?string $template = '@LAGAdmin/grids/properties/boolean.html.twig',
         bool $sortable = true,
         bool $translatable = true,
-        ?string $translationDomain = null,
+
         array $attributes = [],
         array $rowAttributes = [],
         array $headerAttributes = [],
@@ -30,7 +30,7 @@ class Boolean extends Property
             template: $template,
             sortable: $sortable,
             translatable: $translatable,
-            translationDomain: $translationDomain,
+
             attributes: $attributes,
             rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,

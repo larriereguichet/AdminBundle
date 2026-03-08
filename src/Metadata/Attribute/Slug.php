@@ -16,7 +16,7 @@ class Slug extends Property
         ?string $template = '@LAGAdmin/grids/properties/slug.html.twig',
         bool $sortable = false,
         bool $translatable = true,
-        ?string $translationDomain = null,
+
         array $attributes = [],
         array $rowAttributes = [],
         array $headerAttributes = [],
@@ -37,7 +37,7 @@ class Slug extends Property
             label: $label, template: $template,
             sortable: $sortable,
             translatable: $translatable,
-            translationDomain: $translationDomain,
+
             attributes: $attributes,
             rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,

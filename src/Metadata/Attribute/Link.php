@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Attribute;
 
+use LAG\AdminBundle\Workflow\WorkflowAwareInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Assert\Expression(
@@ -11,11 +12,24 @@ use Symfony\Component\Validator\Constraints as Assert;
     message: 'The link should contains a route or an url or an resource and operation name'
 )]
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
-class Link extends Property implements Url
+class Link extends Property implements WorkflowAwareInterface
 {
     /** @param array<string, mixed> $routeParameters */
     public function __construct(
         ?string $name = null,
+        string|bool|null $propertyPath = null,
+        string|bool|null $label = null,
+        ?string $template = '@LAGAdmin/grids/properties/link.html.twig',
+        bool $sortable = false,
+        bool $translatable = true,
+
+        array $attributes = [],
+        array $rowAttributes = [],
+        array $headerAttributes = [],
+        ?string $dataTransformer = null,
+        ?array $permissions = null,
+        ?string $condition = null,
+        ?string $sortingPath = null,
 
         private ?string $route = null,
         private array $routeParameters = [],
@@ -25,20 +39,8 @@ class Link extends Property implements Url
         private ?string $text = null,
         private ?string $textPath = null,
         private ?string $icon = null,
-        string|bool|null $propertyPath = null,
-        string|bool|null $label = null,
-
-        ?string $template = '@LAGAdmin/grids/properties/link.html.twig',
-        bool $sortable = false,
-        bool $translatable = true,
-        ?string $translationDomain = null,
-        array $attributes = [],
-        array $rowAttributes = [],
-        array $headerAttributes = [],
-        ?string $dataTransformer = null,
-        ?array $permissions = null,
-        ?string $condition = null,
-        ?string $sortingPath = null,
+        private ?string $workflow = null,
+        private ?string $workflowTransition = null,
     ) {
         parent::__construct(
             name: $name,
@@ -47,7 +49,7 @@ class Link extends Property implements Url
             template: $template,
             sortable: $sortable,
             translatable: $translatable,
-            translationDomain: $translationDomain,
+
             attributes: $attributes,
             rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,
@@ -84,6 +86,7 @@ class Link extends Property implements Url
         return $self;
     }
 
+    /** @return array<string, mixed> */
     public function getRouteParameters(): array
     {
         return $this->routeParameters;
@@ -159,6 +162,32 @@ class Link extends Property implements Url
     {
         $self = clone $this;
         $self->textPath = $textPath;
+
+        return $self;
+    }
+
+    public function getWorkflow(): ?string
+    {
+        return $this->workflow;
+    }
+
+    public function withWorkflow(?string $workflow): self
+    {
+        $self = clone $this;
+        $self->workflow = $workflow;
+
+        return $self;
+    }
+
+    public function getWorkflowTransition(): ?string
+    {
+        return $this->workflowTransition;
+    }
+
+    public function withWorkflowTransition(?string $workflowTransition): self
+    {
+        $self = clone $this;
+        $self->workflowTransition = $workflowTransition;
 
         return $self;
     }

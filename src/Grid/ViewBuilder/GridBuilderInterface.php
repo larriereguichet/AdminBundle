@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
+use LAG\AdminBundle\Grid\View\Grid;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\GridInterface;
-use LAG\AdminBundle\Grid\View\Grid;
 
 interface GridBuilderInterface
 {
@@ -17,8 +17,6 @@ interface GridBuilderInterface
      * @param CollectionOperationInterface $operation The associated operation
      * @param iterable<int|string, mixed> $data Iterable data. Usually an array or a collection of objects
      * @param array<string, mixed> $context An additional runtime context
-     *
-     * @return Grid
      */
     public function build(
         GridInterface $grid,

@@ -14,7 +14,7 @@ final class ResourceConfigTest extends TestCase
     #[Test]
     public function itConvertsAResourceToAnArray(): void
     {
-        $resource = new Resource(name: 'my_resource');
+        $resource = new Resource(shortName: 'my_resource');
         $config = new ResourceConfig();
         $config->addResource($resource);
 

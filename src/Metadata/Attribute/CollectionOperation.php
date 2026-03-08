@@ -7,59 +7,31 @@ namespace LAG\AdminBundle\Metadata\Attribute;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\CollectionOperationMetadataInterface;
 use LAG\AdminBundle\Metadata\FilterInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-abstract class CollectionOperation extends Operation implements CollectionOperationInterface
+abstract class CollectionOperation extends Operation implements CollectionOperationInterface, CollectionOperationMetadataInterface
 {
     /**
-     * @param string $name
      * @param array<string, mixed> $context
-     * @param string|null $title
-     * @param string|null $description
-     * @param string|null $icon
-     * @param string|null $template
-     * @param string|null $baseTemplate
      * @param array<string>|null $permissions
-     * @param string|null $controller
-     * @param string|null $route
      * @param array<string, mixed>|null $routeParameters
      * @param array<string> $methods
-     * @param string|null $path
-     * @param string|null $redirectRoute
      * @param array<string, mixed> $redirectRouteParameters
-     * @param string|null $form
      * @param array<string, mixed>|null $formOptions
-     * @param string|null $formTemplate
-     * @param string|null $processor
-     * @param string $provider
      * @param array<string>|null $identifiers
-     * @param array<string, Action>|null $contextualActions
-     * @param array<string, Action>|null $itemActions
-     * @param string|null $redirectOperation
-     * @param bool|null $validation
+     * @param array<string, Link>|null $contextualLinks
+     * @param array<string, Link>|null $itemLinks
      * @param array<string, mixed>|null $validationContext
-     * @param bool|null $ajax
      * @param array<string, mixed>|null $normalizationContext
      * @param array<string, mixed>|null $denormalizationContext
-     * @param string|null $input
-     * @param string|null $output
-     * @param string|null $workflow
-     * @param string|null $workflowTransition
-     * @param bool $embedded
-     * @param string|null $flashMessage
-     * @param bool $pagination
-     * @param int $itemsPerPage
-     * @param string $pageParameter
      * @param array<string, mixed> $criteria
      * @param array<string, mixed> $orderBy
      * @param array<int|string, FilterInterface>|null $filters
-     * @param string|null $grid
      * @param array<string, mixed> $gridOptions
-     * @param array<string, Action>|null $collectionActions
-     * @param string|null $filterForm
+     * @param array<string, Link>|null $collectionActions
      * @param array<string, mixed> $filterFormOptions
-     * @param string|null $collectionForm
      * @param array<string, mixed>|null $collectionFormOptions
      */
     public function __construct(
@@ -84,8 +56,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         ?string $processor = ORMProcessor::class,
         string $provider = ORMProvider::class,
         ?array $identifiers = null,
-        ?array $contextualActions = null,
-        ?array $itemActions = null,
+        ?array $contextualLinks = null,
+        ?array $itemLinks = null,
         ?string $redirectOperation = null,
         ?bool $validation = true,
         ?array $validationContext = null,
@@ -132,7 +104,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         private ?array $collectionFormOptions = null, // TODO remove ?
     ) {
         parent::__construct(
-            name: $name,
+            shortName: $name,
             context: $context,
             title: $title,
             description: $description,
@@ -153,8 +125,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             processor: $processor,
             provider: $provider,
             identifiers: $identifiers,
-            contextualActions: $contextualActions,
-            itemActions: $itemActions,
+            contextualLinks: $contextualLinks,
+            itemLinks: $itemLinks,
             redirectOperation: $redirectOperation,
             validation: $validation,
             validationContext: $validationContext,
@@ -175,7 +147,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->pagination;
     }
 
-    public function setPagination(bool $pagination): self
+    public function setPagination(bool $pagination): static
     {
         $self = clone $this;
         $self->pagination = $pagination;
@@ -188,7 +160,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->itemsPerPage;
     }
 
-    public function withItemsPerPage(int $itemsPerPage): self
+    public function withItemsPerPage(int $itemsPerPage): static
     {
         $self = clone $this;
         $self->itemsPerPage = $itemsPerPage;
@@ -201,7 +173,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->pageParameter;
     }
 
-    public function withPageParameter(string $pageParameter): self
+    public function withPageParameter(string $pageParameter): static
     {
         $self = clone $this;
         $self->pageParameter = $pageParameter;
@@ -214,7 +186,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->criteria;
     }
 
-    public function withCriteria(array $criteria): self
+    public function withCriteria(array $criteria): static
     {
         $self = clone $this;
         $self->criteria = $criteria;
@@ -227,7 +199,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->orderBy;
     }
 
-    public function withOrderBy(array $orderBy): self
+    public function withOrderBy(array $orderBy): static
     {
         $self = clone $this;
         $self->orderBy = $orderBy;
@@ -267,7 +239,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->filters !== null && \count($this->filters) > 0;
     }
 
-    public function withFilters(array $filters): self
+    public function withFilters(array $filters): static
     {
         $self = clone $this;
         $self->filters = $filters;
@@ -275,7 +247,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $self;
     }
 
-    public function withFilter(FilterInterface $filter): self
+    public function withFilter(FilterInterface $filter): static
     {
         $self = clone $this;
         $self->filters[] = $filter;
@@ -288,7 +260,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->grid;
     }
 
-    public function withGrid(string $grid): self
+    public function withGrid(string $grid): static
     {
         $self = clone $this;
         $self->grid = $grid;
@@ -296,7 +268,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $self;
     }
 
-    public function withGridOptions(array $gridOptions): self
+    public function withGridOptions(array $gridOptions): static
     {
         $self = clone $this;
         $self->gridOptions = $gridOptions;
@@ -314,7 +286,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->filterForm;
     }
 
-    public function withFilterForm(?string $filterForm): self
+    public function withFilterForm(?string $filterForm): static
     {
         $self = clone $this;
         $self->filterForm = $filterForm;
@@ -327,7 +299,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->filterFormOptions;
     }
 
-    public function withFilterFormOptions(array $filterFormOptions): self
+    public function withFilterFormOptions(array $filterFormOptions): static
     {
         $self = clone $this;
         $self->filterFormOptions = $filterFormOptions;
@@ -340,7 +312,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->collectionForm;
     }
 
-    public function withCollectionForm(?string $collectionForm): self
+    public function withCollectionForm(?string $collectionForm): static
     {
         $self = clone $this;
         $self->collectionForm = $collectionForm;
@@ -353,7 +325,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->collectionFormOptions;
     }
 
-    public function withCollectionFormOptions(?array $collectionFormOptions): self
+    public function withCollectionFormOptions(?array $collectionFormOptions): static
     {
         $self = clone $this;
         $self->collectionFormOptions = $collectionFormOptions;
@@ -366,7 +338,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $this->collectionActions;
     }
 
-    public function withCollectionActions(?array $collectionActions): self
+    public function withCollectionActions(?array $collectionActions): static
     {
         $self = clone $this;
         $self->collectionActions = $collectionActions;

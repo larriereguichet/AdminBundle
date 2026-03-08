@@ -17,7 +17,7 @@ class Collection extends Property
         ?string $template = '@LAGAdmin/grids/properties/collection.html.twig',
         bool $sortable = false,
         bool $translatable = true,
-        ?string $translationDomain = null,
+
         array $attributes = [],
         array $rowAttributes = [],
         array $headerAttributes = [],
@@ -36,7 +36,7 @@ class Collection extends Property
             template: $template,
             sortable: $sortable,
             translatable: $translatable,
-            translationDomain: $translationDomain,
+
             attributes: $attributes,
             rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,

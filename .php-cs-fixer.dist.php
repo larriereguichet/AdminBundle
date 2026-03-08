@@ -22,6 +22,7 @@ return $config
         'elseif' => true,
         'declare_strict_types' => true,
         'single_line_throw' => false,
+        'single_trait_insert_per_statement' => false,
     ])
     ->setCacheFile('var/cache/.php-cs-fixer.cache')
     ->setFinder($finder)

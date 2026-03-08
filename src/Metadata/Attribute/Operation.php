@@ -7,56 +7,36 @@ namespace LAG\AdminBundle\Metadata\Attribute;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Exception\MissingOperationResourceException;
 use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\OperationMetadataInterface;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
-abstract class Operation implements OperationInterface
+abstract class Operation implements OperationInterface, OperationMetadataInterface
 {
     #[Ignore]
-    private ?Resource $resource = null;
+    private ?ResourceInterface $resource = null;
 
     /**
-     * @param string|null $name
      * @param array<string, mixed> $context
-     * @param string|null $title
-     * @param string|null $description
-     * @param string|null $icon
-     * @param string|null $template
-     * @param string|null $baseTemplate
      * @param array<string>|null $permissions
-     * @param string|null $controller
-     * @param string|null $route
      * @param array<string, mixed>|null $routeParameters
      * @param array<string> $methods
-     * @param string|null $path
-     * @param string|null $redirectRoute
      * @param array<string, mixed>|null $redirectRouteParameters
-     * @param string|null $form
      * @param array<string, mixed>|null $formOptions
-     * @param string|null $formTemplate
-     * @param string $processor
-     * @param string $provider
      * @param array<string>|null $identifiers
-     * @param array<string, Action>|null $contextualActions
-     * @param array<string, Action>|null $itemActions
-     * @param string|null $redirectOperation
-     * @param bool|null $validation
+     * @param array<string, Link>|null $contextualLinks
+     * @param array<string, Link>|null $itemLinks
      * @param array<string, mixed>|null $validationContext
-     * @param bool|null $ajax
      * @param array<string, mixed>|null $normalizationContext
      * @param array<string, mixed>|null $denormalizationContext
-     * @param string|null $input
-     * @param string|null $output
-     * @param string|null $workflow
-     * @param string|null $workflowTransition
-     * @param bool $embedded
-     * @param string|null $successMessage
      */
     public function __construct(
         // TODO check for space, dot and special characters
         #[Assert\NotBlank(message: 'The operation name should not be empty')]
-        private ?string $name = null,
+        private ?string $shortName = null,
 
         private array $context = [],
 
@@ -115,9 +95,9 @@ abstract class Operation implements OperationInterface
         #[Assert\NotNull(message: 'The contextual links should not be null. Use an empty array instead')]
         #[Assert\All(constraints: [new Assert\Type(type: Link::class)])]
         #[Assert\Valid]
-        private ?array $contextualActions = null,
+        private ?array $contextualLinks = null,
 
-        private ?array $itemActions = null,
+        private ?array $itemLinks = null,
 
         #[Assert\NotBlank(message: 'The redirect operation should not be empty, use null instead', allowNull: true)]
         private ?string $redirectOperation = null,
@@ -148,24 +128,24 @@ abstract class Operation implements OperationInterface
     ) {
     }
 
+    public function getShortName(): ?string
+    {
+        return $this->shortName;
+    }
+
     public function getName(): string
     {
-        return $this->name;
-    }
-
-    public function getFullName(): ?string
-    {
         if ($this->resource === null) {
-            return null;
+            throw new MissingOperationResourceException($this->shortName ?? '');
         }
 
-        return $this->resource->getApplication().'.'.$this->resource->getName().'.'.$this->name;
+        return $this->resource->getApplicationName().'.'.$this->resource->getShortName().'.'.$this->shortName;
     }
 
-    public function withName(?string $name): static
+    public function withShortName(?string $shortName): static
     {
         $self = clone $this;
-        $self->name = $name;
+        $self->shortName = $shortName;
 
         return $self;
     }
@@ -444,7 +424,7 @@ abstract class Operation implements OperationInterface
     }
 
     #[Ignore]
-    public function getResource(): Resource
+    public function getResource(): ResourceInterface
     {
         if ($this->resource === null) {
             throw new Exception('The operation resource has not been set');
@@ -453,7 +433,7 @@ abstract class Operation implements OperationInterface
         return $this->resource;
     }
 
-    public function setResource(Resource $resource): static
+    public function setResource(ResourceInterface $resource): static
     {
         if ($this->resource !== null) {
             throw new Exception('The operation resource can not be changed');
@@ -463,28 +443,28 @@ abstract class Operation implements OperationInterface
         return $this;
     }
 
-    public function getContextualActions(): ?array
+    public function getContextualLinks(): ?array
     {
-        return $this->contextualActions;
+        return $this->contextualLinks;
     }
 
-    public function withContextualActions(array $contextualActions): static
+    public function withContextualLinks(array $contextualLinks): static
     {
         $self = clone $this;
-        $self->contextualActions = $contextualActions;
+        $self->contextualLinks = $contextualLinks;
 
         return $self;
     }
 
-    public function getItemActions(): ?array
+    public function getItemLinks(): ?array
     {
-        return $this->itemActions;
+        return $this->itemLinks;
     }
 
-    public function withItemActions(array $itemActions): static
+    public function withItemLinks(array $itemLinks): static
     {
         $self = clone $this;
-        $self->itemActions = $itemActions;
+        $self->itemLinks = $itemLinks;
 
         return $self;
     }
@@ -598,7 +578,7 @@ abstract class Operation implements OperationInterface
         return $this->workflow;
     }
 
-    public function setWorkflow(?string $workflow): static
+    public function withWorkflow(?string $workflow): static
     {
         $self = clone $this;
         $self->workflow = $workflow;
@@ -611,7 +591,7 @@ abstract class Operation implements OperationInterface
         return $this->workflowTransition;
     }
 
-    public function setWorkflowTransition(?string $workflowTransition): static
+    public function withWorkflowTransition(?string $workflowTransition): static
     {
         $self = clone $this;
         $self->workflowTransition = $workflowTransition;

@@ -17,7 +17,7 @@ final class PathGeneratorTest extends TestCase
     #[Test]
     public function itGeneratesPath(): void
     {
-        $resource = new Resource(name: 'my_resource');
+        $resource = new Resource(shortName: 'my_resource');
         $operation = (new Index())
             ->setResource($resource)
             ->withPath('/some-path')

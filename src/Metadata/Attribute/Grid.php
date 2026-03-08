@@ -5,18 +5,14 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Metadata\Attribute;
 
 use LAG\AdminBundle\Metadata\GridInterface;
+use LAG\AdminBundle\Metadata\GridMetadataInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class Grid implements GridInterface
+class Grid implements GridInterface, GridMetadataInterface
 {
     /**
-     * @param string|null $name
-     * @param string|null $title
-     * @param string|null $type
-     * @param string|null $template
-     * @param string|null $translationDomain
      * @param array<string> $properties
      * @param array<string, mixed> $attributes
      * @param array<string, mixed> $rowAttributes
@@ -24,15 +20,7 @@ class Grid implements GridInterface
      * @param array<string, mixed> $headerAttributes
      * @param array<string, mixed> $titleAttributes
      * @param array<string, mixed> $options
-     * @param string|null $form
      * @param array<string, mixed> $formOptions
-     * @param array<string, Action>|null $actions
-     * @param array<string, Action>|null $collectionActions
-     * @param string|null $emptyMessage
-     * @param bool|null $useHeaders
-     * @param bool|null $sortable
-     * @param string $sortParameter
-     * @param string $orderParameter
      */
     public function __construct(
         #[Assert\NotBlank(message: 'The grid name should not be empty')]
@@ -47,9 +35,6 @@ class Grid implements GridInterface
         #[Assert\NotBlank(message: 'The grid template should not be an empty string', allowNull: true)]
         private ?string $template = null,
 
-        // TODO remove use operation domain instead
-        private ?string $translationDomain = null,
-
         #[Assert\Count(min: 1, minMessage: 'The grid should have at least one property')]
         private array $properties = [],
 
@@ -63,18 +48,6 @@ class Grid implements GridInterface
         private ?string $form = FormType::class,
 
         private array $formOptions = [],
-
-        /** @var array<int|string, Action>|null $actions */
-        #[Assert\All(constraints: [new Assert\Type(type: Action::class)])]
-        #[Assert\Valid]
-        #[Assert\NotNull]
-        private ?array $actions = null,
-
-        /** @var array<int|string, Action>|null $collectionActions */
-        #[Assert\All(constraints: [new Assert\Type(type: Action::class)])]
-        #[Assert\Valid]
-        #[Assert\NotNull]
-        private ?array $collectionActions = null,
 
         private ?string $emptyMessage = null,
 
@@ -140,19 +113,6 @@ class Grid implements GridInterface
     {
         $self = clone $this;
         $self->template = $template;
-
-        return $self;
-    }
-
-    public function getTranslationDomain(): ?string
-    {
-        return $this->translationDomain;
-    }
-
-    public function withTranslationDomain(?string $translationDomain): self
-    {
-        $self = clone $this;
-        $self->translationDomain = $translationDomain;
 
         return $self;
     }
@@ -273,36 +233,6 @@ class Grid implements GridInterface
         return $self;
     }
 
-    /** @return array<int|string, Action>|null */
-    public function getActions(): ?array
-    {
-        return $this->actions;
-    }
-
-    /** @param array<string, Action> $actions */
-    public function withActions(?array $actions): self
-    {
-        $self = clone $this;
-        $self->actions = $actions;
-
-        return $self;
-    }
-
-    /** @return array<int|string, Action>|null */
-    public function getCollectionActions(): ?array
-    {
-        return $this->collectionActions;
-    }
-
-    /** @param array<string, Action> $collectionActions */
-    public function withCollectionActions(?array $collectionActions): self
-    {
-        $self = clone $this;
-        $self->collectionActions = $collectionActions;
-
-        return $self;
-    }
-
     public function getEmptyMessage(): ?string
     {
         return $this->emptyMessage;
@@ -352,6 +282,7 @@ class Grid implements GridInterface
     public function setSortParameter(?string $sortParameter): self
     {
         $this->sortParameter = $sortParameter;
+
         return $this;
     }
 
@@ -363,6 +294,7 @@ class Grid implements GridInterface
     public function setOrderParameter(?string $orderParameter): self
     {
         $this->orderParameter = $orderParameter;
+
         return $this;
     }
 

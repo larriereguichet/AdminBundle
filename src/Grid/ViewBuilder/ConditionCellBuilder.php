@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
+use LAG\AdminBundle\Grid\View\Cell;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use LAG\AdminBundle\Grid\View\Cell;
 
 final readonly class ConditionCellBuilder implements CellBuilderInterface
 {

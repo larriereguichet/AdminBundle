@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Resource\Factory;
 
 use LAG\AdminBundle\Metadata\OperationInterface;
+
 use function Symfony\Component\String\u;
 
 final readonly class OperationFactory implements OperationFactoryInterface
@@ -18,8 +19,7 @@ final readonly class OperationFactory implements OperationFactoryInterface
     {
         $resourceName = u($operationName)->beforeLast('.')->toString();
         $operationName = u($operationName)->afterLast('.')->toString();
-        $resource = $this->resourceFactory->create($resourceName);
 
-        return $resource->getOperation($operationName);
+        return $this->resourceFactory->create($resourceName)->getOperation($operationName);
     }
 }

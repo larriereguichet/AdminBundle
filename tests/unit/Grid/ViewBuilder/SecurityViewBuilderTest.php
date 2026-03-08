@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
+use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
+use LAG\AdminBundle\Grid\ViewFactory\SecurityCellBuilder;
 use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\Attribute\Index;
 use LAG\AdminBundle\Metadata\Attribute\Text;
-use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
-use LAG\AdminBundle\Grid\ViewFactory\SecurityCellBuilder;
-use LAG\AdminBundle\Grid\View\Cell;
 use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionCheckerInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;

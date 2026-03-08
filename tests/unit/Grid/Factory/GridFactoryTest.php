@@ -33,7 +33,7 @@ final class GridFactoryTest extends TestCase
 
         $this->metadataFactory
             ->expects($this->once())
-            ->method('create')
+            ->method('createMetadata')
             ->with('some_grid')
             ->willReturn($metadata)
         ;
@@ -64,7 +64,7 @@ final class GridFactoryTest extends TestCase
 
         $this->metadataFactory
             ->expects($this->once())
-            ->method('create')
+            ->method('createMetadata')
             ->with('some_grid')
             ->willReturn($metadata)
         ;

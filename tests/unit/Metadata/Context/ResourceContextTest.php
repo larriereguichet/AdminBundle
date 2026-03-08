@@ -7,9 +7,9 @@ namespace LAG\AdminBundle\Tests\Unit\Metadata\Context;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\Attribute\Show;
+use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContext;
-use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -29,7 +29,7 @@ final class ResourceContextTest extends TestCase
     {
         $request = new Request(['test']);
 
-        $resource = new Resource(name: 'my_resource');
+        $resource = new Resource(shortName: 'my_resource');
         $operation = new Show(name: 'my_operation');
         $operation = $operation->setResource($resource);
         $resource = $resource->withOperations([$operation]);
@@ -54,7 +54,7 @@ final class ResourceContextTest extends TestCase
 
         $contextResource = $this->resourceContext->getResource();
 
-        $this->assertEquals($resource->getName(), $contextResource->getName());
+        $this->assertEquals($resource->getShortName(), $contextResource->getShortName());
     }
 
     #[Test]

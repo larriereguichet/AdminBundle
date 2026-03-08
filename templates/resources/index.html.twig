@@ -4,8 +4,8 @@
 
 {% block content %}
     <div class="admin-index admin-{{ resource.name }}">
-        {% block collection_actions %}
-            <twig:lag_admin:grid_actions actions="{{ grid.actions }}"></twig:lag_admin:grid_actions>
+        {% block collection_links %}
+            <twig:lag_admin:links links="{{ operation.collectionLinks }}"></twig:lag_admin:links>
         {% endblock %}
 
         {% block filters %}

@@ -15,8 +15,6 @@ readonly class Row implements \IteratorAggregate
         public ComponentAttributes $attributes,
         /** @var iterable<Cell|Header> $cells */
         public iterable $cells = [],
-        /** @var iterable<Cell> */
-        public iterable $actions = [],
         public mixed $data = null,
     ) {
     }

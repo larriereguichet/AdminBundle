@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
+use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
+use LAG\AdminBundle\Grid\ViewFactory\CompoundCellBuilder;
 use LAG\AdminBundle\Metadata\Attribute\Compound;
 use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\Attribute\Text;
 use LAG\AdminBundle\Metadata\Attribute\Update;
-use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
-use LAG\AdminBundle\Grid\ViewFactory\CompoundCellBuilder;
-use LAG\AdminBundle\Grid\View\Cell;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

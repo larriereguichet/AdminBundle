@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Component;
 
-use LAG\AdminBundle\Metadata as Metadata;
 use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Metadata;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
 use function Symfony\Component\String\u;
 
 // TODO remove ?
@@ -19,7 +20,7 @@ final class Text
     public mixed $text;
     public bool $translation = true;
     public ?string $translationDomain = null;
-    /** @var array<string, mixed> $translationParameters */
+    /** @var array<string, mixed> */
     public array $translationParameters = [];
     public bool $displayHtmlElement = true;
 
@@ -28,7 +29,7 @@ final class Text
         if ($data === null) {
             $data = '';
         }
-        /** @var \LAG\AdminBundle\Metadata\Attribute\Text $property */
+        /** @var Metadata\Attribute\Text $property */
         $property = $cell->property;
         $data = u((string) $data);
 

@@ -5,19 +5,24 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
-use LAG\AdminBundle\Grid\Factory\CacheGridFactory;
 use LAG\AdminBundle\Grid\Factory\GridFactory;
 use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
-use LAG\AdminBundle\Grid\ViewBuilder\DataCellBuilder;
-use LAG\AdminBundle\Grid\ViewBuilder\CellBuilder;
-use LAG\AdminBundle\Grid\ViewBuilder\CellBuilderInterface;
+use LAG\AdminBundle\Grid\Registry\DataTransformerRegistry;
+use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\AttributeBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\AttributeBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\CellBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\CellBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\CollectionCellBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\CompoundCellBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\ConditionCellBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\DataCellBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\GridBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\GridBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\HeaderBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\HeaderBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\LinkBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\LinkBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\RowBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\RowBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\SecurityCellBuilder;
@@ -25,17 +30,8 @@ use LAG\AdminBundle\Metadata\DataTransformer\CountDataTransformer;
 use LAG\AdminBundle\Metadata\DataTransformer\EnumDataTransformer;
 use LAG\AdminBundle\Metadata\DataTransformer\FormDataTransformer;
 use LAG\AdminBundle\Metadata\DataTransformer\MapDataTransformer;
-use LAG\AdminBundle\Grid\Initializer\GridInitializer;
-use LAG\AdminBundle\Grid\Initializer\GridInitializerInterface;
-use LAG\AdminBundle\Grid\Registry\DataTransformerRegistry;
-use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
-use LAG\AdminBundle\Grid\ViewBuilder\ActionBuilder;
-use LAG\AdminBundle\Grid\ViewBuilder\ActionBuilderInterface;
-use LAG\AdminBundle\Grid\ViewBuilder\GridBuilder;
-use LAG\AdminBundle\Grid\ViewBuilder\GridBuilderInterface;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
-use LAG\AdminBundle\Resource\Initializer\ActionInitializerInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
 use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionCheckerInterface;
 
 return static function (ContainerConfigurator $container): void {
@@ -45,17 +41,10 @@ return static function (ContainerConfigurator $container): void {
     $services->set(GridFactoryInterface::class, GridFactory::class)
         ->args([
             '$definitionFactory' => service('lag_admin.definition.factory'),
-            '$gridInitializer' => service(GridInitializerInterface::class),
             '$validator' => service('validator'),
             '$builders' => tagged_iterator('lag_admin.grid_provider'),
         ])
         ->alias('lag_admin.grid.factory', GridFactoryInterface::class)
-    ;
-    $services->set(CacheGridFactory::class)
-        ->decorate(GridFactoryInterface::class)
-        ->args([
-            '$gridFactory' => service('.inner'),
-        ])
     ;
 
     // View builders
@@ -63,13 +52,13 @@ return static function (ContainerConfigurator $container): void {
         ->args([
             '$gridFactory' => service('lag_admin.grid.factory'),
             '$rowBuilder' => service(RowBuilderInterface::class),
-            '$actionBuilder' => service(ActionBuilderInterface::class),
+            '$actionBuilder' => service(LinkBuilderInterface::class),
         ])
         ->alias('lag_admin.grid.view_builder', GridBuilderInterface::class)
     ;
     $services->set(RowBuilderInterface::class, RowBuilder::class)
         ->arg('$cellBuilder', service(CellBuilderInterface::class))
-        ->arg('$actionsBuilder', service(ActionBuilderInterface::class))
+        ->arg('$actionsBuilder', service(LinkBuilderInterface::class))
         ->arg('$attributeBuilder', service(AttributeBuilderInterface::class))
     ;
     $services->set(HeaderBuilderInterface::class, HeaderBuilder::class)
@@ -103,9 +92,9 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$cellBuilder', service('.inner'))
         ->arg('$conditionMatcher', service(ConditionMatcherInterface::class))
     ;
-    $services->set(ActionBuilderInterface::class, ActionBuilder::class)
+    $services->set(LinkBuilderInterface::class, LinkBuilder::class)
         ->args([
-            '$urlGenerator' => service(ResourceUrlGeneratorInterface::class),
+            '$urlGenerator' => service(OperationUrlGeneratorInterface::class),
             '$conditionMatcher' => service(ConditionMatcherInterface::class),
             '$translator' => service('translator'),
             '$attributeBuilder' => service(AttributeBuilderInterface::class),
@@ -133,14 +122,5 @@ return static function (ContainerConfigurator $container): void {
     // Registry
     $services->set(DataTransformerRegistryInterface::class, DataTransformerRegistry::class)
         ->arg('$dataTransformers', tagged_iterator('lag_admin.data_transformer'))
-    ;
-
-    // Initializer
-    $services->set(GridInitializerInterface::class, GridInitializer::class)
-        ->args([
-            '$requestStack' => service('request_stack'),
-            '$actionInitializer' => service(ActionInitializerInterface::class),
-            '$gridTemplates' => param('lag_admin.grids_templates'),
-        ])
     ;
 };

@@ -38,7 +38,7 @@ class SerializationProviderTest extends TestCase
             $expectedType .= '[]';
         }
 
-        $resource = new Resource(name: 'my_resource', resourceClass: \stdClass::class);
+        $resource = new Resource(shortName: 'my_resource', resourceClass: \stdClass::class);
         $operation = $operation->withAjax(true)
             ->setResource($resource)
             ->withNormalizationContext(['groups' => ['my_group']])
