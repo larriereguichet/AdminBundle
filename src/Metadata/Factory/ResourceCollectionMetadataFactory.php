@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Factory;
 
-use LAG\AdminBundle\Config\ResourceConfig;
+use LAG\AdminBundle\Config\LAGAdminBuilder;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -15,12 +15,13 @@ final readonly class ResourceCollectionMetadataFactory implements ResourceCollec
     /** @param array<string> $paths */
     public function __construct(
         private array $paths,
+        private string $kernelEnvironment,
     ) {
     }
 
     public function createMetadata(): array
     {
-        $resources = new ResourceConfig();
+        $builder = new LAGAdminBuilder($this->kernelEnvironment);
 
         foreach ($this->paths as $path) {
             $finder = new Finder()
@@ -38,14 +39,14 @@ final readonly class ResourceCollectionMetadataFactory implements ResourceCollec
                     $callback = $callback($file->getRealPath());
                 } catch (\Throwable) {
                 }
+
                 if (!\is_callable($callback)) {
                     continue;
                 }
-
-                $callback($resources);
+                $callback($builder);
             }
         }
 
-        return $resources->getResources();
+        return $builder->getResources();
     }
 }
