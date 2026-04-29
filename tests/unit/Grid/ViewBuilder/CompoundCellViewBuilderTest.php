@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
 use LAG\AdminBundle\Grid\ViewFactory\CompoundCellBuilder;
 use LAG\AdminBundle\Metadata\Attribute\Compound;
@@ -28,8 +28,8 @@ final class CompoundCellViewBuilderTest extends TestCase
         $child = new Text(name: 'child');
         $property = new Compound(name: 'some_property', properties: ['child']);
         $data = new \stdClass();
-        $cellView = new Cell(name: 'some_view');
-        $childView = new Cell(name: 'some_child_view');
+        $cellView = new CellView(name: 'some_view');
+        $childView = new CellView(name: 'some_child_view');
 
         $resource = new Resource(properties: ['some_property' => $property, 'child' => $child]);
         $operation = (new Update())->setResource($resource);
@@ -56,7 +56,7 @@ final class CompoundCellViewBuilderTest extends TestCase
         $grid = new Grid(name: 'some_grid');
         $property = new Text();
         $data = new \stdClass();
-        $cellView = new Cell(name: 'some_view');
+        $cellView = new CellView(name: 'some_view');
 
         $resource = new Resource();
         $operation = (new Update())->setResource($resource);
@@ -77,7 +77,7 @@ final class CompoundCellViewBuilderTest extends TestCase
         $grid = new Grid(name: 'some_grid');
         $property = new Compound(properties: []);
         $data = new \stdClass();
-        $cellView = new Cell(name: 'some_view');
+        $cellView = new CellView(name: 'some_view');
 
         $resource = new Resource();
         $operation = (new Update())->setResource($resource);

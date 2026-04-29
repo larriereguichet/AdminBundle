@@ -91,7 +91,7 @@ interface OperationInterface extends RolesOwnerInterface, WorkflowAwareInterface
 
     public function getWorkflowTransition(): ?string;
 
-    public function canBeEmbedded(): bool;
+    public function isEmbedded(): bool;
 
     public function getSuccessMessage(): ?string;
 }

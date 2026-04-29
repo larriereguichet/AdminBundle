@@ -11,7 +11,7 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set(CacheResourceFactory::class)
         ->args([
-            '$metadataFactory' => service('.inner'),
+            '$resourceFactory' => service('.inner'),
             '$cache' => service('lag_admin.cache'),
         ])
         ->decorate('lag_admin.resource.factory', priority: 255)

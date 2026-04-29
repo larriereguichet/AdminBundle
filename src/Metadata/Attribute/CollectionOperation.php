@@ -30,7 +30,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
      * @param array<string, mixed> $orderBy
      * @param array<int|string, FilterInterface>|null $filters
      * @param array<string, mixed> $gridOptions
-     * @param array<string, Link>|null $collectionActions
+     * @param array<string, Link>|null $collectionLinks
      * @param array<string, mixed> $filterFormOptions
      * @param array<string, mixed>|null $collectionFormOptions
      */
@@ -91,7 +91,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         private array $gridOptions = [],
 
         #[Assert\NotNull]
-        private ?array $collectionActions = null,
+        private ?array $collectionLinks = null,
 
         private ?string $filterForm = null,
 
@@ -333,15 +333,15 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $self;
     }
 
-    public function getCollectionActions(): ?array
+    public function getCollectionLinks(): ?array
     {
-        return $this->collectionActions;
+        return $this->collectionLinks;
     }
 
-    public function withCollectionActions(?array $collectionActions): static
+    public function withCollectionLinks(?array $collectionLinks): static
     {
         $self = clone $this;
-        $self->collectionActions = $collectionActions;
+        $self->collectionLinks = $collectionLinks;
 
         return $self;
     }

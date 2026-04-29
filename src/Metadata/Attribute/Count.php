@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Attribute;
 
-use LAG\AdminBundle\Metadata\DataTransformer\CountDataTransformer;
+use LAG\AdminBundle\Grid\DataTransformer\CountDataTransformer;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Count extends Property

@@ -18,20 +18,11 @@ interface ResourceMetadataInterface extends ResourceInterface
 
     public function withIcon(string $icon): self;
 
-    /** @return array<int, OperationMetadataInterface> */
+    /** @return array<int|string, OperationMetadataInterface> */
     public function getOperations(): array;
 
-    /** @param array<int, OperationMetadataInterface> $operations */
+    /** @param array<int|string, OperationMetadataInterface> $operations */
     public function withOperations(array $operations): self;
-
-    /**
-     * @template T
-     *
-     * @param class-string<T> $type
-     *
-     * @return array<int|string, T>
-     */
-    public function getPropertiesByType(string $type): array;
 
     /** @param array<int|string, PropertyInterface> $properties */
     public function withProperties(array $properties): self;
@@ -51,7 +42,7 @@ interface ResourceMetadataInterface extends ResourceInterface
 
     public function withTranslationDomain(?string $translationDomain): self;
 
-    public function withApplicationName(?string $applicationName): self;
+    public function withApplication(?string $application): self;
 
     public function withForm(?string $form): self;
 
@@ -79,6 +70,4 @@ interface ResourceMetadataInterface extends ResourceInterface
     public function withInput(?string $input): self;
 
     public function withOutput(?string $output): self;
-
-    public function withApplication(ApplicationInterface $application): void;
 }

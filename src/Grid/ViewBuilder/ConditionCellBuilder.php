@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
-use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
@@ -25,9 +25,9 @@ final readonly class ConditionCellBuilder implements CellBuilderInterface
         PropertyInterface $property,
         mixed $data,
         array $context = []
-    ): Cell {
+    ): CellView {
         if ($property->getCondition() !== null && !$this->conditionMatcher->matchCondition($property, $data, $context)) {
-            return new Cell(
+            return new CellView(
                 name: $property->getName(),
                 attributes: $this->attributeBuilder->buildAttributes($property->getAttributes()),
             );

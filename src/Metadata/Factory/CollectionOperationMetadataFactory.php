@@ -8,59 +8,59 @@ use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Metadata\Attribute\EntityFilter;
 use LAG\AdminBundle\Metadata\CollectionOperationMetadataInterface;
 use LAG\AdminBundle\Metadata\OperationMetadataInterface;
+use LAG\AdminBundle\Metadata\ResourceMetadataInterface;
 
-final readonly class CollectionOperationMetadataFactory implements OperationMetadataFactoryInterface
+final readonly class CollectionOperationMetadataFactory implements ResourceMetadataFactoryInterface
 {
     public function __construct(
-        private OperationMetadataFactoryInterface $metadataFactory,
+        private ResourceMetadataFactoryInterface $metadataFactory,
     ) {
     }
 
-    public function createMetadata(OperationMetadataInterface $operation): OperationMetadataInterface
+    public function createMetadata(string $resourceName): ResourceMetadataInterface
     {
-        $operation = $this->metadataFactory->createMetadata($operation);
+        $resource = $this->metadataFactory->createMetadata($resourceName);
+        $operations = [];
 
-        if (!$operation instanceof CollectionOperationMetadataInterface) {
-            return $operation;
-        }
+        foreach ($resource->getOperations() as $operation) {
+            if (!$operation instanceof CollectionOperationMetadataInterface) {
+                $operations[$operation->getName()] = $operation;
 
-        if ($operation->getFilters() === null) {
-            $operation = $operation->withFilters([]);
-        }
+                continue;
+            }
+            $filters = $operation->getFilters() ?? [];
+            $filterForm = $operation->getFilterForm();
+            $filterFormOptions = $operation->getFilterFormOptions();
 
-        if ($operation->getFilterForm() === null && \count($operation->getFilters() ?? []) > 0) {
-            $operation = $operation
-                ->withFilterForm(FilterType::class)
-                ->withFilterFormOptions(['operation' => $operation->getName()])
+            if ($filterForm === null) {
+                $filterForm = FilterType::class;
+                $filterFormOptions = ['filters' => $filters];
+            }
+
+            foreach ($filters as $index => $filter) {
+                $formOptions = $filter->getFormOptions();
+
+                if ($filter instanceof EntityFilter) {
+                    if (empty($formOptions['multiple']) && $filter->isMultiple()) {
+                        $formOptions['multiple'] = true;
+                    }
+
+                    if ($filter->getProperty() === null) {
+                        $filter = $filter->withProperty($filter->getName());
+                    }
+                }
+                $filters[$index] = $filter->withFormOptions($formOptions);
+            }
+
+            $operations[$operation->getName()] = $operation
+                ->withCollectionLinks($operation->getCollectionLinks() ?? [])
+                ->withCollectionFormOptions($operation->getCollectionFormOptions() ?? [])
+                ->withFilters($filters)
+                ->withFilterForm($filterForm)
+                ->withFilterFormOptions($filterFormOptions)
             ;
         }
 
-        if ($operation->getCollectionFormOptions() === null) {
-            $operation = $operation->withCollectionFormOptions([]);
-        }
-
-        if ($operation->getCollectionActions() === null) {
-            $collectionActions = [];
-
-            $operation = $operation->withCollectionActions($collectionActions);
-        }
-        $filters = $operation->getFilters();
-
-        foreach ($filters as $index => $filter) {
-            $formOptions = $filter->getFormOptions();
-
-            if ($filter instanceof EntityFilter) {
-                if (empty($formOptions['multiple']) && $filter->isMultiple()) {
-                    $formOptions['multiple'] = true;
-                }
-
-                if ($filter->getProperty() === null) {
-                    $filter = $filter->withProperty($filter->getName());
-                }
-            }
-            $filters[$index] = $filter->withFormOptions($formOptions);
-        }
-
-        return $operation->withFilters($filters);
+        return $resource->withOperations($operations);
     }
 }

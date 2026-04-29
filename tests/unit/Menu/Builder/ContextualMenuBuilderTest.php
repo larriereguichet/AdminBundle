@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Tests\Unit\Menu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\MenuItem;
-use LAG\AdminBundle\Menu\Builder\ContextualMenuBuilder;
+use LAG\AdminBundle\Bridge\KnpMenu\Builder\ContextualMenuBuilder;
 use LAG\AdminBundle\Metadata\Attribute\Index;
 use LAG\AdminBundle\Metadata\Attribute\Link;
 use LAG\AdminBundle\Metadata\Attribute\Resource;

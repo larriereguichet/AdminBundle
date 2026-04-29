@@ -19,9 +19,7 @@ final class ResourceRoutingLoader extends Loader
     private bool $loaded = false;
 
     public function __construct(
-        private readonly string $applicationParameter,
-        private readonly string $resourceParameter,
-        private readonly string $operationParameter,
+        private readonly string $requestParameter,
         private readonly ResourceCollectionFactoryInterface $resourceCollectionFactory,
         private readonly PathGeneratorInterface $pathGenerator,
     ) {
@@ -61,15 +59,13 @@ final class ResourceRoutingLoader extends Loader
             $path = $this->pathGenerator->generatePath($operation);
             $defaults = [
                 '_controller' => $operation->getController(),
-                $this->applicationParameter => $operation->getResource()->getApplicationName(),
-                $this->resourceParameter => $operation->getResource()->getShortName(),
-                $this->operationParameter => $operation->getShortName(),
+                $this->requestParameter => $operation->getName(),
             ];
 
             $route = new Route($path, $defaults, [], $identifiers, null, [], $operation->getMethods());
             $routes->add($operation->getRoute(), $route);
 
-            if ($operation->canBeEmbedded()) {
+            if ($operation->isEmbedded()) {
                 $defaults[PartialContextBuilder::EMBEDDED_REQUEST_ATTRIBUTE] = true;
                 $embeddedRouteName = (string) u($operation->getRoute())->append('_embedded');
 

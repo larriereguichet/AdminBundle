@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Upload\Generator;
 
-use LAG\AdminBundle\Entity\ImageInterface;
+use LAG\AdminBundle\Image\ImageInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final readonly class ImagePathGenerator implements ImagePathGeneratorInterface

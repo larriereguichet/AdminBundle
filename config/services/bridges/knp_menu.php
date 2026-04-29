@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use LAG\AdminBundle\Bridge\KnpMenu\Builder\ContextualMenuBuilder;
+use LAG\AdminBundle\Bridge\KnpMenu\Builder\ResourceMenuBuilder;
+use LAG\AdminBundle\Bridge\KnpMenu\Builder\UserMenuBuilder;
 use LAG\AdminBundle\Bridge\KnpMenu\Extension\ResourceExtension;
-use LAG\AdminBundle\Menu\Builder\ContextualMenuBuilder;
-use LAG\AdminBundle\Menu\Builder\ResourceMenuBuilder;
-use LAG\AdminBundle\Menu\Builder\UserMenuBuilder;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -15,7 +15,7 @@ return static function (ContainerConfigurator $container): void {
     // Menu builders
     $services->set(ContextualMenuBuilder::class)
         ->args([
-            '$operationContext' => service('lag_admin.operation.context'),
+            '$resourceContext' => service('lag_admin.resource.context'),
             '$operationFactory' => service('lag_admin.operation.factory'),
             '$routeNameGenerator' => service('lag_admin.routing.route_name_generator'),
             '$factory' => service('knp_menu.factory'),
@@ -43,6 +43,7 @@ return static function (ContainerConfigurator $container): void {
         ->args([
             '$operationFactory' => service('lag_admin.operation.factory'),
             '$urlGenerator' => service('lag_admin.routing.url_generator'),
+            '$operationUrlGenerator' => service('lag_admin.operation.url_generator'),
         ])
         ->tag('knp_menu.factory_extension')
     ;

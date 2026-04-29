@@ -29,7 +29,6 @@ final readonly class GridCollectionAttributeMetadataFactory implements GridColle
             foreach ($attributes as $attribute) {
                 /** @var GridMetadataInterface $grid */
                 $grid = $attribute->newInstance();
-
                 $grids[$grid->getName()] = $grid;
             }
         }

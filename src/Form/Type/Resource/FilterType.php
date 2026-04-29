@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Form\Type\Resource;
 
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,13 +14,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class FilterType extends AbstractType
 {
     public function __construct(
-        private readonly OperationFactoryInterface $operationFactory,
+        private readonly ResourceContextInterface $resourceContext,
     ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $operation = $this->operationFactory->create($options['operation']);
+        $operation = $this->resourceContext->getOperation();
 
         if ($operation instanceof CollectionOperationInterface) {
             foreach ($operation->getFilters() as $filter) {
@@ -38,9 +39,9 @@ final class FilterType extends AbstractType
                 'method' => 'GET',
             ])
 
-            ->define('operation')
+            ->define('filters')
             ->required()
-            ->allowedTypes('string')
+            ->allowedTypes('array')
         ;
     }
 

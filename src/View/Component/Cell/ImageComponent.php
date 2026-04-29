@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Component\Cell;
 
-use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\View\CellView;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(
@@ -19,7 +19,7 @@ final class ImageComponent
 
     public function mount(
         mixed $data,
-        Cell $cell,
+        CellView $cell,
     ): void {
         $this->src = $data;
         $this->alt = $cell->label ?? $this->src;

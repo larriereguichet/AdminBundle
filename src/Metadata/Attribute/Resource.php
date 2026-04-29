@@ -9,7 +9,6 @@ use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\ORMProvider;
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\OperationMissingException;
 use LAG\AdminBundle\Exception\Resource\MissingResourceNameException;
-use LAG\AdminBundle\Metadata\ApplicationInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\OperationMetadataInterface;
@@ -21,8 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class Resource implements ResourceInterface, ResourceMetadataInterface
 {
-    private ApplicationInterface $application;
-
     /**
      * @param array<string>|null $permissions
      * @param array<string, OperationInterface> $operations
@@ -34,12 +31,13 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
      * @param array<string, mixed>|null $denormalizationContext
      */
     public function __construct(
-        // TODO check for space, dot and special characters, lowercase and should contains a dot
+        // TODO check for space, dot and special characters, lowercase and should not contains a dot
         #[Assert\NotBlank(message: 'The resource name should not be null or empty')]
         private ?string $shortName = null,
 
+        // TODO check for space, dot and special characters, lowercase and should not contains a dot
         #[Assert\NotBlank(message: 'The application name should not be empty')]
-        private string $applicationName = 'admin',
+        private string $application = 'admin',
 
         #[Assert\NotBlank(message: 'The resource class should not be null or empty')]
         private ?string $resourceClass = null,
@@ -57,7 +55,7 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
 
         private ?array $permissions = null,
 
-        /** @var array<int, OperationInterface|OperationMetadataInterface> $operations */
+        /** @var array<int|string, OperationInterface|OperationMetadataInterface> $operations */
         #[Assert\Count(min: 1, minMessage: 'The resource should contains at least one operation')]
         #[Assert\All(constraints: [new Assert\Type(type: OperationInterface::class)])]
         #[Assert\Valid]
@@ -127,7 +125,7 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
             throw new MissingResourceNameException();
         }
 
-        return $this->applicationName.'.'.$this->shortName;
+        return $this->application.'.'.$this->shortName;
     }
 
     public function withShortName(?string $shortName): self
@@ -147,6 +145,19 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
     {
         $self = clone $this;
         $self->resourceClass = $resourceClass;
+
+        return $self;
+    }
+
+    public function getApplication(): string
+    {
+        return $this->application;
+    }
+
+    public function withApplication(?string $application): self
+    {
+        $self = clone $this;
+        $self->application = $application;
 
         return $self;
     }
@@ -190,7 +201,7 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
         return $self;
     }
 
-    /** @return array<OperationInterface> */
+    /** @return array<int, string, OperationInterface> */
     public function getOperations(): array
     {
         return $this->operations;
@@ -251,9 +262,10 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
     public function withProperties(array $properties): self
     {
         $self = clone $this;
+        $self->properties = [];
 
-        foreach ($properties as $index => $property) {
-            $self->properties[$property->getName() ?? $index] = $property;
+        foreach ($properties as $property) {
+            $self->properties[$property->getName()] = $property;
         }
 
         return $self;
@@ -365,19 +377,6 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
     {
         $self = clone $this;
         $self->translationDomain = $translationDomain;
-
-        return $self;
-    }
-
-    public function getApplicationName(): string
-    {
-        return $this->applicationName;
-    }
-
-    public function withApplicationName(?string $applicationName): self
-    {
-        $self = clone $this;
-        $self->applicationName = $applicationName;
 
         return $self;
     }
@@ -523,15 +522,5 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
         $self->output = $output;
 
         return $self;
-    }
-
-    public function getApplication(): ApplicationInterface
-    {
-        return $this->application;
-    }
-
-    public function withApplication(ApplicationInterface $application): void
-    {
-        $this->application = $application;
     }
 }

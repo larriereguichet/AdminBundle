@@ -22,7 +22,7 @@ final readonly class GridBuilder implements GridBuilderInterface
         CollectionOperationInterface $operation,
         iterable $data,
         array $context = [],
-    ): View\Grid {
+    ): View\GridView {
         $headers = null;
 
         if ($grid->useHeaders()) {
@@ -30,7 +30,7 @@ final readonly class GridBuilder implements GridBuilderInterface
         }
         $context['translation_domain'] = $operation->getResource()->getTranslationDomain();
 
-        return new View\Grid(
+        return new View\GridView(
             name: $grid->getName(),
             type: $grid->getType(),
             rows: $this->buildRows($operation, $grid, $data, $context),
@@ -49,7 +49,7 @@ final readonly class GridBuilder implements GridBuilderInterface
      * @param iterable<int|string, mixed> $data
      * @param array<string, mixed> $context
      *
-     * @return iterable<int, View\Row>
+     * @return iterable<int, View\RowView>
      */
     private function buildRows(CollectionOperationInterface $operation, GridInterface $grid, iterable $data, array $context): iterable
     {
@@ -62,13 +62,13 @@ final readonly class GridBuilder implements GridBuilderInterface
         return $rows;
     }
 
-    private function buildTitle(GridInterface $grid, OperationInterface $operation): ?View\Title
+    private function buildTitle(GridInterface $grid, OperationInterface $operation): ?View\TitleView
     {
         if ($grid->getTitle() === null) {
             return null;
         }
 
-        return new View\Title(
+        return new View\TitleView(
             title: $grid->getTitle(),
             attributes: $this->attributeBuilder->buildAttributes($grid->getTitleAttributes()),
             translationDomain: $operation->getResource()->getTranslationDomain(),

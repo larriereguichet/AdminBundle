@@ -54,8 +54,7 @@ class Grid implements GridInterface, GridMetadataInterface
         #[Assert\NotNull]
         private ?bool $useHeaders = true,
 
-        #[Assert\NotNull]
-        private ?bool $sortable = null,
+        private bool $sortable = false,
 
         #[Assert\NotBlank]
         private string $sortParameter = 'sort',
@@ -246,7 +245,7 @@ class Grid implements GridInterface, GridMetadataInterface
         return $self;
     }
 
-    public function isSortable(): ?bool
+    public function isSortable(): bool
     {
         return $this->sortable;
     }

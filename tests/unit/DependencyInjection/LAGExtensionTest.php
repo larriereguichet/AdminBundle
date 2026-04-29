@@ -22,7 +22,7 @@ final class LAGExtensionTest extends TestCase
             ->method('setParameter')
             ->willReturnCallback(function ($parameter): void {
                 $this->assertContains($parameter, [
-                    'lag_admin.application_parameter',
+                    'lag_admin.request_parameter',
                     'lag_admin.media_directory',
                     'lag_admin.media_storage',
                     'lag_admin.resource_parameter',
@@ -38,7 +38,7 @@ final class LAGExtensionTest extends TestCase
                     'lag_admin.media_bundle_enabled',
                     'lag_admin.grids',
                     'lag_admin.grid_paths',
-                    'lag_admin.grids_templates',
+                    'lag_admin.grid_templates',
                 ]);
             })
         ;

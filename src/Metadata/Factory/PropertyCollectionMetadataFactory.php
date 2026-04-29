@@ -8,11 +8,6 @@ use LAG\AdminBundle\Metadata\PropertyMetadataInterface;
 
 final readonly class PropertyCollectionMetadataFactory implements PropertyCollectionMetadataFactoryInterface
 {
-    public function __construct(
-        private PropertyMetadataFactoryInterface $propertyMetadataFactory,
-    ) {
-    }
-
     public function createMetadata(string $resourceClass): array
     {
         $reflectionClass = new \ReflectionClass($resourceClass);
@@ -20,7 +15,7 @@ final readonly class PropertyCollectionMetadataFactory implements PropertyCollec
 
         foreach ($reflectionClass->getAttributes(PropertyMetadataInterface::class, \ReflectionAttribute::IS_INSTANCEOF) as $reflectionAttribute) {
             $property = $reflectionAttribute->newInstance();
-            $properties[] = $this->propertyMetadataFactory->create($property);
+            $properties[] = $property;
         }
 
         foreach ($reflectionClass->getProperties() as $reflectionProperty) {
@@ -30,7 +25,7 @@ final readonly class PropertyCollectionMetadataFactory implements PropertyCollec
                 if (!$property->getName()) {
                     $property = $property->withName($reflectionProperty->getName());
                 }
-                $properties[] = $this->propertyMetadataFactory->create($property);
+                $properties[$property->getName()] = $property;
             }
         }
 

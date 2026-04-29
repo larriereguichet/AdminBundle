@@ -38,11 +38,11 @@ final readonly class ResourceEventDispatcher implements ResourceEventDispatcherI
                 ->replace('{resource}', 'resource')
                 ->toString(),
             $template
-                ->replace('{application}', $resource->getApplicationName())
+                ->replace('{application}', $resource->getApplication())
                 ->replace('{resource}', 'resource')
                 ->toString(),
             $template
-                ->replace('{application}', $resource->getApplicationName())
+                ->replace('{application}', $resource->getApplication())
                 ->replace('{resource}', $resource->getShortName())
                 ->toString(),
         ];

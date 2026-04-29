@@ -1,0 +1,6 @@
+- [ ] ResourceInterface
+- [ ] Remove actions and use links
+- [ ] Use Symfony cache for ORM MetadataHelper
+- [ ] Use only one workflow interface
+- [ ] Use resource group to group resource menu item
+- [ ] Add LinkGroup to group links into a single button

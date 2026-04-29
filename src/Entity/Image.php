@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use LAG\AdminBundle\Image\ImageInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
-class Image implements ImageInterface, \Stringable
+class Image implements ImageInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    private ?File $file = null;
 
     #[ORM\Column(nullable: true)]
     private ?string $type = null;
@@ -25,12 +24,9 @@ class Image implements ImageInterface, \Stringable
     #[ORM\Column(nullable: true)]
     private ?string $name = null;
 
-    private ?object $owner = null;
+    private ?File $file = null;
 
-    public function __toString(): string
-    {
-        return $this->path ?? '';
-    }
+    private ?object $owner = null;
 
     public function getId(): ?int
     {

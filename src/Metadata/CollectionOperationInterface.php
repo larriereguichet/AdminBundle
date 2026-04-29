@@ -51,5 +51,5 @@ interface CollectionOperationInterface extends OperationInterface
     public function getCollectionFormOptions(): ?array;
 
     /** @return array<int|string, Link>|null */
-    public function getCollectionActions(): ?array;
+    public function getCollectionLinks(): ?array;
 }

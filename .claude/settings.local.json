@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(vendor/bin/phpunit)",
+      "Bash(vendor/bin/phpunit tests/unit/Metadata/Factory/)",
+      "Bash(vendor/bin/phpunit *)"
+    ]
+  }
+}

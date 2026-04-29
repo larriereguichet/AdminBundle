@@ -45,6 +45,10 @@ final readonly class TemplateResponseHandler implements ContentResponseHandlerIn
             $context['baseTemplate'] = $operation->getBaseTemplate();
         }
 
+        if ($operation->isEmbedded()) {
+            $context['baseTemplate'] = '@LAGAdmin/partial.html.twig';
+        }
+
         return new Response($this->environment->render($operation->getTemplate(), $context), $context['responseCode'] ?? Response::HTTP_OK);
     }
 }

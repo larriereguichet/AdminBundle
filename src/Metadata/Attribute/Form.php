@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Attribute;
 
-use LAG\AdminBundle\Metadata\DataTransformer\FormDataTransformer;
+use LAG\AdminBundle\Grid\DataTransformer\FormDataTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]

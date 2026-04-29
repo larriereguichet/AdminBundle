@@ -4,56 +4,28 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Upload\Uploader;
 
-use LAG\AdminBundle\Entity\ImageAwareInterface;
-use LAG\AdminBundle\Entity\ImageInterface;
-use LAG\AdminBundle\Entity\ImagesAwareInterface;
+use Doctrine\Common\Collections\Collection;
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Image\ImageInterface;
 use LAG\AdminBundle\Upload\Generator\ImagePathGeneratorInterface;
 use League\Flysystem\FilesystemOperator;
 
 final readonly class ImageUploader implements ImageUploaderInterface
 {
-    public function uploadImages(ImagesAwareInterface $owner): void
-    {
-        foreach ($owner->getImages() as $image) {
-            $this->uploadFile($image);
-            $image->setOwner($owner);
-        }
-    }
-
     public function __construct(
         private FilesystemOperator $filesystem,
         private ImagePathGeneratorInterface $pathGenerator,
     ) {
     }
 
-    public function uploadImage(ImageAwareInterface $owner): void
+    public function uploadImages(Collection $images): void
     {
-        $image = $owner->getImage();
-
-        if ($image === null) {
-            return;
+        foreach ($images as $image) {
+            $this->uploadImage($image);
         }
-        $this->uploadFile($image);
-        $image->setOwner($owner);
     }
 
-    public function removeImage(ImageAwareInterface $owner): void
-    {
-        $image = $owner->getImage();
-
-        if ($image === null) {
-            return;
-        }
-
-        if (!$this->filesystem->has($image->getPath())) {
-            return;
-        }
-        $this->filesystem->delete($image->getPath());
-        $image->setPath(null);
-    }
-
-    private function uploadFile(ImageInterface $image): void
+    public function uploadImage(ImageInterface $image): void
     {
         $file = $image->getFile();
 
@@ -76,5 +48,15 @@ final readonly class ImageUploader implements ImageUploaderInterface
             $this->filesystem->delete($previousImage);
         }
         $image->setPath($path);
+    }
+
+    public function removeImage(ImageInterface $image): void
+    {
+        if (!$this->filesystem->has($image->getPath())) {
+            return;
+        }
+        $image->setPath(null);
+        $image->setOwner(null);
+        $this->filesystem->delete($image->getPath());
     }
 }

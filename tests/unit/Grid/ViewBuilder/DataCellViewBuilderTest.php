@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
-use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
 use LAG\AdminBundle\Grid\ViewFactory\DataCellBuilder;
 use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\Attribute\Text;
 use LAG\AdminBundle\Metadata\Attribute\Update;
-use LAG\AdminBundle\Metadata\DataTransformer\DataTransformerInterface;
+use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -32,7 +32,7 @@ final class DataCellViewBuilderTest extends TestCase
         $data = new \stdClass();
         $context = ['some_option' => 'some_value'];
 
-        $cell = new Cell(name: 'cell view');
+        $cell = new CellView(name: 'cell view');
         $operation = new Update();
 
         $dataTransformer = $this->createMock(DataTransformerInterface::class);

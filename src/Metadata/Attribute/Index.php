@@ -60,7 +60,7 @@ class Index extends CollectionOperation
         array $filterFormOptions = [],
         ?string $collectionForm = null,
         ?array $collectionFormOptions = null,
-        ?array $collectionActions = null,
+        ?array $collectionLinks = null,
         bool $embedded = false,
         ?string $flashMessage = null,
     ) {
@@ -108,7 +108,7 @@ class Index extends CollectionOperation
             filters: $filters,
             grid: $grid,
             gridOptions: $gridOptions,
-            collectionActions: $collectionActions,
+            collectionLinks: $collectionLinks,
             filterForm: $filterForm,
             filterFormOptions: $filterFormOptions,
             collectionForm: $collectionForm,

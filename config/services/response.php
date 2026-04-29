@@ -12,7 +12,9 @@ use LAG\AdminBundle\Response\Handler\RedirectResponseHandlerInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandler;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\Response\Handler\TemplateResponseHandler;
+use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -42,7 +44,11 @@ return static function (ContainerConfigurator $container): void {
 
     // Redirect handler
     $services->set(RedirectResponseHandlerInterface::class, RedirectResponseHandler::class)
-        ->args(['$urlGenerator' => service(OperationUrlGeneratorInterface::class)])
+        ->args([
+            '$operationFactory' => service(OperationFactoryInterface::class),
+            '$operationUrlGenerator' => service(OperationUrlGeneratorInterface::class),
+            '$urlGenerator' => service(UrlGeneratorInterface::class),
+        ])
         ->alias('lag_admin.redirect_handler', RedirectResponseHandlerInterface::class)
     ;
 };

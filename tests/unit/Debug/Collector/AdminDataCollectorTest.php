@@ -25,7 +25,7 @@ final class AdminDataCollectorTest extends TestCase
         $request = new Request();
         $response = new Response();
 
-        $resource = new Resource(shortName: 'my_resource', applicationName: 'my_application');
+        $resource = new Resource(shortName: 'my_resource', application: 'my_application');
         $operation = new Show(name: 'my_operation')->setResource($resource);
 
         $this->operationContext

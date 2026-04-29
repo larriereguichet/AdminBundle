@@ -28,7 +28,7 @@ final readonly class CompositeProvider implements ProviderInterface
             'The resource "%s" and operation "%s" in the application "%s" is not supported by any provider',
             $operation->getResource()->getShortName(),
             $operation->getName(),
-            $operation->getResource()->getApplicationName(),
+            $operation->getResource()->getApplication(),
         ));
     }
 }

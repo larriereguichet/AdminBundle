@@ -8,6 +8,6 @@ use LAG\AdminBundle\Grid\View;
 
 class Grid
 {
-    public View\Grid $grid;
+    public View\GridView $grid;
     public mixed $data;
 }

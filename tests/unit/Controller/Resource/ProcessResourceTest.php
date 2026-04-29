@@ -210,7 +210,7 @@ final class ProcessResourceTest extends TestCase
         $resource = new Resource(
             shortName: 'my_resource',
             operations: [$create, $update, $delete],
-            applicationName: 'my_application',
+            application: 'my_application',
         );
 
         foreach ($resource->getOperations() as $operation) {

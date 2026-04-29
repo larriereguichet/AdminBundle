@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Grid\View\Row;
+use LAG\AdminBundle\Grid\View\RowView;
 use LAG\AdminBundle\Grid\ViewBuilder\AttributeBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\GridBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\LinkBuilderInterface;
@@ -42,7 +42,7 @@ final class GridViewBuilderTest extends TestCase
         $data = [$book1, $book2];
         $context = ['some_key' => 'some_value'];
 
-        $headerRow = $this->createMock(Row::class);
+        $headerRow = $this->createMock(RowView::class);
 
         $this->rowBuilder
             ->expects($this->once())

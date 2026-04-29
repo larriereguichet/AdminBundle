@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Factory;
 
+use LAG\AdminBundle\Metadata\Factory\ResourceCollectionMetadataFactoryInterface;
+
 final readonly class ResourceCollectionFactory implements ResourceCollectionFactoryInterface
 {
-    /**
-     * @param array<string, array<string, mixed>> $resources
-     */
     public function __construct(
-        private array $resources,
+        private ResourceCollectionMetadataFactoryInterface $metadataCollectionFactory,
         private ResourceFactoryInterface $resourceFactory,
     ) {
     }
 
     public function create(): array
     {
+        $metadataCollection = $this->metadataCollectionFactory->createMetadata();
         $resources = [];
 
-        foreach (array_keys($this->resources) as $resourceName) {
-            $resources[] = $this->resourceFactory->create($resourceName);
+        foreach (array_keys($metadataCollection) as $resourceName) {
+            $resources[$resourceName] = $this->resourceFactory->create($resourceName);
         }
 
         return $resources;

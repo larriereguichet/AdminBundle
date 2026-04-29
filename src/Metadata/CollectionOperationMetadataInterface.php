@@ -44,6 +44,6 @@ interface CollectionOperationMetadataInterface extends CollectionOperationInterf
     /** @param array<string, mixed> $collectionFormOptions */
     public function withCollectionFormOptions(?array $collectionFormOptions): self;
 
-    /** @param array<int|string, Link> $collectionActions */
-    public function withCollectionActions(?array $collectionActions): self;
+    /** @param array<int|string, Link> $collectionLinks */
+    public function withCollectionLinks(?array $collectionLinks): self;
 }

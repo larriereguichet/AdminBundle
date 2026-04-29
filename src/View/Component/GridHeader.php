@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Component;
 
-use LAG\AdminBundle\Grid\View\Header;
+use LAG\AdminBundle\Grid\View\HeaderView;
 
 final class GridHeader
 {
@@ -14,7 +14,7 @@ final class GridHeader
     public string $order;
     public string $orderParameter;
 
-    public function mount(Header $header): void
+    public function mount(HeaderView $header): void
     {
         $this->sortable = $header->sortable;
         $this->sort = $header->sort;

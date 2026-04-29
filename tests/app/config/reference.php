@@ -1461,7 +1461,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  * }
  * @psalm-type LagAdminConfig = array{
  *     request?: array{
- *         application_parameter?: scalar|null, // Default: "_application"
+ *         request_parameter?: scalar|null, // Default: "_application"
  *         resource_parameter?: scalar|null, // Default: "_resource"
  *         operation_parameter?: scalar|null, // Default: "_operation"
  *     },
@@ -1533,7 +1533,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         sortable?: bool,
  *         ...<mixed>
  *     }>,
- *     grids_templates?: list<mixed>,
+ *     grid_templates?: list<mixed>,
  *     date_format?: scalar|null, // Default: "medium"
  *     time_format?: scalar|null, // Default: "short"
  *     date_localization?: bool, // Default: true

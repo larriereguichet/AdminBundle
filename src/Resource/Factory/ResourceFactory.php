@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Resource\Factory;
 
 use LAG\AdminBundle\Exception\InvalidResourceException;
-use LAG\AdminBundle\Metadata\Factory\OperationMetadataFactoryInterface;
 use LAG\AdminBundle\Metadata\Factory\ResourceMetadataFactoryInterface;
 use LAG\AdminBundle\Metadata\ResourceInterface;
 use Symfony\Component\Validator\Constraints\Valid;
@@ -15,7 +14,6 @@ final readonly class ResourceFactory implements ResourceFactoryInterface
 {
     public function __construct(
         private ResourceMetadataFactoryInterface $metadataFactory,
-        private OperationMetadataFactoryInterface $operationMetadataFactory,
         private ValidatorInterface $validator,
     ) {
     }
@@ -23,17 +21,10 @@ final readonly class ResourceFactory implements ResourceFactoryInterface
     public function create(string $resourceName): ResourceInterface
     {
         $resource = $this->metadataFactory->createMetadata($resourceName);
-        $operations = [];
-
-        foreach ($resource->getOperations() as $operation) {
-            $operation->setResource($resource);
-            $operations[] = $this->operationMetadataFactory->createMetadata($operation);
-        }
-        $resource = $resource->withOperations($operations);
         $errors = $this->validator->validate($resource, [new Valid()]);
 
         if ($errors->count() > 0) {
-            throw new InvalidResourceException($resource->getShortName(), $errors);
+            throw new InvalidResourceException($resource->getName(), $errors);
         }
 
         return $resource;

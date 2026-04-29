@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Grid\View\Grid;
+use LAG\AdminBundle\Grid\View\GridView;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\GridInterface;
 
@@ -23,5 +23,5 @@ interface GridBuilderInterface
         CollectionOperationInterface $operation,
         iterable $data,
         array $context = [],
-    ): Grid;
+    ): GridView;
 }

@@ -27,8 +27,8 @@ abstract class Operation implements OperationInterface, OperationMetadataInterfa
      * @param array<string, mixed>|null $redirectRouteParameters
      * @param array<string, mixed>|null $formOptions
      * @param array<string>|null $identifiers
-     * @param array<string, Link>|null $contextualLinks
-     * @param array<string, Link>|null $itemLinks
+     * @param array<string, Link|string>|null $contextualLinks
+     * @param array<string, Link|string>|null $itemLinks
      * @param array<string, mixed>|null $validationContext
      * @param array<string, mixed>|null $normalizationContext
      * @param array<string, mixed>|null $denormalizationContext
@@ -139,7 +139,7 @@ abstract class Operation implements OperationInterface, OperationMetadataInterfa
             throw new MissingOperationResourceException($this->shortName ?? '');
         }
 
-        return $this->resource->getApplicationName().'.'.$this->resource->getShortName().'.'.$this->shortName;
+        return $this->resource->getApplication().'.'.$this->resource->getShortName().'.'.$this->shortName;
     }
 
     public function withShortName(?string $shortName): static
@@ -599,7 +599,7 @@ abstract class Operation implements OperationInterface, OperationMetadataInterfa
         return $self;
     }
 
-    public function canBeEmbedded(): bool
+    public function isEmbedded(): bool
     {
         return $this->embedded;
     }

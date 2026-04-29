@@ -15,9 +15,7 @@ return static function (ContainerConfigurator $container): void {
     // Globals
     $services->set(LAGAdminGlobal::class)
         ->args([
-            '$applicationContext' => service('lag_admin.application.context'),
             '$resourceContext' => service('lag_admin.resource.context'),
-            '$operationContext' => service('lag_admin.operation.context'),
         ])
         ->alias('lag_admin.twig.global', LAGAdminGlobal::class)
     ;

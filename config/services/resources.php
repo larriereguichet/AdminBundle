@@ -23,14 +23,14 @@ return static function (ContainerConfigurator $container): void {
     // Resources factories
     $services->set(ResourceCollectionFactoryInterface::class, ResourceCollectionFactory::class)
         ->args([
+            '$metadataCollectionFactory' => service('lag_admin.resource.collection_metadata_factory'),
             '$resourceFactory' => service('lag_admin.resource.factory'),
-            '$validator' => service('validator'),
         ])
-        ->alias('lag_admin.resource.collection_factory', ResourceFactoryInterface::class)
+        ->alias('lag_admin.resource.collection_factory', ResourceCollectionFactoryInterface::class)
     ;
     $services->set(ResourceFactoryInterface::class, ResourceFactory::class)
         ->args([
-            '$definitionFactory' => service(ResourceMetadataFactoryInterface::class),
+            '$metadataFactory' => service('lag_admin.resource.metadata_factory'),
             '$validator' => service('validator'),
         ])
         ->alias('lag_admin.resource.factory', ResourceFactoryInterface::class)
@@ -44,11 +44,6 @@ return static function (ContainerConfigurator $container): void {
 
     // Contexts
     $services->set(ResourceContextInterface::class, ResourceContext::class)
-        ->args([
-            '$requestStack' => service('request_stack'),
-            '$parametersExtractor' => service(ParametersExtractorInterface::class),
-            '$resourceFactory' => service('lag_admin.resource.factory'),
-        ])
         ->alias('lag_admin.resource.context', ResourceContextInterface::class)
     ;
 

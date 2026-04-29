@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
@@ -29,9 +29,9 @@ final readonly class SecurityCellBuilder implements CellBuilderInterface
         PropertyInterface $property,
         mixed $data,
         array $context = []
-    ): Cell {
+    ): CellView {
         if (!$this->permissionChecker->isGranted($property)) {
-            return new Cell(
+            return new CellView(
                 name: $property->getName(),
                 attributes: $this->attributeBuilder->buildAttributes($property->getAttributes()),
             );

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Metadata\CompoundPropertyInterface;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
@@ -27,7 +27,7 @@ final readonly class CompoundCellBuilder implements CellBuilderInterface
         PropertyInterface $property,
         mixed $data,
         array $context = []
-    ): Cell {
+    ): CellView {
         if (!$property instanceof CompoundPropertyInterface || !empty($context['children'])) {
             return $this->cellBuilder->buildCell($operation, $grid, $property, $data, $context);
         }

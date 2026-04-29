@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\RichText\RichTextRendererInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\LinkUrlGeneratorInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
 use LAG\AdminBundle\Twig\Extension\AttributeExtension;
 use LAG\AdminBundle\Twig\Extension\PaginationExtension;
@@ -40,7 +41,11 @@ return static function (ContainerConfigurator $container): void {
 
     // Runtime extensions
     $services->set(RoutingRuntime::class)
-        ->args(['$urlGenerator' => service(OperationUrlGeneratorInterface::class)])
+        ->args([
+            '$operationFactory' => service('lag_admin.operation.factory'),
+            '$urlGenerator' => service(OperationUrlGeneratorInterface::class),
+            '$linkUrlGenerator' => service(LinkUrlGeneratorInterface::class),
+        ])
         ->tag('twig.runtime')
     ;
     $services->set(RenderRuntime::class)
@@ -73,7 +78,6 @@ return static function (ContainerConfigurator $container): void {
     // Renderer
     $services->set(LinkRendererInterface::class, LinkRenderer::class)
         ->arg('$urlGenerator', service(OperationUrlGeneratorInterface::class))
-        ->arg('$validator', service('validator'))
         ->arg('$environment', service('twig'))
     ;
 };

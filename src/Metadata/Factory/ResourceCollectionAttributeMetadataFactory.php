@@ -49,7 +49,7 @@ final readonly class ResourceCollectionAttributeMetadataFactory implements Resou
                 if (!$resource->getShortName()) {
                     throw new MissingResourceNameException($resourceClass);
                 }
-                $resources[$resource->getApplicationName().'.'.$resource->getShortName()] = $resource;
+                $resources[$resource->getApplication().'.'.$resource->getShortName()] = $resource;
             }
         }
 

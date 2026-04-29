@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Resource\Slug;
 
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 final readonly class ResourceSlugger implements ResourceSluggerInterface
 {
     public function __construct(
-        private \Symfony\Component\String\Slugger\SluggerInterface $slugger,
+        private SluggerInterface $slugger,
         private PropertyAccessorInterface $propertyAccessor,
     ) {
     }

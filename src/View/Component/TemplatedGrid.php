@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\View\Component;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Grid\View\Grid as GridView;
+use LAG\AdminBundle\Grid\View\GridView as GridView;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 

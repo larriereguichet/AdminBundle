@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\View\Component;
 
-use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Metadata;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -24,7 +24,7 @@ final class Text
     public array $translationParameters = [];
     public bool $displayHtmlElement = true;
 
-    public function mount(mixed $data, Cell $cell): void
+    public function mount(mixed $data, CellView $cell): void
     {
         if ($data === null) {
             $data = '';

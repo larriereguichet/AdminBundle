@@ -10,8 +10,6 @@ use LAG\AdminBundle\Request\ContextBuilder\JsonContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\PaginationContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\PartialContextBuilder;
 use LAG\AdminBundle\Request\ContextBuilder\SortingContextBuilder;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractor;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Request\Uri\UrlVariablesExtractor;
 use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\Request\ValueResolver\GridValueResolver;
@@ -28,8 +26,7 @@ return static function (ContainerConfigurator $container): void {
         ->tag('controller.argument_value_resolver')
     ;
     $services->set(OperationValueResolver::class)
-        ->arg('$parametersExtractor', service('lag_admin.request.parameters_extractor'))
-        ->arg('$operationContext', service('lag_admin.operation.context'))
+        ->arg('$resourceContext', service(ResourceContextInterface::class))
         ->tag('controller.argument_value_resolver')
     ;
     $services->set(GridValueResolver::class)
@@ -41,28 +38,32 @@ return static function (ContainerConfigurator $container): void {
     ;
 
     // Resource request parameters extractors
-    $services->set(ParametersExtractorInterface::class, ParametersExtractor::class)
-        ->args([
-            '$applicationParameter' => param('lag_admin.application_parameter'),
-            '$resourceParameter' => param('lag_admin.resource_parameter'),
-            '$operationParameter' => param('lag_admin.operation_parameter'),
-        ])
-        ->alias('lag_admin.request.parameters_extractor', ParametersExtractorInterface::class)
-    ;
     $services->set(UrlVariablesExtractorInterface::class, UrlVariablesExtractor::class);
 
     // Request context builders
     $services->set(ContextBuilderInterface::class, ContextBuilder::class);
     $services->set(SortingContextBuilder::class)
         ->decorate(ContextBuilderInterface::class)
+        ->args([
+            '$contextBuilder' => service('.inner'),
+        ])
     ;
     $services->set(JsonContextBuilder::class)
+        ->args([
+            '$contextBuilder' => service('.inner'),
+        ])
         ->decorate(ContextBuilderInterface::class)
     ;
     $services->set(PartialContextBuilder::class)
+        ->args([
+            '$contextBuilder' => service('.inner'),
+        ])
         ->decorate(ContextBuilderInterface::class)
     ;
     $services->set(PaginationContextBuilder::class)
         ->decorate(ContextBuilderInterface::class)
+        ->args([
+            '$contextBuilder' => service('.inner'),
+        ])
     ;
 };

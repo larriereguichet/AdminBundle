@@ -21,13 +21,13 @@ final class ResourceCollectionMetadataFactoryTest extends TestCase
         $metadataFactory = new ResourceCollectionMetadataFactory([
             $this->getTestApplicationPath().'/config/admin',
             $this->getTestApplicationPath().'/src/Entity',
-        ]);
+        ], 'test');
         $resources = $metadataFactory->createMetadata();
 
         self::assertEquals([
             'admin.publisher' => new Resource(
                 shortName: 'publisher',
-                applicationName: 'admin',
+                application: 'admin',
                 resourceClass: Publisher::class,
             ),
         ], $resources);

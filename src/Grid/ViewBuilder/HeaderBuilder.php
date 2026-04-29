@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Grid\View\Header;
+use LAG\AdminBundle\Grid\View\HeaderView;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
@@ -22,13 +22,14 @@ final readonly class HeaderBuilder implements HeaderBuilderInterface
         GridInterface $grid,
         PropertyInterface $property,
         array $context = []
-    ): Header {
-        return new Header(
+    ): HeaderView {
+        return new HeaderView(
             name: $property->getName(),
             attributes: $this->attributeBuilder->buildAttributes($property->getHeaderAttributes()),
-            label: $property->getLabel(),
+            label: $property->getLabel() ?: null,
             translationDomain: $context['translation_domain'] ?? 'admin',
-            sort: $context['sort'] ?? null,
+            //sort: $context['sort'] ?? null,
+            sort: null,
             sortParameter: '', // TODO ?
             order: $context['order'] ?? null,
             orderParameter: '',

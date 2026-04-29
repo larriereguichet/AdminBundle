@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Grid\View\Header;
+use LAG\AdminBundle\Grid\View\HeaderView;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
@@ -21,5 +21,5 @@ interface HeaderBuilderInterface
         GridInterface $grid,
         PropertyInterface $property,
         array $context = []
-    ): Header;
+    ): HeaderView;
 }

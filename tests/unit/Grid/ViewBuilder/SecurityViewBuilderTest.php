@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
-use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
 use LAG\AdminBundle\Grid\ViewFactory\SecurityCellBuilder;
 use LAG\AdminBundle\Metadata\Attribute\Grid;
@@ -28,7 +28,7 @@ final class SecurityViewBuilderTest extends TestCase
         $property = new Text(name: 'some property', permissions: ['ROLE_USER']);
         $data = new \stdClass();
         $context = ['some_context'];
-        $cellView = new Cell(name: 'some property');
+        $cellView = new CellView(name: 'some property');
         $operation = new Index();
 
         $this->permissionChecker

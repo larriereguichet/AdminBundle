@@ -15,13 +15,15 @@ interface ResourceInterface
 
     public function getResourceClass(): ?string;
 
+    public function getApplication(): string;
+
     public function getTitle(): ?string;
 
     public function getGroup(): ?string;
 
     public function getIcon(): ?string;
 
-    /** @return array<int, OperationInterface> */
+    /** @return array<int|string, OperationInterface> */
     public function getOperations(): array;
 
     public function hasOperation(string $operationName): bool;
@@ -66,8 +68,6 @@ interface ResourceInterface
 
     public function getTranslationDomain(): ?string;
 
-    public function getApplicationName(): string;
-
     public function getForm(): ?string;
 
     /** @return array<string, mixed>|null */
@@ -94,6 +94,4 @@ interface ResourceInterface
     public function getInput(): ?string;
 
     public function getOutput(): ?string;
-
-    public function getApplication(): ApplicationInterface;
 }

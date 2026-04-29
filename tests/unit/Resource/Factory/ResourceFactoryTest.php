@@ -34,7 +34,7 @@ final class ResourceFactoryTest extends TestCase
         );
         $definition = new Resource(
             shortName: 'my_resource',
-            applicationName: 'my_application',
+            application: 'my_application',
             operations: [$operationDefinition, $collectionOperationDefinition],
         );
 

@@ -15,15 +15,13 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('lag_admin');
         $rootNode = $treeBuilder->getRootNode();
 
-        $this->addRequestSection($rootNode);
         $this->addMappingSection($rootNode);
         $this->addApplicationsSection($rootNode);
         $this->addUploadsSection($rootNode);
-        $this->addResourcesSection($rootNode);
-        $this->addGridsSection($rootNode);
 
         $rootNode
             ->children()
+                ->scalarNode('request_parameter')->defaultValue('_lag_operation')->end()
                 ->scalarNode('date_format')->defaultValue('medium')->end()
                 ->scalarNode('time_format')->defaultValue('short')->end()
                 ->booleanNode('date_localization')->defaultValue(true)->end()
@@ -33,21 +31,6 @@ final class Configuration implements ConfigurationInterface
         ;
 
         return $treeBuilder;
-    }
-
-    private function addRequestSection(ArrayNodeDefinition $rootNode): void
-    {
-        $rootNode
-            ->children()
-                ->arrayNode('request')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('application_parameter')->defaultValue('_application')->end()
-                        ->scalarNode('resource_parameter')->defaultValue('_resource')->end()
-                        ->scalarNode('operation_parameter')->defaultValue('_operation')->end()
-                    ->end()
-            ->end()
-        ;
     }
 
     private function addMappingSection(ArrayNodeDefinition $rootNode): void
@@ -98,85 +81,6 @@ final class Configuration implements ConfigurationInterface
                         ->scalarNode('base_template')->defaultValue('@LAGAdmin/base.html.twig')->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
-    }
-
-    private function addResourcesSection(ArrayNodeDefinition $rootNode): void
-    {
-        $rootNode
-            ->children()
-                ->arrayNode('resources')
-                    ->arrayPrototype()
-                        ->variablePrototype()->end()
-                    ->end()
-                ->end()
-            ->end()
-        ;
-    }
-
-    private function addGridsSection(ArrayNodeDefinition $rootNode): void
-    {
-        $rootNode
-            ->children()
-                ->arrayNode('grids')
-                    ->arrayPrototype()
-                    ->addDefaultsIfNotSet()
-                    ->ignoreExtraKeys(false)
-                    ->children()
-                        ->scalarNode('name')->isRequired()->end()
-                        ->scalarNode('title')->end()
-                        ->scalarNode('type')->defaultValue('table')->end()
-                        ->scalarNode('template')->end()
-                        ->scalarNode('component')->end()
-                        ->scalarNode('translation_domain')->end()
-                        ->scalarNode('header_template')->end()
-
-                        ->arrayNode('properties')
-                            ->scalarPrototype()->end()
-                        ->end()
-                        ->arrayNode('attributes')
-                            ->variablePrototype()->end()
-                        ->end()
-                        ->arrayNode('container_attributes')
-                            ->variablePrototype()->end()
-                        ->end()
-                        ->arrayNode('action_cell_attributes')
-                            ->variablePrototype()->end()
-                        ->end()
-                        ->arrayNode('header_row_attributes')
-                            ->variablePrototype()->end()
-                        ->end()
-                        ->arrayNode('header_attributes')
-                            ->variablePrototype()->end()
-                        ->end()
-                        ->arrayNode('options')
-                            ->variablePrototype()->end()
-                        ->end()
-
-                        ->scalarNode('form')->end()
-                        ->arrayNode('form_options')
-                            ->variablePrototype()->end()
-                        ->end()
-
-                        ->arrayNode('actions')
-                            ->variablePrototype()->end()
-                        ->end()
-                        ->arrayNode('collection_actions')
-                            ->variablePrototype()->end()
-                        ->end()
-
-                        ->scalarNode('empty_message')->end()
-                        ->booleanNode('sortable')->end()
-                    ->end()
-                ->end()
-            ->end()
-            ->arrayNode('grids_templates')
-                ->defaultValue([
-                    'table' => '@LAGAdmin/grids/table.html.twig',
-                    'card' => '@LAGAdmin/grids/card.html.twig',
-                ])
-                ->variablePrototype()->end()
             ->end()
         ;
     }

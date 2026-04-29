@@ -26,11 +26,12 @@ use LAG\AdminBundle\Grid\ViewBuilder\LinkBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\RowBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\RowBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\SecurityCellBuilder;
-use LAG\AdminBundle\Metadata\DataTransformer\CountDataTransformer;
-use LAG\AdminBundle\Metadata\DataTransformer\EnumDataTransformer;
-use LAG\AdminBundle\Metadata\DataTransformer\FormDataTransformer;
-use LAG\AdminBundle\Metadata\DataTransformer\MapDataTransformer;
+use LAG\AdminBundle\Grid\DataTransformer\CountDataTransformer;
+use LAG\AdminBundle\Grid\DataTransformer\EnumDataTransformer;
+use LAG\AdminBundle\Grid\DataTransformer\FormDataTransformer;
+use LAG\AdminBundle\Grid\DataTransformer\MapDataTransformer;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\LinkUrlGeneratorInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
 use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionCheckerInterface;
 
@@ -40,9 +41,8 @@ return static function (ContainerConfigurator $container): void {
     // Factories
     $services->set(GridFactoryInterface::class, GridFactory::class)
         ->args([
-            '$definitionFactory' => service('lag_admin.definition.factory'),
+            '$metadataFactory' => service('lag_admin.grid.metadata_factory'),
             '$validator' => service('validator'),
-            '$builders' => tagged_iterator('lag_admin.grid_provider'),
         ])
         ->alias('lag_admin.grid.factory', GridFactoryInterface::class)
     ;
@@ -50,15 +50,15 @@ return static function (ContainerConfigurator $container): void {
     // View builders
     $services->set(GridBuilderInterface::class, GridBuilder::class)
         ->args([
-            '$gridFactory' => service('lag_admin.grid.factory'),
             '$rowBuilder' => service(RowBuilderInterface::class),
-            '$actionBuilder' => service(LinkBuilderInterface::class),
+            '$attributeBuilder' => service(AttributeBuilderInterface::class),
         ])
         ->alias('lag_admin.grid.view_builder', GridBuilderInterface::class)
     ;
     $services->set(RowBuilderInterface::class, RowBuilder::class)
         ->arg('$cellBuilder', service(CellBuilderInterface::class))
-        ->arg('$actionsBuilder', service(LinkBuilderInterface::class))
+        ->arg('$headerBuilder', service(HeaderBuilderInterface::class))
+        ->arg('$linkBuilder', service(LinkBuilderInterface::class))
         ->arg('$attributeBuilder', service(AttributeBuilderInterface::class))
     ;
     $services->set(HeaderBuilderInterface::class, HeaderBuilder::class)
@@ -66,11 +66,16 @@ return static function (ContainerConfigurator $container): void {
             '$attributeBuilder' => service(AttributeBuilderInterface::class),
         ])
     ;
-    $services->set(CellBuilderInterface::class, CellBuilder::class);
+    $services->set(CellBuilderInterface::class, CellBuilder::class)
+        ->args([
+            '$attributeBuilder' => service(AttributeBuilderInterface::class),
+        ])
+    ;
     $services->set(SecurityCellBuilder::class)
         ->decorate(id: CellBuilderInterface::class, priority: 200)
         ->arg('$cellBuilder', service('.inner'))
         ->arg('$permissionChecker', service(PropertyPermissionCheckerInterface::class))
+        ->arg('$attributeBuilder', service(AttributeBuilderInterface::class))
     ;
     $services->set(DataCellBuilder::class)
         ->decorate(id: CellBuilderInterface::class, priority: 50)
@@ -89,12 +94,13 @@ return static function (ContainerConfigurator $container): void {
     ;
     $services->set(ConditionCellBuilder::class)
         ->decorate(id: CellBuilderInterface::class, priority: 100)
-        ->arg('$cellBuilder', service('.inner'))
         ->arg('$conditionMatcher', service(ConditionMatcherInterface::class))
+        ->arg('$cellBuilder', service('.inner'))
+        ->arg('$attributeBuilder', service(AttributeBuilderInterface::class))
     ;
     $services->set(LinkBuilderInterface::class, LinkBuilder::class)
         ->args([
-            '$urlGenerator' => service(OperationUrlGeneratorInterface::class),
+            '$urlGenerator' => service(LinkUrlGeneratorInterface::class),
             '$conditionMatcher' => service(ConditionMatcherInterface::class),
             '$translator' => service('translator'),
             '$attributeBuilder' => service(AttributeBuilderInterface::class),

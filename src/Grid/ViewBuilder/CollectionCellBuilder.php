@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Metadata\Attribute\Collection;
 use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
@@ -26,7 +26,7 @@ final readonly class CollectionCellBuilder implements CellBuilderInterface
         PropertyInterface $property,
         mixed $data,
         array $context = [],
-    ): Cell {
+    ): CellView {
         if (!$property instanceof Collection) {
             return $this->cellBuilder->buildCell($operation, $grid, $property, $data, $context);
         }

@@ -21,7 +21,7 @@ final class ConfigurationTest extends TestCase
 
         self::assertEquals([
             'request' => [
-                'application_parameter' => '_application',
+                'request_parameter' => '_application',
                 'resource_parameter' => '_resource',
                 'operation_parameter' => '_operation',
             ],
@@ -42,7 +42,7 @@ final class ConfigurationTest extends TestCase
             'resources' => [],
             'grids' => [],
             'cache' => true,
-            'grids_templates' => [
+            'grid_templates' => [
                 'table' => '@LAGAdmin/grids/table.html.twig',
                 'card' => '@LAGAdmin/grids/card.html.twig',
             ],

@@ -24,7 +24,7 @@ return static function (ContainerConfigurator $container): void {
     // Form types
     $services->set(FilterType::class)
         ->args([
-            '$operationFactory' => service('lag_admin.operation.factory'),
+            '$resourceContext' => service('lag_admin.resource.context'),
         ])
         ->tag('form.type')
     ;

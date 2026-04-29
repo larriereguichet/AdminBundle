@@ -7,9 +7,7 @@ namespace LAG\AdminBundle\DependencyInjection;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use LAG\AdminBundle\Grid\Provider\GridProviderInterface;
-use LAG\AdminBundle\Metadata\ApplicationMetadataInterface;
-use LAG\AdminBundle\Metadata\DataTransformer\DataTransformerInterface;
-use LAG\AdminBundle\Metadata\ResourceMetadataInterface;
+use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
@@ -29,20 +27,12 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
 
         $this->loadServices($container);
 
-        // $resources = $this->loadResources($config);
-        $applications = $this->loadApplications($config, $resources);
-        $grids = $this->loadGrids($config);
-
         $container->setParameter('lag_admin.mapping_paths', $config['mapping']['paths'] ?? []);
-        $container->setParameter('lag_admin.resources', $config['resources'] ?? []);
-        $container->setParameter('lag_admin.applications', $applications);
-        $container->setParameter('lag_admin.grids', $grids);
+        $container->setParameter('lag_admin.applications', $config['applications'] ?? []);
         $container->setParameter('lag_admin.media_directory', $config['uploads']['media_directory']);
         $container->setParameter('lag_admin.media_storage', $config['uploads']['storage']);
-        $container->setParameter('lag_admin.application_parameter', $config['request']['application_parameter']);
-        $container->setParameter('lag_admin.resource_parameter', $config['request']['resource_parameter']);
-        $container->setParameter('lag_admin.operation_parameter', $config['request']['operation_parameter']);
-        $container->setParameter('lag_admin.grids_templates', $config['grids_templates'] ?? []);
+        $container->setParameter('lag_admin.request_parameter', $config['request_parameter']);
+        $container->setParameter('lag_admin.grid_templates', $config['grid_templates'] ?? []);
 
         $container->registerForAutoconfiguration(ProviderInterface::class)->addTag('lag_admin.state_provider');
         $container->registerForAutoconfiguration(ProcessorInterface::class)->addTag('lag_admin.state_processor');
@@ -91,47 +81,6 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
             $loader->load('services/bridges/doctrine.php');
         }
         $loader->load('services/bridges/quill_js.php');
-    }
-
-    /**
-     * @param array<string, mixed> $config
-     * @param iterable<ResourceMetadataInterface> $resources
-     *
-     * @return ApplicationMetadataInterface[]
-     */
-    private function loadApplications(array $config, iterable $resources): array
-    {
-        $applications = $config['applications'] ?? [];
-
-        /** @var ResourceMetadataInterface $resource */
-        foreach ($resources as $resource) {
-            if (!empty($resource['application']) && empty($applications[$resource['application']])) {
-                $applications[$resource['application']] = ['name' => $resource['application']];
-            }
-        }
-
-        foreach ($applications as $name => $application) {
-            $application['name'] = $name;
-            $applications[$name] = $application;
-        }
-
-        return $applications;
-    }
-
-    /**
-     * @param array<string, mixed> $config
-     *
-     * @return array<string, array<string, mixed>>
-     */
-    private function loadGrids(array $config): array
-    {
-        $grids = [];
-
-        foreach ($config['grids'] ?? [] as $grid) {
-            $grids[$grid['name']] = $grid;
-        }
-
-        return $grids;
     }
 
     private function prependCacheConfiguration(ContainerBuilder $container): void

@@ -29,9 +29,13 @@ final readonly class ResourceCollectionMetadataFactory implements ResourceCollec
                 ->name('*.php')
                 ->sortByName(true)
                 ->in($path)
+                ->contains('return static function')
             ;
 
             foreach ($finder as $file) {
+                if ($this->isClassFile($file->getRealPath())) {
+                    continue;
+                }
                 // The closure forbids access to the private scope in the included file
                 $callback = \Closure::bind(static fn($filePath) => include $filePath, null, null);
 
@@ -48,5 +52,12 @@ final readonly class ResourceCollectionMetadataFactory implements ResourceCollec
         }
 
         return $builder->getResources();
+    }
+
+    private function isClassFile(string $filePath): bool
+    {
+        $content = file_get_contents($filePath);
+
+        return (bool)preg_match('/^\s*(class|interface|trait|enum)\s+/m', $content);
     }
 }

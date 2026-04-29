@@ -10,6 +10,7 @@ use LAG\AdminBundle\EventListener\Data\GeneratePasswordListener;
 use LAG\AdminBundle\EventListener\Data\GenerateSlugListener;
 use LAG\AdminBundle\EventListener\Data\GenerateTimestampListener;
 use LAG\AdminBundle\EventListener\Data\UploadImageListener;
+use LAG\AdminBundle\EventListener\Resource\DefineResourceContextListener;
 use LAG\AdminBundle\EventListener\Security\AccessListener;
 use LAG\AdminBundle\EventListener\View\DynamicUxComponentRenderListener;
 use LAG\AdminBundle\Upload\Uploader\ImageUploaderInterface;
@@ -19,10 +20,19 @@ use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
+    // Kernel listeners
+    $services->set(DefineResourceContextListener::class)
+        ->args([
+            '$requestParameter' => param('lag_admin.request_parameter'),
+            '$resourceContext' => service('lag_admin.resource.context'),
+            '$resourceFactory' => service('lag_admin.resource.factory'),
+        ])
+        ->tag('kernel.event_listener', ['event' => KernelEvents::REQUEST, 'priority' => -255])
+    ;
     // Security listeners
     $services->set(AccessListener::class)
         ->args([
-            '$operationContext' => service('lag_admin.operation.context'),
+            '$resourceContext' => service('lag_admin.resource.context'),
             '$security' => service('security.helper'),
         ])
         ->tag('kernel.event_listener', ['event' => KernelEvents::REQUEST])

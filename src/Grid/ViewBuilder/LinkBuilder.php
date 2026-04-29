@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
-use LAG\AdminBundle\Grid\View\Cell;
+use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Metadata\Attribute\Link;
 use LAG\AdminBundle\Routing\UrlGenerator\LinkUrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -20,7 +20,7 @@ final readonly class LinkBuilder implements LinkBuilderInterface
     ) {
     }
 
-    public function buildLink(Link $link, mixed $data, array $context = []): ?Cell
+    public function buildLink(Link $link, mixed $data, array $context = []): ?CellView
     {
         $actionAttributes = $link->getAttributes();
 
@@ -32,7 +32,7 @@ final readonly class LinkBuilder implements LinkBuilderInterface
             $actionAttributes['title'] = $this->translator->trans($link->getText(), [], $context['translation_domain'] ?? 'admin');
         }
 
-        return new Cell(
+        return new CellView(
             name: $link->getName(),
             attributes: $this->attributeBuilder->buildAttributes($actionAttributes),
             property: $link,

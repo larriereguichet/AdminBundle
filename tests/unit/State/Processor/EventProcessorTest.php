@@ -33,7 +33,7 @@ final class EventProcessorTest extends TestCase
     {
         $data = new \stdClass();
         $data->myProperty = 'test';
-        $resource = new Resource(shortName: 'my_resource', applicationName: 'my_application');
+        $resource = new Resource(shortName: 'my_resource', application: 'my_application');
         $operation = $operation->setResource($resource);
 
         $this->eventDispatcher

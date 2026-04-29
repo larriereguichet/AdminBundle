@@ -21,7 +21,7 @@ final class ResourceEventDispatcherTest extends TestCase
     #[Test]
     public function itDispatchResourceEvents(): void
     {
-        $resource = new Resource(shortName: 'my_resource', applicationName: 'my_application');
+        $resource = new Resource(shortName: 'my_resource', application: 'my_application');
         $event = new ResourceEvent($resource);
 
         $this->eventDispatcher
