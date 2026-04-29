@@ -29,12 +29,12 @@ final class DefineResourceContextListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_lag_operation', 'admin.book.index');
         $event = new RequestEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
         );
 
-        $operation = $this->createMock(OperationInterface::class);
+        $operation = $this->createStub(OperationInterface::class);
         $resource = $this->createMock(ResourceInterface::class);
         $resource
             ->expects($this->once())
@@ -73,7 +73,7 @@ final class DefineResourceContextListenerTest extends TestCase
     {
         $request = new Request();
         $event = new RequestEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
         );
@@ -96,7 +96,7 @@ final class DefineResourceContextListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_lag_operation', 'admin.book.index');
         $event = new RequestEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
         );
@@ -121,7 +121,7 @@ final class DefineResourceContextListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_lag_operation', '.index');
         $event = new RequestEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
         );
@@ -146,7 +146,7 @@ final class DefineResourceContextListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_lag_operation', 'admin.book.');
         $event = new RequestEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
         );
