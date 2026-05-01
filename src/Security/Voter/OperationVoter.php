@@ -7,12 +7,13 @@ namespace LAG\AdminBundle\Security\Voter;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /** @extends Voter<string, OperationInterface> */
-final class OperationPermissionVoter extends Voter
+final class OperationVoter extends Voter
 {
-    public const string RESOURCE_ACCESS = 'resource_access';
+    public const string OPERATION_ACCESS = 'resource_access';
 
     public function __construct(
         private readonly Security $security,
@@ -21,18 +22,26 @@ final class OperationPermissionVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $subject instanceof OperationInterface && $attribute === self::RESOURCE_ACCESS;
+        return $subject instanceof OperationInterface && $attribute === self::OPERATION_ACCESS;
     }
 
     /** @param OperationInterface $subject */
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
+        $permissions = $subject->getPermissions() ?? [];
+
+        // When no roles are defined, allow user
+        if ($permissions === []) {
+            return true;
+        }
+
+        // User must have at least one of the configured roles
         foreach ($subject->getPermissions() as $permission) {
             if ($this->security->isGranted($permission, $token->getUser())) {
                 return true;
             }
         }
 
-        return \count($subject->getPermissions()) === 0;
+        return false;
     }
 }

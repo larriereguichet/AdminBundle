@@ -8,6 +8,7 @@ namespace LAG\AdminBundle\Entity\Mapping;
 readonly class Sluggable
 {
     public function __construct(
+        // TODO handle several sources
         public string $sourceProperty,
         public string $targetProperty = 'slug',
         public string $generator = 'default',

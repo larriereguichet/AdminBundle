@@ -8,6 +8,7 @@ use League\Flysystem\Config;
 
 use function Symfony\Component\String\u;
 
+// TODO remove
 final readonly class PublicUrlGenerator implements \League\Flysystem\UrlGeneration\PublicUrlGenerator
 {
     public function __construct(
