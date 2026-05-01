@@ -12,11 +12,15 @@ final readonly class PathGenerator implements PathGeneratorInterface
 {
     public function generatePath(OperationInterface $operation): string
     {
-        return u()
+        return (string) u()
             ->append($operation->getPath())
             ->ensureStart('/')
             ->trimEnd('/')
-            ->toString()
         ;
+    }
+
+    public function generateEmbeddedPath(OperationInterface $operation): string
+    {
+        return (string) u($this->generatePath($operation))->prepend('/_lag_admin_embedded/');
     }
 }
