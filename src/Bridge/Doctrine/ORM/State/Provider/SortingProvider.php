@@ -41,7 +41,10 @@ final readonly class SortingProvider implements ProviderInterface
                 if (!$property->isSortable()) {
                     continue;
                 }
-                $sort = $property->getSortingPath();
+
+                if ($property->getSortingPath()) {
+                    $sort = $property->getSortingPath();
+                }
             }
 
             if ($sort === null) {

@@ -7,13 +7,15 @@ namespace LAG\AdminBundle\Bridge\KnpMenu\Extension;
 use Knp\Menu\Factory\ExtensionInterface;
 use Knp\Menu\ItemInterface;
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 
 final readonly class ResourceExtension implements ExtensionInterface
 {
     public function __construct(
         private OperationFactoryInterface $operationFactory,
-        private ResourceUrlGeneratorInterface $urlGenerator,
+        private UrlGeneratorInterface $urlGenerator,
+        private OperationUrlGeneratorInterface $operationUrlGenerator,
     ) {
     }
 
@@ -26,9 +28,9 @@ final readonly class ResourceExtension implements ExtensionInterface
         $resource = $operation->getResource();
 
         if (!empty($options['routeParameters'])) {
-            $options['uri'] = $this->urlGenerator->generateFromRouteName($operation->getRoute(), $options['routeParameters']);
+            $options['uri'] = $this->urlGenerator->generateUrl($operation->getRoute(), $options['routeParameters']);
         } else {
-            $options['uri'] = $this->urlGenerator->generate($operation);
+            $options['uri'] = $this->operationUrlGenerator->generateUrl($operation);
         }
 
         if (!isset($options['extras'])) {

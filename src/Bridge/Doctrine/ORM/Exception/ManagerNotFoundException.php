@@ -14,7 +14,7 @@ class ManagerNotFoundException extends Exception
         parent::__construct(\sprintf(
             'The data class "%s" of the admin resource "%s" is not managed by any Doctrine entity manager',
             $resource->getResource()->getResourceClass(),
-            $resource->getResource()->getName(),
+            $resource->getResource()->getShortName(),
         ));
     }
 }
