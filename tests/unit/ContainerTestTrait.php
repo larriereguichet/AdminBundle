@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests\Unit;
 
-use LAG\AdminBundle\Tests\DependencyInjection\CompilerPass\PublicServiceCompilerPass;
+use LAG\AdminBundle\Tests\Unit\DependencyInjection\CompilerPass\PublicServiceCompilerPass;
 use Nyholm\BundleTest\TestKernel;
 use Symfony\Component\HttpKernel\KernelInterface;
 

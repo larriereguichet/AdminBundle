@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Response\Handler;
+namespace LAG\AdminBundle\Tests\Unit\Response\Handler;
 
-use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Attribute\Create;
 use LAG\AdminBundle\Response\Handler\RedirectResponseHandler;
-use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -60,7 +60,7 @@ final class RedirectHandlerTest extends TestCase
 
         $this->urlGenerator
             ->expects($this->once())
-            ->method('generate')
+            ->method('generateUrl')
             ->with($operation, $data)
             ->willReturn('/same-url')
         ;
@@ -78,7 +78,7 @@ final class RedirectHandlerTest extends TestCase
 
         $this->urlGenerator
             ->expects($this->once())
-            ->method('generate')
+            ->method('generateUrl')
             ->with($operation, $data)
             ->willReturn('/same-url')
         ;
@@ -91,7 +91,7 @@ final class RedirectHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->urlGenerator = $this->createMock(ResourceUrlGeneratorInterface::class);
+        $this->urlGenerator = $this->createMock(OperationUrlGeneratorInterface::class);
         $this->handler = new RedirectResponseHandler($this->urlGenerator);
     }
 }

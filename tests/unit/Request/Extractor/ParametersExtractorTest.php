@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Request\Extractor;
+namespace LAG\AdminBundle\Tests\Unit\Request\Extractor;
 
 use LAG\AdminBundle\Request\Extractor\ParametersExtractor;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Request;
 

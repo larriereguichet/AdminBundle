@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\State\Processor;
+namespace LAG\AdminBundle\Tests\Unit\State\Processor;
 
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;

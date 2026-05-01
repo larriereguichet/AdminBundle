@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Routing\UrlGenerator;
+namespace LAG\AdminBundle\Tests\Unit\Routing\UrlGenerator;
 
 use LAG\AdminBundle\Routing\UrlGenerator\ParametersMapper;
 use PHPUnit\Framework\Attributes\DataProvider;

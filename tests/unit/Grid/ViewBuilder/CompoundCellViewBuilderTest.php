@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Grid\ViewBuilder;
+namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Grid\ViewBuilder\CellViewBuilderInterface;
-use LAG\AdminBundle\Grid\ViewBuilder\CompoundCellViewBuilder;
-use LAG\AdminBundle\Metadata\Compound;
-use LAG\AdminBundle\Metadata\Grid;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Text;
-use LAG\AdminBundle\Metadata\Update;
+use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
+use LAG\AdminBundle\Grid\ViewFactory\CompoundCellBuilder;
+use LAG\AdminBundle\Metadata\Attribute\Compound;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Text;
+use LAG\AdminBundle\Metadata\Attribute\Update;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class CompoundCellViewBuilderTest extends TestCase
 {
-    private CompoundCellViewBuilder $builder;
+    private CompoundCellBuilder $builder;
     private MockObject $decorated;
 
     #[Test]
@@ -94,7 +94,7 @@ final class CompoundCellViewBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = $this->createMock(CellViewBuilderInterface::class);
-        $this->builder = new CompoundCellViewBuilder($this->decorated);
+        $this->decorated = $this->createMock(CellBuilderInterface::class);
+        $this->builder = new CompoundCellBuilder($this->decorated);
     }
 }

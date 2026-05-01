@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Resource\Factory;
+namespace LAG\AdminBundle\Tests\Unit\Resource\Factory;
 
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Resource\Factory\CacheResourceFactory;
-use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Factory\CacheResourceFactory;
+use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ final class CacheResourceFactoryTest extends TestCase
     #[Test]
     public function itCacheFactoryResults(): void
     {
-        $expectedResource = new Resource(name: 'my_resource');
+        $expectedResource = new Resource(shortName: 'my_resource');
 
         $this->decorated
             ->expects($this->once())

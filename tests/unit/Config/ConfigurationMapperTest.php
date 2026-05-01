@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Config;
+namespace LAG\AdminBundle\Tests\Unit\Config;
 
 use LAG\AdminBundle\Config\ConfigurationMapper;
-use LAG\AdminBundle\Metadata\Application;
-use LAG\AdminBundle\Metadata\Boolean;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
-use LAG\AdminBundle\Metadata\Grid;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Show;
-use LAG\AdminBundle\Metadata\Text;
-use LAG\AdminBundle\Metadata\Update;
+use LAG\AdminBundle\Metadata\Attribute\Application;
+use LAG\AdminBundle\Metadata\Attribute\Boolean;
+use LAG\AdminBundle\Metadata\Attribute\Create;
+use LAG\AdminBundle\Metadata\Attribute\Delete;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Show;
+use LAG\AdminBundle\Metadata\Attribute\Text;
+use LAG\AdminBundle\Metadata\Attribute\Update;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -83,11 +84,11 @@ final class ConfigurationMapperTest extends TestCase
 
     #[Test]
     #[DataProvider('resources')]
-    public function itConvertsAResourceToAnArray(Resource $resource): void
+    public function itConvertsAResourceToAnArray(ResourceInterface $resource): void
     {
         $data = $this->configurationMapper->fromResource($resource);
 
-        self::assertEquals($resource->getName(), $data['name']);
+        self::assertEquals($resource->getShortName(), $data['name']);
         self::assertEquals($resource->getResourceClass(), $data['resource_class']);
         self::assertEquals($resource->getTitle(), $data['title']);
         self::assertEquals($resource->getGroup(), $data['group']);
@@ -113,7 +114,7 @@ final class ConfigurationMapperTest extends TestCase
 
         foreach ($resource->getOperations() as $key => $operation) {
             self::assertEquals($data['operations'][$key]['class'], $operation::class);
-            self::assertEquals($data['operations'][$key]['name'], $operation->getName());
+            self::assertEquals($data['operations'][$key]['name'], $operation->getShortName());
             self::assertEquals($data['operations'][$key]['processor'], $operation->getProcessor());
             self::assertEquals($data['operations'][$key]['provider'], $operation->getProvider());
         }
@@ -126,7 +127,7 @@ final class ConfigurationMapperTest extends TestCase
 
     #[Test]
     #[DataProvider('resources')]
-    public function itConvertsAnArrayToAResource(Resource $expectedResource): void
+    public function itConvertsAnArrayToAResource(ResourceInterface $expectedResource): void
     {
         $operations = [
             [
@@ -237,7 +238,7 @@ final class ConfigurationMapperTest extends TestCase
         ];
 
         $resource = new Resource(
-            name: 'MyResource',
+            shortName: 'MyResource',
             resourceClass: 'MyEntity',
             title: 'Some Title',
             group: 'some group',
@@ -281,8 +282,6 @@ final class ConfigurationMapperTest extends TestCase
         self::assertEquals($grid->getProperties(), $data['properties']);
         self::assertEquals($grid->getAttributes(), $data['attributes']);
         self::assertEquals($grid->getRowAttributes(), $data['row_attributes']);
-        self::assertEquals($grid->getContainerAttributes(), $data['container_attributes']);
-        self::assertEquals($grid->getActionCellAttributes(), $data['action_cell_attributes']);
         self::assertEquals($grid->getHeaderRowAttributes(), $data['header_row_attributes']);
         self::assertEquals($grid->getHeaderAttributes(), $data['header_attributes']);
         self::assertEquals($grid->getOptions(), $data['options']);
@@ -309,7 +308,6 @@ final class ConfigurationMapperTest extends TestCase
             properties: [],
             attributes: ['class' => 'my-grid'],
             rowAttributes: ['class' => 'my-row'],
-            containerAttributes: ['class' => 'my-container'],
             options: ['an_option' => 'a_value'],
         );
 

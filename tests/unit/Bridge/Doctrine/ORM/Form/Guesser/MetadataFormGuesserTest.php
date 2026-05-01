@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\Form\Guesser;
+namespace LAG\AdminBundle\Tests\Unit\Bridge\Doctrine\ORM\Form\Guesser;
 
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Form\Guesser\MetadataFormGuesser;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Text;
-use LAG\AdminBundle\Metadata\Update;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Text;
+use LAG\AdminBundle\Metadata\Attribute\Update;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

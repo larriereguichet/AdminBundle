@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
 
 return static function (): iterable {
     yield new Grid(

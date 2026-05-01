@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\State\Provider;
+namespace LAG\AdminBundle\Tests\Unit\State\Provider;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
-use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\Attribute\Create;
+use LAG\AdminBundle\Metadata\Attribute\Delete;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Show;
+use LAG\AdminBundle\Metadata\Attribute\Update;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Show;
-use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Provider\CompositeProvider;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 final class CompositeProviderTest extends TestCase
@@ -38,7 +38,7 @@ final class CompositeProviderTest extends TestCase
     #[DataProvider('operationsProvider')]
     public function testProvideWithoutProvider(OperationInterface $operation): void
     {
-        $resource = new Resource(name: 'my_resource');
+        $resource = new Resource(shortName: 'my_resource');
         $operation = $operation->setResource($resource);
 
         $this->expectExceptionObject(new Exception(\sprintf(

@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Controller\Resource;
+namespace LAG\AdminBundle\Tests\Unit\Controller\Resource;
 
 use LAG\AdminBundle\Controller\Resource\ProcessResource;
 use LAG\AdminBundle\Event\ResourceControllerEvent;
 use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Attribute\Create;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Resource;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
-use LAG\AdminBundle\Tests\Entity\FakeEntity;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\Entity\Book;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -41,7 +41,7 @@ final class ProcessResourceTest extends TestCase
     public function itShowResourceForm(OperationInterface $operation): void
     {
         $request = new Request();
-        $data = new FakeEntity();
+        $data = new Book();
         $data->id = 666;
         $event = new ResourceControllerEvent($operation, $request, $data);
         $form = $this->createMock(FormInterface::class);
@@ -88,7 +88,7 @@ final class ProcessResourceTest extends TestCase
     public function itReturnsAResponseFromEvent(OperationInterface $operation): void
     {
         $request = new Request();
-        $data = new FakeEntity();
+        $data = new Book();
         $data->id = 666;
         $form = $this->createMock(FormInterface::class);
 
@@ -111,7 +111,7 @@ final class ProcessResourceTest extends TestCase
         $this->eventDispatcher
             ->expects($this->once())
             ->method('dispatchEvents')
-            ->willReturnCallback(function (
+            ->willReturnCallback(static function (
                 ResourceControllerEvent $event,
                 string $expectedEventPattern,
             ): void {
@@ -133,7 +133,7 @@ final class ProcessResourceTest extends TestCase
     public function itHandlesASubmittedForm(OperationInterface $operation): void
     {
         $request = new Request();
-        $data = new FakeEntity();
+        $data = new Book();
         $data->id = 666;
 
         $form = $this->createMock(FormInterface::class);
@@ -208,7 +208,7 @@ final class ProcessResourceTest extends TestCase
         );
 
         $resource = new Resource(
-            name: 'my_resource',
+            shortName: 'my_resource',
             operations: [$create, $update, $delete],
             application: 'my_application',
         );

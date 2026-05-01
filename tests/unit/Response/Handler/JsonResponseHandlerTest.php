@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Response\Handler;
+namespace LAG\AdminBundle\Tests\Unit\Response\Handler;
 
-use LAG\AdminBundle\Metadata\Update;
+use LAG\AdminBundle\Metadata\Attribute\Update;
 use LAG\AdminBundle\Response\Handler\JsonResponseHandler;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use PHPUnit\Framework\Attributes\Test;

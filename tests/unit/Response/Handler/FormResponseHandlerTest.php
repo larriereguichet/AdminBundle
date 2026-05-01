@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Response\Handler;
+namespace LAG\AdminBundle\Tests\Unit\Response\Handler;
 
-use LAG\AdminBundle\Metadata\Create;
+use LAG\AdminBundle\Metadata\Attribute\Create;
 use LAG\AdminBundle\Response\Handler\FormResponseHandler;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use PHPUnit\Framework\Attributes\Test;

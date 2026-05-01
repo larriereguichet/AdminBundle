@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\EventDispatcher;
+namespace LAG\AdminBundle\Tests\Unit\EventDispatcher;
 
 use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\Event\ResourceEvent;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcher;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -21,13 +21,13 @@ final class ResourceEventDispatcherTest extends TestCase
     #[Test]
     public function itDispatchResourceEvents(): void
     {
-        $resource = new Resource(name: 'my_resource', application: 'my_application');
+        $resource = new Resource(shortName: 'my_resource', application: 'my_application');
         $event = new ResourceEvent($resource);
 
         $this->eventDispatcher
             ->expects($this->exactly(3))
             ->method('dispatch')
-            ->willReturnCallback(function (ResourceEvent $expectedEvent, string $eventName) use ($event): ResourceEvent {
+            ->willReturnCallback(static function (ResourceEvent $expectedEvent, string $eventName) use ($event): ResourceEvent {
                 self::assertEquals($expectedEvent, $event);
                 self::assertContains($eventName, [
                     'lag_admin.resource.controller',

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Grid\ViewBuilder;
+namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Grid\ViewBuilder\CellViewBuilderInterface;
-use LAG\AdminBundle\Grid\ViewBuilder\SecurityCellViewBuilder;
-use LAG\AdminBundle\Metadata\Grid;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Text;
+use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
+use LAG\AdminBundle\Grid\ViewFactory\SecurityCellBuilder;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Text;
 use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionCheckerInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 final class SecurityViewBuilderTest extends TestCase
 {
-    private SecurityCellViewBuilder $cellBuilder;
+    private SecurityCellBuilder $cellBuilder;
     private MockObject $permissionChecker;
     private MockObject $decorated;
 
@@ -73,9 +73,9 @@ final class SecurityViewBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->decorated = $this->createMock(CellViewBuilderInterface::class);
+        $this->decorated = $this->createMock(CellBuilderInterface::class);
         $this->permissionChecker = $this->createMock(PropertyPermissionCheckerInterface::class);
-        $this->cellBuilder = new SecurityCellViewBuilder(
+        $this->cellBuilder = new SecurityCellBuilder(
             $this->decorated,
             $this->permissionChecker,
         );

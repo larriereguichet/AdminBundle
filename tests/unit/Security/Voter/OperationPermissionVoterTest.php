@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Security\Voter;
+namespace LAG\AdminBundle\Tests\Unit\Security\Voter;
 
-use LAG\AdminBundle\Metadata\Update;
-use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
+use LAG\AdminBundle\Metadata\Attribute\Update;
+use LAG\AdminBundle\Security\Voter\OperationVoter;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class OperationPermissionVoterTest extends TestCase
 {
-    private OperationPermissionVoter $voter;
+    private OperationVoter $voter;
     private MockObject $security;
 
     #[Test]
@@ -35,7 +35,7 @@ final class OperationPermissionVoterTest extends TestCase
         $authorized = $this->voter->vote(
             new UsernamePasswordToken($user, 'admin', ['ROLE_USER']),
             $operation,
-            [OperationPermissionVoter::RESOURCE_ACCESS],
+            [OperationVoter::OPERATION_ACCESS],
         );
 
         self::assertEquals(VoterInterface::ACCESS_GRANTED, $authorized);
@@ -55,7 +55,7 @@ final class OperationPermissionVoterTest extends TestCase
         $authorized = $this->voter->vote(
             new UsernamePasswordToken($user, 'admin', ['ROLE_USER']),
             $operation,
-            [OperationPermissionVoter::RESOURCE_ACCESS],
+            [OperationVoter::OPERATION_ACCESS],
         );
 
         self::assertEquals(VoterInterface::ACCESS_GRANTED, $authorized);
@@ -87,7 +87,7 @@ final class OperationPermissionVoterTest extends TestCase
         $authorized = $this->voter->vote(
             new UsernamePasswordToken($this->createMock(UserInterface::class), 'admin', ['ROLE_USER']),
             new \stdClass(),
-            [OperationPermissionVoter::RESOURCE_ACCESS],
+            [OperationVoter::OPERATION_ACCESS],
         );
 
         self::assertEquals(VoterInterface::ACCESS_ABSTAIN, $authorized);
@@ -96,6 +96,6 @@ final class OperationPermissionVoterTest extends TestCase
     protected function setUp(): void
     {
         $this->security = $this->createMock(Security::class);
-        $this->voter = new OperationPermissionVoter($this->security);
+        $this->voter = new OperationVoter($this->security);
     }
 }

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\View\Helper;
+namespace LAG\AdminBundle\Tests\Unit\View\Helper;
 
-use LAG\AdminBundle\Metadata\Action;
-use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\View\Helper\RenderHelper;
+use LAG\AdminBundle\Metadata\Attribute\Action;
+use LAG\AdminBundle\Metadata\Attribute\Link;
+use LAG\AdminBundle\Twig\Runtime\RenderRuntime;
 use LAG\AdminBundle\View\Render\ActionRendererInterface;
 use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 final class RenderHelperTest extends TestCase
 {
-    private RenderHelper $helper;
+    private RenderRuntime $helper;
     private MockObject $linkRenderer;
     private MockObject $actionRenderer;
 
@@ -59,7 +59,7 @@ final class RenderHelperTest extends TestCase
     {
         $this->linkRenderer = $this->createMock(LinkRendererInterface::class);
         $this->actionRenderer = $this->createMock(ActionRendererInterface::class);
-        $this->helper = new RenderHelper(
+        $this->helper = new RenderRuntime(
             $this->linkRenderer,
             $this->actionRenderer,
         );

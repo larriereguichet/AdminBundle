@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Request\ContextBuilder;
+namespace LAG\AdminBundle\Tests\Unit\Request\ContextBuilder;
 
-use LAG\AdminBundle\Metadata\Update;
-use LAG\AdminBundle\Request\ContextBuilder\AjaxContextBuilder;
+use LAG\AdminBundle\Metadata\Attribute\Update;
+use LAG\AdminBundle\Request\ContextBuilder\JsonContextBuilder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 final class AjaxContextBuilderTest extends TestCase
 {
-    private AjaxContextBuilder $provider;
+    private JsonContextBuilder $provider;
 
     #[Test]
     public function itProvidesAjaxContext(): void
@@ -28,6 +28,6 @@ final class AjaxContextBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->provider = new AjaxContextBuilder();
+        $this->provider = new JsonContextBuilder();
     }
 }

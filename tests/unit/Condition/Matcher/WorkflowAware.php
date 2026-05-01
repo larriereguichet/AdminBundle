@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Condition\Matcher;
+namespace LAG\AdminBundle\Tests\Unit\Condition\Matcher;
 
 use LAG\AdminBundle\Condition\ConditionalInterface;
-use LAG\AdminBundle\Workflow\WorkflowSubjectInterface;
+use LAG\AdminBundle\Workflow\WorkflowAwareInterface;
 use LAG\AdminBundle\Workflow\WorkflowTransitionSubjectInterface;
 
-final readonly class WorkflowSubject implements WorkflowSubjectInterface, WorkflowTransitionSubjectInterface, ConditionalInterface
+final readonly class WorkflowAware implements WorkflowAwareInterface, WorkflowTransitionSubjectInterface, ConditionalInterface
 {
     public function __construct(
         private ?string $condition = null,

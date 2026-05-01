@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests;
+namespace LAG\AdminBundle\Tests\Unit;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -10,6 +10,8 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/** @deprecated use trait */
+// TODO remove
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**

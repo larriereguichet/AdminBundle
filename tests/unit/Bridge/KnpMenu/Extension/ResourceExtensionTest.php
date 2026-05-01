@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Bridge\KnpMenu\Extension;
+namespace LAG\AdminBundle\Tests\Unit\Bridge\KnpMenu\Extension;
 
 use LAG\AdminBundle\Bridge\KnpMenu\Extension\ResourceExtension;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Show;
-use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Show;
+use LAG\AdminBundle\Metadata\Factory\OperationFactoryInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +24,7 @@ final class ResourceExtensionTest extends TestCase
     {
         $operation = new Show(name: 'my_operation', route: 'my_route', title: 'Some title');
         $resource = new Resource(
-            name: 'my_resource',
+            shortName: 'my_resource',
             operations: [$operation],
             translationDomain: 'my_domain',
         );
@@ -38,7 +38,7 @@ final class ResourceExtensionTest extends TestCase
         ;
         $this->urlGenerator
             ->expects($this->once())
-            ->method('generate')
+            ->method('generateUrl')
             ->with($operation)
             ->willReturn('/some-url')
         ;
@@ -73,7 +73,7 @@ final class ResourceExtensionTest extends TestCase
     protected function setUp(): void
     {
         $this->operationFactory = $this->createMock(OperationFactoryInterface::class);
-        $this->urlGenerator = $this->createMock(ResourceUrlGeneratorInterface::class);
+        $this->urlGenerator = $this->createMock(OperationUrlGeneratorInterface::class);
         $this->extension = new ResourceExtension($this->operationFactory, $this->urlGenerator);
     }
 }
