@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Routing\Route;
 
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 
 interface RouteNameGeneratorInterface
 {
@@ -13,5 +13,5 @@ interface RouteNameGeneratorInterface
      * Return a route name according to the given admin and action names, using the routing pattern configured in the
      * application.
      */
-    public function generateRouteName(Resource $resource, OperationInterface $operation): string;
+    public function generateRouteName(ResourceInterface $resource, OperationInterface $operation): string;
 }
