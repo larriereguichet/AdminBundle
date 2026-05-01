@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Resource\PropertyGuesser;
+namespace LAG\AdminBundle\Tests\Unit\Resource\PropertyGuesser;
 
-use LAG\AdminBundle\Metadata\Date;
+use LAG\AdminBundle\Metadata\Attribute\Date;
+use LAG\AdminBundle\Metadata\Attribute\Text;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use LAG\AdminBundle\Metadata\Text;
 use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;

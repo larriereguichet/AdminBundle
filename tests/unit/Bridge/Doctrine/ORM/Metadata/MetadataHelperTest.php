@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\Metadata;
+namespace LAG\AdminBundle\Tests\Unit\Bridge\Doctrine\ORM\Metadata;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelper;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
-use LAG\AdminBundle\Tests\ContainerTestTrait;
+use LAG\AdminBundle\Tests\Unit\ContainerTestTrait;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

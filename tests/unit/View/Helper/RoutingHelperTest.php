@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\View\Helper;
+namespace LAG\AdminBundle\Tests\Unit\View\Helper;
 
-use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
-use LAG\AdminBundle\Tests\Application\Entity\Book;
-use LAG\AdminBundle\View\Helper\RoutingHelper;
+use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
+use LAG\AdminBundle\Tests\Unit\Fixtures\Book;
+use LAG\AdminBundle\Twig\Runtime\RoutingRuntime;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class RoutingHelperTest extends TestCase
 {
-    private RoutingHelper $helper;
+    private RoutingRuntime $helper;
     private MockObject $urlGenerator;
 
     #[Test]
@@ -35,8 +35,8 @@ final class RoutingHelperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->urlGenerator = $this->createMock(ResourceUrlGeneratorInterface::class);
-        $this->helper = new RoutingHelper(
+        $this->urlGenerator = $this->createMock(OperationUrlGeneratorInterface::class);
+        $this->helper = new RoutingRuntime(
             $this->urlGenerator,
         );
     }

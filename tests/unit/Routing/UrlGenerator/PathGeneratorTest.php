@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Routing\UrlGenerator;
+namespace LAG\AdminBundle\Tests\Unit\Routing\UrlGenerator;
 
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Routing\UrlGenerator\PathGenerator;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
 final class PathGeneratorTest extends TestCase
@@ -17,7 +17,7 @@ final class PathGeneratorTest extends TestCase
     #[Test]
     public function itGeneratesPath(): void
     {
-        $resource = new Resource(name: 'my_resource');
+        $resource = new Resource(shortName: 'my_resource');
         $operation = (new Index())
             ->setResource($resource)
             ->withPath('/some-path')

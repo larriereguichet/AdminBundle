@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Resource\Context;
+namespace LAG\AdminBundle\Tests\Unit\Resource\Context;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Application;
+use LAG\AdminBundle\Metadata\Attribute\Application;
+use LAG\AdminBundle\Metadata\Factory\ApplicationFactoryInterface;
 use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ApplicationContext;
-use LAG\AdminBundle\Resource\Factory\ApplicationFactoryInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

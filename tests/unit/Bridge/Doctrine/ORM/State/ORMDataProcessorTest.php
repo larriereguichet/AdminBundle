@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\State;
+namespace LAG\AdminBundle\Tests\Unit\Bridge\Doctrine\ORM\State;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManagerInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Exception\ManagerNotFoundException;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor\ORMProcessor;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Attribute\Create;
+use LAG\AdminBundle\Metadata\Attribute\Delete;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Update;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Update;
-use LAG\AdminBundle\Tests\Entity\FakeEntity;
+use LAG\AdminBundle\Tests\Unit\Entity\Book;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -28,13 +28,13 @@ final class ORMDataProcessorTest extends TestCase
     #[DataProvider('persistOperations')]
     public function itPersistsData(OperationInterface $operation): void
     {
-        $data = new FakeEntity();
+        $data = new Book();
         $manager = $this->createMock(EntityManagerInterface::class);
 
         $this->registry
             ->expects($this->once())
             ->method('getManagerForClass')
-            ->with(FakeEntity::class)
+            ->with(Book::class)
             ->willReturn($manager)
         ;
         $manager->expects($this->once())
@@ -51,13 +51,13 @@ final class ORMDataProcessorTest extends TestCase
     #[Test]
     public function itDeletesData(): void
     {
-        $data = new FakeEntity();
+        $data = new Book();
         $manager = $this->createMock(EntityManagerInterface::class);
 
         $this->registry
             ->expects($this->once())
             ->method('getManagerForClass')
-            ->with(FakeEntity::class)
+            ->with(Book::class)
             ->willReturn($manager)
         ;
         $manager->expects($this->once())
@@ -68,18 +68,18 @@ final class ORMDataProcessorTest extends TestCase
             ->method('flush')
         ;
 
-        $this->processor->process($data, (new Delete())->setResource(new Resource(resourceClass: FakeEntity::class)));
+        $this->processor->process($data, (new Delete())->setResource(new Resource(resourceClass: Book::class)));
     }
 
     #[Test]
     public function itDoesNotSavedNotManagedData(): void
     {
-        $operation = (new Delete())->setResource(new Resource(resourceClass: FakeEntity::class));
-        $data = new FakeEntity();
+        $operation = (new Delete())->setResource(new Resource(resourceClass: Book::class));
+        $data = new Book();
         $this->registry
             ->expects($this->once())
             ->method('getManagerForClass')
-            ->with(FakeEntity::class)
+            ->with(Book::class)
             ->willReturn(null)
         ;
 
@@ -91,7 +91,7 @@ final class ORMDataProcessorTest extends TestCase
     {
         $resource = new Resource(
             operations: [new Create(), new Update()],
-            resourceClass: FakeEntity::class,
+            resourceClass: Book::class,
         );
 
         yield [$resource->getOperation('create')->setResource($resource)];

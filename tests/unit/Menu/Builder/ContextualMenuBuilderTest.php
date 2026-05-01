@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Menu\Builder;
+namespace LAG\AdminBundle\Tests\Unit\Menu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\MenuItem;
-use LAG\AdminBundle\Menu\Builder\ContextualMenuBuilder;
-use LAG\AdminBundle\Metadata\Index;
-use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Metadata\Show;
+use LAG\AdminBundle\Bridge\KnpMenu\Builder\ContextualMenuBuilder;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Link;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Show;
+use LAG\AdminBundle\Metadata\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Resource\Context\OperationContextInterface;
-use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -33,7 +33,7 @@ final class ContextualMenuBuilderTest extends TestCase
         $item = new MenuItem(name: 'Some link', factory: $this->factory); // @phpstan-ignore-line
 
         $resource = new Resource();
-        $operation = new Index(contextualActions: [new Link(operation: 'admin.product.show', text: 'Some link')])->setResource($resource);
+        $operation = new Index(contextualLinks: [new Link(operation: 'admin.product.show', text: 'Some link')])->setResource($resource);
         $linkedOperation = new Show(name: 'show')->setResource($resource);
 
         $this->operationContext

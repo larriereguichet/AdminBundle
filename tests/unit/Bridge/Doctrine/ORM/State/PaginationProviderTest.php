@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\State;
+namespace LAG\AdminBundle\Tests\Unit\Bridge\Doctrine\ORM\State;
 
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider\PaginationProvider;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
-use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\Attribute\Create;
+use LAG\AdminBundle\Metadata\Attribute\Delete;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Show;
+use LAG\AdminBundle\Metadata\Attribute\Update;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Show;
-use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use Pagerfanta\PagerfantaInterface;
 use PHPUnit\Framework\Attributes\DataProvider;

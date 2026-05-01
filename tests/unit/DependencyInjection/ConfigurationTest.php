@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\DependencyInjection;
+namespace LAG\AdminBundle\Tests\Unit\DependencyInjection;
 
 use LAG\AdminBundle\DependencyInjection\Configuration;
-use LAG\AdminBundle\Tests\TestCase;
+use LAG\AdminBundle\Tests\Unit\TestCase;
 
 final class ConfigurationTest extends TestCase
 {
@@ -21,7 +21,7 @@ final class ConfigurationTest extends TestCase
 
         self::assertEquals([
             'request' => [
-                'application_parameter' => '_application',
+                'request_parameter' => '_application',
                 'resource_parameter' => '_resource',
                 'operation_parameter' => '_operation',
             ],
@@ -34,13 +34,15 @@ final class ConfigurationTest extends TestCase
             'time_format' => 'short',
             'date_localization' => true,
             'filter_events' => true,
-            'uploads' => ['storage' => 'lag_admin_image.storage'],
-            'media_directory' => 'media/images',
+            'uploads' => [
+                'storage' => 'lag_admin.media_storage',
+                'media_directory' => '%kernel.project_dir%/public/admin/media/uploads',
+            ],
             'applications' => [],
             'resources' => [],
             'grids' => [],
             'cache' => true,
-            'grids_templates' => [
+            'grid_templates' => [
                 'table' => '@LAGAdmin/grids/table.html.twig',
                 'card' => '@LAGAdmin/grids/card.html.twig',
             ],

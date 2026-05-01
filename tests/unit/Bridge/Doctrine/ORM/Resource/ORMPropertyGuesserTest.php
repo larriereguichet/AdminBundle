@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Bridge\Doctrine\ORM\Resource;
+namespace LAG\AdminBundle\Tests\Unit\Bridge\Doctrine\ORM\Resource;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Metadata\MetadataHelperInterface;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Resource\ORMPropertyGuesser;
-use LAG\AdminBundle\Metadata\Boolean;
-use LAG\AdminBundle\Metadata\Date;
+use LAG\AdminBundle\Metadata\Attribute\Boolean;
+use LAG\AdminBundle\Metadata\Attribute\Date;
+use LAG\AdminBundle\Metadata\Attribute\RichText;
+use LAG\AdminBundle\Metadata\Attribute\Text;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use LAG\AdminBundle\Metadata\RichText;
-use LAG\AdminBundle\Metadata\Text;
 use LAG\AdminBundle\Resource\PropertyGuesser\PropertyGuesserInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;

@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Resource\DataMapper;
+namespace LAG\AdminBundle\Tests\Unit\Resource\DataMapper;
 
 use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Metadata\Attribute\Text;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use LAG\AdminBundle\Metadata\Text;
 use LAG\AdminBundle\Resource\DataMapper\DataMapper;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 final class DataMapperTest extends TestCase
 {
@@ -21,7 +22,7 @@ final class DataMapperTest extends TestCase
     #[DataProvider('values')]
     public function itMapsPropertyData(PropertyInterface $property, mixed $data, mixed $expectedValue): void
     {
-        $value = $this->dataMapper->getValue($property, $data);
+        $value = $this->dataMapper->getPropertyValue($property, $data);
 
         self::assertEquals($expectedValue, $value);
     }
@@ -33,7 +34,7 @@ final class DataMapperTest extends TestCase
         $data->name = 'Some name';
 
         $this->expectExceptionObject(new Exception('The property path "wrongPath" is not readable in data of type "stdClass"'));
-        $this->dataMapper->getValue(new Text(name: 'some', propertyPath: 'wrongPath'), $data);
+        $this->dataMapper->getPropertyValue(new Text(name: 'some', propertyPath: 'wrongPath'), $data);
     }
 
     public static function values(): iterable
@@ -65,6 +66,6 @@ final class DataMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dataMapper = new DataMapper();
+        $this->dataMapper = new DataMapper(new PropertyAccessor());
     }
 }

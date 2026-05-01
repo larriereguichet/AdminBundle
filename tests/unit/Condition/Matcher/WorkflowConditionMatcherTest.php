@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Condition\Matcher;
+namespace LAG\AdminBundle\Tests\Unit\Condition\Matcher;
 
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
 use LAG\AdminBundle\Condition\Matcher\WorkflowConditionMatcher;
@@ -21,7 +21,7 @@ final class WorkflowConditionMatcherTest extends TestCase
     #[Test]
     public function itAddWorkflowContext(): void
     {
-        $subject = new WorkflowSubject(workflow: 'my_workflow');
+        $subject = new WorkflowAware(workflow: 'my_workflow');
         $data = new \stdClass();
 
         $workflow = $this->createMock(WorkflowInterface::class);
@@ -47,7 +47,7 @@ final class WorkflowConditionMatcherTest extends TestCase
     #[Test]
     public function itDoesNotOverrideAlreadySetWorkflow(): void
     {
-        $subject = new WorkflowSubject(workflow: 'my_workflow');
+        $subject = new WorkflowAware(workflow: 'my_workflow');
         $data = new \stdClass();
 
         $this->workflowRegistry
@@ -69,7 +69,7 @@ final class WorkflowConditionMatcherTest extends TestCase
     #[Test]
     public function itAddWorkflowTransitionContext(): void
     {
-        $subject = new WorkflowSubject(workflowTransition: 'my_workflow_transition');
+        $subject = new WorkflowAware(workflowTransition: 'my_workflow_transition');
         $data = new \stdClass();
 
         $this->workflowRegistry

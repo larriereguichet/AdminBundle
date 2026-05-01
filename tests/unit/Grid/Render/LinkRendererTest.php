@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Grid\Render;
+namespace LAG\AdminBundle\Tests\Unit\Grid\Render;
 
 use LAG\AdminBundle\Exception\InvalidLinkException;
-use LAG\AdminBundle\Metadata\Link;
-use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
+use LAG\AdminBundle\Metadata\Attribute\Link;
+use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
 use LAG\AdminBundle\View\Render\LinkRenderer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -74,7 +74,7 @@ final class LinkRendererTest extends TestCase
     protected function setUp(): void
     {
         $this->environment = $this->createMock(Environment::class);
-        $this->urlGenerator = $this->createMock(ResourceUrlGeneratorInterface::class);
+        $this->urlGenerator = $this->createMock(OperationUrlGeneratorInterface::class);
         $this->validator = $this->createMock(ValidatorInterface::class);
         $this->renderer = new LinkRenderer(
             $this->urlGenerator,

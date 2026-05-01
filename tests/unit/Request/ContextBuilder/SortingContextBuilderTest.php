@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Request\ContextBuilder;
+namespace LAG\AdminBundle\Tests\Unit\Request\ContextBuilder;
 
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
-use LAG\AdminBundle\Metadata\Index;
+use LAG\AdminBundle\Metadata\Attribute\Create;
+use LAG\AdminBundle\Metadata\Attribute\Delete;
+use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Metadata\Attribute\Show;
+use LAG\AdminBundle\Metadata\Attribute\Update;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Show;
-use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\Request\ContextBuilder\SortingContextBuilder;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -41,7 +41,7 @@ final class SortingContextBuilderTest extends TestCase
     public function itDoesNotAddContextOnNonCollectionOperation(OperationInterface $operation): void
     {
         $request = new Request();
-        self::assertFalse($this->provider->supports($operation, $request));
+        self::assertFalse($this->provider->supports($request, $operation, null));
     }
 
     public static function nonCollectionOperations(): iterable

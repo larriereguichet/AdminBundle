@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Request\ContextBuilder;
+namespace LAG\AdminBundle\Tests\Unit\Request\ContextBuilder;
 
-use LAG\AdminBundle\Metadata\Show;
-use LAG\AdminBundle\Request\ContextBuilder\OperationContextBuilder;
+use LAG\AdminBundle\Metadata\Attribute\Show;
+use LAG\AdminBundle\Request\ContextBuilder\ContextBuilder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ContextBuilderTest extends TestCase
 {
-    private OperationContextBuilder $provider;
+    private ContextBuilder $provider;
 
     #[Test]
     public function itProvidesContext(): void
@@ -26,6 +26,6 @@ final class ContextBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->provider = new OperationContextBuilder();
+        $this->provider = new ContextBuilder();
     }
 }

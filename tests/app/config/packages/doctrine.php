@@ -16,7 +16,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'url' => '%env(DATABASE_URL)%',
         ],
         'orm' => [
-            'auto_generate_proxy_classes' => true,
+            //'auto_generate_proxy_classes' => true,
             'naming_strategy' => 'doctrine.orm.naming_strategy.underscore_number_aware',
             'auto_mapping' => true,
             'mappings' => [

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Config;
+namespace LAG\AdminBundle\Tests\Unit\Config;
 
 use LAG\AdminBundle\Config\GridConfig;
-use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\Attribute\Grid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Tests\Config;
+namespace LAG\AdminBundle\Tests\Unit\Config;
 
-use LAG\AdminBundle\Config\ResourceConfig;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Config\LAGAdminBuilder;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -14,8 +14,8 @@ final class ResourceConfigTest extends TestCase
     #[Test]
     public function itConvertsAResourceToAnArray(): void
     {
-        $resource = new Resource(name: 'my_resource');
-        $config = new ResourceConfig();
+        $resource = new Resource(shortName: 'my_resource');
+        $config = new LAGAdminBuilder();
         $config->addResource($resource);
 
         $data = $config->toArray();
