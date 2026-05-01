@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Event;
 
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class DataEvent extends Event implements ResourceEventInterface
@@ -26,7 +26,7 @@ class DataEvent extends Event implements ResourceEventInterface
         return $this->operation;
     }
 
-    public function getResource(): Resource
+    public function getResource(): ResourceInterface
     {
         return $this->operation->getResource();
     }

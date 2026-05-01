@@ -8,7 +8,7 @@ use LAG\AdminBundle\Event\DataEvent;
 use LAG\AdminBundle\Security\PasswordAuthenticatedResourceInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-final readonly class PasswordListener
+final readonly class GeneratePasswordListener
 {
     public function __construct(
         private UserPasswordHasherInterface $passwordHasher,
