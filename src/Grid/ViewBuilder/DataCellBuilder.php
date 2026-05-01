@@ -6,15 +6,15 @@ namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
 use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 
-final readonly class DataCellViewBuilder implements CellViewBuilderInterface
+final readonly class DataCellBuilder implements CellBuilderInterface
 {
     public function __construct(
-        private CellViewBuilderInterface $cellBuilder,
+        private CellBuilderInterface $cellBuilder,
         private DataMapperInterface $dataMapper,
         private DataTransformerRegistryInterface $transformerRegistry,
     ) {
@@ -22,12 +22,12 @@ final readonly class DataCellViewBuilder implements CellViewBuilderInterface
 
     public function buildCell(
         OperationInterface $operation,
-        Grid $grid,
+        GridInterface $grid,
         PropertyInterface $property,
         mixed $data,
         array $context = []
     ): CellView {
-        $data = $this->dataMapper->getValue($property, $data);
+        $data = $this->dataMapper->getPropertyValue($property, $data);
 
         if ($property->getDataTransformer() !== null) {
             $dataTransformer = $this->transformerRegistry->get($property->getDataTransformer());

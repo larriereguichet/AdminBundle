@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Metadata\CompoundPropertyInterface;
-use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
 
@@ -14,16 +14,16 @@ use LAG\AdminBundle\Metadata\PropertyInterface;
  * Build the cell view for the compound properties. Each child should be build separately and passed to the parent cell
  * context.
  */
-final readonly class CompoundCellViewBuilder implements CellViewBuilderInterface
+final readonly class CompoundCellBuilder implements CellBuilderInterface
 {
     public function __construct(
-        private CellViewBuilderInterface $cellBuilder,
+        private CellBuilderInterface $cellBuilder,
     ) {
     }
 
     public function buildCell(
         OperationInterface $operation,
-        Grid $grid,
+        GridInterface $grid,
         PropertyInterface $property,
         mixed $data,
         array $context = []

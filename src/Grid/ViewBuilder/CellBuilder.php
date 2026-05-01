@@ -5,26 +5,31 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
 
-final readonly class CellViewBuilder implements CellViewBuilderInterface
+final readonly class CellBuilder implements CellBuilderInterface
 {
+    public function __construct(
+        private AttributeBuilderInterface $attributeBuilder,
+    ) {
+    }
+
+    /** @param array<string, mixed> $context */
     public function buildCell(
         OperationInterface $operation,
-        Grid $grid,
+        GridInterface $grid,
         PropertyInterface $property,
         mixed $data,
-        array $context = []
+        array $context = [],
     ): CellView {
         return new CellView(
             name: $property->getName(),
-            options: $property,
+            attributes: $this->attributeBuilder->buildAttributes($property->getAttributes()),
+            property: $property,
             template: $property->getTemplate(),
             data: $data,
-            attributes: $property->getAttributes(),
-            containerAttributes: $property->getRowAttributes(),
             context: $context,
         );
     }

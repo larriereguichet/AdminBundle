@@ -4,27 +4,26 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Grid\View;
 
-final readonly class GridView implements \IteratorAggregate
+use Symfony\UX\TwigComponent\ComponentAttributes;
+
+/**
+ * @implements \IteratorAggregate<int, RowView>
+ */
+readonly class GridView implements \IteratorAggregate
 {
     public function __construct(
         public string $name,
         public string $type,
-        public iterable $headers,
+        /** @var iterable<int, RowView> $rows */
         public iterable $rows,
-        public iterable $attributes = [],
-        public ?string $title = null,
-        public array $titleAttributes = [],
+        public ComponentAttributes $attributes,
+        public ?RowView $headers = null,
+        public ?TitleView $title = null,
         public ?string $template = null,
+        /** @var array<string, mixed> $options */
         public array $options = [],
-        public array $actions = [],
+        /** @var array<string, mixed> $context */
         public array $context = [],
-        public array $containerAttributes = [],
-        public array $headerRowAttributes = [],
-        public array $headerAttributes = [],
-        public array $rowAttributes = [],
-        public array $cellAttributes = [],
-        public array $actionCellAttributes = [],
-        public bool $extraColumn = false,
         public ?string $emptyMessage = null,
         public ?string $translationDomain = null,
     ) {

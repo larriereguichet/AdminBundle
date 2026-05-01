@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\Factory;
 
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
-use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\GridInterface;
 
-/**
- * Create a new grid instance.
- */
 interface GridFactoryInterface
 {
-    public function createGrid(CollectionOperationInterface $operation): Grid;
+    public function create(string $gridName, CollectionOperationInterface $operation): GridInterface;
 }

@@ -9,10 +9,11 @@ use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
 
 final class DataTransformerRegistry implements DataTransformerRegistryInterface
 {
+    /** @var array<string, DataTransformerInterface> */
     private array $transformers;
 
+    /** @param iterable<DataTransformerInterface> $dataTransformers */
     public function __construct(
-        /* @var iterable<DataTransformerInterface> $dataTransformers */
         iterable $dataTransformers,
     ) {
         $this->transformers = [];

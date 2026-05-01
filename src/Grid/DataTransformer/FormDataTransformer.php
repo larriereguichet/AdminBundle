@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Grid\DataTransformer;
 
 use LAG\AdminBundle\Exception\UnexpectedTypeException;
-use LAG\AdminBundle\Metadata\Form;
+use LAG\AdminBundle\Metadata\Attribute\Form;
 use LAG\AdminBundle\Metadata\PropertyInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
