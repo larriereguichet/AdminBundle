@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Security\PermissionChecker;
 
-use LAG\AdminBundle\Security\PermissibleInterface;
+use LAG\AdminBundle\Security\RolesOwnerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
 final readonly class PropertyPermissionChecker implements PropertyPermissionCheckerInterface
@@ -14,7 +14,7 @@ final readonly class PropertyPermissionChecker implements PropertyPermissionChec
     ) {
     }
 
-    public function isGranted(PermissibleInterface $subject): bool
+    public function isGranted(RolesOwnerInterface $subject): bool
     {
         if ($subject->getPermissions() === null) {
             return true;

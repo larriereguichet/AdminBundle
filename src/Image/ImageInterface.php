@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Entity;
+namespace LAG\AdminBundle\Image;
 
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -21,4 +21,8 @@ interface ImageInterface
     public function getPath(): ?string;
 
     public function setPath(?string $path): void;
+
+    public function getOwner(): mixed;
+
+    public function setOwner(?object $owner): void;
 }
