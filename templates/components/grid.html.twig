@@ -1,0 +1,17 @@
+<div {{ attributes.defaults({class: 'admin-grid'|merge(grid.attributes)}) }}>
+    {% block title %}
+        {% if grid.title %}
+            <twig:lag_admin:grid_title title="{{ grid.title }}" class="my-2 mb-5"></twig:lag_admin:grid_title>
+        {% endif %}
+    {% endblock %}
+
+    {% block header %}{% endif %}
+
+    {% block rows %}
+        {% for row in rows %}
+            <twig:lag_admin:row row="{{ row }}" attributes="{{ row.attributes }}"></twig:lag_admin:row>
+        {% else %}
+            {% block empty %}{% endblock %}
+        {% endfor %}
+    {% endif %}
+</div>

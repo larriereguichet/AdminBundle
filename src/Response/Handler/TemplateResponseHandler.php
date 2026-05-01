@@ -7,6 +7,7 @@ namespace LAG\AdminBundle\Response\Handler;
 use LAG\AdminBundle\Exception\Operation\MissingOperationTemplateException;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\Inflector\EnglishInflector;
 use Twig\Environment;
@@ -20,13 +21,14 @@ final readonly class TemplateResponseHandler implements ContentResponseHandlerIn
     ) {
     }
 
-    public function createResponse(OperationInterface $operation, mixed $data, array $context = []): Response
+    /** @param array<string, mixed> $context */
+    public function createResponse(Request $request, OperationInterface $operation, mixed $data, array $context = []): Response
     {
         if ($operation->getTemplate() === null) {
-            throw new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getFullName());
+            throw new MissingOperationTemplateException('The operation "%s" is missing a template', $operation->getName());
         }
         $resource = $operation->getResource();
-        $resourceName = u($resource->getName())->camel()->toString();
+        $resourceName = u($resource->getShortName())->camel()->toString();
 
         if ($operation instanceof CollectionOperationInterface && !u($resourceName)->endsWith('s')) {
             $inflector = new EnglishInflector();
@@ -41,6 +43,10 @@ final readonly class TemplateResponseHandler implements ContentResponseHandlerIn
 
         if ($operation->getBaseTemplate() !== null) {
             $context['baseTemplate'] = $operation->getBaseTemplate();
+        }
+
+        if ($operation->isEmbedded()) {
+            $context['baseTemplate'] = '@LAGAdmin/partial.html.twig';
         }
 
         return new Response($this->environment->render($operation->getTemplate(), $context), $context['responseCode'] ?? Response::HTTP_OK);

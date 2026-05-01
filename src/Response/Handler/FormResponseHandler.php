@@ -6,6 +6,7 @@ namespace LAG\AdminBundle\Response\Handler;
 
 use LAG\AdminBundle\Metadata\OperationInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final readonly class FormResponseHandler implements ContentResponseHandlerInterface
@@ -15,7 +16,8 @@ final readonly class FormResponseHandler implements ContentResponseHandlerInterf
     ) {
     }
 
-    public function createResponse(OperationInterface $operation, mixed $data, array $context = []): Response
+    /** @param array<string, mixed> $context */
+    public function createResponse(Request $request, OperationInterface $operation, mixed $data, array $context = []): Response
     {
         foreach ($context as $name => $form) {
             if (!$form instanceof FormInterface) {
@@ -28,6 +30,6 @@ final readonly class FormResponseHandler implements ContentResponseHandlerInterf
             }
         }
 
-        return $this->responseHandler->createResponse($operation, $data, $context);
+        return $this->responseHandler->createResponse($request, $operation, $data, $context);
     }
 }

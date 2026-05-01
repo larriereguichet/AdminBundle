@@ -11,6 +11,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
     name: 'lag_admin:image',
     template: '@LAGAdmin/components/cells/image.html.twig',
 )]
+/** @param array<string, mixed> $data */
 final class ImageComponent
 {
     public string $src;

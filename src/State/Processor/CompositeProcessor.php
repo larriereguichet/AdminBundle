@@ -28,8 +28,8 @@ final readonly class CompositeProcessor implements ProcessorInterface
 
         throw new Exception(\sprintf(
             'The resource "%s" and operation "%s" is not supported by any processor',
-            $operation->getResource()->getName(),
-            $operation->getFullName(),
+            $operation->getResource()->getShortName(),
+            $operation->getName(),
         ));
     }
 }

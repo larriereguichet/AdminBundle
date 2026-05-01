@@ -1,48 +1,24 @@
 {% extends '@LAGAdmin/resources/operation.html.twig' %}
 
+{% set grid = grid|default(false) %}
+
 {% block content %}
     <div class="admin-index admin-{{ resource.name }}">
-        {% block collection_actions %}
-            {% if grid is defined and grid.actions|length > 0 %}
-                <div class="row">
-                    <div class="col text-end">
-                        <div class="btn-group"
-                             role="group"
-                             aria-label="Collection actions">
-                            {% for action in grid.actions %}
-                                {{ component('lag_admin:grid:cell', {
-                                    cell: action,
-                                    data: action.data,
-                                    class: 'btn btn-outline-primary'
-                                }) }}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
+        {% block collection_links %}
+            <twig:lag_admin:links links="{{ operation.collectionLinks }}"></twig:lag_admin:links>
         {% endblock %}
 
-        {% block actions %}
-            {% if (filterForm and filterForm.children|length > 0) or (grid is defined and grid.actions|length > 0) %}
-                <div class="row">
-                    {% block filters %}
-                        {% if filterForm and filterForm.children|length > 0 %}
-                            <div class="col-8">
-                                {% include '@LAGAdmin/resources/index/_filters.html.twig' with {form: filterForm} %}
-                            </div>
-                        {% endif %}
-                    {% endblock %}
-                </div>
-            {% endif %}
+        {% block filters %}
+{#            {% if filterForm %}<twig:lag_admin:filters form="{{ filterForm }}"></twig:lag_admin:filters>{% endif %}#}
         {% endblock %}
 
         {% block grid %}
-            {% if grid is defined %}
-                {{ component('lag_admin:grid', {
-                    grid: grid,
-                    data: data,
-                    ...grid.attributes
-                }) }}
+            {% if grid %}
+                <twig:lag_admin:templated_grid
+                        grid="{{ grid }}"
+                        template="{{ grid.template }}"
+                        data="{{ data }}"
+                        attributes="{{ grid.attributes }}" />
             {% endif %}
         {% endblock %}
 

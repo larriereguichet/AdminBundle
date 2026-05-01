@@ -6,6 +6,9 @@ namespace LAG\AdminBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 
+/**
+ * @implements DataTransformerInterface<string, mixed>
+ */
 final readonly class TextareaDataTransformer implements DataTransformerInterface
 {
     public function transform(mixed $value): mixed

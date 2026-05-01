@@ -23,7 +23,7 @@ final class ResourceDataType extends AbstractType
         $operation = $this->operationFactory->create($options['operation']);
 
         foreach ($operation->getResource()->getProperties() as $property) {
-            if (\in_array($property->getName(), $options['exclude'])) {
+            if (\in_array($property->getName(), $options['exclude'], true)) {
                 continue;
             }
             $formType = $this->formGuesser->guessFormType($operation, $property);
