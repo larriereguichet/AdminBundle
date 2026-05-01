@@ -8,34 +8,34 @@ tests: phpunit phpstan rector var-dump-checker cs
 
 # PHP
 phpunit:
-	XDEBUG_MODE=coverage bin/phpunit
+	XDEBUG_MODE=coverage vendor/bin/phpunit
 	@echo "Results file generated file://$(current_dir)/var/phpunit/coverage/index.html"
 
 phpunit.stop-on-failure:
-	bin/phpunit --stop-on-failure
+	vendor/bin/phpunit --stop-on-failure
 	@echo "Results file generated file://$(current_dir)/var/phpunit/coverage/index.html"
 
 cs.fix:
-	PHP_CS_FIXER_IGNORE_ENV=1 bin/php-cs-fixer fix --diff --allow-risky=yes --config .php-cs-fixer.dist.php
+	PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --diff --allow-risky=yes --config .php-cs-fixer.dist.php
 
 cs:
-	PHP_CS_FIXER_IGNORE_ENV=1 bin/php-cs-fixer fix --diff --allow-risky=yes --config .php-cs-fixer.dist.php --dry-run
+	PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --diff --allow-risky=yes --config .php-cs-fixer.dist.php --dry-run
 
 phpstan:
-	bin/phpstan analyse
+	vendor/bin/phpstan analyse
 
 rector:
-	bin/rector --dry-run
+	vendor/bin/rector --dry-run
 
 rector.fix:
-	bin/rector
+	vendor/bin/rector
 
 bc.check:
-	bin/roave-backward-compatibility-check
+	vendor/bin/roave-backward-compatibility-check
 
 var-dump-checker:
-	bin/var-dump-check --symfony src
-	bin/var-dump-check --symfony tests
+	vendor/bin/var-dump-check --symfony src
+	vendor/bin/var-dump-check --symfony tests
 
 # Assets
 .PHONY: assets assets.production assets.build assets.watch assets.install

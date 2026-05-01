@@ -81,13 +81,12 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "LAG\\AdminBundle\\Tests\\": "tests/unit/",
+            "LAG\\AdminBundle\\Tests\\Unit\\": "tests/unit/",
             "LAG\\AdminBundle\\Tests\\Functional\\": "tests/functional/",
             "LAG\\AdminBundle\\Tests\\Application\\": "tests/app/src/"
         }
     },
     "config": {
-        "bin-dir": "bin",
         "sort-packages": true,
         "allow-plugins": {
             "symfony/flex": true,
