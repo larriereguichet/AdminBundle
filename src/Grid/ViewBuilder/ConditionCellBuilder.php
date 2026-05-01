@@ -6,28 +6,31 @@ namespace LAG\AdminBundle\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
 use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Metadata\Grid;
+use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Metadata\PropertyInterface;
 
-final readonly class ConditionCellViewBuilder implements CellViewBuilderInterface
+final readonly class ConditionCellBuilder implements CellBuilderInterface
 {
     public function __construct(
         private ConditionMatcherInterface $conditionMatcher,
-        private CellViewBuilderInterface $cellBuilder,
+        private CellBuilderInterface $cellBuilder,
+        private AttributeBuilderInterface $attributeBuilder,
     ) {
     }
 
     public function buildCell(
         OperationInterface $operation,
-        Grid $grid,
+        GridInterface $grid,
         PropertyInterface $property,
         mixed $data,
         array $context = []
     ): CellView {
         if ($property->getCondition() !== null && !$this->conditionMatcher->matchCondition($property, $data, $context)) {
-            // TODO use empty cell ?
-            return new CellView(name: $property->getName());
+            return new CellView(
+                name: $property->getName(),
+                attributes: $this->attributeBuilder->buildAttributes($property->getAttributes()),
+            );
         }
 
         return $this->cellBuilder->buildCell($operation, $grid, $property, $data, $context);
