@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Bridge\LiipImagine\DataTransformer;
 
-use LAG\AdminBundle\Entity\ImageInterface;
 use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
-use LAG\AdminBundle\Metadata\Image;
+use LAG\AdminBundle\Image\ImageInterface;
+use LAG\AdminBundle\Metadata\Attribute\Image;
 use LAG\AdminBundle\Metadata\PropertyInterface;
 use Liip\ImagineBundle\Templating\LazyFilterRuntime;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;

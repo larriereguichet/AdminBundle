@@ -6,10 +6,10 @@ namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Processor;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use LAG\AdminBundle\Bridge\Doctrine\ORM\Exception\ManagerNotFoundException;
-use LAG\AdminBundle\Metadata\Create;
-use LAG\AdminBundle\Metadata\Delete;
+use LAG\AdminBundle\Metadata\Attribute\Create;
+use LAG\AdminBundle\Metadata\Attribute\Delete;
+use LAG\AdminBundle\Metadata\Attribute\Update;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Update;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 
 final readonly class ORMProcessor implements ProcessorInterface

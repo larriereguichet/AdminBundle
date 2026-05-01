@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Menu\Builder;
+namespace LAG\AdminBundle\Bridge\KnpMenu\Builder;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 
-class UserMenuBuilder
+final readonly class UserMenuBuilder
 {
     public function __construct(
         private readonly FactoryInterface $factory,
     ) {
     }
 
+    /** @param array<string, mixed> $options */
     public function build(array $options = []): ItemInterface
     {
         $menu = $this->factory->createItem('root', $options);

@@ -6,27 +6,17 @@ namespace LAG\AdminBundle\DependencyInjection;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
-use LAG\AdminBundle\Config\ConfigurationMapper;
-use LAG\AdminBundle\DependencyInjection\Locator\ClassLocator;
-use LAG\AdminBundle\Exception\Resource\EmptyResourceNameException;
-use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
 use LAG\AdminBundle\Grid\Provider\GridProviderInterface;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
-use LAG\AdminBundle\Resource\Factory\DefinitionFactoryInterface;
-use LAG\AdminBundle\Resource\Locator\PropertyLocatorInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
-use League\FlysystemBundle\FlysystemBundle;
 use Liip\ImagineBundle\LiipImagineBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-
-use function Symfony\Component\String\u;
 
 final class LAGAdminExtension extends Extension implements PrependExtensionInterface
 {
@@ -37,28 +27,16 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
 
         $this->loadServices($container);
 
-        $resources = $this->loadResources($config);
-        $applications = $this->loadApplications($config, $resources);
-        $grids = $this->loadGrids($config);
-
-        $resourceFactory = $container->getDefinition(DefinitionFactoryInterface::class);
-        $resourceFactory->setArguments([
-            '$applications' => $applications,
-            '$resources' => $resources,
-            '$grids' => $grids,
-            '$propertyLocator' => new Reference(PropertyLocatorInterface::class),
-        ]);
-
-        $container->setParameter('lag_admin.media_directory', $config['media_directory']);
-        $container->setParameter('lag_admin.application_parameter', $config['request']['application_parameter']);
-        $container->setParameter('lag_admin.resource_parameter', $config['request']['resource_parameter']);
-        $container->setParameter('lag_admin.operation_parameter', $config['request']['operation_parameter']);
-        $container->setParameter('lag_admin.grids_templates', $config['grids_templates'] ?? []);
+        $container->setParameter('lag_admin.mapping_paths', $config['mapping']['paths'] ?? []);
+        $container->setParameter('lag_admin.applications', $config['applications'] ?? []);
+        $container->setParameter('lag_admin.media_directory', $config['uploads']['media_directory']);
+        $container->setParameter('lag_admin.media_storage', $config['uploads']['storage']);
+        $container->setParameter('lag_admin.request_parameter', $config['request_parameter']);
+        $container->setParameter('lag_admin.grid_templates', $config['grid_templates'] ?? []);
 
         $container->registerForAutoconfiguration(ProviderInterface::class)->addTag('lag_admin.state_provider');
         $container->registerForAutoconfiguration(ProcessorInterface::class)->addTag('lag_admin.state_processor');
         $container->registerForAutoconfiguration(ContextBuilderInterface::class)->addTag('lag_admin.request_context_provider');
-        $container->registerForAutoconfiguration(PropertyLocatorInterface::class)->addTag('lag_admin.property_locator');
         $container->registerForAutoconfiguration(GridProviderInterface::class)->addTag('lag_admin.grid_provider');
         $container->registerForAutoconfiguration(DataTransformerInterface::class)->addTag('lag_admin.data_transformer');
     }
@@ -91,104 +69,27 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
             $loader->load('services_dev.php');
         }
 
-        if (\in_array(FlysystemBundle::class, $bundles)) {
-            $loader->load('services/bridges/flysystem.php');
-        }
-
-        if (\in_array(KnpMenuBundle::class, $bundles)) {
+        if (\in_array(KnpMenuBundle::class, $bundles, true)) {
             $loader->load('services/bridges/knp_menu.php');
         }
 
-        if (\in_array(LiipImagineBundle::class, $bundles)) {
+        if (\in_array(LiipImagineBundle::class, $bundles, true)) {
             $loader->load('services/bridges/liip_imagine.php');
         }
 
-        if (\in_array(DoctrineBundle::class, $bundles)) {
+        if (\in_array(DoctrineBundle::class, $bundles, true)) {
             $loader->load('services/bridges/doctrine.php');
         }
-        // TODO use editor js
         $loader->load('services/bridges/quill_js.php');
-    }
-
-    private function loadResources(array $config): array
-    {
-        $resources = [];
-        $locator = new ClassLocator();
-        $mapper = new ConfigurationMapper();
-
-        $paths = $config['mapping']['paths'] ?? [];
-        $defaultApplication = $config['default_application'] ?? 'admin';
-
-        foreach ($config['resources'] ?? [] as $resource) {
-            $resources[$resource['application'].'.'.$resource['name']] = $resource;
-        }
-
-        foreach ($locator->locateClassesByPaths($paths) as $resourceClass) {
-            $reflectionClass = new \ReflectionClass($resourceClass);
-            $attributes = $reflectionClass->getAttributes(Resource::class);
-
-            foreach ($attributes as $attribute) {
-                /** @var resource $resource */
-                $resource = $attribute->newInstance();
-
-                if (!$resource->getName()) {
-                    $resource = $resource->withName(
-                        u($reflectionClass->getShortName())
-                            ->snake()
-                            ->lower()
-                            ->toString()
-                    );
-                }
-
-                if (!$resource->getResourceClass()) {
-                    $resource = $resource->withResourceClass($reflectionClass->getName());
-                }
-
-                if (!$resource->getName()) {
-                    throw new EmptyResourceNameException($resourceClass);
-                }
-                $resources[$resource->getApplication().'.'.$resource->getName()] = $mapper->fromResource($resource);
-            }
-        }
-
-        return $resources;
-    }
-
-    private function loadApplications(array $config, array $resources): array
-    {
-        $applications = $config['applications'] ?? [];
-
-        /** @var resource $resource */
-        foreach ($resources as $resource) {
-            if (!empty($resource['application']) && empty($applications[$resource['application']])) {
-                $applications[$resource['application']] = ['name' => $resource['application']];
-            }
-        }
-
-        foreach ($applications as $name => $application) {
-            $application['name'] = $name;
-            $applications[$name] = $application;
-        }
-
-        return $applications;
-    }
-
-    private function loadGrids(array $config): array
-    {
-        $grids = [];
-
-        foreach ($config['grids'] ?? [] as $grid) {
-            $grids[$grid['name']] = $grid;
-        }
-
-        return $grids;
     }
 
     private function prependCacheConfiguration(ContainerBuilder $container): void
     {
         $container->prependExtensionConfig('framework', [
             'cache' => [
-                'pools' => ['lag_admin.cache' => null],
+                'pools' => [
+                    'lag_admin.cache' => null, // TODO composite cache
+                ],
             ],
         ]);
     }
@@ -213,9 +114,9 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
     {
         $container->prependExtensionConfig('flysystem', [
             'storages' => [
-                'lag_admin_image.storage' => [
+                '%lag_admin.media_storage%' => [
                     'adapter' => 'local',
-                    'options' => ['directory' => '%kernel.project_dir%/public/%lag_admin.media_directory%'],
+                    'options' => ['directory' => '%lag_admin.media_directory%'],
                     'public_url_generator' => 'lag_admin.filesystem.public_url_generator',
                 ],
             ],
@@ -228,17 +129,13 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
             'twig' => ['mode' => 'lazy'],
             'filter_sets' => [
                 'lag_admin_thumbnail' => [
-                    'filters' => [
-                        'thumbnail' => ['size' => [100, 100]],
-                    ],
+                    'filters' => ['thumbnail' => ['size' => [100, 100]]],
                 ],
                 'lag_admin_full' => [],
             ],
             'loaders' => [
                 'lag_admin' => [
-                    'flysystem' => [
-                        'filesystem_service' => 'lag_admin_image.storage',
-                    ],
+                    'flysystem' => ['filesystem_service' => '%lag_admin.media_storage%'],
                 ],
             ],
             'data_loader' => 'lag_admin',
