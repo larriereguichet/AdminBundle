@@ -1,18 +1,10 @@
 parameters:
-	paths:
-		- src
-		- config
-		- tests
-	level: 6
-	excludePaths:
-		- src/DependencyInjection/Configuration.php
-		- tests/app
-		- tests/fixtures
-		- tests/unit/Fixtures/Book.php
-	ignoreErrors:
-		# TODO
-		- 	identifier: missingType.iterableValue
-		# TODO
-		- 	identifier: missingType.generics
-		# TODO
-		- 	identifier: argument.templateType
+    paths:
+        - src
+        - config
+    level: 6
+    excludePaths:
+        - src/DependencyInjection/Configuration.php
+        - src/DependencyInjection/LAGAdminExtension.php
+    ignoreErrors:
+          - identifier: trait.unused
