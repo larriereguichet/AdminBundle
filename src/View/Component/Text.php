@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\View\Component\Cell;
+namespace LAG\AdminBundle\View\Component;
 
 use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Metadata\Text;
+use LAG\AdminBundle\Metadata;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 use function Symfony\Component\String\u;
@@ -15,23 +15,22 @@ use function Symfony\Component\String\u;
     name: 'lag_admin:text',
     template: '@LAGAdmin/components/cells/text.html.twig',
 )]
-class TextComponent
+final class Text
 {
     public mixed $text;
     public bool $translation = true;
     public ?string $translationDomain = null;
+    /** @var array<string, mixed> */
     public array $translationParameters = [];
     public bool $displayHtmlElement = true;
 
-    public function mount(
-        mixed $data,
-        CellView $cell,
-    ): void {
+    public function mount(mixed $data, CellView $cell): void
+    {
         if ($data === null) {
             $data = '';
         }
-        /** @var Text $property */
-        $property = $cell->options;
+        /** @var Metadata\Attribute\Text $property */
+        $property = $cell->property;
         $data = u((string) $data);
 
         if ($property->getLength() && $property->getReplace() && $data->length() > $property->getLength()) {

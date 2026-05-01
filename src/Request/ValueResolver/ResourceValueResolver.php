@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Request\Resolver;
+namespace LAG\AdminBundle\Request\ValueResolver;
 
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
@@ -17,7 +17,7 @@ final readonly class ResourceValueResolver implements ValueResolverInterface
     ) {
     }
 
-    /** @return iterable<resource> */
+    /** @return iterable<ResourceInterface> */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         if (!$this->supports($argument)) {
@@ -29,6 +29,6 @@ final readonly class ResourceValueResolver implements ValueResolverInterface
 
     private function supports(ArgumentMetadata $argument): bool
     {
-        return $argument->getType() === Resource::class && $this->resourceContext->hasResource();
+        return $argument->getType() === ResourceInterface::class && $this->resourceContext->hasResource();
     }
 }

@@ -7,8 +7,10 @@ namespace LAG\AdminBundle\Controller\Resource;
 use LAG\AdminBundle\Event\ResourceControllerEvent;
 use LAG\AdminBundle\Event\ResourceControllerEvents;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Grid\ViewBuilder\GridViewBuilderInterface;
+use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\GridBuilderInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
+use LAG\AdminBundle\Metadata\GridInterface;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
@@ -25,15 +27,18 @@ final readonly class IndexResources
         private ProviderInterface $provider,
         private ProcessorInterface $processor,
         private FormFactoryInterface $formFactory,
-        private GridViewBuilderInterface $gridBuilder,
+        private GridFactoryInterface $gridFactory,
+        private GridBuilderInterface $gridBuilder,
         private ResourceEventDispatcherInterface $eventDispatcher,
         private ResponseHandlerInterface $responseHandler,
     ) {
     }
 
-    public function __invoke(Request $request, CollectionOperationInterface $operation): Response
+    public function __invoke(Request $request, CollectionOperationInterface $operation, ?GridInterface $grid = null): Response
     {
-        $context = $this->contextBuilder->buildContext($operation, $request);
+        $context = $this->contextBuilder->buildContext($request, $operation, $grid);
+        $form = null;
+        $filterForm = null;
 
         if ($operation->getFilterForm() !== null) {
             $filterForm = $this->formFactory->create($operation->getFilterForm(), null, $operation->getFilterFormOptions());
@@ -56,12 +61,13 @@ final readonly class IndexResources
                 $data = $form->getData();
                 $this->processor->process($data, $operation, [], $context);
 
-                return $this->responseHandler->createRedirectResponse($operation, $data);
+                return $this->responseHandler->createRedirectResponse($request, $operation, $data);
             }
         }
 
         if ($operation->getGrid() !== null) {
-            $grid = $this->gridBuilder->build($operation, $data, $context);
+            $grid = $this->gridFactory->create($operation->getGrid(), $operation);
+            $gridView = $this->gridBuilder->build($grid, $operation, $data, $context);
         }
         $event = new ResourceControllerEvent($operation, $request, $data);
         $this->eventDispatcher->dispatchEvents($event, ResourceControllerEvents::RESOURCE_CONTROLLER);
@@ -70,10 +76,10 @@ final readonly class IndexResources
             return $event->getResponse();
         }
 
-        return $this->responseHandler->createResponse($operation, $data, [
-            'form' => $form ?? null,
-            'filterForm' => $filterForm ?? null,
-            'grid' => $grid ?? null,
+        return $this->responseHandler->createResponse($request, $operation, $data, [
+            'form' => $form?->createView(),
+            'filterForm' => $filterForm?->createView(),
+            'grid' => $gridView ?? null,
         ]);
     }
 }

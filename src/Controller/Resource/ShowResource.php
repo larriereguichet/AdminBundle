@@ -26,7 +26,7 @@ final readonly class ShowResource
 
     public function __invoke(OperationInterface $operation, Request $request): Response
     {
-        $context = $this->contextBuilder->buildContext($operation, $request);
+        $context = $this->contextBuilder->buildContext($request, $operation);
         $data = $this->provider->provide($operation, [], $context);
 
         $this->eventDispatcher->dispatchEvents(
@@ -38,6 +38,6 @@ final readonly class ShowResource
             return $event->getResponse();
         }
 
-        return $this->responseHandler->createResponse($operation, $data);
+        return $this->responseHandler->createResponse($request, $operation, $data);
     }
 }

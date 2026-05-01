@@ -15,5 +15,6 @@ interface FormGuesserInterface
 {
     public function guessFormType(OperationInterface $operation, PropertyInterface $property): ?string;
 
+    /** @return array<string, mixed> */
     public function guessFormOptions(OperationInterface $operation, PropertyInterface $property): array;
 }

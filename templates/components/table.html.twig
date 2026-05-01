@@ -1,5 +1,54 @@
 {% block title %}
     {% if grid.title %}
+        <h3 {{ grid.title.attributes.defaults({class: 'my-2 mb-5'}) }}>
+            {{ grid.title.title|trans(grid.translationDomain) }}
+        </h3>
+    {% endif %}
+{% endblock %}
+
+<table {{ attributes }}>
+    {% block header %}
+        <thead>
+        <tr {{ grid.headers.attributes) }}>
+            {% for header in grid.headers %}
+                <th {{ headers.attributes }}>
+                    <twig:lag_admin:grid_header header="{{ header }}"></twig:lag_admin:grid_header>
+                </th>
+            {% endfor %}
+        </tr>
+        </thead>
+    {% endblock %}
+
+    {% block rows %}
+        <tbody>
+        {% for row in grid.rows %}
+            <tr {{ row.attributes }}>
+                {% for cell in row.cells %}
+                    <td {{ cell.attributes }}>
+                        <twig:lag_admin:cell cell="{{ cell }}" data="{{ cell.data }}"></twig:lag_admin:cell>
+                    </td>
+                {% endfor %}
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="{{ grid.headers|length }}">
+                    {% if grid.emptyMessage %}
+                        {{ grid.emptyMessage|trans({}, grid.translationDomain) }}
+                    {% else %}
+                        {{ 'lag_admin.ui.no_record'|trans({}, 'admin') }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    {% endblock %}
+</table>
+
+
+
+
+{% block title %}
+    {% if grid.title %}
         <h3 {{ lag_attributes(grid.titleAttributes).defaults({class: 'my-2 mb-5'}) }}>
             {{ title|trans(translationDomain) }}
         </h3>
@@ -26,7 +75,7 @@
         {% for row in grid.rows %}
             <tr {{ lag_attributes(grid.rowAttributes) }}>
                 {% for cell in row.cells %}
-                    <td {{ lag_attributes(cell.containerAttributes) }}>
+                    <td>
                         {{ component('lag_admin:grid:cell', {
                             cell: cell,
                             data: cell.data,

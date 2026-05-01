@@ -30,7 +30,7 @@ final readonly class ProcessResource
 
     public function __invoke(OperationInterface $operation, Request $request): Response
     {
-        $context = $this->contextBuilder->buildContext($operation, $request);
+        $context = $this->contextBuilder->buildContext($request, $operation);
         $data = $this->provider->provide($operation, [], $context);
         $form = $this->formFactory->create($operation->getForm(), $data, $operation->getFormOptions());
         $form->handleRequest($request);
@@ -39,15 +39,11 @@ final readonly class ProcessResource
             $data = $form->getData();
             $this->processor->process($data, $operation, [], $context);
 
-            return $this->responseHandler->createRedirectResponse($operation, $data, ['form' => $form]);
+            return $this->responseHandler->createRedirectResponse($request, $operation, $data, ['form' => $form]);
         }
         $event = new ResourceControllerEvent($operation, $request, $data);
         $this->eventDispatcher->dispatchEvents($event, ResourceControllerEvents::RESOURCE_CONTROLLER);
 
-        if ($event->getResponse() !== null) {
-            return $event->getResponse();
-        }
-
-        return $this->responseHandler->createResponse($operation, $data, ['form' => $form]);
+        return $event->getResponse() ?? $this->responseHandler->createResponse($request, $operation, $data, ['form' => $form]);
     }
 }

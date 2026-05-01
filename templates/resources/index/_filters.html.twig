@@ -1,5 +1,5 @@
 <div class="dropdown mb-4">
-    <div class="admin-filters animated--fade-in{% if not form.vars.submitted%} d-none{% endif %}">
+    <div class="admin-filters collapse">
         <div id="admin-filters" class="card">
             <div class="card-body">
                 {{ form_start(form) }}
@@ -41,7 +41,7 @@
        data-target=".admin-filters"
        data-show-message="{{ 'lag_admin.ui.show_filters'|trans({}, resource.translationDomain) }}"
        data-hide-message="{{ 'lag_admin.ui.hide_filters'|trans({}, resource.translationDomain) }}">
-        {% if not form.vars.submitted%}
+        {% if not form.vars.submitted %}
             {{ 'lag_admin.ui.show_filters'|trans({}, resource.translationDomain) }}
         {% else %}
             {{ 'lag_admin.ui.hide_filters'|trans({}, resource.translationDomain) }}

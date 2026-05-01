@@ -13,6 +13,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
     name: 'lag_admin:form',
     template: '@LAGAdmin/components/cells/form.html.twig',
 )]
+/** @param array<string, mixed> $data */
 final class FormComponent
 {
     public FormView $form;
@@ -28,8 +29,8 @@ final class FormComponent
         mixed $data,
         CellView $cell,
     ): void {
-        /** @var \LAG\AdminBundle\Metadata\Form $property */
-        $property = $cell->options;
+        /** @var \LAG\AdminBundle\Metadata\Attribute\Form $property */
+        $property = $cell->property;
         $form = $this->formFactory->create($property->getForm(), $data, $property->getFormOptions());
         $this->form = $form->createView();
         $this->template = $property->getFormTemplate();

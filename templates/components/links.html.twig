@@ -1,0 +1,16 @@
+{% if links|length > 0 %}
+    <div {{ attributes.defaults({'class': 'row'})}}>
+        <div class="col text-end">
+            <div class="btn-group"
+                 role="group"
+                 aria-label="Collection actions">
+                {% for link in links %}
+                    <twig:lag_admin:grid_cell
+                        cell="{{ link }}"
+                        data="{{ link.data }}"
+                        class="btn btn-outline-primary"></twig:lag_admin:grid_cell>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}

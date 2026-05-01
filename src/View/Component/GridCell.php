@@ -7,22 +7,19 @@ namespace LAG\AdminBundle\View\Component;
 use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Metadata\PropertyInterface;
 
-final class GridCell implements DynamicTemplateComponentInterface
+final class GridCell
 {
     public CellView $cell;
     public mixed $data;
-    public ?PropertyInterface $options = null;
-    public array $context;
+    public PropertyInterface $property;
+
+    /** @var array<string|mixed> */
+    public array $context = [];
 
     public function mount(CellView $cell): void
     {
         $this->cell = $cell;
-        $this->options = $cell->options;
+        $this->property = $cell->property;
         $this->context = $cell->context;
-    }
-
-    public function getTemplate(): ?string
-    {
-        return $this->cell->template;
     }
 }
