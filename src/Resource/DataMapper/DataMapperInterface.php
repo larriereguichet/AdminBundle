@@ -13,5 +13,5 @@ use LAG\AdminBundle\Metadata\PropertyInterface;
  */
 interface DataMapperInterface
 {
-    public function getValue(PropertyInterface $property, mixed $data): mixed;
+    public function getPropertyValue(PropertyInterface $property, mixed $data): mixed;
 }

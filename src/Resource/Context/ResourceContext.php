@@ -5,36 +5,53 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Resource\Context;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
-use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use LAG\AdminBundle\Exception\UnsupportedRequestException;
+use LAG\AdminBundle\Metadata\OperationInterface;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 
-final readonly class ResourceContext implements ResourceContextInterface
+final class ResourceContext implements ResourceContextInterface
 {
-    public function __construct(
-        private RequestStack $requestStack,
-        private ParametersExtractorInterface $parametersExtractor,
-        private ResourceFactoryInterface $resourceFactory,
-    ) {
-    }
+    private ?ResourceInterface $resource = null;
+    private ?OperationInterface $operation = null;
 
-    public function getResource(): Resource
+    public function getResource(): ResourceInterface
     {
-        $request = $this->requestStack->getCurrentRequest();
-        $resourceName = $this->parametersExtractor->getResourceName($request);
-
-        if ($resourceName === null) {
-            throw new Exception('The current request is not supported by any resource');
+        if ($this->resource === null) {
+            throw new UnsupportedRequestException('The current request is not supported by any resource');
         }
 
-        return $this->resourceFactory->create($resourceName);
+        return $this->resource;
+    }
+
+    public function setResource(ResourceInterface $resource): void
+    {
+        $this->resource = $resource;
     }
 
     public function hasResource(): bool
     {
-        $request = $this->requestStack->getCurrentRequest();
+        return $this->resource !== null;
+    }
 
-        return $this->parametersExtractor->getResourceName($request) !== null;
+    public function getOperation(): OperationInterface
+    {
+        if ($this->operation === null) {
+            throw new UnsupportedRequestException('The current request is not supported by any resource or operation');
+        }
+
+        return $this->operation;
+    }
+
+    public function setOperation(OperationInterface $operation): void
+    {
+        if ($this->operation !== null) {
+            throw new Exception('The request operation is already set.');
+        }
+        $this->operation = $operation;
+    }
+
+    public function hasOperation(): bool
+    {
+        return $this->operation !== null;
     }
 }

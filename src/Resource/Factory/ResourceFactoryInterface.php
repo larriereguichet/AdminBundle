@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Resource\Factory;
 
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\Attribute\Resource;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 
 interface ResourceFactoryInterface
 {
     /**
-     * Create a new Admin resource instance. The resource will be validated then returned. An event could be dispatched
-     * before and after the resource creation.
+     * Create a new Admin resource instance. The resource will be validated then returned.
      */
-    public function create(string $resourceName): Resource;
+    public function create(string $resourceName): ResourceInterface;
 }
