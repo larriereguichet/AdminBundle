@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\EventDispatcher;
 
 use LAG\AdminBundle\Event\ResourceEventInterface;
-use LAG\AdminBundle\Metadata\Resource;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 use function Symfony\Component\String\u;
@@ -27,7 +27,8 @@ final readonly class ResourceEventDispatcher implements ResourceEventDispatcherI
         }
     }
 
-    private function getEventNames(string $eventName, Resource $resource): iterable
+    /** @return array<string> */
+    private function getEventNames(string $eventName, ResourceInterface $resource): array
     {
         $template = u($eventName);
 
@@ -42,7 +43,7 @@ final readonly class ResourceEventDispatcher implements ResourceEventDispatcherI
                 ->toString(),
             $template
                 ->replace('{application}', $resource->getApplication())
-                ->replace('{resource}', $resource->getName())
+                ->replace('{resource}', $resource->getShortName())
                 ->toString(),
         ];
     }
