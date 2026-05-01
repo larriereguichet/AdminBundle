@@ -12,7 +12,9 @@ use LAG\AdminBundle\Response\Handler\RedirectResponseHandlerInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandler;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\Response\Handler\TemplateResponseHandler;
-use LAG\AdminBundle\Routing\UrlGenerator\ResourceUrlGeneratorInterface;
+use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -21,7 +23,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(ResponseHandlerInterface::class, ResponseHandler::class)
         ->args([
             '$responseHandler' => service(ContentResponseHandlerInterface::class),
-            '$redirectHandler' => service(RedirectResponseHandlerInterface::class),
+            '$redirectResponseHandler' => service(RedirectResponseHandlerInterface::class),
         ])
         ->alias('lag_admin.response_handler', ResponseHandlerInterface::class)
     ;
@@ -35,7 +37,6 @@ return static function (ContainerConfigurator $container): void {
     $services->set(JsonResponseHandler::class)
         ->decorate(id: ContentResponseHandlerInterface::class, priority: 250)
         ->args([
-            '$requestStack' => service('request_stack'),
             '$responseHandler' => service('.inner'),
             '$serializer' => service('serializer'),
         ])
@@ -43,7 +44,11 @@ return static function (ContainerConfigurator $container): void {
 
     // Redirect handler
     $services->set(RedirectResponseHandlerInterface::class, RedirectResponseHandler::class)
-        ->args(['$urlGenerator' => service(ResourceUrlGeneratorInterface::class)])
+        ->args([
+            '$operationFactory' => service(OperationFactoryInterface::class),
+            '$operationUrlGenerator' => service(OperationUrlGeneratorInterface::class),
+            '$urlGenerator' => service(UrlGeneratorInterface::class),
+        ])
         ->alias('lag_admin.redirect_handler', RedirectResponseHandlerInterface::class)
     ;
 };
