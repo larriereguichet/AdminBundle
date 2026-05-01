@@ -22,7 +22,9 @@ interface FilterInterface
 
     public function withFormType(string $formType): self;
 
+    /** @return array<string, mixed> */
     public function getFormOptions(): array;
 
+    /** @param array<string, mixed> $formOptions */
     public function withFormOptions(array $formOptions): self;
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
+use LAG\AdminBundle\Metadata\Attribute\Link;
+
 /**
  * Interface for collection operations. It adds the required attributes for collection handling to the item operation
  * interface.
@@ -16,19 +18,13 @@ interface CollectionOperationInterface extends OperationInterface
 
     public function getItemsPerPage(): int;
 
-    public function withItemsPerPage(int $itemsPerPage): self;
-
     public function getPageParameter(): string;
 
-    public function withPageParameter(string $pageParameter): self;
-
+    /** @return array<string, mixed> */
     public function getCriteria(): array;
 
-    public function withCriteria(array $criteria): self;
-
+    /** @return array<string, string> */
     public function getOrderBy(): array;
-
-    public function withOrderBy(array $orderBy): self;
 
     /** @return array<int, FilterInterface>|null */
     public function getFilters(): ?array;
@@ -39,36 +35,21 @@ interface CollectionOperationInterface extends OperationInterface
 
     public function hasFilters(): bool;
 
-    /** @param array<int, FilterInterface> $filters */
-    public function withFilters(array $filters): self;
-
-    public function withFilter(FilterInterface $filter): self;
-
     public function getGrid(): ?string;
-
-    public function withGrid(string $grid): self;
 
     public function getFilterForm(): ?string;
 
-    public function withFilterForm(?string $filterForm): self;
-
+    /** @return array<string, mixed> */
     public function getFilterFormOptions(): array;
 
-    public function withFilterFormOptions(array $filterFormOptions): self;
-
-    public function withGridOptions(array $gridOptions): self;
-
+    /** @return array<string, mixed> */
     public function getGridOptions(): array;
 
     public function getCollectionForm(): ?string;
 
-    public function withCollectionForm(?string $collectionForm): self;
-
+    /** @return array<string, mixed>|null */
     public function getCollectionFormOptions(): ?array;
 
-    public function withCollectionFormOptions(?array $collectionFormOptions): self;
-
-    public function getCollectionActions(): ?array;
-
-    public function withCollectionActions(?array $collectionActions): self;
+    /** @return array<int|string, Link>|null */
+    public function getCollectionLinks(): ?array;
 }
