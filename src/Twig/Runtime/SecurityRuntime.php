@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\View\Helper;
+namespace LAG\AdminBundle\Twig\Runtime;
 
 use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
-use LAG\AdminBundle\Security\Voter\OperationPermissionVoter;
+use LAG\AdminBundle\Security\Voter\OperationVoter;
 use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\RuntimeExtensionInterface;
 
-final readonly class SecurityHelper implements RuntimeExtensionInterface
+final readonly class SecurityRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
         private OperationFactoryInterface $operationFactory,
@@ -21,6 +21,6 @@ final readonly class SecurityHelper implements RuntimeExtensionInterface
     {
         $operation = $this->operationFactory->create($operationName);
 
-        return $this->security->isGranted(OperationPermissionVoter::RESOURCE_ACCESS, $operation);
+        return $this->security->isGranted(OperationVoter::OPERATION_ACCESS, $operation);
     }
 }

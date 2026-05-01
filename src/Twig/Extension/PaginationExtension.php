@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Extension;
 
-use LAG\AdminBundle\View\Helper\PaginationHelper;
+use LAG\AdminBundle\Twig\Runtime\PaginationHelper;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

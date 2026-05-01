@@ -4,32 +4,18 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Twig\Globals;
 
-use LAG\AdminBundle\Metadata\Application;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Metadata\Resource;
-use LAG\AdminBundle\Resource\Context\ApplicationContextInterface;
-use LAG\AdminBundle\Resource\Context\OperationContextInterface;
+use LAG\AdminBundle\Metadata\ResourceInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 
 final readonly class LAGAdminGlobal
 {
     public function __construct(
-        private ApplicationContextInterface $applicationContext,
         private ResourceContextInterface $resourceContext,
-        private OperationContextInterface $operationContext,
     ) {
     }
 
-    public function getApplication(): ?Application
-    {
-        if (!$this->applicationContext->hasApplication()) {
-            return null;
-        }
-
-        return $this->applicationContext->getApplication();
-    }
-
-    public function getResource(): ?Resource
+    public function getResource(): ?ResourceInterface
     {
         if (!$this->resourceContext->hasResource()) {
             return null;
@@ -40,10 +26,10 @@ final readonly class LAGAdminGlobal
 
     public function getOperation(): ?OperationInterface
     {
-        if (!$this->operationContext->hasOperation()) {
+        if (!$this->resourceContext->hasOperation()) {
             return null;
         }
 
-        return $this->operationContext->getOperation();
+        return $this->resourceContext->getOperation();
     }
 }
