@@ -11,7 +11,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set(AdminDataCollector::class)
         ->args([
-            '$operationContext' => service('lag_admin.operation.context'),
+            '$resourceContext' => service('lag_admin.resource.context'),
         ])
         ->tag('data_collector', ['template' => '@LAGAdmin/debug/template.html.twig', 'id' => AdminDataCollector::class])
         ->private()
