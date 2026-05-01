@@ -6,19 +6,16 @@ namespace LAG\AdminBundle\Resource\DataMapper;
 
 use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Metadata\PropertyInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final readonly class DataMapper implements DataMapperInterface
 {
-    private PropertyAccessorInterface $accessor;
-
-    public function __construct()
-    {
-        $this->accessor = PropertyAccess::createPropertyAccessor();
+    public function __construct(
+        private PropertyAccessorInterface $propertyAccessor,
+    ) {
     }
 
-    public function getValue(PropertyInterface $property, mixed $data): mixed
+    public function getPropertyValue(PropertyInterface $property, mixed $data): mixed
     {
         if ($property->getPropertyPath() === '.' || $property->getPropertyPath() === true) {
             return $data;
@@ -28,10 +25,14 @@ final readonly class DataMapper implements DataMapperInterface
             return null;
         }
 
-        if (!$this->accessor->isReadable($data, $property->getPropertyPath())) {
-            throw new Exception(\sprintf('The property path "%s" is not readable in data of type "%s"', $property->getPropertyPath(), get_debug_type($data)));
+        if (!$this->propertyAccessor->isReadable($data, $property->getPropertyPath())) {
+            throw new Exception(
+                'The property path "%s" is not readable in data of type "%s"',
+                $property->getPropertyPath(),
+                get_debug_type($data),
+            );
         }
 
-        return $this->accessor->getValue($data, $property->getPropertyPath());
+        return $this->propertyAccessor->getValue($data, $property->getPropertyPath());
     }
 }
