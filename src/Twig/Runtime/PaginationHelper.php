@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\View\Helper;
+namespace LAG\AdminBundle\Twig\Runtime;
 
 use Pagerfanta\PagerfantaInterface;
 use Twig\Extension\RuntimeExtensionInterface;

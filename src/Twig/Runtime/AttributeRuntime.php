@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\View\Helper;
+namespace LAG\AdminBundle\Twig\Runtime;
 
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 use Twig\Runtime\EscaperRuntime;
 
-final readonly class AttributeHelper implements RuntimeExtensionInterface
+final readonly class AttributeRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
         private Environment $environment,
