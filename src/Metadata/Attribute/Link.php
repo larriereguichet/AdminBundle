@@ -19,7 +19,7 @@ class Link extends Property implements WorkflowAwareInterface
         ?string $name = null,
         string|bool|null $propertyPath = null,
         string|bool|null $label = null,
-        ?string $template = '@LAGAdmin/grids/properties/link.html.twig',
+        ?string $template = null,
         bool $sortable = false,
         bool $translatable = true,
 
@@ -30,6 +30,8 @@ class Link extends Property implements WorkflowAwareInterface
         ?array $permissions = null,
         ?string $condition = null,
         ?string $sortingPath = null,
+        ?string $component = 'lag_admin:link',
+        ?string $translationDomain = null,
 
         private ?string $route = null,
         private array $routeParameters = [],
@@ -49,7 +51,6 @@ class Link extends Property implements WorkflowAwareInterface
             template: $template,
             sortable: $sortable,
             translatable: $translatable,
-
             attributes: $attributes,
             rowAttributes: $rowAttributes,
             headerAttributes: $headerAttributes,
@@ -57,6 +58,8 @@ class Link extends Property implements WorkflowAwareInterface
             permissions: $permissions,
             condition: $condition,
             sortingPath: $sortingPath,
+            component: $component,
+            translationDomain: $translationDomain,
         );
     }
 

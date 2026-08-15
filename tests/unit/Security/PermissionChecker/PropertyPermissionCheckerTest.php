@@ -61,6 +61,17 @@ final class PropertyPermissionCheckerTest extends TestCase
         self::assertFalse($granted);
     }
 
+    #[Test]
+    public function itAllowsWhenNoRolesAreDefined(): void
+    {
+        $property = new Text(permissions: null);
+
+        $this->security->expects($this->never())->method('getUser');
+        $this->security->expects($this->never())->method('isGranted');
+
+        self::assertTrue($this->permissionChecker->isGranted($property));
+    }
+
     protected function setUp(): void
     {
         $this->security = $this->createMock(Security::class);

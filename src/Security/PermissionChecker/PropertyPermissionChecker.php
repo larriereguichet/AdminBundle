@@ -16,12 +16,12 @@ final readonly class PropertyPermissionChecker implements PropertyPermissionChec
 
     public function isGranted(RolesOwnerInterface $subject): bool
     {
-        if ($subject->getPermissions() === null) {
+        if ($subject->getRoles() === null) {
             return true;
         }
         $user = $this->security->getUser();
 
-        foreach ($subject->getPermissions() as $permission) {
+        foreach ($subject->getRoles() as $permission) {
             if ($this->security->isGranted($permission, $user)) {
                 return true;
             }

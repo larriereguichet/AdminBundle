@@ -94,4 +94,7 @@ interface ResourceInterface
     public function getInput(): ?string;
 
     public function getOutput(): ?string;
+
+    /** @return array<string, mixed> */
+    public function getContext(): array;
 }

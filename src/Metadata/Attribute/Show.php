@@ -16,7 +16,7 @@ class Show extends Operation
     public function __construct(
         string $name = 'show',
         array $context = [],
-        ?string $title = null,
+        string|false|null $title = null,
         ?string $description = null,
         ?string $icon = null,
         ?string $template = '@LAGAdmin/resources/show.html.twig',
@@ -42,6 +42,8 @@ class Show extends Operation
         ?array $denormalizationContext = null,
         ?string $input = null,
         ?string $output = null,
+        ?string $normalizationInput = null,
+        ?string $normalizationOutput = null,
         bool $embedded = false,
         ?string $successMessage = null,
     ) {
@@ -74,6 +76,8 @@ class Show extends Operation
             denormalizationContext: $denormalizationContext,
             input: $input,
             output: $output,
+            normalizationInput: $normalizationInput,
+            normalizationOutput: $normalizationOutput,
             embedded: $embedded,
             successMessage: $successMessage,
         );
