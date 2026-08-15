@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Condition\Matcher\ConditionMatcherInterface;
+use LAG\AdminBundle\Grid\DataTransformer\CountDataTransformer;
+use LAG\AdminBundle\Grid\DataTransformer\EnumDataTransformer;
+use LAG\AdminBundle\Grid\DataTransformer\FormDataTransformer;
 use LAG\AdminBundle\Grid\Factory\GridFactory;
 use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistry;
@@ -26,13 +29,8 @@ use LAG\AdminBundle\Grid\ViewBuilder\LinkBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\RowBuilder;
 use LAG\AdminBundle\Grid\ViewBuilder\RowBuilderInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\SecurityCellBuilder;
-use LAG\AdminBundle\Grid\DataTransformer\CountDataTransformer;
-use LAG\AdminBundle\Grid\DataTransformer\EnumDataTransformer;
-use LAG\AdminBundle\Grid\DataTransformer\FormDataTransformer;
-use LAG\AdminBundle\Grid\DataTransformer\MapDataTransformer;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\LinkUrlGeneratorInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
 use LAG\AdminBundle\Security\PermissionChecker\PropertyPermissionCheckerInterface;
 
 return static function (ContainerConfigurator $container): void {
@@ -112,9 +110,6 @@ return static function (ContainerConfigurator $container): void {
 
     // Data transformers
     $services->set(CountDataTransformer::class)
-        ->tag('lag_admin.data_transformer')
-    ;
-    $services->set(MapDataTransformer::class)
         ->tag('lag_admin.data_transformer')
     ;
     $services->set(FormDataTransformer::class)

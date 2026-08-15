@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Grid\ViewFactory;
 
-use LAG\AdminBundle\Grid\ViewFactory\AttributeViewFactory;
+use LAG\AdminBundle\Grid\ViewBuilder\AttributeBuilder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +13,7 @@ use Twig\Runtime\EscaperRuntime;
 
 final class AttributeViewFactoryTest extends TestCase
 {
-    private AttributeViewFactory $attributeViewFactory;
+    private AttributeBuilder $attributeBuilder;
     private MockObject $environment;
 
     #[Test]
@@ -26,7 +26,7 @@ final class AttributeViewFactoryTest extends TestCase
             ->willReturn(new EscaperRuntime())
         ;
 
-        $attributes = $this->attributeViewFactory->buildComponentAttributes(['some_attribute' => 'some_value']);
+        $attributes = $this->attributeBuilder->buildAttributes(['some_attribute' => 'some_value']);
 
         self::assertEquals(['some_attribute' => 'some_value'], $attributes->all());
     }
@@ -34,6 +34,6 @@ final class AttributeViewFactoryTest extends TestCase
     protected function setUp(): void
     {
         $this->environment = $this->createMock(Environment::class);
-        $this->attributeViewFactory = new AttributeViewFactory($this->environment);
+        $this->attributeBuilder = new AttributeBuilder($this->environment);
     }
 }

@@ -28,11 +28,10 @@ final readonly class HeaderBuilder implements HeaderBuilderInterface
             attributes: $this->attributeBuilder->buildAttributes($property->getHeaderAttributes()),
             label: $property->getLabel() ?: null,
             translationDomain: $context['translation_domain'] ?? 'admin',
-            //sort: $context['sort'] ?? null,
-            sort: null,
-            sortParameter: '', // TODO ?
+            sort: $context['sort'] ?? null,
+            sortParameter: $grid->getSortParameter(),
             order: $context['order'] ?? null,
-            orderParameter: '',
+            orderParameter: $grid->getOrderParameter(),
             sortable: $grid->isSortable() && $property->isSortable(),
         );
     }
