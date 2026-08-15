@@ -38,12 +38,13 @@ final class ShowResourceTest extends TestCase
         $this->contextBuilder
             ->expects($this->once())
             ->method('buildContext')
-            ->with($operation, $request)
+            ->with($request, $operation)
+            ->willReturn([])
         ;
         $this->provider
             ->expects($this->once())
             ->method('provide')
-            ->with($operation)
+            ->with($operation, [], [])
             ->willReturn($data)
         ;
         $this->eventDispatcher
@@ -54,7 +55,7 @@ final class ShowResourceTest extends TestCase
         $this->responseHandler
             ->expects($this->once())
             ->method('createResponse')
-            ->with($operation, $data)
+            ->with($request, $operation, $data)
             ->willReturn(new Response(content: 'some html'))
         ;
         $response = $this->controller->__invoke($operation, $request);
@@ -70,10 +71,16 @@ final class ShowResourceTest extends TestCase
         $data = new Book();
         $data->id = 666;
 
+        $this->contextBuilder
+            ->expects($this->once())
+            ->method('buildContext')
+            ->with($request, $operation)
+            ->willReturn([])
+        ;
         $this->provider
             ->expects($this->once())
             ->method('provide')
-            ->with($operation)
+            ->with($operation, [], [])
             ->willReturn($data)
         ;
         $this->eventDispatcher
