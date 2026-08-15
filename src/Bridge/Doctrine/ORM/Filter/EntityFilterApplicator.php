@@ -11,11 +11,6 @@ use LAG\AdminBundle\Metadata\OperationInterface;
 
 final readonly class EntityFilterApplicator extends AbstractApplicator
 {
-    public function supports(OperationInterface $operation, FilterInterface $filter, mixed $data, mixed $filterValue): bool
-    {
-        return parent::supports($operation, $filter, $data, $filterValue) && $filter instanceof EntityFilter;
-    }
-
     /**
      * @param EntityFilter $filter
      * @param QueryBuilder $data
@@ -28,5 +23,10 @@ final readonly class EntityFilterApplicator extends AbstractApplicator
         $data->innerJoin($rootAlias.'.'.$filter->getProperty(), $filter->getName().'_alias');
         $data->$method($filter->getName().'_alias = :'.$filter->getName().'_value');
         $data->setParameter($filter->getName().'_value', $filterValue);
+    }
+
+    protected function supportsFilter(FilterInterface $filter): bool
+    {
+        return $filter instanceof EntityFilter;
     }
 }
