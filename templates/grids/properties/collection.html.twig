@@ -1,6 +1,6 @@
 {# TODO remove context use data or rows #}
 {% for child in context.children %}
-    {{ component('lag_admin:grid:cell', {
+    {{ component('lag_admin:cell', {
         cell: child,
         data: child.data,
         ...child.attributes,

@@ -1,11 +1,5 @@
 <div {{ attributes }}>
     {% for child in context.children %}
-        {{ component('lag_admin:grid:cell', {
-            cell: child,
-            options: child.options,
-            context: child.context,
-            data: child.data,
-            ...child.attributes,
-        }) }}
+        <twig:lag_admin:cell cell="{{ child }}"  context="{{ child.context }}" />
     {% endfor %}
 </div>

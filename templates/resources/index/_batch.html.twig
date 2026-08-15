@@ -1,0 +1,11 @@
+<div class="admin-batch-toolbar d-flex align-items-center gap-2 mt-2 mb-2">
+    <span class="admin-batch-selected-count">
+        {{ 'lag_admin.batch.selected_count'|trans({}, 'admin') }}
+        <span class="badge bg-secondary batch-count">0</span>
+    </span>
+
+    {{ form_widget(batchForm.operation) }}
+    <button type="submit" class="btn btn-sm btn-primary admin-batch-submit">
+        {{ 'lag_admin.batch.apply'|trans({}, 'admin') }}
+    </button>
+</div>

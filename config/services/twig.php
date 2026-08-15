@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use LAG\AdminBundle\Twig\Component\Cell\Cell;
+use LAG\AdminBundle\Twig\Component\Grid;
+use LAG\AdminBundle\Twig\Component\GridHeader;
+use LAG\AdminBundle\Twig\Component\Links;
+use LAG\AdminBundle\Twig\Component\Row;
+use LAG\AdminBundle\Twig\Component\TableGrid;
 use LAG\AdminBundle\Twig\Globals\LAGAdminGlobal;
-use LAG\AdminBundle\View\Component\Grid;
-use LAG\AdminBundle\View\Component\GridCell;
-use LAG\AdminBundle\View\Component\Links;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
@@ -24,21 +27,28 @@ return static function (ContainerConfigurator $container): void {
     $services->set(Grid::class)
         ->tag('twig.component', [
             'key' => 'lag_admin:grid',
-            'template' => '@LAGAdmin/components/grids/grid.html.twig',
+            'template' => '@LAGAdmin/components/grid.html.twig',
             'expose_public_props' => true,
         ])
     ;
-    $services->set(Grid::class)
+    $services->set(TableGrid::class)
         ->tag('twig.component', [
-            'key' => 'lag_admin:templated_grid',
-            'template' => '@LAGAdmin/components/templated_grid.html.twig',
+            'key' => 'lag_admin:table_grid',
+            'template' => '@LAGAdmin/components/table_grid.html.twig',
             'expose_public_props' => true,
         ])
     ;
-    $services->set(GridCell::class)
+    $services->set(Row::class)
         ->tag('twig.component', [
-            'key' => 'lag_admin:grid_cell',
-            'template' => '@LAGAdmin/components/cells/cell.html.twig',
+            'key' => 'lag_admin:row',
+            'template' => '@LAGAdmin/components/row.html.twig',
+            'expose_public_props' => true,
+        ])
+    ;
+    $services->set(Cell::class)
+        ->tag('twig.component', [
+            'key' => 'lag_admin:cell',
+            'template' => '@LAGAdmin/components/cell.html.twig',
             'expose_public_props' => true,
         ])
     ;
@@ -46,6 +56,13 @@ return static function (ContainerConfigurator $container): void {
         ->tag('twig.component', [
             'key' => 'lag_admin:links',
             'template' => '@LAGAdmin/components/links.html.twig',
+            'expose_public_props' => true,
+        ])
+    ;
+    $services->set(GridHeader::class)
+        ->tag('twig.component', [
+            'key' => 'lag_admin:table_header',
+            'template' => '@LAGAdmin/components/table_header.html.twig',
             'expose_public_props' => true,
         ])
     ;

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\View\Component;
+namespace LAG\AdminBundle\Twig\Component;
 
 use LAG\AdminBundle\Exception\Exception;
-use LAG\AdminBundle\Grid\View\GridView as GridView;
+use LAG\AdminBundle\Grid\View\GridView;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
-final class TemplatedGrid implements DynamicTemplateComponentInterface
+final class TemplatedGrid implements TemplateComponentInterface
 {
     public GridView $grid;
     public mixed $data;

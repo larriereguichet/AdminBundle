@@ -1,0 +1,12 @@
+<div {{ attributes.defaults(row.attributes) }}>
+    {% block header %}{% endblock %}
+
+    {% block cells %}
+        {% for cell in row.cells %}
+            <twig:lag_admin:cell cell="{{ cell }}" />
+        {% endfor %}
+    {% endblock %}
+
+    {% block footer %}{% endblock %}
+</div>
+
