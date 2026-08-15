@@ -27,7 +27,7 @@ final class FormResponseHandlerTest extends TestCase
         $data = new \stdClass();
         $request = new Request();
 
-        $formView = $this->createMock(FormView::class);
+        $formView = $this->createStub(FormView::class);
         $form = $this->createMock(FormInterface::class);
         $form->expects($this->once())
             ->method('createView')
@@ -42,7 +42,7 @@ final class FormResponseHandlerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $customFormView = $this->createMock(FormView::class);
+        $customFormView = $this->createStub(FormView::class);
         $customForm = $this->createMock(FormInterface::class);
         $customForm->expects($this->once())
             ->method('createView')
@@ -58,7 +58,7 @@ final class FormResponseHandlerTest extends TestCase
         $this->responseHandler
             ->expects($this->once())
             ->method('createResponse')
-            ->with($operation, $data, [
+            ->with($request, $operation, $data, [
                 'form' => $formView,
                 'customForm' => $customFormView,
                 'some_data' => 'some_value',
@@ -67,7 +67,7 @@ final class FormResponseHandlerTest extends TestCase
             ->willReturn(new Response('some html content'))
         ;
 
-        $this->handler->createResponse($operation, $data, $context);
+        $this->handler->createResponse($request, $operation, $data, $context);
     }
 
     protected function setUp(): void

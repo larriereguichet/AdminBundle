@@ -52,7 +52,6 @@
         "twig/twig": "^3.15"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-latest",
         "dg/bypass-finals": "^1.1",
         "friendsofphp/php-cs-fixer": "^3.13",
         "liip/imagine-bundle": "^2.13",
@@ -61,11 +60,13 @@
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^12.3",
         "rector/rector": "^2.0",
+        "roave/security-advisories": "dev-latest",
         "symfony/browser-kit": "^7.0",
         "symfony/css-selector": "^7.0",
         "symfony/debug-bundle": "^7.1",
         "symfony/dotenv": "^7.1",
         "symfony/monolog-bundle": "^3.5",
+        "symfony/object-mapper": "^7.1",
         "symfony/runtime": "^7.1",
         "symfony/var-dumper": "^7.0",
         "symfony/web-profiler-bundle": "^7.0",
@@ -73,6 +74,9 @@
         "symfony/workflow": "^7.1",
         "symplify/config-transformer": "^12.3",
         "zenstruck/foundry": "^2.2"
+    },
+    "suggest": {
+        "symfony/object-mapper": "Enables mapper-based input/output transformation (MappingProvider and MappingProcessor)"
     },
     "autoload": {
         "psr-4": {

@@ -39,10 +39,15 @@ final readonly class ImageUploader implements ImageUploaderInterface
         }
         $path = $this->pathGenerator->generatePath($image);
 
-        if (!$this->filesystem->fileExists($file->getRealPath())) {
+        if (!file_exists($file->getRealPath())) {
             throw new Exception('The image "%s" file does not exists', $file->getRealPath());
         }
-        $this->filesystem->copy($file->getRealPath(), $path);
+        $stream = fopen($file->getRealPath(), 'r');
+        $this->filesystem->writeStream($path, $stream);
+
+        if (\is_resource($stream)) {
+            fclose($stream);
+        }
 
         if ($previousImage !== null) {
             $this->filesystem->delete($previousImage);
