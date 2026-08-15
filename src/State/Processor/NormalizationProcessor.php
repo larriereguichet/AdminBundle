@@ -19,7 +19,7 @@ final readonly class NormalizationProcessor implements ProcessorInterface
 
     public function process(mixed $data, OperationInterface $operation, array $urlVariables = [], array $context = []): void
     {
-        if ($operation->getInput() === null) {
+        if ($operation->getNormalizationInput() === null) {
             $this->processor->process($data, $operation, $urlVariables, $context);
 
             return;

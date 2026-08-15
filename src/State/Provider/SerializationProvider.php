@@ -30,7 +30,8 @@ final readonly class SerializationProvider implements ProviderInterface
         }
         $type = $operation->getResource()->getResourceClass();
 
-        if ($operation instanceof CollectionOperationInterface && \is_array($data)) {
+        // The guard above already returned when a collection operation did not provide an array
+        if ($operation instanceof CollectionOperationInterface) {
             $type .= '[]';
         }
 
