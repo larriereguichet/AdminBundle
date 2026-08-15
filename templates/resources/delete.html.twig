@@ -9,7 +9,7 @@
             {{ form_start(form) }}
             {{ form_row(form) }}
             <h5 class="card-title">
-                {{ operation.title|default('lag_admin.delete.title')|trans({}, resource.translationDomain) }}
+                {% if operation.title %}{{ operation.title|trans({}, resource.translationDomain) }}{% endif %}
             </h5>
             <p class="card-text">
                 {{ 'lag_admin.delete.message'|trans({}, resource.translationDomain) }}

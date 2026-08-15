@@ -1,23 +1,17 @@
+{% trans_default_domain header.translationDomain %}
 {% if header.sortable %}
-    {% set order = 'asc' %}
-
-    {% if header.order|lower == 'asc' %}
-        {% set order = 'desc' %}
-    {% endif %}
-
-    {# TODO keep the existing query ? #}
-    <a href="?{{ sortParameter }}={{ header.name }}&{{ orderParameter }}={{ order }}"
+    <a href="{{ lag_admin_sort_url(header.name, header.sortParameter, header.orderParameter, header.sort, header.order) }}"
        class="text-dark">
-        {{ header.label|trans({}, header.translationDomain) }}
+        {{ header.label|trans }}
 
         {% if header.sort == header.name %}
-            {% if order == 'asc' %}
-                <i class="bi bi-arrow-down sort-icon sort-asc"></i>
+            {% if header.order|lower == 'asc' %}
+                <i class="bi bi-arrow-up sort-icon sort-asc"></i>
             {% else %}
-                <i class="bi bi-arrow-up sort-icon sort-desc"></i>
+                <i class="bi bi-arrow-down sort-icon sort-desc"></i>
             {% endif %}
         {% endif %}
     </a>
 {% elseif header.label %}
-    {{ header.label|trans({} , header.translationDomain) }}
+    {{ header.label|trans }}
 {% endif %}

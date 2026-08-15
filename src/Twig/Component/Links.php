@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\View\Component;
+namespace LAG\AdminBundle\Twig\Component;
 
 use LAG\AdminBundle\Metadata\Attribute\Link;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;

@@ -1,9 +1,10 @@
+{% trans_default_domain property.translationDomain %}
 <a href="{{ data }}" {{ attributes.defaults({class: 'btn'}) }}>
-    {% if options.icon %}<i class="bi bi-{{ options.icon }}"></i>{% endif %}
+    {% if property.icon %}<i class="bi bi-{{ property.icon }}"></i>{% endif %}
 
-    {% if options.translatable %}
-        {{ options.label|trans({}, options.translationDomain) }}
+    {% if property.translatable %}
+        {{ property.label|trans }}
     {% else %}
-        {{ options.label }}
+        {{ property.label }}
     {% endif %}
 </a>
