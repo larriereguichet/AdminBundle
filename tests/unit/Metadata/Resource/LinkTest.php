@@ -18,7 +18,6 @@ final class LinkTest extends TestCase
             label: 'My Property Label',
             sortable: true,
             translatable: true,
-            translationDomain: 'admin',
             attributes: ['an' => 'attribute'],
             headerAttributes: ['an' => 'attribute'],
             route: 'my_route',

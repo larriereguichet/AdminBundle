@@ -28,6 +28,8 @@ class Form extends Property
         ?string $dataTransformer = FormDataTransformer::class,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $component = null,
+        ?string $translationDomain = null,
 
         private string $form = FormType::class,
         private ?string $formTemplate = null,
@@ -47,6 +49,8 @@ class Form extends Property
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            component: $component,
+            translationDomain: $translationDomain,
         );
     }
 

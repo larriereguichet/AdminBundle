@@ -6,9 +6,6 @@ namespace LAG\AdminBundle\Security;
 
 interface RolesOwnerInterface
 {
-    // TODO rename getRoles
-    /**
-     * @return array<int, string>|null
-     */
-    public function getPermissions(): ?array;
+    /** @return array<int, string>|null */
+    public function getRoles(): ?array;
 }

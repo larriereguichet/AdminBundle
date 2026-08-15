@@ -11,6 +11,10 @@ use LAG\AdminBundle\Metadata\CollectionOperationMetadataInterface;
 use LAG\AdminBundle\Metadata\FilterInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[Assert\Expression(
+    expression: 'this.getLimit() === null or not this.hasPagination()',
+    message: 'Pagination must be disabled when a limit is set.',
+)]
 abstract class CollectionOperation extends Operation implements CollectionOperationInterface, CollectionOperationMetadataInterface
 {
     /**
@@ -18,6 +22,7 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
      * @param array<string>|null $permissions
      * @param array<string, mixed>|null $routeParameters
      * @param array<string> $methods
+     * @param array<string, string> $orderBy
      * @param array<string, mixed> $redirectRouteParameters
      * @param array<string, mixed>|null $formOptions
      * @param array<string>|null $identifiers
@@ -26,18 +31,16 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
      * @param array<string, mixed>|null $validationContext
      * @param array<string, mixed>|null $normalizationContext
      * @param array<string, mixed>|null $denormalizationContext
-     * @param array<string, mixed> $criteria
-     * @param array<string, mixed> $orderBy
      * @param array<int|string, FilterInterface>|null $filters
      * @param array<string, mixed> $gridOptions
      * @param array<string, Link>|null $collectionLinks
      * @param array<string, mixed> $filterFormOptions
-     * @param array<string, mixed>|null $collectionFormOptions
+     * @param string[] $batchOperations
      */
     public function __construct(
         string $name,
         array $context = [],
-        ?string $title = null,
+        string|false|null $title = null,
         ?string $description = null,
         ?string $icon = null,
         ?string $template = null,
@@ -66,10 +69,15 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         ?array $denormalizationContext = null,
         ?string $input = null,
         ?string $output = null,
+        ?string $normalizationInput = null,
+        ?string $normalizationOutput = null,
         ?string $workflow = null,
         ?string $workflowTransition = null,
         bool $embedded = false,
         ?string $flashMessage = null,
+
+        #[Assert\Positive]
+        private ?int $limit = null,
 
         private bool $pagination = true,
 
@@ -78,8 +86,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
 
         #[Assert\NotBlank]
         private string $pageParameter = 'page',
-        private array $criteria = [], // TODO remove use context
-        private array $orderBy = [], // TODO remove use context
+
+        private array $orderBy = [],
 
         #[Assert\NotNull]
         #[Assert\Valid]
@@ -97,11 +105,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
 
         private array $filterFormOptions = [],
 
-        #[Assert\NotBlank(message: 'The collection form type should not be blank. Use null instead', allowNull: true)]
-        private ?string $collectionForm = null, // TODO remove ?
-
-        #[Assert\NotNull]
-        private ?array $collectionFormOptions = null, // TODO remove ?
+        #[Assert\All(constraints: [new Assert\NotBlank()])]
+        private array $batchOperations = [],
     ) {
         parent::__construct(
             shortName: $name,
@@ -135,6 +140,8 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
             denormalizationContext: $denormalizationContext,
             input: $input,
             output: $output,
+            normalizationInput: $normalizationInput,
+            normalizationOutput: $normalizationOutput,
             workflow: $workflow,
             workflowTransition: $workflowTransition,
             embedded: $embedded,
@@ -142,12 +149,25 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         );
     }
 
+    public function getLimit(): ?int
+    {
+        return $this->limit;
+    }
+
+    public function withLimit(?int $limit): static
+    {
+        $self = clone $this;
+        $self->limit = $limit;
+
+        return $self;
+    }
+
     public function hasPagination(): bool
     {
         return $this->pagination;
     }
 
-    public function setPagination(bool $pagination): static
+    public function withPagination(bool $pagination): static
     {
         $self = clone $this;
         $self->pagination = $pagination;
@@ -181,24 +201,12 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $self;
     }
 
-    public function getCriteria(): array
-    {
-        return $this->criteria;
-    }
-
-    public function withCriteria(array $criteria): static
-    {
-        $self = clone $this;
-        $self->criteria = $criteria;
-
-        return $self;
-    }
-
     public function getOrderBy(): array
     {
         return $this->orderBy;
     }
 
+    /** @param array<string, string> $orderBy */
     public function withOrderBy(array $orderBy): static
     {
         $self = clone $this;
@@ -307,28 +315,16 @@ abstract class CollectionOperation extends Operation implements CollectionOperat
         return $self;
     }
 
-    public function getCollectionForm(): ?string
+    public function getBatchOperations(): array
     {
-        return $this->collectionForm;
+        return $this->batchOperations;
     }
 
-    public function withCollectionForm(?string $collectionForm): static
+    /** @param string[] $batchOperations */
+    public function withBatchOperations(array $batchOperations): static
     {
         $self = clone $this;
-        $self->collectionForm = $collectionForm;
-
-        return $self;
-    }
-
-    public function getCollectionFormOptions(): ?array
-    {
-        return $this->collectionFormOptions;
-    }
-
-    public function withCollectionFormOptions(?array $collectionFormOptions): static
-    {
-        $self = clone $this;
-        $self->collectionFormOptions = $collectionFormOptions;
+        $self->batchOperations = $batchOperations;
 
         return $self;
     }

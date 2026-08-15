@@ -24,6 +24,8 @@ class Count extends Property
         ?array $permissions = null,
         ?string $condition = null,
         ?string $sortingPath = null,
+        ?string $component = null,
+        ?string $translationDomain = null,
     ) {
         parent::__construct(
             name: $name,
@@ -40,6 +42,8 @@ class Count extends Property
             permissions: $permissions,
             condition: $condition,
             sortingPath: $sortingPath,
+            component: $component,
+            translationDomain: $translationDomain,
         );
     }
 }
