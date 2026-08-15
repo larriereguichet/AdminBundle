@@ -30,6 +30,8 @@ final readonly class GridBuilder implements GridBuilderInterface
         }
         $context['translation_domain'] = $operation->getResource()->getTranslationDomain();
 
+        $batchOperations = $operation->getBatchOperations();
+
         return new View\GridView(
             name: $grid->getName(),
             type: $grid->getType(),
@@ -38,10 +40,13 @@ final readonly class GridBuilder implements GridBuilderInterface
             headers: $headers,
             title: $this->buildTitle($grid, $operation),
             template: $grid->getTemplate(),
+            component: $grid->getComponent(),
             options: $grid->getOptions(),
             context: $context,
             emptyMessage: $grid->getEmptyMessage(),
             translationDomain: $operation->getResource()->getTranslationDomain(),
+            batchEnabled: $batchOperations !== [],
+            batchIdentifier: $operation->getResource()->getIdentifiers()[0] ?? 'id',
         );
     }
 
@@ -64,12 +69,14 @@ final readonly class GridBuilder implements GridBuilderInterface
 
     private function buildTitle(GridInterface $grid, OperationInterface $operation): ?View\TitleView
     {
-        if ($grid->getTitle() === null) {
+        $title = $grid->getTitle();
+
+        if ($title === false || $title === null) {
             return null;
         }
 
         return new View\TitleView(
-            title: $grid->getTitle(),
+            title: $title,
             attributes: $this->attributeBuilder->buildAttributes($grid->getTitleAttributes()),
             translationDomain: $operation->getResource()->getTranslationDomain(),
         );

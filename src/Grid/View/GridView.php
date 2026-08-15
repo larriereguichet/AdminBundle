@@ -20,12 +20,15 @@ readonly class GridView implements \IteratorAggregate
         public ?RowView $headers = null,
         public ?TitleView $title = null,
         public ?string $template = null,
+        public ?string $component = null,
         /** @var array<string, mixed> $options */
         public array $options = [],
         /** @var array<string, mixed> $context */
         public array $context = [],
         public ?string $emptyMessage = null,
         public ?string $translationDomain = null,
+        public bool $batchEnabled = false,
+        public string $batchIdentifier = 'id',
     ) {
     }
 
