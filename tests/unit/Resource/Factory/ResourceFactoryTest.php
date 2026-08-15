@@ -4,64 +4,77 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Resource\Factory;
 
-use LAG\AdminBundle\Metadata\Attribute\Index;
+use LAG\AdminBundle\Exception\InvalidResourceException;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
-use LAG\AdminBundle\Metadata\Attribute\Show;
-use LAG\AdminBundle\Metadata\Attribute\TextFilter;
-use LAG\AdminBundle\Metadata\Factory\ResourceFactory;
-use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Metadata\Factory\ResourceInitializerInterface;
 use LAG\AdminBundle\Metadata\Factory\ResourceMetadataFactoryInterface;
+use LAG\AdminBundle\Resource\Factory\ResourceFactory;
+use LAG\AdminBundle\Resource\Factory\ResourceFactoryInterface;
 use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ResourceFactoryTest extends TestCase
 {
     private ResourceFactoryInterface $resourceFactory;
-    private MockObject $definitionFactory;
-    private MockObject $resourceInitializer;
+    private MockObject $metadataFactory;
     private MockObject $validator;
 
     #[Test]
     public function itCreatesAResourceFromADefinition(): void
     {
-        $operationDefinition = new Show(name: 'my_operation');
-        $collectionOperationDefinition = new Index(
-            name: 'my_collection_operation',
-            filters: [new TextFilter(name: 'my_filter')],
-        );
-        $definition = new Resource(
-            shortName: 'my_resource',
-            application: 'my_application',
-            operations: [$operationDefinition, $collectionOperationDefinition],
-        );
+        $definition = new Resource(shortName: 'my_resource', application: 'my_application');
 
-        $this->definitionFactory
+        $this->metadataFactory
+            ->expects($this->once())
+            ->method('createMetadata')
+            ->with('my_application.my_resource')
+            ->willReturn($definition)
+        ;
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->willReturn(new ConstraintViolationList())
+        ;
+
+        $resource = $this->resourceFactory->create('my_application.my_resource');
+
+        self::assertEquals($definition->getShortName(), $resource->getShortName());
+    }
+
+    #[Test]
+    public function itDoesNotCreateInvalidResource(): void
+    {
+        $definition = new Resource(shortName: 'my_resource', application: 'my_application');
+        $errors = $this->createMock(ConstraintViolationListInterface::class);
+        $errors->expects($this->once())
+            ->method('count')
+            ->willReturn(1)
+        ;
+
+        $this->metadataFactory
             ->expects($this->once())
             ->method('createMetadata')
             ->willReturn($definition)
         ;
-        $this->resourceInitializer
+        $this->validator
             ->expects($this->once())
-            ->method('initializeResource')
-            ->with($definition)
-            ->willReturn($definition->withShortName('my_resource'))
+            ->method('validate')
+            ->willReturn($errors)
         ;
-        $resource = $this->resourceFactory->create('my_resource');
 
-        self::assertEquals($definition->getShortName(), $resource->getName());
+        $this->expectException(InvalidResourceException::class);
+        $this->resourceFactory->create('my_application.my_resource');
     }
 
     protected function setUp(): void
     {
-        $this->definitionFactory = $this->createMock(ResourceMetadataFactoryInterface::class);
-        $this->resourceInitializer = $this->createMock(ResourceInitializerInterface::class);
+        $this->metadataFactory = $this->createMock(ResourceMetadataFactoryInterface::class);
         $this->validator = $this->createMock(ValidatorInterface::class);
         $this->resourceFactory = new ResourceFactory(
-            $this->definitionFactory,
-            $this->resourceInitializer,
+            $this->metadataFactory,
             $this->validator,
         );
     }

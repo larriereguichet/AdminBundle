@@ -27,6 +27,7 @@ final readonly class ResourceFactory implements ResourceFactoryInterface
             throw new InvalidResourceException($resource->getName(), $errors);
         }
 
-        return $resource;
+        // Ensure operations are linked to the current resource
+        return $resource->withOperations($resource->getOperations());
     }
 }
