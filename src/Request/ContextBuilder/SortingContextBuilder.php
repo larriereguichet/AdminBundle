@@ -23,7 +23,7 @@ final readonly class SortingContextBuilder implements ContextBuilderInterface
         if (!$operation instanceof CollectionOperationInterface || $grid === null) {
             return $context;
         }
-        $context['sort'] = [];
+        $context['sort'] = null;
 
         $sortParameter = $grid->getSortParameter();
         $orderParameter = $grid->getOrderParameter();
@@ -33,7 +33,7 @@ final readonly class SortingContextBuilder implements ContextBuilderInterface
         }
 
         if ($request->query->has($orderParameter)) {
-            $context['order'] = $request->query->get($sortParameter);
+            $context['order'] = $request->query->get($orderParameter);
         }
 
         return $context;
