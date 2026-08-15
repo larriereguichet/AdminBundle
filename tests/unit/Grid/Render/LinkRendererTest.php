@@ -4,81 +4,72 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Grid\Render;
 
-use LAG\AdminBundle\Exception\InvalidLinkException;
 use LAG\AdminBundle\Metadata\Attribute\Link;
-use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\LinkUrlGeneratorInterface;
 use LAG\AdminBundle\View\Render\LinkRenderer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 
 final class LinkRendererTest extends TestCase
 {
     private LinkRenderer $renderer;
     private MockObject $urlGenerator;
-    private MockObject $validator;
     private MockObject $environment;
 
     #[Test]
     public function itRendersLink(): void
     {
-        $link = new Link();
+        $link = new Link(template: 'some_template.html.twig');
 
-        $violationList = $this->createMock(ConstraintViolationListInterface::class);
-        $violationList
+        $this->urlGenerator
             ->expects($this->once())
-            ->method('count')
-            ->willReturn(0)
-        ;
-        $this->validator
-            ->expects($this->once())
-            ->method('validate')
-            ->willReturn($violationList)
+            ->method('generateUrl')
+            ->with($link, null)
+            ->willReturn('/some-url')
         ;
         $this->environment
             ->expects($this->once())
             ->method('render')
+            ->with('some_template.html.twig')
+            ->willReturn('<a href="/some-url">link</a>')
         ;
 
-        $this->renderer->render($link);
+        $result = $this->renderer->render($link);
+
+        self::assertEquals('<a href="/some-url">link</a>', $result);
     }
 
     #[Test]
     public function itDoesNotRenderInvalidLink(): void
     {
-        $link = new Link();
+        $link = new Link(template: 'some_template.html.twig');
+        $data = new \stdClass();
 
-        $violationList = $this->createMock(ConstraintViolationListInterface::class);
-        $violationList
+        $this->urlGenerator
             ->expects($this->once())
-            ->method('count')
-            ->willReturn(1)
-        ;
-        $this->validator
-            ->expects($this->once())
-            ->method('validate')
-            ->willReturn($violationList)
+            ->method('generateUrl')
+            ->with($link, $data)
+            ->willReturn('/some-url')
         ;
         $this->environment
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('render')
+            ->willReturn('')
         ;
-        $this->expectException(InvalidLinkException::class);
 
-        $this->renderer->render($link);
+        $result = $this->renderer->render($link, $data);
+
+        self::assertEquals('', $result);
     }
 
     protected function setUp(): void
     {
         $this->environment = $this->createMock(Environment::class);
-        $this->urlGenerator = $this->createMock(OperationUrlGeneratorInterface::class);
-        $this->validator = $this->createMock(ValidatorInterface::class);
+        $this->urlGenerator = $this->createMock(LinkUrlGeneratorInterface::class);
         $this->renderer = new LinkRenderer(
             $this->urlGenerator,
-            $this->validator,
             $this->environment,
         );
     }

@@ -37,6 +37,7 @@ final readonly class LinkBuilder implements LinkBuilderInterface
             attributes: $this->attributeBuilder->buildAttributes($actionAttributes),
             property: $link,
             template: $link->getTemplate(),
+            component: $link->getComponent(),
             label: $link->getLabel(),
             data: $this->urlGenerator->generateUrl($link, $data),
         );

@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
+use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
 use LAG\AdminBundle\Grid\Registry\DataTransformerRegistryInterface;
 use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
-use LAG\AdminBundle\Grid\ViewFactory\DataCellBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\CellBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\DataCellBuilder;
 use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\Attribute\Text;
 use LAG\AdminBundle\Metadata\Attribute\Update;
-use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
 use LAG\AdminBundle\Resource\DataMapper\DataMapperInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\TwigComponent\ComponentAttributes;
+use Twig\Runtime\EscaperRuntime;
 
 final class DataCellViewBuilderTest extends TestCase
 {
@@ -32,7 +34,7 @@ final class DataCellViewBuilderTest extends TestCase
         $data = new \stdClass();
         $context = ['some_option' => 'some_value'];
 
-        $cell = new CellView(name: 'cell view');
+        $cell = new CellView(name: 'cell view', attributes: new ComponentAttributes([], new EscaperRuntime()));
         $operation = new Update();
 
         $dataTransformer = $this->createMock(DataTransformerInterface::class);
@@ -45,7 +47,7 @@ final class DataCellViewBuilderTest extends TestCase
         $this->dataMapper
             ->expects($this->once())
             ->method('getPropertyValue')
-            ->with($data, $property)
+            ->with($property, $data)
             ->willReturn('some data')
         ;
         $this->transformerRegistry
