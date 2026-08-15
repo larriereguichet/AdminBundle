@@ -14,27 +14,36 @@ use function Symfony\Component\String\u;
 
 final readonly class TextFilterApplicator extends AbstractApplicator
 {
-    public function supports(OperationInterface $operation, FilterInterface $filter, mixed $data, mixed $filterValue): bool
-    {
-        return parent::supports($operation, $filter, $data, $filterValue) && $filter instanceof TextFilter;
-    }
-
     /**
      * @param TextFilter $filter
      * @param QueryBuilder $data
      */
     public function apply(OperationInterface $operation, FilterInterface $filter, mixed $data, mixed $filterValue): void
     {
-        $rootAlias = $data->getRootAliases()[0];
-        $this->applyFilter($data, $filter, $filterValue, $rootAlias, $filter->getProperties());
+        if ($filter->getProperties() === null) {
+            return;
+        }
 
-        // TODO move in another filter ?
-        //        if (u($filter->getPropertyPath())->containsAny('.')) {
-        //            $this->applyJoinFilter($data, $filter, $filterValue, $rootAlias);
-        //        }
-        //
-        //        if ($metadata->hasField($filter->getPropertyPath())) {
-        //        }
+        $rootAlias = $data->getRootAliases()[0];
+        $grouped = [];
+
+        foreach ($filter->getProperties() as $property) {
+            if (!str_contains($property, '.')) {
+                $grouped[$rootAlias][] = $property;
+            } else {
+                [$joinAlias, $field] = $this->resolveJoin($data, $rootAlias, $property);
+                $grouped[$joinAlias][] = $field;
+            }
+        }
+
+        foreach ($grouped as $alias => $fields) {
+            $this->applyFilter($data, $filter, $filterValue, $alias, $fields);
+        }
+    }
+
+    protected function supportsFilter(FilterInterface $filter): bool
+    {
+        return $filter instanceof TextFilter;
     }
 
     /** @param string[] $properties */
@@ -116,23 +125,4 @@ final readonly class TextFilterApplicator extends AbstractApplicator
             $queryBuilder->setParameter($parameterName, $value);
         }
     }
-
-    //    private function applyJoinFilter(
-    //        QueryBuilder $queryBuilder,
-    //        FilterInterface $filter,
-    //        mixed $value,
-    //        string $alias
-    //    ): void {
-    //        // TODO join filters
-    //        $lastAlias = $alias;
-    //        $joins = u($filter->getPropertyPath())->split('.');
-    //        $field = array_pop($joins);
-    //
-    //        foreach ($joins as $join) {
-    //            $alias = $join;
-    //            $queryBuilder->innerJoin($lastAlias.'.'.$join, $alias);
-    //            $lastAlias = $alias;
-    //        }
-    //        $this->applyFilter($queryBuilder, $filter, $value, $alias, $field);
-    //    }
 }

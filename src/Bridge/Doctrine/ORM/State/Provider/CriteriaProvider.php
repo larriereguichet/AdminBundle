@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Bridge\Doctrine\ORM\State\Provider;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 
-final readonly class ResultProvider implements ProviderInterface
+final readonly class CriteriaProvider implements ProviderInterface
 {
     public function __construct(
         private ProviderInterface $provider,
@@ -22,19 +20,22 @@ final readonly class ResultProvider implements ProviderInterface
     {
         $data = $this->provider->provide($operation, $urlVariables, $context);
 
-        if ($data instanceof QueryBuilder) {
-            $data = $data->getQuery();
+        if (!$data instanceof QueryBuilder || !$operation instanceof CollectionOperationInterface) {
+            return $data;
         }
 
-        if ($data instanceof Query) {
-            if ($operation instanceof CollectionOperationInterface) {
-                return new ArrayCollection($data
-                    ->setMaxResults($operation->getLimit())
-                    ->getResult()
-                );
-            }
+        $criteria = $context['criteria'] ?? [];
 
-            return $data->getOneOrNullResult();
+        if ($criteria === []) {
+            return $data;
+        }
+
+        $rootAlias = $data->getRootAliases()[0];
+
+        foreach ($criteria as $field => $value) {
+            $paramName = 'criteria_'.$field;
+            $data->andWhere($rootAlias.'.'.$field.' = :'.$paramName);
+            $data->setParameter($paramName, $value);
         }
 
         return $data;
