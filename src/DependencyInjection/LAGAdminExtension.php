@@ -6,8 +6,8 @@ namespace LAG\AdminBundle\DependencyInjection;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
-use LAG\AdminBundle\Grid\Provider\GridProviderInterface;
 use LAG\AdminBundle\Grid\DataTransformer\DataTransformerInterface;
+use LAG\AdminBundle\Grid\Provider\GridProviderInterface;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
@@ -88,7 +88,7 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
         $container->prependExtensionConfig('framework', [
             'cache' => [
                 'pools' => [
-                    'lag_admin.cache' => null, // TODO composite cache
+                    'lag_admin.cache' => ['adapter' => 'cache.app'],
                 ],
             ],
         ]);
@@ -117,7 +117,6 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
                 '%lag_admin.media_storage%' => [
                     'adapter' => 'local',
                     'options' => ['directory' => '%lag_admin.media_directory%'],
-                    'public_url_generator' => 'lag_admin.filesystem.public_url_generator',
                 ],
             ],
         ]);

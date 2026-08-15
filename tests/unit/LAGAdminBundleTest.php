@@ -28,6 +28,11 @@ final class LAGAdminBundleTest extends TestCase
         $this->assertEquals(realpath(__DIR__.'/../..'), $this->bundle->getPath());
     }
 
+    public function testGetContainerExtension(): void
+    {
+        self::assertInstanceOf(\LAG\AdminBundle\DependencyInjection\LAGAdminExtension::class, $this->bundle->getContainerExtension());
+    }
+
     protected function setUp(): void
     {
         $this->bundle = new LAGAdminBundle();
