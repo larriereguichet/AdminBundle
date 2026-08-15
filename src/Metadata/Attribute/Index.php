@@ -27,6 +27,7 @@ class Index extends CollectionOperation
      * @param array<string, mixed>|null $validationContext
      * @param array<string, mixed>|null $normalizationContext
      * @param array<string, mixed>|null $denormalizationContext
+     * @param array<string, string> $orderBy
      * @param array<int|string, mixed> $filters
      * @param array<string, mixed> $gridOptions
      * @param array<string, mixed> $filterFormOptions
@@ -73,6 +74,7 @@ class Index extends CollectionOperation
         bool $pagination = true,
         int $itemsPerPage = 25,
         string $pageParameter = 'page',
+        array $orderBy = [],
         array $filters = [],
         ?string $grid = null,
         array $gridOptions = [],
@@ -125,6 +127,7 @@ class Index extends CollectionOperation
             pagination: $pagination,
             itemsPerPage: $itemsPerPage,
             pageParameter: $pageParameter,
+            orderBy: $orderBy,
             filters: $filters,
             grid: $grid,
             gridOptions: $gridOptions,

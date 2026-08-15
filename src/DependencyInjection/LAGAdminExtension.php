@@ -83,12 +83,19 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
         $loader->load('services/bridges/quill_js.php');
     }
 
+    /**
+     * The cached resources are derived entirely from the code — the PHP attributes and the bundle configuration —
+     * so they belong to the system pool, which lives in the kernel cache directory and is therefore wiped by
+     * cache:clear. The application pool survives it by design, which left a deployment serving metadata built by
+     * the previous version of the code: any metadata property added since was then missing from the unserialized
+     * object, and a typed property with no value throws on first access.
+     */
     private function prependCacheConfiguration(ContainerBuilder $container): void
     {
         $container->prependExtensionConfig('framework', [
             'cache' => [
                 'pools' => [
-                    'lag_admin.cache' => ['adapter' => 'cache.app'],
+                    'lag_admin.cache' => ['adapter' => 'cache.system'],
                 ],
             ],
         ]);
