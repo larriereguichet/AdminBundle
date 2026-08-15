@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\View\Component\Cell;
+namespace LAG\AdminBundle\Twig\Component\Cell;
 
+use LAG\AdminBundle\Grid\View\CellView;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(
@@ -12,8 +13,8 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 )]
 class Link
 {
-    public string $url;
-    public string $text;
+    public ?string $url = null;
+    public ?string $text = null;
     public ?string $icon = null;
     public bool $translation = true;
     public ?string $translationDomain = null;
@@ -23,14 +24,14 @@ class Link
     public ?string $suffix = null;
     public ?int $length = null;
 
-    public function mount(mixed $data, ?string $text = null): void
+    public function mount(CellView $cell): void
     {
-        $this->url = $data;
+        $this->url = \is_string($cell->data) ? $cell->data : '';
 
-        if ($text === null) {
-            $this->text = $this->url;
+        if ($cell->label !== null) {
+            $this->text = $cell->label;
         } else {
-            $this->text = $text;
+            $this->text = $this->url;
         }
     }
 }

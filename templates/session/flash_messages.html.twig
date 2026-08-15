@@ -1,8 +1,22 @@
-{% for notice_level in ['success', 'error', 'info', 'warning'] %}
-    {% for flash in app.session.flashbag.get(notice_level) %}
-        {% set notice_level = (notice_level == 'error') ? 'danger' : notice_level %}
-        <div class="alert {{ 'alert-' ~ notice_level }} mt-1 mb-1">
-            {{ flash|trans({}, 'flashes') }}
+{% for messageType in ['success', 'error', 'info', 'warning'] %}
+    {% for message in app.session.flashbag.get(messageType) %}
+        {% set alertType = (messageType == 'error') ? 'danger' : messageType %}
+        {% set alertClass = cva({
+            base: 'alert my-1 mb-0',
+            variants: {
+                type: {success: 'alert-success', danger: 'alert-danger', info: 'alert-info', warning: 'alert-warning'}
+            }
+        }) %}
+
+        <div class="toast show align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body flex-grow-1">
+                    <div class="{{ alertClass.apply({type: alertType}) }}">
+                        {{ message|trans({}, 'flashes') }}
+                    </div>
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
         </div>
     {% endfor %}
 {% endfor %}

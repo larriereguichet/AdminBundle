@@ -1,7 +1,8 @@
+{% trans_default_domain property.translationDomain %}
 {% if data %}
     <i class="bi bi-check-circle-fill text-success"
-       title="{{ 'lag_admin.ui.yes'|trans({}, options.translationDomain) }}"></i>
+       title="{{ 'lag_admin.ui.yes'|trans }}"></i>
 {% else %}
     <i class="bi bi-x-circle-fill text-danger"
-       title="{{ 'lag_admin.ui.no'|trans({}, options.translationDomain) }}"></i>
+       title="{{ 'lag_admin.ui.no'|trans }}"></i>
 {% endif %}

@@ -1,5 +1,5 @@
 <div {{ attributes }}>
-    {% if options.prefix %}{{ options.prefix }}{% endif %}
+    {% if property.prefix %}{{ property.prefix }}{% endif %}
     {{ data|lag_admin_rich_text }}
-    {% if options.suffix %}{{ options.suffix }}{% endif %}
+    {% if property.suffix %}{{ property.suffix }}{% endif %}
 </div>

@@ -1,5 +1,5 @@
 <p {{ attributes }}>
-    {% if options.prefix %}{{ options.prefix }}{% endif %}
-    {{ data|default(options.empty)|u.truncate(options.length, options.replace)|striptags }}
-    {% if options.suffix %}{{ options.suffix }}{% endif %}
+    {% if property.prefix %}{{ property.prefix }}{% endif %}
+    {{ data|default(property.empty)|u.truncate(property.length, property.replace)|striptags }}
+    {% if property.suffix %}{{ property.suffix }}{% endif %}
 </p>

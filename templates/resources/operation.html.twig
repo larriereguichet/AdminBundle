@@ -1,6 +1,6 @@
 {% extends baseTemplate|default('@LAGAdmin/base.html.twig') %}
 
-{% block page_title %}{{ operation.title|trans({}, lag_admin.resource.translationDomain) }} - {{ parent() }}{% endblock %}
+{% block page_title %}{% if operation.title %}{{ operation.title|trans({}, lag_admin.resource.translationDomain) }} - {% endif %}{{ parent() }}{% endblock %}
 
 {% block title %}
     {% if operation.title %}
@@ -8,12 +8,16 @@
             {{ operation.title|trans({}, lag_admin.resource.translationDomain) }}
         </h1>
     {% endif %}
+
+    {% if operation.description %}
+        <p class="fs-5">{{ operation.description }}</p>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
     <div class="admin-container admin-{{ resource.name }} admin-{{ operation.name }}">
         {% block form %}
-            {% if form is defined %}
+            {% if form %}
                 {{ form_start(form) }}
 
                 {% block form_content %}

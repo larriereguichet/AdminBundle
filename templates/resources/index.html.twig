@@ -3,28 +3,36 @@
 {% set grid = grid|default(false) %}
 
 {% block content %}
-    <div class="admin-index admin-{{ resource.name }}">
+    <div class="admin-index admin-{{ resource.shortName }}">
         {% block collection_links %}
-            <twig:lag_admin:links links="{{ operation.collectionLinks }}"></twig:lag_admin:links>
+            <twig:lag_admin:links links="{{ operation.collectionLinks }}" />
         {% endblock %}
 
         {% block filters %}
+            {# TODO #}
 {#            {% if filterForm %}<twig:lag_admin:filters form="{{ filterForm }}"></twig:lag_admin:filters>{% endif %}#}
         {% endblock %}
 
         {% block grid %}
             {% if grid %}
-                <twig:lag_admin:templated_grid
+                {% if batchForm is defined and batchForm %}
+                    {{ form_start(batchForm, {'action': app.request.uri, 'method': 'POST', 'attr': {'class': 'admin-batch-form'}}) }}
+                {% endif %}
+
+                <twig:lag_admin:grid
                         grid="{{ grid }}"
-                        template="{{ grid.template }}"
-                        data="{{ data }}"
-                        attributes="{{ grid.attributes }}" />
+                        data="{{ data }}" />
+
+                {% if batchForm is defined and batchForm %}
+                    {% include '@LAGAdmin/resources/index/_batch.html.twig' with {'batchForm': batchForm} %}
+                    {{ form_end(batchForm) }}
+                {% endif %}
             {% endif %}
         {% endblock %}
 
         {% block pagination %}
             {% if lag_admin_is_pager(data) and data.haveToPaginate %}
-                <div class="admin-pagination mt-4">
+                <div class="admin-pagination my-4">
                     <div class="pagination justify-content-center">
                         {{ pagerfanta(data, {
                             page: data.currentPage,

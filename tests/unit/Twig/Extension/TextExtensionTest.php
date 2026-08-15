@@ -18,7 +18,6 @@ final class TextExtensionTest extends TestCase
         $extension = new RichTextExtension();
 
         self::assertEquals([
-            new TwigFilter('lag_admin_pluralize', [RichTextRuntime::class, 'pluralize']),
             new TwigFilter('lag_admin_rich_text', [RichTextRuntime::class, 'renderRichText'], ['is_safe' => ['html']]),
         ], $extension->getFilters());
     }

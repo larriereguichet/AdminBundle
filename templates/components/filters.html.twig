@@ -1,3 +1,4 @@
+{% trans_default_domain 'admin' %}
 <div class="row">
     <div class="col-12">
         <a href="#filters"
@@ -5,11 +6,11 @@
            role="button"
            aria-expanded="false"
            aria-controls="filters">
-            {{ 'lag_admin.ui.show_filters'|trans({}, 'admin') }}
+            {{ 'lag_admin.ui.show_filters'|trans }}
         </a>
 
         <div id="filters" class="collapse">
-            <h4>{{ 'lag_admin.ui.filter'|trans({}, 'admin') }}</h4>
+            <h4>{{ 'lag_admin.ui.filter'|trans }}</h4>
             {{ form_start(form) }}
 
             {{ form_row(form) }}
@@ -18,12 +19,12 @@
                 <a href="{{ app.request.pathInfo }}"
                    class="btn btn-outline-secondary">
                     <i class="fas fa-eraser"></i>
-                    {{ 'lag_admin.ui.reset'|trans({}, 'admin') }}
+                    {{ 'lag_admin.ui.reset'|trans }}
                 </a>
 
                 <button type="submit"
                         class="btn btn-success">
-                    {{ 'lag_admin.ui.filter'|trans({}, 'admin') }}
+                    {{ 'lag_admin.ui.filter'|trans }}
                     <i class="fas fa-filter"></i>
                 </button>
             </div>

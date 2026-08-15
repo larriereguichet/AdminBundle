@@ -1,0 +1,11 @@
+{% extends '@LAGAdmin/components/grid.html.twig' %}
+
+{% set attributes = attributes.defaults({'class': 'row'}) %}
+
+{% block rows %}
+    {% for row in grid.rows %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <twig:lag_admin:row row="{{ row }}" class="card h-100" />
+        </div>
+    {% endfor %}
+{% endblock %}
