@@ -28,7 +28,7 @@ final class OperationVoter extends Voter
     /** @param OperationInterface $subject */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
-        $permissions = $subject->getPermissions() ?? [];
+        $permissions = $subject->getRoles() ?? [];
 
         // When no roles are defined, allow user
         if ($permissions === []) {
@@ -36,7 +36,7 @@ final class OperationVoter extends Voter
         }
 
         // User must have at least one of the configured roles
-        foreach ($subject->getPermissions() as $permission) {
+        foreach ($subject->getRoles() as $permission) {
             if ($this->security->isGranted($permission, $token->getUser())) {
                 return true;
             }

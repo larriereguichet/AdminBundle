@@ -6,7 +6,7 @@ namespace LAG\AdminBundle\Tests\Unit\EventListener\Security;
 
 use LAG\AdminBundle\EventListener\Security\AccessListener;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Resource\Context\OperationContextInterface;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Security\Voter\OperationVoter;
 use LAG\AdminBundle\Tests\Unit\DataProviderTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -25,7 +25,7 @@ final class AccessListenerTest extends TestCase
     use DataProviderTestTrait;
 
     private AccessListener $listener;
-    private MockObject $operationContext;
+    private MockObject $resourceContext;
     private MockObject $security;
 
     #[Test]
@@ -33,15 +33,15 @@ final class AccessListenerTest extends TestCase
     public function itAllowsOperationAccess(OperationInterface $operation): void
     {
         $request = new Request();
-        $event = new RequestEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->createStub(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
         $operation = $operation->withPermissions(['ROLE_ADMIN']);
 
-        $this->operationContext
+        $this->resourceContext
             ->expects($this->once())
             ->method('hasOperation')
             ->willReturn(true)
         ;
-        $this->operationContext
+        $this->resourceContext
             ->expects($this->once())
             ->method('getOperation')
             ->willReturn($operation)
@@ -60,15 +60,15 @@ final class AccessListenerTest extends TestCase
     public function itDeniesOperationAccess(OperationInterface $operation): void
     {
         $request = new Request();
-        $event = new RequestEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->createStub(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
         $operation = $operation->withPermissions(['ROLE_ADMIN']);
 
-        $this->operationContext
+        $this->resourceContext
             ->expects($this->once())
             ->method('hasOperation')
             ->willReturn(true)
         ;
-        $this->operationContext
+        $this->resourceContext
             ->expects($this->once())
             ->method('getOperation')
             ->willReturn($operation)
@@ -87,14 +87,14 @@ final class AccessListenerTest extends TestCase
     public function itDoesNotApplyWithoutOperation(): void
     {
         $request = new Request();
-        $event = new RequestEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->createStub(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
 
-        $this->operationContext
+        $this->resourceContext
             ->expects($this->once())
             ->method('hasOperation')
             ->willReturn(false)
         ;
-        $this->operationContext
+        $this->resourceContext
             ->expects($this->never())
             ->method('getOperation')
         ;
@@ -107,10 +107,10 @@ final class AccessListenerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->operationContext = $this->createMock(OperationContextInterface::class);
+        $this->resourceContext = $this->createMock(ResourceContextInterface::class);
         $this->security = $this->createMock(Security::class);
         $this->listener = new AccessListener(
-            $this->operationContext,
+            $this->resourceContext,
             $this->security,
         );
     }
