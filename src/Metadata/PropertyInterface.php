@@ -44,6 +44,16 @@ interface PropertyInterface extends RolesOwnerInterface, ConditionalInterface
     public function getTemplate(): ?string;
 
     /**
+     * Return the Twig component name used to render this property.
+     */
+    public function getComponent(): ?string;
+
+    /**
+     * Return the translation domain used to translate property data.
+     */
+    public function getTranslationDomain(): ?string;
+
+    /**
      * Return true if data can be sorted using this property.
      */
     public function isSortable(): bool;

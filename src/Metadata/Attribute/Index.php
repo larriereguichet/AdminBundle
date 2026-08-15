@@ -14,10 +14,29 @@ use LAG\AdminBundle\Controller\Resource\IndexResources;
  */
 class Index extends CollectionOperation
 {
+    /**
+     * @param array<string, mixed> $context
+     * @param array<string>|null $permissions
+     * @param array<string, mixed>|null $routeParameters
+     * @param array<string> $methods
+     * @param array<string, mixed> $redirectRouteParameters
+     * @param array<string, mixed>|null $formOptions
+     * @param array<string>|null $identifiers
+     * @param array<string, mixed>|null $contextualLinks
+     * @param array<string, mixed>|null $itemLinks
+     * @param array<string, mixed>|null $validationContext
+     * @param array<string, mixed>|null $normalizationContext
+     * @param array<string, mixed>|null $denormalizationContext
+     * @param array<int|string, mixed> $filters
+     * @param array<string, mixed> $gridOptions
+     * @param array<string, mixed> $filterFormOptions
+     * @param string[] $batchOperations
+     * @param array<int|string, mixed>|null $collectionLinks
+     */
     public function __construct(
         string $name = 'index',
         array $context = [],
-        ?string $title = null,
+        string|false|null $title = null,
         ?string $description = null,
         ?string $icon = null,
         ?string $template = '@LAGAdmin/resources/index.html.twig',
@@ -46,20 +65,20 @@ class Index extends CollectionOperation
         ?array $denormalizationContext = null,
         ?string $input = null,
         ?string $output = null,
+        ?string $normalizationInput = null,
+        ?string $normalizationOutput = null,
         ?string $workflow = null,
         ?string $workflowTransition = null,
+        ?int $limit = null,
         bool $pagination = true,
         int $itemsPerPage = 25,
         string $pageParameter = 'page',
-        array $criteria = [],
-        array $orderBy = [],
         array $filters = [],
         ?string $grid = null,
         array $gridOptions = [],
         ?string $filterForm = null,
         array $filterFormOptions = [],
-        ?string $collectionForm = null,
-        ?array $collectionFormOptions = null,
+        array $batchOperations = [],
         ?array $collectionLinks = null,
         bool $embedded = false,
         ?string $flashMessage = null,
@@ -96,23 +115,23 @@ class Index extends CollectionOperation
             denormalizationContext: $denormalizationContext,
             input: $input,
             output: $output,
+            normalizationInput: $normalizationInput,
+            normalizationOutput: $normalizationOutput,
             workflow: $workflow,
             workflowTransition: $workflowTransition,
             embedded: $embedded,
             flashMessage: $flashMessage,
+            limit: $limit,
             pagination: $pagination,
             itemsPerPage: $itemsPerPage,
             pageParameter: $pageParameter,
-            criteria: $criteria,
-            orderBy: $orderBy,
             filters: $filters,
             grid: $grid,
             gridOptions: $gridOptions,
             collectionLinks: $collectionLinks,
             filterForm: $filterForm,
             filterFormOptions: $filterFormOptions,
-            collectionForm: $collectionForm,
-            collectionFormOptions: $collectionFormOptions,
+            batchOperations: $batchOperations,
         );
     }
 }

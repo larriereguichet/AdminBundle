@@ -70,4 +70,7 @@ interface ResourceMetadataInterface extends ResourceInterface
     public function withInput(?string $input): self;
 
     public function withOutput(?string $output): self;
+
+    /** @param array<string, mixed> $context */
+    public function withContext(array $context): self;
 }

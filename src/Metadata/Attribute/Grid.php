@@ -26,8 +26,8 @@ class Grid implements GridInterface, GridMetadataInterface
         #[Assert\NotBlank(message: 'The grid name should not be empty')]
         private ?string $name = null,
 
-        #[Assert\NotBlank(message: 'The grid title should not be empty. Use null instead', allowNull: true)]
-        private ?string $title = null,
+        #[Assert\Length(max: 255, maxMessage: 'The grid title should be shorter than 255 characters')]
+        private string|false|null $title = null,
 
         #[Assert\NotBlank(message: 'The grid type should not be empty')]
         private ?string $type = null,
@@ -35,7 +35,9 @@ class Grid implements GridInterface, GridMetadataInterface
         #[Assert\NotBlank(message: 'The grid template should not be an empty string', allowNull: true)]
         private ?string $template = null,
 
-        #[Assert\Count(min: 1, minMessage: 'The grid should have at least one property')]
+        #[Assert\NotBlank(message: 'The grid component should not be an empty string', allowNull: true)]
+        private ?string $component = null,
+
         private array $properties = [],
 
         private array $attributes = [],
@@ -77,12 +79,12 @@ class Grid implements GridInterface, GridMetadataInterface
         return $self;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string|false|null
     {
         return $this->title;
     }
 
-    public function withTitle(?string $title): self
+    public function withTitle(string|false|null $title): self
     {
         $self = clone $this;
         $self->title = $title;
@@ -305,5 +307,18 @@ class Grid implements GridInterface, GridMetadataInterface
     public function setUseHeaders(?bool $useHeaders): void
     {
         $this->useHeaders = $useHeaders;
+    }
+
+    public function getComponent(): ?string
+    {
+        return $this->component;
+    }
+
+    public function withComponent(?string $component): self
+    {
+        $self = clone $this;
+        $self->component = $component;
+
+        return $self;
     }
 }

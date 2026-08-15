@@ -25,6 +25,8 @@ class Collection extends Property
         ?array $permissions = null,
         ?string $condition = null,
         ?string $sortingPath = null,
+        ?string $component = null,
+        ?string $translationDomain = null,
 
         #[Assert\NotNull(message: 'The collection should have an property for each entry')]
         private ?PropertyInterface $entryProperty = null,
@@ -44,6 +46,8 @@ class Collection extends Property
             permissions: $permissions,
             condition: $condition,
             sortingPath: $sortingPath,
+            component: $component,
+            translationDomain: $translationDomain,
         );
     }
 

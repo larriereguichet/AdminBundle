@@ -8,7 +8,7 @@ interface GridMetadataInterface extends GridInterface
 {
     public function withName(?string $name): self;
 
-    public function withTitle(?string $title): self;
+    public function withTitle(string|false|null $title): self;
 
     public function withType(?string $type): self;
 

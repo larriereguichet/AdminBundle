@@ -29,14 +29,21 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
      * @param array<string, mixed>|null $validationContext
      * @param array<string, mixed>|null $normalizationContext
      * @param array<string, mixed>|null $denormalizationContext
+     * @param array<string, mixed> $context
      */
     public function __construct(
-        // TODO check for space, dot and special characters, lowercase and should not contains a dot
         #[Assert\NotBlank(message: 'The resource name should not be null or empty')]
+        #[Assert\Regex(
+            pattern: '/^[a-z][a-z0-9_]*$/',
+            message: 'The resource name should only contain lowercase letters, digits and underscores, and start with a letter',
+        )]
         private ?string $shortName = null,
 
-        // TODO check for space, dot and special characters, lowercase and should not contains a dot
         #[Assert\NotBlank(message: 'The application name should not be empty')]
+        #[Assert\Regex(
+            pattern: '/^[a-z][a-z0-9_]*$/',
+            message: 'The application name should only contain lowercase letters, digits and underscores, and start with a letter',
+        )]
         private string $application = 'admin',
 
         #[Assert\NotBlank(message: 'The resource class should not be null or empty')]
@@ -108,6 +115,8 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
         private ?string $input = null,
 
         private ?string $output = null,
+
+        private array $context = [],
     ) {
         foreach ($properties as $index => $property) {
             $this->properties[$property->getName() ?? $index] = $property;
@@ -201,7 +210,7 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
         return $self;
     }
 
-    /** @return array<int, string, OperationInterface> */
+    /** @return array<string, OperationInterface> */
     public function getOperations(): array
     {
         return $this->operations;
@@ -232,13 +241,15 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
         );
     }
 
+    /** @param array<OperationMetadataInterface> $operations */
     public function withOperations(array $operations): self
     {
         $self = clone $this;
         $self->operations = [];
 
         foreach ($operations as $operation) {
-            $self->operations[$operation->getName()] = $operation;
+            $linked = $operation->setResource($self);
+            $self->operations[$linked->getName()] = $linked;
         }
 
         return $self;
@@ -264,8 +275,8 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
         $self = clone $this;
         $self->properties = [];
 
-        foreach ($properties as $property) {
-            $self->properties[$property->getName()] = $property;
+        foreach ($properties as $index => $property) {
+            $self->properties[$property->getName() ?? $index] = $property;
         }
 
         return $self;
@@ -520,6 +531,19 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
     {
         $self = clone $this;
         $self->output = $output;
+
+        return $self;
+    }
+
+    public function getContext(): array
+    {
+        return $this->context;
+    }
+
+    public function withContext(array $context): self
+    {
+        $self = clone $this;
+        $self->context = $context;
 
         return $self;
     }
