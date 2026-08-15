@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Metadata\Factory;
 
+use LAG\AdminBundle\Exception\Operation\UnsupportedLinkConditionException;
 use LAG\AdminBundle\Metadata\Attribute\Create;
 use LAG\AdminBundle\Metadata\Attribute\Delete;
 use LAG\AdminBundle\Metadata\Attribute\Index;
@@ -169,6 +170,43 @@ final class OperationsLinkMetadataFactoryTest extends TestCase
         self::assertCount(1, $contextualLinks);
         self::assertInstanceOf(Link::class, $contextualLinks[0]);
         self::assertSame('admin.book.create', $contextualLinks[0]->getOperation());
+    }
+
+    #[Test]
+    public function itRejectsAConditionOnAContextualLink(): void
+    {
+        $resource = $this->buildResource(new Resource(
+            shortName: 'book',
+            application: 'admin',
+            resourceClass: \stdClass::class,
+            operations: [new Index(contextualLinks: [new Link(name: 'export', condition: 'data.count() > 0')])],
+        ));
+        $metadataFactory = $this->createStub(ResourceMetadataFactoryInterface::class);
+        $metadataFactory->method('createMetadata')->willReturn($resource);
+
+        $this->expectException(UnsupportedLinkConditionException::class);
+        // the message has to say where the condition would work instead, otherwise it only moves the puzzle
+        $this->expectExceptionMessage('only evaluated on item links');
+
+        (new OperationsLinkMetadataFactory($metadataFactory))->createMetadata('book');
+    }
+
+    #[Test]
+    public function itAcceptsAConditionOnAnItemLink(): void
+    {
+        $resource = $this->buildResource(new Resource(
+            shortName: 'book',
+            application: 'admin',
+            resourceClass: \stdClass::class,
+            operations: [new Index(itemLinks: [new Link(name: 'archive', condition: 'data.isArchivable()')])],
+        ));
+        $metadataFactory = $this->createStub(ResourceMetadataFactoryInterface::class);
+        $metadataFactory->method('createMetadata')->willReturn($resource);
+
+        $result = (new OperationsLinkMetadataFactory($metadataFactory))->createMetadata('book');
+
+        $operation = current($result->getOperations());
+        self::assertSame('data.isArchivable()', current($operation->getItemLinks())->getCondition());
     }
 
     private function buildResource(Resource $resource): ResourceMetadataInterface
