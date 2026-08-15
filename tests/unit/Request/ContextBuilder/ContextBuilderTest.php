@@ -19,9 +19,15 @@ final class ContextBuilderTest extends TestCase
     {
         $operation = new Show(context: ['a_key' => 'a_value']);
 
-        $context = $this->provider->buildContext($operation, new Request());
+        $context = $this->provider->buildContext(new Request(), $operation);
 
         self::assertEquals(['a_key' => 'a_value'], $context);
+    }
+
+    #[Test]
+    public function itSupports(): void
+    {
+        self::assertTrue($this->provider->supports());
     }
 
     protected function setUp(): void
