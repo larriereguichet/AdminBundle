@@ -46,11 +46,19 @@ jobs:
             -   name: Copy assets files for functionnal tests
                 run: mkdir -p tests/app/public/build && cp -r public/* tests/app/public/build
 
+            -   name: Run phpunit unit test suite
+                run: vendor/bin/phpunit -c phpunit.xml.dist --testsuite "AdminBundle Test Suite"
+
+                # The functional suite boots the kernel, so it only passes once a change is complete. Feature
+                # branches are reviewed as a stack of partial steps, where an intermediate branch is not expected
+                # to run the application — running it there would report a failure the reviewer cannot act on.
             -   name: Run docker compose
+                if: ${{ github.ref_name == 'master' || github.ref_name == 'feat/v2.0' }}
                 run: docker compose up -d database && sleep 10 && docker compose logs database
 
-            -   name: Run phpunit
-                run: vendor/bin/phpunit -c phpunit.xml.dist
+            -   name: Run phpunit functional test suite
+                if: ${{ github.ref_name == 'master' || github.ref_name == 'feat/v2.0' }}
+                run: vendor/bin/phpunit -c phpunit.xml.dist --testsuite "AdminBundle Functional Test Suite"
 
             -   name: Run php-cs-fixer
                 run: PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --dry-run --using-cache=no --verbose --diff --allow-risky=yes --config .php-cs-fixer.dist.php
@@ -65,6 +73,7 @@ jobs:
                 run: vendor/bin/rector --dry-run
 
             -   name: Stop docker compose
+                if: ${{ github.ref_name == 'master' || github.ref_name == 'feat/v2.0' }}
                 run: docker compose down
 
             -   name: Cache vendors
