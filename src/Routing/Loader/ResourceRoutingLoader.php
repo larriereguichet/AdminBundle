@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Routing\Loader;
 
 use LAG\AdminBundle\Metadata\ResourceInterface;
-use LAG\AdminBundle\Request\ContextBuilder\PartialContextBuilder;
 use LAG\AdminBundle\Resource\Factory\ResourceCollectionFactoryInterface;
-use LAG\AdminBundle\Routing\UrlGenerator\PathGeneratorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -21,7 +19,6 @@ final class ResourceRoutingLoader extends Loader
     public function __construct(
         private readonly string $requestParameter,
         private readonly ResourceCollectionFactoryInterface $resourceCollectionFactory,
-        private readonly PathGeneratorInterface $pathGenerator,
     ) {
         parent::__construct();
     }
@@ -56,7 +53,11 @@ final class ResourceRoutingLoader extends Loader
         }
 
         foreach ($resource->getOperations() as $operation) {
-            $path = $this->pathGenerator->generatePath($operation);
+            $path = (string) u()
+                ->append($operation->getPath())
+                ->ensureStart('/')
+                ->trimEnd('/')
+            ;
             $defaults = [
                 '_controller' => $operation->getController(),
                 $this->requestParameter => $operation->getName(),
@@ -64,18 +65,6 @@ final class ResourceRoutingLoader extends Loader
 
             $route = new Route($path, $defaults, [], $identifiers, null, [], $operation->getMethods());
             $routes->add($operation->getRoute(), $route);
-
-            if ($operation->isEmbedded()) {
-                $defaults[PartialContextBuilder::EMBEDDED_REQUEST_ATTRIBUTE] = true;
-                $embeddedRouteName = (string) u($operation->getRoute())->append('_embedded');
-
-                $routes->add($embeddedRouteName, new Route(
-                    path: $this->pathGenerator->generateEmbeddedPath($operation),
-                    defaults: $defaults,
-                    options: $identifiers,
-                    methods: $operation->getMethods(),
-                ));
-            }
         }
     }
 }

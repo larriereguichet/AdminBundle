@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\Routing\UrlGenerator;
+namespace LAG\AdminBundle\Routing\Mapper;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 final readonly class ParametersMapper implements ParametersMapperInterface
 {
-    public function map(mixed $data, array $routeParameters = []): array
+    public function mapObjectToRouteParameters(mixed $data, array $routeParameters = []): array
     {
         if ($data === null || \count($routeParameters) === 0) {
             return [];
