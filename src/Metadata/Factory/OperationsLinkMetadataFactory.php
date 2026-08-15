@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata\Factory;
 
+use LAG\AdminBundle\Exception\Operation\UnsupportedLinkConditionException;
 use LAG\AdminBundle\Metadata\Attribute\Link;
+use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\CollectionOperationMetadataInterface;
 use LAG\AdminBundle\Metadata\ResourceMetadataInterface;
 
@@ -70,6 +72,15 @@ final readonly class OperationsLinkMetadataFactory implements ResourceMetadataFa
                 $operation->getItemLinks() ?? $itemLinks,
             );
 
+            // Only item links reach the condition matcher: they are built per row, so there is a subject to evaluate
+            // against. The other buckets are rendered once for the whole collection, and used to accept a condition
+            // and drop it without a word
+            $this->assertNoCondition($operation->getName(), $contextualLinks, 'contextual');
+
+            if ($operation instanceof CollectionOperationInterface) {
+                $this->assertNoCondition($operation->getName(), $operation->getCollectionLinks() ?? [], 'collection');
+            }
+
             $operations[$operation->getShortName()] = $operation
                 ->withContextualLinks($contextualLinks)
                 ->withItemLinks($itemLinks)
@@ -77,6 +88,16 @@ final readonly class OperationsLinkMetadataFactory implements ResourceMetadataFa
         }
 
         return $resource->withOperations($operations);
+    }
+
+    /** @param array<int|string, Link|string> $links */
+    private function assertNoCondition(string $operationName, array $links, string $bucket): void
+    {
+        foreach ($links as $link) {
+            if ($link instanceof Link && $link->getCondition() !== null) {
+                throw new UnsupportedLinkConditionException($operationName, (string) $link->getName(), $bucket);
+            }
+        }
     }
 
     /**
