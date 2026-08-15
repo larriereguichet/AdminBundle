@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Twig\Globals;
 
-use LAG\AdminBundle\Metadata\Attribute\Application;
 use LAG\AdminBundle\Metadata\Attribute\Index;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
-use LAG\AdminBundle\Resource\Context\ApplicationContextInterface;
-use LAG\AdminBundle\Resource\Context\OperationContextInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Twig\Globals\LAGAdminGlobal;
 use PHPUnit\Framework\Attributes\Test;
@@ -18,30 +15,7 @@ use PHPUnit\Framework\TestCase;
 final class LAGAdminGlobalTest extends TestCase
 {
     private LAGAdminGlobal $adminContext;
-    private MockObject $applicationContext;
     private MockObject $resourceContext;
-    private MockObject $operationContext;
-
-    #[Test]
-    public function itReturnsTheCurrentApplication(): void
-    {
-        $expectedApplication = new Application(name: 'my_application');
-
-        $this->applicationContext
-            ->expects($this->once())
-            ->method('hasApplication')
-            ->willReturn(true)
-        ;
-        $this->applicationContext
-            ->expects($this->once())
-            ->method('getApplication')
-            ->willReturn($expectedApplication)
-        ;
-
-        $application = $this->adminContext->getApplication();
-
-        self::assertEquals($expectedApplication, $application);
-    }
 
     #[Test]
     public function itReturnsTheCurrentResource(): void
@@ -69,12 +43,12 @@ final class LAGAdminGlobalTest extends TestCase
     {
         $expectedOperation = new Index(name: 'my_operation');
 
-        $this->operationContext
+        $this->resourceContext
             ->expects($this->once())
             ->method('hasOperation')
             ->willReturn(true)
         ;
-        $this->operationContext
+        $this->resourceContext
             ->expects($this->once())
             ->method('getOperation')
             ->willReturn($expectedOperation)
@@ -85,15 +59,27 @@ final class LAGAdminGlobalTest extends TestCase
         self::assertEquals($expectedOperation, $operation);
     }
 
+    #[Test]
+    public function itReturnsNullWhenNoResource(): void
+    {
+        $this->resourceContext->method('hasResource')->willReturn(false);
+        $this->resourceContext->expects($this->never())->method('getResource');
+
+        self::assertNull($this->adminContext->getResource());
+    }
+
+    #[Test]
+    public function itReturnsNullWhenNoOperation(): void
+    {
+        $this->resourceContext->method('hasOperation')->willReturn(false);
+        $this->resourceContext->expects($this->never())->method('getOperation');
+
+        self::assertNull($this->adminContext->getOperation());
+    }
+
     protected function setUp(): void
     {
-        $this->applicationContext = $this->createMock(ApplicationContextInterface::class);
         $this->resourceContext = $this->createMock(ResourceContextInterface::class);
-        $this->operationContext = $this->createMock(OperationContextInterface::class);
-        $this->adminContext = new LAGAdminGlobal(
-            $this->applicationContext,
-            $this->resourceContext,
-            $this->operationContext,
-        );
+        $this->adminContext = new LAGAdminGlobal($this->resourceContext);
     }
 }

@@ -19,7 +19,7 @@ final class GridTest extends TestCase
         self::assertNull($grid->getTitle());
         self::assertNull($grid->getType());
         self::assertNull($grid->getTemplate());
-        self::assertSame('lag:table_grid', $grid->getComponent());
+        self::assertSame('lag_admin:table_grid', $grid->getComponent());
         self::assertSame(['title'], $grid->getProperties());
         self::assertSame([], $grid->getAttributes());
         self::assertSame([], $grid->getRowAttributes());
@@ -72,9 +72,9 @@ final class GridTest extends TestCase
         self::assertNotSame($grid, $new);
         self::assertSame('@App/my_grid.html.twig', $new->getTemplate());
 
-        $new = $grid->withComponent('lag:card_grid');
+        $new = $grid->withComponent('lag_admin:card_grid');
         self::assertNotSame($grid, $new);
-        self::assertSame('lag:card_grid', $new->getComponent());
+        self::assertSame('lag_admin:card_grid', $new->getComponent());
 
         $new = $grid->withProperties(['author', 'title']);
         self::assertNotSame($grid, $new);

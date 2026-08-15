@@ -1,3 +1,4 @@
+{% trans_default_domain header.translationDomain %}
 {% if header.sortable %}
     {% set order = 'asc' %}
 
@@ -8,7 +9,7 @@
     {# TODO keep the existing query ? #}
     <a href="?sort={{ header.name }}&order={{ order }}"
        class="text-dark">
-        {{ header.label|trans({}, header.translationDomain) }}
+        {{ header.label|trans }}
 
         {% if header.sort == header.name %}
             {% if order == 'asc' %}
@@ -19,5 +20,5 @@
         {% endif %}
     </a>
 {% elseif header.label %}
-    {{ header.label|trans({} , header.translationDomain) }}
+    {{ header.label|trans }}
 {% endif %}

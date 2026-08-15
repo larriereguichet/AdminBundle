@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\View\Component;
+namespace LAG\AdminBundle\Twig\Component;
 
 use LAG\AdminBundle\Grid\View\CellView;
 use LAG\AdminBundle\Metadata;
@@ -10,7 +10,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 use function Symfony\Component\String\u;
 
-// TODO remove ?
 #[AsTwigComponent(
     name: 'lag_admin:text',
     template: '@LAGAdmin/components/cells/text.html.twig',

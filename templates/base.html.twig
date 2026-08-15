@@ -43,21 +43,17 @@
 
     {% block javascripts %}{% endblock %}
 
-    {% block head %}{% endblock %}
+    {% block body_head %}{% endblock %}
 </head>
 
 {% block body %}
     <body>
-    {% block header %}
-        {% include '@LAGAdmin/layout/header.html.twig' %}
-    {% endblock %}
+    {% block header %}{% include '@LAGAdmin/layout/header.html.twig' %}{% endblock %}
+
+    {% block flash_messages %}{% include '@LAGAdmin/session/flash_messages.html.twig' %}{% endblock %}
 
     {% block container %}
-        <div class="container-fluid">
-            {% block flash_messages %}
-                {% include '@LAGAdmin/session/flash_messages.html.twig' %}
-            {% endblock %}
-
+        <div class="container">
             {% block layout %}
                 <div class="row flex-nowrap">
                     <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">

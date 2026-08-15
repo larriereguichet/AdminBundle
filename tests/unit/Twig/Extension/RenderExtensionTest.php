@@ -19,7 +19,6 @@ final class RenderExtensionTest extends TestCase
 
         self::assertEquals([
             new TwigFunction('lag_admin_link', [RenderRuntime::class, 'renderLink'], ['is_safe' => ['html']]),
-            new TwigFunction('lag_admin_action', [RenderRuntime::class, 'renderAction'], ['is_safe' => ['html']]),
         ], $extension->getFunctions());
     }
 }

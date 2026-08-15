@@ -36,7 +36,7 @@ class Grid implements GridInterface, GridMetadataInterface
         private ?string $template = null,
 
         #[Assert\NotBlank(message: 'The grid component should not be an empty string', allowNull: true)]
-        private ?string $component = 'lag:table_grid',
+        private ?string $component = 'lag_admin:table_grid',
 
         private array $properties = [],
 

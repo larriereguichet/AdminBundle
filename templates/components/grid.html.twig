@@ -1,17 +1,20 @@
-<div {{ attributes.defaults({class: 'admin-grid'|merge(grid.attributes)}) }}>
+{# the grid attributes are merged into the component attributes by AttributeComponentRenderListener #}
+<div {{ attributes.defaults({class: 'admin-grid'}) }}>
     {% block title %}
         {% if grid.title %}
-            <twig:lag_admin:grid_title title="{{ grid.title }}" class="my-2 mb-5"></twig:lag_admin:grid_title>
+            {% include '@LAGAdmin/components/grid_title.html.twig' with {title: grid.title} only %}
         {% endif %}
     {% endblock %}
 
-    {% block header %}{% endif %}
+    {% block header %}{% endblock %}
 
     {% block rows %}
-        {% for row in rows %}
-            <twig:lag_admin:row row="{{ row }}" attributes="{{ row.attributes }}"></twig:lag_admin:row>
+        {% for row in grid.rows %}
+            <twig:lag_admin:row row="{{ row }}" />
         {% else %}
             {% block empty %}{% endblock %}
         {% endfor %}
-    {% endif %}
+    {% endblock %}
+
+    {% block footer %}{% endblock %}
 </div>

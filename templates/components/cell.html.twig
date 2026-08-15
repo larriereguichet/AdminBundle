@@ -1,0 +1,8 @@
+{% if component %}
+    {{ component(component, {cell: cell}) }}
+{% else %}
+    {# Fallback display. Usually a dynamic template has been rendered instead #}
+    <div {{ attributes }}>
+        {{ data }}
+    </div>
+{% endif %}

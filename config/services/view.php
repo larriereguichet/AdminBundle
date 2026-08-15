@@ -7,23 +7,25 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use LAG\AdminBundle\RichText\RichTextRendererInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\LinkUrlGeneratorInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
+use LAG\AdminBundle\Twig\Component\Cell\FormComponent;
+use LAG\AdminBundle\Twig\Component\Cell\ImageComponent;
+use LAG\AdminBundle\Twig\Component\Cell\Link;
+use LAG\AdminBundle\Twig\Component\Cell\MapComponent;
+use LAG\AdminBundle\Twig\Component\Text;
 use LAG\AdminBundle\Twig\Extension\AttributeExtension;
 use LAG\AdminBundle\Twig\Extension\PaginationExtension;
 use LAG\AdminBundle\Twig\Extension\RenderExtension;
 use LAG\AdminBundle\Twig\Extension\RichTextExtension;
 use LAG\AdminBundle\Twig\Extension\RoutingExtension;
 use LAG\AdminBundle\Twig\Extension\SecurityExtension;
+use LAG\AdminBundle\Twig\Extension\SortingExtension;
 use LAG\AdminBundle\Twig\Runtime\AttributeRuntime;
 use LAG\AdminBundle\Twig\Runtime\PaginationHelper;
 use LAG\AdminBundle\Twig\Runtime\RenderRuntime;
 use LAG\AdminBundle\Twig\Runtime\RichTextRuntime;
 use LAG\AdminBundle\Twig\Runtime\RoutingRuntime;
 use LAG\AdminBundle\Twig\Runtime\SecurityRuntime;
-use LAG\AdminBundle\View\Component\Cell\FormComponent;
-use LAG\AdminBundle\View\Component\Cell\ImageComponent;
-use LAG\AdminBundle\View\Component\Cell\Link;
-use LAG\AdminBundle\View\Component\Cell\MapComponent;
-use LAG\AdminBundle\View\Component\Text;
+use LAG\AdminBundle\Twig\Runtime\SortingRuntime;
 use LAG\AdminBundle\View\Render\LinkRenderer;
 use LAG\AdminBundle\View\Render\LinkRendererInterface;
 
@@ -38,6 +40,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(SecurityExtension::class)->tag('twig.extension');
     $services->set(RichTextExtension::class)->tag('twig.extension');
     $services->set(AttributeExtension::class)->tag('twig.extension');
+    $services->set(SortingExtension::class)->tag('twig.extension');
 
     // Runtime extensions
     $services->set(RoutingRuntime::class)
@@ -64,6 +67,10 @@ return static function (ContainerConfigurator $container): void {
     ;
     $services->set(AttributeRuntime::class)
         ->args(['$environment' => service('twig')])
+        ->tag('twig.runtime')
+    ;
+    $services->set(SortingRuntime::class)
+        ->arg('$requestStack', service('request_stack'))
         ->tag('twig.runtime')
     ;
     $services->set(Text::class)->autoconfigure();

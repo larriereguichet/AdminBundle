@@ -1,5 +1,5 @@
-{% if options.formTemplate %}
-    {% include options.formTemplate %}
+{% if property.formTemplate %}
+    {% include property.formTemplate %}
 {% else %}
     {{ form_start(data) }}
     {{ form_row(data) }}
