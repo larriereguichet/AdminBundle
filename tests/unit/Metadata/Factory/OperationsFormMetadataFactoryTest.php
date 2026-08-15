@@ -164,6 +164,26 @@ final class OperationsFormMetadataFactoryTest extends TestCase
         self::assertSame('books', $createOperation->getFormOption('translation_domain'));
     }
 
+    #[Test]
+    public function itPropagatesFormTemplateFromResource(): void
+    {
+        $resource = $this->buildResource(new Resource(
+            shortName: 'book',
+            application: 'admin',
+            resourceClass: \stdClass::class,
+            formTemplate: '@App/form.html.twig',
+            operations: [new Create()],
+        ));
+        $decorated = $this->createStub(ResourceMetadataFactoryInterface::class);
+        $decorated->method('createMetadata')->willReturn($resource);
+
+        $factory = new OperationsFormMetadataFactory($decorated);
+        $result = $factory->createMetadata('admin.book');
+
+        $createOperation = current($result->getOperations());
+        self::assertSame('@App/form.html.twig', $createOperation->getFormTemplate());
+    }
+
     private function buildResource(Resource $resource): ResourceMetadataInterface
     {
         $operations = [];

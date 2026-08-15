@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Metadata\Factory;
 
 use LAG\AdminBundle\Metadata\Attribute\Create;
+use LAG\AdminBundle\Metadata\Attribute\Index;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationMetadataInterface;
 use LAG\AdminBundle\Metadata\ResourceMetadataInterface;
@@ -52,8 +53,9 @@ final readonly class OperationsMetadataFactory implements ResourceMetadataFactor
                 $redirectOperation = $application->getName().'.'.$resource->getShortName().'.'.$operation->getRedirectOperation();
             }
 
-            if (!$resource instanceof Create) {
-                $identifiers = $resource->getIdentifiers();
+            // A create operation has no identifier to route on, as the resource does not exist yet
+            if (!$operation instanceof Create) {
+                $identifiers = $operation->getIdentifiers() ?? $resource->getIdentifiers() ?? [];
             }
 
             if ($operation->getPath() === null) {
@@ -75,7 +77,7 @@ final readonly class OperationsMetadataFactory implements ResourceMetadataFactor
                 if (!$operation instanceof CollectionOperationInterface) {
                     $path = $path->ensureEnd('/');
 
-                    foreach ($operation->getIdentifiers() ?? [] as $identifier) {
+                    foreach ($identifiers as $identifier) {
                         $path = $path
                             ->append('{')
                             ->append($identifier)
@@ -111,12 +113,14 @@ final readonly class OperationsMetadataFactory implements ResourceMetadataFactor
             }
             $redirectRoute = null;
 
-            // TODO use instanceof instead
-            if ($resource->hasOperation('index')) {
-                $redirectRoute = $this->routeNameGenerator->generateRouteName($resource, $resource->getOperation('index'));
+            foreach ($resource->getOperations() as $op) {
+                if ($op instanceof Index) {
+                    $redirectRoute = $this->routeNameGenerator->generateRouteName($resource, $op);
+                    break;
+                }
             }
             $operation->setResource($resource);
-            $operations[$operation->getName()] = $operation
+            $operation = $operation
                 ->withShortName($operation->getShortName() ?? $shortName)
                 ->withTitle($operation->getTitle() ?? $title)
                 ->withBaseTemplate($operation->getBaseTemplate() ?? $application->getBaseTemplate())
@@ -130,14 +134,21 @@ final readonly class OperationsMetadataFactory implements ResourceMetadataFactor
                 ->withPermissions($operation->getRoles() ?? $resource->getPermissions() ?? [])
                 ->withIdentifiers($operation->getIdentifiers() ?? $identifiers)
                 ->withRoute($operation->getRoute() ?? $route)
-                ->withRouteParameters($operation->getRouteParameters() ?? $this->generateRouteParametersFromIdentifiers($operation))
                 ->withRedirectRoute($operation->getRedirectRoute() ?? $redirectRoute)
+                ->withContext(array_merge($resource->getContext(), $operation->getContext()))
             ;
+            // Should be done after assignments as it can require identifiers
+            $operation = $operation->withRouteParameters(
+                $operation->getRouteParameters() ?? $this->generateRouteParametersFromIdentifiers($operation)
+            );
+
+            $operations[$operation->getName()] = $operation;
         }
 
         return $resource->withOperations($operations);
     }
 
+    /** @return array<string, mixed> */
     private function generateRouteParametersFromIdentifiers(OperationMetadataInterface $operation): array
     {
         if ($operation->getIdentifiers() === null || $operation->getPath() === null) {

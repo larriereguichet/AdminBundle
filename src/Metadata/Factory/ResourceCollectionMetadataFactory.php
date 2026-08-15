@@ -37,11 +37,12 @@ final readonly class ResourceCollectionMetadataFactory implements ResourceCollec
                     continue;
                 }
                 // The closure forbids access to the private scope in the included file
-                $callback = \Closure::bind(static fn($filePath) => include $filePath, null, null);
+                $loader = \Closure::bind(static fn ($filePath) => include $filePath, null, null);
 
                 try {
-                    $callback = $callback($file->getRealPath());
+                    $callback = $loader($file->getRealPath());
                 } catch (\Throwable) {
+                    continue;
                 }
 
                 if (!\is_callable($callback)) {
@@ -58,6 +59,6 @@ final readonly class ResourceCollectionMetadataFactory implements ResourceCollec
     {
         $content = file_get_contents($filePath);
 
-        return (bool)preg_match('/^\s*(class|interface|trait|enum)\s+/m', $content);
+        return (bool) preg_match('/^\s*(class|interface|trait|enum)\s+/m', $content);
     }
 }

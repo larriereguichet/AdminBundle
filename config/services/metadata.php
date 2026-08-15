@@ -6,6 +6,8 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use LAG\AdminBundle\Metadata\Factory\ApplicationMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\ApplicationMetadataFactoryInterface;
+use LAG\AdminBundle\Metadata\Factory\CachingGridCollectionMetadataFactory;
+use LAG\AdminBundle\Metadata\Factory\CachingResourceCollectionMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\CollectionOperationMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\GridCollectionAttributeMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\GridCollectionMetadataFactory;
@@ -14,18 +16,16 @@ use LAG\AdminBundle\Metadata\Factory\GridMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\GridMetadataFactoryInterface;
 use LAG\AdminBundle\Metadata\Factory\GridProviderMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\OperationsFormMetadataFactory;
+use LAG\AdminBundle\Metadata\Factory\OperationsLinkMetadataFactory;
+use LAG\AdminBundle\Metadata\Factory\OperationsMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\PropertyCollectionClassMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\PropertyCollectionMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\PropertyCollectionMetadataFactoryInterface;
-use LAG\AdminBundle\Metadata\Factory\PropertyMetadataFactory;
-use LAG\AdminBundle\Metadata\Factory\PropertyMetadataFactoryInterface;
 use LAG\AdminBundle\Metadata\Factory\ResourceCollectionAttributeMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\ResourceCollectionMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\ResourceCollectionMetadataFactoryInterface;
 use LAG\AdminBundle\Metadata\Factory\ResourceMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\ResourceMetadataFactoryInterface;
-use LAG\AdminBundle\Metadata\Factory\OperationsLinkMetadataFactory;
-use LAG\AdminBundle\Metadata\Factory\OperationsMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\ResourcePropertiesMetadataFactory;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 
@@ -53,6 +53,13 @@ return static function (ContainerConfigurator $container): void {
         ->args([
             '$metadataFactory' => service('.inner'),
             '$paths' => param('lag_admin.mapping_paths'),
+        ])
+    ;
+    $services->set(CachingResourceCollectionMetadataFactory::class)
+        ->decorate('lag_admin.resource.collection_metadata_factory', priority: 255)
+        ->args([
+            '$decorated' => service('.inner'),
+            '$cache' => service('lag_admin.cache'),
         ])
     ;
 
@@ -122,6 +129,13 @@ return static function (ContainerConfigurator $container): void {
         ->args([
             '$metadataFactory' => service('.inner'),
             '$paths' => param('lag_admin.mapping_paths'),
+        ])
+    ;
+    $services->set(CachingGridCollectionMetadataFactory::class)
+        ->decorate('lag_admin.grid.collection_metadata_factory', priority: 512)
+        ->args([
+            '$decorated' => service('.inner'),
+            '$cache' => service('lag_admin.cache'),
         ])
     ;
     $services->set(GridMetadataFactoryInterface::class, GridMetadataFactory::class)

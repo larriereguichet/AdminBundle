@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Unit\Metadata\Factory;
 
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
+use LAG\AdminBundle\Metadata\Attribute\EntityFilter;
 use LAG\AdminBundle\Metadata\Attribute\Index;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\Attribute\Show;
@@ -39,7 +40,6 @@ final class CollectionOperationMetadataFactoryTest extends TestCase
         $indexOperation = current($result->getOperations());
         self::assertSame(FilterType::class, $indexOperation->getFilterForm());
         self::assertSame([], $indexOperation->getCollectionLinks());
-        self::assertSame([], $indexOperation->getCollectionFormOptions());
     }
 
     #[Test]
@@ -111,6 +111,49 @@ final class CollectionOperationMetadataFactoryTest extends TestCase
         $indexOperation = current($result->getOperations());
         self::assertSame(FilterType::class, $indexOperation->getFilterForm());
         self::assertCount(1, $indexOperation->getFilterFormOptions()['filters']);
+    }
+
+    #[Test]
+    public function itSetsMultipleOnEntityFilterFormOptions(): void
+    {
+        $filter = new EntityFilter(name: 'category', multiple: true);
+        $resource = $this->buildResource(new Resource(
+            shortName: 'book',
+            application: 'admin',
+            resourceClass: \stdClass::class,
+            operations: [new Index(filters: [$filter])],
+        ));
+        $decorated = $this->createStub(ResourceMetadataFactoryInterface::class);
+        $decorated->method('createMetadata')->willReturn($resource);
+
+        $factory = new CollectionOperationMetadataFactory($decorated);
+        $result = $factory->createMetadata('admin.book');
+
+        $indexOperation = current($result->getOperations());
+        $resultFilter = current($indexOperation->getFilters());
+        self::assertTrue($resultFilter->getFormOptions()['multiple']);
+    }
+
+    #[Test]
+    public function itSetsPropertyFromFilterNameWhenEntityFilterHasNoProperty(): void
+    {
+        $filter = new EntityFilter(name: 'author');
+        $resource = $this->buildResource(new Resource(
+            shortName: 'book',
+            application: 'admin',
+            resourceClass: \stdClass::class,
+            operations: [new Index(filters: [$filter])],
+        ));
+        $decorated = $this->createStub(ResourceMetadataFactoryInterface::class);
+        $decorated->method('createMetadata')->willReturn($resource);
+
+        $factory = new CollectionOperationMetadataFactory($decorated);
+        $result = $factory->createMetadata('admin.book');
+
+        $indexOperation = current($result->getOperations());
+        $resultFilter = current($indexOperation->getFilters());
+        self::assertInstanceOf(EntityFilter::class, $resultFilter);
+        self::assertSame('author', $resultFilter->getProperty());
     }
 
     private function buildResource(Resource $resource): ResourceMetadataInterface

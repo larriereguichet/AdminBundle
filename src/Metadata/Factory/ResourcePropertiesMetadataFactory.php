@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Metadata\Factory;
 
 use LAG\AdminBundle\Metadata\Attribute\Link;
+use LAG\AdminBundle\Metadata\PropertyMetadataInterface;
 use LAG\AdminBundle\Metadata\ResourceMetadataInterface;
 
 use function Symfony\Component\String\u;
@@ -27,7 +28,11 @@ final readonly class ResourcePropertiesMetadataFactory implements ResourceMetada
         $newProperties = [];
 
         foreach ($properties as $property) {
-            if ($property->getLabel() === null) {
+            \assert($property instanceof PropertyMetadataInterface);
+            $label = $property->getLabel();
+            $sortingPath = $property->getSortingPath();
+
+            if ($label === null) {
                 $label = u($property->getName())
                     ->replace('_', ' ')
                     ->title()
@@ -45,7 +50,7 @@ final readonly class ResourcePropertiesMetadataFactory implements ResourceMetada
                 }
             }
 
-            if ($property->isSortable() && $property->getSortingPath() === null) {
+            if ($sortingPath === null && $property->isSortable()) {
                 $sortingPath = $property->getName();
 
                 if (\is_string($property->getPropertyPath())) {
@@ -53,9 +58,9 @@ final readonly class ResourcePropertiesMetadataFactory implements ResourceMetada
                 }
             }
             $property = $property
-                ->withLabel($property->getLabel() ?? $label ?? null)
+                ->withLabel($label)
                 ->withPropertyPath($property->getPropertyPath() ?? $property->getName())
-                ->withSortingPath($property->getSortingPath() ?? $sortingPath ?? null)
+                ->withSortingPath($sortingPath)
             ;
 
             if ($property instanceof Link) {
@@ -67,6 +72,7 @@ final readonly class ResourcePropertiesMetadataFactory implements ResourceMetada
                 $property = $property
                     ->withText($property->getText() ?? $property->getName())
                     ->withOperation($operation)
+                    ->withPropertyPath($property->getPropertyPath() ?? $property->getName())
                 ;
             }
             $newProperties[$property->getName()] = $property;
