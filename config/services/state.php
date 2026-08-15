@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use LAG\AdminBundle\Bridge\ObjectMapper\SymfonyObjectMapper;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
 use LAG\AdminBundle\Filter\Applicator\FilterApplicatorInterface;
+use LAG\AdminBundle\Mapper\ObjectMapperInterface;
 use LAG\AdminBundle\Request\Uri\UrlVariablesExtractorInterface;
 use LAG\AdminBundle\Session\FlashMessageHelperInterface;
 use LAG\AdminBundle\State\Processor\CompositeProcessor;
 use LAG\AdminBundle\State\Processor\EventProcessor;
 use LAG\AdminBundle\State\Processor\FlashMessageProcessor;
+use LAG\AdminBundle\State\Processor\MappingProcessor;
 use LAG\AdminBundle\State\Processor\NormalizationProcessor;
 use LAG\AdminBundle\State\Processor\PartialAjaxFormProcessor;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
@@ -19,6 +22,7 @@ use LAG\AdminBundle\State\Processor\WorkflowProcessor;
 use LAG\AdminBundle\State\Provider\CompositeProvider;
 use LAG\AdminBundle\State\Provider\CreateProvider;
 use LAG\AdminBundle\State\Provider\FilterProvider;
+use LAG\AdminBundle\State\Provider\MappingProvider;
 use LAG\AdminBundle\State\Provider\NormalizationProvider;
 use LAG\AdminBundle\State\Provider\ProviderInterface;
 use LAG\AdminBundle\State\Provider\SerializationProvider;
@@ -58,6 +62,17 @@ return static function (ContainerConfigurator $container): void {
         ->tag('lag_admin.state_provider')
     ;
 
+    if (interface_exists(\Symfony\Component\ObjectMapper\ObjectMapperInterface::class)) {
+        $services->set(ObjectMapperInterface::class, SymfonyObjectMapper::class)
+            ->arg('$objectMapper', service(\Symfony\Component\ObjectMapper\ObjectMapperInterface::class))
+        ;
+        $services->set(MappingProvider::class)
+            ->decorate(ProviderInterface::class, priority: -210)
+            ->arg('$provider', service('.inner'))
+            ->arg('$objectMapper', service(ObjectMapperInterface::class))
+        ;
+    }
+
     // Data processors
     $services->set(ProcessorInterface::class, CompositeProcessor::class)
         ->arg('$processors', tagged_iterator('lag_admin.state_processor'))
@@ -92,4 +107,12 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$normalizer', service('serializer'))
         ->arg('$denormalizer', service('serializer'))
     ;
+
+    if (interface_exists(\Symfony\Component\ObjectMapper\ObjectMapperInterface::class)) {
+        $services->set(MappingProcessor::class)
+            ->decorate(ProcessorInterface::class, priority: 230)
+            ->arg('$processor', service('.inner'))
+            ->arg('$objectMapper', service(ObjectMapperInterface::class))
+        ;
+    }
 };

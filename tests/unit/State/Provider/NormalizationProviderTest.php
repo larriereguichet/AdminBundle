@@ -91,6 +91,7 @@ class NormalizationProviderTest extends TestCase
         yield [new Index(output: null), $fake, false];
         yield [new Index(output: null), new ArrayCollection(), false];
         yield [new Index(output: 'TestClass'), $fake, false];
+        yield [new Index(normalizationOutput: 'TestClass'), $fake, false];
         yield [
             (new Show(output: 'TestClass'))->setResource(new Resource(resourceClass: 'OtherClass')),
             new ArrayCollection(),
@@ -111,7 +112,7 @@ class NormalizationProviderTest extends TestCase
             (new Show(
                 normalizationContext: ['groups' => ['normalization']],
                 denormalizationContext: ['groups' => ['denormalization']],
-                output: 'Output',
+                normalizationOutput: 'Output',
             ))->setResource(new Resource(resourceClass: \stdClass::class)),
             $fake,
             true,
@@ -121,7 +122,7 @@ class NormalizationProviderTest extends TestCase
             (new Index(
                 normalizationContext: ['groups' => ['normalization']],
                 denormalizationContext: ['groups' => ['denormalization']],
-                output: 'Output',
+                normalizationOutput: 'Output',
             ))->setResource(new Resource(resourceClass: \stdClass::class)),
             [$fake],
             true,

@@ -23,7 +23,7 @@ final class CompositeProviderTest extends TestCase
     public function testProvide(OperationInterface $operation): void
     {
         $customProvider = $this->createMock(ProviderInterface::class);
-        $nevenCalledProvider = $this->createMock(ProviderInterface::class);
+        $nevenCalledProvider = $this->createStub(ProviderInterface::class);
         $operation = $operation->withProvider($customProvider::class);
 
         $customProvider
@@ -43,8 +43,8 @@ final class CompositeProviderTest extends TestCase
 
         $this->expectExceptionObject(new Exception(\sprintf(
             'The resource "%s" and operation "%s" in the application "%s" is not supported by any provider',
-            $operation->getResource()->getName(),
-            $operation->getFullName(),
+            $operation->getResource()->getShortName(),
+            $operation->getName(),
             $operation->getResource()->getApplication(),
         )));
 

@@ -34,7 +34,7 @@ final class FilterProviderTest extends TestCase
             ],
         ];
 
-        $data = $this->createMock(QueryBuilder::class);
+        $data = $this->createStub(QueryBuilder::class);
 
         $this->decorated
             ->expects($this->once())
@@ -76,6 +76,39 @@ final class FilterProviderTest extends TestCase
         ;
 
         $this->provider->provide(new Index(), ['some' => 'value'], ['some_context' => 'context_value']);
+    }
+
+    #[Test]
+    public function itSkipsFilterWhenApplicatorDoesNotSupport(): void
+    {
+        $filter = new TextFilter(name: 'my_filter');
+        $operation = (new Index())->withFilter($filter);
+        $context = ['filters' => ['my_filter' => 'some_value']];
+        $data = $this->createStub(QueryBuilder::class);
+
+        $this->decorated->method('provide')->willReturn($data);
+        $this->filterApplicator
+            ->expects($this->once())
+            ->method('supports')
+            ->willReturn(false)
+        ;
+        $this->filterApplicator->expects($this->never())->method('apply');
+
+        $this->provider->provide($operation, [], $context);
+    }
+
+    #[Test]
+    public function itSkipsUnknownFilters(): void
+    {
+        $operation = new Index();
+        $context = ['filters' => ['unknown_filter' => 'some_value']];
+        $data = $this->createStub(QueryBuilder::class);
+
+        $this->decorated->method('provide')->willReturn($data);
+        $this->filterApplicator->expects($this->never())->method('supports');
+        $this->filterApplicator->expects($this->never())->method('apply');
+
+        $this->provider->provide($operation, [], $context);
     }
 
     protected function setUp(): void
