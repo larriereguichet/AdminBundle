@@ -20,8 +20,7 @@ final class RoutingExtensionTest extends TestCase
         self::assertEquals([
             new TwigFunction('lag_admin_path', [RoutingRuntime::class, 'generatePath']),
             new TwigFunction('lag_admin_url', [RoutingRuntime::class, 'generateUrl']),
-            new TwigFunction('lag_admin_resource_url', [RoutingRuntime::class, 'generateResourceUrl']),
-            new TwigFunction('lag_admin_link_url', [RoutingRuntime::class, 'generateLinkUrl']),
+            new TwigFunction('lag_admin_link', [RoutingRuntime::class, 'generateLink']),
         ], $extension->getFunctions());
     }
 }

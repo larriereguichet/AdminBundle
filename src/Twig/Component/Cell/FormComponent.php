@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace LAG\AdminBundle\View\Component\Cell;
+namespace LAG\AdminBundle\Twig\Component\Cell;
 
 use LAG\AdminBundle\Grid\View\CellView;
 use Symfony\Component\Form\FormFactoryInterface;
