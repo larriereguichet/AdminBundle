@@ -6,7 +6,6 @@ namespace LAG\AdminBundle\Tests\Unit\Grid\Factory;
 
 use LAG\AdminBundle\Exception\InvalidGridException;
 use LAG\AdminBundle\Grid\Factory\GridFactory;
-use LAG\AdminBundle\Grid\Initializer\GridInitializerInterface;
 use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\Attribute\Index;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
@@ -21,14 +20,12 @@ final class GridFactoryTest extends TestCase
 {
     private GridFactory $factory;
     private MockObject $metadataFactory;
-    private MockObject $gridInitializer;
     private MockObject $validator;
 
     #[Test]
     public function itCreatesAGrid(): void
     {
-        $resource = new Resource();
-        $operation = new Index()->setResource($resource);
+        $operation = new Index()->setResource(new Resource());
         $metadata = new Grid();
 
         $this->metadataFactory
@@ -37,17 +34,15 @@ final class GridFactoryTest extends TestCase
             ->with('some_grid')
             ->willReturn($metadata)
         ;
-        $this->gridInitializer
-            ->expects($this->once())
-            ->method('initializeGrid')
-            ->with($resource, $operation, $metadata)
-            ->willReturn($metadata)
+        $violations = $this->createMock(ConstraintViolationListInterface::class);
+        $violations->expects($this->once())
+            ->method('count')
+            ->willReturn(0)
         ;
         $this->validator
             ->expects($this->once())
             ->method('validate')
-            ->with($metadata)
-            ->willReturn($this->createMock(ConstraintViolationListInterface::class))
+            ->willReturn($violations)
         ;
 
         $grid = $this->factory->create('some_grid', $operation);
@@ -58,8 +53,7 @@ final class GridFactoryTest extends TestCase
     #[Test]
     public function itDoesNotCreateInvalidGrid(): void
     {
-        $resource = new Resource();
-        $operation = new Index()->setResource($resource);
+        $operation = new Index()->setResource(new Resource());
         $metadata = new Grid();
 
         $this->metadataFactory
@@ -68,22 +62,14 @@ final class GridFactoryTest extends TestCase
             ->with('some_grid')
             ->willReturn($metadata)
         ;
-        $this->gridInitializer
-            ->expects($this->once())
-            ->method('initializeGrid')
-            ->with($resource, $operation, $metadata)
-            ->willReturn($metadata)
-        ;
         $errors = $this->createMock(ConstraintViolationListInterface::class);
         $errors->expects($this->once())
             ->method('count')
             ->willReturn(1)
         ;
-
         $this->validator
             ->expects($this->once())
             ->method('validate')
-            ->with($metadata)
             ->willReturn($errors)
         ;
 
@@ -94,11 +80,9 @@ final class GridFactoryTest extends TestCase
     protected function setUp(): void
     {
         $this->metadataFactory = $this->createMock(GridMetadataFactoryInterface::class);
-        $this->gridInitializer = $this->createMock(GridInitializerInterface::class);
         $this->validator = $this->createMock(ValidatorInterface::class);
         $this->factory = new GridFactory(
             $this->metadataFactory,
-            $this->gridInitializer,
             $this->validator,
         );
     }

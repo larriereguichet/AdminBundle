@@ -29,6 +29,7 @@ final readonly class CellBuilder implements CellBuilderInterface
             attributes: $this->attributeBuilder->buildAttributes($property->getAttributes()),
             property: $property,
             template: $property->getTemplate(),
+            component: $property->getComponent(),
             data: $data,
             context: $context,
         );

@@ -5,22 +5,18 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Unit\Grid\View;
 
 use LAG\AdminBundle\Metadata\Attribute\Link;
-use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
+use LAG\AdminBundle\Routing\UrlGenerator\LinkUrlGeneratorInterface;
 use LAG\AdminBundle\Tests\Unit\TestCase;
 use LAG\AdminBundle\View\Render\LinkRenderer;
 use LAG\AdminBundle\View\Render\LinkRendererInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Validator\Constraints\Valid;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 
 final class LinkRendererTest extends TestCase
 {
     private LinkRendererInterface $linkRenderer;
     private MockObject $urlGenerator;
-    private MockObject $validator;
     private MockObject $environment;
 
     #[Test]
@@ -30,16 +26,10 @@ final class LinkRendererTest extends TestCase
             template: 'some_template.html.twig',
         );
 
-        $this->validator
-            ->expects($this->once())
-            ->method('validate')
-            ->with($link, [new Valid()])
-            ->willReturn(new ConstraintViolationList())
-        ;
         $this->urlGenerator
             ->expects($this->once())
-            ->method('generateFromUrl')
-            ->with($link)
+            ->method('generateUrl')
+            ->with($link, null)
             ->willReturn('/some/url')
         ;
         $this->environment
@@ -59,12 +49,10 @@ final class LinkRendererTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->urlGenerator = $this->createMock(OperationUrlGeneratorInterface::class);
-        $this->validator = $this->createMock(ValidatorInterface::class);
+        $this->urlGenerator = $this->createMock(LinkUrlGeneratorInterface::class);
         $this->environment = $this->createMock(Environment::class);
         $this->linkRenderer = new LinkRenderer(
             $this->urlGenerator,
-            $this->validator,
             $this->environment,
         );
     }
