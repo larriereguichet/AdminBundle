@@ -9,6 +9,7 @@ use LAG\AdminBundle\Metadata\Attribute\Create;
 use LAG\AdminBundle\Metadata\Attribute\Index;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\Attribute\Show;
+use LAG\AdminBundle\Metadata\Attribute\Update;
 use LAG\AdminBundle\Metadata\Factory\ApplicationMetadataFactoryInterface;
 use LAG\AdminBundle\Metadata\Factory\OperationsMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\ResourceMetadataFactoryInterface;
@@ -110,6 +111,31 @@ final class OperationsMetadataFactoryTest extends TestCase
 
         $showOp = current($result->getOperations());
         self::assertSame('/books/{author}/{id}/show', $showOp->getPath());
+    }
+
+    #[Test]
+    public function itKeepsAnExplicitlyEmptyIdentifiersList(): void
+    {
+        // The "my account" / "shop configuration" pattern: an item operation addressing an implicit record that the
+        // provider resolves from the user context, so it carries no identifier in its path on purpose. No explicit
+        // path here, as that is the only case exercising the identifier generation
+        $update = new Update(name: 'account', identifiers: []);
+        $resource = new Resource(
+            shortName: 'user',
+            application: 'admin',
+            resourceClass: \stdClass::class,
+            operations: [$update],
+            identifiers: ['id'],
+        );
+        $application = new Application(name: 'admin');
+
+        $factory = $this->createFactory($resource, $application, 'admin.user.account');
+        $result = $factory->createMetadata('user');
+
+        $operation = current($result->getOperations());
+        self::assertSame([], $operation->getIdentifiers());
+        self::assertSame('/users/account', $operation->getPath());
+        self::assertStringNotContainsString('{', $operation->getPath());
     }
 
     #[Test]
