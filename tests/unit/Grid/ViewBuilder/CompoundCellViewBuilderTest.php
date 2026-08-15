@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Unit\Grid\ViewBuilder;
 
 use LAG\AdminBundle\Grid\View\CellView;
-use LAG\AdminBundle\Grid\ViewFactory\CellBuilderInterface;
-use LAG\AdminBundle\Grid\ViewFactory\CompoundCellBuilder;
+use LAG\AdminBundle\Grid\ViewBuilder\CellBuilderInterface;
+use LAG\AdminBundle\Grid\ViewBuilder\CompoundCellBuilder;
 use LAG\AdminBundle\Metadata\Attribute\Compound;
 use LAG\AdminBundle\Metadata\Attribute\Grid;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
@@ -15,6 +15,8 @@ use LAG\AdminBundle\Metadata\Attribute\Update;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\TwigComponent\ComponentAttributes;
+use Twig\Runtime\EscaperRuntime;
 
 final class CompoundCellViewBuilderTest extends TestCase
 {
@@ -28,8 +30,8 @@ final class CompoundCellViewBuilderTest extends TestCase
         $child = new Text(name: 'child');
         $property = new Compound(name: 'some_property', properties: ['child']);
         $data = new \stdClass();
-        $cellView = new CellView(name: 'some_view');
-        $childView = new CellView(name: 'some_child_view');
+        $cellView = new CellView(name: 'some_view', attributes: new ComponentAttributes([], new EscaperRuntime()));
+        $childView = new CellView(name: 'some_child_view', attributes: new ComponentAttributes([], new EscaperRuntime()));
 
         $resource = new Resource(properties: ['some_property' => $property, 'child' => $child]);
         $operation = (new Update())->setResource($resource);
@@ -56,7 +58,7 @@ final class CompoundCellViewBuilderTest extends TestCase
         $grid = new Grid(name: 'some_grid');
         $property = new Text();
         $data = new \stdClass();
-        $cellView = new CellView(name: 'some_view');
+        $cellView = new CellView(name: 'some_view', attributes: new ComponentAttributes([], new EscaperRuntime()));
 
         $resource = new Resource();
         $operation = (new Update())->setResource($resource);
@@ -77,7 +79,7 @@ final class CompoundCellViewBuilderTest extends TestCase
         $grid = new Grid(name: 'some_grid');
         $property = new Compound(properties: []);
         $data = new \stdClass();
-        $cellView = new CellView(name: 'some_view');
+        $cellView = new CellView(name: 'some_view', attributes: new ComponentAttributes([], new EscaperRuntime()));
 
         $resource = new Resource();
         $operation = (new Update())->setResource($resource);

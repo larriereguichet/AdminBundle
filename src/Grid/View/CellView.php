@@ -17,6 +17,7 @@ readonly class CellView
         public ComponentAttributes $attributes,
         public ?PropertyInterface $property = null,
         public ?string $template = null,
+        public ?string $component = null,
         public ?string $label = null,
         public mixed $data = null,
         public array $context = [],
