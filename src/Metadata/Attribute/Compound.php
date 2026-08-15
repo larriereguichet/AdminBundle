@@ -25,6 +25,8 @@ class Compound extends Property implements CompoundPropertyInterface
         ?array $permissions = null,
         ?string $condition = null,
         ?string $sortingPath = null,
+        ?string $component = null,
+        ?string $translationDomain = null,
 
         private array $properties = [],
     ) {
@@ -43,6 +45,8 @@ class Compound extends Property implements CompoundPropertyInterface
             permissions: $permissions,
             condition: $condition,
             sortingPath: $sortingPath,
+            component: $component,
+            translationDomain: $translationDomain,
         );
     }
 

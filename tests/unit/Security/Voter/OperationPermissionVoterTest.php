@@ -22,7 +22,7 @@ final class OperationPermissionVoterTest extends TestCase
     #[Test]
     public function itChecksOperationPermissions(): void
     {
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createStub(UserInterface::class);
         $operation = new Update(permissions: ['ROLE_USER']);
 
         $this->security
@@ -44,7 +44,7 @@ final class OperationPermissionVoterTest extends TestCase
     #[Test]
     public function itAllowsOperationWithoutPermissions(): void
     {
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createStub(UserInterface::class);
         $operation = new Update(permissions: []);
 
         $this->security
@@ -69,7 +69,7 @@ final class OperationPermissionVoterTest extends TestCase
             ->method('isGranted')
         ;
         $authorized = $this->voter->vote(
-            new UsernamePasswordToken($this->createMock(UserInterface::class), 'admin', ['ROLE_USER']),
+            new UsernamePasswordToken($this->createStub(UserInterface::class), 'admin', ['ROLE_USER']),
             new Update(permissions: ['ROLE_USER']),
             ['ROLE_ADMIN'],
         );
@@ -85,12 +85,34 @@ final class OperationPermissionVoterTest extends TestCase
             ->method('isGranted')
         ;
         $authorized = $this->voter->vote(
-            new UsernamePasswordToken($this->createMock(UserInterface::class), 'admin', ['ROLE_USER']),
+            new UsernamePasswordToken($this->createStub(UserInterface::class), 'admin', ['ROLE_USER']),
             new \stdClass(),
             [OperationVoter::OPERATION_ACCESS],
         );
 
         self::assertEquals(VoterInterface::ACCESS_ABSTAIN, $authorized);
+    }
+
+    #[Test]
+    public function itDeniesAccessWhenNoRoleMatches(): void
+    {
+        $user = $this->createStub(UserInterface::class);
+        $operation = new Update(permissions: ['ROLE_ADMIN']);
+
+        $this->security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with('ROLE_ADMIN', $user)
+            ->willReturn(false)
+        ;
+
+        $authorized = $this->voter->vote(
+            new UsernamePasswordToken($user, 'admin', ['ROLE_USER']),
+            $operation,
+            [OperationVoter::OPERATION_ACCESS],
+        );
+
+        self::assertEquals(VoterInterface::ACCESS_DENIED, $authorized);
     }
 
     protected function setUp(): void

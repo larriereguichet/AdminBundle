@@ -8,7 +8,7 @@ interface GridInterface
 {
     public function getName(): ?string;
 
-    public function getTitle(): ?string;
+    public function getTitle(): string|false|null;
 
     public function getType(): ?string;
 
@@ -55,4 +55,6 @@ interface GridInterface
     public function useHeaders(): ?bool;
 
     public function setUseHeaders(?bool $useHeaders): void;
+
+    public function getComponent(): ?string;
 }

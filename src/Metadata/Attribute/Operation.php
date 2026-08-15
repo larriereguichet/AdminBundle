@@ -34,14 +34,17 @@ abstract class Operation implements OperationInterface, OperationMetadataInterfa
      * @param array<string, mixed>|null $denormalizationContext
      */
     public function __construct(
-        // TODO check for space, dot and special characters
         #[Assert\NotBlank(message: 'The operation name should not be empty')]
+        #[Assert\Regex(
+            pattern: '/^[a-z][a-z0-9_]*$/',
+            message: 'The operation name should only contain lowercase letters, digits and underscores, and start with a letter',
+        )]
         private ?string $shortName = null,
 
         private array $context = [],
 
         #[Assert\Length(max: 255, maxMessage: 'The operation title should be shorter than 255 characters')]
-        private ?string $title = null,
+        private string|false|null $title = null,
 
         private ?string $description = null,
 
@@ -118,6 +121,10 @@ abstract class Operation implements OperationInterface, OperationMetadataInterfa
 
         private ?string $output = null,
 
+        private ?string $normalizationInput = null,
+
+        private ?string $normalizationOutput = null,
+
         private ?string $workflow = null,
 
         private ?string $workflowTransition = null,
@@ -163,12 +170,12 @@ abstract class Operation implements OperationInterface, OperationMetadataInterfa
         return $self;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string|false|null
     {
         return $this->title;
     }
 
-    public function withTitle(?string $title): static
+    public function withTitle(string|false|null $title): static
     {
         $self = clone $this;
         $self->title = $title;
@@ -228,7 +235,7 @@ abstract class Operation implements OperationInterface, OperationMetadataInterfa
         return $self;
     }
 
-    public function getPermissions(): ?array
+    public function getRoles(): ?array
     {
         return $this->permissions;
     }
@@ -435,7 +442,7 @@ abstract class Operation implements OperationInterface, OperationMetadataInterfa
 
     public function setResource(ResourceInterface $resource): static
     {
-        if ($this->resource !== null) {
+        if ($this->resource !== null && $resource->getName() !== $this->resource->getName()) {
             throw new Exception('The operation resource can not be changed');
         }
         $this->resource = $resource;
@@ -569,6 +576,32 @@ abstract class Operation implements OperationInterface, OperationMetadataInterfa
     {
         $self = clone $this;
         $self->output = $output;
+
+        return $self;
+    }
+
+    public function getNormalizationInput(): ?string
+    {
+        return $this->normalizationInput;
+    }
+
+    public function withNormalizationInput(?string $normalizationInput): static
+    {
+        $self = clone $this;
+        $self->normalizationInput = $normalizationInput;
+
+        return $self;
+    }
+
+    public function getNormalizationOutput(): ?string
+    {
+        return $this->normalizationOutput;
+    }
+
+    public function withNormalizationOutput(?string $normalizationOutput): static
+    {
+        $self = clone $this;
+        $self->normalizationOutput = $normalizationOutput;
 
         return $self;
     }

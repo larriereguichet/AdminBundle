@@ -18,7 +18,7 @@ interface OperationInterface extends RolesOwnerInterface, WorkflowAwareInterface
     /** @return array<string, mixed> */
     public function getContext(): array;
 
-    public function getTitle(): ?string;
+    public function getTitle(): string|false|null;
 
     public function getDescription(): ?string;
 
@@ -88,6 +88,10 @@ interface OperationInterface extends RolesOwnerInterface, WorkflowAwareInterface
     public function getInput(): ?string;
 
     public function getOutput(): ?string;
+
+    public function getNormalizationInput(): ?string;
+
+    public function getNormalizationOutput(): ?string;
 
     public function getWorkflowTransition(): ?string;
 

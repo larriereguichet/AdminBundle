@@ -9,6 +9,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class Slug extends Property
 {
+    /** @var string[] */
+    #[Assert\NotBlank]
+    #[Assert\All([new Assert\NotBlank()])]
+    private array $source;
+
+    /**
+     * @param string|string[] $source
+     */
     public function __construct(
         ?string $name = null,
         string|bool|null $propertyPath = null,
@@ -24,13 +32,15 @@ class Slug extends Property
         ?array $permissions = null,
         ?string $condition = null,
         ?string $sortingPath = null,
+        ?string $component = null,
+        ?string $translationDomain = null,
 
-        #[Assert\NotBlank(message: 'The source property should not be blank')]
-        private string $source = 'name',
-
+        string|array $source = 'name',
         #[Assert\NotBlank(message: 'The slugger should not be blank')]
         private string $slugger = 'default',
     ) {
+        $this->source = \is_string($source) ? [$source] : $source;
+
         parent::__construct(
             name: $name,
             propertyPath: $propertyPath,
@@ -44,19 +54,23 @@ class Slug extends Property
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
-            sortingPath: $sortingPath
+            sortingPath: $sortingPath,
+            component: $component,
+            translationDomain: $translationDomain,
         );
     }
 
-    public function getSource(): string
+    /** @return string[] */
+    public function getSource(): array
     {
         return $this->source;
     }
 
-    public function withSource(string $source): self
+    /** @param string|string[] $source */
+    public function withSource(string|array $source): self
     {
         $self = clone $this;
-        $self->source = $source;
+        $self->source = \is_string($source) ? [$source] : $source;
 
         return $self;
     }

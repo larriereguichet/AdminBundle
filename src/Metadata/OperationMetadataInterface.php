@@ -13,7 +13,7 @@ interface OperationMetadataInterface extends OperationInterface
     /** @param  array<string, mixed> $context */
     public function withContext(array $context): static;
 
-    public function withTitle(?string $title): static;
+    public function withTitle(string|false|null $title): static;
 
     public function withDescription(?string $description): static;
 
