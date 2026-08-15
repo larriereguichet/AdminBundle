@@ -47,22 +47,22 @@ jobs:
                 run: mkdir -p tests/app/public/build && cp -r public/* tests/app/public/build
 
             -   name: Run docker compose
-                run: docker compose up -d db && sleep 10 && docker compose logs db
+                run: docker compose up -d database && sleep 10 && docker compose logs database
 
             -   name: Run phpunit
-                run: bin/phpunit -c phpunit.xml.dist
+                run: vendor/bin/phpunit -c phpunit.xml.dist
 
             -   name: Run php-cs-fixer
                 run: PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --dry-run --using-cache=no --verbose --diff --allow-risky=yes --config .php-cs-fixer.dist.php
 
             -   name: Run phpstan
-                run: bin/phpstan analyse
+                run: vendor/bin/phpstan analyse
 
             -   name: Run var_dump checker
-                run: bin/var-dump-check --symfony src tests
+                run: vendor/bin/var-dump-check --symfony src tests
 
             -   name: Run Rector
-                run: bin/rector --dry-run
+                run: vendor/bin/rector --dry-run
 
             -   name: Stop docker compose
                 run: docker compose down
