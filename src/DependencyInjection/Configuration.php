@@ -21,12 +21,18 @@ final class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('request_parameter')->defaultValue('_lag_operation')->end()
-                ->scalarNode('date_format')->defaultValue('medium')->end()
-                ->scalarNode('time_format')->defaultValue('short')->end()
-                ->booleanNode('date_localization')->defaultValue(true)->end()
-                ->booleanNode('filter_events')->defaultValue(true)->end()
-                ->booleanNode('cache')->defaultValue(true)->end()
+            ->scalarNode('request_parameter')->defaultValue('_lag_operation')->end()
+            ->scalarNode('date_format')->defaultValue('medium')->end()
+            ->scalarNode('time_format')->defaultValue('short')->end()
+            ->booleanNode('date_localization')->defaultValue(true)->end()
+            ->booleanNode('filter_events')->defaultValue(true)->end()
+            ->booleanNode('cache')->defaultValue(true)->end()
+            ->arrayNode('grid_templates')
+                ->prototype('scalar')->end()
+                ->defaultValue([
+                    'table' => '@LAGAdmin/components/table_grid.html.twig',
+                    'card' => '@LAGAdmin/components/card_grid.html.twig',
+                ])
             ->end()
         ;
 
@@ -75,7 +81,7 @@ final class Configuration implements ConfigurationInterface
                         ->scalarNode('name')->end()
                         ->scalarNode('date_format')->defaultValue('medium')->end()
                         ->scalarNode('time_format')->defaultValue('short')->end()
-                        ->scalarNode('translation_domain')->end()
+                        ->scalarNode('translation_domain')->defaultValue('messages')->end()
                         ->scalarNode('translation_pattern')->defaultValue('{application}.{resource}.{message}')->end()
                         ->scalarNode('route_pattern')->defaultValue('{application}.{resource}.{operation}')->end()
                         ->scalarNode('base_template')->defaultValue('@LAGAdmin/base.html.twig')->end()

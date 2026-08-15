@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle;
 
 use LAG\AdminBundle\DependencyInjection\CompilerPass\MediaStorageCompilerPass;
+use LAG\AdminBundle\DependencyInjection\CompilerPass\ObjectMapperCompilerPass;
 use LAG\AdminBundle\DependencyInjection\CompilerPass\WorkflowCompilerPass;
 use LAG\AdminBundle\DependencyInjection\LAGAdminExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -17,6 +18,7 @@ final class LAGAdminBundle extends AbstractBundle
     {
         $container->addCompilerPass(new WorkflowCompilerPass());
         $container->addCompilerPass(new MediaStorageCompilerPass());
+        $container->addCompilerPass(new ObjectMapperCompilerPass());
     }
 
     public function getPath(): string

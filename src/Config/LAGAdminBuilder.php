@@ -12,7 +12,7 @@ final class LAGAdminBuilder
     /** @var array<string, ResourceMetadataInterface> */
     private array $resources = [];
 
-    /** @var array<string, GridMetadataInterface>  */
+    /** @var array<string, GridMetadataInterface> */
     private array $grids = [];
 
     public function __construct(
