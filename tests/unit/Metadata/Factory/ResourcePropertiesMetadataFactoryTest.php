@@ -53,6 +53,30 @@ final class ResourcePropertiesMetadataFactoryTest extends TestCase
     }
 
     #[Test]
+    public function itDoesNotLeakTheSortingPathToTheNextProperty(): void
+    {
+        $resource = new Resource(
+            shortName: 'book',
+            application: 'admin',
+            resourceClass: \stdClass::class,
+        );
+        $resourceFactory = $this->createStub(ResourceMetadataFactoryInterface::class);
+        $resourceFactory->method('createMetadata')->willReturn($resource);
+
+        $propertiesFactory = $this->createStub(PropertyCollectionMetadataFactoryInterface::class);
+        $propertiesFactory->method('createMetadata')->willReturn([
+            new Text('title'),
+            new Text('summary', sortable: false),
+        ]);
+
+        $factory = new ResourcePropertiesMetadataFactory($resourceFactory, $propertiesFactory);
+        $properties = $factory->createMetadata('book')->getProperties();
+
+        self::assertSame('title', $properties['title']->getSortingPath());
+        self::assertNull($properties['summary']->getSortingPath());
+    }
+
+    #[Test]
     public function itUsesTranslationPatternWhenProvided(): void
     {
         $resource = new Resource(
@@ -81,6 +105,36 @@ final class ResourcePropertiesMetadataFactoryTest extends TestCase
         $metadata = $factory->createMetadata('book');
 
         self::assertSame('lag_admin.admin.book.published_at', $metadata->getProperties()['published_at']->getLabel());
+    }
+
+    #[Test]
+    public function itUsesPropertyPathAsSortingPath(): void
+    {
+        $resource = new Resource(
+            shortName: 'book',
+            application: 'admin',
+            resourceClass: \stdClass::class,
+        );
+        $property = new Text('name', propertyPath: 'nested.name');
+
+        $resourceFactory = $this->createMock(ResourceMetadataFactoryInterface::class);
+        $resourceFactory
+            ->expects($this->once())
+            ->method('createMetadata')
+            ->willReturn($resource)
+        ;
+
+        $propertiesFactory = $this->createMock(PropertyCollectionMetadataFactoryInterface::class);
+        $propertiesFactory
+            ->expects($this->once())
+            ->method('createMetadata')
+            ->willReturn([$property])
+        ;
+
+        $factory = new ResourcePropertiesMetadataFactory($resourceFactory, $propertiesFactory);
+        $metadata = $factory->createMetadata('book');
+
+        self::assertSame('nested.name', $metadata->getProperties()['name']->getSortingPath());
     }
 
     #[Test]
@@ -167,6 +221,12 @@ final class ResourcePropertiesMetadataFactoryTest extends TestCase
             ->expects($this->once())
             ->method('withOperation')
             ->with('admin.book.')
+            ->willReturn($linkWithOperation)
+        ;
+        $linkWithOperation
+            ->expects($this->once())
+            ->method('withPropertyPath')
+            ->with('details')
             ->willReturn($linkWithOperation)
         ;
         $linkWithOperation

@@ -87,7 +87,7 @@ final readonly class OperationsLinkMetadataFactory implements ResourceMetadataFa
     private function initializeLinks(ResourceMetadataInterface $resource, array $links): array
     {
         foreach ($links as $index => $link) {
-            if (is_string($link)) {
+            if (\is_string($link)) {
                 $link = new Link(operation: $link);
             }
             $linkName = $link->getName();

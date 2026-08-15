@@ -7,7 +7,6 @@ namespace LAG\AdminBundle\Metadata\Factory;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Metadata\Attribute\EntityFilter;
 use LAG\AdminBundle\Metadata\CollectionOperationMetadataInterface;
-use LAG\AdminBundle\Metadata\OperationMetadataInterface;
 use LAG\AdminBundle\Metadata\ResourceMetadataInterface;
 
 final readonly class CollectionOperationMetadataFactory implements ResourceMetadataFactoryInterface
@@ -54,7 +53,6 @@ final readonly class CollectionOperationMetadataFactory implements ResourceMetad
 
             $operations[$operation->getName()] = $operation
                 ->withCollectionLinks($operation->getCollectionLinks() ?? [])
-                ->withCollectionFormOptions($operation->getCollectionFormOptions() ?? [])
                 ->withFilters($filters)
                 ->withFilterForm($filterForm)
                 ->withFilterFormOptions($filterFormOptions)
