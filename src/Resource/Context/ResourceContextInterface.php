@@ -10,6 +10,16 @@ use LAG\AdminBundle\Metadata\ResourceInterface;
 interface ResourceContextInterface
 {
     /**
+     * Push a new empty context onto the stack (called on each kernel.request).
+     */
+    public function push(): void;
+
+    /**
+     * Pop the current context from the stack (called on kernel.finish_request).
+     */
+    public function pop(): void;
+
+    /**
      * Return the current resource. If no resource is found, an exception will be thrown.
      *
      * @return ResourceInterface The current resource

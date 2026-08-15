@@ -11,47 +11,73 @@ use LAG\AdminBundle\Metadata\ResourceInterface;
 
 final class ResourceContext implements ResourceContextInterface
 {
-    private ?ResourceInterface $resource = null;
-    private ?OperationInterface $operation = null;
+    /** @var array<array{resource: ResourceInterface|null, operation: OperationInterface|null}> */
+    private array $stack = [];
+
+    public function push(): void
+    {
+        $this->stack[] = ['resource' => null, 'operation' => null];
+    }
+
+    public function pop(): void
+    {
+        array_pop($this->stack);
+    }
 
     public function getResource(): ResourceInterface
     {
-        if ($this->resource === null) {
+        $current = $this->current();
+
+        if ($current['resource'] === null) {
             throw new UnsupportedRequestException('The current request is not supported by any resource');
         }
 
-        return $this->resource;
+        return $current['resource'];
     }
 
     public function setResource(ResourceInterface $resource): void
     {
-        $this->resource = $resource;
+        $this->stack[array_key_last($this->stack)]['resource'] = $resource;
     }
 
     public function hasResource(): bool
     {
-        return $this->resource !== null;
+        return $this->current()['resource'] !== null;
     }
 
     public function getOperation(): OperationInterface
     {
-        if ($this->operation === null) {
+        $current = $this->current();
+
+        if ($current['operation'] === null) {
             throw new UnsupportedRequestException('The current request is not supported by any resource or operation');
         }
 
-        return $this->operation;
+        return $current['operation'];
     }
 
     public function setOperation(OperationInterface $operation): void
     {
-        if ($this->operation !== null) {
+        $current = $this->current();
+
+        if ($current['operation'] !== null) {
             throw new Exception('The request operation is already set.');
         }
-        $this->operation = $operation;
+        $this->stack[array_key_last($this->stack)]['operation'] = $operation;
     }
 
     public function hasOperation(): bool
     {
-        return $this->operation !== null;
+        return $this->current()['operation'] !== null;
+    }
+
+    /** @return array{resource: ResourceInterface|null, operation: OperationInterface|null} */
+    private function current(): array
+    {
+        if ($this->stack === []) {
+            return ['resource' => null, 'operation' => null];
+        }
+
+        return $this->stack[array_key_last($this->stack)];
     }
 }
