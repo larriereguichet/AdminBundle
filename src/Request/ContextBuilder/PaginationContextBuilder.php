@@ -16,11 +16,13 @@ final readonly class PaginationContextBuilder implements ContextBuilderInterface
     ) {
     }
 
-    /** @param CollectionOperationInterface $operation */
     public function buildContext(Request $request, OperationInterface $operation, ?GridInterface $grid = null): array
     {
         $context = $this->contextBuilder->buildContext($request, $operation, $grid);
-        $context['page'] = $request->query->getInt($operation->getPageParameter(), 1);
+
+        if ($operation instanceof CollectionOperationInterface) {
+            $context['page'] = $request->query->getInt($operation->getPageParameter(), 1);
+        }
 
         return $context;
     }
