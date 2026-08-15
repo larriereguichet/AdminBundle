@@ -6,6 +6,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **LAG AdminBundle** (`lag/adminbundle`) is a Symfony 7.0+ bundle (PHP 8.4+) that generates administration interfaces from PHP attributes. Resources are declared with `#[Resource]` on entity classes; the bundle generates routes, controllers, grids, forms, and menus from that metadata at boot time.
 
+## Project rules
+
+These are binding — read them before writing code or touching Git:
+
+@.claude/rules/coding-standards.md
+@.claude/rules/commits-and-merge-requests.md
+
+Short version: **everything written into the repository is in English** (code, comments,
+commit messages, MR descriptions), commits follow Conventional Commits, and `make tests`
+must be green before a commit is proposed.
+
+Use the `/review` skill to review a change before committing it.
+
 ## Commands
 
 ```bash
@@ -21,6 +34,13 @@ vendor/bin/phpunit --stop-on-failure
 # Run a single test file or method
 vendor/bin/phpunit tests/unit/path/to/FooTest.php
 vendor/bin/phpunit --filter testMethodName
+
+# Unit suite only — fast, no database required
+vendor/bin/phpunit --testsuite "AdminBundle Test Suite"
+
+# Functional suite only — requires the database container to be up
+docker compose up -d database
+vendor/bin/phpunit --testsuite "AdminBundle Functional Test Suite"
 
 # Static analysis
 vendor/bin/phpstan analyse
@@ -44,7 +64,20 @@ make assets          # install + production build
 make assets.watch    # dev watch mode
 ```
 
-Functional tests require a MySQL database on `127.0.0.1:3366` (non-standard port) with credentials `admin_test:admin_test`, database `admin_test`. The test app kernel is `LAG\AdminBundle\Tests\Application\TestKernel`.
+Functional tests require a MySQL database on `127.0.0.1:3366` (non-standard port) with credentials `admin_test:admin_test`, database `admin_test`. It is provided by the `database` service in `compose.yaml` (MariaDB 11) — start it with `docker compose up -d database`. The test app kernel is `LAG\AdminBundle\Tests\Application\TestKernel`.
+
+### Quality gates
+
+| Gate | Command | Scope |
+|---|---|---|
+| Tests | `vendor/bin/phpunit` | `tests/unit` + `tests/functional` |
+| Static analysis | `vendor/bin/phpstan analyse` | `src`, `config` — level 6 |
+| Code style | `make cs` | `config`, `src`, `tests/unit` — `@Symfony` + risky |
+| Modernization | `make rector` | `config`, `src`, `tests` (except `tests/app`) — PHP 8.3 sets |
+| Debug leftovers | `make var-dump-checker` | `src`, `tests` |
+| Backward compatibility | `make bc.check` | public API vs last release |
+
+CI (`.github/workflows/ci.yaml`) runs phpunit, php-cs-fixer and phpstan on PHP 8.4 for every push. `make bc.check` and `make rector` are local-only gates.
 
 ## Architecture
 
@@ -136,6 +169,15 @@ Key `lag_admin` config keys: `mapping.paths` (where to scan for `#[Resource]` at
 
 Tests use `zenstruck/foundry` for entity factories and `dg/bypass-finals` to mock final classes.
 
-## Active Work (feat/view-builders branch)
+## Active Work
 
-The current branch is restructuring view building. `TODO.md` tracks in-progress design decisions: consolidating `ResourceInterface`, replacing "actions" with "links", adding a `LinkGroup` concept, and caching ORM metadata via Symfony Cache.
+Development happens on `feat/v2.0`, branched off `master`. It restructures view building
+around the builder pattern (`GridBuilder` → `RowBuilder` → `CellBuilder`) and moves the
+metadata attributes into `src/Metadata/Attribute/`.
+
+`TODO.md` tracks the remaining design decisions: consolidating `ResourceInterface`,
+replacing "actions" with "links", adding a `LinkGroup` concept, unifying the workflow
+interfaces, grouping resource menu items, and caching ORM metadata via Symfony Cache.
+
+Since this is a 2.0 line, breaking changes are acceptable — but they must be intentional,
+called out in the commit footer (`BREAKING CHANGE:`), and documented in `HISTORY.md`.

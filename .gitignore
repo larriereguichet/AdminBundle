@@ -1,4 +1,5 @@
 /.docker
+/.claude/settings.local.json
 /bin
 /composer.lock
 /yarn.lock
