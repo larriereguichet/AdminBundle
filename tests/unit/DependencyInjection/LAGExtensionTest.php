@@ -22,22 +22,11 @@ final class LAGExtensionTest extends TestCase
             ->method('setParameter')
             ->willReturnCallback(function ($parameter): void {
                 $this->assertContains($parameter, [
-                    'lag_admin.request_parameter',
+                    'lag_admin.mapping_paths',
+                    'lag_admin.applications',
                     'lag_admin.media_directory',
                     'lag_admin.media_storage',
-                    'lag_admin.resource_parameter',
-                    'lag_admin.operation_parameter',
-                    'lag_admin.application.configuration',
-                    'lag_admin.resource_paths',
-                    'lag_admin.title',
-                    'lag_admin.resource_paths',
-                    'lag_admin.date_format',
-                    'lag_admin.time_format',
-                    'lag_admin.date_localization',
-                    'lag_admin.filter_events',
-                    'lag_admin.media_bundle_enabled',
-                    'lag_admin.grids',
-                    'lag_admin.grid_paths',
+                    'lag_admin.request_parameter',
                     'lag_admin.grid_templates',
                 ]);
             })
@@ -61,13 +50,32 @@ final class LAGExtensionTest extends TestCase
                 'mapping' => ['paths' => [__DIR__.'/../../app/src/Entity']],
             ],
         ], $this->container); // @phpstan-ignore-line
+
+        self::assertSame('lag_admin', $extension->getAlias());
+    }
+
+    #[Test]
+    public function itReturnsAlias(): void
+    {
+        $extension = new LAGAdminExtension();
+        self::assertSame('lag_admin', $extension->getAlias());
+    }
+
+    #[Test]
+    public function itPrependsConfiguration(): void
+    {
+        $this->container->expects($this->atLeastOnce())
+            ->method('prependExtensionConfig')
+        ;
+
+        $extension = new LAGAdminExtension();
+        $extension->prepend($this->container);
     }
 
     protected function setUp(): void
     {
         $this->container = $this->createMock(ContainerBuilder::class);
         $this->container
-            ->expects($this->atLeastOnce())
             ->method('getParameter')
             ->willReturnMap([
                 ['kernel.environment', 'dev'],
