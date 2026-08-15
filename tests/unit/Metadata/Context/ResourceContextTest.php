@@ -4,53 +4,22 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\Metadata\Context;
 
-use LAG\AdminBundle\Exception\Exception;
+use LAG\AdminBundle\Exception\UnsupportedRequestException;
 use LAG\AdminBundle\Metadata\Attribute\Resource;
 use LAG\AdminBundle\Metadata\Attribute\Show;
-use LAG\AdminBundle\Metadata\Factory\ResourceFactoryInterface;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Resource\Context\ResourceContext;
 use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
-// TODO move ?
 final class ResourceContextTest extends TestCase
 {
     private ResourceContext $resourceContext;
-    private MockObject $requestStack;
-    private MockObject $parametersExtractor;
-    private MockObject $resourceFactory;
 
     #[Test]
     public function itReturnsTheCurrentResource(): void
     {
-        $request = new Request(['test']);
-
         $resource = new Resource(shortName: 'my_resource');
-        $operation = new Show(name: 'my_operation');
-        $operation = $operation->setResource($resource);
-        $resource = $resource->withOperations([$operation]);
-
-        $this->requestStack
-            ->expects($this->once())
-            ->method('getCurrentRequest')
-            ->willReturn($request)
-        ;
-        $this->parametersExtractor
-            ->expects($this->atLeastOnce())
-            ->method('getResourceName')
-            ->with($request)
-            ->willReturn('my_resource')
-        ;
-        $this->resourceFactory
-            ->expects($this->once())
-            ->method('create')
-            ->with('my_resource')
-            ->willReturn($resource)
-        ;
+        $this->resourceContext->setResource($resource);
 
         $contextResource = $this->resourceContext->getResource();
 
@@ -60,52 +29,71 @@ final class ResourceContextTest extends TestCase
     #[Test]
     public function itDoesNotReturnAMissingResource(): void
     {
-        $request = new Request(['test']);
-
-        $this->requestStack
-            ->expects($this->once())
-            ->method('getCurrentRequest')
-            ->willReturn($request)
-        ;
-        $this->parametersExtractor
-            ->expects($this->once())
-            ->method('getResourceName')
-            ->with($request)
-            ->willReturn(null)
-        ;
-
-        $this->expectExceptionObject(new Exception('The current request is not supported by any resource'));
+        $this->expectException(UnsupportedRequestException::class);
         $this->resourceContext->getResource();
     }
 
     #[Test]
     public function itCheckIfThereIsACurrentResource(): void
     {
-        $request = new Request(['test']);
-        $this->requestStack
-            ->expects($this->once())
-            ->method('getCurrentRequest')
-            ->willReturn($request)
-        ;
-        $this->parametersExtractor
-            ->expects($this->once())
-            ->method('getResourceName')
-            ->with($request)
-            ->willReturn(null)
-        ;
+        $this->assertFalse($this->resourceContext->hasResource());
+
+        $resource = new Resource(shortName: 'my_resource');
+        $this->resourceContext->setResource($resource);
+
+        $this->assertTrue($this->resourceContext->hasResource());
+    }
+
+    #[Test]
+    public function itReturnsTheCurrentOperation(): void
+    {
+        $operation = new Show(name: 'my_operation');
+        $this->resourceContext->setOperation($operation);
+
+        $this->assertEquals($operation, $this->resourceContext->getOperation());
+    }
+
+    #[Test]
+    public function itDoesNotReturnAMissingOperation(): void
+    {
+        $this->expectException(UnsupportedRequestException::class);
+        $this->resourceContext->getOperation();
+    }
+
+    #[Test]
+    public function itPopsTheStack(): void
+    {
+        $resource = new Resource(shortName: 'my_resource');
+        $this->resourceContext->setResource($resource);
+        $this->resourceContext->pop();
 
         $this->assertFalse($this->resourceContext->hasResource());
     }
 
+    #[Test]
+    public function itThrowsWhenSettingOperationTwice(): void
+    {
+        $this->expectException(\LAG\AdminBundle\Exception\Exception::class);
+
+        $operation = new Show(name: 'my_operation');
+        $this->resourceContext->setOperation($operation);
+        $this->resourceContext->setOperation($operation);
+    }
+
+    #[Test]
+    public function itCheckIfThereIsACurrentOperation(): void
+    {
+        $this->assertFalse($this->resourceContext->hasOperation());
+
+        $operation = new Show(name: 'my_operation');
+        $this->resourceContext->setOperation($operation);
+
+        $this->assertTrue($this->resourceContext->hasOperation());
+    }
+
     protected function setUp(): void
     {
-        $this->requestStack = $this->createMock(RequestStack::class);
-        $this->parametersExtractor = $this->createMock(ParametersExtractorInterface::class);
-        $this->resourceFactory = $this->createMock(ResourceFactoryInterface::class);
-        $this->resourceContext = new ResourceContext(
-            $this->requestStack,
-            $this->parametersExtractor,
-            $this->resourceFactory,
-        );
+        $this->resourceContext = new ResourceContext();
+        $this->resourceContext->push();
     }
 }

@@ -15,10 +15,14 @@ final readonly class ResourceSlugger implements ResourceSluggerInterface
     ) {
     }
 
-    public function generateSlug(object $resource, string $sourceProperty, string $targetProperty): string
+    /** @param string|string[] $sourceProperties */
+    public function generateSlug(object $resource, string|array $sourceProperties, string $targetProperty): string
     {
-        $slugSource = $this->propertyAccessor->getValue($resource, $sourceProperty);
-        $slug = $this->slugger->slug($slugSource)->toString();
+        $parts = array_map(
+            fn (string $property) => (string) $this->propertyAccessor->getValue($resource, $property),
+            (array) $sourceProperties,
+        );
+        $slug = $this->slugger->slug(implode(' ', $parts))->toString();
         $this->propertyAccessor->setValue($resource, $targetProperty, $slug);
 
         return $slug;
