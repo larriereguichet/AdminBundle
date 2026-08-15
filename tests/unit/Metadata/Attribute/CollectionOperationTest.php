@@ -25,6 +25,18 @@ final class CollectionOperationTest extends TestCase
         self::assertSame([], $operation->getFilterFormOptions());
         self::assertSame([], $operation->getBatchOperations());
         self::assertNull($operation->getCollectionLinks());
+        self::assertSame([], $operation->getOrderBy());
+    }
+
+    #[Test]
+    public function itCarriesTheOrderByDeclaredOnTheOperation(): void
+    {
+        // Index is the only concrete collection operation, so an argument it does not forward to its parent is
+        // unreachable from configuration however well the parent implements it
+        $operation = new Index(orderBy: ['publishedAt' => 'DESC']);
+
+        self::assertSame(['publishedAt' => 'DESC'], $operation->getOrderBy());
+        self::assertSame(['name' => 'asc'], $operation->withOrderBy(['name' => 'asc'])->getOrderBy());
     }
 
     #[Test]
