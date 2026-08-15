@@ -85,7 +85,7 @@ final class OperationTest extends TestCase
         self::assertNotSame($operation, $new);
         self::assertSame('/books/index', $new->getPath());
 
-        $new = $operation->withPermissions(['ROLE_ADMIN']);
+        $new = $operation->withRoles(['ROLE_ADMIN']);
         self::assertNotSame($operation, $new);
         self::assertSame(['ROLE_ADMIN'], $new->getRoles());
 

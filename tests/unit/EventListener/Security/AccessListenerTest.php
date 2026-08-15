@@ -34,7 +34,7 @@ final class AccessListenerTest extends TestCase
     {
         $request = new Request();
         $event = new RequestEvent($this->createStub(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
-        $operation = $operation->withPermissions(['ROLE_ADMIN']);
+        $operation = $operation->withRoles(['ROLE_ADMIN']);
 
         $this->resourceContext
             ->expects($this->once())
@@ -61,7 +61,7 @@ final class AccessListenerTest extends TestCase
     {
         $request = new Request();
         $event = new RequestEvent($this->createStub(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
-        $operation = $operation->withPermissions(['ROLE_ADMIN']);
+        $operation = $operation->withRoles(['ROLE_ADMIN']);
 
         $this->resourceContext
             ->expects($this->once())

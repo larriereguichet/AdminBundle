@@ -181,9 +181,9 @@ final class ResourceTest extends TestCase
         self::assertNotSame($resource, $new);
         self::assertSame('Books', $new->getTitle());
 
-        $new = $resource->withPermissions(['ROLE_ADMIN']);
+        $new = $resource->withRoles(['ROLE_ADMIN']);
         self::assertNotSame($resource, $new);
-        self::assertSame(['ROLE_ADMIN'], $new->getPermissions());
+        self::assertSame(['ROLE_ADMIN'], $new->getRoles());
 
         $new = $resource->withIdentifiers(['uuid']);
         self::assertNotSame($resource, $new);

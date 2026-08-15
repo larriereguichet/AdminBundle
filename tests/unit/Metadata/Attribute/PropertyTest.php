@@ -85,7 +85,7 @@ final class PropertyTest extends TestCase
         self::assertNotSame($property, $new);
         self::assertSame('App\DataTransformer\MyTransformer', $new->getDataTransformer());
 
-        $new = $property->withPermissions(['ROLE_ADMIN']);
+        $new = $property->withRoles(['ROLE_ADMIN']);
         self::assertNotSame($property, $new);
         self::assertSame(['ROLE_ADMIN'], $new->getRoles());
 

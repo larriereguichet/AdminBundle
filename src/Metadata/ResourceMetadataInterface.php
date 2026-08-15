@@ -64,8 +64,8 @@ interface ResourceMetadataInterface extends ResourceInterface
     /** @param array<string, mixed> $context */
     public function withDenormalizationContext(array $context): self;
 
-    /** @param array<string> $permissions */
-    public function withPermissions(array $permissions): self;
+    /** @param array<int, string> $roles */
+    public function withRoles(array $roles): self;
 
     public function withInput(?string $input): self;
 
