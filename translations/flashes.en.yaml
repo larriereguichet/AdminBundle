@@ -1,0 +1,5 @@
+lag_admin:
+    ui:
+        create_success: The changes have been saved
+        process_success: The changes have been saved
+        transition_not_enabled: This action is no longer available on this record
