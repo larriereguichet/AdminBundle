@@ -9,7 +9,6 @@ use LAG\AdminBundle\Controller\Resource\ProcessResource;
 use LAG\AdminBundle\Controller\Resource\ShowResource;
 use LAG\AdminBundle\Controller\Security\Login;
 use LAG\AdminBundle\EventDispatcher\ResourceEventDispatcherInterface;
-use LAG\AdminBundle\Grid\Factory\GridFactoryInterface;
 use LAG\AdminBundle\Grid\ViewBuilder\GridBuilderInterface;
 use LAG\AdminBundle\Request\ContextBuilder\ContextBuilderInterface;
 use LAG\AdminBundle\State\Processor\ProcessorInterface;
@@ -24,10 +23,10 @@ return static function (ContainerConfigurator $container): void {
             '$provider' => service(ProviderInterface::class),
             '$processor' => service(ProcessorInterface::class),
             '$formFactory' => service('form.factory'),
-            '$gridFactory' => service(GridFactoryInterface::class),
             '$gridBuilder' => service(GridBuilderInterface::class),
             '$eventDispatcher' => service('lag_admin.event_dispatcher'),
             '$responseHandler' => service('lag_admin.response_handler'),
+            '$security' => service('security.helper'),
         ])
         ->tag('controller.service_arguments')
     ;

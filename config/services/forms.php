@@ -9,7 +9,6 @@ use LAG\AdminBundle\Form\Extension\ChoiceTypeExtension;
 use LAG\AdminBundle\Form\Extension\CollectionTypeExtension;
 use LAG\AdminBundle\Form\Guesser\FormGuesser;
 use LAG\AdminBundle\Form\Guesser\FormGuesserInterface;
-use LAG\AdminBundle\Form\Type\Date\DateRangeType;
 use LAG\AdminBundle\Form\Type\Image\ImageType;
 use LAG\AdminBundle\Form\Type\Resource\FilterType;
 use LAG\AdminBundle\Form\Type\Resource\ResourceDataChoiceType;
@@ -26,9 +25,6 @@ return static function (ContainerConfigurator $container): void {
         ->args([
             '$resourceContext' => service('lag_admin.resource.context'),
         ])
-        ->tag('form.type')
-    ;
-    $services->set(DateRangeType::class)
         ->tag('form.type')
     ;
     $services->set(LoginType::class)

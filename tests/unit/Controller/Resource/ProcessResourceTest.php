@@ -44,24 +44,25 @@ final class ProcessResourceTest extends TestCase
         $data = new Book();
         $data->id = 666;
         $event = new ResourceControllerEvent($operation, $request, $data);
-        $form = $this->createMock(FormInterface::class);
+        $form = $this->createStub(FormInterface::class);
 
         $this->contextBuilder
             ->expects($this->once())
             ->method('buildContext')
-            ->with($operation, $request)
+            ->with($request, $operation)
+            ->willReturn([])
+        ;
+        $this->provider
+            ->expects($this->once())
+            ->method('provide')
+            ->with($operation, [], [])
+            ->willReturn($data)
         ;
         $this->formFactory
             ->expects($this->once())
             ->method('create')
             ->with($operation->getForm(), $data, $operation->getFormOptions())
             ->willReturn($form)
-        ;
-        $this->provider
-            ->expects($this->once())
-            ->method('provide')
-            ->with($operation)
-            ->willReturn($data)
         ;
         $this->processor
             ->expects($this->never())
@@ -75,7 +76,7 @@ final class ProcessResourceTest extends TestCase
         $this->responseHandler
             ->expects($this->once())
             ->method('createResponse')
-            ->with($operation, $data, ['form' => $form])
+            ->with($request, $operation, $data, ['form' => $form])
             ->willReturn(new Response(content: 'some html'))
         ;
         $response = $this->controller->__invoke($operation, $request);
@@ -90,19 +91,25 @@ final class ProcessResourceTest extends TestCase
         $request = new Request();
         $data = new Book();
         $data->id = 666;
-        $form = $this->createMock(FormInterface::class);
+        $form = $this->createStub(FormInterface::class);
 
+        $this->contextBuilder
+            ->expects($this->once())
+            ->method('buildContext')
+            ->with($request, $operation)
+            ->willReturn([])
+        ;
+        $this->provider
+            ->expects($this->once())
+            ->method('provide')
+            ->with($operation, [], [])
+            ->willReturn($data)
+        ;
         $this->formFactory
             ->expects($this->once())
             ->method('create')
             ->with($operation->getForm(), $data, $operation->getFormOptions())
             ->willReturn($form)
-        ;
-        $this->provider
-            ->expects($this->once())
-            ->method('provide')
-            ->with($operation)
-            ->willReturn($data)
         ;
         $this->processor
             ->expects($this->never())
@@ -150,22 +157,28 @@ final class ProcessResourceTest extends TestCase
             ->willReturn($data)
         ;
 
+        $this->contextBuilder
+            ->expects($this->once())
+            ->method('buildContext')
+            ->with($request, $operation)
+            ->willReturn([])
+        ;
+        $this->provider
+            ->expects($this->once())
+            ->method('provide')
+            ->with($operation, [], [])
+            ->willReturn($data)
+        ;
         $this->formFactory
             ->expects($this->once())
             ->method('create')
             ->with($operation->getForm(), $data, $operation->getFormOptions())
             ->willReturn($form)
         ;
-        $this->provider
-            ->expects($this->once())
-            ->method('provide')
-            ->with($operation)
-            ->willReturn($data)
-        ;
         $this->processor
             ->expects($this->once())
             ->method('process')
-            ->with($data, $operation)
+            ->with($data, $operation, [], [])
         ;
         $this->eventDispatcher
             ->expects($this->never())
@@ -174,7 +187,7 @@ final class ProcessResourceTest extends TestCase
         $this->responseHandler
             ->expects($this->once())
             ->method('createRedirectResponse')
-            ->with($operation, $data, ['form' => $form])
+            ->with($request, $operation, $data, ['form' => $form])
             ->willReturn(new RedirectResponse(url: '/url'))
         ;
         $response = $this->controller->__invoke($operation, $request);
