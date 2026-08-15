@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Metadata;
 
-interface ResourceInterface
+use LAG\AdminBundle\Security\RolesOwnerInterface;
+
+interface ResourceInterface extends RolesOwnerInterface
 {
     /**
      * Return the resource name. It is the concatenation of the application name and the resource short name.
@@ -87,9 +89,6 @@ interface ResourceInterface
 
     /** @return array<string, mixed>|null */
     public function getDenormalizationContext(): ?array;
-
-    /** @return array<string>|null */
-    public function getPermissions(): ?array;
 
     public function getInput(): ?string;
 

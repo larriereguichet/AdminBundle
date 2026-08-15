@@ -205,10 +205,10 @@ class Property implements PropertyInterface, PropertyMetadataInterface
         return $this->permissions;
     }
 
-    public function withPermissions(array $permissions): static
+    public function withRoles(array $roles): static
     {
         $self = clone $this;
-        $self->permissions = $permissions;
+        $self->permissions = $roles;
 
         return $self;
     }

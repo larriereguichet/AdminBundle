@@ -91,9 +91,9 @@ interface PropertyMetadataInterface extends PropertyInterface
     /**
      * Define the property permissions.
      *
-     * @param array<string, string> $permissions
+     * @param array<int, string> $roles
      */
-    public function withPermissions(array $permissions): self;
+    public function withRoles(array $roles): self;
 
     /**
      * Define the path by the provider used to sort with this property. Usually it is the Doctrine ORM query path.

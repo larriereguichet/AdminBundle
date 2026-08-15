@@ -240,10 +240,10 @@ abstract class Operation implements OperationInterface, OperationMetadataInterfa
         return $this->permissions;
     }
 
-    public function withPermissions(?array $permissions): static
+    public function withRoles(?array $roles): static
     {
         $self = clone $this;
-        $self->permissions = $permissions;
+        $self->permissions = $roles;
 
         return $self;
     }
