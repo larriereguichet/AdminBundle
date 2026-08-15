@@ -8,6 +8,7 @@ use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Exception\Resource\MissingResourceException;
 use LAG\AdminBundle\Metadata\ResourceMetadataInterface;
 use Symfony\Component\String\Inflector\EnglishInflector;
+
 use function Symfony\Component\String\u;
 
 final readonly class ResourceMetadataFactory implements ResourceMetadataFactoryInterface

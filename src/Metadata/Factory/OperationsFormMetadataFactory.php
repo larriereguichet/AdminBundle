@@ -9,7 +9,6 @@ use LAG\AdminBundle\Form\Type\Resource\ResourceDataType;
 use LAG\AdminBundle\Metadata\Attribute\Create;
 use LAG\AdminBundle\Metadata\Attribute\Delete;
 use LAG\AdminBundle\Metadata\Attribute\Update;
-use LAG\AdminBundle\Metadata\OperationMetadataInterface;
 use LAG\AdminBundle\Metadata\ResourceMetadataInterface;
 
 final readonly class OperationsFormMetadataFactory implements ResourceMetadataFactoryInterface

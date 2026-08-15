@@ -9,6 +9,7 @@ use Symfony\Component\Finder\Finder;
 
 final class GridCollectionMetadataFactory implements GridCollectionMetadataFactoryInterface
 {
+    /** @var array<string, mixed>|null */
     private ?array $cache = null;
 
     /** @param array<string> $paths */
@@ -40,7 +41,7 @@ final class GridCollectionMetadataFactory implements GridCollectionMetadataFacto
                     continue;
                 }
                 // The closure forbids access to the private scope in the included file
-                $loader = \Closure::bind(static fn($filePath) => include $filePath, null, null);
+                $loader = \Closure::bind(static fn ($filePath) => include $filePath, null, null);
 
                 try {
                     $callback = $loader($file->getRealPath());

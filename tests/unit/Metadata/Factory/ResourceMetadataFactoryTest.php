@@ -84,6 +84,30 @@ final class ResourceMetadataFactoryTest extends TestCase
     }
 
     #[Test]
+    public function itThrowsExceptionForMissingResourceClass(): void
+    {
+        $resource = new Resource(
+            shortName: 'book',
+            application: 'admin',
+            resourceClass: null,
+        );
+
+        $collectionFactory = $this->createMock(ResourceCollectionMetadataFactoryInterface::class);
+        $collectionFactory
+            ->expects($this->once())
+            ->method('createMetadata')
+            ->willReturn(['admin.book' => $resource])
+        ;
+        $applicationFactory = $this->createMock(ApplicationMetadataFactoryInterface::class);
+        $applicationFactory->expects($this->never())->method('createMetadata');
+
+        $factory = new ResourceMetadataFactory($collectionFactory, $applicationFactory);
+
+        $this->expectException(\LAG\AdminBundle\Exception\Exception::class);
+        $factory->createMetadata('admin.book');
+    }
+
+    #[Test]
     public function itThrowsExceptionForMissingResource(): void
     {
         $collectionFactory = $this->createMock(ResourceCollectionMetadataFactoryInterface::class);
