@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Response\Handler\ContentResponseHandlerInterface;
 use LAG\AdminBundle\Response\Handler\FormResponseHandler;
 use LAG\AdminBundle\Response\Handler\JsonResponseHandler;
@@ -12,7 +13,6 @@ use LAG\AdminBundle\Response\Handler\RedirectResponseHandlerInterface;
 use LAG\AdminBundle\Response\Handler\ResponseHandler;
 use LAG\AdminBundle\Response\Handler\ResponseHandlerInterface;
 use LAG\AdminBundle\Response\Handler\TemplateResponseHandler;
-use LAG\AdminBundle\Resource\Factory\OperationFactoryInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\OperationUrlGeneratorInterface;
 use LAG\AdminBundle\Routing\UrlGenerator\UrlGeneratorInterface;
 

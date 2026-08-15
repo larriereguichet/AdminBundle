@@ -19,8 +19,12 @@ final readonly class WorkflowConditionMatcher implements ConditionMatcherInterfa
     public function matchCondition(ConditionalInterface $subject, mixed $data, array $context = []): bool
     {
         if ($subject instanceof WorkflowAwareInterface) {
-            $context['workflow'] = $this->workflowRegistry->get($data, $subject->getWorkflow());
-            $context['workflow_transition'] = $subject->getWorkflowTransition();
+            if ($subject->getWorkflow() !== null && !isset($context['workflow'])) {
+                $context['workflow'] = $this->workflowRegistry->get($data, $subject->getWorkflow());
+            }
+            if ($subject->getWorkflowTransition() !== null) {
+                $context['workflow_transition'] = $subject->getWorkflowTransition();
+            }
         }
 
         return $this->conditionMatcher->matchCondition($subject, $data, $context);

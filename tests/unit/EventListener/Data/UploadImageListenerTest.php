@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\EventListener\Data;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use LAG\AdminBundle\Entity\Image;
 use LAG\AdminBundle\Event\DataEvent;
 use LAG\AdminBundle\EventListener\Data\UploadImageListener;
@@ -30,13 +29,14 @@ final class UploadImageListenerTest extends TestCase
     public function itUploadsImage(OperationInterface $operation): void
     {
         $book = new Book();
-        $book->setImages(new ArrayCollection([new Image(), new Image()]));
+        $book->addImage(new Image());
+        $book->addImage(new Image());
         $event = new DataEvent($book, $operation);
 
         $this->uploader
             ->expects($this->once())
             ->method('uploadImages')
-            ->with($book)
+            ->with($book->getImages())
         ;
 
         $this->listener->__invoke($event);
@@ -53,7 +53,7 @@ final class UploadImageListenerTest extends TestCase
         $this->uploader
             ->expects($this->once())
             ->method('uploadImage')
-            ->with($author)
+            ->with($author->getImage())
         ;
 
         $this->listener->__invoke($event);
