@@ -23,7 +23,7 @@ final readonly class PaginationProvider implements ProviderInterface
     {
         $data = $this->provider->provide($operation, $urlVariables, $context);
 
-        if (!$operation instanceof CollectionOperationInterface || !$this->shouldPaginate($operation, $data)) {
+        if (!$operation instanceof CollectionOperationInterface || !$this->couldPaginate($operation, $data)) {
             return $data;
         }
 
@@ -37,7 +37,7 @@ final readonly class PaginationProvider implements ProviderInterface
         return $pager;
     }
 
-    private function shouldPaginate(OperationInterface $operation, mixed $data): bool
+    private function couldPaginate(OperationInterface $operation, mixed $data): bool
     {
         if (!$operation instanceof CollectionOperationInterface) {
             return false;
