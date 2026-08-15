@@ -42,18 +42,12 @@ final class EventProcessorTest extends TestCase
             ->willReturnMap([
                 [
                     new DataEvent($data, $operation),
-                    DataEvents::DATA_PROCESS,
-                    'my_application',
-                    'my_resource',
-                    $operation->getFullName(),
+                    DataEvents::DATA_PROCESS_EVENT_TEMPLATE,
                     null,
                 ],
                 [
                     new DataEvent($data, $operation),
-                    DataEvents::DATA_PROCESSED,
-                    'my_application',
-                    'my_resource',
-                    $operation->getFullName(),
+                    DataEvents::DATA_PROCESSED_EVENT_TEMPLATE,
                     null,
                 ],
             ])
