@@ -6,5 +6,6 @@ namespace LAG\AdminBundle\Resource\Slug;
 
 interface ResourceSluggerInterface
 {
-    public function generateSlug(object $resource, string $sourceProperty, string $targetProperty): string;
+    /** @param string|string[] $sourceProperties */
+    public function generateSlug(object $resource, string|array $sourceProperties, string $targetProperty): string;
 }
