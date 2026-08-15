@@ -27,6 +27,7 @@ use LAG\AdminBundle\Metadata\Factory\ResourceCollectionMetadataFactoryInterface;
 use LAG\AdminBundle\Metadata\Factory\ResourceMetadataFactory;
 use LAG\AdminBundle\Metadata\Factory\ResourceMetadataFactoryInterface;
 use LAG\AdminBundle\Metadata\Factory\ResourcePropertiesMetadataFactory;
+use LAG\AdminBundle\Metadata\Factory\WorkflowMetadataFactory;
 use LAG\AdminBundle\Routing\Route\RouteNameGeneratorInterface;
 
 return static function (ContainerConfigurator $container): void {
@@ -90,6 +91,13 @@ return static function (ContainerConfigurator $container): void {
         ->args([
             '$metadataFactory' => service('.inner'),
             '$propertyCollectionMetadataFactory' => service('lag_admin.property.collection_metadata_factory'),
+        ])
+    ;
+    $services->set(WorkflowMetadataFactory::class)
+        ->decorate('lag_admin.resource.metadata_factory', priority: -250)
+        ->args([
+            '$metadataFactory' => service('.inner'),
+            '$workflowLocator' => tagged_locator('workflow', indexAttribute: 'name'),
         ])
     ;
     $services->set(OperationsLinkMetadataFactory::class)
