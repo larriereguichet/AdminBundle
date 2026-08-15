@@ -147,6 +147,30 @@ final class OperationsLinkMetadataFactoryTest extends TestCase
         self::assertSame('other.resource.create', $contextualLinks[0]->getOperation());
     }
 
+    #[Test]
+    public function itConvertsStringLinksToLinkObjects(): void
+    {
+        $resource = $this->buildResource(new Resource(
+            shortName: 'book',
+            application: 'admin',
+            resourceClass: \stdClass::class,
+            operations: [
+                new Index(contextualLinks: ['admin.book.create']),
+            ],
+        ));
+        $decorated = $this->createStub(ResourceMetadataFactoryInterface::class);
+        $decorated->method('createMetadata')->willReturn($resource);
+
+        $factory = new OperationsLinkMetadataFactory($decorated);
+        $result = $factory->createMetadata('admin.book');
+
+        $indexOperation = current($result->getOperations());
+        $contextualLinks = array_values($indexOperation->getContextualLinks());
+        self::assertCount(1, $contextualLinks);
+        self::assertInstanceOf(Link::class, $contextualLinks[0]);
+        self::assertSame('admin.book.create', $contextualLinks[0]->getOperation());
+    }
+
     private function buildResource(Resource $resource): ResourceMetadataInterface
     {
         $operations = [];
