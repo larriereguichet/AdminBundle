@@ -52,6 +52,28 @@ final class ConditionMatcherTest extends TestCase
         self::assertTrue($result);
     }
 
+    #[Test]
+    public function itReturnsTrueWhenConditionIsNull(): void
+    {
+        $property = new Text(condition: null);
+
+        $this->authorizationChecker->expects($this->never())->method('isGranted');
+
+        $result = $this->conditionMatcher->matchCondition($property, new \stdClass());
+
+        self::assertTrue($result);
+    }
+
+    #[Test]
+    public function itReturnsFalseWhenExpressionIsNotBool(): void
+    {
+        $property = new Text(condition: '"not_a_bool"');
+
+        $result = $this->conditionMatcher->matchCondition($property, new \stdClass());
+
+        self::assertFalse($result);
+    }
+
     protected function setUp(): void
     {
         $this->authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);

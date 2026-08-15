@@ -24,7 +24,7 @@ final class WorkflowConditionMatcherTest extends TestCase
         $subject = new WorkflowAware(workflow: 'my_workflow');
         $data = new \stdClass();
 
-        $workflow = $this->createMock(WorkflowInterface::class);
+        $workflow = $this->createStub(WorkflowInterface::class);
 
         $this->workflowRegistry
             ->expects($this->once())

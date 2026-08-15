@@ -6,9 +6,8 @@ namespace LAG\AdminBundle\Tests\Unit\Condition\Matcher;
 
 use LAG\AdminBundle\Condition\ConditionalInterface;
 use LAG\AdminBundle\Workflow\WorkflowAwareInterface;
-use LAG\AdminBundle\Workflow\WorkflowTransitionSubjectInterface;
 
-final readonly class WorkflowAware implements WorkflowAwareInterface, WorkflowTransitionSubjectInterface, ConditionalInterface
+final readonly class WorkflowAware implements WorkflowAwareInterface, ConditionalInterface
 {
     public function __construct(
         private ?string $condition = null,
