@@ -44,7 +44,7 @@ final readonly class ResourceMetadataFactory implements ResourceMetadataFactoryI
             ->withTranslationDomain($resource->getTranslationDomain() ?? $application->getTranslationDomain())
             ->withTranslationPattern($resource->getTranslationPattern() ?? $application->getTranslationPattern())
             ->withRoutePattern($resource->getRoutePattern() ?? $application->getRoutePattern())
-            ->withPermissions($resource->getPermissions() ?? [])
+            ->withRoles($resource->getRoles() ?? [])
             ->withNormalizationContext($resource->getNormalizationContext() ?? [])
             ->withDenormalizationContext($resource->getDenormalizationContext() ?? [])
             ->withFormOptions($resource->getFormOptions() ?? [])

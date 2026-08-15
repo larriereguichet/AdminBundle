@@ -131,7 +131,7 @@ final readonly class OperationsMetadataFactory implements ResourceMetadataFactor
                 ->withAjax($operation->hasAjax() ?? $resource->hasAjax())
                 ->withNormalizationContext($operation->getNormalizationContext() ?? $resource->getNormalizationContext() ?? [])
                 ->withDenormalizationContext($operation->getDenormalizationContext() ?? $resource->getDenormalizationContext() ?? [])
-                ->withPermissions($operation->getRoles() ?? $resource->getPermissions() ?? [])
+                ->withRoles($operation->getRoles() ?? $resource->getRoles() ?? [])
                 ->withIdentifiers($operation->getIdentifiers() ?? $identifiers)
                 ->withRoute($operation->getRoute() ?? $route)
                 ->withRedirectRoute($operation->getRedirectRoute() ?? $redirectRoute)

@@ -50,7 +50,7 @@ final class ResourceMetadataFactoryTest extends TestCase
         self::assertSame('messages', $result->getTranslationDomain());
         self::assertSame('admin.{resource}.{message}', $result->getTranslationPattern());
         self::assertSame('{application}.{resource}.{operation}', $result->getRoutePattern());
-        self::assertSame([], $result->getPermissions());
+        self::assertSame([], $result->getRoles());
     }
 
     #[Test]

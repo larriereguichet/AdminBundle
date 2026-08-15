@@ -23,8 +23,8 @@ interface OperationMetadataInterface extends OperationInterface
 
     public function withBaseTemplate(string $baseTemplate): static;
 
-    /** @param  array<string, mixed> $permissions */
-    public function withPermissions(?array $permissions): static;
+    /** @param array<int, string>|null $roles */
+    public function withRoles(?array $roles): static;
 
     public function withController(?string $controller): static;
 

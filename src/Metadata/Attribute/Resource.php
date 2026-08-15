@@ -496,15 +496,15 @@ class Resource implements ResourceInterface, ResourceMetadataInterface
         return $self;
     }
 
-    public function getPermissions(): ?array
+    public function getRoles(): ?array
     {
         return $this->permissions;
     }
 
-    public function withPermissions(array $permissions): self
+    public function withRoles(array $roles): self
     {
         $self = clone $this;
-        $self->permissions = $permissions;
+        $self->permissions = $roles;
 
         return $self;
     }
