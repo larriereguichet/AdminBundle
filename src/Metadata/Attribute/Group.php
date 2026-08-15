@@ -23,6 +23,8 @@ class Group extends Property implements CompoundPropertyInterface
         ?string $dataTransformer = null,
         ?array $permissions = null,
         ?string $condition = null,
+        ?string $component = null,
+        ?string $translationDomain = null,
 
         private array $properties = [],
     ) {
@@ -40,6 +42,8 @@ class Group extends Property implements CompoundPropertyInterface
             dataTransformer: $dataTransformer,
             permissions: $permissions,
             condition: $condition,
+            component: $component,
+            translationDomain: $translationDomain,
         );
     }
 

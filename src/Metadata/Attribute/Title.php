@@ -29,6 +29,8 @@ class Title extends Property
         ?array $permissions = null,
         ?string $condition = null,
         ?string $sortingPath = null,
+        ?string $component = null,
+        ?string $translationDomain = null,
 
         #[Assert\Length(min: 1)]
         private int $length = 100,
@@ -51,6 +53,8 @@ class Title extends Property
             permissions: $permissions,
             condition: $condition,
             sortingPath: $sortingPath,
+            component: $component,
+            translationDomain: $translationDomain,
         );
     }
 

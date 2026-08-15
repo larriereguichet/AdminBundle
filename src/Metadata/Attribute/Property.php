@@ -28,41 +28,32 @@ class Property implements PropertyInterface, PropertyMetadataInterface
             maxMessage: 'The name should not be longer than 255 characters'
         )]
         private ?string $name = null,
-
         #[Assert\NotNull(message: 'The property path should not be null. Use false instead')]
         private string|bool|null $propertyPath = null,
-
         #[Assert\NotNull(message: 'The label should not be null. Use false instead to disable the label')]
         private string|bool|null $label = null,
-
         #[TemplateValid(message: 'The template should be a valid Twig template')]
-        #[Assert\NotBlank(message: 'The template should not be blank')]
+        #[Assert\NotBlank(message: 'The template should not be blank', allowNull: true)]
         private ?string $template = null,
-
         private bool $sortable = true,
-
         private bool $translatable = false,
-
         private array $attributes = [],
-
         private array $rowAttributes = [],
-
         private array $headerAttributes = [],
-
         #[Assert\NotBlank(message: 'The data transformer should not be empty. Use null instead', allowNull: true)]
         private ?string $dataTransformer = null,
-
         private ?array $permissions = null,
-
         #[WorkflowInstalled]
         private ?string $condition = null,
-
         #[Assert\NotBlank(message: 'The sorting path should not be empty. Use null instead', allowNull: true)]
         #[Assert\Expression(
             expression: '(this.isSortable() and this.getSortingPath() !== null) or !this.isSortable()',
             message: 'The sorting path should not be null if the property is sortable',
         )]
         private ?string $sortingPath = null,
+        #[Assert\NotBlank(message: 'The component should not be blank. Use null instead', allowNull: true)]
+        private ?string $component = null,
+        private ?string $translationDomain = null
     ) {
     }
 
@@ -209,7 +200,7 @@ class Property implements PropertyInterface, PropertyMetadataInterface
         return $self;
     }
 
-    public function getPermissions(): ?array
+    public function getRoles(): ?array
     {
         return $this->permissions;
     }
@@ -244,6 +235,32 @@ class Property implements PropertyInterface, PropertyMetadataInterface
     {
         $self = clone $this;
         $self->sortingPath = $sortingPath;
+
+        return $self;
+    }
+
+    public function getComponent(): ?string
+    {
+        return $this->component;
+    }
+
+    public function withComponent(?string $component): static
+    {
+        $self = clone $this;
+        $self->component = $component;
+
+        return $self;
+    }
+
+    public function getTranslationDomain(): ?string
+    {
+        return $this->translationDomain;
+    }
+
+    public function withTranslationDomain(?string $translationDomain): static
+    {
+        $self = clone $this;
+        $self->translationDomain = $translationDomain;
 
         return $self;
     }

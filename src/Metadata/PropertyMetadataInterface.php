@@ -37,6 +37,16 @@ interface PropertyMetadataInterface extends PropertyInterface
     public function withTemplate(?string $template): self;
 
     /**
+     * Define the Twig component name used to render this property.
+     */
+    public function withComponent(?string $component): self;
+
+    /**
+     * Define the translation domain used to translate property data.
+     */
+    public function withTranslationDomain(?string $translationDomain): self;
+
+    /**
      * Define if data can be sorted using this property.
      */
     public function withSortable(bool $sortable): self;

@@ -12,17 +12,13 @@ use LAG\AdminBundle\Metadata\Attribute\Link;
  */
 interface CollectionOperationMetadataInterface extends CollectionOperationInterface, OperationMetadataInterface
 {
-    public function setPagination(bool $pagination): self;
+    public function withLimit(?int $limit): self;
+
+    public function withPagination(bool $pagination): self;
 
     public function withItemsPerPage(int $itemsPerPage): self;
 
     public function withPageParameter(string $pageParameter): self;
-
-    /** @param array<string, mixed> $criteria */
-    public function withCriteria(array $criteria): self;
-
-    /** @param array<string, mixed> $orderBy */
-    public function withOrderBy(array $orderBy): self;
 
     /** @param array<int, FilterInterface> $filters */
     public function withFilters(array $filters): static;
@@ -39,10 +35,8 @@ interface CollectionOperationMetadataInterface extends CollectionOperationInterf
     /** @param array<string, mixed> $gridOptions */
     public function withGridOptions(array $gridOptions): self;
 
-    public function withCollectionForm(?string $collectionForm): self;
-
-    /** @param array<string, mixed> $collectionFormOptions */
-    public function withCollectionFormOptions(?array $collectionFormOptions): self;
+    /** @param string[] $batchOperations */
+    public function withBatchOperations(array $batchOperations): self;
 
     /** @param array<int|string, Link> $collectionLinks */
     public function withCollectionLinks(?array $collectionLinks): self;

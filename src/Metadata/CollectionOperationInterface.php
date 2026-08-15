@@ -12,18 +12,22 @@ use LAG\AdminBundle\Metadata\Attribute\Link;
  */
 interface CollectionOperationInterface extends OperationInterface
 {
+    public function getLimit(): ?int;
+
     public function hasPagination(): bool;
 
-    public function setPagination(bool $pagination): self;
+    public function withPagination(bool $pagination): self;
 
     public function getItemsPerPage(): int;
 
     public function getPageParameter(): string;
 
-    /** @return array<string, mixed> */
-    public function getCriteria(): array;
-
-    /** @return array<string, string> */
+    /**
+     * The default ordering of the collection, as a map of property name to direction. It is overridden, entry by
+     * entry, by the "order_by" context key and then by the sort and order query parameters.
+     *
+     * @return array<string, string>
+     */
     public function getOrderBy(): array;
 
     /** @return array<int, FilterInterface>|null */
@@ -45,10 +49,8 @@ interface CollectionOperationInterface extends OperationInterface
     /** @return array<string, mixed> */
     public function getGridOptions(): array;
 
-    public function getCollectionForm(): ?string;
-
-    /** @return array<string, mixed>|null */
-    public function getCollectionFormOptions(): ?array;
+    /** @return string[] */
+    public function getBatchOperations(): array;
 
     /** @return array<int|string, Link>|null */
     public function getCollectionLinks(): ?array;
