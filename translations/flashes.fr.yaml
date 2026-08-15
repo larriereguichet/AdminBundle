@@ -2,3 +2,4 @@ lag_admin:
     ui:
         create_success: Les modifications ont été sauvegardées
         process_success: Les modifications ont été sauvegardées
+        transition_not_enabled: Cette action n'est plus disponible sur cette donnée

@@ -90,6 +90,7 @@ return static function (ContainerConfigurator $container): void {
         ->decorate(ProcessorInterface::class, priority: 20)
         ->arg('$processor', service('.inner'))
         ->arg('$workflowRegistry', service('workflow.registry'))
+        ->arg('$flashMessageHelper', service(FlashMessageHelperInterface::class))
     ;
     $services->set(ValidationProcessor::class)
         ->decorate(ProcessorInterface::class, priority: 100)
