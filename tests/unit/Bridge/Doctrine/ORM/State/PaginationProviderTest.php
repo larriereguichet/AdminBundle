@@ -27,7 +27,7 @@ final class PaginationProviderTest extends TestCase
     #[Test]
     public function itPaginatesData(): void
     {
-        $data = $this->createMock(QueryBuilder::class);
+        $data = $this->createStub(QueryBuilder::class);
 
         $operation = new Index(pagination: true);
         $uriVariables = ['some_variable' => 'some_value'];
@@ -63,6 +63,34 @@ final class PaginationProviderTest extends TestCase
         $returnedData = $this->provider->provide($operation, $uriVariables, $context);
 
         self::assertEquals($data, $returnedData);
+    }
+
+    #[Test]
+    public function itDoesNotPaginateWhenDataIsNotQueryBuilder(): void
+    {
+        $operation = new Index(pagination: true);
+        $data = new \stdClass();
+        $context = [];
+
+        $this->decorated->method('provide')->willReturn($data);
+
+        $result = $this->provider->provide($operation, [], $context);
+
+        self::assertSame($data, $result);
+    }
+
+    #[Test]
+    public function itDoesNotPaginateWhenPaginationDisabled(): void
+    {
+        $operation = new Index(pagination: false);
+        $data = $this->createStub(QueryBuilder::class);
+        $context = [];
+
+        $this->decorated->method('provide')->willReturn($data);
+
+        $result = $this->provider->provide($operation, [], $context);
+
+        self::assertSame($data, $result);
     }
 
     public static function noCollectionOperations(): iterable
