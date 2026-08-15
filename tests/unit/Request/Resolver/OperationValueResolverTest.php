@@ -13,9 +13,8 @@ use LAG\AdminBundle\Metadata\Attribute\Show;
 use LAG\AdminBundle\Metadata\Attribute\Update;
 use LAG\AdminBundle\Metadata\CollectionOperationInterface;
 use LAG\AdminBundle\Metadata\OperationInterface;
-use LAG\AdminBundle\Request\Extractor\ParametersExtractorInterface;
 use LAG\AdminBundle\Request\ValueResolver\OperationValueResolver;
-use LAG\AdminBundle\Resource\Context\OperationContextInterface;
+use LAG\AdminBundle\Resource\Context\ResourceContextInterface;
 use LAG\AdminBundle\Tests\Unit\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -26,8 +25,7 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 final class OperationValueResolverTest extends TestCase
 {
     private OperationValueResolver $resolver;
-    private MockObject $parametersExtractor;
-    private MockObject $operationContext;
+    private MockObject $resourceContext;
 
     #[Test]
     #[DataProvider('supportTypes')]
@@ -35,13 +33,12 @@ final class OperationValueResolverTest extends TestCase
     {
         $request = new Request();
 
-        $this->parametersExtractor
+        $this->resourceContext
             ->expects($this->once())
-            ->method('supports')
-            ->with($request)
+            ->method('hasOperation')
             ->willReturn(true)
         ;
-        $this->operationContext
+        $this->resourceContext
             ->expects($this->once())
             ->method('getOperation')
             ->willReturn(new Show())
@@ -57,10 +54,9 @@ final class OperationValueResolverTest extends TestCase
     public function itDoesNotResolveWrongType(string $type): void
     {
         $request = new Request(['test']);
-        $this->parametersExtractor
+        $this->resourceContext
             ->expects($this->once())
-            ->method('supports')
-            ->with($request)
+            ->method('hasOperation')
             ->willReturn(true)
         ;
 
@@ -71,34 +67,16 @@ final class OperationValueResolverTest extends TestCase
     }
 
     #[Test]
-    public function itDoesNotResolveWithoutSupports(): void
-    {
-        $request = new Request(['test']);
-        $this->parametersExtractor
-            ->expects($this->once())
-            ->method('supports')
-            ->with($request)
-            ->willReturn(false)
-        ;
-
-        $parameters = $this->resolver->resolve($request, new ArgumentMetadata('test', null, false, false, null));
-        $parameters = iterator_to_array($parameters);
-
-        $this->assertCount(0, $parameters);
-    }
-
-    #[Test]
     public function itNotResolveArgumentsWithoutRequestParameters(): void
     {
         $request = new Request();
 
-        $this->parametersExtractor
+        $this->resourceContext
             ->expects($this->once())
-            ->method('supports')
-            ->with($request)
+            ->method('hasOperation')
             ->willReturn(false)
         ;
-        $this->operationContext
+        $this->resourceContext
             ->expects($this->never())
             ->method('getOperation')
         ;
@@ -128,11 +106,7 @@ final class OperationValueResolverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->parametersExtractor = $this->createMock(ParametersExtractorInterface::class);
-        $this->operationContext = $this->createMock(OperationContextInterface::class);
-        $this->resolver = new OperationValueResolver(
-            $this->parametersExtractor,
-            $this->operationContext,
-        );
+        $this->resourceContext = $this->createMock(ResourceContextInterface::class);
+        $this->resolver = new OperationValueResolver($this->resourceContext);
     }
 }
