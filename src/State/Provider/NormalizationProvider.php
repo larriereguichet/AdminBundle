@@ -33,7 +33,7 @@ final readonly class NormalizationProvider implements ProviderInterface
             return $data;
         }
         $normalizedData = $this->normalizer->normalize($data, null, $operation->getNormalizationContext());
-        $targetType = $operation->getOutput();
+        $targetType = $operation->getNormalizationOutput();
 
         if ($operation instanceof CollectionOperationInterface) {
             $targetType .= '[]';
@@ -49,7 +49,7 @@ final readonly class NormalizationProvider implements ProviderInterface
 
     private function supports(OperationInterface $operation, mixed $data): bool
     {
-        if ($operation->getOutput() === null) {
+        if ($operation->getNormalizationOutput() === null) {
             return false;
         }
 

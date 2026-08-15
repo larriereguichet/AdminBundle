@@ -43,7 +43,7 @@ final class CompositeProcessorTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(\sprintf(
             'The resource "my_resource" and operation "%s" is not supported by any processor',
-            $operation->getFullName(),
+            $operation->getName(),
         ));
         $processor = new CompositeProcessor();
         $processor->process(null, $operation);

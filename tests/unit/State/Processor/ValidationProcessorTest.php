@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Tests\Unit\State\Processor;
 
+use LAG\AdminBundle\Exception\InvalidaDataException;
 use LAG\AdminBundle\Metadata\Attribute\Create;
 use LAG\AdminBundle\Metadata\Attribute\Delete;
 use LAG\AdminBundle\Metadata\Attribute\Index;
@@ -18,6 +19,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ValidationProcessorTest extends TestCase
@@ -43,7 +45,7 @@ final class ValidationProcessorTest extends TestCase
             ->expects($this->once())
             ->method('validate')
             ->with($data, [new Valid()], ['groups' => ['my_group']])
-            ->willReturn($this->createMock(ConstraintViolationList::class))
+            ->willReturn($this->createStub(ConstraintViolationList::class))
         ;
 
         $this->processor->process($data, $operation, ['my_var' => 'value'], ['test' => 'ok']);
@@ -67,6 +69,26 @@ final class ValidationProcessorTest extends TestCase
         ;
 
         $this->processor->process($data, $operation, ['my_var' => 'value'], ['test' => 'ok']);
+    }
+
+    #[Test]
+    public function itThrowsOnValidationErrors(): void
+    {
+        $data = new \stdClass();
+        $operation = (new Create())->withValidation(true)->withValidationContext([]);
+
+        $violations = $this->createMock(ConstraintViolationListInterface::class);
+        $violations->method('count')->willReturn(2);
+
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->willReturn($violations)
+        ;
+        $this->decoratedProcessor->expects($this->never())->method('process');
+
+        $this->expectException(InvalidaDataException::class);
+        $this->processor->process($data, $operation, []);
     }
 
     public static function operations(): array
