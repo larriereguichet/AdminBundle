@@ -27,7 +27,7 @@ final readonly class CollectionOutputProvider implements ProviderInterface
     {
         $data = $this->provider->provide($operation, $urlVariables, $context);
 
-        if ($operation->getOutput() === null || !$operation instanceof CollectionOperationInterface) {
+        if ($operation->getNormalizationOutput() === null || !$operation instanceof CollectionOperationInterface) {
             return $data;
         }
 
@@ -36,7 +36,7 @@ final readonly class CollectionOutputProvider implements ProviderInterface
 
             return $this->denormalizer->denormalize(
                 $normalizedData,
-                $operation->getOutput(),
+                $operation->getNormalizationOutput(),
                 null,
                 $operation->getDenormalizationContext(),
             );
