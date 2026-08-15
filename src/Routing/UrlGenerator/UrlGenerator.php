@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LAG\AdminBundle\Routing\UrlGenerator;
 
+use LAG\AdminBundle\Routing\Mapper\ParametersMapper;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface as SymfonyUrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -23,7 +24,7 @@ final readonly class UrlGenerator implements UrlGeneratorInterface
         $mappedRouteParameters = $routeParameters;
 
         if ($data !== null) {
-            $mappedRouteParameters = new ParametersMapper()->map($data, $routeParameters);
+            $mappedRouteParameters = new ParametersMapper()->mapObjectToRouteParameters($data, $routeParameters);
         }
 
         return $this->router->generate($routeName, $mappedRouteParameters, $referenceType);
