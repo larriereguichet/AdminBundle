@@ -32,16 +32,18 @@ final readonly class ImageUploader implements ImageUploaderInterface
         if ($file === null) {
             return;
         }
+
+        // The path generator guesses the extension from the file itself, so the file has to be
+        // checked before anything else reads it.
+        if (!is_file($file->getPathname())) {
+            throw new Exception('The image file "%s" does not exist or is not a regular file', $file->getPathname());
+        }
         $previousImage = null;
 
         if ($image->getPath() !== null && $this->filesystem->has($image->getPath())) {
             $previousImage = $image->getPath();
         }
         $path = $this->pathGenerator->generatePath($image);
-
-        if (!file_exists($file->getRealPath())) {
-            throw new Exception('The image "%s" file does not exists', $file->getRealPath());
-        }
         $this->filesystem->write($path, $file->getContent());
 
         if ($previousImage !== null) {
