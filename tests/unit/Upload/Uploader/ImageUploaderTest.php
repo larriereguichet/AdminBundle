@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Tests\Unit\Upload\Uploader;
 
 use LAG\AdminBundle\Entity\Image;
+use LAG\AdminBundle\Exception\Exception;
 use LAG\AdminBundle\Upload\Generator\ImagePathGeneratorInterface;
 use LAG\AdminBundle\Upload\Uploader\ImageUploader;
 use League\Flysystem\FilesystemOperator;
@@ -74,6 +75,54 @@ final class ImageUploaderTest extends TestCase
         ;
 
         $this->createUploader('images/an-image.jpg')->uploadImage(new Image());
+    }
+
+    /**
+     * An upload carrying an error points at a path that was never created, so the file is missing
+     * while the image still holds it. The uploader must name it instead of failing on a type error.
+     *
+     * The path generator is mocked rather than stubbed on purpose: it guesses the extension from
+     * the file, and throws its own mime exception on a missing one. The guard is only useful if it
+     * runs first, so the test asserts the generator is never reached.
+     */
+    #[Test]
+    public function itFailsOnAMissingFileBeforeGeneratingThePath(): void
+    {
+        $path = $this->createTemporaryFile('to be removed');
+        $image = new Image();
+        $image->setFile(new File($path, checkPath: false));
+        unlink($path);
+
+        $pathGenerator = $this->createMock(ImagePathGeneratorInterface::class);
+        $pathGenerator
+            ->expects($this->never())
+            ->method('generatePath')
+        ;
+        $this->filesystem
+            ->expects($this->never())
+            ->method('write')
+        ;
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(\sprintf('The image file "%s" does not exist or is not a regular file', $path));
+
+        (new ImageUploader($this->filesystem, $pathGenerator))->uploadImage($image);
+    }
+
+    #[Test]
+    public function itFailsOnADirectoryInsteadOfAFile(): void
+    {
+        $image = new Image();
+        $image->setFile(new File(sys_get_temp_dir(), checkPath: false));
+
+        $this->filesystem
+            ->expects($this->never())
+            ->method('write')
+        ;
+
+        $this->expectException(Exception::class);
+
+        $this->createUploader('images/an-image.jpg')->uploadImage($image);
     }
 
     protected function setUp(): void
