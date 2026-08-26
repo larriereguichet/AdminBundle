@@ -42,12 +42,7 @@ final readonly class ImageUploader implements ImageUploaderInterface
         if (!file_exists($file->getRealPath())) {
             throw new Exception('The image "%s" file does not exists', $file->getRealPath());
         }
-        $stream = fopen($file->getRealPath(), 'r');
-        $this->filesystem->writeStream($path, $stream);
-
-        if (\is_resource($stream)) {
-            fclose($stream);
-        }
+        $this->filesystem->write($path, $file->getContent());
 
         if ($previousImage !== null) {
             $this->filesystem->delete($previousImage);
