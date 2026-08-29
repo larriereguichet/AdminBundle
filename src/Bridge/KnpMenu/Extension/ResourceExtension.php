@@ -33,9 +33,7 @@ final readonly class ResourceExtension implements ExtensionInterface
             $options['uri'] = $this->operationUrlGenerator->generateUrl($operation);
         }
 
-        if (!isset($options['extras'])) {
-            $options['extras'] = [];
-        }
+        $options['extras'] ??= [];
 
         if (empty($options['label'])) {
             $options['label'] = $operation->getTitle();

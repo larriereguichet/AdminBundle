@@ -21,12 +21,6 @@ final readonly class PropertyPermissionChecker implements PropertyPermissionChec
         }
         $user = $this->security->getUser();
 
-        foreach ($subject->getRoles() as $permission) {
-            if ($this->security->isGranted($permission, $user)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($subject->getRoles(), fn ($permission) => $this->security->isGranted($permission, $user));
     }
 }

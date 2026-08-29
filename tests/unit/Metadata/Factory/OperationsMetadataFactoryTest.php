@@ -59,14 +59,7 @@ final class OperationsMetadataFactoryTest extends TestCase
         $result = $factory->createMetadata('book');
 
         $operations = $result->getOperations();
-        $showOp = null;
-
-        foreach ($operations as $op) {
-            if ($op->getShortName() === 'show') {
-                $showOp = $op;
-                break;
-            }
-        }
+        $showOp = array_find($operations, static fn ($op) => $op->getShortName() === 'show');
 
         self::assertNotNull($showOp);
         self::assertSame('Show book', $showOp->getTitle());
