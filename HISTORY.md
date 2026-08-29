@@ -1,3 +1,6 @@
+v2.0:
+- a collection entry property no longer has to be named
+
 v1.0:
 - add filters
 - file exporters : array type, association
