@@ -25,9 +25,7 @@ final class Text
 
     public function mount(mixed $data, CellView $cell): void
     {
-        if ($data === null) {
-            $data = '';
-        }
+        $data ??= '';
         /** @var Metadata\Attribute\Text $property */
         $property = $cell->property;
         $data = u((string) $data);

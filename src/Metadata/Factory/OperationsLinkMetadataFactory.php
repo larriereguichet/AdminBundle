@@ -98,9 +98,7 @@ final readonly class OperationsLinkMetadataFactory implements ResourceMetadataFa
                     $linkOperation = $resource->getApplication().'.'.$resource->getShortName().'.'.$linkOperation;
                 }
 
-                if ($linkName === null) {
-                    $linkName = (string) u($linkOperation)->afterLast('.');
-                }
+                $linkName ??= (string) u($linkOperation)->afterLast('.');
             }
 
             $links[$index] = $link

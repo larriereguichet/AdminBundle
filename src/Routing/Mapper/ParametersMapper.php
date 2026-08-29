@@ -17,9 +17,7 @@ final readonly class ParametersMapper implements ParametersMapperInterface
         $mappedRouteParameters = [];
 
         foreach ($routeParameters as $parameter => $propertyPath) {
-            if ($propertyPath === null) {
-                $propertyPath = $parameter;
-            }
+            $propertyPath ??= $parameter;
 
             if (\is_int($parameter)) {
                 $parameter = $propertyPath;
