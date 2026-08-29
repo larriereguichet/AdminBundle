@@ -22,9 +22,14 @@ final class CompoundCellViewBuilderTest extends TestCase
 {
     private CompoundCellBuilder $builder;
     private MockObject $decorated;
+    private MockObject $root;
 
+    /**
+     * Children are built through the whole builder chain rather than the inner builder, so that the
+     * decorators wrapping this one still check each child condition and each child role.
+     */
     #[Test]
-    public function itBuildsNotCompoundProperties(): void
+    public function itBuildsChildrenThroughTheWholeChain(): void
     {
         $grid = new Grid(name: 'some_grid');
         $child = new Text(name: 'child');
@@ -36,17 +41,21 @@ final class CompoundCellViewBuilderTest extends TestCase
         $resource = new Resource(properties: ['some_property' => $property, 'child' => $child]);
         $operation = (new Update())->setResource($resource);
 
-        $this->decorated
-            ->expects($this->exactly(2))
+        $this->root
+            ->expects($this->once())
             ->method('buildCell')
-            ->willReturnMap([
-                [$operation, $grid, $child, $data, [], $childView],
-                [$operation, $grid, $property, $data, [
-                    'some' => 'context',
-                    'resource' => $resource,
-                    'children' => [$childView],
-                ], $cellView],
+            ->with($operation, $grid, $child, $data)
+            ->willReturn($childView)
+        ;
+        $this->decorated
+            ->expects($this->once())
+            ->method('buildCell')
+            ->with($operation, $grid, $property, $data, [
+                'some' => 'context',
+                'resource' => $resource,
+                'children' => [$childView],
             ])
+            ->willReturn($cellView)
         ;
 
         $this->builder->buildCell($operation, $grid, $property, $data, ['some' => 'context', 'resource' => $resource]);
@@ -69,6 +78,10 @@ final class CompoundCellViewBuilderTest extends TestCase
             ->with($operation, $grid, $property, $data, [])
             ->willReturn($cellView)
         ;
+        $this->root
+            ->expects($this->never())
+            ->method('buildCell')
+        ;
 
         $this->builder->buildCell($operation, $grid, $property, $data);
     }
@@ -90,6 +103,10 @@ final class CompoundCellViewBuilderTest extends TestCase
             ->with($operation, $grid, $property, $data, ['children' => 'set'])
             ->willReturn($cellView)
         ;
+        $this->root
+            ->expects($this->never())
+            ->method('buildCell')
+        ;
 
         $this->builder->buildCell($operation, $grid, $property, $data, ['children' => 'set']);
     }
@@ -97,6 +114,7 @@ final class CompoundCellViewBuilderTest extends TestCase
     protected function setUp(): void
     {
         $this->decorated = $this->createMock(CellBuilderInterface::class);
-        $this->builder = new CompoundCellBuilder($this->decorated);
+        $this->root = $this->createMock(CellBuilderInterface::class);
+        $this->builder = new CompoundCellBuilder($this->decorated, fn (): CellBuilderInterface => $this->root);
     }
 }

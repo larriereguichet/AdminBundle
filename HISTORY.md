@@ -1,4 +1,13 @@
 v2.0:
+- BREAKING: a grid property condition is evaluated before the property value is mapped. The
+  condition expression receives the row entity where it used to receive the mapped cell value.
+  This covers `data`, `this` and `object` alike: ConditionMatcher binds the three to the same
+  value, so swapping one for another is not a migration. Read the value from the entity, or
+  keep using `resource`, which has always been the row entity
+- a property condition now short circuits the value mapping, so it can guard a property path
+  that is not readable on every row
+- compound property children are built through the whole cell builder chain, so their own
+  condition and roles are still checked
 - a collection entry property no longer has to be named
 
 v1.0:

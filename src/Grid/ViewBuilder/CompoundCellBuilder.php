@@ -16,8 +16,12 @@ use LAG\AdminBundle\Metadata\PropertyInterface;
  */
 final readonly class CompoundCellBuilder implements CellBuilderInterface
 {
+    /**
+     * @param \Closure(): CellBuilderInterface $rootCellBuilder
+     */
     public function __construct(
         private CellBuilderInterface $cellBuilder,
+        private \Closure $rootCellBuilder,
     ) {
     }
 
@@ -35,7 +39,9 @@ final readonly class CompoundCellBuilder implements CellBuilderInterface
 
         foreach ($property->getProperties() as $childPropertyName) {
             $child = $operation->getResource()->getProperty($childPropertyName);
-            $children[] = $this->cellBuilder->buildCell($operation, $grid, $child, $data);
+            // Children re-enter the whole chain instead of the inner builder: each one carries its own
+            // condition and its own roles, which are checked by the decorators wrapping this one.
+            $children[] = ($this->rootCellBuilder)()->buildCell($operation, $grid, $child, $data);
         }
         $context['children'] = $children;
 

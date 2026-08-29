@@ -84,6 +84,7 @@ return static function (ContainerConfigurator $container): void {
     $services->set(CompoundCellBuilder::class)
         ->decorate(id: CellBuilderInterface::class, priority: 25)
         ->arg('$cellBuilder', service('.inner'))
+        ->arg('$rootCellBuilder', service_closure(CellBuilderInterface::class))
     ;
     $services->set(CollectionCellBuilder::class)
         ->decorate(id: CellBuilderInterface::class, priority: 150)
@@ -91,7 +92,7 @@ return static function (ContainerConfigurator $container): void {
         ->arg('$dataMapper', service(DataMapperInterface::class))
     ;
     $services->set(ConditionCellBuilder::class)
-        ->decorate(id: CellBuilderInterface::class, priority: 100)
+        ->decorate(id: CellBuilderInterface::class, priority: 20)
         ->arg('$conditionMatcher', service(ConditionMatcherInterface::class))
         ->arg('$cellBuilder', service('.inner'))
         ->arg('$attributeBuilder', service(AttributeBuilderInterface::class))
