@@ -77,7 +77,13 @@ Functional tests require a MySQL database on `127.0.0.1:3366` (non-standard port
 | Debug leftovers | `make var-dump-checker` | `src`, `tests` |
 | Backward compatibility | `make bc.check` | public API vs last release |
 
-CI (`.github/workflows/ci.yaml`) runs phpunit, php-cs-fixer and phpstan on PHP 8.4 for every push. `make bc.check` and `make rector` are local-only gates.
+CI (`.github/workflows/ci.yaml`) runs the unit and functional suites, php-cs-fixer, phpstan,
+var-dump-check and Rector on PHP 8.4 for every push. `make bc.check` is the only local-only gate.
+
+`composer.lock` is not versioned, so CI resolves dependencies afresh on every run: a new release of
+php-cs-fixer, phpstan or Rector can turn a green branch red without a single line of code changing.
+When a gate fails in CI but passes locally, compare the tool version before looking for the culprit
+in the diff.
 
 ## Architecture
 
