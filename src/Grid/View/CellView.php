@@ -13,7 +13,7 @@ readonly class CellView
      * @param array<string, mixed> $context
      */
     public function __construct(
-        public string $name,
+        public ?string $name,
         public ComponentAttributes $attributes,
         public ?PropertyInterface $property = null,
         public ?string $template = null,
