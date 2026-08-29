@@ -139,6 +139,53 @@ Structural issues, independent of the percentage:
 Suggested order: P1 → P3 → P2 → P4, doing the test-tree rename and de-duplication alongside P1,
 in separate commits (`test:` for the new tests, `refactor(tests):` for the reorganisation).
 
+## Bugs found while unifying the grid rendering of an application
+
+Raised on 2026-08-29 while an application consuming the bundle tried to give every grid the same
+look without declaring a `template:` per grid. Ordered by severity. The first was reproduced
+against the installed Twig; the others were read off the code on `feat/v2.0`.
+
+- [ ] **An empty grid renders nothing at all, and `emptyMessage` is dead.**
+      `templates/resources/index.html.twig` opens with `{% set grid = grid|default(false) %}`.
+      Twig's `default` filter returns its default when the value is *empty*, not merely undefined,
+      and `GridView implements \IteratorAggregate`, so emptiness is `iterator_count() === 0`. A
+      grid with no rows therefore collapses to `false` and the whole `{% block grid %}` is skipped:
+      no table, no headers, and never the `emptyMessage` that exists precisely for that case. An
+      application read this as a broken grid and spent a long time in the argument resolver, where
+      nothing was wrong. Use `{% set grid = grid ?? false %}`, which only tests definedness —
+      verified: an empty grid then renders, an absent or null one still does not.
+      This also removes a latent fatal: `iterator_count()` consumes the iterator, so a provider
+      returning a one-shot generator raises `Cannot traverse an already closed generator` before
+      the grid is ever displayed.
+- [ ] **`lag_admin.grid_templates` is unreachable with the default component.** `Grid::$component`
+      defaults to `lag_admin:table_grid`, and `TableGrid` implements `AttributeComponentInterface`
+      only, so it renders its own component template and `grid->template` is ignored. Neither
+      `grid_templates` nor an explicit `template:` has any effect unless every grid also declares
+      `component: null`. Worse, the default is hardcoded to the table component whatever the
+      `type` is, so a `type: 'card'` grid renders `table_grid.html.twig` and never reaches
+      `grid_templates['card']`. Default `Grid::$component` to `null`: `index.html.twig` already
+      falls back to `lag_admin:grid`, whose component implements *both*
+      `TemplateComponentInterface` and `AttributeComponentInterface`, so the configured template
+      is honoured and the grid attributes still go through `ComponentAttributes`.
+- [ ] **A link cell silently loses its icon.** `Twig\Component\Cell\Link::mount()` populates
+      `url` and `text` only, and `templates/components/cell.html.twig` renders
+      `{{ component(component, {cell: cell}) }}`, passing `cell` alone. `$icon` therefore stays
+      null whatever the `Link` metadata declares, and `{% if icon %}` in
+      `templates/components/cells/link.html.twig` is unreachable. Hidden behind it is
+      `iconAttributes`, a variable defined nowhere in `src/`, `config/` or `templates/`, which
+      will fail the day `$icon` is populated. Fix the two together, or fixing one reveals the
+      other.
+- [ ] **Two icon conventions for the same field.** `OperationsLinkMetadataFactory` generates
+      `icon: 'bi:pencil'`, `'bi:trash'`, `'bi:circle-plus'` — Iconify naming, while no
+      `symfony/ux-icons` is installed — where a resource declares `icon: 'pencil'`. The dead
+      `templates/common/links/_action_link.html.twig` adds a third, Font Awesome
+      (`fa-solid fa-pencil`). Settle on one convention, and delete that template: nothing
+      references it.
+- [ ] **A generated link is labelled with its operation name.** `OperationsLinkMetadataFactory`
+      gives the generated `Link` its name as `label` (`'update'`) and puts the translatable
+      string in `text` (`'lag_admin.ui.update'`). Any consumer reading `label` first displays a
+      raw `update`. Consider setting `label` to the translation key directly.
+
 ## Findings left from the v2 code review
 
 Raised by the review of the merged view-builder work on 2026-08-15. The HIGH ones and the two that
@@ -154,11 +201,16 @@ were reachable as a 500 from the browser were fixed on the spot; these are the r
       *last* collection operation where the previous code took the first. A resource declaring
       `#[Index]` plus another collection operation (export, archive…) gets a sidebar entry pointing
       at the second one. Use `reset()`.
-- [ ] **`embedded` operations are half-removed.** The embedded branch of `ResourceRoutingLoader`
-      went away with `PathGenerator`, but `Operation::isEmbedded()`, `TemplateResponseHandler` and
-      `PartialContextBuilder::EMBEDDED_REQUEST_ATTRIBUTE` all remain. Nothing sets that attribute
-      any more, so `$context['partial']` is permanently false and `embedded: true` operations get no
-      route. Decide: finish the removal, or restore the route.
+- [ ] **The partial form rerender is unreachable.** `PartialContextBuilder` reads the request
+      attribute `_lag_admin_embedded`, which nothing in `src/` or `config/` ever writes, so
+      `$context['partial']` is permanently false and the early return in
+      `PartialAjaxFormProcessor` never happens: a partial form submission is always processed,
+      and the rerender it describes cannot occur. Either set the attribute where a partial is
+      rendered, or drop the processor and the context key.
+      *Corrected 2026-08-29: an earlier version of this entry also claimed `embedded: true`
+      operations get no route. They do — `ResourceRoutingLoader` generates a route for every
+      operation, and `TemplateResponseHandler:48` reads `isEmbedded()` to swap the base template
+      for `@LAGAdmin/partial.html.twig`. Only the request attribute half is dead.*
 - [ ] **`ImageUploader` does not check `fopen()`.** The handle goes straight to `writeStream()`, so
       a permission or ulimit failure raises a `TypeError` instead of the intended actionable
       exception.
@@ -168,11 +220,12 @@ were reachable as a 500 from the browser were fixed on the spot; these are the r
 - [ ] **`ResourceContext::setResource()` / `setOperation()` on an empty stack.**
       `array_key_last([])` returns null, so PHP silently creates an entry under the key `""` that no
       `pop()` will ever balance. Throw, or push explicitly.
-- [ ] **Dead templates.** `grids/table/captions.html.twig` contains nested output tags
+- [x] **Dead templates.** `grids/table/captions.html.twig` contains nested output tags
       (`{{ {{ … }} }}`), a Twig syntax error that only survives because nothing includes the file.
       `grids/properties/resource_link.html.twig` passes an `options` variable that no longer exists
       in the cell render context, and `grids/table/header.html.twig` is unreferenced. Delete them or
       bring them back into use.
+      *Fixed: the three files were deleted.*
 
 ## Cleanups
 
