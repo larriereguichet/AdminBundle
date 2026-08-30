@@ -1,6 +1,8 @@
 {% extends '@LAGAdmin/resources/operation.html.twig' %}
 
-{% set grid = grid|default(false) %}
+{# ?? and not |default: the default filter also replaces an empty value, and a GridView is
+   traversable, so a grid with no rows would be dropped along with its empty message #}
+{% set grid = grid ?? false %}
 
 {% block content %}
     <div class="admin-index admin-{{ resource.shortName }}">

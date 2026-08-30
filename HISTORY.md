@@ -8,6 +8,8 @@ v2.0:
   that is not readable on every row
 - compound property children are built through the whole cell builder chain, so their own
   condition and roles are still checked
+- a grid with no row renders its table and its empty message again, instead of rendering
+  nothing at all
 - a collection entry property no longer has to be named
 
 v1.0:
