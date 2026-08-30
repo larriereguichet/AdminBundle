@@ -1,12 +1,12 @@
 {% for messageType in ['success', 'error', 'info', 'warning'] %}
     {% for message in app.session.flashbag.get(messageType) %}
         {% set alertType = (messageType == 'error') ? 'danger' : messageType %}
-        {% set alertClass = cva({
+        {% set alertClass = html_cva(
             base: 'alert my-1 mb-0',
             variants: {
                 type: {success: 'alert-success', danger: 'alert-danger', info: 'alert-info', warning: 'alert-warning'}
             }
-        }) %}
+        ) %}
 
         <div class="toast show align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
