@@ -60,6 +60,13 @@ jobs:
                 if: ${{ github.ref_name == 'master' || github.ref_name == 'feat/v2.0' }}
                 run: vendor/bin/phpunit -c phpunit.xml.dist --testsuite "AdminBundle Functional Test Suite"
 
+                # Unconditional, unlike the functional suite above: a service wired with a type its
+                # constructor refuses is a defect on its own branch, not something that only matters once
+                # the change is complete. It needs no database, and the container only type checks an
+                # argument when it instantiates the service, so booting the kernel never catches this.
+            -   name: Lint the container
+                run: vendor/bin/phpunit -c phpunit.xml.dist tests/functional/ContainerLintTest.php
+
             -   name: Run php-cs-fixer
                 run: PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --dry-run --using-cache=no --verbose --diff --allow-risky=yes --config .php-cs-fixer.dist.php
 
