@@ -12,6 +12,10 @@ return static function (ContainerConfigurator $container): void {
 
     // Slugger
     $services->set(ResourceSluggerInterface::class, ResourceSlugger::class)
+        ->args([
+            '$slugger' => service('slugger'),
+            '$propertyAccessor' => service('property_accessor'),
+        ])
         ->alias('lag_admin.slugger', ResourceSluggerInterface::class)
     ;
 };
