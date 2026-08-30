@@ -84,7 +84,7 @@ return static function (ContainerConfigurator $container): void {
 
     // Renderer
     $services->set(LinkRendererInterface::class, LinkRenderer::class)
-        ->arg('$urlGenerator', service(OperationUrlGeneratorInterface::class))
+        ->arg('$urlGenerator', service(LinkUrlGeneratorInterface::class))
         ->arg('$environment', service('twig'))
     ;
 };
