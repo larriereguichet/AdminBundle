@@ -1,0 +1,11 @@
+{
+    "description": "Backward compatibility checker, installed apart from the bundle. It caps symfony/console at ^7.4, so requiring it next to the bundle would drag the whole Symfony stack back to 7.x and undo the Symfony 8 coverage.",
+    "require": {
+        "roave/backward-compatibility-check": "^8.21"
+    },
+    "config": {
+        "allow-plugins": {
+            "ocramius/package-versions": true
+        }
+    }
+}

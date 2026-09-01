@@ -75,10 +75,18 @@ Functional tests require a MySQL database on `127.0.0.1:3366` (non-standard port
 | Code style | `make cs` | `config`, `src`, `tests/unit` — `@Symfony` + risky |
 | Modernization | `make rector` | `config`, `src`, `tests` (except `tests/app`) — PHP 8.3 sets |
 | Debug leftovers | `make var-dump-checker` | `src`, `tests` |
-| Backward compatibility | `make bc.check` | public API vs last release |
+| Backward compatibility | `make bc.check` | public API vs `FROM`, default the last tag |
 
 CI (`.github/workflows/ci.yaml`) runs the unit and functional suites, php-cs-fixer, phpstan,
 var-dump-check and Rector on PHP 8.4 for every push. `make bc.check` is the only local-only gate.
+
+The backward compatibility checker caps `symfony/console` at `^7.4`, so it is installed in its own
+composer project under `tools/bc-check/` rather than in `require-dev`, where it would drag the whole
+Symfony stack back to 7.x and undo the Symfony 8 coverage. `make bc.check` installs it on first run.
+Its default baseline is the last tag, `v1.1-RC2` from 2020, whose dependency graph no longer installs
+— every old Symfony and Twig release is blocked by a security advisory. Until 2.0 is tagged, pass a
+recent reference explicitly, `make bc.check FROM=<ref>`, and read the result knowing that a change of
+Symfony version between the two references reports that version's own classes as breaks.
 
 `composer.lock` is not versioned, so CI resolves dependencies afresh on every run: a new release of
 php-cs-fixer, phpstan or Rector can turn a green branch red without a single line of code changing.

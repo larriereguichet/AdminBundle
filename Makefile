@@ -30,8 +30,13 @@ rector:
 rector.fix:
 	vendor/bin/rector
 
+# The checker caps symfony/console at ^7.4, so it lives in its own composer project: requiring it
+# beside the bundle would drag the whole Symfony stack back to 7.x. FROM defaults to the last tag,
+# which only becomes a meaningful baseline once 2.0 is released.
 bc.check:
-	vendor/bin/roave-backward-compatibility-check
+	@test -f tools/bc-check/vendor/bin/roave-backward-compatibility-check \
+		|| composer install --working-dir=tools/bc-check --no-interaction
+	tools/bc-check/vendor/bin/roave-backward-compatibility-check $(if $(FROM),--from=$(FROM),)
 
 var-dump-checker:
 	vendor/bin/var-dump-check --symfony src
