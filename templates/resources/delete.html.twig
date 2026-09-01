@@ -17,7 +17,7 @@
             <div class="btn-group"
                  role="group"
                  aria-label="{{ 'lag_admin.list.available_actions_for_item'|trans({}, 'admin') }}">
-                {% for link in operation.itemActions %}
+                {% for link in operation.itemLinks ?? [] %}
                     {{ lag_admin_link(link, data) }}
                 {% endfor %}
                 <button href="#"
