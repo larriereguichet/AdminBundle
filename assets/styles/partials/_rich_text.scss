@@ -1,5 +1,8 @@
-.ql-container {
-    .ql-editor {
-        font-size: 16px;
-    }
+trix-editor {
+    font-size: 16px;
+    min-height: 12rem;
+}
+
+trix-toolbar .trix-button-row {
+    flex-wrap: wrap;
 }

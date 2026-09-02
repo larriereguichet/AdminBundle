@@ -1,4 +1,20 @@
 v2.0:
+- BREAKING: rich text is edited with Trix and stored as HTML instead of being edited with Quill and
+  stored as a Delta JSON document. Convert the existing columns before upgrading, while
+  `nadar/quill-delta-parser` is still installable: `(new Lexer($delta))->render()` turns a stored
+  Delta into the HTML the new editor expects. A column left in the Delta format is displayed as its
+  raw JSON
+- BREAKING: the `lag_admin_rich_text` Twig filter, the `RichTextRendererInterface` and the
+  `LAG\AdminBundle\Bridge\QuillJs` namespace are removed. Rich text needs no rendering pass now that
+  it is stored as HTML: use `|sanitize_html('lag_admin_rich_text')`, from symfony/html-sanitizer
+- BREAKING: the `toolbar` option of the rich text form type takes a flat list of Trix button names,
+  where it used to take the nested Quill toolbar definition. `true` keeps the whole toolbar, `false`
+  hides it. File attachments are off unless `attachFiles` is listed, because Trix inlines dropped
+  files as data URIs when no upload endpoint is wired
+- rich text submitted by an editor is sanitized before it reaches the entity, through the
+  `lag_admin_rich_text` sanitizer. Redeclaring `framework.html_sanitizer.sanitizers.lag_admin_rich_text`
+  overrides the policy, but `framework.html_sanitizer` has to stay enabled: turning it off takes the
+  `sanitize_html` filter away with it, and every rich text cell then fails to render
 - BREAKING: a grid property condition is evaluated before the property value is mapped. The
   condition expression receives the row entity where it used to receive the mapped cell value.
   This covers `data`, `this` and `object` alike: ConditionMatcher binds the three to the same

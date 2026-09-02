@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace LAG\AdminBundle\Form\Type\Text;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,30 +12,43 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class TextareaType extends AbstractType
 {
     /**
-     * @param DataTransformerInterface<string, object> $dataTransformer
+     * The Trix toolbar buttons enabled by default, named after their data-trix-attribute or, when they carry
+     * none, their data-trix-action. Attachments are deliberately left out: with no upload endpoint wired,
+     * Trix inlines the dropped files as data URIs into the stored HTML.
+     *
+     * @var list<string>
      */
-    public function __construct(
-        private readonly DataTransformerInterface $dataTransformer,
-    ) {
-    }
+    public const array DEFAULT_TOOLBAR = [
+        'bold',
+        'italic',
+        'strike',
+        'href',
+        'heading1',
+        'quote',
+        'code',
+        'bullet',
+        'number',
+        'decreaseNestingLevel',
+        'increaseNestingLevel',
+        'undo',
+        'redo',
+    ];
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->define('toolbar')
-            ->allowedTypes('array', 'boolean')
-            ->default([
-                [['header' => [1, 2, false]]],
-                ['bold', 'italic', 'underline', 'strike'],
-                ['blockquote', 'code-block'],
-                ['link', 'image', 'video'],
-            ])
+            ->allowedTypes('string[]', 'bool')
+            ->default(self::DEFAULT_TOOLBAR)
         ;
-    }
 
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder->addModelTransformer($this->dataTransformer);
+        // Rich text is stored as HTML, so the submitted markup has to be sanitized before it reaches the entity.
+        // Both options come from the form extension shipped with symfony/html-sanitizer, and the sanitizer itself
+        // is declared by the bundle extension.
+        $resolver->setDefaults([
+            'sanitize_html' => true,
+            'sanitizer' => 'lag_admin_rich_text',
+        ]);
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options): void
