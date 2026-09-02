@@ -55,6 +55,7 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
         $this->prependLiipImagineConfiguration($container);
         $this->prependPagerfantaConfiguration($container);
         $this->prependKnpMenuConfiguration($container);
+        $this->prependHtmlSanitizerConfiguration($container);
     }
 
     private function loadServices(ContainerBuilder $container): void
@@ -80,7 +81,6 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
         if (\in_array(DoctrineBundle::class, $bundles, true)) {
             $loader->load('services/bridges/doctrine.php');
         }
-        $loader->load('services/bridges/quill_js.php');
     }
 
     /**
@@ -96,6 +96,26 @@ final class LAGAdminExtension extends Extension implements PrependExtensionInter
             'cache' => [
                 'pools' => [
                     'lag_admin.cache' => ['adapter' => 'cache.system'],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Rich text properties are stored as HTML, so the submitted markup is sanitized on the way in and on the way
+     * out. The dedicated sanitizer keeps that policy separate from the application default one, and leaves it
+     * overridable: declaring framework.html_sanitizer.sanitizers.lag_admin_rich_text replaces the values below.
+     */
+    private function prependHtmlSanitizerConfiguration(ContainerBuilder $container): void
+    {
+        $container->prependExtensionConfig('framework', [
+            'html_sanitizer' => [
+                'sanitizers' => [
+                    'lag_admin_rich_text' => [
+                        'allow_safe_elements' => true,
+                        'allow_relative_links' => true,
+                        'allow_relative_medias' => true,
+                    ],
                 ],
             ],
         ]);
