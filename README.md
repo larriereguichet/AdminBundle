@@ -1,139 +1,164 @@
 [![Latest Stable Version](https://poser.pugx.org/lag/adminbundle/v/stable)](https://packagist.org/packages/lag/adminbundle)
-[![Build Status](https://travis-ci.org/larriereguichet/AdminBundle.svg?branch=master)](https://travis-ci.org/larriereguichet/AdminBundle)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/build.png?b=master)](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/build-status/master)
-[![Code Intelligence Status](https://scrutinizer-ci.com/g/larriereguichet/AdminBundle/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0/mini.png)](https://insight.sensiolabs.com/projects/c8e28654-44c7-46f3-9450-497e37bda3d0)
 [![Total Downloads](https://poser.pugx.org/lag/adminbundle/downloads)](https://packagist.org/packages/lag/adminbundle)
+[![CI](https://github.com/larriereguichet/AdminBundle/actions/workflows/ci.yaml/badge.svg)](https://github.com/larriereguichet/AdminBundle/actions/workflows/ci.yaml)
+[![License](https://poser.pugx.org/lag/adminbundle/license)](LICENSE)
 
 # AdminBundle
-The AdminBundle helps you to create **flexible** and **robust** administration application.
 
-It provides PHP attributes or yaml configuration to build views to show, create; update and delete resources. It comes
-with a native Doctrine ORM integration, and can also be used with any architecture.
+The AdminBundle builds an administration interface from PHP attributes. Put a `#[Resource]` on
+an entity, and the bundle generates the routes, the controllers, the grids, the forms and the
+menus from that metadata — no code generation, nothing to maintain by hand.
 
-The AdminBundle is highly customizable using configuration or with events to allow you tu build dynamic administration 
-interfaces.
+Everything it generates is replaceable: a provider, a processor, a template, a Twig component
+or an event listener is enough to bend a screen to what your application actually needs.
 
 ## Features
-* Easy to use PHP attributes or yaml configuration
-* Highly customizable
-* Doctrine ORM integration
-* Views with pagination, sorting and filtering
-* Dynamic menus
-* Bootstrap 5 integration
 
-## Install the Bundle
+* Declarative configuration through PHP attributes, or PHP configuration files
+* Doctrine ORM integration out of the box — provider, processor, identifiers, form guessing
+* Listings with pagination, sorting, filtering and batch operations
+* Generated forms, guessed from the property metadata and the Doctrine mapping
+* Per-resource, per-operation and per-property permissions
+* Dynamic menus, translations and route generation
+* Rendering through Symfony UX Twig components, every template overridable
+* Rich text through QuillJS, and optional integrations: LiipImagine, `symfony/workflow`,
+  `symfony/object-mapper`
 
-```bash
-composer require lag/adminbundle
-```
+## Requirements
 
-If you do not use Symfony Flex, follow [those extra steps](docs/install/install-without-flex.md).
+| Requirement | Version |
+|---|---|
+| PHP | 8.4 or higher |
+| Symfony | 7.0 or higher |
+| Doctrine ORM | required for the default provider and processor |
 
+## Quick start
 
-
-
-
-
-
-
-
-
-
-
-
-### Step 1: Install the Bundle
-Open a command console, execute the
-following command in your project directory to install the latest stable version of the bundle:
+### 1. Install the bundle
 
 ```bash
 composer require lag/adminbundle
 ```
 
-> If you do not use flex, read the [extra steps to install the bundle](docs/install/install-without-flex.md) 
+Without Symfony Flex, register it yourself in `config/bundles.php` — see
+[Installation](docs/installation.md).
 
+### 2. Import the routing
 
-### Step 2: Configure the routing
-Import the routing configuration to have the admin generated routes :
+```php
+// config/routes/lag_admin.php
+declare(strict_types=1);
 
-```yml
-    # config/routes.yaml        
-    lag_admin:
-        resource: '@LAGAdminBundle/Resources/config/routing/routing.yaml'
-        prefix: /admin
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+
+return static function (RoutingConfigurator $routing): void {
+    $routing->import('@LAGAdminBundle/config/routing.php');
+};
 ```
 
-### Step 3 : Configure an entity
+### 3. Declare a resource
 
-```yaml
-# config/packages/lag_admin.yaml
-lag_admin:
-    application:
-        title: My Little TaunTaun application       
+```php
+// src/Entity/Article.php
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use LAG\AdminBundle\Metadata\Attribute as LAG;
+
+#[LAG\Resource(shortName: 'article', operations: [
+    new LAG\Index(grid: 'articles'),
+    new LAG\Show(),
+    new LAG\Create(),
+    new LAG\Update(),
+    new LAG\Delete(),
+])]
+#[LAG\Grid(name: 'articles', properties: ['title', 'publishedAt'])]
+#[ORM\Entity]
+class Article
+{
+    #[ORM\Id, ORM\GeneratedValue, ORM\Column]
+    private ?int $id = null;
+
+    #[LAG\Text]
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
+    #[LAG\Date]
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $publishedAt = null;
+
+    // getters and setters
+}
 ```
 
-```yaml
-# config/admin/resources/article.yaml
-article:
-    entity: App\Entity\Article 
-    actions:
-        create: ~
-        edit: ~
-        list: ~
-        delete: ~
+The resource is named `admin.article`. Declaring `operations` replaces the defaults, so the five
+are listed here to point `index` at the grid — `#[LAG\Resource(shortName: 'article')]` alone
+already gives you the same five.
+
+### 4. Configure the application
+
+```php
+// config/packages/lag_admin.php
+declare(strict_types=1);
+
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
+return static function (ContainerConfigurator $container): void {
+    $container->extension('lag_admin', [
+        'applications' => [
+            'admin' => [
+                'translation_domain' => 'admin',
+                'base_template' => '@LAGAdmin/base.html.twig',
+            ],
+        ],
+    ]);
+};
 ```
 
-> As new routes are dynamically created, the cache clearing is required (`symfony cache:clear`)
+### 5. Browse it
 
-Now you could visit `http://127.0.0.1:8000/admin/article/list` to see a list of your entities. 
+Routes are built when the container is compiled, so clear the cache after adding a resource:
 
-Yan can visit `http://127.0.0.1:8000/app_dev.php/admin/` to see the homepage of your admin interface
+```bash
+bin/console cache:clear
+bin/console debug:router | grep article
+```
+
+Open `/articles/index`.
+
+The full walkthrough is in [Getting started](docs/getting-started.md).
 
 ## Documentation
-1. [How to use](docs/how-to-use/basics.md)   
-    * a. [Basics](docs/how-to-use/basics.md)
-    * b. [Admins](docs/how-to-use/admin.md)
-    * c. [Actions](docs/how-to-use/action.md)
-    * d. [Fields](docs/how-to-use/field.md)
-    * e. [Events](docs/how-to-use/events.md)
-    * f. Data Providers
-    * g. Filters
-    * h. Views
-    * i. Security    
-2. Customization
-    * a. Custom actions
-    * b. Custom render
-    * c. Custom data
-    * d. Custom routes and urls
-3. Reference
-    * a. Application configuration
-    * b. Admin configuration
-4. FAQ
-5. [Configuration reference](docs/reference/index.md)
 
+The documentation lives in [`docs/`](docs/index.md).
 
-## Testing
-To run the admin test suite, run the following :
-```shell
-make tests
+* [Installation](docs/installation.md) — dependencies, routing, assets, security
+* [Getting started](docs/getting-started.md) — one entity to a working screen
+* [Configuration](docs/configuration.md) — every `lag_admin` key
+* [Concepts](docs/index.md#concepts) — resources, operations, properties, grids, forms,
+  filters, providers and processors, routing, security, menus, events, translations
+* [Reference](docs/index.md#reference) — every option of every attribute
+* [Customization](docs/index.md#customization) — templates, Twig components, custom
+  properties, state, uploads, workflow
+
+## Contributing
+
+The quality suite must be green before a change is proposed:
+
+```bash
+make tests          # phpunit + phpstan + rector + var-dump-check + cs
+make cs.fix         # apply the code style fixes
 ```
 
-## Road map
+Functional tests need the database container: `docker compose up -d database`. The conventions
+this repository follows — coding standards, commit format — are in [CLAUDE.md](CLAUDE.md) and
+[`.claude/rules/`](.claude/rules/). How AI assistants are used here is stated in
+[AI_USAGE.md](AI_USAGE.md).
 
-### v1.1
-- Add dynamic id column (instead of required "id" column) to improve generic and handle multiple ids columns 
+## Changelog
 
-### v1.0
-- Add more testing
+Release notes and breaking changes are in [HISTORY.md](HISTORY.md).
 
-## History
-Version 0.4 :
-* Dynamic CRUD for your entities (no code generation)
-* Simple configuration in yml (look alike symfony1 generators.yml syntax)
-* List with pagination, sorting and batch remove (filters are coming)
-* Full translated
-* Main and left menu integration
-* Fully customizable (use your own controllers, data providers or templates)
-* Bootstrap 3 integration (can be disabled or override)
+## License
+
+[MIT](LICENSE).
