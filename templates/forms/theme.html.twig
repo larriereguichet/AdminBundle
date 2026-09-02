@@ -220,9 +220,12 @@
 {% endblock lag_admin_gallery_widget %}
 
 {% block lag_admin_textarea_widget %}
+    {# Trix edits the markup held by the hidden input and writes it back on every change, so the form receives
+       HTML rather than the editor own representation. The input keeps the widget id to stay the label target. #}
     <div data-controller="lag-admin-textarea"
-         data-toolbar="{{ form.vars.toolbar }}"
-         data-name="{{ form.vars.full_name }}">
-        {{ form_widget(form) }}
+         data-toolbar="{{ toolbar }}"
+         data-disabled="{{ disabled ? '1' : '0' }}">
+        <input type="hidden" id="{{ id }}" name="{{ full_name }}" value="{{ value }}"{% if disabled %} disabled="disabled"{% endif %}>
+        <trix-editor input="{{ id }}"{{ block('attributes') }}></trix-editor>
     </div>
 {% endblock lag_admin_textarea_widget %}

@@ -1,5 +1,5 @@
 <div {{ attributes }}>
     {% if property.prefix %}{{ property.prefix }}{% endif %}
-    {{ data|lag_admin_rich_text }}
+    {{ data|default('')|sanitize_html('lag_admin_rich_text') }}
     {% if property.suffix %}{{ property.suffix }}{% endif %}
 </div>
