@@ -1,4 +1,10 @@
 v2.0:
+- BREAKING: `ImagesAwareInterface` no longer declares `addImage()` and `removeImage()`. An entity
+  using `ImagesAwareTrait` is unaffected, since the trait still provides them. The contract was
+  keeping out any entity holding its own image class, because `addImage(ItsOwnImage $image)` cannot
+  implement an inherited `addImage(ImageInterface $image)` — narrowing a parameter is illegal — and
+  the upload listener only ever reads the collection. Code type hinting `ImagesAwareInterface` to
+  call the mutators has to type hint the entity or the trait instead
 - the collection widget numbers the next entry after the last rendered one. It announced one index
   too far, so adding an entry to a collection that already had some left a hole in the submitted
   keys and the entry at the missing index came back empty
