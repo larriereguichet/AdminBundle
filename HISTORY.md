@@ -1,4 +1,7 @@
 v2.0:
+- the collection widget numbers the next entry after the last rendered one. It announced one index
+  too far, so adding an entry to a collection that already had some left a hole in the submitted
+  keys and the entry at the missing index came back empty
 - BREAKING: a grid property condition is evaluated before the property value is mapped. The
   condition expression receives the row entity where it used to receive the mapped cell value.
   This covers `data`, `this` and `object` alike: ConditionMatcher binds the three to the same
