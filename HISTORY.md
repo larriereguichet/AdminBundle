@@ -1,4 +1,8 @@
 v2.0:
+- an image row left without a file is rejected by the form instead of failing the save. An entry the
+  administrator added and never filled submitted an image with neither an uploaded file nor a stored
+  path, which the uploader skipped and the database refused on a non nullable path column, so the whole
+  save died on an error naming a column rather than a field
 - BREAKING: the collection entry markup moved from the `collection_item` Twig macro to a
   `lag_admin_collection_item` block, so it can be overridden — a macro cannot be. A theme overriding it
   has to extend `@LAGAdmin/forms/theme.html.twig`, and derive what it needs from `form`:
