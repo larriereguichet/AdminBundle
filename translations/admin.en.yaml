@@ -1,0 +1,53 @@
+lag_admin:
+    actions:
+        index: List
+        create: Create
+        delete: Delete
+        update: Edit
+        collection_action: Manage
+
+    delete:
+        confirmation: Yes, I want to delete this record
+        title: Deletion
+        message: You are about to delete this record. Are you sure?
+
+    home:
+        title: Home - AdminBundle
+
+    image:
+        add_image: Add an image
+        choose_in_gallery: Choose from the image gallery
+        no_image_in_gallery: You have no image in your gallery yet
+        upload_from_computer: Upload from my computer
+        remove_image: Remove the image
+
+    index:
+        no_record: No record has been created yet
+
+    list:
+        available_actions_for_item: Available actions for this record
+
+    security:
+        login: Log in
+        email: Email
+        password: Password
+        welcome: Welcome!
+
+    ui:
+        add: Add
+        apply: Apply
+        cancel: Cancel
+        create: Create
+        delete: Delete
+        filter: Filter
+        hide_filters: Hide the filters
+        no: 'No'
+        no_record: No record was found
+        update: Edit
+        reset: Reset
+        return: Back
+        save: Save
+        show: View
+        show_filters: Show the filters
+        yes: 'Yes'
+        warning: Warning
