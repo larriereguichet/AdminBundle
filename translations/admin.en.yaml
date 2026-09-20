@@ -20,6 +20,7 @@ lag_admin:
         no_image_in_gallery: You have no image in your gallery yet
         upload_from_computer: Upload from my computer
         remove_image: Remove the image
+        file_required: Choose a file, or remove the image
 
     index:
         no_record: No record has been created yet

@@ -9,6 +9,7 @@ use LAG\AdminBundle\Form\Type\Image\ImageType;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -26,6 +27,22 @@ final class ImageTypeTest extends KernelTestCase
 
         self::assertFalse($form->isValid());
         self::assertCount(1, $form->get('file')->getErrors());
+
+        // A FormError added by hand is printed as is by the theme, so the message has to arrive
+        // translated. A missing catalogue entry shows up here as the bare key.
+        self::assertSame('Choose a file, or remove the image', $form->get('file')->getErrors()[0]->getMessage());
+    }
+
+    #[Test]
+    public function itTranslatesTheErrorForTheCurrentLocale(): void
+    {
+        $form = $this->createForm(new Image(), 'fr');
+        $form->submit(['file' => null]);
+
+        self::assertSame(
+            "Choisissez un fichier, ou supprimez l'image",
+            $form->get('file')->getErrors()[0]->getMessage(),
+        );
     }
 
     #[Test]
@@ -55,9 +72,13 @@ final class ImageTypeTest extends KernelTestCase
         unlink($path);
     }
 
-    private function createForm(Image $image): \Symfony\Component\Form\FormInterface
+    private function createForm(Image $image, ?string $locale = null): FormInterface
     {
         self::bootKernel();
+
+        if ($locale !== null) {
+            self::getContainer()->get('translator')->setLocale($locale);
+        }
         /** @var FormFactoryInterface $formFactory */
         $formFactory = self::getContainer()->get('form.factory');
 

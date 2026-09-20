@@ -2,7 +2,10 @@ v2.0:
 - an image row left without a file is rejected by the form instead of failing the save. An entry the
   administrator added and never filled submitted an image with neither an uploaded file nor a stored
   path, which the uploader skipped and the database refused on a non nullable path column, so the whole
-  save died on an error naming a column rather than a field
+  save died on an error naming a column rather than a field. The message is translated through
+  `lag_admin.image.file_required` in the `admin` domain
+- the English translation catalogue is no longer empty. An application running in English displayed the
+  raw translation keys for every string the bundle ships
 - BREAKING: the collection entry markup moved from the `collection_item` Twig macro to a
   `lag_admin_collection_item` block, so it can be overridden — a macro cannot be. A theme overriding it
   has to extend `@LAGAdmin/forms/theme.html.twig`, and derive what it needs from `form`:
