@@ -1,4 +1,9 @@
 v2.0:
+- SECURITY: the `permissions` declared on a resource or an operation are enforced again. AccessListener
+  was tagged on kernel.request with no priority, so it ran before InitializeResourceContextListener
+  filled the resource context at -255; it found no operation, returned without voting, and granted
+  access instead of denying it. An application relying on `permissions` alone for its access control
+  had no protection at all, and nothing reported an error
 - BREAKING: rich text is edited with Trix and stored as HTML instead of being edited with Quill and
   stored as a Delta JSON document. Convert the existing columns before upgrading, while
   `nadar/quill-delta-parser` is still installable: `(new Lexer($delta))->render()` turns a stored

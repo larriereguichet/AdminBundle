@@ -18,6 +18,10 @@ use LAG\AdminBundle\Metadata\Attribute as LAG;
         new LAG\Update(),
         new LAG\Delete(),
         new LAG\Show(),
+        // Routed outside the ^/admin firewall on purpose: nothing but the operation permissions guards
+        // it, which is the configuration the access listener is supposed to cover.
+        new LAG\Show(name: 'secured', path: '/authors/{id}/secured', permissions: ['ROLE_ADMIN']),
+        new LAG\Show(name: 'granted', path: '/authors/{id}/granted', permissions: ['PUBLIC_ACCESS']),
     ]),
 ]
 #[LAG\Grid(name: 'authors')]

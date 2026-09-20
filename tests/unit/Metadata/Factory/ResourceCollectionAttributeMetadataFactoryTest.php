@@ -63,6 +63,8 @@ final class ResourceCollectionAttributeMetadataFactoryTest extends TestCase
                 new Update(),
                 new Delete(),
                 new Show(),
+                new Show(name: 'secured', path: '/authors/{id}/secured', permissions: ['ROLE_ADMIN']),
+                new Show(name: 'granted', path: '/authors/{id}/granted', permissions: ['PUBLIC_ACCESS']),
             ],
         ), $resources['admin.author']);
     }
