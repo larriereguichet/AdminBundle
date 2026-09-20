@@ -20,6 +20,7 @@ lag_admin:
         no_image_in_gallery: Vous n'avez pas encore d'image dans votre galerie
         upload_from_computer: Téléchargez depuis mon ordinateur
         remove_image: Supprimer l'image
+        file_required: Choisissez un fichier, ou supprimez l'image
 
     index:
         no_record: Aucun élément n'a encore été créé

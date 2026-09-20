@@ -15,28 +15,28 @@
 {%- endblock form_errors %}
 
 {% block collection_widget %}
-    {% set data = form.vars.data %}
     {% set add_label = form.vars.add_label|default('lag_admin.ui.add')|trans({}, translation_domain|default('admin')) %}
     {% set delete_label = form.vars.delete_label|default('lag_admin.ui.delete')|trans({}, translation_domain|default('admin')) %}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' collection-widget')|trim}) -%}
 
+    {% if prototype is defined %}
+        {% set item_prototype %}
+            {% with { form: prototype } %}{{ block('lag_admin_collection_item') }}{% endwith %}
+        {% endset %}
+    {% endif %}
+
     <div {{ block('widget_attributes') }}
          {{ stimulus_controller('lag-admin-collection') }}
-         data-index-value="{{ data|length > 0 ? data|length + 1 : 0 }}"
+         data-index-value="{{ form|length }}"
          data-delete-label="{{ delete_label }}"
          data-target=".collection-container"
          {% if prototype is defined %}
-         data-prototype-value="{{ _self.collection_item(
-             form.vars.prototype,
-             form.vars.allow_delete,
-             delete_label,
-             '__name__'
-         )|e }}"
+         data-prototype-value="{{ item_prototype|trim|e }}"
          {% endif %}>
 
         <div class="collection-container">
             {% for child in form %}
-                {{ _self.collection_item(child, allow_delete, delete_label, loop.index0) }}
+                {% with { form: child } %}{{ block('lag_admin_collection_item') }}{% endwith %}
             {% endfor %}
         </div>
 
@@ -52,7 +52,19 @@
     </div>
 {% endblock collection_widget %}
 
-{% macro collection_item(form, allow_delete, delete_label, index) %}
+{# Override this block in a form theme to lay an entry out differently. Everything it needs is derived
+   from `form`, the entry or the prototype, so an override gets the same inputs wherever it is rendered
+   from: `form.vars.name` is the entry index, or '__name__' for the prototype, and the collection options
+   sit on the parent. An override has to keep the contract the collection controller relies on:
+   data-form-collection="item" and the matching data-form-collection-index on the entry and its remove
+   link.
+
+   A theme overriding it has to extend this one, because the widget renders it through block(): listing a
+   second theme alongside is not enough, the call would still resolve here. #}
+{% block lag_admin_collection_item %}
+    {% set index = form.vars.name %}
+    {% set allow_delete = form.parent.vars.allow_delete %}
+    {% set delete_label = form.parent.vars.delete_label %}
     {% set attr = form.vars.attr|merge({class: (form.vars.attr.class|default('') ~ ' collection-item')|trim}) -%}
 
     {% apply spaceless %}
@@ -63,13 +75,11 @@
                 {{ form_row(form, {row_attr: {class: 'col-10'}}) }}
 
                 {% if allow_delete %}
-                    <div class="col-2 text-right">
-                        <br/>
+                    <div class="col-2 text-end">
                         <a href="#"
                            {{ stimulus_action('lag-admin-collection', 'removeCollectionElement') }}
                            data-form-collection-index="{{ index }}"
-                           class="btn btn-danger mt-2">
-                            <i class="glyphicon glyphicon-remove collection-button-remove"></i>
+                           class="btn btn-sm btn-outline-danger collection-button-remove">
                             {{ delete_label }}
                         </a>
                     </div>
@@ -77,7 +87,7 @@
             </div>
         </div>
     {% endapply %}
-{% endmacro %}
+{% endblock lag_admin_collection_item %}
 
 {% block select2_entity_widget %}
     <div class="">

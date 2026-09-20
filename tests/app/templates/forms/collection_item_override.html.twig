@@ -1,0 +1,5 @@
+{% extends '@LAGAdmin/forms/theme.html.twig' %}
+
+{# A theme overriding a block the bundle theme renders through block() has to extend it, so that the
+   call resolves against this template rather than the original. #}
+{% block lag_admin_collection_item %}<p class="overridden">{{ form.vars.name }}</p>{% endblock %}

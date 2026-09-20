@@ -31,6 +31,7 @@ return static function (ContainerConfigurator $container): void {
         ->tag('form.type')
     ;
     $services->set(ImageType::class)
+        ->arg('$translator', service('translator'))
         ->tag('form.type')
     ;
     $services->set(ResourceDataChoiceType::class)

@@ -1,4 +1,28 @@
 v2.0:
+- an image row left without a file is rejected by the form instead of failing the save. An entry the
+  administrator added and never filled submitted an image with neither an uploaded file nor a stored
+  path, which the uploader skipped and the database refused on a non nullable path column, so the whole
+  save died on an error naming a column rather than a field. The message is translated through
+  `lag_admin.image.file_required` in the `admin` domain
+- the English translation catalogue is no longer empty. An application running in English displayed the
+  raw translation keys for every string the bundle ships
+- BREAKING: the collection entry markup moved from the `collection_item` Twig macro to a
+  `lag_admin_collection_item` block, so it can be overridden — a macro cannot be. A theme overriding it
+  has to extend `@LAGAdmin/forms/theme.html.twig`, and derive what it needs from `form`:
+  `form.vars.name` is the entry index, the collection options sit on `form.parent.vars`
+- the delete link of a collection entry no longer carries `glyphicon glyphicon-remove` and `text-right`,
+  which are Bootstrap 3 class names and rendered nothing in the Bootstrap 5 layout the theme extends: the
+  button had no icon and no alignment. It is now a lighter `btn btn-sm btn-outline-danger`, and the
+  unconditional `<br/>` that padded the row is gone
+- BREAKING: `ImagesAwareInterface` no longer declares `addImage()` and `removeImage()`. An entity
+  using `ImagesAwareTrait` is unaffected, since the trait still provides them. The contract was
+  keeping out any entity holding its own image class, because `addImage(ItsOwnImage $image)` cannot
+  implement an inherited `addImage(ImageInterface $image)` — narrowing a parameter is illegal — and
+  the upload listener only ever reads the collection. Code type hinting `ImagesAwareInterface` to
+  call the mutators has to type hint the entity or the trait instead
+- the collection widget numbers the next entry after the last rendered one. It announced one index
+  too far, so adding an entry to a collection that already had some left a hole in the submitted
+  keys and the entry at the missing index came back empty
 - BREAKING: a grid property condition is evaluated before the property value is mapped. The
   condition expression receives the row entity where it used to receive the mapped cell value.
   This covers `data`, `this` and `object` alike: ConditionMatcher binds the three to the same

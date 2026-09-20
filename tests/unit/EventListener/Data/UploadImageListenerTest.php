@@ -11,6 +11,8 @@ use LAG\AdminBundle\Metadata\OperationInterface;
 use LAG\AdminBundle\Tests\Unit\DataProviderTestTrait;
 use LAG\AdminBundle\Tests\Unit\Fixtures\Author;
 use LAG\AdminBundle\Tests\Unit\Fixtures\Book;
+use LAG\AdminBundle\Tests\Unit\Fixtures\Product;
+use LAG\AdminBundle\Tests\Unit\Fixtures\ProductImage;
 use LAG\AdminBundle\Upload\Uploader\ImageUploaderInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -37,6 +39,23 @@ final class UploadImageListenerTest extends TestCase
             ->expects($this->once())
             ->method('uploadImages')
             ->with($book->getImages())
+        ;
+
+        $this->listener->__invoke($event);
+    }
+
+    #[Test]
+    #[DataProvider('operations')]
+    public function itUploadsTheImagesOfAnEntityDeclaringItsOwnImageClass(OperationInterface $operation): void
+    {
+        $product = new Product();
+        $product->addImage(new ProductImage());
+        $event = new DataEvent($product, $operation);
+
+        $this->uploader
+            ->expects($this->once())
+            ->method('uploadImages')
+            ->with($product->getImages())
         ;
 
         $this->listener->__invoke($event);
