@@ -32,12 +32,15 @@ return static function (ContainerConfigurator $container): void {
         ->tag('kernel.event_listener', ['event' => KernelEvents::FINISH_REQUEST, 'method' => 'onFinishRequest', 'priority' => -255])
     ;
     // Security listeners
+    // The priority has to stay below the one of InitializeResourceContextListener above: the access check
+    // reads the operation from the resource context, and a listener that runs before the context is filled
+    // finds nothing to check and returns without voting, which grants access instead of denying it.
     $services->set(AccessListener::class)
         ->args([
             '$resourceContext' => service('lag_admin.resource.context'),
             '$security' => service('security.helper'),
         ])
-        ->tag('kernel.event_listener', ['event' => KernelEvents::REQUEST])
+        ->tag('kernel.event_listener', ['event' => KernelEvents::REQUEST, 'priority' => -256])
     ;
 
     // Data listeners
