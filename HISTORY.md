@@ -1,4 +1,12 @@
 v2.0:
+- BREAKING: the collection entry markup moved from the `collection_item` Twig macro to a
+  `lag_admin_collection_item` block, so it can be overridden — a macro cannot be. A theme overriding it
+  has to extend `@LAGAdmin/forms/theme.html.twig`, and derive what it needs from `form`:
+  `form.vars.name` is the entry index, the collection options sit on `form.parent.vars`
+- the delete link of a collection entry no longer carries `glyphicon glyphicon-remove` and `text-right`,
+  which are Bootstrap 3 class names and rendered nothing in the Bootstrap 5 layout the theme extends: the
+  button had no icon and no alignment. It is now a lighter `btn btn-sm btn-outline-danger`, and the
+  unconditional `<br/>` that padded the row is gone
 - BREAKING: `ImagesAwareInterface` no longer declares `addImage()` and `removeImage()`. An entity
   using `ImagesAwareTrait` is unaffected, since the trait still provides them. The contract was
   keeping out any entity holding its own image class, because `addImage(ItsOwnImage $image)` cannot
